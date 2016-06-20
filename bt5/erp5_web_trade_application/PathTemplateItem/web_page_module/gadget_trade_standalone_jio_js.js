@@ -153,7 +153,7 @@
             remote_sub_storage: {
               type: "erp5",
               url: setting_list[0],
-              default_view_reference: "jio_view"
+              default_view_reference: "trade_jio_view"
             }
           });
 

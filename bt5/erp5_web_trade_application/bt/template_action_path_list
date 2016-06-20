@@ -1,14 +1,14 @@
-Category | jio_view
+Category | trade_jio_view
 Currency Module | currency_exchange_ratio_fast_input
-Currency | jio_view
-Organisation Module | jio_view
-Organisation | jio_view
-Product Module | jio_view
-Product | jio_view
-Sale Price Record Module | jio_view
-Sale Price Record Module | trade_view
-Sale Price Record | jio_view
-Sale Price Record | trade_view
-Sale Price Record | trade_view_error
+Currency | trade_jio_view
+Organisation Module | trade_jio_view
+Organisation | trade_jio_view
+Product Module | trade_jio_view
+Product | trade_jio_view
+Sale Price Record Module | trade_jio_view
+Sale Price Record Module | view
+Sale Price Record | trade_jio_view
+Sale Price Record | view
+Sale Price Record | view_error
 Sale Price Validation Item Module | view
 Sale Price Validation Item | view

@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jio_view</string> </value>
+            <value> <string>trade_jio_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -49,10 +49,6 @@
                 <string>View</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Action Information</string> </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
@@ -77,7 +73,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Base_viewAsJio</string> </value>
+            <value> <string>string:${object_url}/Organisation_viewAsJio</string> </value>
         </item>
       </dictionary>
     </pickle>
