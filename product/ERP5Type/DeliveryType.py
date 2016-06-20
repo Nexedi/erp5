@@ -43,10 +43,11 @@ class DeliveryType(ERP5TypeInformation):
 
   security.declarePublic('constructInstance')
   def constructInstance(self, *args, **kw):
+    has_ledger_parameter = False
     for k in kw:
       if k.startswith('ledger_'):
-        raise ValueError
-    if 'ledger' not in kw:
+        has_ledger_parameter = True
+    if not has_ledger_parameter:
       ledger = self.getDefaultLedger()
       if ledger:
         kw['ledger'] = ledger
