@@ -110,7 +110,7 @@ portal.%s()
     # 
     result = portal.Base_runJupyter(
       jupyter_code=jupyter_code, 
-      old_local_variable_dict=portal.Base_addLocalVariableDict()
+      old_notebook_context=portal.Base_createNotebookContext()
     )
     
     self.assertEquals(result['ename'], 'NameError')
@@ -125,6 +125,23 @@ portal.%s()
 
     # Test that calling Base_runJupyter shouldn't change the context Title
     self.assertNotEqual(portal.getTitle(), new_test_title)
+    
+  def testJupyterCompileInvalidPythonSyntax(self):
+    """
+    Test how the JupyterCompile extension behaves when it receives Python
+    code to be executed that has invalid syntax. 
+    """
+    self.login('dev_user')
+    jupyter_code = "a = 1\na++"
+    
+    reference = 'Test.Notebook.ErrorHandling.SyntaxError'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    result_json = json.loads(result)
+    
+    self.assertEquals(result_json['ename'], 'SyntaxError')
 
   def testUserCannotAccessBaseExecuteJupyter(self):
     """
@@ -133,9 +150,9 @@ portal.%s()
     portal = self.portal
 
     self.login('member_user')
-    result = portal.Base_executeJupyter.Base_checkPermission('portal_components', 'Manage Portal')
+    result = portal.Base_executeJupyter(title='Any title', reference='Any reference')
 
-    self.assertFalse(result)
+    self.assertEquals(result, 'You are not authorized to access the script')
 
   def testUserCanCreateNotebookWithoutCode(self):
     """
@@ -263,10 +280,10 @@ portal.%s()
     self.assertEquals(result['ename'], 'NameError')
     self.assertEquals(result['code_result'], None)
 
-  def testBaseExecuteJupyterSaveActiveResult(self):
+  def testBaseExecuteJupyterSaveNotebookContext(self):
     """
-    Test if the result is being saved inside active_process and the user can
-    access the loacl variable and execute python expression on them
+    Test if user context is being saved in the notebook_context property and the 
+    user can access access and execute python code on it.
     """
     portal = self.portal
     self.login('dev_user')
@@ -286,12 +303,9 @@ portal.%s()
                                           reference=reference
                                           )
     notebook = notebook_list[0]
-    process_id = notebook.getProcess()
-    active_process = portal.portal_activities[process_id]
-    result_list = active_process.getResultList()
-    local_variable_dict = result_list[0].summary['variables']
+    notebook_context = notebook.getNotebookContext()['variables']
     result = {'a':2, 'b':3}
-    self.assertDictContainsSubset(result, local_variable_dict)
+    self.assertDictContainsSubset(result, notebook_context)
 
   def testBaseExecuteJupyterRerunWithPreviousLocalVariables(self):
     """
@@ -321,29 +335,9 @@ portal.%s()
     expected_result = '11'
     self.assertEquals(json.loads(result)['code_result'].rstrip(), expected_result)
 
-  def testBaseExecuteJupyterWithContextObjectsAsLocalVariables(self):
-    """
-    Test Base_executeJupyter with context objects as local variables
-    """
-    portal = self.portal
-    self.login('dev_user')
-    python_expression = 'a=context.getPortalObject(); print a.getTitle()'
-    reference = 'Test.Notebook.ExecutePythonExpressionWithVariables %s' % time.time()
-    title = 'Test NB Title %s' % time.time()
-
-    result = portal.Base_executeJupyter(
-                                        title=title,
-                                        reference=reference,
-                                        python_expression=python_expression
-                                        )
-    self.tic()
-
-    expected_result = portal.getTitle()
-    self.assertEquals(json.loads(result)['code_result'].rstrip(), expected_result)
-
   def testSavingModuleObjectLocalVariables(self):
     """
-    Test to check the saving of module objects in local_variable_dict
+    Test to check the saving of module objects in notebook_context
     and if they work as expected.
     """
     portal = self.portal
@@ -393,13 +387,13 @@ image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s'
 context.Base_renderAsHtml(image)
 """%reference
 
-    local_variable_dict = {'imports' : {}, 'variables' : {}}
+    notebook_context = {'setup' : {}, 'variables' : {}}
     result = self.portal.Base_runJupyter(
       jupyter_code=jupyter_code,
-      old_local_variable_dict=local_variable_dict
+      old_notebook_context=notebook_context
       )
 
-    self.assertEquals(result['result_string'].rstrip(), data_template % base64.b64encode(data))
+    self.assertTrue((data_template % base64.b64encode(data)) in result['result_string'])
     # Mime_type shouldn't be  image/png just because of filename, instead it is
     # dependent on file and file data
     self.assertNotEqual(result['mime_type'], 'image/png')
@@ -438,6 +432,187 @@ context.Base_renderAsHtml(image)
       python_expression=jupyter_code2
       )
     self.assertEquals(json.loads(result)['code_result'].rstrip(), 'sys')
+    
+  def testEnvironmentObjectWithFunctionAndClass(self):
+    self.login('dev_user')
+    environment_define_code = '''
+def create_sum_machines():
+  def sum_function(x, y):
+    return x + y
+    
+  class Calculator(object):
+  
+    def sum(self, x, y):
+      return x + y
+    
+  return {'sum_function': sum_function, 'Calculator': Calculator}
+
+environment.clearAll()
+environment.define(create_sum_machines, 'creates sum function and class')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Function'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print sum_function(1, 1)
+print Calculator().sum(2, 2)
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    output = result['code_result']
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(output.strip(), '2\n4')
+    
+  def testEnvironmentObjectSimpleVariable(self):
+    self.login('dev_user')
+    environment_define_code = '''
+environment.clearAll()
+environment.define(x='couscous')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Variable'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = 'print x'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'couscous')
+    
+  def testEnvironmentUndefineFunctionClass(self):
+    self.login('dev_user')
+    environment_define_code = '''
+def create_sum_machines():
+  def sum_function(x, y):
+    return x + y
+    
+  class Calculator(object):
+  
+    def sum(self, x, y):
+      return x + y
+    
+  return {'sum_function': sum_function, 'Calculator': Calculator}
+
+environment.clearAll()
+environment.define(create_sum_machines, 'creates sum function and class')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Function.Undefine'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    undefine_code = '''
+environment.undefine('creates sum function and class')
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=undefine_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print 'sum_function' in locals()
+print 'Calculator' in locals()
+'''
+
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    result = json.loads(result)
+    output = result['code_result']
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(output.strip(), 'False\nFalse')
+    
+  def testEnvironmentUndefineVariable(self):
+    self.login('dev_user')
+    environment_define_code = '''
+environment.clearAll()
+environment.define(x='couscous')
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Variable.Undefine'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=environment_define_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    undefine_code = 'environment.undefine("x")'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=undefine_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = "'x' in locals()"
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'False')
+    
+  def testImportFixer(self):
+    self.login('dev_user')
+    import_code = '''
+import random
+'''
+
+    reference = 'Test.Notebook.EnvironmentObject.ImportFixer'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print random.randint(1,1)
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), '1')
     
   def testPivotTableJsIntegration(self):
     '''

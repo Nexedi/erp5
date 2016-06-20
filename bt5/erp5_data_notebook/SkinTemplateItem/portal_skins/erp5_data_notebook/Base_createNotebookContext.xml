@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>AddNewLocalVariableDict</string> </value>
+            <value> <string>createNotebookContext</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_addLocalVariableDict</string> </value>
+            <value> <string>Base_createNotebookContext</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
