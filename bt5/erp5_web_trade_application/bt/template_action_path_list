@@ -6,9 +6,9 @@ Organisation | jio_view
 Product Module | jio_view
 Product | jio_view
 Sale Price Record Module | jio_view
-Sale Price Record Module | view
+Sale Price Record Module | trade_view
 Sale Price Record | jio_view
-Sale Price Record | view
-Sale Price Record | view_error
+Sale Price Record | trade_view
+Sale Price Record | trade_view_error
 Sale Price Validation Item Module | view
 Sale Price Validation Item | view

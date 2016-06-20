@@ -7,7 +7,6 @@ currency_module/SGD
 currency_module/THB
 currency_module/USD
 portal_alarms/trade_deliver_purchase_price_record
-portal_categories/action_type/object_jio_view
 portal_categories/quantity_unit/**
 portal_categories/region/**
 quantity_unit_conversion_module/conversion_group_weight
