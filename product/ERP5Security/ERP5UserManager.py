@@ -132,7 +132,7 @@ class ERP5UserManager(BasePlugin):
     """
     login = credentials.get('login')
     ignore_password = False
-    if not login:
+    if not login and "external_login" in credentials:
       # fallback to support plugins using external tools to extract login
       # those are not using login/password pair, they just extract login
       # from remote system (eg. SSL certificates)
@@ -142,42 +142,50 @@ class ERP5UserManager(BasePlugin):
     if login == SUPER_USER:
       return None
 
-    @UnrestrictedMethod
-    def _authenticateCredentials(login, password, path,
-      ignore_password=False):
-      if not login or not (password or ignore_password):
-        return None
+    if not login and "person_relative_url" in credentials:
+      user = self.getPortalObject().unrestrictedTraverse(
+        credentials["person_relative_url"]
+      )
+      login = user.getReference()
+      authentication_result = login, login
 
-      user_list = self.getUserByLogin(login)
+    else:
+      @UnrestrictedMethod
+      def _authenticateCredentials(login, password, path,
+        ignore_password=False):
+        if not login or not (password or ignore_password):
+          return None
 
-      if not user_list:
+        user_list = self.getUserByLogin(login)
+
+        if not user_list:
+          raise _AuthenticationFailure()
+
+        user = user_list[0]
+
+        try:
+
+          if (ignore_password or pw_validate(user.getPassword(), password)) and \
+              len(getValidAssignmentList(user)) and user  \
+              .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
+            return login, login # use same for user_id and login
+        finally:
+          pass
         raise _AuthenticationFailure()
 
-      user = user_list[0]
-
+      _authenticateCredentials = CachingMethod(
+        _authenticateCredentials,
+        id='ERP5UserManager_authenticateCredentials',
+        cache_factory='erp5_content_short')
       try:
+        authentication_result = _authenticateCredentials(
+          login=login,
+          password=credentials.get('password'),
+          path=self.getPhysicalPath(),
+          ignore_password=ignore_password)
 
-        if (ignore_password or pw_validate(user.getPassword(), password)) and \
-            len(getValidAssignmentList(user)) and user  \
-            .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
-          return login, login # use same for user_id and login
-      finally:
-        pass
-      raise _AuthenticationFailure()
-
-    _authenticateCredentials = CachingMethod(
-      _authenticateCredentials,
-      id='ERP5UserManager_authenticateCredentials',
-      cache_factory='erp5_content_short')
-    try:
-      authentication_result = _authenticateCredentials(
-        login=login,
-        password=credentials.get('password'),
-        path=self.getPhysicalPath(),
-        ignore_password=ignore_password)
-
-    except _AuthenticationFailure:
-      authentication_result = None
+      except _AuthenticationFailure:
+        authentication_result = None
 
     if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
       # stop here, no authentication policy enabled
@@ -185,11 +193,12 @@ class ERP5UserManager(BasePlugin):
       return authentication_result
 
     # authentication policy enabled, we need person object anyway
-    user_list = self.getUserByLogin(credentials.get('login'))
-    if not user_list:
-      # not an ERP5 Person object
-      return None
-    user = user_list[0]
+    if not user:
+      user_list = self.getUserByLogin(credentials.get('login'))
+      if not user_list:
+        # not an ERP5 Person object
+        return None
+      user = user_list[0]
 
     if authentication_result is None:
       # file a failed authentication attempt

@@ -28,6 +28,7 @@ import ERP5UserFactory
 import ERP5KeyAuthPlugin
 import ERP5ExternalAuthenticationPlugin
 import ERP5BearerExtractionPlugin
+import ERP5JSONWebTokenPlugin
 import ERP5ExternalOauth2ExtractionPlugin
 import ERP5AccessTokenExtractionPlugin
 import ERP5DumbHTTPExtractionPlugin
@@ -67,6 +68,7 @@ registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
 registerMultiPlugin(ERP5KeyAuthPlugin.ERP5KeyAuthPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin.meta_type)
 registerMultiPlugin(ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin.meta_type)
+registerMultiPlugin(ERP5JSONWebTokenPlugin.ERP5JSONWebTokenPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
 registerMultiPlugin(ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin.meta_type)
@@ -133,6 +135,15 @@ def initialize(context):
                        , constructors=(
                           ERP5BearerExtractionPlugin.manage_addERP5BearerExtractionPluginForm,
                           ERP5BearerExtractionPlugin.addERP5BearerExtractionPlugin, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
+
+  context.registerClass( ERP5JSONWebTokenPlugin.ERP5JSONWebTokenPlugin
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5JSONWebTokenPlugin.manage_addERP5JSONWebTokenPluginForm,
+                          ERP5JSONWebTokenPlugin.addERP5JSONWebTokenPlugin, )
                        , visibility=None
                        , icon='www/portal.gif'
                        )
