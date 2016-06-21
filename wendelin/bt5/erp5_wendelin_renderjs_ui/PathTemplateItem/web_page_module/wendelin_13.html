@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Listbox Gadget</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="gadget_wendelin_listbox.js"></script>
+    
+    <script id="contact-list-template" class="contact-list-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+          <ul data-role="listview" data-inset="true">
+            {{#each url_list}}
+              <li>
+                <a href="{{url}}">
+                  {{id}}
+                </a>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+        <div class="ui-block-c"></div>
+      </div>
+    </script>
+    
+  </head>
+
+  <body>
+  
+    <h1>Listbox gadget</h1>
+    
+     <div role="main" class="ui-content gadget-content"></div>
+
+  </body>
+</html>

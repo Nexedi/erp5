@@ -49,21 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string># This script returns an iterable of the paths to standard JavaScript objects.\n
-# If you want to customize your own site, please override this script\n
-# in your own skin folder. Note that the returned items must be\n
-# relative URLs instead of absolute URLs, i.e. they must be traversable\n
-# from the portal object. This is required for further processing of JavaScript\n
-# data, e.g. compression.\n
-#\n
-# BBB: For the history, erp5_xhtml_appearance.js is included by default when\n
-#      js_list is not pre-defined before the global definitions.\n
-js_list = (\'jquery/core/jquery.min.js\', \'jquery/ui/js/jquery-ui.min.js\', \'erp5.js\', \'erp5_knowledge_box.js\', \'erp5_dhtml_style.js\',\'live_test.js\')\n
-return js_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

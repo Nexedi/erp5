@@ -100,55 +100,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!doctype html>\n
-<html>\n
-  <head>\n
-    <meta charset="utf-8">\n
-    <meta name="viewport" content="width=device-width, initial-scale=1">\n
-\n
-    <title>Listbox Gadget</title>\n
-\n
-    <script src="rsvp.js"></script>\n
-    <script src="renderjs.js"></script>\n
-    <script src="handlebars.js"></script>\n
-    <script src="gadget_wendelin_listbox.js"></script>\n
-    \n
-    <script id="contact-list-template" class="contact-list-template" type="text/x-handlebars-template">\n
-      <div class="ui-grid-b ui-responsive">\n
-        <div class="ui-block-a"></div>\n
-        <div class="ui-block-b">\n
-          <ul data-role="listview" data-inset="true">\n
-            {{#each url_list}}\n
-              <li>\n
-                <a href="{{url}}">\n
-                  {{id}}\n
-                </a>\n
-              </li>\n
-            {{/each}}\n
-          </ul>\n
-        </div>\n
-        <div class="ui-block-c"></div>\n
-      </div>\n
-    </script>\n
-    \n
-  </head>\n
-\n
-  <body>\n
-  \n
-    <h1>Listbox gadget</h1>\n
-    \n
-     <div role="main" class="ui-content gadget-content"></div>\n
-\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Wendelin Listbox  Gadget</string> </value>
         </item>

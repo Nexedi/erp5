@@ -98,21 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>/* ======================= DYGRAPH CSS FORMATTING ==========================  */\n
-.dygraph-title,\n
-.dygraph-label,\n
-.dygraph-axis-label {\n
-  color: gray;\n
-  font-family: Helvetica,Arial,sans-serif;\n
-  font-weight: normal;\n
-  padding: 0.1em;\n
-}\n
-.dygraph-title {\n
-  font-size: 75%;\n
-}</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Wendelin: DYGRAPH CSS FORMATTING</string> </value>
         </item>

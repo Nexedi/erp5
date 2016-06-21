@@ -1,0 +1,12 @@
+/* ======================= DYGRAPH CSS FORMATTING ==========================  */
+.dygraph-title,
+.dygraph-label,
+.dygraph-axis-label {
+  color: gray;
+  font-family: Helvetica,Arial,sans-serif;
+  font-weight: normal;
+  padding: 0.1em;
+}
+.dygraph-title {
+  font-size: 75%;
+}
