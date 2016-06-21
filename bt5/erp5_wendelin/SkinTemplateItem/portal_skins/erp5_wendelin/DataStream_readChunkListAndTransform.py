@@ -19,6 +19,10 @@ if transform_script_id is not None:
                                   end, \
                                   data_array_reference, \
                                   **kw)
+  else:
+    # transformation script can not be found thus raise loudly
+    raise ValueError("Transformation script: %s can not be found." \
+                        %transform_script_id)
 
 # [warning] store current position offset in Data Stream, this can cause easily 
 # ConflictErrors and it spawns re-index activities on DataStream. Thus 
