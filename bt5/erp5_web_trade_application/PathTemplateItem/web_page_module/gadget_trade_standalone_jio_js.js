@@ -1,73 +1,8 @@
 /*global window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO */
 /*jslint indent: 2, maxlen: 80*/
 /*jslint nomen: true*/
-(function (window, rJS, RSVP, UriTemplate,
-            URI, Query, SimpleQuery, ComplexQuery, jIO) {
+(function (window, rJS, RSVP) {
   "use strict";
-
-  function wrapJioCall(gadget, method_name, argument_list) {
-    var storage = gadget.state_parameter_dict.jio_storage,
-      regexp =
-        /^X-Delegate uri="(http[s]*:\/\/[\/\-\[\]{}()*+:?.,\\\^$|#\s\w%]+)"$/,
-      login_page;
-
-    return storage[method_name].apply(storage, argument_list)
-      .push(undefined, function (error) {
-        if ((error.target !== undefined) && (error.target.status === 401)) {
-          login_page = error.target.getResponseHeader('WWW-Authenticate');
-          // Only connect to https to login
-          if (regexp.test(login_page)) {
-            return gadget.getUrlFor({
-              command: 'login',
-              absolute_url: true
-            })
-              .push(function (came_from) {
-                return gadget.redirect({
-                  command: 'raw',
-                  options: {
-                    url:
-                      UriTemplate.parse(regexp.exec(login_page)[1])
-                      .expand({came_from: came_from})
-                  }
-                });
-              });
-          }
-        }
-        throw error;
-      });
-  }
-
-  function isSingleLocalRoles(parsed_query) {
-    if ((parsed_query instanceof SimpleQuery) &&
-        (parsed_query.key === 'local_roles')) {
-      // local_roles:"Assignee"
-      return parsed_query.value;
-    }
-  }
-
-  function isMultipleLocalRoles(parsed_query) {
-    var i,
-      sub_query,
-      is_multiple = true,
-      local_role_list = [];
-    if ((parsed_query instanceof ComplexQuery) &&
-        (parsed_query.operator === 'OR')) {
-
-      for (i = 0; i < parsed_query.query_list.length; i += 1) {
-        sub_query = parsed_query.query_list[i];
-        if ((sub_query instanceof SimpleQuery) &&
-            (sub_query.key === 'local_roles')) {
-          local_role_list.push(sub_query.value);
-        } else {
-          is_multiple = false;
-        }
-      }
-      if (is_multiple) {
-        // local_roles:"Assignee" OR local_roles:"Assignor"
-        return local_role_list;
-      }
-    }
-  }
 
   rJS(window)
 
@@ -160,104 +95,17 @@
         });
     })
 
-    .declareMethod('allDocs', function (option_dict) {
-      // throw new Error('do not use all docs');
-
-      if (option_dict.list_method_template === undefined) {
-        return wrapJioCall(this, 'allDocs', arguments);
-      }
-
-      var query = option_dict.query,
-        i,
-        parsed_query,
-        sub_query,
-        result_list,
-        local_roles;
-      if (option_dict.query) {
-        parsed_query = jIO.QueryFactory.create(option_dict.query);
-
-        result_list = isSingleLocalRoles(parsed_query);
-        if (result_list) {
-          query = undefined;
-          local_roles = result_list;
-        } else {
-
-          result_list = isMultipleLocalRoles(parsed_query);
-          if (result_list) {
-            query = undefined;
-            local_roles = result_list;
-          } else if ((parsed_query instanceof ComplexQuery) &&
-                     (parsed_query.operator === 'AND')) {
-
-            // portal_type:"Person" AND local_roles:"Assignee"
-            for (i = 0; i < parsed_query.query_list.length; i += 1) {
-              sub_query = parsed_query.query_list[i];
-
-              result_list = isSingleLocalRoles(sub_query);
-              if (result_list) {
-                local_roles = result_list;
-                parsed_query.query_list.splice(i, 1);
-                query = Query.objectToSearchText(parsed_query);
-                i = parsed_query.query_list.length;
-              } else {
-                result_list = isMultipleLocalRoles(sub_query);
-                if (result_list) {
-                  local_roles = result_list;
-                  parsed_query.query_list.splice(i, 1);
-                  query = Query.objectToSearchText(parsed_query);
-                  i = parsed_query.query_list.length;
-                }
-              }
-            }
-          }
-
-        }
-        option_dict.query = query;
-        option_dict.local_roles = local_roles;
-      }
-
-      return wrapJioCall(
-        this,
-        'getAttachment',
-        [
-          // XXX Ugly hardcoded meaningless id...
-          "erp5",
-          new UriTemplate.parse(option_dict.list_method_template)
-                         .expand(option_dict),
-          {format: "json"}
-        ]
-      )
-        .push(function (catalog_json) {
-          var data = catalog_json._embedded.contents,
-            count = data.length,
-            k,
-            uri,
-            item,
-            result = [];
-          for (k = 0; k < count; k += 1) {
-            item = data[k];
-            uri = new URI(item._links.self.href);
-            delete item._links;
-            result.push({
-              id: uri.segment(2),
-              doc: {},
-              value: item
-            });
-          }
-          return {
-            data: {
-              rows: result,
-              total_rows: result.length
-            }
-          };
-        });
+    .declareMethod('allDocs', function () {
+      var storage = this.state_parameter_dict.jio_storage;
+      return storage.allDocs.apply(storage, arguments);
     })
-    .declareMethod('getAttachment', function (id, name) {
-      return wrapJioCall(this, 'getAttachment', [id, name, {format: "json"}]);
+    .declareMethod('getAttachment', function () {
+      var storage = this.state_parameter_dict.jio_storage;
+      return storage.getAttachment.apply(storage, arguments);
     })
-    .declareMethod('putAttachment', function (id, name, json) {
-      return wrapJioCall(this,
-                         'putAttachment', [id, name, JSON.stringify(json)]);
+    .declareMethod('putAttachment', function () {
+      var storage = this.state_parameter_dict.jio_storage;
+      return storage.putAttachment.apply(storage, arguments);
     })
     .declareMethod('repair', function () {
       var storage = this.state_parameter_dict
@@ -291,18 +139,15 @@
     })
 
     .declareMethod('get', function () {
-      var storage = this.state_parameter_dict
-          .jio_storage.state_parameter_dict.jio_storage;
+      var storage = this.state_parameter_dict.jio_storage;
       return storage.get.apply(storage, arguments);
     })
     .declareMethod('post', function () {
-      var storage = this.state_parameter_dict
-          .jio_storage.state_parameter_dict.jio_storage;
+      var storage = this.state_parameter_dict.jio_storage;
       return storage.post.apply(storage, arguments);
     })
     .declareMethod('put', function () {
-      var storage = this.state_parameter_dict
-          .jio_storage.state_parameter_dict.jio_storage;
+      var storage = this.state_parameter_dict.jio_storage;
       return storage.put.apply(storage, arguments);
     });
 
