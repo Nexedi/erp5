@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title> Wendelin Visualisation Demo</title>
+    <link id="favicon" rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAERAAAAAAAAEQEAAAAAAAEQARAAAAAAARAAEQAAAAARAAARAAAAABAAAAEQAAAAAAAAABEAAAAAAAAAEQAAAAAAAAABEAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAQAAAAAAAAAAD//wAA//8AAP7/AAD8fwAA+X8AAPM/AADznwAA558AAO/PAAD/5wAA/+cAAP/zAAD/+QAA//kAAP/9AAD//wAA">
+
+    <link rel="stylesheet" href="jquerymobile.css">
+
+    <script src="jquery.js"></script>
+    <script src="jquerymobile.js"></script>
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="gadget_wendelin.js"></script>
+    
+  </head>
+
+  <body>
+    <div class="ui-hidden-accessible connection-gadget-container"></div>
+
+    <div data-role="page">
+
+      <div data-role="header" data-position="fixeppppppd" class="gadget-header" data-theme="b">
+        <h1>Wendelin Graph Visualisation</h1>
+        <a class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all uploadlink">Upload</a>
+        <a class="ui-btn-right ui-btn ui-btn-inline ui-mini ui-corner-all alldoclink">List Document</a>
+      </div>
+
+      <div role="main" class="ui-content gadget-content"></div>
+      
+    </div>
+    
+    <!-- Example of inline a global gadget, scope is mandatory -->
+    <div data-gadget-url="gadget_jio.html" data-gadget-scope="JIO"></div>
+    
+  </body>
+</html>

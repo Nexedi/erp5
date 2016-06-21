@@ -49,19 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Utils import isValidTALESExpression\n
-from Products.Formulator.Errors import ValidationError\n
-if not value:\n
-  return True\n
-\n
-valid, message = isValidTALESExpression("python: getindex[%s]" % value)\n
-if valid:\n
-  return True\n
-raise ValidationError(\'external_validator_failed\', context, error_text=message)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value, REQUEST</string> </value>
         </item>

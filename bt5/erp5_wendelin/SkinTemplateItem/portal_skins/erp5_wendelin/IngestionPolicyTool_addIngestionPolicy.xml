@@ -49,64 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Create all required types for proper ingestion.\n
-"""\n
-from DateTime import DateTime\n
-\n
-now = DateTime()\n
-ingestion_policy = context.newContent( \\\n
-      id = reference,\n
-      portal_type =\'Ingestion Policy\',\n
-      reference = reference,\n
-      version = \'001\',\n
-      script_id = \'ERP5Site_handleDefaultFluentdIngestion\')\n
-ingestion_policy.validate()\n
-    \n
-# create sensor\n
-sensor = context.sensor_module.newContent( \\\n
-                            portal_type=\'Sensor\', \n
-                            reference = reference)\n
-sensor.validate()\n
-\n
-# create new Data Stream\n
-data_stream = context.data_stream_module.newContent( \\\n
-                   portal_type=\'Data Stream\', \\\n
-                   version = \'001\', \\\n
-                   reference=reference)\n
-data_stream.validate()\n
-    \n
-# create Data Supply\n
-resource = context.restrictedTraverse(\'data_product_module/wendelin_4\')\n
-data_supply_kw = {\'reference\': reference,\n
-                  \'version\': \'001\',\n
-                  \'start_date\': now,\n
-                  \'stop_date\': now + 365}\n
-data_supply_line_kw = {\'resource_value\': resource,\n
-                       \'source_value\': sensor,\n
-                       \'destination_value\': data_stream}\n
-data_supply = ingestion_policy.PortalIngestionPolicy_addDataSupply( \\\n
-                                  data_supply_kw, \\\n
-                                  data_supply_line_kw)\n
-    \n
-data_array = context.data_array_module.newContent(\n
-                                        portal_type=\'Data Array\',\n
-                                        reference = reference,\n
-                                        version = \'001\')\n
-data_array.validate()\n
-\n
-if batch_mode:\n
-  return ingestion_policy, data_supply, data_stream, data_array\n
-else:\n
-  # UI case\n
-  ingestion_policy.Base_redirect(\\\n
-                    form_id=\'view\', \\\n
-                    keep_items={\'portal_status_message\': \\\n
-                      context.Base_translateString(\'Ingestion Policy added.\')})\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference=None, batch_mode=0</string> </value>
         </item>

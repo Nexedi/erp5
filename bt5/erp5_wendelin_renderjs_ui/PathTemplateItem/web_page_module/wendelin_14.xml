@@ -98,67 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*globals window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
-          loopEventListener, jQuery, console, jIO*/\n
-/*jslint indent: 2, maxerr: 30, nomen:true */\n
-(function () {\n
-  "use strict";\n
-\n
-  /////////////////////////////////////////////////////////////////\n
-  // Handlebars\n
-  /////////////////////////////////////////////////////////////////\n
-  // Precompile the templates while loading the first gadget instance\n
-  var gadget_klass = rJS(window),\n
-    source = gadget_klass.__template_element\n
-                         .getElementById("contact-list-template")\n
-                         .innerHTML,\n
-    table_template = Handlebars.compile(source);\n
-\n
-  // Ivan: we extend gadget API like so:\n
-  rJS(window).declareMethod(\'render\', function () {\n
-    var gadget = this,\n
-      html;\n
-    return gadget.aq_allDocs()\n
-      .push(function (result) {\n
-        var promise_list = [],\n
-          len = result.data.rows.length,\n
-          i;\n
-        for (i = 0; i < len; i += 1) {\n
-          promise_list.push(result.data.rows[i].id);\n
-        }\n
-        return RSVP.all(promise_list);\n
-      })\n
-      .push(function (rows) {\n
-        // posts contains an array of results for the given promises\n
-        var new_url_list = [],\n
-          len = rows.length,\n
-          i;\n
-        for (i = 0; i < len; i += 1) {\n
-          // XXX: renderjs generate URL ?\n
-          new_url_list.push({\'url\': \'#page=show&id=\' + rows[i],\n
-                             \'id\': rows[i]});\n
-        }\n
-        html = table_template({\'url_list\': new_url_list});\n
-        return gadget.getElement();\n
-      })\n
-      .push(function (element) {\n
-        // append produced HTML\n
-        element.innerHTML = html;\n
-      });\n
-\n
-  })\n
-\n
-    // ivan: decalre we want to use JIO functionality as an alias (aq_post)\n
-    .declareAcquiredMethod("aq_allDocs", "jio_allDocs");\n
-\n
-}());
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Wendelin Listbox Gadget JS</string> </value>
         </item>

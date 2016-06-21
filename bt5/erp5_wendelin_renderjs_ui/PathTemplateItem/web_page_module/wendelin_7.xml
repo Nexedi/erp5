@@ -98,47 +98,6 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-/*globals window, document, RSVP, rJS, Handlebars, promiseEventListener,\n
-          loopEventListener, jQuery, console, jIO*/\n
-/*jslint indent: 2, maxerr: 3 */\n
-(function () {\n
-  "use strict";\n
-\n
-  // Ivan: we extend gadget API like so:\n
-  rJS(window).declareMethod(\'render\', function (options) {\n
-    var gadget = this;\n
-\n
-    return gadget.aq_getAttachment({\n
-      "_id": options.id,\n
-      "_attachment": "body.json"\n
-    })\n
-      .push(function (result) {\n
-        // XXX: not nice use directly jio!\n
-        //return jIO.util.readBlobAsText(result.data); -> old way\n
-        return jIO.util.readBlobAsArrayBuffer(result.data);\n
-      })\n
-      .push(function (event) {\n
-        gadget.data = event.target.result;\n
-        // getDeclaredGadget uses scope to get a sub gadget, which is a promise\n
-        return gadget.getDeclaredGadget(\'Visualise\');\n
-      })\n
-      .push(function (sub_gadget) {\n
-        sub_gadget.draw(gadget.data);\n
-      });\n
-  })\n
-\n
-    // ivan: decalre we want to use JIO functionality as an alias (aq_post)\n
-    .declareAcquiredMethod("aq_get", "jio_get")\n
-    .declareAcquiredMethod("aq_getAttachment", "aq_getAttachment");\n
-\n
-}());
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Wendelin Show Gadget JS</string> </value>
         </item>
