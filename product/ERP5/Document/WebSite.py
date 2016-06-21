@@ -174,7 +174,7 @@ class WebSite(WebSection):
           if request.get('AcceptLanguage') is not None:
             request['AcceptLanguage'].set(name, 100)
             request.set(WEBSITE_LANGUAGE_KEY, name)
-          return self.asContext(id=name)
+          return self.getOriginalDocument().asContext(id=name)
       return WebSection.getExtensibleContent(self, request, name)
 
     def _getExtensibleContent(self, request, name):

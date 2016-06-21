@@ -856,7 +856,7 @@ Hé Hé Hé!""", page.asText().strip())
       Test that getWebSiteValue() and getWebSectionValue() always
       include selected Language.
     """
-    website_id = self.setupWebSite().getId()
+    website_id = self.setupWebSite(default_available_language='en').getId()
     website = self.portal.restrictedTraverse(
       'web_site_module/%s' % website_id)
     website_relative_url = website.absolute_url(relative=1)
@@ -925,6 +925,46 @@ Hé Hé Hé!""", page.asText().strip())
                       webpage_module.getWebSectionValue().absolute_url(relative=1))
     self.assertEqual(websection_relative_url_fr,
                       webpage_module_fr.getWebSectionValue().absolute_url(relative=1))
+
+    # several languages in URL
+    website_bg_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/fr' % website_id)
+    self.assertEqual(website_bg_fr.getOriginalDocument(), website)
+    websection_bg_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/fr/%s' % (website_id, websection_id))
+    webpage_bg_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/fr/%s/%s' % (website_id, websection_id, page_ref))
+
+    # change language without referer
+    request = self.portal.REQUEST
+    request['HTTP_REFERER'] = ''
+    website_absolute_url = website.absolute_url()
+    self.assertEqual(website_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(websection_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(webpage_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_fr.Base_doLanguage('en'), website_absolute_url)
+    self.assertEqual(websection_fr.Base_doLanguage('en'), website_absolute_url)
+    self.assertEqual(webpage_fr.Base_doLanguage('en'), website_absolute_url)
+    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(websection_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_bg_fr.Base_doLanguage('en'), website_absolute_url)
+    self.assertEqual(websection_bg_fr.Base_doLanguage('en'), website_absolute_url)
+    self.assertEqual(webpage_bg_fr.Base_doLanguage('en'), website_absolute_url)
+
+    # change language with referer
+    request['HTTP_REFERER'] = website_fr.absolute_url()
+    self.assertEqual(website_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    request['HTTP_REFERER'] = websection_fr.absolute_url()
+    self.assertEqual(websection_fr.Base_doLanguage('de'), websection_fr.absolute_url().replace('/fr/', '/de/'))
+    request['HTTP_REFERER'] = webpage_fr.absolute_url()
+    self.assertEqual(webpage_fr.Base_doLanguage('de'), webpage_fr.absolute_url().replace('/fr/', '/de/'))
+    request['HTTP_REFERER'] = website_bg_fr.absolute_url()
+    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    request['HTTP_REFERER'] = websection_bg_fr.absolute_url()
+    self.assertEqual(websection_bg_fr.Base_doLanguage('de'), websection_bg_fr.absolute_url().replace('/bg/fr/', '/de/'))
+    request['HTTP_REFERER'] = webpage_bg_fr.absolute_url()
+    self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), webpage_bg_fr.absolute_url().replace('/bg/fr/', '/de/'))
 
   def test_13_DocumentCache(self):
     """

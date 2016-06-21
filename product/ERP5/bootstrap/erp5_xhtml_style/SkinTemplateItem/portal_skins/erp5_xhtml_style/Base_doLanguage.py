@@ -1,3 +1,5 @@
+import re
+
 try:
   website = context.getWebSiteValue()
 except AttributeError:
@@ -5,25 +7,24 @@ except AttributeError:
 
 if website is not None and website.isStaticLanguageSelection():
   # Web Mode
+  root_website = website.getOriginalDocument()
+  default_language = root_website.getDefaultAvailableLanguage()
+  root_website_url = root_website.absolute_url()
+  website_url_pattern = r'^%s(?:%s)*(/|$)' % (
+    re.escape(root_website_url),
+    '|'.join('/' + re.escape(x) for x in root_website.getAvailableLanguageList()))
   referer_url = context.REQUEST.HTTP_REFERER
-  default_language = context.getDefaultAvailableLanguage()
-  current_language = context.Localizer.get_selected_language()
-  web_site_url = context.getWebSiteValue().absolute_url()
-  if web_site_url.endswith('/%s' % current_language):
-    # Quick hack to handle acquisition of temp object
-    # which is different in the case of a Web Site
-    web_site_url = web_site_url[:-len(current_language) - 1]
-
-  if current_language == select_language:
-    redirect_url = referer_url
-  elif current_language == default_language:
-    redirect_url = referer_url.replace(web_site_url, '%s/%s' %
-                            (web_site_url, select_language))
-  elif select_language == default_language:
-    redirect_url = referer_url.replace('%s/%s' % (web_site_url, current_language), web_site_url)
+  if referer_url:
+    if select_language == default_language:
+      redirect_url = re.sub(website_url_pattern, r'%s\1' % root_website_url, referer_url)
+    else:
+      redirect_url = re.sub(website_url_pattern, r'%s/%s\1' % (root_website_url, select_language),
+                            referer_url)
   else:
-    redirect_url = referer_url.replace('%s/%s' % (web_site_url, current_language),
-                                       '%s/%s' % (web_site_url, select_language))
+    if select_language == default_language:
+      redirect_url = root_website_url
+    else:
+      redirect_url = '%s/%s' % (root_website_url, select_language)
   return context.REQUEST.RESPONSE.redirect(redirect_url)
 else:
   # ERP5 Mode
