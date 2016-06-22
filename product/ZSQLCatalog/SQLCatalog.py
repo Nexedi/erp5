@@ -474,6 +474,11 @@ class Catalog(Folder,
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id'      : 'sql_optimizer_switch',
+      'description': 'Method to get optimizer_switch value',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_tables',
       'description' : 'Method to get the main catalog tables',
       'type'    : 'selection',
@@ -599,6 +604,7 @@ class Catalog(Folder,
   sql_count_results = ''
   sql_getitem_by_path = ''
   sql_getitem_by_uid = ''
+  sql_optimizer_switch = ''
   sql_catalog_tables = ''
   sql_search_tables = ()
   sql_catalog_schema = ''
@@ -2898,6 +2904,30 @@ class Catalog(Folder,
             'isInventoryMovement': ob.isInventoryMovement,
             }
         return getEngine().getContext(data)
+
+  def _getOptimizerSwitch(self):
+    method_name = self.sql_optimizer_switch
+    try:
+      method = getattr(self, method_name)
+    except AttributeError:
+      pass
+    else:
+      try:
+        return method()[0][0]
+      except (ConflictError, DatabaseError):
+        raise
+      except Exception:
+        pass
+
+    LOG('SQLCatalog', WARNING, 'getTableIds failed with the method %s'
+        % method_name, error=sys.exc_info())
+    return ''
+
+  security.declarePublic('getOptimizerSwitchKeyList')
+  @transactional_cache_decorator('SQLCatalog.getOptimizerSwitchKeyList')
+  def getOptimizerSwitchKeyList(self):
+    return [pair.split('=', 1)[0] for pair in \
+              self._getOptimizerSwitch().split(',')]
 
 InitializeClass(Catalog)
 
