@@ -68,10 +68,11 @@ def traverseHref(url, allow_method=True, allow_hash=False):
 site_object_dict = context.ERP5Site_getWebSiteDomainDict()
 base_url_root_object = getattr(context, "getWebSiteValue", str)() or portal
 base_url_object = context
-assert base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl())
-base_url = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
-if not base_url.startswith("/"):
-  base_url = "/" + base_url
+base_url = "."
+if base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl()):
+  base_url = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
+  if base_url and not base_url.startswith("/"):
+    base_url = "/" + base_url
 
 normalize_kw = {"keep_empty": False, "keep_trailing_slash": False}
 def prepareHrefTraverse(url, allow_hash=False):
