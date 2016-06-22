@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="State" module="erp5.portal_type"/>
+      <global name="Transition" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,23 +10,6 @@
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>comment</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
             </value>
         </item>
         <item>
@@ -42,17 +25,15 @@
             </value>
         </item>
         <item>
+            <key> <string>after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_configureWendelinSetupDataNotebook</string> </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/erp5_wendelin_workflow/3</string>
+                <string>destination/workflow_module/erp5_wendelin_workflow/2</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>comment</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -62,16 +43,24 @@
             </value>
         </item>
         <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: True</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
-            <value> <string>29</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>State</string> </value>
+            <value> <string>Transition</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Customer BT</string> </value>
+            <value> <string>Setup data notebook module</string> </value>
+        </item>
+        <item>
+            <key> <string>transition_form_id</string> </key>
+            <value> <string>BusinessConfiguration_viewWendelinConfigureDataNotebookForm</string> </value>
         </item>
       </dictionary>
     </pickle>
