@@ -2713,7 +2713,11 @@ class Base( CopyContainer,
     else:
       original = getattr(self, '_original', None)
       if original is not None:
-        return aq_inner(original)
+        original = aq_inner(original)
+        if original.isTempObject():
+          return original.getOriginalDocument()
+        else:
+          return original
       else:
         return None
 
