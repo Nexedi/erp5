@@ -1,7 +1,7 @@
 /*globals window, rJS, Handlebars, RSVP, rJS,Handlebars, promiseEventListener, loopEventListener,jQuery,
 translateString, getWorkflowState, document, getSequentialID, addTemporaryCustomer */
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS, promiseEventListener, $) {
+(function (window, document, RSVP, rJS, promiseEventListener) {
   "use strict";
 
  /////////////////////////////////////////
@@ -359,11 +359,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
       if (page_gadget.options.jio_key.indexOf('sale_price_record_module/')
           === 0) {
         editable = 0;
-        $('<a data-role="button" href="Base_redirectToGeneratedDocumentOf/'
-          + page_gadget.options.jio_key + '" target="_blank">'
-          + translateString('Go To ERP5') + '</a>').appendTo(
-          $(page_gadget.props.element.querySelector('form'))
-        );
       } else {
         editable = 1;
       }
@@ -962,16 +957,6 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             local_validation: "self",
             //inputusername: my_input_user_name,
             hidden_in_html5_app_flag: "0",
-            drc: 100,
-            drc2: 100,
-            drc3: 100,
-            drc4: 100,
-            drc5: 100,
-            drc6: 100,
-            drc7: 100,
-            drc8: 100,
-            drc9: 100,
-            drc10: 100
           };
 
           return gadget.jio_post(doc);
@@ -986,4 +971,4 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
       );
 
 }(window, document, RSVP,
-  rJS, promiseEventListener, jQuery));
+  rJS, promiseEventListener));
