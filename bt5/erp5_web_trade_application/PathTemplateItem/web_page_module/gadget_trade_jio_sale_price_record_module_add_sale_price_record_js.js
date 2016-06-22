@@ -313,6 +313,7 @@
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_post", "jio_post")
+    .declareAcquiredMethod("jio_remove", "jio_remove")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
@@ -347,17 +348,20 @@
 
     .declareService(function () {
       var form_gadget = this,
-       doc_id;
+        doc_id;
 
       function formSubmit() {
         return form_gadget.notifySubmitting()
-         .push(function () {
-          return  getSequentialID(form_gadget, 'SPR');
-        })
-        .push(function (result) {
-          doc_id = result;
-          return doc_id;
-        })
+          .push(function () {
+            return addTemporaryCustomer(form_gadget);
+          })
+          .push(function () {
+            return getSequentialID(form_gadget, 'SPR');
+          })
+          .push(function (result) {
+            doc_id = result;
+            return doc_id;
+          })
           .push(function () {
             return form_gadget.getDeclaredGadget("erp5_form");
           })
@@ -856,7 +860,6 @@
                   "key": "previousowner",
                   "hidden": 0,
                   "type": "StringField",
-                  "change" : 1,
                   "disabled" : 1
                 }
               }

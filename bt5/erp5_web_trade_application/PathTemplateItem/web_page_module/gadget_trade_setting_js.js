@@ -252,7 +252,7 @@
           return new RSVP.Queue()
             .push(function () {
               if(window.applicationCache.status == window.applicationCache.DOWNLOADING){
-                alert(translateString('Downloading New Version Of HTML5 App'));
+                //alert(translateString('Downloading New Version Of HTML5 App'));
               }
             });
         })
@@ -305,7 +305,7 @@
               return new RSVP.Queue()
                 .push(function(){
                 if(update_check_flag === true){
-                  alert(translateString('No HTML5 App Update Found'));
+                  //alert(translateString('No HTML5 App Update Found'));
                   update_check_flag = false;
                 }
                 });

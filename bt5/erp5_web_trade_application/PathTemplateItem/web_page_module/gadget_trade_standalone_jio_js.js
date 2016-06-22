@@ -137,7 +137,10 @@
         });
 
     })
-
+     .declareMethod('remove', function () {
+      var storage = this.state_parameter_dict.jio_storage;
+      return storage.remove.apply(storage, arguments);
+    })
     .declareMethod('get', function () {
       var storage = this.state_parameter_dict.jio_storage;
       return storage.get.apply(storage, arguments);
