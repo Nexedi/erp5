@@ -966,6 +966,48 @@ Hé Hé Hé!""", page.asText().strip())
     request['HTTP_REFERER'] = webpage_bg_fr.absolute_url()
     self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), webpage_bg_fr.absolute_url().replace('/bg/fr/', '/de/'))
 
+    # /bg/en/fr/xxx should be redirected to /fr/xxx
+    website_bg_en_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/en/fr' % website_id)
+    websection_bg_en_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/en/fr/%s' % (website_id, websection_id))
+    webpage_bg_en_fr = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/en/fr/%s/%s' % (website_id, websection_id, page_ref))
+    self.assertEqual(self.publish(website_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
+                     website_fr.absolute_url())
+    self.assertEqual(self.publish(websection_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
+                     websection_fr.absolute_url())
+    self.assertEqual(self.publish(webpage_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
+                     webpage_fr.absolute_url())
+
+    # /bg/en/xxx should be redirected to /xxx where en is the default language
+    website_bg_en = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/en' % website_id)
+    websection_bg_en = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/en/%s' % (website_id, websection_id))
+    webpage_bg_en = self.portal.restrictedTraverse(
+      'web_site_module/%s/bg/en/%s/%s' % (website_id, websection_id, page_ref))
+    self.assertEqual(self.publish(website_bg_en.absolute_url(relative=1)).getHeader('location'),
+                     website.absolute_url())
+    self.assertEqual(self.publish(websection_bg_en.absolute_url(relative=1)).getHeader('location'),
+                     websection.absolute_url())
+    self.assertEqual(self.publish(webpage_bg_en.absolute_url(relative=1)).getHeader('location'),
+                     webpage.absolute_url())
+
+    # /en/xxx should be redirected to /xxx where en is the default language
+    website_en = self.portal.restrictedTraverse(
+      'web_site_module/%s/en' % website_id)
+    websection_en = self.portal.restrictedTraverse(
+      'web_site_module/%s/en/%s' % (website_id, websection_id))
+    webpage_en = self.portal.restrictedTraverse(
+      'web_site_module/%s/en/%s/%s' % (website_id, websection_id, page_ref))
+    self.assertEqual(self.publish(website_en.absolute_url(relative=1)).getHeader('location'),
+                     website.absolute_url())
+    self.assertEqual(self.publish(websection_en.absolute_url(relative=1)).getHeader('location'),
+                     websection.absolute_url())
+    self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)).getHeader('location'),
+                     webpage.absolute_url())
+
   def test_13_DocumentCache(self):
     """
       Test that when a document is modified, it can be accessed through a

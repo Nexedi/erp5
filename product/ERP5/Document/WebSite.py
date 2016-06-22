@@ -37,6 +37,7 @@ from Persistence import Persistent
 from ZPublisher import BeforeTraverse
 from ZPublisher.HTTPRequest import HTTPRequest
 from warnings import warn
+from zExceptions import Redirect
 
 WEBSITE_KEY = 'web_site_value'
 WEBSITE_LANGUAGE_KEY = 'web_site_language'
@@ -171,9 +172,16 @@ class WebSite(WebSection):
         # as a language selection only if language_list
         # was defined or set default language
         if name in language_list:
+          default_language = self.getDefaultAvailableLanguage()
           if request.get('AcceptLanguage') is not None:
             request['AcceptLanguage'].set(name, 100)
             request.set(WEBSITE_LANGUAGE_KEY, name)
+          if self.isTempObject() or name == default_language:
+            redirect_path_list = [self.getOriginalDocument().absolute_url()]
+            if name != default_language:
+              redirect_path_list.append(name)
+            redirect_path_list.extend(reversed(request['TraversalRequestNameStack']))
+            request['minimum_language_redirect_url'] = '/'.join(redirect_path_list)
           return self.getOriginalDocument().asContext(id=name)
       return WebSection.getExtensibleContent(self, request, name)
 
@@ -187,6 +195,12 @@ class WebSite(WebSection):
 
     def _getTraversalHookClass(self):
       return WebSiteTraversalHook
+
+    def __before_publishing_traverse__(self, self2, request):
+      redirect_url = request.get('minimum_language_redirect_url')
+      if redirect_url:
+        raise Redirect(redirect_url)
+      return super(WebSite, self).__before_publishing_traverse__(self2, request)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getPermanentURLList')
     def getPermanentURLList(self, document):
