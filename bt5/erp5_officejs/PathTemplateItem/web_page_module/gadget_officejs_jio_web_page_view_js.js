@@ -146,6 +146,23 @@
         })
         .push(function () {
           return text_gadget.getElement();
+        })
+        .fail(function (error) {
+          var display_error_element;
+          if (error === "Timed out after 5000 ms") {
+            display_error_element =
+              gadget.props.element.querySelector(
+                "form div.ui-field-contain fieldset"
+              );
+            display_error_element.innerHTML =
+              '<br/><p style="color: red"></p><br/><br/>';
+            display_error_element.querySelector('p').textContent =
+              "TIMEOUT: The editor gadget is taking to long to load but is" +
+              " currently being cached, please wait for the page to load" +
+              " (check your browser loading icon) and then refresh.";
+          } else {
+            throw error;
+          }
         });
     })
 
