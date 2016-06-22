@@ -579,6 +579,11 @@ class Catalog(Folder,
       'type': 'boolean',
       'default' : True,
       'mode': 'w' },
+    { 'id': 'sql_optimizer_switch',
+      'descriptiontitle': 'Method to get optimizer_switch value',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
 
   )
 
@@ -621,6 +626,7 @@ class Catalog(Folder,
   sql_catalog_security_uid_columns = (' | security_uid',)
   sql_catalog_table_vote_scripts = ()
   sql_catalog_raise_error_on_uid_check = True
+  sql_optimizer_switch = ''
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -2898,6 +2904,38 @@ class Catalog(Folder,
             'isInventoryMovement': ob.isInventoryMovement,
             }
         return getEngine().getContext(data)
+
+  def _getOptimizerSwitch(self):
+    method_name = self.sql_optimizer_switch
+    try:
+      method = getattr(self, method_name)
+    except AttributeError:
+      pass
+    else:
+      try:
+        return method()[0][0]
+      except (ConflictError, DatabaseError):
+        raise
+      except Exception:
+        pass
+
+    LOG('SQLCatalog', WARNING, 'getTableIds failed with the method %s'
+        % method_name, error=sys.exc_info())
+    return ''
+
+  security.declarePublic('getOptimizerSwitchKeyList')
+  @transactional_cache_decorator('SQLCatalog.getOptimizerSwitchKeyList')
+  def getOptimizerSwitchKeyList(self):
+    return [pair.split('=', 1)[0] for pair in \
+              self._getOptimizerSwitch().split(',')]
+
+  security.declarePrivate('getColumnIds')
+  def getColumnIds(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    """
+    return self._getColumnIds()[:]
 
 InitializeClass(Catalog)
 
