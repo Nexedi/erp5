@@ -1,6 +1,6 @@
-/*globals window, RSVP, rJS, promiseEventListener, Handlebars*/
+/*globals window, RSVP, rJS, promiseEventListener, Handlebars, document*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
-(function (window, RSVP, rJS, promiseEventListener, Handlebars) {
+(function (window, RSVP, rJS, promiseEventListener, Handlebars, document) {
   "use strict";
   var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
@@ -57,12 +57,12 @@
           return gadget.repair();
         })
         .push(function () {
-         // alert(translateString('Synchronisation Finished'));
-        //alert('Synchronisation Finished');
-        $(".synchro-form").append("Synchronisation Finished");
-        
+          var element = document.createElement("p"),
+            text = document.createTextNode("Synchronisation Finished");
+          element.appendChild(text);
+          gadget.props.element.appendChild(element);
           return;
         });
     });
 
-}(window, RSVP, rJS, promiseEventListener, Handlebars));
+}(window, RSVP, rJS, promiseEventListener, Handlebars, document));
