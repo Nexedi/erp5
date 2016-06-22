@@ -86,7 +86,7 @@
             }
                                          }},
 
-            gadget: "nextowner_title"
+            gadget_created: "nextowner_title"
           }),
 
           form_gadget.render({
@@ -106,7 +106,7 @@
             }
                                          }},
 
-            gadget: "nextowner_reference"
+            gadget_created: "nextowner_reference"
           }),
 
           form_gadget.render({
@@ -126,7 +126,7 @@
             }
                                          }},
 
-            gadget: "default_telephone_coordinate_text"
+            gadget_created: "default_telephone_coordinate_text"
           }),
 
           form_gadget.render({
@@ -146,7 +146,7 @@
             }
                                          }},
 
-            gadget: "default_address_city"
+            gadget_created: "default_address_city"
           }),
 
           form_gadget.render({
@@ -168,7 +168,7 @@
             }
                                          }},
 
-            gadget: "default_address_region"
+            gadget_created: "default_address_region"
           }),
 
           form_gadget.render({
@@ -188,7 +188,7 @@
             }
                                          }},
 
-            gadget: "default_address_street_address"
+            gadget_created: "default_address_street_address"
           }),
 
           form_gadget.render({
@@ -208,7 +208,7 @@
             }
                                          }},
 
-            gadget: "default_address_zip_code"
+            gadget_created: "default_address_zip_code"
           }),
 
           form_gadget.render({
@@ -228,7 +228,7 @@
 
             }
                                          }},
-            gadget: "default_email_coordinate_text"
+            gadget_created: "default_email_coordinate_text"
           })
         ]);
 
@@ -272,7 +272,7 @@
           }
                                          }},
 
-          gadget: "nextowner"
+          gadget_created: "nextowner"
         });
 
 
@@ -281,8 +281,6 @@
 
 
   }
-
-
 
 
 
@@ -315,6 +313,8 @@
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_post", "jio_post")
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
 
@@ -346,10 +346,18 @@
    /////////////////////////////////////////
 
     .declareService(function () {
-      var form_gadget = this;
+      var form_gadget = this,
+       doc_id;
 
       function formSubmit() {
         return form_gadget.notifySubmitting()
+         .push(function () {
+          return  getSequentialID(form_gadget, 'SPR');
+        })
+        .push(function (result) {
+          doc_id = result;
+          return doc_id;
+        })
           .push(function () {
             return form_gadget.getDeclaredGadget("erp5_form");
           })
@@ -360,15 +368,12 @@
 
             doc.parent_relative_url = "sale_price_record_module";
             doc.portal_type = "Sale Price Record";
-            doc.doc_id = getSequentialID('SPR');
+            doc.doc_id = doc_id;
             doc.local_validation = "self";
             doc.record_revision = 1;
             if (doc.sync_flag !== "1") {
               doc.portal_type = 'Sale Price Record Temp'; // For to avoid sync
             }
-
-
-            addTemporaryCustomer(form_gadget);
 
             return form_gadget.jio_post(doc);
 
@@ -397,7 +402,6 @@
     .declareMethod("render", function (options) {
       var page_gadget = this,
         sycn_method,
-        gadget,
         title,
         relative_url;
 
@@ -480,7 +484,6 @@
           return page_gadget.getDeclaredGadget("erp5_form");
         })
         .push(function (form_gadget) {
-          gadget = form_gadget;
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
               "sale_price": {
@@ -806,14 +809,7 @@
 
             }
           });
-        })
-        .push(function () {
-          gadget.props.element
-            .querySelector('[name="date"]')
-            .setAttribute('type', 'date');
-
         });
-
     })
 
     /////////////////////////////////////////
@@ -866,7 +862,7 @@
               }
                                            }},
 
-              gadget: "previousowner"
+              gadget_created: "previousowner"
             });
           }
 

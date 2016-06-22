@@ -34,24 +34,36 @@ function createOptions(select, option_array, selected_value){
   $(select).selectmenu('refresh')
 }
 
-function getSequentialID(record_type_prefix){
-  var last_sequential_id = Cookies.get('last_sequential_id');
-  if (last_sequential_id == undefined){
-    last_sequential_id = 0;
-  }else{
-    last_sequential_id = Number(last_sequential_id);
-  }
-  last_sequential_id++;
-  Cookies.set('last_sequential_id', last_sequential_id, {expires:36500, path:'/'});
-
-  var prefix = Cookies.get('sequential_id_prefix');
-  if (prefix == undefined){
-    prefix = getRandomPrefixForID();
-    Cookies.set('sequential_id_prefix', prefix, {expires:36500, path:'/'});
-  }
-  var date = new Date();
-  var date_text = date.getFullYear()+('0'+(date.getMonth()+1)).slice(-2)+('0'+date.getDate()).slice(-2)
-  return record_type_prefix + '-' + date_text + '-' + prefix + ('0000'+last_sequential_id).slice(-5)
+function getSequentialID(gadget,record_type_prefix){
+  var prefix;
+  
+          return gadget.getSetting("last_sequential_id")
+        .push(function (result) {
+          if (result === undefined){
+           last_sequential_id = 0;
+         }else{
+           last_sequential_id = Number(result);
+       }
+           last_sequential_id++;
+           return gadget.setSetting("last_sequential_id", last_sequential_id); 
+          })
+        .push(function () {
+          return gadget.getSetting("sequential_id_prefix");
+          })
+        .push(function (result) {
+          if (result === undefined){
+            prefix = getRandomPrefixForID();
+            return gadget.setSetting("sequential_id_prefix", prefix); 
+          } else{
+            prefix = result;
+            }
+          })
+          .push(function () {
+           var date = new Date();
+           var date_text = date.getFullYear()+('0'+(date.getMonth()+1)).slice(-2)+('0'+date.getDate()).slice(-2)
+           return record_type_prefix + '-' + date_text + '-' + prefix + ('0000'+last_sequential_id).slice(-5)
+          })
+ 
 }
 
 function getRandomPrefixForID(){
@@ -241,11 +253,11 @@ function addTemporaryCustomer(gadget){
             default_telephone_coordinate_text: gadget.props.element.querySelector('input[name=default_telephone_coordinate_text]').value,
             default_address_city: gadget.props.element.querySelector('input[name=default_address_city]').value,
             default_address_region: gadget.props.element.querySelector('select[name=default_address_region]').value,
-            default_address_street_address: gadget.props.element.querySelector('textarea[name=default_address_street_address]').value,
+            default_address_street_address: gadget.props.element.querySelector('input[name=default_address_street_address]').value,
             default_address_zip_code: gadget.props.element.querySelector('input[name=default_address_zip_code]').value,
             default_email_coordinate_text: gadget.props.element.querySelector('input[name=default_email_coordinate_text]').value
           };
-          gadget.post(doc);
+          gadget.jio_post(doc);
         }
       })
   }
@@ -283,7 +295,7 @@ function addTemporaryProduct(gadget){
             reference: gadget.props.element.querySelector('input[name=product_reference]').value,
             product_line: gadget.props.element.querySelector('select[name=product_line]').value
           };
-          gadget.post(doc);
+          gadget.jio_post(doc);
         }
       })
   }

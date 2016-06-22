@@ -81,7 +81,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "nextowner_title"
+            gadget_created: "nextowner_title"
           }),
 
           form_gadget.render({
@@ -101,7 +101,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "nextowner_reference"
+            gadget_created: "nextowner_reference"
           }),
 
           form_gadget.render({
@@ -121,7 +121,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "default_telephone_coordinate_text"
+            gadget_created: "default_telephone_coordinate_text"
           }),
 
           form_gadget.render({
@@ -141,7 +141,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "default_address_city"
+            gadget_created: "default_address_city"
           }),
 
           form_gadget.render({
@@ -163,7 +163,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "default_address_region"
+            gadget_created: "default_address_region"
           }),
 
           form_gadget.render({
@@ -183,7 +183,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "default_address_street_address"
+            gadget_created: "default_address_street_address"
           }),
 
           form_gadget.render({
@@ -203,7 +203,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget: "default_address_zip_code"
+            gadget_created: "default_address_zip_code"
           }),
 
           form_gadget.render({
@@ -223,7 +223,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
 
             }
                                          }},
-            gadget: "default_email_coordinate_text"
+            gadget_created: "default_email_coordinate_text"
           })
         ]);
 
@@ -267,7 +267,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           }
                                          }},
 
-          gadget: "nextowner"
+          gadget_created: "nextowner"
         });
 
 
@@ -306,8 +306,10 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_set", "jio_set")
     .declareAcquiredMethod("jio_post", "jio_post")
-
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
 
@@ -932,11 +934,14 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           );
         })
         .push(function () {
+          return  getSequentialID(gadget, 'SPR');
+        })
+        .push(function (result) {
           var doc = {
             // XXX Hardcoded
             parent_relative_url: "sale_record_module",
             portal_type: "Sale Price Record Temp",
-            doc_id: getSequentialID('SR'),
+            doc_id: result,
             causality_doc_id: gadget.options.doc.doc_id,
             causality_price_record: gadget.options.jio_key,
             record_revision: 1,
