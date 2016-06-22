@@ -72,7 +72,7 @@
           g.props.element = element;
         });
     })
-    .declareAcquiredMethod("inputChange", "inputChange")	
+    .declareAcquiredMethod("inputChange", "inputChange")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {
       return this.getDeclaredGadget(scope)
@@ -94,12 +94,11 @@
           gadget_element.previousElementSibling.querySelector("span").textContent = "";
         });
     })
-   .allowPublicAcquisition("inputChange", function (param_list, scope) {
+    .allowPublicAcquisition("inputChange", function (param_list, scope) {
 
       return this.inputChange(param_list[0], scope);
     })
-    
-    
+
     .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
       return getFieldTypeGadgetUrl(param_list[0]);
     })
@@ -120,20 +119,15 @@
 
       delete options.erp5_document;
       delete options.form_definition;
-      
-      if (options.gadget !== undefined) {
+
+      if (options.gadget_created !== undefined) {
         return queue
           .push(function () {
-
-            return form_gadget.getDeclaredGadget(options.gadget);
-
+            return form_gadget.getDeclaredGadget(options.gadget_created);
           })
           .push(function (field_gadget) {
             return field_gadget.render(rendered_form);
-
-
           });
-
       }
       group_list = form_definition.group_list;
 
