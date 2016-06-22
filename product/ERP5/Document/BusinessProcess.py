@@ -774,6 +774,12 @@ class BusinessProcess(Path, XMLObject):
       if value:
         property_dict[base_category] = value
 
+    # Allow to identify a trade model path by it's reference for possibly doing
+    # matching in simulation
+    reference = trade_model_path.getReference()
+    if reference:
+      property_dict['trade_model_path_reference'] = reference
+
     # Amount quantities - XXX-JPS maybe we should consider handling unit conversions here
     # and specifying units
     if trade_model_path.getQuantity():
