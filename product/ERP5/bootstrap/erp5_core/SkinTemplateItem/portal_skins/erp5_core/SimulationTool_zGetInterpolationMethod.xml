@@ -10,7 +10,7 @@
             <key> <string>_Use_Database_Methods_Permission</string> </key>
             <value>
               <list>
-                <string>Member</string>
+                <string>Anonymous</string>
               </list>
             </value>
         </item>
