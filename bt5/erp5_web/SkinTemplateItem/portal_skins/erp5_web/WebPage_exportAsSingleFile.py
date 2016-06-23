@@ -180,7 +180,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
   # handle File portal_skins/folder/file.png
   # XXX handle "?portal_skin=" parameter ?
   if hasattr(obj, "getContentType"):
-    mime = obj.getContentType("")
+    mime = obj.getContentType()
     if mime:
       data = getattr(obj, "getData", lambda: str(obj))() or ""
       if isinstance(data, unicode):
