@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_nextowner_title</string> </value>
+            <value> <string>my_next_owner_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

@@ -62,9 +62,9 @@
                       <list>
                         <string>my_inputusername</string>
                         <string>my_product</string>
-                        <string>my_nextowner</string>
-                        <string>my_previousowner</string>
-                        <string>my_previouslocation</string>
+                        <string>my_next_owner</string>
+                        <string>my_previous_owner</string>
+                        <string>my_previous_location</string>
                         <string>my_base_price</string>
                         <string>my_price_currency</string>
                         <string>my_priced_quantity</string>
@@ -75,8 +75,8 @@
                         <string>my_contract_no</string>
                         <string>my_batch</string>
                         <string>my_comment</string>
-                        <string>my_nextowner_title</string>
-                        <string>my_nextowner_reference</string>
+                        <string>my_next_owner_title</string>
+                        <string>my_next_owner_reference</string>
                         <string>my_default_telephone_coordinate_text</string>
                         <string>my_default_address_city</string>
                         <string>my_default_address_region</string>
