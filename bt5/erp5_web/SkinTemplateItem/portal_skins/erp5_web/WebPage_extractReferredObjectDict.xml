@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>allow_tag_list=None, deny_tag_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

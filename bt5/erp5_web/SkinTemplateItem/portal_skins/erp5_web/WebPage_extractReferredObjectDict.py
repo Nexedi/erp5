@@ -2,12 +2,22 @@ from zExceptions import Unauthorized
 portal = context.getPortalObject()
 
 href_object_dict = {}
+if not isinstance(allow_tag_list, (list, tuple)):
+  allow_tag_list = None
+if not isinstance(deny_tag_list, (list, tuple)):
+  deny_tag_list = []
+
 def main():
   for part in context.Base_parseHtml(context.getTextContent("").decode("utf-8")):
     handleHtmlPart(part)
   return href_object_dict
 
 def handleHtmlTag(tag, attrs):
+  if allow_tag_list is not None:
+    if tag not in allow_tag_list:
+      return
+  if tag in deny_tag_list:
+    return
   #if tag == "base": and "href" in attrs:  # should not exist in safe-html
   #  NotImplemented
   if tag == "object":
