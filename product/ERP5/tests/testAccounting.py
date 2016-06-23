@@ -1248,24 +1248,26 @@ class TestClosingPeriod(AccountingTestCase):
     transaction5 = self._makeOne(
         start_date=DateTime(2006, 1, 1),
         portal_type='Sale Invoice Transaction',
-        ledger='',
         destination_section_value=organisation_module.client_1,
         simulation_state='delivered',
         lines=(dict(source_value=self.account_module.goods_sales,
                     source_debit=1600),
                dict(source_value=self.account_module.receivable,
                     source_credit=1600)))
+    transaction5.setLedger(None)
 
     transaction6 = self._makeOne(
         start_date=DateTime(2006, 1, 2),
         portal_type='Sale Invoice Transaction',
-        ledger='',
         destination_section_value=organisation_module.client_2,
         simulation_state='delivered',
         lines=(dict(source_value=self.account_module.goods_sales,
                     source_debit=3200),
                dict(source_value=self.account_module.receivable,
                     source_credit=3200)))
+    transaction6.setLedger(None)
+
+    self.tic()
 
     period.AccountingPeriod_createBalanceTransaction(
                                profit_and_loss_account=pl.getRelativeUrl())
