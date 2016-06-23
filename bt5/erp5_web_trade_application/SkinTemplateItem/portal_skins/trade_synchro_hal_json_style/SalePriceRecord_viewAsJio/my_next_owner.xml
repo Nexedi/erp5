@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_previouslocation</string> </value>
+            <value> <string>my_next_owner</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -241,7 +241,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Consignor Title or Reference</string> </value>
+                    <value> <string>Customer Title or Reference</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>

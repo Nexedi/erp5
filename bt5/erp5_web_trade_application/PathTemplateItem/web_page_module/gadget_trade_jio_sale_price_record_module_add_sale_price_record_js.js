@@ -10,14 +10,14 @@
 
 
   /////////////////////////////////////////
-  // Nextowner changed.
+  // nextOwner changed.
   /////////////////////////////////////////
-  function nextownerChange(gadget) {
+  function changeNextOwner(gadget) {
     var page_gadget = gadget,
       result_tmp,
       disabled,
-      nextowner_title,
-      nextowner_reference,
+      next_owner_title,
+      next_owner_reference,
       default_telephone_coordinate_text,
       default_address_city,
       default_address_region,
@@ -30,7 +30,7 @@
         return gadget.allDocs({
           query: 'portal_type:("Organisation"' +
                    'OR "Organisation Temp") AND title_lowercase: "'
-                  + page_gadget.stringChange.toLowerCase() + '"',
+                  + page_gadget.valueChange.toLowerCase() + '"',
           limit: [0, 2]
         });
       })
@@ -48,8 +48,8 @@
       })
       .push(function (form_gadget) {
         if (result_tmp !== undefined) {
-          nextowner_title =  result_tmp.title;
-          nextowner_reference =  result_tmp.reference;
+          next_owner_title =  result_tmp.title;
+          next_owner_reference =  result_tmp.reference;
           default_telephone_coordinate_text =
             result_tmp.default_telephone_coordinate_text;
           default_address_city =  result_tmp.default_address_city;
@@ -63,9 +63,9 @@
           disabled = 1;
 
         }
-        if (page_gadget.nextownerTitleChange) {
-          nextowner_title = page_gadget.stringChange;
-          page_gadget.nextownerTitleChange = 0;
+        if (page_gadget.nextOwnerTitleChange) {
+          next_owner_title = page_gadget.valueChange;
+          page_gadget.nextOwnerTitleChange = 0;
         }
         return RSVP.all([
 
@@ -74,11 +74,11 @@
               field_json : {
                 "description": "",
                 "title": "Client",
-                "default": nextowner_title,
+                "default": next_owner_title,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner_title",
+                "key": "next_owner_title",
                 "hidden": 0,
                 "type": "StringField",
                 "disabled" : disabled
@@ -86,7 +86,7 @@
             }
                                          }},
 
-            gadget_created: "nextowner_title"
+            gadget_created: "next_owner_title"
           }),
 
           form_gadget.render({
@@ -94,11 +94,11 @@
               field_json : {
                 "description": "",
                 "title": "Client Reference",
-                "default": nextowner_reference,
+                "default": next_owner_reference,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner_reference",
+                "key": "next_owner_reference",
                 "hidden": 0,
                 "type": "StringField",
                 "disabled" : disabled
@@ -106,7 +106,7 @@
             }
                                          }},
 
-            gadget_created: "nextowner_reference"
+            gadget_created: "next_owner_reference"
           }),
 
           form_gadget.render({
@@ -240,13 +240,13 @@
 
 
   /////////////////////////////////////////
-  // Nextowner title changed.
+  // nextOwner title changed.
   /////////////////////////////////////////
-  function nextownerTitleChange(gadget) {
+  function nextOwnerTitleChange(gadget) {
     var page_gadget = gadget;
-    page_gadget.nextownerTitleChange = 1;
+    page_gadget.nextOwnerTitleChange = 1;
 
-    nextownerChange(page_gadget);
+    changeNextOwner(page_gadget);
 
     return new RSVP.Queue()
 
@@ -260,11 +260,11 @@
             field_json : {
               "description": "",
               "title": "Client",
-              "default": page_gadget.stringChange,
+              "default": page_gadget.valueChange,
               "css_class": "",
               "required": 1,
               "editable": 1,
-              "key": "nextowner",
+              "key": "next_owner",
               "hidden": 0,
               "type": "StringField",
               "disabled" : 0
@@ -272,7 +272,7 @@
           }
                                          }},
 
-          gadget_created: "nextowner"
+          gadget_created: "next_owner"
         });
 
 
@@ -321,15 +321,15 @@
 
     .allowPublicAcquisition("inputChange", function (param_list) {
       this.gadgetChange = param_list[1];
-      if (this.gadgetChange === "nextowner") {
-        this.stringChange = param_list[0].nextowner;
+      if (this.gadgetChange === "next_owner") {
+        this.valueChange = param_list[0].next_owner;
 
-        return nextownerChange(this);
+        return changeNextOwner(this);
       }
-      if (this.gadgetChange === "nextowner_title") {
-        this.stringChange = param_list[0].nextowner_title;
+      if (this.gadgetChange === "next_owner_title") {
+        this.valueChange = param_list[0].next_owner_title;
 
-        return nextownerTitleChange(this);
+        return nextOwnerTitleChange(this);
 
       }
 
@@ -514,14 +514,14 @@
                 "hidden": 0,
                 "type": "StringField"
               },
-              "nextowner": {
+              "next_owner": {
                 "description": "",
                 "title": "Client",
                 "default": "",
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner",
+                "key": "next_owner",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -532,7 +532,7 @@
                 "css_class": "",
                 "required": 1,
                 "editable": 0,
-                "key": "previousowner",
+                "key": "previous_owner",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -543,7 +543,7 @@
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "previouslocation",
+                "key": "previous_location",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -705,7 +705,7 @@
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner_title",
+                "key": "next_owner_title",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -716,7 +716,7 @@
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner_reference",
+                "key": "next_owner_reference",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -794,7 +794,7 @@
 
                 ["left",
                   [["sale_price"], ["product"],
-                    ["nextowner"], ["organisation"], ["warehouse"],
+                    ["next_owner"], ["organisation"], ["warehouse"],
                     ["price"], ["currency"], ["priced_quantity"],
                     ["quantity_unit"], ["total_dry_quantity"],
                     ["total_amount_price"],
@@ -857,7 +857,7 @@
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "previousowner",
+                  "key": "previous_owner",
                   "hidden": 0,
                   "type": "StringField",
                   "disabled" : 1
@@ -865,7 +865,7 @@
               }
                                            }},
 
-              gadget_created: "previousowner"
+              gadget_created: "previous_owner"
             });
           }
 

@@ -5,14 +5,14 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
   "use strict";
 
  /////////////////////////////////////////
-  // Nextowner changed.
+  // nextOwner changed.
   /////////////////////////////////////////
-  function nextownerChange(gadget) {
+  function changeNextOwner(gadget) {
     var page_gadget = gadget,
       result_tmp,
       disabled,
-      nextowner_title,
-      nextowner_reference,
+      next_owner_title,
+      next_owner_reference,
       default_telephone_coordinate_text,
       default_address_city,
       default_address_region,
@@ -25,7 +25,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
         return gadget.allDocs({
           query: 'portal_type:("Organisation"' +
                    'OR "Organisation Temp") AND title_lowercase: "'
-                  + page_gadget.stringChange.toLowerCase() + '"',
+                  + page_gadget.valueChange.toLowerCase() + '"',
           limit: [0, 2]
         });
       })
@@ -43,8 +43,8 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
       })
       .push(function (form_gadget) {
         if (result_tmp !== undefined) {
-          nextowner_title =  result_tmp.title;
-          nextowner_reference =  result_tmp.reference;
+          next_owner_title =  result_tmp.title;
+          next_owner_reference =  result_tmp.reference;
           default_telephone_coordinate_text =
             result_tmp.default_telephone_coordinate_text;
           default_address_city =  result_tmp.default_address_city;
@@ -58,9 +58,9 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           disabled = 1;
 
         }
-        if (page_gadget.nextownerTitleChange) {
-          nextowner_title = page_gadget.stringChange;
-          page_gadget.nextownerTitleChange = 0;
+        if (page_gadget.nextOwnerTitleChange) {
+          next_owner_title = page_gadget.valueChange;
+          page_gadget.nextOwnerTitleChange = 0;
         }
         return RSVP.all([
 
@@ -69,11 +69,11 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
               field_json : {
                 "description": "",
                 "title": "Client",
-                "default": nextowner_title,
+                "default": next_owner_title,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner_title",
+                "key": "next_owner_title",
                 "hidden": 0,
                 "type": "StringField",
                 "disabled" : disabled
@@ -81,7 +81,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget_created: "nextowner_title"
+            gadget_created: "next_owner_title"
           }),
 
           form_gadget.render({
@@ -89,11 +89,11 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
               field_json : {
                 "description": "",
                 "title": "Client Reference",
-                "default": nextowner_reference,
+                "default": next_owner_reference,
                 "css_class": "",
                 "required": 1,
                 "editable": 1,
-                "key": "nextowner_reference",
+                "key": "next_owner_reference",
                 "hidden": 0,
                 "type": "StringField",
                 "disabled" : disabled
@@ -101,7 +101,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             }
                                          }},
 
-            gadget_created: "nextowner_reference"
+            gadget_created: "next_owner_reference"
           }),
 
           form_gadget.render({
@@ -235,13 +235,13 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
 
 
   /////////////////////////////////////////
-  // Nextowner title changed.
+  // nextOwner title changed.
   /////////////////////////////////////////
-  function nextownerTitleChange(gadget) {
+  function nextOwnerTitleChange(gadget) {
     var page_gadget = gadget;
-    page_gadget.nextownerTitleChange = 1;
+    page_gadget.nextOwnerTitleChange = 1;
 
-    nextownerChange(page_gadget);
+    changeNextOwner(page_gadget);
 
     return new RSVP.Queue()
 
@@ -255,11 +255,11 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             field_json : {
               "description": "",
               "title": "Client",
-              "default": page_gadget.stringChange,
+              "default": page_gadget.valueChange,
               "css_class": "",
               "required": 1,
               "editable": 1,
-              "key": "nextowner",
+              "key": "next_owner",
               "hidden": 0,
               "type": "StringField",
               "disabled" : 0
@@ -267,7 +267,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
           }
                                          }},
 
-          gadget_created: "nextowner"
+          gadget_created: "next_owner"
         });
 
 
@@ -315,15 +315,15 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
 
     .allowPublicAcquisition("inputChange", function (param_list) {
       this.gadgetChange = param_list[1];
-      if (this.gadgetChange === "nextowner") {
-        this.stringChange = param_list[0].nextowner;
+      if (this.gadgetChange === "next_owner") {
+        this.valueChange = param_list[0].next_owner;
 
-        return nextownerChange(this);
+        return changeNextOwner(this);
       }
-      if (this.gadgetChange === "nextowner_title") {
-        this.stringChange = param_list[0].nextowner_title;
+      if (this.gadgetChange === "next_owner_title") {
+        this.valueChange = param_list[0].next_owner_title;
 
-        return nextownerTitleChange(this);
+        return nextOwnerTitleChange(this);
 
       }
 
@@ -475,36 +475,36 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                 "hidden": 0,
                 "type": "StringField"
               },
-              "nextowner": {
+              "next_owner": {
                 "description": "",
                 "title": "Client",
-                "default": page_gadget.options.doc.nextowner,
+                "default": page_gadget.options.doc.next_owner,
                 "css_class": "",
                 "required": 1,
                 "editable": editable,
-                "key": "nextowner",
+                "key": "next_owner",
                 "hidden": 0,
                 "type": "StringField"
               },
               "organisation": {
                 "description": "",
                 "title": "Sales Organisation",
-                "default": page_gadget.options.doc.previousowner,
+                "default": page_gadget.options.doc.previous_owner,
                 "css_class": "",
                 "required": 0,
                 "editable": editable,
-                "key": "previousowner",
+                "key": "previous_owner",
                 "hidden": 0,
                 "type": "StringField"
               },
               "warehouse": {
                 "description": "",
                 "title": "Sender Warehouse",
-                "default": page_gadget.options.doc.previouslocation,
+                "default": page_gadget.options.doc.previous_location,
                 "css_class": "",
                 "required": 1,
                 "editable": editable,
-                "key": "previouslocation",
+                "key": "previous_location",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -649,22 +649,22 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
               "client": {
                 "description": "",
                 "title": "Client",
-                "default": page_gadget.options.doc.nextowner_title,
+                "default": page_gadget.options.doc.next_owner_title,
                 "css_class": "",
                 "required": 1,
                 "editable": editable,
-                "key": "nextowner_title",
+                "key": "next_owner_title",
                 "hidden": 0,
                 "type": "StringField"
               },
               "client_reference": {
                 "description": "",
                 "title": "Client Reference",
-                "default": page_gadget.options.doc.nextowner_reference,
+                "default": page_gadget.options.doc.next_owner_reference,
                 "css_class": "",
                 "required": 1,
                 "editable": editable,
-                "key": "nextowner_reference",
+                "key": "next_owner_reference",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -747,7 +747,7 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
                   "left",
                   [["sale_price"],
                     ["username"], ["state"], ["product"],
-                    ["nextowner"], ["organisation"], ["warehouse"],
+                    ["next_owner"], ["organisation"], ["warehouse"],
                     ["price"], ["currency"], ["priced_quantity"],
                     ["quantity_unit"], ["total_dry_quantity"],
                     ["total_amount_price"],
@@ -944,9 +944,9 @@ translateString, getWorkflowState, document, getSequentialID, addTemporaryCustom
             price: gadget.options.doc.base_price,
             price_quantity_unit: gadget.options.doc.quantity_unit,
             product: gadget.options.doc.product,
-            nextowner: gadget.options.doc.nextowner,
-            previousowner: gadget.options.doc.previousowner,
-            previouslocation: gadget.options.doc.previouslocation,
+            next_owner: gadget.options.doc.nextOwner,
+            previous_owner: gadget.options.doc.previous_owner,
+            previous_location: gadget.options.doc.previous_location,
             price_currency: gadget.options.doc.price_currency,
             quantity_unit: gadget.options.doc.quantity_unit,
             date: gadget.options.doc.date,

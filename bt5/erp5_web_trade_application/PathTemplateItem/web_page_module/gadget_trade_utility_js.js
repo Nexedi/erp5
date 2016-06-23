@@ -179,7 +179,7 @@ function getWorkflowState(portal_type, id, sync_flag, local_validation, local_st
 
 function addTemporarySupplier(gadget){
   var create_temporary_flag = false;
-  var element = gadget.props.element.querySelector('input[name=previousowner_title]');
+  var element = gadget.props.element.querySelector('input[name=previous_owner_title]');
   if(element.value){
     return gadget.allDocs({
       query: 'portal_type: ("Organisation" OR "Organisation Temp") AND title_lowercase:"' + element.value.toLowerCase() + '"',
@@ -204,9 +204,9 @@ function addTemporarySupplier(gadget){
         if(create_temporary_flag){
           var doc = {
             portal_type:"Organisation Temp",
-            title: gadget.props.element.querySelector('input[name=previousowner_title]').value,
-            title_lowercase: gadget.props.element.querySelector('input[name=previousowner_title]').value.toLowerCase(),
-            reference: gadget.props.element.querySelector('input[name=previousowner_reference]').value,
+            title: gadget.props.element.querySelector('input[name=previous_owner_title]').value,
+            title_lowercase: gadget.props.element.querySelector('input[name=previous_owner_title]').value.toLowerCase(),
+            reference: gadget.props.element.querySelector('input[name=previous_owner_reference]').value,
             default_telephone_coordinate_text: gadget.props.element.querySelector('input[name=default_telephone_coordinate_text]').value,
             default_address_city: gadget.props.element.querySelector('input[name=default_address_city]').value,
             default_address_region: gadget.props.element.querySelector('select[name=default_address_region]').value,
@@ -222,7 +222,7 @@ function addTemporarySupplier(gadget){
 
 function addTemporaryCustomer(gadget){
   var create_temporary_flag = false;
-  var element = gadget.props.element.querySelector('input[name=nextowner_title]');
+  var element = gadget.props.element.querySelector('input[name=next_owner_title]');
   if(element.value){
     return gadget.allDocs({
       query: 'portal_type: ("Organisation" OR "Organisation Temp") AND title_lowercase:"' + element.value.toLowerCase() + '"',
@@ -247,9 +247,9 @@ function addTemporaryCustomer(gadget){
         if(create_temporary_flag){
           var doc = {
             portal_type:"Organisation Temp",
-            title: gadget.props.element.querySelector('input[name=nextowner_title]').value,
-            title_lowercase: gadget.props.element.querySelector('input[name=nextowner_title]').value.toLowerCase(),
-            reference: gadget.props.element.querySelector('input[name=nextowner_reference]').value,
+            title: gadget.props.element.querySelector('input[name=next_owner_title]').value,
+            title_lowercase: gadget.props.element.querySelector('input[name=next_owner_title]').value.toLowerCase(),
+            reference: gadget.props.element.querySelector('input[name=next_owner_reference]').value,
             default_telephone_coordinate_text: gadget.props.element.querySelector('input[name=default_telephone_coordinate_text]').value,
             default_address_city: gadget.props.element.querySelector('input[name=default_address_city]').value,
             default_address_region: gadget.props.element.querySelector('select[name=default_address_region]').value,
