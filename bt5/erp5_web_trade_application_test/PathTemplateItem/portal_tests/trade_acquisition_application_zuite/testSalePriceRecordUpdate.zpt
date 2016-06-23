@@ -104,13 +104,13 @@
 </tr>
 <tr>
   <td>type</td>
-  <td>name=nextowner</td>
+  <td>name=next_owner</td>
   <td>广垦橡胶集团</td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>name=previouslocation</td>
+  <td>name=previous_location</td>
   <td>lille</td>
 </tr>
 <tr>
@@ -151,13 +151,13 @@
 </tr>
 <tr>
   <td>type</td>
-  <td>name=nextowner_title</td>
+  <td>name=next_owner_title</td>
   <td>广垦橡胶集团</td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>name=nextowner_reference</td>
+  <td>name=next_owner_reference</td>
   <td>GKR</td>
 </tr>
 
@@ -381,12 +381,12 @@
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope='nextowner']/p</td>
+  <td>//div[@data-gadget-scope='next_owner']/p</td>
   <td>广垦橡胶集团</td>
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope="previouslocation"]/p</td>
+  <td>//div[@data-gadget-scope="previous_location"]/p</td>
   <td>lille</td>
 </tr>
 <tr>
@@ -412,13 +412,13 @@
 </tr>
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope="nextowner_title"]/p</td>
+  <td>//div[@data-gadget-scope="next_owner_title"]/p</td>
   <td>广垦橡胶集团</td>
 </tr>
 
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope="nextowner_reference"]/p</td>
+  <td>//div[@data-gadget-scope="next_owner_reference"]/p</td>
   <td>GKR</td>
 </tr>
 
