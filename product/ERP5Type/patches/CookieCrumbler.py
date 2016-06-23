@@ -93,7 +93,6 @@ def balancer_cookie_hook(ob, req, resp):
     except AttributeError:
       path = '/'
     if req['AUTHENTICATED_USER'].getUserName() == 'Anonymous User':
-      resp.expireCookie("boom_jwt", path="/")
       if balancer_cookie in req.cookies:
         resp.expireCookie(balancer_cookie, path=path)
     else:

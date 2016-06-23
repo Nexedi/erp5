@@ -33,7 +33,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products.ERP5Security.ERP5UserManager import SUPER_USER, ERP5UserManager
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 from AccessControl.SecurityManagement import getSecurityManager, \
@@ -72,7 +72,8 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
   meta_type = "ERP5 JSON Web Token Plugin"
   security = ClassSecurityInfo()
-  cookie_name = "boom_jwt"
+  name_cookie = "n_jwt"
+  data_cookie = "d_jwt"
   default_cookie_name = "__ac"
     
   manage_options = ( ( { 'label': 'Update Secret',
@@ -88,6 +89,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     self._setId(id)
     self.title = title
     self.secret = SystemRandom(256)
+    self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#
@@ -104,40 +106,96 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
     login_pw = request._authUserPW()
 
-    serializer = JSONWebSignatureSerializer(self.secret)
+    name_serializer = JSONWebSignatureSerializer(self.secret)
 
     creds = {}
     if login_pw is not None:
       name, password = login_pw
       creds[ 'login' ] = name
       creds[ 'password' ] = password
-      #Save this in cookie
-      self.updateCredentials(request, request["RESPONSE"], name, password)
     else:
-      token = None
-      if self.cookie_name in request.cookies:
+      name_token = None
+      if self.name_cookie in request.cookies:
         # 1st - try to fetch from Authorization header
-        token = request.cookies.get(self.cookie_name)
+        name_token = request.cookies.get(self.name_cookie)
   
-      if token is None:
-        # no token
+      #import pdb; pdb.set_trace()
+      if name_token is None:
+        # no name_token
         return DumbHTTPExtractor().extractCredentials(request)
+      # name_token is available
+      
+      name = name_serializer.loads(name_token)["user"].encode()
   
-      data = serializer.loads(token)
-      # token is available
-      user = data["user"].encode()
-  
-      if user is None:
+      if name is None:
         # fallback to default way
         return DumbHTTPExtractor().extractCredentials(request)
-  
-    creds['external_login'] = user
+      
+      self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
+      user = self.erp5usermanager.getUserByLogin(name)[0]
+
+      if not user:
+        return DumbHTTPExtractor().extractCredentials(request)
+      
+      data_token = None
+      if self.data_cookie in request.cookies:
+        # 1st - try to fetch from Authorization header
+        data_token = request.cookies.get(self.data_cookie)
+      if data_token is None:
+        # no name_token
+        return DumbHTTPExtractor().extractCredentials(request)
+
+      data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
+      data = data_serializer.loads(data_token)
+      #import pdb; pdb.set_trace()
+      self.getPortalObject().ERP5Site_processJWTData(data)
+      creds['external_login'] = name
+
+      # XXX A script should be called here to deal with the data 
+
     creds['remote_host'] = request.get('REMOTE_HOST', '')
     try:
       creds['remote_address'] = request.getClientAddr()
     except AttributeError:
       creds['remote_address'] = request.get('REMOTE_ADDR', '')
     return creds
+
+  #
+  #   IAuthenticationPlugin implementation
+  #
+  security.declarePrivate( 'authenticateCredentials' )
+  def authenticateCredentials(self, credentials):
+    LOG('ERP5JSONWebTokenPlugin', INFO,
+        'authenticating Credential')
+    #if self.erp5usermanager is None:
+    self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
+    authentication_result = self.erp5usermanager.authenticateCredentials(credentials)
+    LOG('ERP5JSONWebTokenPlugin', INFO,
+        'authentication result: %s' % str(authentication_result))
+    if authentication_result is not None:
+      #Save this in cookie
+      name = authentication_result[0]
+      user = self.erp5usermanager.getUserByLogin(name)[0]
+      name_serializer = JSONWebSignatureSerializer(self.secret)
+      data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
+
+      request = self.REQUEST
+      response = request.response
+      response.setCookie(self.name_cookie, name_serializer.dumps({"user": name}), path='/')
+      # Update data if needed
+      data_token = None
+      data = {}
+      if self.data_cookie in request.cookies:
+        # 1st - try to fetch from Authorization header
+        data_token = request.cookies.get(self.data_cookie)
+        if data_token is not None:
+          # no name_token
+          data = data_serializer.loads(data_token)
+      data = self.getPortalObject().ERP5Site_updateJWTData(data)
+      response.setCookie(self.data_cookie, data_serializer.dumps(data), path='/')
+      response.expireCookie(self.default_cookie_name, path='/')
+                      
+    return authentication_result  
 
   ################################
   #   ICredentialsUpdatePlugin   #
@@ -150,7 +208,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     LOG('ERP5JSONWebTokenPlugin', INFO,
         'Login is %s' % login)
     serializer = JSONWebSignatureSerializer(self.secret)
-    response.setCookie(self.cookie_name, serializer.dumps({"user": login}), path='/')
+    response.setCookie(self.name_cookie, serializer.dumps({"user": login}), path='/')
     response.expireCookie(self.default_cookie_name, path='/')
 
   ################################
@@ -191,6 +249,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
 #List implementation of class
 classImplements( ERP5JSONWebTokenPlugin,
+                plugins.IAuthenticationPlugin,
                 plugins.ICredentialsResetPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin,
                 plugins.ICredentialsUpdatePlugin,
