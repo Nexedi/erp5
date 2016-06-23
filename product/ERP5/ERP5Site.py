@@ -1927,11 +1927,6 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
-    # Add ERP5 SQL Catalog Tool
-    addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
-    if not p.hasObject('portal_catalog'):
-      addTool('ERP5 Catalog', None)
-
     # Add Default SQL connection
     if p.erp5_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('erp5_sql_connection'):
@@ -2210,6 +2205,11 @@ class ERP5Generator(PortalGenerator):
       self.setupDefaultSkins(p)
       assert not p.hasObject('portal_activities')
       addERP5Tool(p, 'portal_activities', 'Activity Tool')
+
+      # CatalogTool has been included inside ERP5. So, prefer using addERP5Tool
+      # instead of using addTool on Catalog Tool object.
+      addERP5Tool(p, 'portal_catalog', 'Catalog Tool')
+
       # Initialize Activities
       p.portal_activities.manageClearActivities()
       # Reindex already existing tools
