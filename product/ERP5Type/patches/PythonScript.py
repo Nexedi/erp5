@@ -14,6 +14,7 @@ from Products.DCWorkflow.Guard import Guard
 from Products.PythonScripts.PythonScript import PythonScript
 from App.special_dtml import DTMLFile
 from .. import _dtmldir
+from ..Utils import createExpressionContext
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.class_init import InitializeClass
 from AccessControl.PermissionRole import rolesForPermissionOn
@@ -122,8 +123,6 @@ def getRoles(ob):
 
 def _checkGuard(guard, ob):
   # returns 1 if guard passes against ob, else 0.
-  # TODO : implement TALES evaluation by defining an appropriate
-  # context.
   if guard.permissions:
     # Require at least one role for required roles for the given permission.
     u_roles = getRoles(ob)
@@ -156,7 +155,7 @@ def _checkGuard(guard, ob):
         break
     else:
       return 0
-  return 1
+  return guard.expr is None or guard.expr(createExpressionContext(ob))
 
 def checkGuard(aq_base=aq_base, aq_parent=aq_parent, _checkGuard=_checkGuard):
   def checkGuard(self, _exec=False):
