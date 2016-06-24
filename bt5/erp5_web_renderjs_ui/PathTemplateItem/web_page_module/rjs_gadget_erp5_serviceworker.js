@@ -3,7 +3,7 @@
 (function (self, caches, fetch) {
   "use strict";
 
-  var CACHE_NAME = 'Tue, 12 Apr 2016 16:30:00 GMT',
+  var CACHE_NAME = 'Tue, 24 Jun 2016 16:00:00 GMT',
     // Files required to make this app work offline
     REQUIRED_FILES = [
       './',
@@ -14,7 +14,6 @@
       'https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0',
       'https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular',
       'URI.js',
-      'erp5_launcher.html',
       'erp5_launcher.js',
       'gadget_erp5.css',
       'gadget_erp5_editor_panel.html',
