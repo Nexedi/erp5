@@ -50,27 +50,24 @@
         tmp = "",
         wrap = document.createElement("select");
 
-      if (this.props.change !== undefined) {
+      if (this.props.gadgetCreated !== undefined) {
 
         if (field_json.default !== undefined) {
-           this.notifyValid();
+          this.notifyValid();
           span = this.element.querySelector('span');
           input = select.querySelector('[value="' + field_json.default + '"]');
           span.textContent = input.innerHTML;
           select.setAttribute('disabled', 'disabled');
-           input.selected = 'selected';
+          input.selected = 'selected';
         } else {
           span = this.element.querySelector('span');
           span.textContent = "";
           select.disabled = false;
           input = select.querySelector('[value=""]');
           input.selected = 'selected';
-          
         }
-
-
       } else {
-        this.props.change =true;
+        this.props.gadgetCreated = true;
         select.setAttribute('name', field_json.key);
         for (i = 0; i < field_json.items.length; i += 1) {
           if (field_json.items[i][1] === field_json.default) {
