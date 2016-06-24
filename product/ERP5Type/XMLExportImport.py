@@ -56,10 +56,9 @@ class OrderedPickler(Pickler):
         else:   # proto 0 -- can't use EMPTY_DICT
             write(MARK + DICT)
         self.memoize(obj)
-        key_list = obj.keys()
-        key_list.sort() # Order keys
-        obj_items = map(lambda x: (x, obj[x]), key_list) # XXX Make it lazy in the future
-        self._batch_setitems(obj_items)
+        item_list = obj.items()
+        item_list.sort()
+        self._batch_setitems(iter(item_list))
 
     dispatch[DictionaryType] = save_dict
     if not PyStringMap is None:

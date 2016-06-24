@@ -20,43 +20,12 @@ from base64 import encodestring
 from cStringIO import StringIO
 from ZODB.serialize import referencesf
 from ZODB.ExportImport import TemporaryFile
-from pickle import Pickler, EMPTY_DICT, MARK, DICT
-from cPickle import loads, dumps
 from types import TupleType
-from types import StringType
-from types import DictionaryType
 from OFS import ObjectManager, XMLExportImport
+from ..XMLExportImport import OrderedPickler
 
 from logging import getLogger
 log = getLogger(__name__)
-
-# Jython has PyStringMap; it's a dict subclass with string keys
-try:
-    from org.python.core import PyStringMap
-except ImportError:
-    PyStringMap = None
-
-# Ordered pickles
-class OrderedPickler(Pickler):
-
-    dispatch = Pickler.dispatch.copy()
-
-    def save_dict(self, obj):
-        write = self.write
-
-        if self.bin:
-            write(EMPTY_DICT)
-        else:   # proto 0 -- can't use EMPTY_DICT
-            write(MARK + DICT)
-
-        self.memoize(obj)
-        item_list = obj.items() # New version by JPS for sorting
-        item_list.sort(key=lambda x: x[0]) # New version by JPS for sorting
-        self._batch_setitems(item_list.__iter__())
-
-    dispatch[DictionaryType] = save_dict
-    if not PyStringMap is None:
-        dispatch[PyStringMap] = save_dict
 
 def reorderPickle(jar, p):
     try:
