@@ -51,18 +51,21 @@
         wrap = document.createElement("select");
 
       if (this.props.change !== undefined) {
-        this.notifyValid();
 
         if (field_json.default !== undefined) {
+           this.notifyValid();
           span = this.element.querySelector('span');
           input = select.querySelector('[value="' + field_json.default + '"]');
           span.textContent = input.innerHTML;
           select.setAttribute('disabled', 'disabled');
+           input.selected = 'selected';
         } else {
           span = this.element.querySelector('span');
           span.textContent = "";
           select.disabled = false;
-
+          input = select.querySelector('[value=""]');
+          input.selected = 'selected';
+          
         }
 
 
