@@ -674,7 +674,7 @@
             if (keyvalue.length === 2) {
               key = decodeURIComponent(keyvalue[0]);
               tmp = decodeURIComponent(keyvalue[1]);
-              if ((tmp) && (endsWith(key, ":json"))) {
+              if (tmp && (endsWith(key, ":json"))) {
                 tmp = JSON.parse(tmp);
               }
               args[key] = tmp;
