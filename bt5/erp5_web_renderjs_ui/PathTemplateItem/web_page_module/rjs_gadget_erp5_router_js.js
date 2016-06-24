@@ -55,12 +55,22 @@
     return window.location.replace(hash);
   }
 
-  function synchronousChangeState(hash) {
-    changeState(hash);
+  function timeoutUrlChange() {
     // prevent returning unexpected response
     // wait for the hash change to occur
     // fail if nothing happens
-    return RSVP.timeout(REDIRECT_TIMEOUT);
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.timeout(REDIRECT_TIMEOUT);
+      })
+      .push(undefined, function () {
+        throw new Error('URL handling timeout: ' + window.location.hash);
+      });
+  }
+
+  function synchronousChangeState(hash) {
+    changeState(hash);
+    return timeoutUrlChange();
   }
 
   //////////////////////////////////////////////////////////////////
@@ -500,6 +510,8 @@
   //////////////////////////////////////////////////////////////////
   function routeMethodLess(gadget) {
     // Nothing. Go to front page
+    // If no frontpage is configured, his may comes from missing configuration on website
+    // or default HTML gadget modification date more recent than the website modification date
     return gadget.getSetting("frontpage_gadget")
       .push(function (result) {
         return synchronousChangeState(
@@ -767,11 +779,7 @@
       return this.getCommandUrlFor(options)
         .push(function (hash) {
           window.location.replace(hash);
-
-          // prevent returning unexpected response
-          // wait for the hash change to occur
-          // fail if nothing happens
-          return RSVP.timeout(REDIRECT_TIMEOUT);
+          return timeoutUrlChange();
         });
     })
 
