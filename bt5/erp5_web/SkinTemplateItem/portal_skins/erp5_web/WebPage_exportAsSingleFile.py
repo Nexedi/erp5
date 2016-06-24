@@ -69,6 +69,9 @@ def handleHtmlTag(tag, attrs):
     for i in range(len(attrs)):
       if attrs[i][0] == "href" or attrs[i][0] == "src":
         attrs[i] = attrs[i][0], makeHrefAbsolute(attrs[i][1])
+  for i in range(len(attrs)):
+    if attrs[i][0] == "style":
+      attrs[i] = attrs[i][0], replaceCssUrl(attrs[i][1])
   return tag, attrs
 
 def strHtmlPart(part):

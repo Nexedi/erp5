@@ -31,6 +31,10 @@ def handleHtmlTag(tag, attrs):
     for i in range(len(attrs)):
       if attrs[i][0] in ("src", "href"):
         handleHref(attrs[i][1])
+  for i in range(len(attrs)):
+    if attrs[i][0] == "style":
+      handleCss(attrs[i][1])
+
 
 on_next_data = [lambda x: x]
 def handleHtmlPart(part):
