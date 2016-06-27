@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>DeliveryType</string> </value>
+            <value> <string>DeliveryTypeInformation</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

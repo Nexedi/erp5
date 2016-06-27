@@ -43,7 +43,7 @@ class PortalTypeOfPortalTypeTestCase(ERP5TypeTestCase):
     portal_type.setProperty(property_name, None)
 
 
-class TestDeliveryType(PortalTypeOfPortalTypeTestCase):
+class TestDeliveryTypeInformation(PortalTypeOfPortalTypeTestCase):
   """
   Delivery Type is a Base Type on which a list of allowed ledgers is defined.
   This suite checks that its custom features are correctly implemented.
@@ -73,7 +73,7 @@ class TestDeliveryType(PortalTypeOfPortalTypeTestCase):
   def testDefaultLedgerIsSetOnObjectIfSetOnPortalType(self):
     """
     Sets up a list of ledger on the Accounting Transaction portal type,
-    which is a DeliveryType, and checks that new Accounting Transactions
+    which is a DeliveryTypeInformation, and checks that new Accounting Transactions
     have a default ledger set at their creation
     """
     portal_type = "Accounting Transaction"

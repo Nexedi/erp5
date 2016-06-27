@@ -31,11 +31,14 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from zLOG import LOG
 
-class DeliveryType(ERP5TypeInformation):
+class DeliveryTypeInformation(ERP5TypeInformation):
   """
   Base type for Delivery Type.
-  A DeliveryType is a BaseType on which a list of ledgers is set,
-  which is the list of ledger allowed on the delivery objects.
+  A Delivery Type is a Base Type on which a list of ledgers is set,
+  which is the list of ledger allowed on the delivery documents.
+
+  When creating new deliveries, the delivery's ledger will be initialized to
+  the default ledger (the first one) set on the delivery type.
   """
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -46,9 +49,9 @@ class DeliveryType(ERP5TypeInformation):
   security.declarePublic('constructInstance')
   def constructInstance(self, *args, **kw):
     "Creates a new delivery with a default ledger found on the portal type"
-    delivery = super(DeliveryType, self).constructInstance(*args, **kw)
+    delivery = super(DeliveryTypeInformation, self).constructInstance(*args, **kw)
     if not delivery.hasLedger():
       delivery.setLedger(self.getDefaultLedger())
     return delivery
 
-InitializeClass( DeliveryType )
+InitializeClass( DeliveryTypeInformation )
