@@ -94,15 +94,13 @@ def initialize( context ):
   from Base import Base
   import XMLObject
   from ERP5Type import ERP5TypeInformation
-  from Products.ERP5Type.DeliveryType import DeliveryType
   import CodingStyle
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
   content_classes = ( Base,
                       XMLObject.XMLObject,
-                      ERP5TypeInformation,
-                      DeliveryType, )
+                      ERP5TypeInformation, )
   portal_tools = ( CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
                    SessionTool.SessionTool,
