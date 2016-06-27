@@ -33,9 +33,7 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class SolverTypeInformation(Predicate, ERP5TypeInformation):
-  """
-    A Type Information class which (will) implement
-    all Solver related methods
+  """A Type Information class which implements all Solver related methods
   """
   # CMF Type Definition
   meta_type = 'ERP5 Solver Type Information'
