@@ -14,6 +14,7 @@ from Products.DCWorkflow.Guard import Guard
 from Products.PythonScripts.PythonScript import PythonScript
 from App.special_dtml import DTMLFile
 from .. import _dtmldir
+from . import PatchClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.class_init import InitializeClass
 from AccessControl.PermissionRole import rolesForPermissionOn
@@ -21,46 +22,6 @@ from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
-
-security = ClassSecurityInfo()
-PythonScript.security = security
-
-def haveProxyRole(self):
-  """if a script has proxy role, return True"""
-  return bool(self._proxy_roles)
-
-def om_icons(self):
-  """Return a list of icon URLs to be displayed by an ObjectManager"""
-  icons = ({'path': 'misc_/PythonScripts/pyscript.gif',
-            'alt': self.meta_type, 'title': self.meta_type},)
-  if self.haveProxyRole():
-    icons = ({'path': 'p_/PythonScript_ProxyRole_icon',
-              'alt': 'Proxy Roled Python Script',
-              'title': 'This script has proxy role.'},)
-  return icons
-
-pyscript_proxyrole = ImageFile('pyscript_proxyrole.gif', globals())
-
-#
-# Add proxy role icon in ZMI
-#
-security.declarePrivate('haveProxyRole')
-PythonScript.haveProxyRole = haveProxyRole
-
-PythonScript.om_icons = om_icons
-p_.PythonScript_ProxyRole_icon = pyscript_proxyrole
-
-
-# Patch for displaying textearea in full window instead of
-# remembering a quantity of lines to display in a cookie
-manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
-manage_editForm._setName('manage_editForm')
-PythonScript.ZPythonScriptHTML_editForm = manage_editForm
-PythonScript.manage_editForm = manage_editForm
-PythonScript.manage = manage_editForm
-PythonScript.manage_main = manage_editForm
-PythonScript.manage_editDocument = manage_editForm
-PythonScript.manage_editForm = manage_editForm
 
 ### Guards
 
@@ -184,15 +145,42 @@ def addGuard(cls, set_permission):
   security.declareProtected(set_permission, 'manage_setGuard')
   cls.manage_setGuard = manage_setGuard
 
+###
+
+class _(PatchClass(PythonScript)):
+
+  security = ClassSecurityInfo()
+
+  # Add proxy role icon in ZMI
+
+  def om_icons(self):
+    """Return a list of icon URLs to be displayed by an ObjectManager"""
+    if self._proxy_roles:
+      return {'path': 'p_/PythonScript_ProxyRole_icon',
+              'alt': 'Proxy Roled Python Script',
+              'title': 'This script has proxy role.'},
+    return {'path': 'misc_/PythonScripts/pyscript.gif',
+            'alt': self.meta_type, 'title': self.meta_type},
+
+  p_.PythonScript_ProxyRole_icon = \
+    ImageFile('pyscript_proxyrole.gif', globals())
+
+  # Patch for displaying textearea in full window instead of
+  # remembering a quantity of lines to display in a cookie
+  manage = manage_editDocument = manage_main = ZPythonScriptHTML_editForm = \
+  manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
+  manage_editForm._setName('manage_editForm')
+
+  # Guards
+
+  def __call__(self, *args, **kw):
+    '''Calls the script.'''
+    self.checkGuard(True) # patch
+    return self._bindAndExec(args, kw, None)
+
+  security.declarePublic("render")
+  render = __call__
 
 addGuard(PythonScript, 'Change Python Scripts')
-
-def __call__(self, *args, **kw):
-  '''Calls the script.'''
-  self.checkGuard(True) # patch
-  return self._bindAndExec(args, kw, None)
-
-security.declarePublic("render")
-PythonScript.__call__ = PythonScript.render = __call__
 
 InitializeClass(PythonScript)

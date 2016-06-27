@@ -14,9 +14,11 @@
 from inspect import getargs
 from Products.ExternalMethod.ExternalMethod import *
 from Products.ERP5Type.Globals import InitializeClass
+from . import PatchClass
 from .PythonScript import addGuard
 
-if 1:
+class _(PatchClass(ExternalMethod)):
+
     def getFunction(self, reload=False, f=None):
         """
         Patch to get ZODB Component Extension function if available, otherwise
@@ -43,8 +45,6 @@ if 1:
 
         return f
 
-    ExternalMethod.getFunction = getFunction
-
     ExternalMethod_reloadIfChanged = ExternalMethod.reloadIfChanged
     def reloadIfChanged(self):
         try:
@@ -54,8 +54,6 @@ if 1:
                 level=0)
         except ImportError:
             return ExternalMethod_reloadIfChanged(self)
-
-    ExternalMethod.reloadIfChanged = reloadIfChanged
 
     def __call__(self, *args, **kw):
         """Call an ExternalMethod
@@ -137,10 +135,8 @@ if 1:
                 raise TypeError, v, tb
             finally: tb=None
 
-    ExternalMethod.__call__ = __call__
+    security = ClassSecurityInfo()
 
-    ExternalMethod.security = ClassSecurityInfo()
+addGuard(ExternalMethod, change_external_methods)
 
-    addGuard(ExternalMethod, change_external_methods)
-
-    InitializeClass(ExternalMethod)
+InitializeClass(ExternalMethod)
