@@ -50,7 +50,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='portal_type:("Bar" OR "Foo") AND simulation_state:"draft"' and @type='text' and @name='search']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='portal_type:("Bar" OR "Foo") AND simulation_state:"draft"' and @type='search' and @name='search']</td>
   <td></td>
 </tr>
 

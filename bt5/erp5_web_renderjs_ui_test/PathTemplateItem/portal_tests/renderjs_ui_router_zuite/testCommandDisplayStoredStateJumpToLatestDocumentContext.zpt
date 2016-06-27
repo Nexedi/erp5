@@ -32,7 +32,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@class='search_button' and @type='submit']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-open')]</td>
+  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]</td>
   <td></td>
 </tr>
 <tr>
@@ -71,37 +71,26 @@
   <td></td>
 </tr>
 
-<!-- Go back to foo module -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h3[@data-i18n='Other']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//h3[@data-i18n='Other']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[@data-i18n='Foos']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[@data-i18n='Foos']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos']</td>
   <td></td>
 </tr>
 
 <!-- Wait for gadget to be loaded -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='search' and @name='search']</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='text' and @name='search']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='search' and @name='search']</td>
   <td></td>
 </tr>
 

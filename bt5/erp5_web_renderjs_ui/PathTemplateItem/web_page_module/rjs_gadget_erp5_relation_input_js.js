@@ -1,8 +1,8 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
 /*global window, rJS, RSVP, URI, loopEventListener, Handlebars,
- SimpleQuery, ComplexQuery, Query, QueryFactory, promiseEventListener, $*/
+ SimpleQuery, ComplexQuery, Query, QueryFactory, promiseEventListener*/
 (function (window, rJS, RSVP, URI, loopEventListener, promiseEventListener,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars, $) {
+  SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars) {
   "use strict";
 
 
@@ -151,6 +151,7 @@
             href: jump_href,
             create_object: create_object,
             readonly: field_json.editable ? "" : "ui-state-readonly",
+            input_readonly: field_json.editable ? "" : 'readonly="readonly"',
             required: field_json.required ? "required" : "",
             value: value,
             title: field_json.title,
@@ -164,7 +165,7 @@
             gadget.props.element.querySelector("input");
           gadget.props.new_tag_div = gadget.props.element.querySelector(".new_tag");
           gadget.props.spinner = gadget.props.element.querySelector("a");
-          gadget.props.plane = gadget.props.element.querySelectorAll("a")[1];
+          gadget.props.plane = gadget.props.element.querySelector("a");
         });
       return queue;
     })
@@ -223,7 +224,7 @@
         props.jump_url = [];
         ul.innerHTML = "";
         if (my_value === "") {
-          props.spinner.className = searched;
+          props.spinner.className = jump_off;
           return;
         }
         simple_query = new SimpleQuery({
@@ -254,15 +255,13 @@
                 value: result.data.rows[i].value[index]
               });
             }
-            props.spinner.className = searched;
+            props.spinner.className = jump_off;
             html =  relation_listview_template({
               list: list,
               type: type,
               value: my_value
             });
-            $(ul).toggle();
             ul.innerHTML = html;
-            $(ul).toggle();
           });
       }
 
@@ -383,4 +382,4 @@
     });
 
 }(window, rJS, RSVP, URI, loopEventListener, promiseEventListener,
-  SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars, $));
+  SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars));

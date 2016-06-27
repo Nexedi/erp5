@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 Launcher JS</string> </value>
+            <value> <string>OfficeJS Launcher JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>950.1266.16388.62907</string> </value>
+                <value> <string>952.55927.14574.22152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1458731136.97</float>
+                        <float>1469701036.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

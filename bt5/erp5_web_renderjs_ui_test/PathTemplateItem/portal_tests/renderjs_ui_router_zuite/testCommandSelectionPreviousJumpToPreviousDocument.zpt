@@ -70,7 +70,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@class='search_button' and @type='submit']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
   <td></td>
 </tr>
 
@@ -118,7 +118,7 @@
 
 <tr>
   <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]/div[2]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
   <td>descending</td>
 </tr>
 

@@ -1,6 +1,6 @@
-/*global window, rJS, URI, jQuery */
+/*global window, rJS, URI */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, URI, $) {
+(function (window, rJS, URI) {
   "use strict";
 
   var gadget_klass = rJS(window);
@@ -135,9 +135,6 @@
                 element.removeChild(element.firstChild);
               }
               element.appendChild(fragment);
-              if (options.hasOwnProperty("form_validation_error")) {
-                $(element).trigger("create");
-              }
             });
         });
       return queue;
@@ -149,4 +146,4 @@
       return this.render(options);
     });
 
-}(window, rJS, URI, jQuery));
+}(window, rJS, URI));

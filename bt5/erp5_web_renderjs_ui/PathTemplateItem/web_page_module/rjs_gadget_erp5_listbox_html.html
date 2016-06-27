@@ -136,8 +136,8 @@
           <div class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all ui-paging-menu">
             <div class="ui-controlgroup-controls">
               <a class="{{previous_classname}}" data-i18n="Previous" href="{{previous_url}}">Previous</a>
-              <span class="ui-btn ui-disabled" data-i18n="{{record}}">{{record}}</span>
               <a class="{{next_classname}}" data-i18n="Next" href="{{next_url}}">Next</a>
+              <span class="ui-btn ui-disabled" data-i18n="{{record}}">{{record}}</span>
             </div>
           </div>
         </th>
@@ -147,17 +147,17 @@
 
     <script id="listbox-template" type="text/x-handlebars-template">
       <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
-        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
-          <div class="ui-controlgroup-controls">
-            <button data-rel="hide" data-i18n="Hide Rows" name="Hide" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left {{hide_class}}">Hide Rows</button>
-          </div>
-        </div>
         <h1 data-i18n="{{title}}" class="ui-title ui-override-theme">{{title}}</h1>
-        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
-          <div class="ui-controlgroup-controls">
-            <button data-rel="Sort" data-i18n="Sort" name="Sort" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left {{hide_sort}}">Sort</button>
-          </div>
+        <!--div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+          <div class="ui-controlgroup-controls"-->
+            <button data-rel="hide" data-i18n="Hide Rows" name="Hide" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left {{hide_class}}">Hide Rows</button>
+          <!--/div>
         </div>
+        <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
+          <div class="ui-controlgroup-controls"-->
+            <button data-rel="Sort" data-i18n="Sort" name="Sort" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-sort-amount-desc ui-btn-icon-left {{hide_sort}}">Sort</button>
+          <!--/div>
+        </div-->
       </div>
       <table class="ui-responsive ui-body-c ui-table-inset">
         <thead class="ui-bar-inherit thead"></thead>

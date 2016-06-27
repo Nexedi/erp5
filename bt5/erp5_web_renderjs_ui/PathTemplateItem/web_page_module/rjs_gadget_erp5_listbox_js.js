@@ -292,9 +292,9 @@
               tmp = gadget.props.sort_list[j];
               if (tmp[0] === gadget.props.field_json.column_list[i][0]) {
                 if (tmp[1] === "ascending") {
-                  class_value = "ui-icon-arrow-up";
+                  class_value = "ui-icon ui-icon-arrow-up";
                 } else {
-                  class_value = "ui-icon-arrow-down";
+                  class_value = "ui-icon ui-icon-arrow-down";
                 }
                 break;
               }

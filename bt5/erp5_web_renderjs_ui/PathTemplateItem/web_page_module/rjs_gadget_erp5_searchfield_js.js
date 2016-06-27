@@ -77,20 +77,6 @@
 
       result[input.getAttribute('name')] = value;
       return result;
-    })
-    .declareService(function () {
-      var gadget = this,
-        clear_button = gadget.props.element.querySelector(".clear_button"),
-        search_input = gadget.props.element.querySelector("input");
-      return loopEventListener(
-        clear_button,
-        "click",
-        false,
-        function () {
-          search_input.value = "";
-          search_input.focus();
-        }
-      );
     });
 
 }(window, rJS, RSVP, Handlebars, loopEventListener));

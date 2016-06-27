@@ -263,7 +263,7 @@
 
 <tr>
   <td>click</td>
-  <td>//input[@class="search_button"]</td>
+  <td>//button[contains(@class, "search_button")]</td>
   <td></td>
 </tr>
 

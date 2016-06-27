@@ -1,7 +1,7 @@
 /*jslint indent: 2, maxerr: 3, maxlen: 100, nomen: true */
-/*global window, document, rJS, RSVP, Handlebars, $, loopEventListener,
+/*global window, document, rJS, RSVP, Handlebars, loopEventListener,
   QueryFactory, SimpleQuery, ComplexQuery, Query, console*/
-(function (window, document, rJS, RSVP, Handlebars, $, loopEventListener,
+(function (window, document, rJS, RSVP, Handlebars, loopEventListener,
   QueryFactory, SimpleQuery, ComplexQuery, Query, console) {
   "use strict";
   var gadget_klass = rJS(window),
@@ -69,7 +69,7 @@
       option = [],
       tmp,
       operator_option = [],
-      input_type = "text",
+      input_type = "search",
       i;
 
     if (filter_item) {
@@ -132,7 +132,6 @@
             })
             .push(function (innerHTML) {
               select_list[1].innerHTML = innerHTML;
-              $(select_list[1]).selectmenu('refresh');
               if (isNumericComparison(event.target.value)) {
                 if (event.target.value.indexOf("date") !== -1) {
                   input.setAttribute("type", "date");
@@ -210,8 +209,7 @@
       var gadget = this,
         i,
         list = [],
-        or = gadget.props.element.querySelector(".or"),
-        and = gadget.props.element.querySelector(".and"),
+        operator_select = gadget.props.element.querySelector("select"),
         container = gadget.props.element.querySelector(".filter_item_container"),
         query_list;
       if (gadget.props.extended_search) {
@@ -225,12 +223,7 @@
           return;
         }
         if (query_list.operator === "OR") {
-          or.checked = true;
-          and.checked = false;
-          or.parentElement.children[0].setAttribute("class",
-            "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-on");
-          and.parentElement.children[0].setAttribute("class",
-            "ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-off");
+          operator_select.querySelectorAll("option")[1].selected = "selected";
         }
 
         query_list = query_list.query_list || [query_list];
@@ -242,15 +235,11 @@
             return RSVP.all(list);
           })
           .push(function (all_result) {
-            var innerHTML = "",
-              select_list;
+            var div;
             for (i = 0; i < all_result.length; i += 1) {
-              innerHTML += all_result[i];
-            }
-            container.innerHTML = innerHTML;
-            select_list = container.querySelectorAll("select");
-            for (i = 0; i < select_list.length; i += 1) {
-              $(select_list[i]).selectmenu();
+              div = document.createElement("div");
+              div.innerHTML = all_result[i];
+              container.appendChild(div);
             }
             return listenToSelect(gadget, "auto");
           });
@@ -266,7 +255,7 @@
         function () {
           var focused = document.activeElement;
           if (focused.nodeName === "BUTTON") {
-            container.removeChild(focused.parentElement.parentElement);
+            container.removeChild(focused.parentElement);
           }
         }
       );
@@ -289,7 +278,8 @@
             value,
             options = {},
             filter_item_list = gadget.props.element.querySelectorAll(".filter_item"),
-            and = gadget.props.element.querySelector(".and");
+            operator_select = gadget.props.element.querySelector("select"),
+            operator = operator_select[operator_select.selectedIndex].value;
           for (i = 0; i < filter_item_list.length; i += 1) {
             select_list = filter_item_list[i].querySelectorAll("select");
             value = filter_item_list[i].querySelector("input").value;
@@ -319,7 +309,7 @@
 
           if (simple_query_list.length > 0) {
             complex_query = new ComplexQuery({
-              operator: and.checked ? "AND" : "OR",
+              operator: operator,
               query_list: simple_query_list,
               type: "complex"
             });
@@ -353,15 +343,9 @@
             })
             .push(function (template) {
               var tmp = document.createElement("div"),
-                container = gadget.props.element.querySelector(".filter_item_container"),
-                select_list,
-                i;
+                container = gadget.props.element.querySelector(".filter_item_container");
               tmp.innerHTML = template;
-              select_list = tmp.querySelectorAll("select");
-              for (i = 0; i < select_list.length; i += 1) {
-                $(select_list[i]).selectmenu();
-              }
-              container.appendChild(tmp.querySelector("div"));
+              container.appendChild(tmp);
               return listenToSelect(gadget, class_value);
             });
         }
@@ -379,5 +363,5 @@
       );
     });
 
-}(window, document, rJS, RSVP, Handlebars, $, loopEventListener,
+}(window, document, rJS, RSVP, Handlebars, loopEventListener,
   QueryFactory, SimpleQuery, ComplexQuery, Query, console));

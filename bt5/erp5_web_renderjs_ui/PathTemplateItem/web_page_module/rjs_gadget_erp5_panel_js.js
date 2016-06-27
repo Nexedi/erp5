@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, Handlebars, jQuery, RSVP, loopEventListener */
-(function (window, rJS, Handlebars, $, RSVP, loopEventListener) {
+/*global window, rJS, Handlebars, RSVP, loopEventListener */
+(function (window, rJS, Handlebars, RSVP, loopEventListener) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -37,28 +37,20 @@
       return g.getElement()
         .push(function (element) {
           g.props.element = element;
-          g.props.jelement = $(element.querySelector("div"));
           g.props.render_deferred = RSVP.defer();
         });
-    })
-
-    .ready(function (g) {
-      g.props.jelement.panel({
-        display: "overlay",
-        position: "left",
-        theme: "d"
-        // animate: false
-      });
     })
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('toggle', function () {
-      this.props.jelement.panel("toggle");
+      this.props.element.classList.toggle('visible');
     })
     .declareMethod('close', function () {
-      this.props.jelement.panel("close");
+      if (this.props.element.classList.contains('visible')) {
+        this.props.element.classList.remove('visible');
+      }
     })
 
     .declareMethod('render', function () {
@@ -89,8 +81,7 @@
           return tmp;
         })
         .push(function (my_translated_or_plain_html) {
-          g.props.jelement.html(my_translated_or_plain_html);
-          g.props.jelement.trigger("create");
+          g.props.element.querySelector("div").innerHTML = my_translated_or_plain_html;
           g.props.render_deferred.resolve();
         });
     })
@@ -110,8 +101,8 @@
         })
         .push(function () {
           return loopEventListener(
-            panel_gadget.props.element.querySelector('form'),
-            'submit',
+            panel_gadget.props.element.querySelector('button'),
+            'click',
             false,
             formSubmit
           );
@@ -119,4 +110,4 @@
 
     });
 
-}(window, rJS, Handlebars, jQuery, RSVP, loopEventListener));
+}(window, rJS, Handlebars, RSVP, loopEventListener));

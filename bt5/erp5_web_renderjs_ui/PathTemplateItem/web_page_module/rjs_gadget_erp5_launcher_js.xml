@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Style" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_latest.css</string> </value>
+            <value> <string>erp5_launcher_nojqm.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_latest_css</string> </value>
+            <value> <string>rjs_gadget_erp5_launcher_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Style</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget ERP5 CSS</string> </value>
+            <value> <string>ERP5 Launcher JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -185,8 +185,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411390496.99</float>
-                        <string>GMT</string>
+                        <float>1469697528.36</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -216,7 +216,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.48419.62008.14711</string> </value>
+                <value> <string>952.55886.52877.43281</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,8 +248,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411390338.58</float>
-                        <string>GMT</string>
+                        <float>1469697595.92</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -275,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>sven</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,8 +305,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411390316.76</float>
-                        <string>GMT</string>
+                        <float>1469697401.26</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -62,7 +62,6 @@
       'gadget_erp5_header.js',
       'gadget_erp5_jio.html',
       'gadget_erp5_jio.js',
-      'gadget_erp5_latest.css',
       'gadget_erp5_page_action.html',
       'gadget_erp5_page_action.js',
       'gadget_erp5_page_form.html',
@@ -87,7 +86,6 @@
       'gadget_erp5_page_worklist.js',
       'gadget_erp5_panel.html',
       'gadget_erp5_panel.js',
-      'gadget_erp5_panel_configuration.html',
       'gadget_erp5_pt_form_dialog.html',
       'gadget_erp5_pt_form_dialog.js',
       'gadget_erp5_pt_form_list.html',
@@ -118,9 +116,6 @@
       'handlebars.js',
       'i18next.js',
       'jiodev.js',
-      'jquery.js',
-      'jquerymobile.css',
-      'jquerymobile.js',
       'renderjs.js',
       'rsvp.js'
     ];

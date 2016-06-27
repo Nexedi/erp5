@@ -108,7 +108,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Tue, 12 July 2016 12:00:00 GMT\n
+# generated on Tue, 24 Jun 2016 16:00:00 GMT .\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -119,8 +119,8 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.wof
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 URI.js\n
-erp5_launcher.js\n
-gadget_erp5.css\n
+erp5_launcher_nojqm.js\n
+gadget_erp5_nojqm.css\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
 gadget_erp5_field_checkbox.html\n
@@ -167,7 +167,6 @@ gadget_erp5_header.html\n
 gadget_erp5_header.js\n
 gadget_erp5_jio.html\n
 gadget_erp5_jio.js\n
-gadget_erp5_latest.css\n
 gadget_erp5_page_action.html\n
 gadget_erp5_page_action.js\n
 gadget_erp5_page_form.html\n
@@ -192,7 +191,6 @@ gadget_erp5_page_worklist.html\n
 gadget_erp5_page_worklist.js\n
 gadget_erp5_panel.html\n
 gadget_erp5_panel.js\n
-gadget_erp5_panel_configuration.html\n
 gadget_erp5_pt_form_dialog.html\n
 gadget_erp5_pt_form_dialog.js\n
 gadget_erp5_pt_form_list.html\n
@@ -223,9 +221,6 @@ gadget_translation_data.js\n
 handlebars.js\n
 i18next.js\n
 jiodev.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
 NETWORK:\n
@@ -360,7 +355,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.33120.45206.6075</string> </value>
+                <value> <string>952.54415.21673.50380</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -378,7 +373,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468331792.72</float>
+                        <float>1469697772.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
