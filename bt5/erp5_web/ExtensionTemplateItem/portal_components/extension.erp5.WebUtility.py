@@ -98,8 +98,7 @@ def partition(text, separatorRegexp):
   return result
 
 css_comment_filter_re = re.compile(r"/\*((?:[^\*]|\*[^/])*)\*/")
-#css_url_re = re.compile(r"""(:[ \t]*url\()((")([^"]*)"|(')([^']*)'|([^\)]*))\)""")
-css_url_re = re.compile(r"""(:[ \t]*url\()(\s*(")([^"]*)"\s*|\s*(')([^']*)'\s*|([^\)]*))\)""")
+css_url_re = re.compile(r"""(url\()(\s*(")([^"]*)"\s*|\s*(')([^']*)'\s*|([^\)]*))\)""")
 def parseCssForUrl(text):
   """
   return tuple list like: [

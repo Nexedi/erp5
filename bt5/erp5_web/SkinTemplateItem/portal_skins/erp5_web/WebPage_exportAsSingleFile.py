@@ -18,15 +18,18 @@ mhtml_message = {
 }
 
 def main():
-  data = context.getTextContent("").decode("utf-8")
-  data = "".join([fn(p) for fn, p in handleHtmlPartList(parseHtml(data))])
+  data = context.getTextContent("")
+  if isinstance(data, str):
+    data = data.decode("utf-8")
+  data = u"".join([fn(p) for fn, p in handleHtmlPartList(parseHtml(data))])
+  data = data.encode("utf-8")
   if format == "mhtml":
     mhtml_message["header_dict"]["Subject"] = context.getTitle() or "Untitled"
     mhtml_message["attachment_list"].insert(0, {
       "mime_type": "text/html",
       "encode": "quoted-printable",
       "add_header_list": [("Content-Location", context.absolute_url())],
-      "data": str(data.encode("utf-8")),
+      "data": data,
     })
     res = context.Base_formatAttachmentListToMIMEMultipartString(**mhtml_message)
     if REQUEST is not None:
@@ -185,7 +188,10 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
   if hasattr(obj, "getContentType"):
     mime = obj.getContentType()
     if mime:
-      data = getattr(obj, "getData", lambda: str(obj))() or ""
+      if hasattr(obj, "data"):
+        data = obj.data or ""
+      else:
+        data = getattr(obj, "getData", lambda: str(obj))() or ""
       if isinstance(data, unicode):
         data = data.encode("utf-8")
       return handleLinkedData(mime, data, src)
@@ -260,9 +266,9 @@ def isHrefAUrl(href):
 
 normalize_kw = {"keep_empty": False, "keep_trailing_slash": False}
 def traverseHref(url, allow_hash=False):
-  url = url.split("?")[0]
+  url = url.split("?", 1)[0]
   if not allow_hash:
-    url = url.split("#")[0]
+    url = url.split("#", 1)[0]
   if url.startswith("https://") or url.startswith("http://") or url.startswith("//"):  # absolute url possibly on other sites
     site_url = "/".join(url.split("/", 3)[:3])
     domain = url.split("/", 3)[2]
@@ -277,7 +283,10 @@ def traverseHref(url, allow_hash=False):
   return base_url_root_object.restrictedTraverse(str(context.Base_normalizeUrlPathname(base_url + "/" + url, **normalize_kw)[1:]))
 
 def replaceFromDataUri(data_uri, replacer):
-  header, data = data_uri.split(",")
+  split = data_uri.split(",", 1)
+  if len(split) != 2:
+    return data_uri
+  header, data = split
   if "text/css" not in header:
     return data_uri
   is_base64 = False
