@@ -27,7 +27,7 @@
     COMMAND_SELECTION_NEXT = "selection_next",
     COMMAND_HISTORY_PREVIOUS = "history_previous",
     COMMAND_PUSH_HISTORY = "push_history",
-    REDIRECT_TIMEOUT = 5000,
+    REDIRECT_TIMEOUT = 5055,
     VALID_URL_COMMAND_DICT = {};
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
@@ -55,7 +55,7 @@
     return window.location.replace(hash);
   }
 
-  function timeoutUrlChange() {
+  function timeoutUrlChange(from_hash, to_hash) {
     // prevent returning unexpected response
     // wait for the hash change to occur
     // fail if nothing happens
@@ -63,14 +63,18 @@
       .push(function () {
         return RSVP.timeout(REDIRECT_TIMEOUT);
       })
-      .push(undefined, function () {
-        throw new Error('URL handling timeout: ' + window.location.hash);
+      .push(undefined, function (error) {
+        if (error === 'Timed out after ' + REDIRECT_TIMEOUT + ' ms') {
+          throw new Error('URL handling timeout. From: "' + from_hash + '" to: "' + to_hash + '" and current: "' + window.location.hash + '"');
+        }
+        throw error;
       });
   }
 
   function synchronousChangeState(hash) {
+    var from_hash = window.location.hash;
     changeState(hash);
-    return timeoutUrlChange();
+    return timeoutUrlChange(from_hash, hash);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -835,8 +839,9 @@
       delete options.form_content;
       return this.getCommandUrlFor(options)
         .push(function (hash) {
+          var from_hash = window.location.hash;
           window.location.replace(hash);
-          return timeoutUrlChange();
+          return timeoutUrlChange(from_hash, hash);
         });
     })
 
