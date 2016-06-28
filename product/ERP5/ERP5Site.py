@@ -34,6 +34,7 @@ from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.Log import log as unrestrictedLog
+from Products.ERP5Type.Utils import UpperCase
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -1676,6 +1677,102 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
           if tool_id in ('portal_trash',):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
+
+  def migrateSQLCatalogToERP5Catalog(self):
+    """
+      Migrate SQLCatalog objects to ERP5Catalog objects which is a Folder object
+      holding indexes of objects inside ERP5 Catalog Tool.
+
+      Create new ERP5Catalog object and copy the Catalog data from the Default
+      SQLCatalog object to this new object.
+      This function should be run at the end of ERP5 Site installation so as to
+      maintain consistency for the objects.
+
+      UPDATE: This function could be called from anywhere in ERP5, cause it will
+      update the objects and properties of ERP5Catalog if it already exists.
+      For example: We can use it to run everytime after we install a business
+      template which might be updating CatalogTemplateMethodItems.
+
+      Now, we don't shift the default_sql_catalog_id, instead we have a new
+      property default_erp5_catalog_id and functions like getERP5Catalog and
+      getERP5CatalogIdList whose usage is recommended.
+    """
+    # We'll be migrating Persistent Objects
+    from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
+    from Products.ERP5Catalog.ERP5Catalog import ERP5Catalog
+    PickleUpdater(self)
+
+    # Getting ERP5 Catalog Tool
+    catalog_tool = self.portal_catalog
+    sql_catalog = catalog_tool.getSQLCatalog()
+    erp5_catalog_id = 'erp5_mysql_innodb_new'
+    # If there is no default SQL Catalog installed already, add a warning log
+    # in ERP5Site and break the migration
+    if not sql_catalog:
+      from Products.ERP5Type.Log import log
+      warning_message = 'No SQLCatlaog found out. No migration going to happen'
+      log(warning_message)
+      return
+
+    if not isinstance(sql_catalog, ERP5Catalog):
+      if erp5_catalog_id not in catalog_tool.objectIds():
+        # Create new ERP5Catalog object if it doesn't exist
+        catalog_tool.newContent(portal_type='Catalog',
+                                id = erp5_catalog_id,
+                                title='')
+        # Update default erp5 catalog id, the first time we run create ..
+        # ERP5Catalog object.
+        catalog_tool.default_erp5_catalog_id = erp5_catalog_id
+      erp5_catalog = catalog_tool._getOb(erp5_catalog_id)
+
+      # No need to migrate if the erp5_catalog is not an object of ERP5Catlog
+      if not isinstance(erp5_catalog, ERP5Catalog):
+        return
+
+      # Copy-paste objects from SQLCatalog to ERP5Catalog
+      for id in sql_catalog.objectIds():
+        ob = sql_catalog._getOb(id)
+        # Check if the object is copyable and that it doesn't already exist
+        # The copying attributes are from OFS.CopySupport
+        if hasattr(ob, '_canCopy') and not erp5_catalog.has_key(id):
+          # Get a copy of object for new conainer, i.e. erp5_catalog
+          ob = ob._getCopy(erp5_catalog)
+          ob._setId(id)
+          # Set the copied object in the erp5_catalog
+          erp5_catalog._setObject(id, ob)
+          ob = erp5_catalog._getOb(id)
+          ob._postCopy(erp5_catalog, op=0)
+
+      # Update properties list for the new catalog from the SQLCatalog
+      # Not an efficient way to carry this
+      for property_id in sql_catalog.propertyIds():
+        # This is needed because there have been problems with setting property
+        # for title, see this docstring for explanations:
+        # https://lab.nexedi.com/nexedi/erp5/blob/198df7021a17725e81ab930015c3c618e94263db/product/ERP5Type/Base.py#L3531
+        if property_id == 'title':
+          # Ignore case when property_id is title
+          continue
+        value = getattr(sql_catalog, property_id)
+        property_type = sql_catalog.getPropertyType(property_id)
+        erp5_catalog.setProperty(key=property_id, value=value, type=property_type)
+
+      # This step is required as we don't have consistency between the properties
+      # of new ERP5Catalog object and SQLCatalog.Catalog objects, i.e,
+      # for example: Trying to get property `sql_catalog_clear_reserved` for
+      # `erp5_catalog` would give us a tuple cause it is basically calling the
+      # getter function getSqlCatalogClearReserved, which when called for
+      # `sql_catalog.sql_catalog_clear_reserved` would give a string.
+      # This inconsistency arised due to the generation of getter functions where
+      # 'selection' type is taken as list_types which leads to creating getters
+      # and setters accordingly to create list and tuples instead of just a
+      # string. Well, imo(Ayush), this might not be good way to solve this
+      # problem. Other way would be to leave the proeprties as it is for ERP5Catalog
+      # objects and change the function calls in ERP5Catalog accordignly instead.
+      for p in sql_catalog.propertyMap():
+        if p['type'] in ['selection', 'multiple selection', 'lines']:
+          accessor_name = 'get' + UpperCase(p['id'])
+          value = getattr(sql_catalog, p['id'])
+          setattr(erp5_catalog, p['id'], value)
 
 Globals.InitializeClass(ERP5Site)
 
