@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>data_url</string>
                 <string>default</string>
                 <string>gadget_url</string>
               </list>
@@ -76,6 +77,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
