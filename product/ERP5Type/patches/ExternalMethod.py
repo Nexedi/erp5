@@ -14,46 +14,64 @@
 from inspect import getargs
 from Products.ExternalMethod.ExternalMethod import *
 from Products.ERP5Type.Globals import InitializeClass
+from zLOG import LOG, WARNING
 from . import PatchClass
 from .PythonScript import addGuard
 
 class _(PatchClass(ExternalMethod)):
 
-    def getFunction(self, reload=False, f=None):
-        """
-        Patch to get ZODB Component Extension function if available, otherwise
-        fallback on filesystem Extension
-        Patch2: do not use hasattr.
-        """
-        if f is None:
-            try:
-                component_module = __import__(
-                    'erp5.component.extension.' + self._module,
-                    fromlist=['erp5.component.extension'],
-                    level=0)
-            except ImportError:
-                f = getObject(self._module, self._function, reload)
-            else:
-                f = getattr(component_module, self._function)
+    reloadIfChanged = getFuncDefaults = getFuncCode = filepath = None
 
-        ff = getattr(f, 'im_func', f)
+    @property
+    def func_defaults(self):
+        return self.getFunction()[1]
 
-        self._v_func_defaults  = ff.func_defaults
-        self._v_func_code = FuncCode(ff,f is not ff)
+    @property
+    def func_code(self):
+        return self.getFunction()[2]
 
-        self._v_f=f
-
-        return f
-
-    ExternalMethod_reloadIfChanged = ExternalMethod.reloadIfChanged
-    def reloadIfChanged(self):
+    def getFunction(self, reload=False):
         try:
             component_module = __import__(
                 'erp5.component.extension.' + self._module,
-                fromlist=['erp5.component.extension'],
-                level=0)
-        except ImportError:
-            return ExternalMethod_reloadIfChanged(self)
+                fromlist="*", level=0)
+        except ImportError, e:
+            if str(e) != "No module named " + self._module:
+                # Fall back loudly if a component exists but is broken.
+                # XXX: We used __import__ instead of
+                #      erp5.component.extension.find_load_module
+                #      because the latter is much slower.
+                # XXX: Should we also fall back on FS if the module imports
+                #      successfully but does not contain the wanted function?
+                LOG("ERP5Type.dynamic", WARNING,
+                    "Could not load Component module %r"
+                    % ('erp5.component.extension.' + self._module),
+                    error=1)
+            if not reload:
+                from Globals import DevelopmentMode
+                if DevelopmentMode:
+                    try:
+                        last_read, path = self._v_fs
+                    except AttributeError:
+                        last_read = None
+                        path = getPath('Extensions', self._module,
+                                       suffixes=('', 'py', 'pyc'))
+                    ts = os.stat(path)[stat.ST_MTIME]
+                    if last_read != ts:
+                        self._v_fs = ts, path
+                        reload = True
+            f = getObject(self._module, self._function, reload)
+        else:
+            f = getattr(component_module, self._function)
+        try:
+            _f = self._v_f
+            if _f[0] is f:
+                return _f
+        except AttributeError:
+            pass
+        ff = getattr(f, 'im_func', f)
+        self._v_f = _f = f, ff.func_defaults, FuncCode(ff, f is not ff)
+        return _f
 
     def __call__(self, *args, **kw):
         """Call an ExternalMethod
@@ -72,48 +90,13 @@ class _(PatchClass(ExternalMethod)):
 
         In this case, the URL parent of the object is supplied as the
         first argument.
-
-        Monkey patches:
-        - check guard against context, if guard exists.
-        - call ZODB Component Extension, by trying first to import ZODB
-          Component Extension if available, otherwise fallback on filesystem
-          Extension
-        - access volatile attribute safely
-        - fix magic "self" argument when positional arguments get their values
-          from kw.
         """
         self.checkGuard(True)
 
-        import erp5.component.extension
-        component_module = erp5.component.extension.find_load_module(self._module)
-        if component_module is not None:
-            f = getattr(component_module, self._function)
-        else:
-            import Globals  # for data
+        _f = self.getFunction()
+        f = _f[0]
 
-            filePath = self.filepath()
-            if filePath==None:
-                raise RuntimeError,\
-                    "external method could not be called " \
-                    "because it is None"
-
-            if not os.path.exists(filePath):
-                raise RuntimeError,\
-                    "external method could not be called " \
-                    "because the file does not exist"
-
-            if Globals.DevelopmentMode:
-                self.reloadIfChanged()
-
-            f = None
-
-        _v_f = getattr(self, '_v_f', None)
-        if not _v_f or (f and f is not _v_f):
-            f = self.getFunction(f=f)
-        else:
-            f = _v_f
-
-        __traceback_info__=args, kw, self._v_func_defaults
+        __traceback_info__ = args, kw, _f[1]
 
         # XXX: We'd like to use inspect.getcallargs instead of try..except.
         #      However, for the same reason as we use getargs instead of

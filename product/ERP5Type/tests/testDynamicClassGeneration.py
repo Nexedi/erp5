@@ -34,6 +34,7 @@ import unittest
 import transaction
 from persistent import Persistent
 from ZODB.broken import BrokenModified
+from zExceptions import NotFound
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -2011,14 +2012,8 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     test_component.invalidate()
     self.tic()
 
-    # XXX-arnau: perhaps the error message should be more meaningful?
-    try:
-      external_method()
-    except RuntimeError, e:
-      self.assertEqual(e.message,
-                        'external method could not be called because it is None')
-    else:
-      self.fail("TestExternalMethod should not be callable")
+    self.assertRaisesRegexp(NotFound, "The specified module,"
+        " 'TestExternalMethodComponent', couldn't be found.", external_method)
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
