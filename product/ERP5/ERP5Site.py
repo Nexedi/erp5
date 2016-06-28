@@ -1723,6 +1723,149 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
+  def convertPythonScriptToERP5PythonScript(self, python_script):
+    """
+    Converts object with meta_type 'Script (Python)' to ERP5 Python Script
+    and moves all the properties and id to the new object.
+    Also, deletes the initial object.
+
+    Params:
+    python_script:  Should be a python script inside ERP5 Catalog.
+                    It is forced for the aq_parent to be an ERP5 Catalog.
+    """
+    method_parent = python_script.aq_parent
+    if not method_parent.meta_type in ['ERP5 Catalog', 'SQLCatalog']:
+      return
+    erp5_catalog = method_parent
+    if not python_script: return None
+    # Filter only the objects which are of 'Script (Python)' meta_type
+    if python_script.meta_type == "Script (Python)":
+        script_id = python_script.id
+        title       = python_script.title
+        code        = python_script._body
+        parameter   = python_script._params
+        _v_change   = python_script._v_change
+        # Delete the python_script object from ther erp5_catalog
+        erp5_catalog.manage_delObjects(ids=script_id)
+        # Create new Python Script object inside erp5_catalog from the info data
+        # of the zope python script object.
+        erp5_python_script = erp5_catalog.newContent(portal_type='Python Script', \
+                          id = script_id )
+        erp5_python_script.title   = title
+        # Calling setter function for body would also compile the code body
+        erp5_python_script._setBody(code)
+        erp5_python_script._setParameterSignature(parameter)
+        erp5_python_script._v_change = _v_change
+
+        # Update filter properies only if SQL Catalog exists, in other case the
+        # updating of filter dict for the current object would be handled while
+        # installation itself.
+        try:
+          catalog = self.portal_catalog.getSQLCatalog()
+          if not catalog:
+            return
+          if catalog.meta_type != 'SQLCatalog':
+            return
+          filter_dict = catalog.filter_dict
+        except AttributeError:
+          return
+        else:
+          if script_id in filter_dict.keys():
+            filter_ = filter_dict[script_id]
+            erp5_python_script.setFiltered(filter_['filtered'])
+            erp5_python_script.setTypeList(filter_['type'])
+            erp5_python_script.setExpressionCacheKeyList(filter_['expression_cache_key'])
+            erp5_python_script.setExpression(filter_['expression'])
+            erp5_python_script.setExpressionInstance(filter_['expression_instance'])
+    else:
+      return
+
+  def convertSQLMethodToERP5SQLMethod(self, method):
+    """
+    Converts the SQL Method(SQL) objects with all its properties and id to an
+    ERP5 SQL Method object.
+
+    Params:
+      method: Should be an sql method inside ERP5 Catalog.
+              It is forced for the aq_parent to be an ERP5 Catalog.
+    """
+    obj_parent = method.aq_parent
+    # Only convert for objects having aq_parent
+    if not obj_parent.meta_type in ['ERP5 Catalog', 'SQLCatalog']:
+      return
+    erp5_catalog = obj_parent
+    if not method: return
+    if method.meta_type == "Z SQL Method":
+        sql_method = method
+        method_id = sql_method.id
+        title = sql_method.title
+        connection_id = sql_method.connection_id
+        connection_hook = sql_method.connection_hook
+        max_rows_ = sql_method.max_rows_
+        max_cache_ = sql_method.max_cache_
+        cache_time_ = sql_method.cache_time_
+        allow_simple_one_argument_traversal = sql_method.allow_simple_one_argument_traversal
+        class_file_ = sql_method.class_file_
+        class_name_ = sql_method.class_name_
+        arguments_src = sql_method.arguments_src
+        template = sql_method.src
+
+        # Delete old object and create a new object with same id
+        erp5_catalog.manage_delObjects(ids=method_id)
+        erp5_sql_method = erp5_catalog.newContent(portal_type='SQL Method',\
+                    id = method_id)
+
+        # Update properties and attributes of erp5_sql_catalog with the info
+        # data of same attributes of sql_method
+        erp5_sql_method.title = title
+        erp5_sql_method.setConnectionId(connection_id)
+        erp5_sql_method.setSrc(template)
+
+        # Update advanced attributes for the SQL Method
+        erp5_sql_method.setConnectionHook(connection_hook)
+        erp5_sql_method.setMaxRows(max_rows_)
+        erp5_sql_method.setMaxCache(max_cache_)
+        erp5_sql_method.setCacheTime(cache_time_)
+        erp5_sql_method.setAllowSimpleOneArgumentTraversal(\
+                                            allow_simple_one_argument_traversal)
+        erp5_sql_method.setClassFile(class_file_)
+        erp5_sql_method.setClassName(class_name_)
+
+        # Update argument at last cause this will update other attributes by
+        # calling manage_edit for SQLMethod in ZRDB.DA
+        erp5_sql_method._setArgumentsSrc(arguments_src)
+
+        # Delete sql_method object from erp5_catalog and update the Id of
+        # erp5_catalog_object with the Id of sql_method
+        #erp5_catalog._delOb(id=method_id)
+        #erp5_sql_method.manage_renameObject(method_id)
+
+        # Update filter properies only if SQL Catalog exists, in other case the
+        # updating of filter dict for the current object would be handled while
+        # installation itself.
+        try:
+          catalog = self.portal_catalog.getSQLCatalog()
+          if not catalog:
+            return
+          # Only carry out updation of filter_dict when SQL Catalog still exists
+          if catalog.meta_type != 'SQLCatalog':
+            return
+          filter_dict = catalog.filter_dict
+        except AttributeError:
+          return
+        else:
+          if method_id in filter_dict.keys():
+            filter_ = filter_dict[method_id]
+            erp5_sql_method.setFiltered(filter_['filtered'])
+            erp5_sql_method.setTypeList(filter_['type'])
+            erp5_sql_method.setExpressionCacheKeyList(filter_['expression_cache_key'])
+            erp5_sql_method.setExpression(filter_['expression'])
+            erp5_sql_method.setExpressionInstance(filter_['expression_instance'])
+          else:
+            pass
+    else:
+      return
+
 Globals.InitializeClass(ERP5Site)
 
 def getBootstrapDirectory():
