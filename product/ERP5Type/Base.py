@@ -2314,7 +2314,7 @@ class Base( CopyContainer,
                             'getTranslatedTitleOrId')
   def getTranslatedTitleOrId(self):
     """
-    Returns the translated title or the id if the id is empty
+    Returns the translated title or the id if the title is empty
     """
     title = self.getTranslatedTitle()
     if title is not None:
