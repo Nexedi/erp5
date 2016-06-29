@@ -1,4 +1,10 @@
 portal_categories/base_amount/payroll/l10n/fr
 portal_categories/base_amount/payroll/l10n/fr/**
+portal_categories/calendar_period_type/social_declaration
+portal_categories/calendar_period_type/social_declaration/l10n
+portal_categories/calendar_period_type/social_declaration/l10n/fr
+portal_categories/calendar_period_type/social_declaration/l10n/fr/**
 portal_categories/salary_range/france
 portal_categories/salary_range/france/**
+portal_categories/use/social_declaration/l10n/fr
+portal_categories/use/social_declaration/l10n/fr/**

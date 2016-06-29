@@ -4,10 +4,6 @@ request = context.REQUEST
 quantity_renderer = portal.Base_viewFieldLibrary.my_view_mode_money_quantity.render_pdf
 paysheet = context
 
-model = paysheet.getSpecialiseValue().getEffectiveModel(\
-    start_date=paysheet.getStartDate(),
-    stop_date=paysheet.getStopDate())
-
 def getFieldAsString(field):
   return ', '.join(getFieldAsLineList(field))
 
@@ -63,9 +59,7 @@ def getPriceCurrencyId(currency):
 getMovementTotalPriceFromCategory = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory
 getMovementQuantityFromCategory = paysheet.PaySheetTransaction_getMovementQuantityFromCategory
 
-salaire_net_imposable = getMovementTotalPriceFromCategory(\
-    base_contribution='base_contribution/base_amount/payroll/base/income_tax',
-    contribution_share='contribution_share/employee')
+salaire_net_imposable = paysheet.PaySheetTransaction_getPaysheetTaxableSalary()
 
 def getTaxableNetPayId(salaire_net_imposable):
   s = ''
@@ -137,9 +131,7 @@ def getPaymentConditionText(paysheet):
   return ''
 
 base_contribution = 'base_contribution/base_amount/payroll/report/salary/gross'
-gross_salary = getMovementTotalPriceFromCategory(base_contribution,
-    contribution_share='contribution_share/employee')
-year_to_date_gross_salary = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution)
+year_to_date_gross_salary = abs(paysheet.PaySheetTransaction_getYearToDateMovementTotalPriceFromCategory(base_contribution))
 year_to_date_slice_a = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution, 'salary_range/france/tranche_a')
 year_to_date_slice_b = paysheet.PaySheetTransaction_getYearToDateSlice(base_contribution, 'salary_range/france/tranche_b')
 
@@ -214,6 +206,7 @@ data_dict = {
   'absence_hour_count': 0, #XXX currently absence hour are not take into 
                            # account in payroll
   'salaire_net_imposable': getTaxableNetPayId(salaire_net_imposable),
+  'salaire_net_imposable_float': salaire_net_imposable,
   'total_employee_tax': getTotalEmployeeTaxId(total_employee_tax),
   'total_employer_tax': getTotalEmployerTaxId(total_employer_tax),
   'year_to_date_total_employer_tax': year_to_date_total_employer_tax,
