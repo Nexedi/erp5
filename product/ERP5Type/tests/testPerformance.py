@@ -131,7 +131,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       Return the bar module
       """
-      return self.getPortal()['bar_module']
+      return self.portal['bar_module']
 
     def afterSetUp(self):
       """
@@ -158,16 +158,16 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       self.abort()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
       self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
-      gender = self.getPortal().portal_categories['gender']
+      gender = self.portal.portal_categories['gender']
       gender.manage_delObjects(list(gender.objectIds()))
-      gender = self.getPortal().portal_caches.clearAllCache()
+      gender = self.portal.portal_caches.clearAllCache()
       self.tic()
 
     def checkViewBarObject(self, min, max, quiet=quiet, prefix=None):
       # Some init to display form with some value
       if prefix is None:
         prefix = ''
-      gender = self.getPortal().portal_categories['gender']
+      gender = self.portal.portal_categories['gender']
       if 'male' not in gender.objectIds():
         gender.newContent(id='male', title='Male', portal_type='Category')
       if 'female' not in gender.objectIds():

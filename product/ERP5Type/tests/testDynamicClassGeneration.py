@@ -137,7 +137,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     Take an existing object, change the mixin definitions of its portal type.
     Check that the new methods are there.
     """
-    portal = self.getPortal()
+    portal = self.portal
     person_module = portal.person_module
     person = person_module.newContent(id='John Dough', portal_type='Person')
 
@@ -162,7 +162,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     Take an existing object, change its document class
     Check that the new methods are there.
     """
-    portal = self.getPortal()
+    portal = self.portal
     person_module = portal.person_module
     person = person_module.newContent(id='Eva Dough', portal_type='Person')
 
@@ -355,7 +355,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     be created, it's necessary that the category properties referenced
     in the web-based Property Sheet exist)
     """
-    new_base_category = self.getPortal().portal_categories.newContent(
+    new_base_category = self.portal.portal_categories.newContent(
       id=base_category_id, portal_type='Base Category')
 
     # Create a dummy sub-category
@@ -366,7 +366,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                                  portal_type='Category')
 
     if operation_type == 'change':
-      self.getPortal().portal_categories.newContent(
+      self.portal.portal_categories.newContent(
         id=base_category_id + '_renamed',
         portal_type='Base Category')
 
@@ -457,7 +457,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Create a new Category Membership Arity Constraint within test
     Property Sheet (with or without acquisition)
     """
-    self.getPortal().portal_categories.newContent(
+    self.portal.portal_categories.newContent(
       id=reference, portal_type='Base Category')
 
     self.test_property_sheet.newContent(
@@ -505,7 +505,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     Create a test Property Sheet (and its properties)
     """
-    portal = self.getPortal()
+    portal = self.portal
 
     # Create the test Property Sheet
     try:
@@ -622,7 +622,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     """
     import erp5
 
-    portal = self.getPortal()
+    portal = self.portal
     person_type = portal.portal_types.Person
 
     self.assertFalse('TestMigration' in person_type.getTypePropertySheetList())
@@ -1255,7 +1255,7 @@ class _TestZodbComponent(SecurityTestCase):
     return ('erp5_base',)
 
   def afterSetUp(self):
-    self._component_tool = self.getPortal().portal_components
+    self._component_tool = self.portal.portal_components
     self._module = __import__(self._getComponentModuleName(),
                               fromlist=['erp5.component'])
     self._component_tool.reset(force=True,
@@ -1973,7 +1973,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     # Add an External Method using the Extension Component defined above and
     # check that it returns 42
     from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
-    manage_addExternalMethod(self.getPortal(),
+    manage_addExternalMethod(self.portal,
                              'TestExternalMethod',
                              'title',
                              'TestExternalMethodComponent',
@@ -1981,7 +1981,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
 
     self.tic()
 
-    external_method = self.getPortal().TestExternalMethod
+    external_method = self.portal.TestExternalMethod
     self.assertEqual(external_method(), 42)
 
     # Check that the External Method returns expected result through Publisher
@@ -2000,11 +2000,11 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     # Add a Python Script with the External Method defined above and check
     # that it returns 42
     from Products.PythonScripts.PythonScript import manage_addPythonScript
-    manage_addPythonScript(self.getPortal(), 'TestPythonScript')
-    self.getPortal().TestPythonScript.write('return context.TestExternalMethod()')
+    manage_addPythonScript(self.portal, 'TestPythonScript')
+    self.portal.TestPythonScript.write('return context.TestExternalMethod()')
     self.tic()
 
-    self.assertEqual(self.getPortal().TestPythonScript(), 42)
+    self.assertEqual(self.portal.TestPythonScript(), 42)
 
     # Invalidate the Extension Component and check that it's not callable
     # anymore
@@ -2066,12 +2066,12 @@ class TestPortalType(Person):
     # be available
     self.assertModuleImportable('TestPortalType')
 
-    person_type = self.getPortal().portal_types.Person
+    person_type = self.portal.portal_types.Person
     person_type_class = person_type.getTypeClass()
     self.assertEqual(person_type_class, 'Person')
 
     # Create a new Person
-    person_module = self.getPortal().person_module
+    person_module = self.portal.person_module
     person = person_module.newContent(id='Foo Bar', portal_type='Person')
     self.assertTrue(PersonDocument in person.__class__.mro())
 

@@ -74,7 +74,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     and gather all consistency messages.
     """
     # Find the list if skins to test - we only test the last business template
-    portal_templates = self.getPortal().portal_templates
+    portal_templates = self.portal.portal_templates
     skin_id_list = []
     for business_template in portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():

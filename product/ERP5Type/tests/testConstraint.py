@@ -50,20 +50,19 @@ class TestConstraint(PropertySheetTestCase):
     return ('erp5_base',)
 
   def login(self):
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
   def stepLoginAsAssignee(self, sequence=None, sequence_list=None, **kw):
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('member', '', ['Member', 'Assignee'], [])
     user = uf.getUserById('member').__of__(uf)
     newSecurityManager(None, user)
 
   def afterSetUp(self):
     self.login()
-    self.portal = self.getPortal()
     self.category_tool = self.getCategoryTool()
     self.createCategories()
     portal_property_sheets = self.portal.portal_property_sheets
@@ -99,8 +98,7 @@ class TestConstraint(PropertySheetTestCase):
     """
       Delete all objects in the module.
     """
-    portal = self.getPortal()
-    module = portal.getDefaultModule(self.object_portal_type)
+    module = self.portal.getDefaultModule(self.object_portal_type)
     module.manage_delObjects(module.contentIds())
 
   def _makeOne(self):
@@ -115,8 +113,7 @@ class TestConstraint(PropertySheetTestCase):
     """
       Create a object which will be tested.
     """
-    portal = self.getPortal()
-    module = portal.getDefaultModule(self.object_portal_type)
+    module = self.portal.getDefaultModule(self.object_portal_type)
     object = module.newContent(portal_type=self.object_portal_type)
     group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
     if sequence:
@@ -1292,7 +1289,7 @@ class TestConstraint(PropertySheetTestCase):
     """Tests PropertyTypeValidity can repairs categories when this property
     is added on the class later.
     """
-    self.getPortal().portal_categories.newContent(
+    self.portal.portal_categories.newContent(
                               portal_type='Base Category',
                               id='testing_category')
     constraint = self._createGenericConstraint(

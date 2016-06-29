@@ -52,7 +52,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
         Executed before each test_*.
       """
       self.login()
-      self.folder = self.getPortal().newContent(id='TestFolder',
+      self.folder = self.portal.newContent(id='TestFolder',
                                                 portal_type='Folder')
 
     def beforeTearDown(self):
@@ -60,7 +60,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
         Executed after each test_*.
       """
       self.folder.manage_delObjects(ids=list(self.folder.objectIds()))
-      self.getPortal().manage_delObjects(ids=[self.folder.getId(),])
+      self.portal.manage_delObjects(ids=[self.folder.getId(),])
       clearCache()
       self.tic()
 

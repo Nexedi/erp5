@@ -58,7 +58,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     self.getSkinnableObject().changeSkin(skinname=None)
 
   def login(self):
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('vincent', '', ['Manager'], [])
     user = uf.getUserById('vincent').__of__(uf)
     newSecurityManager(None, user)
@@ -67,13 +67,13 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     """
       Return the skinnable object (access to SkinsTool through cache).
     """
-    return self.getPortal()
+    return self.portal
 
   def getSkinsTool(self):
     """
       Return the SkinsTool (access to SkinsSool without cache).
     """
-    return self.getPortal().portal_skins
+    return self.portal.portal_skins
 
   def getTestedSkinFolder(self):
     """

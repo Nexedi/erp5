@@ -57,12 +57,11 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
     """
     Some pre-configuration
     """
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('manager', '', ['Manager'], [])
     user = uf.getUserById('manager').__of__(uf)
     newSecurityManager(None, user)
-    portal = self.getPortal()
-    module = portal.purchase_order_module
+    module = self.portal.purchase_order_module
     order = module.newContent(portal_type='Purchase Order')
     self.matrix = order.newContent(portal_type='Purchase Order Line')
     self._catch_log_errors(ignored_level=PROBLEM)

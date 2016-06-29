@@ -58,7 +58,7 @@ class TestSessionTool(ERP5TypeTestCase):
 
   def afterSetUp(self):
     # create a Memcached Plugin
-    memcached_tool = self.getPortal().portal_memcached
+    memcached_tool = self.portal.portal_memcached
     #create Memcache Plugin
     if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
       memcached_tool.newContent(id='default_memcached_plugin',
@@ -68,7 +68,7 @@ class TestSessionTool(ERP5TypeTestCase):
     self.login()
 
   def login(self):
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('ivan').__of__(uf)
@@ -107,7 +107,7 @@ class TestSessionTool(ERP5TypeTestCase):
   def stepTestAcquisitionRamSessionStorage(self, sequence=None, \
                                            sequence_list=None, **kw):
     from Products.ERP5Type.Document import newTempOrder
-    portal_sessions =  self.getPortal().portal_sessions
+    portal_sessions =  self.portal.portal_sessions
     session = portal_sessions.newContent(
                       self.session_id, \
                       attr_1 = newTempOrder(portal_sessions, '1'), \
@@ -123,7 +123,7 @@ class TestSessionTool(ERP5TypeTestCase):
   def stepModifySession(self, sequence=None, \
                         sequence_list=None, **kw):
     """ Modify session and check that modifications are updated in storage backend."""
-    portal_sessions = self.getPortal().portal_sessions
+    portal_sessions = self.portal.portal_sessions
     session = portal_sessions.newContent(self.session_id, \
                                          **primitives_kw)
     session = portal_sessions[self.session_id]
@@ -162,7 +162,7 @@ class TestSessionTool(ERP5TypeTestCase):
   def stepDeleteClearSession(self, sequence=None, \
                              sequence_list=None, **kw):
     """ Get session object and check keys stored in previous test. """
-    portal_sessions =  self.getPortal().portal_sessions
+    portal_sessions =  self.portal.portal_sessions
     session = portal_sessions.newContent(self.session_id, \
                                          **primitives_kw)
     # delete it
@@ -228,12 +228,12 @@ class TestSessionTool(ERP5TypeTestCase):
                             sequence_list=None, **kw):
     """ Test expire session which uses different cache plugin. """
     interval = 3
-    portal_sessions = self.getPortal().portal_sessions
+    portal_sessions = self.portal.portal_sessions
     portal_sessions.manage_delObjects(self.session_id)
     session = portal_sessions.getSession(self.session_id, session_duration = interval)
     session['key'] = 'value'
     time.sleep(interval+1)
-    session = self.getPortal().portal_sessions.getSession(self.session_id)
+    session = self.portal.portal_sessions.getSession(self.session_id)
     # session should be an emty dic as it expired
     self.assert_(session == {})
 
@@ -245,7 +245,7 @@ class TestSessionTool(ERP5TypeTestCase):
     session.clear()
     session['key'] = 'value'
 
-    self.getPortal().person_module.newContent(portal_type='Person',
+    self.portal.person_module.newContent(portal_type='Person',
                                         default_address_city='test',
                                         default_address_region='test',
                                         default_address_street_address='test',

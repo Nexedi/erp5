@@ -119,7 +119,7 @@ class TestLocalizer(ERP5TypeTestCase):
     tmp_obj = self.portal.portal_templates.newContent()
     self.tic()
     tmp_obj.activate().test_activity()
-    # here we don't call self.tic() that calls self.getPortal() that
+    # here we don't call self.tic() that calls self.portal that
     # reinvoke setSite(portal).
     setSite()
     self.commit()

@@ -56,7 +56,6 @@ from zope.site.hooks import setSite
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
-from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -235,7 +234,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       try:
         PortalTestCase.login(self, user_name)
       except AttributeError:
-        uf = self.getPortal().acl_users
+        uf = self.portal.acl_users
         uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
                       'Assignor', 'Author', 'Auditor', 'Associate'], [])
         return PortalTestCase.login(self, user_name)
@@ -245,7 +244,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         Change current Skin
       """
       request = self.app.REQUEST
-      self.getPortal().portal_skins.changeSkin(skin_name)
+      self.portal.portal_skins.changeSkin(skin_name)
       request.set('portal_skin', skin_name)
 
     def logout(self):
@@ -298,71 +297,71 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
-      return getToolByName(self.getPortal(), 'portal_templates', None)
+      return getattr(self.portal, 'portal_templates', None)
 
     def getPreferenceTool(self) :
-      return getToolByName(self.getPortal(), 'portal_preferences', None)
+      return getattr(self.portal, 'portal_preferences', None)
 
     def getTrashTool(self):
-      return getToolByName(self.getPortal(), 'portal_trash', None)
+      return getattr(self.portal, 'portal_trash', None)
 
     def getPasswordTool(self):
-      return getToolByName(self.getPortal(), 'portal_password', None)
+      return getattr(self.portal, 'portal_password', None)
 
     def getSkinsTool(self):
-      return getToolByName(self.getPortal(), 'portal_skins', None)
+      return getattr(self.portal, 'portal_skins', None)
 
     def getCategoryTool(self):
-      return getToolByName(self.getPortal(), 'portal_categories', None)
+      return getattr(self.portal, 'portal_categories', None)
 
     def getWorkflowTool(self):
-      return getToolByName(self.getPortal(), 'portal_workflow', None)
+      return getattr(self.portal, 'portal_workflow', None)
 
     def getCatalogTool(self):
-      return getToolByName(self.getPortal(), 'portal_catalog', None)
+      return getattr(self.portal, 'portal_catalog', None)
 
     def getTypesTool(self):
-      return getToolByName(self.getPortal(), 'portal_types', None)
+      return getattr(self.portal, 'portal_types', None)
     getTypeTool = getTypesTool
 
     def getRuleTool(self):
-      return getattr(self.getPortal(), 'portal_rules', None)
+      return getattr(self.portal, 'portal_rules', None)
 
     def getSimulationTool(self):
-      return getToolByName(self.getPortal(), 'portal_simulation', None)
+      return getattr(self.portal, 'portal_simulation', None)
 
     def getSQLConnection(self):
-      return getToolByName(self.getPortal(), 'erp5_sql_connection', None)
+      return getattr(self.portal, 'erp5_sql_connection', None)
 
     def getPortalId(self):
-      return self.getPortal().getId()
+      return self.portal.getId()
 
     def getDomainTool(self):
-      return getToolByName(self.getPortal(), 'portal_domains', None)
+      return getattr(self.portal, 'portal_domains', None)
 
     def getAlarmTool(self):
-      return getattr(self.getPortal(), 'portal_alarms', None)
+      return getattr(self.portal, 'portal_alarms', None)
 
     def getActivityTool(self):
-      return getattr(self.getPortal(), 'portal_activities', None)
+      return getattr(self.portal, 'portal_activities', None)
 
     def getArchiveTool(self):
-      return getattr(self.getPortal(), 'portal_archives', None)
+      return getattr(self.portal, 'portal_archives', None)
 
     def getCacheTool(self):
-      return getattr(self.getPortal(), 'portal_caches', None)
+      return getattr(self.portal, 'portal_caches', None)
 
     def getOrganisationModule(self):
-      return getattr(self.getPortal(), 'organisation_module',
-          getattr(self.getPortal(), 'organisation', None))
+      return getattr(self.portal, 'organisation_module',
+          getattr(self.portal, 'organisation', None))
 
     def getPersonModule(self):
-      return getattr(self.getPortal(), 'person_module',
-          getattr(self.getPortal(), 'person', None))
+      return getattr(self.portal, 'person_module',
+          getattr(self.portal, 'person', None))
 
     def getCurrencyModule(self):
-      return getattr(self.getPortal(), 'currency_module',
-          getattr(self.getPortal(), 'currency', None))
+      return getattr(self.portal, 'currency_module',
+          getattr(self.portal, 'currency', None))
 
     def _addPropertySheet(self, portal_type_name,
                           property_sheet_name='TestPropertySheet',
