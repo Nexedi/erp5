@@ -25,13 +25,16 @@ class _(PatchClass(ExternalMethod)):
 
     @property
     def func_defaults(self):
-        return self.getFunction()[1]
+        return self._getFunction()[1]
 
     @property
     def func_code(self):
-        return self.getFunction()[2]
+        return self._getFunction()[2]
 
     def getFunction(self, reload=False):
+        return self._getFunction(reload)[0]
+
+    def _getFunction(self, reload=False):
         try:
             component_module = __import__(
                 'erp5.component.extension.' + self._module,
@@ -92,7 +95,7 @@ class _(PatchClass(ExternalMethod)):
         """
         self.checkGuard(True)
 
-        _f = self.getFunction()
+        _f = self._getFunction()
         __traceback_info__ = args, kw, _f[1]
 
         if _f[3]:
