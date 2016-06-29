@@ -57,6 +57,7 @@
             <value>
               <list>
                 <string>_set.*</string>
+                <string>manage_afterAdd</string>
               </list>
             </value>
         </item>
@@ -66,6 +67,12 @@
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
             <value>
               <none/>
             </value>

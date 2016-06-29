@@ -1248,6 +1248,32 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
+  def test_05g_SimulationAfterCloningLine(self):
+    sequence_list = SequenceList()
+
+    sequence_string = self.default_sequence
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+    sequence = sequence_list.getSequenceList()[0]
+    packing_list = sequence.get('packing_list')
+    self.assertEqual(None, packing_list.getCausalityRelatedValue(
+         portal_type="Applied Rule"))
+    line, = packing_list.getMovementList()
+    line.Base_createCloneDocument(batch_mode=True)
+    self.assertEqual('calculating', packing_list.getCausalityState())
+    self.tic()
+    self.assertEqual('solved', packing_list.getCausalityState())
+    applied_rule = packing_list.getCausalityRelatedValue(
+         portal_type="Applied Rule")
+    self.assertNotEqual(None, applied_rule)
+    self.assertEqual(1, len(applied_rule.objectValues()))
+    # create new line and check simulation has it
+    line.Base_createCloneDocument(batch_mode=True)
+    self.assertEqual('calculating', packing_list.getCausalityState())
+    self.tic()
+    self.assertEqual('solved', packing_list.getCausalityState())
+    self.assertEqual(2, len(applied_rule.objectValues()))
+
   # The 3 following tests currently fail because they are making assertions on
   # an applied rule which with the new simulation structure is not the same as
   # in the original test packing list.
