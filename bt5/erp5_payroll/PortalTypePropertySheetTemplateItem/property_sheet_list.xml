@@ -2,4 +2,10 @@
  <portal_type id="Pay Sheet Transaction">
   <item>AccountingTransactionConstraint</item>
  </portal_type>
+ <portal_type id="Payroll Enrollment Record">
+  <item>SimpleItem</item>
+ </portal_type>
+ <portal_type id="Social Declaration Report">
+  <item>SimpleItem</item>
+ </portal_type>
 </property_sheet_list>

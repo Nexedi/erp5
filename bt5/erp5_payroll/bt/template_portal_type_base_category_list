@@ -13,4 +13,6 @@ Pay Sheet Model Slice | product_line
 Pay Sheet Model Slice | salary_range
 Pay Sheet Transaction | quantity_unit
 Pay Sheet Transaction | specialise
+Payroll Enrollment Record Module | business_application
 Service | base_amount
+Social Declaration Report Module | business_application
