@@ -53,33 +53,30 @@ data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
   batch_mode=True
 )
 
-# Get active_process associated with data_notebook object
-process_id = data_notebook.getProcess()
-active_process = portal.portal_activities[process_id]
-# Add a result object to Active Process object
-result_list = active_process.getResultList()
-
-# Get local variables saves in Active Result, local varibales are saved as
-# persistent mapping object
-old_local_variable_dict = result_list[0].summary
-if not old_local_variable_dict:
-  old_local_variable_dict = context.Base_addLocalVariableDict()
+# Gets the context associated to the data notebook being used
+#
+old_notebook_context = data_notebook.getNotebookContext()
+if not old_notebook_context:
+  old_notebook_context = portal.Base_createNotebookContext()
 
 # Pass all to code Base_runJupyter external function which would execute the code
 # and returns a dict of result
-final_result = context.Base_runJupyter(python_expression, old_local_variable_dict)
+final_result = context.Base_runJupyter(python_expression, old_notebook_context)
 code_result = final_result['result_string']
-new_local_variable_dict = final_result['local_variable_dict']
+new_local_variable_dict = final_result['notebook_context']
 ename = final_result['ename']
 evalue = final_result['evalue']
 traceback = final_result['traceback']
 status = final_result['status']
 mime_type = final_result['mime_type']
 
-# Call to function to update persistent mapping object with new local variables
-# and save the variables in the Active Result pertaining to the current Data Notebook
-new_dict = context.Base_updateLocalVariableDict(new_local_variable_dict)
-result_list[0].edit(summary=new_dict)
+# Updates the context in the notebook with the resulting context of code 
+# execution.
+#
+try:
+  data_notebook.setNotebookContext(new_local_variable_dict)
+except Exception as e:
+  return context.Base_getErrorMessageForException(e, new_local_variable_dict)
 
 result = {
   u'code_result': code_result,

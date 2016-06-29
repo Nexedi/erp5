@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from cStringIO import StringIO
-from Products.ERP5Type.Globals import  PersistentMapping
 from erp5.portal_type import Image
 from types import ModuleType
+from ZODB.serialize import ObjectWriter
 
 import sys
 import traceback
@@ -12,6 +12,7 @@ import base64
 import cPickle
 
 import transaction
+import Acquisition
 import astor
 
 from matplotlib.figure import Figure
@@ -19,22 +20,30 @@ from IPython.core.display import DisplayObject
 from IPython.lib.display import IFrame
 
 
-def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
+def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   """
-    Function to execute jupyter code and update the local_varibale dictionary.
+    Function to execute jupyter code and update the context dictionary.
     Code execution depends on 'interactivity', a.k.a , if the ast.node object has
-    ast.Expr instance(valid for expressions) or not.
+    ast.Expr instance (valid for expressions) or not.
     
-    old_local_variable_dict should contain both variables dict and modules imports.
-    Here, imports dict is key, value pair of modules and their name in sys.path,
-    executed separately everytime before execution of jupyter_code to populate
-    sys modules beforehand.
+    old_notebook_context should contain both variables dict and setup functions.
+    Here, setup dict is {key: value} pair of setup function names and another dict,
+    which contains the function's alias and code, as string. These functions
+    should be executed before `jupyter_code` to properly create the required
+    environment.
 
-    For example :
-    old_local_variable_dict = {
-                                'imports': {'numpy': 'np', 'sys': 'sys'},
-                                'variables': {'np.split': <function split at 0x7f4e6eb48b90>}
-                                }
+    For example:
+    old_notebook_context =  {
+      'setup': {
+        'numpy setup': {
+          'func_name': 'numpy_setup_function',
+          'code': ...
+        }
+      },
+      'variables': {
+        'my_variable': 1
+      }
+    }
 
     The behaviour would be similar to that of jupyter notebook:-
     ( https://github.com/ipython/ipython/blob/master/IPython/core/interactiveshell.py#L2954 )
@@ -65,26 +74,17 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
   result_string = ''
-
-  # XXX: The focus is on 'ok' status only, we're letting errors to be raised on
-  # erp5 for now, so as not to hinder the transactions while catching them.
-  # TODO: This can be refactored by using client side error handling instead of
-  # catching errors on server/erp5.
-  #
-  local_variable_dict = copy.deepcopy(old_local_variable_dict)
+  notebook_context = old_notebook_context
 
   # Execute only if jupyter_code is not empty
-  #
   if jupyter_code:
     # Create ast parse tree
-    #
     try:
       ast_node = ast.parse(jupyter_code)
     except Exception as e:
       # It's not necessary to abort the current transaction here 'cause the 
       # user's code wasn't executed at all yet.
-      #
-      return getErrorMessageForException(self, e, local_variable_dict)
+      return getErrorMessageForException(self, e, notebook_context)
     
     # Fixing "normal" imports and detecting environment object usage
     import_fixer = ImportFixer()
@@ -93,15 +93,12 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     ast_node = environment_collector.visit(ast_node)
     
     # Get the node list from the parsed tree
-    #
     nodelist = ast_node.body
 
     # Handle case for empty nodelist(in case of comments as jupyter_code)
-    #
     if nodelist:
       # If the last node is instance of ast.Expr, set its interactivity as 'last'
       # This would be the case if the last node is expression
-      #
       if isinstance(nodelist[-1], ast.Expr):
         interactivity = "last"
       else:
@@ -147,23 +144,21 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
         '_volatile_variable_list': []
       }
       user_context.update(inject_variable_dict)
-      user_context.update(local_variable_dict['variables'])
+      user_context.update(notebook_context['variables'])
       
       # Getting the environment setup defined in the current code cell
-      #
       current_setup_dict = environment_collector.getEnvironmentSetupDict()
       current_var_dict = environment_collector.getEnvironmentVarDict()
 
       # Removing old setup from the setup functions
-      #
       removed_setup_message_list = []
       for func_alias in environment_collector.getEnvironmentRemoveList():
         found = False
-        for key, data in local_variable_dict['setup'].items():
+        for key, data in notebook_context['setup'].items():
           if key == func_alias:
             found = True
             func_name = data['func_name']
-            del local_variable_dict['setup'][func_alias]
+            del notebook_context['setup'][func_alias]
             try:
               del user_context[func_alias]
             except KeyError:
@@ -176,17 +171,17 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
             removed_setup_message_list.append(removed_setup_message)
             break
         if not found:
-          raise Exception("Trying to remove non existing function/variable from environment: '%s'\nEnvironment: %s" % (func_alias, str(local_variable_dict['setup'])))
+          transaction.abort()
+          raise Exception("Trying to remove non existing function/variable from environment: '%s'\nEnvironment: %s" % (func_alias, str(notebook_context['setup'])))
       
       # Removing all the setup functions if user call environment.clearAll()
       if environment_collector.clearAll():
-        keys = local_variable_dict['setup'].keys()
+        keys = notebook_context ['setup'].keys()
         for key in keys:
-          del local_variable_dict['setup'][key]
+          del notebook_context['setup'][key]
       
       # Running all the setup functions that we got
-      #
-      for key, value in local_variable_dict['setup'].iteritems():
+      for key, value in notebook_context['setup'].iteritems():
         try:
           code = compile(value['code'], '<string>', 'exec')
           exec(code, user_context, user_context)
@@ -214,31 +209,25 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
           "_volatile_variable_list += _result.keys()\n"
           "del %s, _result\n"
         ) % (data['code'], func_name, func_name)
-        local_variable_dict['setup'][data['alias']] = {
+        notebook_context['setup'][data['alias']] = {
           "func_name": func_name,
           "code": setup_string
         }
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
-      #
       for variable, value, in current_var_dict.iteritems():
         setup_string = "%s = %s\n" % (variable, repr(value))
-        local_variable_dict['setup'][variable] = {
+        notebook_context['setup'][variable] = {
           'func_name': variable,
           'code': setup_string
         }
         user_context['_volatile_variable_list'] += variable
         
       if environment_collector.showEnvironmentSetup():
-        result_string += "%s\n" % str(local_variable_dict['setup'])
-        # environment_list = []
-        # for func_alias, data in local_variable_dict['setup'].iteritems():
-        #   environment_list.append([data['func_name'], func_alias])
-        # result_string += "%s\n" % environment_list
+        result_string += "%s\n" % str(notebook_context['setup'])
 
       # Execute the nodes with 'exec' mode
-      #
       for node in to_run_exec:
         mod = ast.Module([node])
         code = compile(mod, '<string>', "exec")
@@ -249,12 +238,11 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
           # are not added if an exception occurs.
           #
           # TODO: store which notebook line generated which exception.
-          #
           transaction.abort()
-          return getErrorMessageForException(self, e, local_variable_dict)
+          # Clear the portal cache from previous transaction
+          return getErrorMessageForException(self, e, notebook_context)
 
       # Execute the interactive nodes with 'single' mode
-      #
       for node in to_run_interactive:
         mod = ast.Interactive([node])
         try:
@@ -265,9 +253,9 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
           # are not added if an exception occurs.
           #
           # TODO: store which notebook line generated which exception.
-          #
           transaction.abort()
-          return getErrorMessageForException(self, e, local_variable_dict)
+          # Clear the portal cache from previous transaction
+          return getErrorMessageForException(self, e, notebook_context)
 
       sys.stdout = old_stdout
       mime_type = display_data['mime_type'] or mime_type
@@ -276,32 +264,53 @@ def Base_compileJupyterCode(self, jupyter_code, old_local_variable_dict):
     # Checking in the user context what variables are pickleable and we can store
     # safely. Everything that is not pickleable shall not be stored and the user
     # needs to be warned about it.
-    #
     volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context['_volatile_variable_list']
     del user_context['_volatile_variable_list']
     for key, val in user_context.items():
       if not key in globals_dict.keys() and not isinstance(val, ModuleType) and not key in volatile_variable_list:
+        can_store = False
+        
+        # Try to check if we can serialize the object in a way which it can be
+        # stored properly in the ZODB 
         try:
-          import pickle
-          pickle.dumps(val)
-          local_variable_dict['variables'][key] = val
+          # Need to unwrap the variable, otherwise we get a TypeError, because
+          # objects cannot be pickled while inside an acquisition wrapper.
+          ObjectWriter(val).serialize(Acquisition.aq_base(val))
+          can_store = True
+        # If cannot serialize object with ZODB.serialize, try with cPickle
         except:
+          try:
+            # Only a dump of the object is not enough. Dumping and trying to
+            # load it will properly raise errors in all possible situations, 
+            # for example: if the user defines a dict with an object of a class 
+            # that he created the dump will stil work, but the load will fail. 
+            cPickle.loads(cPickle.dumps(val))
+            can_store = True
+          except:
+            can_store = False
+          
+        if can_store:
+          notebook_context['variables'][key] = val
+        else:
           del user_context[key]
-          result_string += ("Cannot pickle the variable named %s whose value is %s, "
-                            "thus it will not be stored in the context. "
-                            "You should move it's definition to a function and " 
-                            "use the environment object to load it.\n") % (key, val)
+          result_string += (
+            "Cannot pickle the variable named %s whose value is %s, "
+            "thus it will not be stored in the context. "
+            "You should move it's definition to a function and " 
+            "use the environment object to load it.\n"
+          ) % (key, val)
+        # if isinstance(val, InstanceType):
+        #   can_pickle = False
     
     # Deleting from the variable storage the keys that are not in the user 
-    # context anymore (i.e., variables that are deleted by the user)
-    #
-    for key in local_variable_dict['variables'].keys():
+    # context anymore (i.e., variables that are deleted by the user).
+    for key in notebook_context['variables'].keys():
       if not key in user_context:
-        del local_variable_dict['variables'][key]
+        del notebook_context['variables'][key]
 
   result = {
     'result_string': result_string,
-    'local_variable_dict': local_variable_dict,
+    'notebook_context': notebook_context,
     'status': status,
     'mime_type': mime_type,
     'evalue': evalue,
@@ -531,7 +540,7 @@ def renderAsHtml(self, renderable_object):
   # At this point the stack should be, from top to the bottom:
   #
   #   5. ExternalMethod Patch call
-  #   4. Base_compileJupyterCode frame (where we want to change variable)
+  #   4. Base_runJupyterCode frame (where we want to change variable)
   #   3. exec call to run the user's code
   #   2. ExternalMethod Patch call through `context.Base_renderAsHtml` in the notebook
   #   1. renderAsHtml frame (where the function is)
@@ -545,10 +554,10 @@ def renderAsHtml(self, renderable_object):
   compile_jupyter_locals['result'].write(result)
   compile_jupyter_locals['display_data']['mime_type'] = 'text/html'
 
-def getErrorMessageForException(self, exception, local_variable_dict):
+def getErrorMessageForException(self, exception, notebook_context):
   '''
     getErrorMessageForException receives an Expcetion object and a context for
-    code execution (local_variable_dict) and will return a dict as Jupyter
+    code execution (notebook_context) and will return a dict as Jupyter
     requires for error rendering.
   '''
   etype, value, tb = sys.exc_info()
@@ -556,38 +565,18 @@ def getErrorMessageForException(self, exception, local_variable_dict):
   return {
     'status': 'error',
     'result_string': None,
-    'local_variable_dict': local_variable_dict,
+    'notebook_context': notebook_context,
     'mime_type': 'text/plain',
     'evalue': str(value),
     'ename': exception.__class__.__name__,
     'traceback': traceback_text
   }
 
-def AddNewLocalVariableDict(self):
+def createNotebookContext(self):
   """
-  Function to add a new Local Variable for a Data Notebook
+  Function to create an empty notebook context.
   """
-  new_dict = PersistentMapping()
-  variable_dict = PersistentMapping()
-  module_dict = PersistentMapping()
-  setup_dict = PersistentMapping()
-  new_dict['variables'] = variable_dict
-  new_dict['imports'] = module_dict
-  new_dict['setup'] = setup_dict 
-  return new_dict
-
-def UpdateLocalVariableDict(self, existing_dict):
-  """
-  Function to update local_varibale_dict for a Data Notebook
-  """
-  new_dict = self.Base_addLocalVariableDict()
-  for key, val in existing_dict['variables'].iteritems():
-    new_dict['variables'][key] = val
-  for key, val in existing_dict['imports'].iteritems():
-    new_dict['imports'][key] = val
-  for key, val in existing_dict['setup'].iteritems():
-    new_dict['setup'][key] = val
-  return new_dict
+  return {'variables': {}, 'setup': {}}
 
 class ObjectProcessor(object):
   '''

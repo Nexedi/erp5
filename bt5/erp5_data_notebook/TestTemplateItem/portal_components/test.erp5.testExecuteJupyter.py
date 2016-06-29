@@ -110,7 +110,7 @@ portal.%s()
     # 
     result = portal.Base_runJupyter(
       jupyter_code=jupyter_code, 
-      old_local_variable_dict=portal.Base_addLocalVariableDict()
+      old_notebook_context=portal.Base_createNotebookContext()
     )
     
     self.assertEquals(result['ename'], 'NameError')
@@ -280,10 +280,10 @@ portal.%s()
     self.assertEquals(result['ename'], 'NameError')
     self.assertEquals(result['code_result'], None)
 
-  def testBaseExecuteJupyterSaveActiveResult(self):
+  def testBaseExecuteJupyterSaveNotebookContext(self):
     """
-    Test if the result is being saved inside active_process and the user can
-    access the loacl variable and execute python expression on them
+    Test if user context is being saved in the notebook_context property and the 
+    user can access access and execute python code on it.
     """
     portal = self.portal
     self.login('dev_user')
@@ -303,12 +303,9 @@ portal.%s()
                                           reference=reference
                                           )
     notebook = notebook_list[0]
-    process_id = notebook.getProcess()
-    active_process = portal.portal_activities[process_id]
-    result_list = active_process.getResultList()
-    local_variable_dict = result_list[0].summary['variables']
+    notebook_context = notebook.getNotebookContext()['variables']
     result = {'a':2, 'b':3}
-    self.assertDictContainsSubset(result, local_variable_dict)
+    self.assertDictContainsSubset(result, notebook_context)
 
   def testBaseExecuteJupyterRerunWithPreviousLocalVariables(self):
     """
@@ -340,7 +337,7 @@ portal.%s()
 
   def testSavingModuleObjectLocalVariables(self):
     """
-    Test to check the saving of module objects in local_variable_dict
+    Test to check the saving of module objects in notebook_context
     and if they work as expected.
     """
     portal = self.portal
@@ -390,13 +387,13 @@ image = context.portal_catalog.getResultValue(portal_type='Image',reference='%s'
 context.Base_renderAsHtml(image)
 """%reference
 
-    local_variable_dict = {'setup' : {}, 'variables' : {}}
+    notebook_context = {'setup' : {}, 'variables' : {}}
     result = self.portal.Base_runJupyter(
       jupyter_code=jupyter_code,
-      old_local_variable_dict=local_variable_dict
+      old_notebook_context=notebook_context
       )
 
-    self.assertEquals(result['result_string'].rstrip(), data_template % base64.b64encode(data))
+    self.assertTrue((data_template % base64.b64encode(data)) in result['result_string'])
     # Mime_type shouldn't be  image/png just because of filename, instead it is
     # dependent on file and file data
     self.assertNotEqual(result['mime_type'], 'image/png')
