@@ -1,0 +1,13 @@
+DSN Change Block | view
+DSN Early Recovery Report | DSN_report_print
+DSN Early Recovery Report | make_DSN
+DSN Early Recovery Report | view
+DSN Early Recovery Report | view_data
+DSN Enrollment Record | view
+DSN Monthly Report | DSN_report_print
+DSN Monthly Report | aggregate_pay_sheet_transaction_list
+DSN Monthly Report | create_replacement
+DSN Monthly Report | make_DSN
+DSN Monthly Report | view
+DSN Monthly Report | view_data
+Leave Request Period | dsn_report_leave_view

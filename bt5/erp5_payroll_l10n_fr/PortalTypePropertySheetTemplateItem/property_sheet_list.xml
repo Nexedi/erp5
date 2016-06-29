@@ -1,0 +1,19 @@
+<property_sheet_list>
+ <portal_type id="DSN Change Block">
+  <item>Data</item>
+  <item>Event</item>
+ </portal_type>
+ <portal_type id="DSN Early Recovery Report">
+  <item>Amount</item>
+  <item>Data</item>
+  <item>DublinCore</item>
+ </portal_type>
+ <portal_type id="DSN Enrollment Record">
+  <item>DsnEnrollmentRecord</item>
+ </portal_type>
+ <portal_type id="DSN Monthly Report">
+  <item>Amount</item>
+  <item>Data</item>
+  <item>DublinCore</item>
+ </portal_type>
+</property_sheet_list>
