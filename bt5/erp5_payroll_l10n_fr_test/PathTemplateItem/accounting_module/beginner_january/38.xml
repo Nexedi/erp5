@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Pay Sheet Transaction Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source_section/organisation_module/generali</string>
+                <string>destination/account_module/prevoyance</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>grouping_reference</string> </key>
+            <value> <string>2015-33</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>38</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Pay Sheet Transaction Line</string> </value>
+        </item>
+        <item>
+            <key> <string>price</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>15.75</float> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
