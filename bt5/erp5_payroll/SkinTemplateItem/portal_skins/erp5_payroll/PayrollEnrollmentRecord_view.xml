@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -35,7 +14,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -70,7 +59,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -84,46 +75,15 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_quantity</string>
-                        <string>your_section_category</string>
-                        <string>my_integer_value</string>
-                        <string>my_comment</string>
-                        <string>my_view_mode_listbox</string>
-                        <string>my_list_field</string>
-                        <string>my_lines_field</string>
-                        <string>my_matrix_box</string>
-                        <string>my_percent</string>
-                        <string>my_category</string>
-                        <string>my_text_area_field</string>
-                        <string>your_target_language</string>
-                        <string>my_string_field</string>
-                        <string>my_multi_list_field</string>
-                        <string>my_multi_relation_field</string>
-                        <string>my_description</string>
-                        <string>my_checkbox</string>
-                        <string>your_portal_skin</string>
-                        <string>my_translated_workflow_state_title</string>
-                        <string>your_format</string>
-                        <string>my_float_field</string>
-                        <string>my_relation_field</string>
-                        <string>my_parallel_list_field</string>
-                        <string>my_list_mode_listbox</string>
-                        <string>my_money_quantity</string>
-                        <string>my_date</string>
-                        <string>your_at_date</string>
-                        <string>Base_viewReportFieldLibrary</string>
-                        <string>your_from_date</string>
-                        <string>your_simulation_state</string>
-                        <string>my_view_mode_category</string>
-                        <string>my_ledger</string>
-                        <string>my_view_mode_translated_workflow_state_title</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_validation_state_title</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -131,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+            <value> <string>PayrollEnrollmentRecord_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -139,7 +99,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Base_viewPayrollFieldLibrary</string> </value>
+            <value> <string>PayrollEnrollmentRecord_view</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -151,11 +115,19 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payroll Field Library</string> </value>
+            <value> <string>Payroll Enrollment Record</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
