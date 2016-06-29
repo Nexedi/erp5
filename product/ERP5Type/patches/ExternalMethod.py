@@ -12,6 +12,7 @@
 ##############################################################################
 
 from inspect import getargs
+from types import MethodType
 from Products.ExternalMethod.ExternalMethod import *
 from Products.ERP5Type.Globals import InitializeClass
 from zLOG import LOG, WARNING
@@ -69,8 +70,15 @@ class _(PatchClass(ExternalMethod)):
                 return _f
         except AttributeError:
             pass
-        ff = getattr(f, 'im_func', f)
-        self._v_f = _f = f, ff.func_defaults, FuncCode(ff, f is not ff)
+        code = f.func_code
+        args = getargs(code)[0]
+        i = isinstance(f, MethodType)
+        ff = f.__func__ if i else f
+        has_self = len(args) > i and args[i] == 'self'
+        i += has_self
+        if i:
+            code = FuncCode(ff, i)
+        self._v_f = _f = (f, f.func_defaults, code, has_self)
         return _f
 
     def __call__(self, *args, **kw):
@@ -79,44 +87,17 @@ class _(PatchClass(ExternalMethod)):
         Calling an External Method is roughly equivalent to calling
         the original actual function from Python.  Positional and
         keyword parameters can be passed as usual.  Note however that
-        unlike the case of a normal Python method, the "self" argument
-        must be passed explicitly.  An exception to this rule is made
-        if:
-
-        - The supplied number of arguments is one less than the
-          required number of arguments, and
-
-        - The name of the function\'s first argument is 'self'.
-
-        In this case, the URL parent of the object is supplied as the
-        first argument.
+        if first argument is 'self', and only in this case, the
+        acquisition parent is passed as first positional parameter.
         """
         self.checkGuard(True)
 
         _f = self.getFunction()
-        f = _f[0]
-
         __traceback_info__ = args, kw, _f[1]
 
-        # XXX: We'd like to use inspect.getcallargs instead of try..except.
-        #      However, for the same reason as we use getargs instead of
-        #      getargspec, we need something that works for any callable
-        #      providing func_code & func_default (not only functions).
-        try: return f(*args, **kw)
-        except TypeError, v:
-            tb=sys.exc_info()[2]
-            try:
-                func_args, func_varargs, _ = getargs(f.func_code)
-                by_kw = set(kw)
-                if f.func_defaults:
-                    by_kw.update(func_args[-len(f.func_defaults):])
-                if func_args[0] == 'self' and 'self' not in kw and (
-                        func_varargs or len(set(func_args[len(args):]
-                            ).difference(by_kw)) == 1):
-                    return f(self.aq_parent.this(), *args, **kw)
-
-                raise TypeError, v, tb
-            finally: tb=None
+        if _f[3]:
+            return _f[0](self.aq_parent, *args, **kw)
+        return _f[0](*args, **kw)
 
     security = ClassSecurityInfo()
 

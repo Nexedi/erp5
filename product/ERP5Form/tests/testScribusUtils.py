@@ -88,7 +88,6 @@ class TestScribusUtils(ERP5TypeTestCase):
     generated (using convert), and a css file created'''
 
     self.portal.ERP5Site_createModuleScribus(
-              self,
               option_html=1,
               desired_width=800,
               desired_height=1132,
@@ -177,7 +176,6 @@ class TestScribusUtils(ERP5TypeTestCase):
 
     # Update the ERP5Form, scribus, PDFForm, css and background picture
     self.portal.ERP5Site_updateModuleScribus(
-                  self,
                   import_pdf_file=self.makeFileUpload('test_1.pdf'),
                   import_scribus_file=self.makeFileUpload('test_2.sla'),
                   object_portal_type="Dummy")

@@ -25,7 +25,7 @@ elif (portal_type == "Web Manifest"):
 
 else:
   if (mapping_dict is not None):
-    web_content = web_page.TextDocument_substituteTextContent(web_page, web_content, mapping_dict=mapping_dict)
+    web_content = web_page.TextDocument_substituteTextContent(web_content, mapping_dict=mapping_dict)
 
   content_security_policy = "default-src 'self' data: blob:"
   if (web_section):
