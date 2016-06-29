@@ -29,15 +29,21 @@
 ##############################################################################
 
 import gc
+import os
+import shutil
+import tempfile
 import unittest
 
 import transaction
 from persistent import Persistent
 from ZODB.broken import BrokenModified
-from zExceptions import NotFound
+from zExceptions import Forbidden, NotFound
+from AccessControl.SecurityManagement import \
+  getSecurityManager, setSecurityManager, noSecurityManager
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken, InitGhostBase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 from zope.interface import Interface, implementedBy
 
@@ -1377,8 +1383,6 @@ class _TestZodbComponent(SecurityTestCase):
                                              'invalidate_action',
                                              test_component)
 
-    from AccessControl.SecurityManagement import getSecurityManager
-    from AccessControl.SecurityManagement import setSecurityManager
     from Products.CMFCore.WorkflowCore import WorkflowException
     sm = getSecurityManager()
     try:
@@ -1962,58 +1966,87 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     Check that ExternalMethod monkey-patch to use ZODB Components works well
     by creating a new External Method and then a Python Script to call it
     """
-    test_component = self._newComponent(
-      'TestExternalMethodComponent',
-      'def foobar(*args, **kwargs):\n  return 42')
+    module = 'TestExternalMethodComponent'
+    test_component = self._newComponent(module, """# a method
+class foobar:
+  def f(self, x, y=1, *z):
+    return sum(z, x + y)
+foobar = foobar().f
+""")
 
     test_component.validate()
     self.tic()
 
-    self.assertModuleImportable('TestExternalMethodComponent')
+    self.assertModuleImportable(module)
 
-    # Add an External Method using the Extension Component defined above and
-    # check that it returns 42
+    # Add an External Method using the Extension Component defined above
     from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
     manage_addExternalMethod(self.portal,
                              'TestExternalMethod',
                              'title',
-                             'TestExternalMethodComponent',
+                             module,
                              'foobar')
 
-    self.tic()
+    self.commit()
 
     external_method = self.portal.TestExternalMethod
-    self.assertEqual(external_method(), 42)
+    external_method._p_deactivate()
+    self.assertFalse(hasattr(external_method, '_v_f'))
+    self.assertEqual(external_method(1, 2, 3, 4), 10)
+    self.assertTrue(hasattr(external_method, '_v_f'))
 
     # Check that the External Method returns expected result through Publisher
-    # with or without DevelopmentMode
-    path = '%s/TestExternalMethod' % self.portal.getId()
-    self.assertEqual(self.publish(path).getBody(), '42')
-
-    import Globals
-    previous_development_mode = Globals.DevelopmentMode
-    Globals.DevelopmentMode = not Globals.DevelopmentMode
-    try:
+    base = self.portal.getPath()
+    for query in 'x:int=-24&y:int=66', 'x:int=41':
+      path = '%s/TestExternalMethod?%s' % (base, query)
       self.assertEqual(self.publish(path).getBody(), '42')
+
+    # Test from a Python Script
+    createZODBPythonScript(self.portal.portal_skins.custom,
+      'TestPythonScript', '**kw', 'return context.TestExternalMethod(**kw)')
+    self.assertEqual(self.portal.TestPythonScript(x=2), 3)
+
+    # Check that the External Method is reloaded automatically if the component
+    # changes. We also test that the context is passed automatically.
+    test_component.setTextContent("""# a function
+def foobar(self, a, b="portal_type"):
+  return getattr(getattr(self, a), b)
+""")
+    self.commit()
+
+    external_method.manage_setGuard({'guard_roles': 'Member'})
+    self.assertEqual(self.portal.TestPythonScript(a='portal_ids'), 'Id Tool')
+    self.assertEqual(self.publish(base + '/portal_types/TestExternalMethod?'
+      'a=Types Tool&b=type_class', 'ERP5TypeTestCase:').getBody(), 'TypesTool')
+
+    sm = getSecurityManager()
+    try:
+      noSecurityManager()
+      self.assertRaises(Forbidden, external_method, "portal_types")
+      external_method.manage_setGuard({})
+      self.assertEqual(external_method('portal_types'), 'Types Tool')
     finally:
-      Globals.DevelopmentMode = previous_development_mode
-
-    # Add a Python Script with the External Method defined above and check
-    # that it returns 42
-    from Products.PythonScripts.PythonScript import manage_addPythonScript
-    manage_addPythonScript(self.portal, 'TestPythonScript')
-    self.portal.TestPythonScript.write('return context.TestExternalMethod()')
-    self.tic()
-
-    self.assertEqual(self.portal.TestPythonScript(), 42)
+      setSecurityManager(sm)
 
     # Invalidate the Extension Component and check that it's not callable
     # anymore
     test_component.invalidate()
-    self.tic()
+    self.commit()
 
     self.assertRaisesRegexp(NotFound, "The specified module,"
-        " 'TestExternalMethodComponent', couldn't be found.", external_method)
+        " '%s', couldn't be found." % module, external_method)
+
+    # Check fallback on FS, and also callable objects.
+    cfg = getConfiguration()
+    assert not hasattr(cfg, "extensions")
+    cfg.extensions = tempfile.mkdtemp()
+    try:
+      with open(os.path.join(cfg.extensions, module + '.py'), "w") as f:
+        f.write("foobar = lambda **kw: sorted(kw.iteritems())")
+      self.assertEqual(external_method(z=1, a=0), [('a', 0), ('z', 1)])
+    finally:
+      shutil.rmtree(cfg.extensions)
+      del cfg.extensions
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 

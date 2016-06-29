@@ -37,6 +37,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import INFO
+from zExceptions import Forbidden
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -3073,6 +3074,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.assertTrue(x in result_set, "%s not in %s" % (x, result_set))
       # Values from which acquired properties are fetched are not returned.
       self.assertFalse("address" in result_set)
+
+    def test_callable_guards(self):
+      skin = self.getSkinsTool().custom
+      script = createZODBPythonScript(skin, self.id(), 'x', 'return x+1')
+      script.manage_setGuard({'guard_roles': 'Manager'})
+      self.assertEqual(script(1), 2)
+      self.assertTrue(script.checkGuard())
+      self.loginWithNoRole()
+      self.assertRaises(Forbidden, script, 2)
+      self.assertFalse(script.checkGuard())
+      script.manage_setGuard({})
+      self.assertEqual(script(1), 2)
+      self.assertTrue(script.checkGuard())
 
 
 class TestAccessControl(ERP5TypeTestCase):
