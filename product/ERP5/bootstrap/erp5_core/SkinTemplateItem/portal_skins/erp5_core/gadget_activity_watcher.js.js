@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, Handlebars, jIO, location */
+/*global window, rJS, RSVP, Handlebars, jIO, location, console */
 /*jslint nomen: true, maxlen:80, indent:2*/
 (function (rJS, jIO, Handlebars, RSVP, window) {
   "use strict";
@@ -61,6 +61,17 @@
           })
           .push(function () {
             return getDataExamine();
+          })
+          .push(undefined, function (error) {
+            //Exception is raised if network is lost for some reasons,
+            //in this case, try patiently until network is back.
+            //There is probably more clean ways
+            console.log("error", error);
+            return new RSVP.Queue().push(function () {
+              return RSVP.delay(1000);
+            }).push(function () {
+                return getDataExamine();
+              });
           });
       }
       return queue.push(function () {
