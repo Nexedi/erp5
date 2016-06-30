@@ -1,9 +1,9 @@
 import feedparser, urllib2, socket
 from hashlib import md5
 
-def getRssDataAsDict(self, url, username=None, password=None):
+def getRssDataAsDict(context, url, username=None, password=None):
   result = {}
-  translate = self.Base_translateString
+  translate = context.Base_translateString
   # no url, no feed to read
   if url in ('', None, 'None',):
     # no URL
