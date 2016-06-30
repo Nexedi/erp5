@@ -143,10 +143,15 @@ class TaskDistributionTool(BaseTool):
             last_revision = reference
           elif reference:
             last_revision = last_revision, reference
-          if len(test_result.objectValues(portal_type="Test Result Line")) == 0 \
-              and len(test_name_list):
+          result_line_list = test_result.objectValues(portal_type="Test Result Line")
+          result_line_list_len = len(result_line_list)
+          if result_line_list_len == 0 and len(test_name_list):
             test_result.serialize() # prevent duplicate test result lines
             createTestResultLineList(test_result, test_name_list)
+          elif result_line_list_len:
+            # Do not process test result if all test result lines are already affected
+            if len([x for x in result_line_list if x.getSimulationState() == 'draft']) == 0:
+              return
           return test_result.getRelativeUrl(), last_revision
         if last_state in ('stopped', 'public_stopped'):
           if reference_list_string is not None:
@@ -202,11 +207,6 @@ class TaskDistributionTool(BaseTool):
         if state == 'draft':
           line.start()
           return test
-        # XXX Make sure we finish all tests.
-        if state == 'started':
-          started_list.append(test)
-    if started_list:
-      return random.choice(started_list)
 
   security.declarePublic('stopUnitTest')
   def stopUnitTest(self, test_path, status_dict):

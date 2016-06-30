@@ -246,7 +246,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     now = DateTime()
     from_date = now - 30
     def getTestSuiteSortKey(test_suite):
-      test_result = portal.portal_catalog(portal_type="Test Result",
+      test_result_list = portal.portal_catalog(portal_type="Test Result",
                                           title=SimpleQuery(title=test_suite.getTitle()),
                                           creation_date=SimpleQuery(
                                             creation_date=from_date,
@@ -254,8 +254,16 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
                                           ),
                                           sort_on=[("modification_date", "descending")],
                                           limit=1)
-      if len(test_result):
-        key = test_result[0].getObject().getModificationDate().timeTime()
+      if len(test_result_list):
+        test_result = test_result_list[0].getObject()
+        key = test_result.getModificationDate().timeTime()
+        # if a test result has all it's tests already ongoing, it is not a
+        # priority at all to process it, therefore push it at the end of the list
+        if test_result.getSimulationState() == "started":
+          result_line_list = test_result.objectValues(portal_type="Test Result Line")
+          if len(result_line_list):
+            if len([x for x in result_line_list if x.getSimulationState() == "draft"]) == 0:
+              key = now.timeTime()
       else:
         key = random.random()
       return key

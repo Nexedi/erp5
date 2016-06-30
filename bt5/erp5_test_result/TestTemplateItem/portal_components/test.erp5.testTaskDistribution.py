@@ -1,6 +1,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import json 
 from time import sleep
+from DateTime import DateTime
 
 class TestTaskDistribution(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -143,6 +144,10 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.portal.portal_alarms.task_distributor_alarm_optimize.activeSense()
     self.tic()
 
+  def _callRestartStuckTestResultAlarm(self):
+    self.portal.portal_alarms.test_result_alarm_restarted_stuck_test_result.activeSense()
+    self.tic()
+
   def test_03_startTestSuiteWithOneTestNode(self):
     config_list = json.loads(self.distributor.startTestSuite(
                              title="COMP32-Node1"))
@@ -202,17 +207,28 @@ class TestTaskDistribution(ERP5TypeTestCase):
                       set(getTestSuiteList()))
     # Check that if test suite 1 and test suite 2 are recently processed,
     # then next work must be test suite 3
-    def processTest(test_title, revision):
+    def processTest(test_title, revision, start_count=2, stop_count=2):
+      """start_count: number of test line to start
+         stop_count: number of test line to stop
+      """
       status_dict = {}
       test_result_path, revision = self._createTestResult(revision=revision,
         test_list=['testFoo', 'testBar'], test_title=test_title)
-      line_url, test = self.tool.startUnitTest(test_result_path)
-      next_line_url, next_test = self.tool.startUnitTest(test_result_path)
-      self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
-      self.tool.stopUnitTest(line_url, status_dict)
-      self.tool.stopUnitTest(next_line_url, status_dict)
+      if start_count:
+        line_url, test = self.tool.startUnitTest(test_result_path)
+      if start_count == 2:
+        next_line_url, next_test = self.tool.startUnitTest(test_result_path)
+        self.assertEqual(set(['testFoo', 'testBar']), set([test, next_test]))
+      if stop_count:
+        self.tool.stopUnitTest(line_url, status_dict)
+      if stop_count == 2:
+        self.tool.stopUnitTest(next_line_url, status_dict)
       test_result = self.portal.restrictedTraverse(test_result_path)
-      self.assertEquals(test_result.getSimulationState(), "stopped")
+      if stop_count == 2:
+        self.assertEquals(test_result.getSimulationState(), "stopped")
+      else:
+        self.assertEquals(test_result.getSimulationState(), "started")
+
     processTest("test suite 1", "r0=a")
     self.tic()
     sleep(1) # needed because creation date sql value does not record millesecond
@@ -227,7 +243,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     sleep(1)
     self.assertEquals(getTestSuiteList()[0], "test suite 1")
     processTest("test suite 1", "r0=c")
-    # after test suite 2, we now have to process test suite 2
+    # after test suite 1, we now have to process test suite 2
     # since it is the oldest one
     self.tic()
     sleep(1)
@@ -235,14 +251,26 @@ class TestTaskDistribution(ERP5TypeTestCase):
     processTest("test suite 2", "r0=d")
     self.tic()
     sleep(1)
-    # now let's say for any reasyon test suite 1 has been done
+    # now let's say for any reason test suite 1 has been done
     processTest("test suite 1", "r0=e")
     self.tic()
     sleep(1)
     # we should then have by order 3, 2, 1
     self.assertEquals(["test suite 3", "test suite 2", "test suite 1"],
                       getTestSuiteList())
-    
+    # now launch all test of test 3, even if they are not finished yet
+    processTest("test suite 3", "r0=f", stop_count=1)
+    self.tic()
+    sleep(1)
+    self.assertEquals(["test suite 2", "test suite 1", "test suite 3"],
+                      getTestSuiteList())
+    # now launch partially tests of suite 2, it must have priority over
+    # test 3, even if test 3 is older because all tests of test 3 are ongoing
+    processTest("test suite 2", "r0=g", start_count=1, stop_count=0)
+    self.tic()
+    sleep(1)
+    self.assertEquals(["test suite 1", "test suite 2", "test suite 3"],
+                      getTestSuiteList())
 
   def _cleanupTestResult(self):
     self.tic()
@@ -290,6 +318,19 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(2, len(line_list))
     self.assertEqual(set(['testFoo', 'testBar']), set([x.getTitle() for x
                       in line_list]))
+    line_url, test = self.tool.startUnitTest(test_result_path)
+    result = self._createTestResult(test_list=['testFoo', 'testBar'])
+    self.assertEqual((test_result_path, revision), result)
+    next_line_url, next_test = self.tool.startUnitTest(test_result_path)
+    # all tests of this test suite are now started, stop affecting test node to it
+    result = self._createTestResult(test_list=['testFoo', 'testBar'])
+    self.assertEqual(None, result)
+    # though, is we restart one line, we will have affectation again
+    self.portal.restrictedTraverse(line_url).redraft()
+    self.commit()
+    result = self._createTestResult(test_list=['testFoo', 'testBar'])
+    self.assertEqual((test_result_path, revision), result)
+    next_line_url, next_test = self.tool.startUnitTest(test_result_path)
 
   def test_06_startStopUnitTest(self):
     """
@@ -300,6 +341,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     line_url, test = self.tool.startUnitTest(test_result_path)
     next_line_url, next_test = self.tool.startUnitTest(test_result_path)
+    # once all tests are affected, stop affecting resources on this test result
+    next_result = self.tool.startUnitTest(test_result_path)
+    self.assertEqual(None, next_result)
     # first launch, we have no time optimisations, so tests are
     # launched in alphabetical order
     self.assertEqual(['testBar', 'testFoo'], [test, next_test])
@@ -326,6 +370,37 @@ class TestTaskDistribution(ERP5TypeTestCase):
     line_url, test = self.tool.startUnitTest(next_test_result_path)
     next_line_url, next_test = self.tool.startUnitTest(next_test_result_path)
     self.assertEqual(['testFoo', 'testBar'], [test, next_test])
+
+  def test_06b_restartStuckTest(self):
+    """
+    Check if a test result line is not stuck in 'started', if so, redraft
+    if with alarm to let opportunity of another test node to work on it
+    """
+    test_result_path, revision = self._createTestResult(
+      test_list=['testFoo', 'testBar'])
+    test_result = self.portal.unrestrictedTraverse(test_result_path)
+    line_url, test = self.tool.startUnitTest(test_result_path)
+    now = DateTime()
+    def checkTestResultLine(expected):
+      line_list = test_result.objectValues(portal_type="Test Result Line")
+      found_list = [(x.getTitle(), x.getSimulationState()) for x in line_list]
+      found_list.sort(key=lambda x: x[0])
+      self.assertEqual(expected, found_list)
+    checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
+    self._callRestartStuckTestResultAlarm()
+    checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
+    line_url, test = self.tool.startUnitTest(test_result_path)
+    checkTestResultLine([('testBar', 'started'), ('testFoo', 'started')])
+    self._callRestartStuckTestResultAlarm()
+    checkTestResultLine([('testBar', 'started'), ('testFoo', 'started')])
+    # now let change history to do like if a test result line was started
+    # a long time ago
+    line = self.portal.restrictedTraverse(line_url)
+    for history_line in line.workflow_history["test_result_workflow"]:
+      if history_line['action'] == 'start':
+        history_line['time'] = now - 1
+    self._callRestartStuckTestResultAlarm()
+    checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
 
   def test_07_reportTaskFailure(self):
     test_result_path, revision = self._createTestResult(node_title="Node0")
