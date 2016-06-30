@@ -5309,6 +5309,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Clear cache to avoid reusing cached values with replaced objects.
       site.portal_caches.clearAllCache()
 
+      # Update or migrate methods and properties from SQLCatlog to ERP5Catalog
+      site.migrateSQLCatalogToERP5Catalog()
+
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
 
@@ -5344,6 +5347,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # It is better to clear cache because the uninstallation of a
       # template deletes many things from the portal.
       self.getPortalObject().portal_caches.clearAllCache()
+      # Rerun migration after uninstallation so as to maintain consistency between
+      # objects and properties of sql_catalog(specially needed for bt5 having
+      # CatalogMethodTemplateItem objects)
+      site = self.getPortalObject()
+      site.migrateSQLCatalogToERP5Catalog()
 
     security.declareProtected(Permissions.ManagePortal, 'uninstall')
     uninstall = _uninstall
