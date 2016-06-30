@@ -126,7 +126,7 @@ class ERP5UserManager(BasePlugin):
         return person_url
       else:
         person_list = portal.portal_catalog.unrestrictedSearchResults(
-          select_list=('relative_url',),
+          select_list=('relative_url', 'reference'),
           portal_type='Person',
           reference={'query': reference, 'key': 'ExactMatch'},
           limit=2
@@ -136,11 +136,10 @@ class ERP5UserManager(BasePlugin):
           raise RuntimeError, 'More than one Person have login %r' % \
             (reference,)
         elif l == 1:
+          self.REQUEST.set('_person_cache', {})
+          self.REQUEST['_person_cache'][person_list[0]['reference']] = \
+            person_list[0]['relative_url']
           return person_list[0]['relative_url']
-    _getPersonRelativeUrlFromReference = CachingMethod(
-      _getPersonRelativeUrlFromReference,
-      id='ERP5UserManager._getPersonRelativeUrlFromReference',
-      cache_factory='erp5_content_short')
     person_relative_url = _getPersonRelativeUrlFromReference(reference)
     if person_relative_url is not None:
       return self.getPortalObject().unrestrictedTraverse(
