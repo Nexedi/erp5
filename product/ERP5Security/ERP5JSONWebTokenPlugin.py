@@ -119,24 +119,16 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
         # 1st - try to fetch from Authorization header
         name_token = request.cookies.get(self.name_cookie)
   
-      #import pdb; pdb.set_trace()
       if name_token is None:
         # no name_token
         return DumbHTTPExtractor().extractCredentials(request)
       # name_token is available
-      
+
       name = name_serializer.loads(name_token)["user"].encode()
   
-      if name is None:
-        # fallback to default way
-        return DumbHTTPExtractor().extractCredentials(request)
-      
       self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
       user = self.erp5usermanager.getUserByLogin(name)[0]
 
-      if not user:
-        return DumbHTTPExtractor().extractCredentials(request)
-      
       data_token = None
       if self.data_cookie in request.cookies:
         # 1st - try to fetch from Authorization header
@@ -147,11 +139,9 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
       data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
       data = data_serializer.loads(data_token)
-      #import pdb; pdb.set_trace()
-      self.getPortalObject().ERP5Site_processJWTData(data)
-      creds['external_login'] = name
-
-      # XXX A script should be called here to deal with the data 
+      data_okay = self.getPortalObject().ERP5Site_processJWTData(data)
+      if data_okay:
+        creds['external_login'] = name
 
     creds['remote_host'] = request.get('REMOTE_HOST', '')
     try:
@@ -165,15 +155,16 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
   #
   security.declarePrivate( 'authenticateCredentials' )
   def authenticateCredentials(self, credentials):
-    LOG('ERP5JSONWebTokenPlugin', INFO,
-        'authenticating Credential')
     #if self.erp5usermanager is None:
     self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
     authentication_result = self.erp5usermanager.authenticateCredentials(credentials)
-    LOG('ERP5JSONWebTokenPlugin', INFO,
-        'authentication result: %s' % str(authentication_result))
     if authentication_result is not None:
       #Save this in cookie
+      if JSONWebSignatureSerializer is None:
+        LOG('ERP5JSONWebTokenPlugin', INFO,
+            'No itsdangerous module, install itsdangerous package. '
+              'Authentication disabled.')
+        return authentication_result
       name = authentication_result[0]
       user = self.erp5usermanager.getUserByLogin(name)[0]
       name_serializer = JSONWebSignatureSerializer(self.secret)
@@ -196,30 +187,6 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
       response.expireCookie(self.default_cookie_name, path='/')
                       
     return authentication_result  
-
-  ################################
-  #   ICredentialsUpdatePlugin   #
-  ################################
-  security.declarePrivate('updateCredentials')
-  def updateCredentials(self, request, response, login, new_password):
-    """ Respond to change of credentials"""
-    LOG('ERP5JSONWebTokenPlugin', INFO,
-        'Updating Credential')
-    LOG('ERP5JSONWebTokenPlugin', INFO,
-        'Login is %s' % login)
-    serializer = JSONWebSignatureSerializer(self.secret)
-    response.setCookie(self.name_cookie, serializer.dumps({"user": login}), path='/')
-    response.expireCookie(self.default_cookie_name, path='/')
-
-  ################################
-  #    ICredentialsResetPlugin   #
-  ################################
-  security.declarePrivate('resetCredentials')
-  def resetCredentials(self, request, response):
-    """Expire cookies of authentification """
-    response.expireCookie(self.cookie_name, path='/')
-    response.expireCookie(self.default_cookie_name, path='/')
-
 
   ################################
   # Properties for ZMI managment #
@@ -250,8 +217,6 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 #List implementation of class
 classImplements( ERP5JSONWebTokenPlugin,
                 plugins.IAuthenticationPlugin,
-                plugins.ICredentialsResetPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin,
-                plugins.ICredentialsUpdatePlugin,
                )
 InitializeClass(ERP5JSONWebTokenPlugin)
