@@ -176,10 +176,16 @@ class _(PatchClass(PythonScript)):
   def __call__(self, *args, **kw):
     '''Calls the script.'''
     self.checkGuard(True) # patch
-    return self._bindAndExec(args, kw, None)
+    return self._orig_bindAndExec(args, kw, None)
 
   security.declarePublic("render")
   render = __call__
+
+  # For __render_with_namespace__ (we prefer to monkey-patch __call__
+  # because it's called more often, and this makes debugging easier)
+  _orig_bindAndExec = PythonScript._bindAndExec
+  def _bindAndExec(self, args, kw, caller_namespace):
+    return self(*args, **kw) # caller_namespace not used by PythonScript
 
 addGuard(PythonScript, 'Change Python Scripts')
 
