@@ -57,21 +57,16 @@
 
             form_gadget.props.element.querySelector(".activity_watcher_gadget")
                             .innerHTML = html_content;
+          }, function (error) {
+            //Exception is raised if network is lost for some reasons,
+            //in this case, try patiently until network is back.
+            console.log("Unable to fetch activities from ERP5", error);
+          })
+          .push(function () {
             return RSVP.delay(1000);
           })
           .push(function () {
             return getDataExamine();
-          })
-          .push(undefined, function (error) {
-            //Exception is raised if network is lost for some reasons,
-            //in this case, try patiently until network is back.
-            //There is probably more clean ways
-            console.log("error", error);
-            return new RSVP.Queue().push(function () {
-              return RSVP.delay(1000);
-            }).push(function () {
-                return getDataExamine();
-              });
           });
       }
       return queue.push(function () {
