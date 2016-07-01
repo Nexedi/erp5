@@ -5,7 +5,7 @@
 from wendelin.bigarray.array_zodb import ZBigArray
 import numpy as np
 
-def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
+def DataStream_copyCSVToDataArray(data_stream, chunk_list, start, end, \
                                   data_array_reference=None):
   """
     Receive CSV data and transform it to a numpy array of floats.
@@ -18,7 +18,7 @@ def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
   start = start - offset_mismatch
   end = end - offset_mismatch
   
-  #self.log(chunk_text)
+  #data_stream.log(chunk_text)
 
   # remove offset line which is to be processed next call
   chunk_text = chunk_text[:len(chunk_text) - offset_mismatch - 1]
@@ -31,11 +31,11 @@ def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
     size_list.extend([x for x in line_item_list])
 
   # save this value as a numpy array (for testing, only create ZBigArray for one variable)
-  #self.log(size_list)
+  #data_stream.log(size_list)
   size_list = [float(x) for x in size_list]
   ndarray = np.array(size_list)
 
-  data_array = self.portal_catalog.getResultValue( \
+  data_array = data_stream.portal_catalog.getResultValue( \
                       portal_type='Data Array', \
                       reference = data_array_reference, \
                       validation_state = 'validated')
@@ -46,7 +46,7 @@ def DataStream_copyCSVToDataArray(self, chunk_list, start, end, \
     data_array.setArray(zarray)
     zarray = data_array.getArray()
 
-  #self.log('Zarray shape=%s,  To append shape=%s, %s' %(zarray.shape, ndarray.shape, ndarray.itemsize))
+  #data_stream.log('Zarray shape=%s,  To append shape=%s, %s' %(zarray.shape, ndarray.shape, ndarray.itemsize))
     
   # resize so we can add new array data
   old_shape = zarray.shape
