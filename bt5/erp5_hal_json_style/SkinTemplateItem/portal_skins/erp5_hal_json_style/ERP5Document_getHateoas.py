@@ -933,16 +933,12 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
   field_errors = REQUEST.get('field_errors', {})
 
   #hardcoded
-  include_action = True
   if form.pt == 'form_dialog':
     action_to_call = "Base_callDialogMethod"
   else:
-    action_to_call = form.action
-  if (action_to_call == 'Base_edit') and (not portal.portal_membership.checkPermission('Modify portal content', traversed_document)):
-    # prevent allowing editing if user doesn't have permission
-    include_action = False
+    action_to_call = form.getAction(traversed_document)
 
-  if (include_action):
+  if action_to_call:
     # Form action
     response_dict['_actions'] = {
       'put': {

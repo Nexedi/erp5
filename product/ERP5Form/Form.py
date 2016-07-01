@@ -41,6 +41,7 @@ from Products.ERP5Type import PropertySheet, Permissions
 from urllib import quote
 from Products.ERP5Type.Globals import DTMLFile, get_request
 from AccessControl import Unauthorized, ClassSecurityInfo
+from AccessControl.ZopeGuards import guarded_getattr
 from DateTime import DateTime
 from ZODB.POSException import ConflictError
 from zExceptions import Redirect
@@ -1291,6 +1292,22 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     def PrincipiaSearchSource(self):
       return str((self.pt, self.name, self.action, self.update_action,
                   self.encoding, self.stored_encoding, self.enctype))
+
+    def getAction(self, context):
+      action = self.action
+      if action:
+        try:
+          m = guarded_getattr(context, action)
+        except Unauthorized:
+          pass
+        else:
+          code = m.func_code
+          args = code.co_varnames[:code.co_argcount]
+          if (m(form_id=self.id, check_security=1) if 'form_id' in args else
+              m(check_security=1)) if 'check_security' in args else \
+             context.getPortalObject().portal_membership.checkPermission(
+                'Modify portal content', context):
+            return action
 
 # utility function
 def get_field_meta_type_and_proxy_flag(field):
