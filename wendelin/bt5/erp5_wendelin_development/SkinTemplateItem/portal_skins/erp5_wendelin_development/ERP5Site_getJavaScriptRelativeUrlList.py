@@ -7,5 +7,5 @@
 #
 # BBB: For the history, erp5_xhtml_appearance.js is included by default when
 #      js_list is not pre-defined before the global definitions.
-js_list = ('jquery/core/jquery.min.js', 'jquery/ui/js/jquery-ui.min.js', 'erp5.js', 'erp5_knowledge_box.js', 'erp5_dhtml_style.js','live_test.js')
+js_list = ('jquery/core/jquery.min.js', 'jquery/ui/js/jquery-ui.min.js', 'erp5.js', 'erp5_knowledge_box.js', 'erp5_dhtml_style.js')
 return js_list
