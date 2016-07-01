@@ -82,8 +82,8 @@ def getRoles(ob):
 
 def _checkGuard(guard, ob):
   # returns 1 if guard passes against ob, else 0.
-  # TODO : implement TALES evaluation by defining an appropriate
-  # context.
+  # NOTE: Do not implement TALES evaluation like on workflow transition.
+  #       See also https://lab.nexedi.com/nexedi/erp5/merge_requests/133
   if guard.permissions:
     # Require at least one role for required roles for the given permission.
     u_roles = getRoles(ob)
