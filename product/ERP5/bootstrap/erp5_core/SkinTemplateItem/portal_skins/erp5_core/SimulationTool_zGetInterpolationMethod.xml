@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Use_Database_Methods_Permission</string> </key>
+            <value>
+              <list>
+                <string>Anonymous</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>stock_table_id\r\n
+interpolation_method\r\n
+interpolation_method_from_date\r\n
+interpolation_method_to_date\r\n
+interpolation_method_at_date\r\n
+group_by_time_sequence_list:list</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>cmf_activity_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SimulationTool_zGetInterpolationMethod</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-if expr="interpolation_method == \'linear\'">\n
+  <dtml-if group_by_time_sequence_list>\n
+    CASE\n
+     WHEN <dtml-var stock_table_id>.mirror_date = <dtml-var stock_table_id>.date THEN 1\n
+     ELSE (\n
+       UNIX_TIMESTAMP(\n
+         IFNULL(\n
+           LEAST(\n
+             IFNULL(slot_at_date, slot_to_date),\n
+             GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+           ),\n
+           GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+         )\n
+       )\n
+       - UNIX_TIMESTAMP(\n
+         GREATEST(\n
+           IFNULL(\n
+             slot_from_date, TIMESTAMP(0)\n
+           ),\n
+           LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+         )\n
+       )\n
+     )\n
+     / (\n
+       UNIX_TIMESTAMP(GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)) -\n
+       UNIX_TIMESTAMP(LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)) ) END\n
+  <dtml-else>\n
+  CASE\n
+     WHEN <dtml-var stock_table_id>.mirror_date = <dtml-var stock_table_id>.date THEN 1\n
+     ELSE (\n
+      UNIX_TIMESTAMP(LEAST(\n
+        <dtml-if interpolation_method_at_date>\n
+          <dtml-sqlvar interpolation_method_at_date type="datetime">\n
+        <dtml-else>\n
+          <dtml-sqlvar interpolation_method_to_date type="datetime">\n
+        </dtml-if>,\n
+            GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date) ))\n
+       - UNIX_TIMESTAMP(GREATEST(<dtml-sqlvar interpolation_method_from_date type="datetime">,\n
+                  LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date))))\n
+      / ( UNIX_TIMESTAMP(GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)) -\n
+         UNIX_TIMESTAMP(LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)) ) END\n
+  </dtml-if>\n
+<dtml-elif expr="interpolation_method == \'all_or_nothing\'">\n
+  CASE\n
+    WHEN (\n
+      -- movement contained in time frame\n
+      LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+        >= <dtml-sqlvar interpolation_method_from_date type="datetime"> AND\n
+      GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+      <dtml-if interpolation_method_at_date>\n
+        <= <dtml-sqlvar interpolation_method_at_date type="datetime">\n
+      <dtml-else>\n
+        < <dtml-sqlvar interpolation_method_to_date type="datetime">\n
+      </dtml-if>\n
+    ) THEN 1\n
+    ELSE 0\n
+  END\n
+<dtml-elif expr="interpolation_method == \'one_for_all\'">\n
+  CASE\n
+    WHEN (\n
+      -- movement overlaps with time frame\n
+      GREATEST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+        <= <dtml-sqlvar interpolation_method_from_date type="datetime"> OR\n
+      LEAST(<dtml-var stock_table_id>.date, <dtml-var stock_table_id>.mirror_date)\n
+      <dtml-if interpolation_method_at_date>\n
+        >= <dtml-sqlvar interpolation_method_at_date type="datetime">\n
+      <dtml-else>\n
+        > <dtml-sqlvar interpolation_method_to_date type="datetime">\n
+      </dtml-if>\n
+    ) THEN 0\n
+    ELSE 1\n
+  END\n
+<dtml-else>\n
+  1\n
+</dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
