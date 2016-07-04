@@ -45,7 +45,7 @@ from Products.ERP5Security.ERP5UserManager import getUserByLogin
 from zLOG import LOG, ERROR, INFO
 
 try:
-  from itsdangerous import JSONWebSignatureSerializer
+  from itsdangerous import JSONWebSignatureSerializer, BadSignature
 except ImportError:
   JSONWebSignatureSerializer = None
 
@@ -118,30 +118,34 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
       if self.name_cookie in request.cookies:
         # 1st - try to fetch from Authorization header
         name_token = request.cookies.get(self.name_cookie)
-  
+
       if name_token is None:
         # no name_token
-        return DumbHTTPExtractor().extractCredentials(request)
+        return None
       # name_token is available
+      try:
+        name = name_serializer.loads(name_token)["user"].encode()
 
-      name = name_serializer.loads(name_token)["user"].encode()
-  
-      self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
-      user = self.erp5usermanager.getUserByLogin(name)[0]
+        self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
+        user = self.erp5usermanager.getUserByLogin(name)[0]
 
-      data_token = None
-      if self.data_cookie in request.cookies:
-        # 1st - try to fetch from Authorization header
-        data_token = request.cookies.get(self.data_cookie)
-      if data_token is None:
-        # no name_token
-        return DumbHTTPExtractor().extractCredentials(request)
+        data_token = None
+        if self.data_cookie in request.cookies:
+          # 1st - try to fetch from Authorization header
+          data_token = request.cookies.get(self.data_cookie)
+        if data_token is None:
+          # no name_token
+          return None
 
-      data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
-      data = data_serializer.loads(data_token)
-      data_okay = self.getPortalObject().ERP5Site_processJWTData(data)
-      if data_okay:
-        creds['external_login'] = name
+        data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
+        data = data_serializer.loads(data_token)
+        data_okay = self.getPortalObject().ERP5Site_processJWTData(data)
+        if data_okay:
+          creds['external_login'] = name
+      except BadSignature:
+        request.response.expireCookie(self.name_cookie, path='/')
+        request.response.expireCookie(self.data_cookie, path='/')
+        return None
 
     creds['remote_host'] = request.get('REMOTE_HOST', '')
     try:
@@ -158,7 +162,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     #if self.erp5usermanager is None:
     self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
     authentication_result = self.erp5usermanager.authenticateCredentials(credentials)
-    if authentication_result is not None:
+    if authentication_result is not None and "password" in credentials:
       #Save this in cookie
       if JSONWebSignatureSerializer is None:
         LOG('ERP5JSONWebTokenPlugin', INFO,
@@ -185,7 +189,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
       data = self.getPortalObject().ERP5Site_updateJWTData(data)
       response.setCookie(self.data_cookie, data_serializer.dumps(data), path='/')
       response.expireCookie(self.default_cookie_name, path='/')
-                      
+
     return authentication_result  
 
   ################################
