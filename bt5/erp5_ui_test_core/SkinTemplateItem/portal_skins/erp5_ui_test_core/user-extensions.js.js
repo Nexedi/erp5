@@ -62,7 +62,7 @@ Selenium.prototype.doType = function(locator, newText) {
  * Get the location of the current page. This function is missing in
  * Selenium 0.8 or later.
  */
-Selenium.prototype.getAbsoluteLocation = function() {
+Selenium.prototype.uteLocation = function() {
     return this.page().location || this.browserbot.getCurrentWindow().location;
 };
 
@@ -81,4 +81,27 @@ Selenium.prototype.assertElementPositionRangeTop = function(locator, range){
     if (positionTop < minimumPositionTop || positionTop > maximumPositionTop ){
       Assert.fail(positionTop + " is not between " + minimumPositionTop + " and " + maximumPositionTop);
     }
+};
+
+
+/*
+ * Upload/Load the PDF to the pdf.js viewer
+ */
+
+// As of now, we don't have a good way in erp5 to submit files using selenium,
+// So, I have created this PDF specific function that loads the pdf.
+// TODO: create a generic function to send keys and submit files.
+Selenium.prototype.doOpenPDF = function() {
+  this.browserbot.selectFrame('index=0');
+  self = this;
+  self.doWaitForPageToLoad();
+  self.page().currentWindow.webViewerLoad('https://softinst67525.host.vifib.net/erp5/portal_skins/erp5_dms/pdf_js/pdf_test.pdf');
+};
+
+/*
+ * Verify if the loaded pdf is correct
+ */
+Selenium.prototype.assertPDF = function(text) {
+  var value = this.page().findElement('//*[@id="pageContainer1"]/div[2]/div[1]').innerHTML;
+  Assert.matches(text, value);
 };
