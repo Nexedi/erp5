@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Pay Sheet Model Ratio Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>salaire_minimum_mensuel</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>5</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Pay Sheet Model Ratio Line</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>1457.52</float> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

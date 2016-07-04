@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Career">
+  <item>aggregate</item>
+ </portal_type>
  <portal_type id="DSN Change Block">
   <item>use</item>
  </portal_type>

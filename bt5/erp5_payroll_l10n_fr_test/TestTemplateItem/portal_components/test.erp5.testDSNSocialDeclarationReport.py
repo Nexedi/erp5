@@ -1,0 +1,65 @@
+#############################################################################
+#
+# Copyright (c) 2002-2015 Nexedi SA and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
+
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from DateTime import DateTime
+
+import difflib
+
+class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
+  """
+  A Sample Test Class
+  """
+
+  def getTitle(self):
+    return "DSN Reports"
+
+  def afterSetUp(self):
+    """
+    This is ran before anything, used to set the environment
+    """
+    self.portal = self.getPortalObject()
+    self.dsn_module = self.portal.getDefaultModuleValue("DSN Monthly Report")
+    self.pinDateTime(DateTime(2015, 12, 01))
+
+  def beforeTearDown(self):
+    self.unpinDateTime()
+
+  def test_01_makeMonthlyDSN(self):
+    """
+    Compute a DSN in a test environment, and check is the newly created
+    document is exactly the same as a previously computed one.
+    """
+    test_dsn = self.portal.social_declaration_report_module['test_model']
+    test_dsn.DSNMonthlyReport_aggregatePaySheetTransactionList()
+    self.tic()
+    test_dsn.DSNMonthlyReport_makeDSN_p2()
+    reference_DSN = getattr(self.portal.portal_skins.erp5_payroll_l10n_fr_test, "test_model.dsn").data
+    diff_list = []
+    for unit_diff in difflib.unified_diff(reference_DSN.split('\n'), test_dsn.getData().split('\n')):
+      diff_list.append(unit_diff)
+    self.assertEqual(reference_DSN, test_dsn.getData(), msg='\n'.join(diff_list))
