@@ -6,14 +6,12 @@ from Products.ERP5Type.Log import log
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
+def isFieldType(field, type_name):
+  if field.meta_type == 'ProxyField':
+    field = field.getRecursiveTemplateField()
+  return field.meta_type == type_name
 def isListBox(field):
-  if field.meta_type=='ListBox':
-    return True
-  elif field.meta_type=='ProxyField':
-    template_field = field.getRecursiveTemplateField()
-    if template_field.meta_type=='ListBox':
-      return True
-  return False
+  return isFieldType(field, 'ListBox')
 
 from Products.Formulator.Errors import FormValidationError
 from ZTUtils import make_query
@@ -113,7 +111,7 @@ for field in form.get_fields():
   if v is not MARKER:
     if isListBox(field):
       listbox_id_list.append(k)
-    elif can_redirect and (v in (None, [], ()) or hasattr(v, 'read')) : # If we cannot redirect, useless to test it again
+    elif can_redirect and (v in (None, [], ()) or hasattr(v, 'read') or 'password' in k or isFieldType(field, 'PasswordField')) : # If we cannot redirect, useless to test it again
       can_redirect = 0
 
     # Cleanup my_ and your_ prefixes
