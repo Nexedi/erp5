@@ -1,0 +1,47 @@
+/* 
+taken from https://github.com/FontFaceKit/open-sans
+==============================
+Apache License v2.00
+Copyright 2012 Google Inc. All Rights Reserved.
+==============================
+*/
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans-regular.eot');
+  src: url('open-sans-regular.eot#iefix') format('embedded-opentype'),
+       url('open-sans-regular.woff') format('woff'),
+       url('open-sans-regular.woff2') format('woff2')
+       url('open-sans-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans-light.eot');
+  src: url('open-sans-light.eot#iefix') format('embedded-opentype'),
+       url('open-sans-light.woff') format('woff'),
+       url('open-sans-light.woff2') format('woff2')
+       url('open-sans-light.ttf') format('truetype');
+  font-weight: lighter;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans-italic.eot');
+  src: url('open-sans-italic.eot#iefix') format('embedded-opentype'),
+       url('open-sans-italic.woff') format('woff'),
+       url('open-sans-italic.woff2') format('woff2')
+       url('open-sans-italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('open-sans-bold.eot');
+  src: url('open-sans-bold.eot#iefix') format('embedded-opentype'),
+       url('open-sans-bold.woff') format('woff'),
+       url('open-sans-bold.woff2') format('woff2')
+       url('open-sans-bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
