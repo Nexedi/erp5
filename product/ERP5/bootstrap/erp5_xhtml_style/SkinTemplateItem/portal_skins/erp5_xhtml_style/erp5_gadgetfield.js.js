@@ -46,6 +46,16 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition('allowFullScreen', function (_, subgadget_scope) {
+      var gadget = this, subgadget;
+      return this.getDeclaredGadget(subgadget_scope).push(function (g) {
+        subgadget = g;
+        return g.getElement();
+      }).push(function (element) {
+        var iframe = element.querySelector('iframe');
+        iframe.allowFullscreen = true;
+      });
+    })
     .declareService(function () {
       var g = this,
         i,
@@ -63,7 +73,7 @@
         url = list_gadget[i].getAttribute("data-gadget-url");
         key = list_gadget[i].getAttribute("data-gadget-editable");
         value = list_gadget[i].getAttribute("data-gadget-value");
-        //renderable 
+        //renderable
         if (url !== undefined && url !== null) {
           tmp = {};
           scope = list_gadget[i].getAttribute("data-gadget-scope");
