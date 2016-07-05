@@ -718,13 +718,13 @@ class TestUpgrader(ERP5TypeTestCase):
     sequence_string = """
       stepCreateOrganisationWithActivity
       stepCreateCustomUpgradeCategoryListForRenaming
-      stepRenameCategoryActivityToBusinessCore
       stepUpdateOrganisationPropertySheetManually
       stepTic
       stepActiveSensePreUpgradeAlarm
       stepActiveSensePostUpgradeAlarm
       stepTic
       stepRunUpgrader
+      stepRenameCategoryActivityToBusinessCore
       stepTic
       stepRunPostUpgrade
       stepTic
@@ -745,12 +745,12 @@ class TestUpgrader(ERP5TypeTestCase):
     sequence_string = """
       stepCreateOrganisationWithActivity
       stepCreateCustomUpgradeCategoryListForMoving
-      stepChangeCategoryRelativeUrl
       stepTic
       stepActiveSensePreUpgradeAlarm
       stepActiveSensePostUpgradeAlarm
       stepTic
       stepRunUpgrader
+      stepChangeCategoryRelativeUrl
       stepTic
       stepRunPostUpgrade
       stepTic
