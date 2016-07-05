@@ -1,6 +1,9 @@
 web_page_module/gadget_ckeditor_*
+web_page_module/gadget_devtool_*
 web_page_module/gadget_officejs_*
 web_page_module/gadget_ooffice_*
+web_site_module/devtool
+web_site_module/devtool/**
 web_site_module/officejs_text_editor
 web_site_module/officejs_text_editor/**
 web_site_module/officejs_spreadsheet

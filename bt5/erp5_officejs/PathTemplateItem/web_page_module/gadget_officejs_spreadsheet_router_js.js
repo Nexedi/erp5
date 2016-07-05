@@ -1,12 +1,152 @@
-/*global window, rJS */
+/*global window, rJS, jIO, URI, location, console, document, RSVP, loopEventListener, navigator */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS) {
   "use strict";
 
   var gadget_klass = rJS(window),
+    NAME = "spreadsheet",
     MAIN_PAGE_PREFIX = "gadget_officejs_",
-    DEFAULT_PAGE = "spreadsheet_list",
+    DEFAULT_PAGE = NAME + "_list",
     REDIRECT_TIMEOUT = 5000;
+
+  (function () {
+    var erp5_query,
+      jio_erp5_cache_storage;
+    if ('serviceWorker' in navigator) {
+      erp5_query = [
+        "ooffice/gadget_ooffice.js",
+        "ooffice/gadget_ooffice.html",
+        "ooffice/apps/require.js",
+        "ooffice/apps/css.js",
+        "ooffice/apps/underscore.js",
+        "ooffice/apps/backbone.js",
+        "ooffice/apps/bootstrap.js",
+        "ooffice/apps/text.js",
+        "ooffice/apps/xregexp-all-min.js",
+        "ooffice/apps/jquery.mousewheel.js",
+        "ooffice/apps/common/%",
+        "ooffice/apps/spreadsheeteditor/main/%",
+        "ooffice/sdk/Common/%",
+        "ooffice/sdk/Excel/%"
+      ].map(function (currentValue) {
+        return 'url_string: "' + currentValue + '"';
+      }).join(' OR ');
+      erp5_query = '(' + erp5_query + ' OR ' + [
+        "gadget_officejs_spreadsheet_router.html",
+        "gadget_officejs_spreadsheet_router.js",
+        "gadget_officejs_spreadsheet_application_panel.html",
+        "gadget_officejs_page_spreadsheet_list.html",
+        "gadget_officejs_page_spreadsheet_list.js",
+        "gadget_officejs_jio_spreadsheet_view.html",
+        "gadget_officejs_jio_spreadsheet_view.js",
+        "gadget_officejs_page_add_spreadsheet.html",
+        "gadget_officejs_page_add_spreadsheet.js",
+        "gadget_erp5_editor_panel.html",
+        "gadget_erp5_editor_panel.js",
+        "URI.js",
+        "dygraph.js",
+        "gadget_erp5.css",
+        "gadget_global.js",
+        "gadget_jio.html",
+        "gadget_jio.js",
+        "gadget_translate.html",
+        "gadget_translate.js",
+        "i18next.js",
+        "jiodev.js",
+        "jquery.js",
+        "jquerymobile.css",
+        "jquerymobile.js",
+        "renderjs.js",
+        "rsvp.js",
+        "gadget_officejs_header.html",
+        "gadget_officejs_jio.html",
+        "gadget_officejs_page_add_text_document.html",
+        "gadget_officejs_page_jio_configurator.html",
+        "gadget_officejs_page_jio_dav_configurator.html",
+        "gadget_officejs_page_login.html",
+        "gadget_officejs_page_logout.html",
+        "gadget_officejs_page_share_webrtc_jio.html",
+        "gadget_officejs_page_sync.html",
+        "gadget_translation.html",
+        "gadget_officejs_webrtc_jio.html",
+        "gadget_officejs_widget_listbox.html",
+        "gadget_officejs_header.js",
+        "gadget_officejs_jio.js",
+        "gadget_officejs_page_add_text_document.js",
+        "gadget_officejs_page_jio_configurator.js",
+        "gadget_officejs_page_jio_dav_configurator.js",
+        "gadget_officejs_page_login.js",
+        "gadget_officejs_page_logout.js",
+        "gadget_officejs_page_share_webrtc_jio.js",
+        "gadget_officejs_page_sync.js",
+        "gadget_officejs_text_editor_application_panel.js",
+        "gadget_translation.js",
+        "gadget_translation_data.js",
+        "gadget_officejs_webrtc_jio.js",
+        "gadget_officejs_widget_listbox.js",
+        "erp5_launcher.js",
+        "erp5_launcher.html"
+      ].map(function (currentValue) {
+        return '(reference: ="' + currentValue + '")';
+      }).join(' OR ') + ')';
+
+      jio_erp5_cache_storage = {
+        type: "query",
+        sub_storage: {
+          type: "uuid",
+          sub_storage: {
+            type: "indexeddb",
+            database: 'officejs_' + NAME + '_cache_erp5'
+          }
+        }
+      };
+
+      jio_erp5_cache_storage = jIO.createJIO({
+        type: "replicate",
+        query: {
+          query: '(portal_type: ("Web Style", "Web Page", "Web Script")) AND ' +
+            erp5_query,
+          limit: [0, 1234567890]
+        },
+        use_remote_post: true,
+        conflict_handling: 2,
+        check_local_modification: false,
+        check_local_creation: false,
+        check_local_deletion: false,
+        check_remote_modification: true,
+        check_remote_creation: true,
+        check_remote_deletion: true,
+        local_sub_storage: {
+          type: "attachasproperty",
+          map: {
+            text_content: "text_content",
+            data: "data"
+          },
+          sub_storage: jio_erp5_cache_storage
+        },
+        remote_sub_storage: {
+          type: "erp5",
+          url: (new URI("hateoasnoauth"))
+            .absoluteTo(location.href)
+            .toString(),
+          default_view_reference: "jio_view"
+        }
+      });
+
+      jio_erp5_cache_storage.repair().push(function () {
+        navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
+          .then(function (reg) {
+            // registration worked
+            console.log('Registration succeeded. Scope is ' + reg.scope);
+          })
+          .then(undefined, function (error) {
+            // registration failed
+            console.log('Registration failed with ' + error);
+          });
+      }, console.log);
+
+    }
+  }());
 
   function listenHashChange(gadget) {
     function extractHashAndDispatch(evt) {
@@ -38,7 +178,7 @@
     }
 
     var result = loopEventListener(window, 'hashchange', false,
-                                   extractHashAndDispatch),
+      extractHashAndDispatch),
       event = document.createEvent("Event");
     event.initEvent('hashchange', true, true);
     event.newURL = window.location.toString();
@@ -54,7 +194,7 @@
       };
     })
 
-    .declareMethod("getCommandUrlFor", function(options) {
+    .declareMethod("getCommandUrlFor", function (options) {
       var prefix = '',
         result,
         key;
@@ -117,7 +257,7 @@
           };
         });
     })
-    
+
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareMethod('start', function () {
