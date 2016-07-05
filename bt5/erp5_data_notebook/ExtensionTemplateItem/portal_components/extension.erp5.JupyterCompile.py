@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from cStringIO import StringIO
+import cPickle
 from erp5.portal_type import Image
 from types import ModuleType
 from ZODB.serialize import ObjectWriter
+
 
 import sys
 import traceback
 import ast
 import base64
-import cPickle
+import json
 
 import transaction
 import Acquisition
@@ -18,6 +20,109 @@ import astor
 from matplotlib.figure import Figure
 from IPython.core.display import DisplayObject
 from IPython.lib.display import IFrame
+
+
+def Base_executeJupyter(self, python_expression=None, reference=None, title=None, request_reference=False, **kw):
+  # Check permissions for current user and display message to non-authorized user 
+  if not self.Base_checkPermission('portal_components', 'Manage Portal'):
+    return "You are not authorized to access the script"
+  
+  # Convert the request_reference argument string to their respeced boolean values
+  request_reference = {'True': True, 'False': False}.get(request_reference, False)
+  
+  # Return python dictionary with title and reference of all notebooks
+  # for request_reference=True
+  if request_reference:
+    data_notebook_list = self.portal_catalog(portal_type='Data Notebook')
+    notebook_detail_list = [{'reference': obj.getReference(), 'title': obj.getTitle()} for obj in data_notebook_list]
+    return notebook_detail_list
+  
+  if not reference:
+    message = "Please set or use reference for the notebook you want to use"
+    return message
+  
+  # Take python_expression as '' for empty code from jupyter frontend
+  if not python_expression:
+    python_expression = ''
+  
+  # Get Data Notebook with the specific reference
+  data_notebook = self.portal_catalog.getResultValue(portal_type='Data Notebook',
+                        reference=reference)
+  
+  # Create new Data Notebook if reference doesn't match with any from existing ones
+  if not data_notebook:
+    notebook_module = self.getDefaultModule(portal_type='Data Notebook')
+    data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
+      title=title,
+      reference=reference,
+      batch_mode=True
+    )
+  
+  # Add new Data Notebook Line to the Data Notebook
+  data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
+    notebook_code=python_expression,
+    batch_mode=True
+  )
+  
+  # Gets the context associated to the data notebook being used
+  old_notebook_context = data_notebook.getNotebookContext()
+  if not old_notebook_context:
+    old_notebook_context = self.Base_createNotebookContext()
+  
+  # Pass all to code Base_runJupyter external function which would execute the code
+  # and returns a dict of result
+  final_result = Base_runJupyterCode(self, python_expression, old_notebook_context)
+    
+  new_notebook_context = final_result['notebook_context']
+  
+  result = {
+    u'code_result': final_result['result_string'],
+    u'ename': final_result['ename'],
+    u'evalue': final_result['evalue'],
+    u'traceback': final_result['traceback'],
+    u'status': final_result['status'],
+    u'mime_type': final_result['mime_type'],
+  }
+  
+  # Updates the context in the notebook with the resulting context of code 
+  # execution.
+  data_notebook.setNotebookContext(new_notebook_context)
+  
+  # We try to commit, but the notebook context property may have variables that
+  # cannot be serialized into the ZODB and couldn't be captured by our code yet.
+  # In this case we abort the transaction and warn the user about it. Unforunately,
+  # the exeception raised when this happens doesn't help to know exactly which
+  # object caused the problem, so we cannot tell the user what to fix.
+  try:
+    transaction.commit()
+  except transaction.interfaces.TransactionError as e:
+    transaction.abort()
+    exception_dict = getErrorMessageForException(self, e, new_notebook_context)
+    result.update(exception_dict)
+    return json.dumps(result)
+  
+  # Catch exception while seriaizing the result to be passed to jupyter frontend
+  # and in case of error put code_result as None and status as 'error' which would
+  # be shown by Jupyter frontend
+  try:
+    serialized_result = json.dumps(result)
+  except UnicodeDecodeError:
+    result = {
+      u'code_result': None,
+      u'ename': u'UnicodeDecodeError',
+      u'evalue': None,
+      u'traceback': None,
+      u'status': u'error',
+      u'mime_type': result['mime_type']
+    }
+    serialized_result = json.dumps(result)
+  
+  data_notebook_line.edit(
+    notebook_code_result=result['code_result'], 
+    mime_type=result['mime_type']
+  )
+  
+  return serialized_result  
 
 
 def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
@@ -186,7 +291,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           code = compile(value['code'], '<string>', 'exec')
           exec(code, user_context, user_context)
         # An error happened, so we show the user the stacktrace along with a
-        # note that the exception happened in a setup funtion's code.
+        # note that the exception happened in a setup function's code.
         except Exception as e:
           if value['func_name'] in user_context:
             del user_context[value['func_name']]
@@ -261,53 +366,30 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       mime_type = display_data['mime_type'] or mime_type
       result_string += "\n".join(removed_setup_message_list) + result.getvalue() + display_data['result']
     
-    # Checking in the user context what variables are pickleable and we can store
-    # safely. Everything that is not pickleable shall not be stored and the user
-    # needs to be warned about it.
+    # Saves a list of all the variables we injected into the user context and
+    # shall be deleted before saving the context.
     volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context['_volatile_variable_list']
-    del user_context['_volatile_variable_list']
+    volatile_variable_list.append('__builtins__')
+
     for key, val in user_context.items():
       if not key in globals_dict.keys() and not isinstance(val, ModuleType) and not key in volatile_variable_list:
-        can_store = False
-        
-        # Try to check if we can serialize the object in a way which it can be
-        # stored properly in the ZODB 
-        try:
-          # Need to unwrap the variable, otherwise we get a TypeError, because
-          # objects cannot be pickled while inside an acquisition wrapper.
-          ObjectWriter(val).serialize(Acquisition.aq_base(val))
-          can_store = True
-        # If cannot serialize object with ZODB.serialize, try with cPickle
-        except:
-          try:
-            # Only a dump of the object is not enough. Dumping and trying to
-            # load it will properly raise errors in all possible situations, 
-            # for example: if the user defines a dict with an object of a class 
-            # that he created the dump will stil work, but the load will fail. 
-            cPickle.loads(cPickle.dumps(val))
-            can_store = True
-          except:
-            can_store = False
-          
-        if can_store:
+        if canSerialize(val):
           notebook_context['variables'][key] = val
         else:
           del user_context[key]
           result_string += (
-            "Cannot pickle the variable named %s whose value is %s, "
+            "Cannot serialize the variable named %s whose value is %s, "
             "thus it will not be stored in the context. "
             "You should move it's definition to a function and " 
             "use the environment object to load it.\n"
           ) % (key, val)
-        # if isinstance(val, InstanceType):
-        #   can_pickle = False
     
     # Deleting from the variable storage the keys that are not in the user 
     # context anymore (i.e., variables that are deleted by the user).
     for key in notebook_context['variables'].keys():
       if not key in user_context:
         del notebook_context['variables'][key]
-
+  
   result = {
     'result_string': result_string,
     'notebook_context': notebook_context,
@@ -318,6 +400,63 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     'traceback': tb_list,
   }
   return result
+
+
+def canSerialize(obj):
+  result = False
+        
+  container_type_tuple = (list, tuple, dict, set, frozenset)
+  
+  # if object is a container, we need to check its elements for presence of
+  # objects that cannot be put inside the zodb
+  if isinstance(obj, container_type_tuple):
+    if isinstance(obj, dict):
+      result_list = []
+      for key, value in obj.iteritems():
+        result_list.append(canSerialize(key))
+        result_list.append(canSerialize(value))
+    else:
+      result_list = [canSerialize(element) for element in obj]
+    return all(result_list)
+  # if obj is an object and implements __getstate__, ZODB.serialize can check
+  # if we can store it
+  elif isinstance(obj, object) and hasattr(obj, '__getstate__'):
+    # Need to unwrap the variable, otherwise we get a TypeError, because
+    # objects cannot be pickled while inside an acquisition wrapper.
+    unwrapped_obj = Acquisition.aq_base(obj)
+    writer = ObjectWriter(unwrapped_obj)
+    for obj in writer:
+      try:
+        writer.serialize(obj)
+      # Because writer.serialize(obj) relies on the implementation of __getstate__
+      # of obj, all errors can happen, so the "except all" is necessary here. 
+      except:
+        return False
+    return True
+  else:
+    # If cannot serialize object with ZODB.serialize, try with cPickle
+    # Only a dump of the object is not enough. Dumping and trying to
+    # load it will properly raise errors in all possible situations, 
+    # for example: if the user defines a dict with an object of a class 
+    # that he created the dump will stil work, but the load will fail. 
+    try:
+      cPickle.loads(cPickle.dumps(obj))
+    # By unknowing reasons, trying to catch cPickle.PicklingError in the "normal"
+    # way isn't working. This issue might be related to some weirdness in 
+    # pickle/cPickle that is reported in this issue: http://bugs.python.org/issue1457119.
+    #
+    # So, as a temporary fix, we're investigating the exception's class name as
+    # string to be able to identify them.
+    # 
+    # Even though the issue seems complicated, this quickfix should be 
+    # properly rewritten in a better way as soon as possible.
+    except Exception as e:
+      if type(e).__name__ in ('PicklingError', 'TypeError', 'NameError', 'AttributeError'):
+        return False
+      else:
+        raise e
+    else:
+      return True
   
 
 class EnvironmentParser(ast.NodeTransformer):

@@ -150,9 +150,9 @@ portal.%s()
     portal = self.portal
 
     self.login('member_user')
-    result = portal.Base_executeJupyter.Base_checkPermission('portal_components', 'Manage Portal')
+    result = portal.Base_executeJupyter(title='Any title', reference='Any reference')
 
-    self.assertFalse(result)
+    self.assertEquals(result, 'You are not authorized to access the script')
 
   def testUserCanCreateNotebookWithoutCode(self):
     """
