@@ -31,6 +31,7 @@
 
 from copy import copy
 from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
@@ -149,8 +150,8 @@ class PresencePeriod(Movement, PeriodicityMixin):
       stop_date = self.getStopDate(start_date)
       periodicity_stop_date = self.getPeriodicityStopDate(
                                           start_date)
-      second_duration = int(stop_date) - int(start_date)
-      if second_duration > 0:
+      duration = stop_date - start_date
+      if duration > 0:
         # First date has to respect the periodicity config
         next_start_date = self.getNextPeriodicalDate(addToDate(start_date, day=-1))
         while (next_start_date is not None) and \
@@ -170,8 +171,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
              (current_exception_date < next_start_date.Date()):
             # SQL method don't like iterator
   #             yield (next_start_date, next_start_date+duration)
-            result.append([next_start_date,
-               addToDate(next_start_date, second=second_duration)])
+            result.append([next_start_date, next_start_date + duration])
             # Update the next exception date
             if len(exception_date_list) != 0:
               current_exception_date = exception_date_list.pop(0).Date()
@@ -181,7 +181,7 @@ class PresencePeriod(Movement, PeriodicityMixin):
             # SQL method don't like iterator
   #             yield (next_start_date, next_start_date+duration)
             result.append({'start_date': next_start_date,
-                           'stop_date': addToDate(next_start_date, second=second_duration),
+                           'stop_date': next_start_date + duration,
                            'quantity': self.getQuantity()})
           next_start_date = self.getNextPeriodicalDate(next_start_date)
 
@@ -206,12 +206,21 @@ class PresencePeriod(Movement, PeriodicityMixin):
       day_count = int(current_date-next_start_date)
       next_start_date = next_start_date + day_count
 
-    next_start_date = addToDate(next_start_date, day=1)
+    timezone = self._getTimezone(next_start_date)
+    next_start_date = self._getNextDay(next_start_date, timezone)
     while 1:
       if (self._validateDay(next_start_date)) and \
          (self._validateWeek(next_start_date)) and \
          (self._validateMonth(next_start_date)):
         break
       else:
-        next_start_date = addToDate(next_start_date, day=1)
-    return next_start_date
+        next_start_date = self._getNextDay(next_start_date, timezone)
+
+    return DateTime(
+      next_start_date.year(),
+      next_start_date.month(),
+      next_start_date.day(),
+      current_date.hour(),
+      current_date.minute(),
+      current_date.second(),
+      timezone)
