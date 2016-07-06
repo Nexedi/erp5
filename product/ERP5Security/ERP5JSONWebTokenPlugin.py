@@ -176,7 +176,13 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
       request = self.REQUEST
       response = request.response
-      response.setCookie(self.name_cookie, name_serializer.dumps({"user": name}), path='/')
+      response.setCookie(
+        self.name_cookie,
+        name_serializer.dumps({"user": name}),
+        path='/',
+        secure=True,
+        http_only=True,
+        )
       # Update data if needed
       data_token = None
       data = {}
@@ -187,7 +193,13 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
           # no name_token
           data = data_serializer.loads(data_token)
       data = self.getPortalObject().ERP5Site_updateJWTData(data)
-      response.setCookie(self.data_cookie, data_serializer.dumps(data), path='/')
+      response.setCookie(
+        self.data_cookie,
+        data_serializer.dumps(data),
+        path='/',
+        secure=True,
+        http_only=True,
+        )
       response.expireCookie(self.default_cookie_name, path='/')
 
     return authentication_result  
