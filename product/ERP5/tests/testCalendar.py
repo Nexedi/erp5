@@ -1071,6 +1071,46 @@ class TestCalendar(ERP5ReportTestCase):
     presence_request.setDestinationValue(person)
     self.assertEqual(0, len(presence_request.checkConsistency()))
 
+  def test_GroupCalendarPeriodicityDayLightSaving(self):
+    """Test group calendar periodicity handles day light saving.
+
+    If we configure "every day from 09:00 to 12:00 in Europe/Paris time", this is 09:00 GMT+1 or
+    09:00 GMT+1 according to daylight saving time.
+
+    """
+    node = self.portal.organisation_module.newContent(portal_type='Organisation',)
+
+    group_calendar = self.portal.group_calendar_module.newContent(
+       portal_type='Group Calendar')
+    group_calendar_period = group_calendar.newContent(
+       portal_type='Group Presence Period')
+
+    # In 2008, DST switch was Sunday 30 march
+    group_calendar_period.setStartDate('2008/03/29 09:00:00 Europe/Paris')
+    group_calendar_period.setStopDate('2008/03/29 12:00:00 Europe/Paris')
+    group_calendar_period.setQuantity(10)
+    group_calendar_period.setResourceValue(
+       self.portal.portal_categories.calendar_period_type.type1)
+    group_calendar_period.setPeriodicityDayFrequency(1)
+    group_calendar_period.setPeriodicityStopDate(DateTime('2008/12/31 00:00:00 Europe/Paris'))
+    self.tic()
+
+    assignment = self.portal.group_calendar_assignment_module.newContent(
+       specialise_value=group_calendar,
+       resource_value=self.portal.portal_categories.calendar_period_type.type1,
+       start_date=DateTime('2008/03/29 09:00:00 Europe/Paris'),
+       stop_date=DateTime('2008/04/02 00:00:00 Europe/Paris'),
+       destination_value=node)
+    assignment.confirm()
+    self.tic()
+
+    self.assertEqual([
+      ( DateTime('2008/03/29 09:00:00 Europe/Paris'), DateTime('2008/03/29 12:00:00 Europe/Paris') ),
+      ( DateTime('2008/03/30 09:00:00 Europe/Paris'), DateTime('2008/03/30 12:00:00 Europe/Paris') ),
+      ( DateTime('2008/03/31 09:00:00 Europe/Paris'), DateTime('2008/03/31 12:00:00 Europe/Paris') ),
+      ( DateTime('2008/04/01 09:00:00 Europe/Paris'), DateTime('2008/04/01 12:00:00 Europe/Paris') ), ],
+      [ (m.getStopDate(), m.getStartDate()) for m in assignment.asMovementList() ] )
+
   def test_SimpleLeaveRequestWithSameDateAsGroupCalendar(self):
     group_calendar = self.portal.group_calendar_module.newContent(
                                   portal_type='Group Calendar')
