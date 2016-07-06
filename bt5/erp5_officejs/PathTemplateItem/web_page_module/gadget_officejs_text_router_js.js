@@ -34,7 +34,6 @@
       erp5_query = '(' + erp5_query + ' OR ' + [
         "gadget_officejs_text_router.html",
         "gadget_officejs_text_router.js",
-        "gadget_officejs_text_application_panel.html",
         "gadget_officejs_page_text_list.html",
         "gadget_officejs_page_text_list.js",
         "gadget_officejs_jio_text_view.html",
@@ -79,7 +78,8 @@
         "gadget_officejs_page_logout.js",
         "gadget_officejs_page_share_webrtc_jio.js",
         "gadget_officejs_page_sync.js",
-        "gadget_officejs_text_editor_application_panel.js",
+        "gadget_officejs_application_panel.html",
+        "gadget_officejs_application_panel.js",
         "gadget_translation.js",
         "gadget_translation_data.js",
         "gadget_officejs_webrtc_jio.js",
@@ -192,6 +192,10 @@
       gadget.props = {
         start_deferred: RSVP.defer()
       };
+      return gadget.getElement()
+        .push(function (element) {
+          gadget.props.element = element;
+        });
     })
 
     .declareMethod("getCommandUrlFor", function (options) {
@@ -210,14 +214,20 @@
     })
 
     .declareMethod('redirect', function (options) {
-      return this.getCommandUrlFor(options)
-        .push(function (hash) {
-          window.location.replace(hash);
-          // prevent returning unexpected response
-          // wait for the hash change to occur
-          // fail if nothing happens
-          return RSVP.timeout(REDIRECT_TIMEOUT);
-        });
+      if (options !== undefined && options.toExternal) {
+        window.location.replace(options.url);
+        return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected
+      }
+      else {
+        return this.getCommandUrlFor(options)
+          .push(function (hash) {
+            window.location.replace(hash);
+            // prevent returning unexpected response
+            // wait for the hash change to occur
+            // fail if nothing happens
+            return RSVP.timeout(REDIRECT_TIMEOUT);
+          });
+      }
     })
 
     .declareMethod('route', function (options) {
@@ -261,6 +271,26 @@
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareMethod('start', function () {
+      var gadget = this,
+        element_list =
+          gadget.props.element.querySelectorAll("[data-renderjs-configuration]"),
+        len = element_list.length,
+        key,
+        value,
+        i,
+        queue = new RSVP.Queue();
+
+      function push(a, b) {
+        queue.push(function () {
+          return gadget.setSetting(a, b);
+        });
+      }
+
+      for (i = 0; i < len; i += 1) {
+        key = element_list[i].getAttribute('data-renderjs-configuration');
+        value = element_list[i].textContent;
+        push(key, value);
+      }
       this.props.start_deferred.resolve();
     })
     .declareService(function () {

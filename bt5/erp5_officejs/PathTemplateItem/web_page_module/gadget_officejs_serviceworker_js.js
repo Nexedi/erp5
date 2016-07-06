@@ -513,7 +513,8 @@ var global = self,
 
   self.jio_cache_fetch = function (event) {
     var url = event.request.url,
-      specific_url = get_specific_url(url),
+      relative_url = get_relative_url(url),
+      specific_url = get_specific_url(url) || relative_url,
       not_found_in_dev_storage = false,
       queue;
 
@@ -549,7 +550,7 @@ var global = self,
       })
       .then(undefined, function (error) {
         if (error.status_code === 404) {
-          console.log(url + ',' + get_relative_url(url) + ' not found in cache storage');
+          console.log(url + ',' + relative_url + ' not found in cache storage');
           // fetch
           return fetch(event.request);
         } else {
