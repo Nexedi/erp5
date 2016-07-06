@@ -1,8 +1,6 @@
 <dtml-let email_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
-    <dtml-if expr="getPortalType[loop_item]=='Email'">
-      <dtml-call expr="email_list.append(loop_item)">
-    </dtml-if>
+    <dtml-call expr="email_list.append(loop_item)">
   </dtml-in>
   <dtml-if expr="_.len(email_list) > 0">
     REPLACE INTO
