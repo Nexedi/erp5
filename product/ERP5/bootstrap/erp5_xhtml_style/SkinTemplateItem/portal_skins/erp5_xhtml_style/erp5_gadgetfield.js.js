@@ -123,6 +123,7 @@
               elements[j].style.height = "100%";
               iframe.style.width = "100%";
               iframe.style.height = "100%";
+              iframe.allowFullscreen = true;
               j += 1;
             }
           }
