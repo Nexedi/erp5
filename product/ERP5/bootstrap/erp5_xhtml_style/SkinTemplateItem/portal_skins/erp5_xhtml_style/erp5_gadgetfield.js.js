@@ -63,7 +63,7 @@
         url = list_gadget[i].getAttribute("data-gadget-url");
         key = list_gadget[i].getAttribute("data-gadget-editable");
         value = list_gadget[i].getAttribute("data-gadget-value");
-        //renderable 
+        //renderable
         if (url !== undefined && url !== null) {
           tmp = {};
           scope = list_gadget[i].getAttribute("data-gadget-scope");
@@ -123,6 +123,7 @@
               elements[j].style.height = "100%";
               iframe.style.width = "100%";
               iframe.style.height = "100%";
+              iframe.allowFullscreen = true;
               j += 1;
             }
           }
