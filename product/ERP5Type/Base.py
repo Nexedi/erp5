@@ -2976,7 +2976,7 @@ class Base( CopyContainer,
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  security.declarePublic('skinSuper')
   def skinSuper(self, skin, id):
     if id[:1] != '_' and id[:3] != 'aq_':
       skin_info = SKINDATA.get(thread.get_ident())
