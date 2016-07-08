@@ -40,9 +40,10 @@ from os import urandom
 from zLOG import LOG, INFO
 
 try:
-  from itsdangerous import JSONWebSignatureSerializer, BadSignature
+  from itsdangerous import TimedJSONWebSignatureSerializer, BadSignature, \
+    SignatureExpired
 except ImportError:
-  JSONWebSignatureSerializer = None
+  TimedJSONWebSignatureSerializer = None
 
 
 #Form for new plugin in ZMI
@@ -73,17 +74,20 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
   manage_options = ( ( { 'label': 'Update Secret',
                           'action': 'manage_updateERP5JSONWebTokenPluginForm', }
                         ,
+                       { 'label': 'Edit Expiration Date',
+                          'action': 'manage_editERP5JSONWebTokenExpirationTimePluginForm', }
+                        ,
                       )
                       + BasePlugin.manage_options[:]
                     )
 
 
   def __init__(self, id, title=None):
-    #Register value
     self._setId(id)
     self.title = title
-    self._secret = self.manage_updateERP5JSONWebTokenPlugin()
-    self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
+    self.manage_updateERP5JSONWebTokenPlugin()
+    # Default Expiration Date is one day
+    self.manage_editERP5JSONWebTokenExpirationTimePlugin(86400)
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#
@@ -91,7 +95,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
   security.declarePrivate('extractCredentials')
   def extractCredentials(self, request):
     """ Extract JWT from the request header. """
-    if JSONWebSignatureSerializer is None:
+    if TimedJSONWebSignatureSerializer is None:
       LOG('ERP5JSONWebTokenPlugin', INFO,
           'No itsdangerous module, install itsdangerous package. '
             'Authentication disabled.')
@@ -99,7 +103,10 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
     login_pw = request._authUserPW()
 
-    name_serializer = JSONWebSignatureSerializer(self._secret)
+    name_serializer = TimedJSONWebSignatureSerializer(
+      self._secret,
+      expires_in=self.expiration_time
+      )
 
     creds = {}
     if login_pw is not None:
@@ -129,7 +136,10 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
           # no name_token
           return None
 
-        data_serializer = JSONWebSignatureSerializer(self._secret + user.getPassword())
+        data_serializer = TimedJSONWebSignatureSerializer(
+          self._secret + user.getPassword(),
+          expires_in=self.expiration_time
+        )
         data = data_serializer.loads(data_token)
         data_okay = self.getPortalObject().ERP5Site_processJWTData(data)
         if data_okay:
@@ -151,20 +161,26 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
   #
   security.declarePrivate( 'authenticateCredentials' )
   def authenticateCredentials(self, credentials):
-    #if self.erp5usermanager is None:
     self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
     authentication_result = self.erp5usermanager.authenticateCredentials(credentials)
+
+    # In case the password is present in the request, the token is updated
     if authentication_result is not None and "password" in credentials:
-      #Save this in cookie
-      if JSONWebSignatureSerializer is None:
+      if TimedJSONWebSignatureSerializer is None:
         LOG('ERP5JSONWebTokenPlugin', INFO,
             'No itsdangerous module, install itsdangerous package. '
               'Authentication disabled.')
         return authentication_result
       name = authentication_result[0]
       user = self.erp5usermanager.getUserByLogin(name)[0]
-      name_serializer = JSONWebSignatureSerializer(self._secret)
-      data_serializer = JSONWebSignatureSerializer(self._secret + user.getPassword())
+      name_serializer = TimedJSONWebSignatureSerializer(
+        self._secret,
+        expires_in=self.expiration_time
+        )
+      data_serializer = TimedJSONWebSignatureSerializer(
+        self._secret + user.getPassword(),
+        expires_in=self.expiration_time
+        )
 
       request = self.REQUEST
       response = request.response
@@ -179,10 +195,8 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
       data_token = None
       data = {}
       if self.data_cookie in request.cookies:
-        # 1st - try to fetch from Authorization header
         data_token = request.cookies.get(self.data_cookie)
         if data_token is not None:
-          # no name_token
           data = data_serializer.loads(data_token)
       data = self.getPortalObject().ERP5Site_updateJWTData(data)
       response.setCookie(
@@ -219,6 +233,38 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
                         '?manage_tabs_message=%s'
                         % (self.absolute_url(), message)
                         )
+
+  #'Edit' option form
+  manage_editERP5JSONWebTokenExpirationTimePluginForm = PageTemplateFile(
+      'www/ERP5Security_editERP5JSONWebTokenExpirationTimePlugin',
+      globals(),
+      __name__='manage_editERP5JSONWebTokenExpirationTimePluginForm')
+
+  security.declareProtected(ManageUsers, 'manage_editERP5JSONWebTokenExpirationTimePlugin')
+  def manage_editERP5JSONWebTokenExpirationTimePlugin(self, expiration_time, RESPONSE=None):
+    """Edit the object"""
+    error_message = ''
+
+    #Save user_id_key
+    if expiration_time == '' or expiration_time is None:
+      error_message += 'Invalid expiration_time value '
+    else:
+      try:
+        self.expiration_time = int(expiration_time)
+      except:
+        error_message += 'Invalid expiration_time value '
+
+    #Redirect
+    if RESPONSE is not None:
+      if error_message != '':
+        self.REQUEST.form['manage_tabs_message'] = error_message
+        return self.manage_editERP5JSONWebTokenExpirationTimePluginForm(RESPONSE)
+      else:
+        message = "Updated"
+        RESPONSE.redirect('%s/manage_editERP5JSONWebTokenExpirationTimePluginForm'
+                          '?manage_tabs_message=%s'
+                          % (self.absolute_url(), message)
+                          )
 
 
 #List implementation of class
