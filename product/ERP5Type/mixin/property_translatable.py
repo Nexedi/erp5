@@ -41,13 +41,19 @@ class PropertyTranslatableBuiltInDictMixIn:
 
   security = ClassSecurityInfo()
 
-  def _getTranslationDict(self):
+  def _getTranslationDict(self, create_if_missing=False):
+    """
+    create_if_missing: force creation of translation dict. It is false by
+                       default to havoid zodb pollution when only try to get
+                       translations
+    """
     try:
       return getattr(self, INTERNAL_TRANSLATION_DICT_NAME)
     except AttributeError:
       dict_ = {}
-      setattr(self, INTERNAL_TRANSLATION_DICT_NAME, dict_)
-      self._p_changed = True
+      if create_if_missing:
+        setattr(self, INTERNAL_TRANSLATION_DICT_NAME, dict_)
+        self._p_changed = True
       return dict_
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -58,7 +64,8 @@ class PropertyTranslatableBuiltInDictMixIn:
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setPropertyTranslation')
   def setPropertyTranslation(self, property_id, language, original_text, translation):
-    self._getTranslationDict()[(property_id, language)] = (original_text, translation)
+    self._getTranslationDict(create_if_missing=True)[(property_id, language)] = \
+          (original_text, translation)
     self._p_changed = True
 
   security.declareProtected(Permissions.ModifyPortalContent,
