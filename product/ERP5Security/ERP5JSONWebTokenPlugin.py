@@ -33,16 +33,11 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.ERP5Security.ERP5UserManager import SUPER_USER, ERP5UserManager
+from Products.ERP5Security.ERP5UserManager import ERP5UserManager
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
-from AccessControl.SecurityManagement import getSecurityManager, \
-  setSecurityManager, newSecurityManager
-from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
-from os import urandom as SystemRandom
-import socket
-from Products.ERP5Security.ERP5UserManager import getUserByLogin
-from zLOG import LOG, ERROR, INFO
+from os import urandom
+from zLOG import LOG, INFO
 
 try:
   from itsdangerous import JSONWebSignatureSerializer, BadSignature
@@ -74,8 +69,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
   security = ClassSecurityInfo()
   name_cookie = "n_jwt"
   data_cookie = "d_jwt"
-  default_cookie_name = "__ac"
-    
+
   manage_options = ( ( { 'label': 'Update Secret',
                           'action': 'manage_updateERP5JSONWebTokenPluginForm', }
                         ,
@@ -88,7 +82,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     #Register value
     self._setId(id)
     self.title = title
-    self.secret = SystemRandom(256)
+    self._secret = self.manage_updateERP5JSONWebTokenPlugin()
     self.erp5usermanager = ERP5UserManager(self.getId() + "_user_manager")
 
   ####################################
@@ -97,7 +91,6 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
   security.declarePrivate('extractCredentials')
   def extractCredentials(self, request):
     """ Extract JWT from the request header. """
-
     if JSONWebSignatureSerializer is None:
       LOG('ERP5JSONWebTokenPlugin', INFO,
           'No itsdangerous module, install itsdangerous package. '
@@ -106,7 +99,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
 
     login_pw = request._authUserPW()
 
-    name_serializer = JSONWebSignatureSerializer(self.secret)
+    name_serializer = JSONWebSignatureSerializer(self._secret)
 
     creds = {}
     if login_pw is not None:
@@ -116,7 +109,6 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     else:
       name_token = None
       if self.name_cookie in request.cookies:
-        # 1st - try to fetch from Authorization header
         name_token = request.cookies.get(self.name_cookie)
 
       if name_token is None:
@@ -137,7 +129,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
           # no name_token
           return None
 
-        data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
+        data_serializer = JSONWebSignatureSerializer(self._secret + user.getPassword())
         data = data_serializer.loads(data_token)
         data_okay = self.getPortalObject().ERP5Site_processJWTData(data)
         if data_okay:
@@ -171,8 +163,8 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
         return authentication_result
       name = authentication_result[0]
       user = self.erp5usermanager.getUserByLogin(name)[0]
-      name_serializer = JSONWebSignatureSerializer(self.secret)
-      data_serializer = JSONWebSignatureSerializer(self.secret + user.getPassword())
+      name_serializer = JSONWebSignatureSerializer(self._secret)
+      data_serializer = JSONWebSignatureSerializer(self._secret + user.getPassword())
 
       request = self.REQUEST
       response = request.response
@@ -200,7 +192,6 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
         secure=True,
         http_only=True,
         )
-      response.expireCookie(self.default_cookie_name, path='/')
 
     return authentication_result  
 
@@ -219,7 +210,7 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     """Edit the object"""
 
     #Save user_id_key
-    self.secret = SystemRandom(256)
+    self._secret = urandom(256)
 
     #Redirect
     if RESPONSE is not None:
