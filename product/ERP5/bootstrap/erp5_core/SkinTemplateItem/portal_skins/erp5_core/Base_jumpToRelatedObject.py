@@ -10,15 +10,32 @@ else:
 
 # FIXME: performance problem getting *all* related documents URL is not scalable.
 getter_base_name = ''.join([x.capitalize() for x in base_category.split('_')])
+
+if same_type(portal_type, ''):
+  portal_type = [portal_type]
+
 if related:
+  # Try to see if we have already many visible results with the catalog and if we are
+  # in the case we should jump to a module (in which case we would also use the catalog
+  # to display result). This can avoid retrieving all objects. It would be better to have
+  # get[Category]RelatedList returning a lazy list directly.
+  if len(portal_type) == 1:
+    catalog_list = portal.portal_catalog(portal_type=portal_type, limit=2,
+                                       **{'default_%s_uid' % base_category: relation.getUid()})
+    if len(catalog_list) == 2:
+      related_list = catalog_list
+      module_id = portal.getDefaultModuleId(portal_type[0], None)
+      if module_id is not None:
+        module = portal.getDefaultModule(portal_type[0])
+        return module.Base_redirect(
+                 'view', keep_items={'default_%s_uid' % base_category: relation.getUid(),
+                                     'ignore_hide_rows': 1,
+                                     'reset': 1})
   search_method = getattr(relation, 'get%sRelatedList' % getter_base_name)
 else:
   search_method = getattr(relation, 'get%sList' % getter_base_name)
 
 related_list = search_method(portal_type = portal_type)
-
-if same_type(portal_type, ''):
-  portal_type = [portal_type]
 
 relation_found = 0
 if len(related_list) == 0:
@@ -61,11 +78,7 @@ else:
     module_id = portal.getDefaultModuleId(portal_type[0], None)
     if module_id is not None:
       module = portal.getDefaultModule(portal_type[0])
-      if related:
-        return module.Base_redirect(
-                 'view', keep_items={'default_%s_uid' % base_category: relation.getUid(),
-                                     'ignore_hide_rows': 1,
-                                     'reset': 1})
+      # related case already done, we have to do the non related case
       # We can not pass parameters through url, otherwise we might have too long urls (if many uids).
       # Therefore check if we are in usual case of module form having a listbox, and update
       # selection for it
