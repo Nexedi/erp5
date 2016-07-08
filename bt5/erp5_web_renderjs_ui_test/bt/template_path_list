@@ -1,5 +1,7 @@
 portal_tests/renderjs_ui_listbox_zuite
 portal_tests/renderjs_ui_listbox_zuite/**
+portal_tests/renderjs_ui_logout_zuite
+portal_tests/renderjs_ui_logout_zuite/**
 portal_tests/renderjs_ui_page_templates_zuite
 portal_tests/renderjs_ui_page_templates_zuite/**
 portal_tests/renderjs_ui_page_zuite
