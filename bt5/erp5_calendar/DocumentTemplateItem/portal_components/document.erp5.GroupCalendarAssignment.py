@@ -65,14 +65,14 @@ class GroupCalendarAssignment(PresencePeriod):
     if method is None:
       group_calendar = self.getSpecialiseValue()
       if group_calendar is not None:
-        start_date = self.getStartDate()
+        # start_date = self.getStartDate()
         stop_date = self.getStopDate()
         period_list = []
         for period in group_calendar.objectValues(
             portal_type=self.getPortalCalendarPeriodTypeList()):
           period_list.append(
             period.asContext(
-              start_date=max(period.getStartDate(start_date), start_date),
+              #start_date=max(period.getStartDate(start_date), start_date),
               periodicity_stop_date=min(
                 period.getPeriodicityStopDate(stop_date), stop_date))
           )
