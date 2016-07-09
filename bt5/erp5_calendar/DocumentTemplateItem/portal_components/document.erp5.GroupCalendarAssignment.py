@@ -72,7 +72,7 @@ class GroupCalendarAssignment(PresencePeriod):
             portal_type=self.getPortalCalendarPeriodTypeList()):
           period_list.append(
             period.asContext(
-              start_date=max(period.getStartDate(start_date), start_date),
+              #start_date=max(period.getStartDate(start_date), start_date),
               periodicity_stop_date=min(
                 period.getPeriodicityStopDate(stop_date), stop_date))
           )
