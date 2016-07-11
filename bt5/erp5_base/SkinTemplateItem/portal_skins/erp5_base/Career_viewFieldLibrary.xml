@@ -96,6 +96,7 @@
                         <string>my_salary_level</string>
                         <string>my_activity</string>
                         <string>my_reference</string>
+                        <string>my_aggregate_title_list</string>
                       </list>
                     </value>
                 </item>
