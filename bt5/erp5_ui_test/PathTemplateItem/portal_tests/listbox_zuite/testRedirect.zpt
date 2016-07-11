@@ -193,7 +193,7 @@
 </tr>
 <tr>
   <td>verifyAbsoluteLocation</td>
-  <td tal:content="string:glob:${here/portal_url}/foo_module/0/listbox_setPage" />
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
   <td></td>
 </tr>
 <!-- Go to previous and verify -->
@@ -280,7 +280,7 @@
 </tr>
 <tr>
   <td>verifyAbsoluteLocation</td>
-  <td tal:content="string:glob:${here/portal_url}/foo_module/0/listbox_setPage" />
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />
   <td></td>
 </tr>
 <tr>

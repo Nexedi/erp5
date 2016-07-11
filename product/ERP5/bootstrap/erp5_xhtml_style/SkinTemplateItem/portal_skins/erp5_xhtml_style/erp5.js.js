@@ -150,7 +150,8 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag, element
     if (form == "main_form") {
       form = document.forms[form]; // backward compatibility
     }
-    form.action = method_name;
+    $('<input />').attr('type', 'hidden').attr('name', method_name + ':method').appendTo(form);
+    $('#hidden_button').prop('disabled', true);
     if (clear_changed_flag === true) {
       changed = false;
     }
@@ -358,3 +359,4 @@ function installDoubleSubmitDialogPrevention(confirmation_message) {
     });
   });
 }
+
