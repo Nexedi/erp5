@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_subordination_title</string> </value>
+            <value> <string>my_destination_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,11 +73,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_subordination_title</string> </value>
+                    <value> <string>my_destination_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Career_viewFieldLibrary</string> </value>
+                    <value> <string>Assignment_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Employer Organisation</string> </value>
+                    <value> <string>Employer Site</string> </value>
                 </item>
               </dictionary>
             </value>

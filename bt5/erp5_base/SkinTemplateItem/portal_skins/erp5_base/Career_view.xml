@@ -63,6 +63,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
+                        <string>my_aggregate_title_list</string>
                         <string>my_description</string>
                       </list>
                     </value>
@@ -74,6 +75,7 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_subordination_title</string>
+                        <string>my_destination_title</string>
                         <string>my_role_list</string>
                         <string>my_function</string>
                         <string>my_activity</string>
