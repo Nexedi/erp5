@@ -302,6 +302,8 @@ class ERP5TypeInformation(XMLObject,
       'budget_variation',
       # Module
       'module',
+      # Document related to person
+      'personal_item',
       # Base
       'entity',
       # LEGACY - needs a warning - XXX-JPS
