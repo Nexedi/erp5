@@ -1,9 +1,6 @@
-if not data:
-  data = {}
-
 origin = context.Base_getRequestHeader("Origin")
 if origin:
-  if 'cors' in data and origin in data.get('cors', []):
-    return True
-  return False
+  if not data:
+    data = {}
+  return origin in data.get('cors', ()) if data else False
 return True
