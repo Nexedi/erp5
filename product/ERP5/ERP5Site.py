@@ -1496,6 +1496,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('module')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalPersonalItemTypeList')
+  def getPortalPersonalItemTypeList(self) :
+    """
+      Return personal item types.
+    """
+    return self._getPortalGroupedTypeList('personal_item')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalInventoryMovementTypeList')
   def getPortalInventoryMovementTypeList(self):
     """
