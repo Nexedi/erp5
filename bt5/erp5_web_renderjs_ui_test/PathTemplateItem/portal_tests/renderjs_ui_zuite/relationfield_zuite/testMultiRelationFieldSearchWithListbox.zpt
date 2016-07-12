@@ -175,11 +175,7 @@
 </tr>
 
 
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
-  <td>Create:Foo</td>
-</tr>
+
 
 
 
@@ -326,11 +322,6 @@
 </tr>
 
 
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
-  <td>Create:Foo</td>
-</tr>
 
 
 
