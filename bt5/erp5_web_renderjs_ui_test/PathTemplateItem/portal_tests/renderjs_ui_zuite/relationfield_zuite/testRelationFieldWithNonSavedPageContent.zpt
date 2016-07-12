@@ -206,11 +206,7 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Create:Category</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>click</td>
@@ -334,11 +330,7 @@
   <td>//input[@name="field_my_foo_big_category_title"]</td>
   <td>TEST1</td>
 </tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Create:Category</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>assertChecked</td>
@@ -488,11 +480,7 @@
   <td>//input[@name="field_my_foo_big_category_title"]</td>
   <td>TEST1</td>
 </tr>
-<tr>
-  <td>verifyTextNotPresent</td>
-  <td>Create:Category</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>assertNotChecked</td>
