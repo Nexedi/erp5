@@ -137,11 +137,7 @@
 </tr>
 
 
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
-  <td>Create:Foo</td>
-</tr>
+
 
 
 
@@ -195,11 +191,6 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Create:Category</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>click</td>
@@ -279,11 +270,7 @@
   <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
   <td>TEST1</td>
 </tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Create:Category</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>assertChecked</td>
@@ -305,11 +292,7 @@
 </tr>
 
 
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//div[@class="ui-tag-list ui-tag-list-inset"]//li</td>
-  <td>Create:Foo</td>
-</tr>
+
 
 
 
@@ -462,11 +445,7 @@
   <td>//input[@name="field_my_foo_line_foo_category_title"]</td>
   <td>TEST1</td>
 </tr>
-<tr>
-  <td>verifyTextNotPresent</td>
-  <td>Create:Category</td>
-  <td></td>
-</tr>
+
 
 <tr>
   <td>assertNotChecked</td>

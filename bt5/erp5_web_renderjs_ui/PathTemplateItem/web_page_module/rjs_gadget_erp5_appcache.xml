@@ -205,6 +205,8 @@ gadget_erp5_pt_report_view.html\n
 gadget_erp5_pt_report_view.js\n
 gadget_erp5_router.html\n
 gadget_erp5_router.js\n
+gadget_erp5_relation_input.html\n
+gadget_erp5_relation_input.js\n
 gadget_erp5_search_editor.html\n
 gadget_erp5_search_editor.js\n
 gadget_erp5_searchfield.html\n
@@ -358,7 +360,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.33119.51229.58811</string> </value>
+                <value> <string>952.33120.45206.6075</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -376,7 +378,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468331561.38</float>
+                        <float>1468331792.72</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
