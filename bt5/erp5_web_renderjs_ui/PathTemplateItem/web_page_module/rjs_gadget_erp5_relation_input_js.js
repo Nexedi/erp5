@@ -17,11 +17,6 @@
                          .innerHTML,
     relation_listview_template = Handlebars.compile(relation_listview_source),
 
-    create_source = gadget_klass.__template_element
-                         .getElementById("create-template")
-                         .innerHTML,
-    create_template = Handlebars.compile(create_source),
-
 
     searching = "ui-btn ui-corner-all ui-btn-icon-notext" +
         " ui-input-clear ui-icon-spinner ui-icon-spin",
@@ -216,7 +211,6 @@
         search_query,
         simple_query,
         field_json = props.field_json,
-        create_div = props.element.querySelector(".ui-tag-list"),
         ul = gadget.props.element.querySelector(".search_ul");
 
       function generateList(event) {
@@ -227,7 +221,6 @@
 
         props.plane.className = jump_off;
         props.jump_url = [];
-        create_div.innerHTML = "";
         ul.innerHTML = "";
         if (my_value === "") {
           props.spinner.className = searched;
@@ -299,7 +292,6 @@
         if (create_object_type) {
           gadget.props.create_object_type = create_object_type;
           props.plane.className = jump_add;
-          create_div.innerHTML = create_template({'text': create_object_type});
           return;
         }
         if (explore) {
