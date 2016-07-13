@@ -1112,8 +1112,13 @@ class Catalog(Folder,
     """
     return self._getCatalogSchema()[table]
 
+  security.declarePrivate('getColumnIds')
   @transactional_cache_decorator('SQLCatalog.getColumnIds')
-  def _getColumnIds(self):
+  def getColumnIds(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    """
     keys = set()
     add_key = keys.add
     table_dict = self._getCatalogSchema()
@@ -1128,14 +1133,6 @@ class Catalog(Folder,
       scriptable_tuple = scriptable.split('|')
       add_key(scriptable_tuple[0].strip())
     return sorted(keys)
-
-  security.declarePrivate('getColumnIds')
-  def getColumnIds(self):
-    """
-    Calls the show column method and returns dictionnary of
-    Field Ids
-    """
-    return self._getColumnIds()[:]
 
   security.declarePrivate('getColumnMap')
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
