@@ -43,8 +43,6 @@ from Products.Formulator.Errors import FormValidationError, ValidationError
 
 import string
 
-from zLOG import LOG, WARNING, DEBUG, PROBLEM
-
 class FormBoxWidget(Widget.Widget):
   """
       A widget that display a form within a form.
@@ -93,50 +91,33 @@ class FormBoxWidget(Widget.Widget):
                                 default="",
                                 required=0)
 
-  def render(self, field, key, value, REQUEST, render_prefix=None):
-    """
-        Render a form in a field
-    """
-    return self._render(field, key, value, REQUEST, render_prefix=render_prefix)
-
   def render_view(self, field, value, REQUEST, render_prefix=None):
     """
         Render a view form in a field
     """
-    return self._render(field, None, value, REQUEST, render_prefix=render_prefix)
+    return self.render(field, None, value, REQUEST, render_prefix)
 
-  def _render(self, field, key, value, REQUEST, render_prefix=None):
-    result = ''
+  def render(self, field, key, value, REQUEST, render_prefix=None):
+    """
+        Render a form in a field
+    """
     target_id = field.get_value('formbox_target_id')
-    if target_id not in (None, ''):
-      here = REQUEST['here']
+    if target_id:
+      other = REQUEST.other
+      here = other['here']
       context_method_id = field.get_value('context_method_id')
-      if context_method_id:
-        REQUEST['original_context'] = original_here = here
-        REQUEST['here'] = here = getattr(here, context_method_id)()
-      # If 'cell' is not defined, we define 'cell' just same as 'here', so
-      # that we can use the same formbox for both ListBox and non-ListBox
-      # using 'cell' parameter.
-      if not REQUEST.has_key('cell'):
-        set_cell = True
-        REQUEST.set('cell', here)
-      else:
-        set_cell = False
       try:
-        form = getattr(here, target_id)
-      except AttributeError:
-        LOG('FormBox', WARNING,
-            'Could not get a form from formbox %s in %s' % \
-                (field.id, field.aq_parent.id))
-      else:
-        result = form(REQUEST=REQUEST, key_prefix=key)
-      finally:
+        cell = other.pop('cell', None)
+        context = cell or here
         if context_method_id:
-          REQUEST['here'] = original_here
-          del REQUEST.other['original_context']
-        if set_cell:
-          del REQUEST.other['cell']
-    return result
+          context = getattr(context, context_method_id)(
+            field=field, REQUEST=REQUEST)
+        return getattr(context, target_id)(REQUEST=REQUEST, key_prefix=key)
+      finally:
+        other['here'] = here
+        if cell:
+          other['cell'] = cell
+    return ''
 
 class FormBoxEditor:
   """
@@ -186,10 +167,12 @@ class FormBoxValidator(Validator.Validator):
 
   def validate(self, field, key, REQUEST):
     # XXX hardcoded acquisition
+    # TODO: Handle 'cell' for validation inside listboxes,
+    #       like it is done for rendering.
     here = field.aq_parent.aq_parent
     context_method_id = field.get_value('context_method_id')
     if context_method_id:
-      here = getattr(here, context_method_id)()
+      here = getattr(here, context_method_id)(field=field, REQUEST=REQUEST)
     formbox_target_id = field.get_value('formbox_target_id')
 
     # Get current error fields
