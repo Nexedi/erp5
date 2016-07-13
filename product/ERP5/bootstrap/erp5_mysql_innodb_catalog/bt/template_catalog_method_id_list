@@ -69,6 +69,7 @@ erp5_mysql_innodb/z_create_versioning
 erp5_mysql_innodb/z_delete_recorded_object_list
 erp5_mysql_innodb/z_delete_translation_list
 erp5_mysql_innodb/z_delete_uid
+erp5_mysql_innodb/z_get_table_schema
 erp5_mysql_innodb/z_getitem_by_path
 erp5_mysql_innodb/z_getitem_by_uid
 erp5_mysql_innodb/z_portal_ids_commit
