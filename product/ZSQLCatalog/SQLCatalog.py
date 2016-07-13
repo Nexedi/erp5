@@ -1085,15 +1085,19 @@ class Catalog(Folder,
   @transactional_cache_decorator('SQLCatalog._getCatalogSchema')
   def _getCatalogSchema(self):
     method = getattr(self, self.sql_catalog_multi_schema, None)
+    result = {}
     if method is None:
       # BBB: deprecated
+      warnings.warn("The usage of sql_catalog_schema is much slower. "
+              "than sql_catalog_multi_schema. It makes many SQL queries "
+              "instead of one",
+              DeprecationWarning)
       method_name = self.sql_catalog_schema
       try:
         method = getattr(self, method_name)
       except AttributeError:
         return {}
-      result = {}
-      for table in table_list:
+      for table in self.getCatalogSearchTableIds():
         try:
           result[table] = [c.Field for c in method(table=table)]
         except (ConflictError, DatabaseError):
@@ -1102,7 +1106,6 @@ class Catalog(Folder,
           LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s'
             % method_name, error=sys.exc_info())
       return result
-    result = {}
     for row in method():
       result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
     return result
