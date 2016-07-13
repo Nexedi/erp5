@@ -497,8 +497,7 @@ class SimulationTool(BaseTool):
 
         # Sort on
         if 'sort_on' in new_kw:
-          table_column_list = ctool.getSQLCatalog()._getCatalogSchema(
-                                                              table=table)
+          table_column_list = ctool.getSQLCatalog().getTableColumnList(table)
           sort_on = new_kw['sort_on']
           new_sort_on = []
           for column_id, sort_direction in sort_on:
