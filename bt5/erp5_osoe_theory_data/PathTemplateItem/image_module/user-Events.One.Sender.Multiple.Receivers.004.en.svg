@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Events.One.Sender.Multiple.Receivers-004-en.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="721"
+     id="namedview33"
+     showgrid="false"
+     inkscape:zoom="0.63432805"
+     inkscape:cx="262.20471"
+     inkscape:cy="375.20018"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <defs
+     id="defs5">
+    <marker
+       id="Arrow1Lend-81"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         id="path4717-2"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+  </defs>
+  <g
+     id="g9"
+     transform="matrix(2.0064104,0,0,2.0064104,-0.9909099,-0.43919893)">
+    <title
+       id="title11">Layer 1</title>
+    <text
+       font-size="29.8045845px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.91398036,1.0941154)"
+       id="text3617"
+       y="214.5298"
+       x="97.016762"
+       xml:space="preserve"
+       style="font-size:29.8045845px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Building.1?format=png"
+       width="106.50372"
+       height="113.6122"
+       id="image3311"
+       x="4.9591198"
+       y="56.42997" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Building.2?format=png"
+       width="65.363136"
+       height="91.771912"
+       id="image3476"
+       x="444.12863"
+       y="3.5692699" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Building.2?format=png"
+       width="65.363136"
+       height="91.771912"
+       id="image3476-1"
+       x="456.13351"
+       y="278.34195" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"
+       width="42.959869"
+       height="79.480324"
+       id="image3993"
+       x="38.03915"
+       y="202.86075" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       width="32.39555"
+       height="56.48679"
+       id="image4158"
+       x="422.19672"
+       y="240.80003" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       width="32.39555"
+       height="56.48679"
+       id="image4158-9"
+       x="421.71646"
+       y="312.07996" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png"
+       width="29.51436"
+       height="59.935822"
+       id="image3663-4"
+       x="400.58783"
+       y="20.06217" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       width="32.39555"
+       height="56.48679"
+       id="image4158-9-7"
+       x="432.12369"
+       y="84.067902" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png"
+       width="29.51436"
+       height="59.935822"
+       id="image3663-4-8"
+       x="450.85138"
+       y="97.477257" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       width="32.39555"
+       height="56.48679"
+       id="image4158-9-7-4"
+       x="413.07294"
+       y="53.402779" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"
+       width="42.959869"
+       height="79.480324"
+       id="image3993-0"
+       x="122.93767"
+       y="75.601479" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       width="32.39555"
+       height="56.48679"
+       id="image4158-9-3"
+       x="465.89459"
+       y="220.10582" />
+    <path
+       stroke-miterlimit="4"
+       id="path5640"
+       d="M 157.7234,119.29325 409.81869,63.25579"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.49022996;stroke-miterlimit:4;marker-end:url(#Arrow1Lend-81)" />
+    <path
+       stroke-miterlimit="4"
+       id="path5640-0"
+       d="M 318.88644,128.61475 70.86506,233.08504"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.49022996;stroke-miterlimit:4;marker-end:url(#Arrow1Lend-81)" />
+    <path
+       stroke-miterlimit="4"
+       id="path5640-0-0"
+       d="M 439.72098,127.43366 155.883,130.11221"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7f2a;stroke:#ff7f2a;stroke-width:1.49022996;stroke-miterlimit:4;marker-end:url(#Arrow1Lend-81)" />
+    <path
+       stroke-miterlimit="4"
+       id="path5640-0-5"
+       d="M 320.06332,83.50429 470.2901,236.14405"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.49022996;stroke-miterlimit:4;marker-end:url(#Arrow1Lend-81)" />
+    <path
+       id="path5640-6"
+       d="M 70.31638,272.77475 424.20272,258.56552"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#00ff00;stroke-width:1.49450219px;marker-end:url(#Arrow1Lend-81)" />
+    <path
+       stroke-miterlimit="4"
+       id="path5640-0-5-5"
+       d="m 282.57919,265.83951 146.62915,80.50214"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#00ff00;stroke-width:1.49022996;stroke-miterlimit:4;marker-end:url(#Arrow1Lend-81)" />
+    <path
+       stroke-miterlimit="4"
+       id="path5640-0-0-7"
+       d="m 471.19211,245.90414 -397.89159,2.6212"
+       inkscape:connector-curvature="0"
+       style="fill:#ff7f2a;stroke:#ff7f2a;stroke-width:1.49022996;stroke-miterlimit:4;marker-end:url(#Arrow1Lend-81)" />
+  </g>
+</svg>

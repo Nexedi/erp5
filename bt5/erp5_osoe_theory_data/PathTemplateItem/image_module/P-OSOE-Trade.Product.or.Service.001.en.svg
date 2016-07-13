@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg5933"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="P-OSOE-Trade.Product.or.Service-001-en.svg">
+  <defs
+     id="defs5935" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="620.8679"
+     inkscape:cy="397.79197"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="721"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5938">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26769)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.67214608;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect6215"
+       width="1045.467"
+       height="440.54984"
+       x="3.327456"
+       y="454.98492" />
+    <image
+       y="517.45703"
+       x="695.37402"
+       id="image6068"
+       xlink:href="http://www.erp5.com/P-OSOE-Woman.With.Pie.Chart.Diagram?format=png"
+       height="267.94202"
+       width="343.55756" />
+    <image
+       y="530.60754"
+       x="19.765617"
+       id="image6165"
+       xlink:href="http://www.erp5.com/P-OSOE-Vacuum.Cleaner.Aspirator?format=png"
+       height="218.62753"
+       width="110.13567" />
+    <image
+       y="528.96375"
+       x="129.90129"
+       id="image6165-3"
+       xlink:href="http://www.erp5.com/P-OSOE-Vacuum.Cleaner.Aspirator?format=png"
+       height="218.62753"
+       width="110.13567" />
+    <image
+       y="528.96375"
+       x="241.68079"
+       id="image6165-2"
+       xlink:href="http://www.erp5.com/P-OSOE-Vacuum.Cleaner.Aspirator?format=png"
+       height="218.62753"
+       width="110.13567" />
+    <image
+       y="530.60754"
+       x="350.17264"
+       id="image6165-0"
+       xlink:href="http://www.erp5.com/P-OSOE-Vacuum.Cleaner.Aspirator?format=png"
+       height="218.62753"
+       width="110.13567" />
+    <text
+       xml:space="preserve"
+       style="font-size:26.30105782px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="208.80446"
+       y="832.2478"
+       id="text6232"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan6234"
+         x="208.80446"
+         y="832.2478">Quantity</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:26.30105782px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="782.81732"
+       y="824.70929"
+       id="text6232-6"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan6257"
+         x="782.81732"
+         y="824.70929">Time spent</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:26.30105782px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="557.6145"
+       y="867.44843"
+       id="text6232-5"
+       sodipodi:linespacing="100%"><tspan
+         sodipodi:role="line"
+         id="tspan6234-5"
+         x="557.6145"
+         y="867.44843">...</tspan></text>
+  </g>
+</svg>

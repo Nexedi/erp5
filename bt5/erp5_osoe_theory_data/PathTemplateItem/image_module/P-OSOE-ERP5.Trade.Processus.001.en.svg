@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="P-OSOE-ERP5.Trade.Processus-001-en.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="506.68675"
+     inkscape:cy="376.48294"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="721"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3755"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="50px"
+       spacingy="50px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26769)">
+    <path
+       style="fill:#2dc5df;fill-opacity:1;stroke:#000000;stroke-width:1.72650373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 12.363252,500.07031 274.514088,0 88.05169,191.64192 -88.05169,188.18898 -272.787584,0 z"
+       id="path3822"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#2dc5df;fill-opacity:1;stroke:#000000;stroke-width:1.72650373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 321.40742,500.07031 293.50563,0 100.13722,193.36842 -98.41071,188.18888 -296.95865,0 98.41072,-191.64189 z"
+       id="path3824"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#2dc5df;fill-opacity:1;stroke:#000000;stroke-width:1.72650373px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 655.48589,500.9336 293.50563,0 100.13718,193.36842 -98.41067,188.18889 -296.95864,0 98.41071,-191.6419 z"
+       id="path3824-5"
+       inkscape:connector-curvature="0" />
+    <image
+       y="544.95941"
+       x="94.372177"
+       id="image3971"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.White.Paper?format=png"
+       height="172.65038"
+       width="146.75282" />
+    <image
+       y="643.37012"
+       x="53.799343"
+       id="image4036"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Hand.Wrist?format=png"
+       height="176.10338"
+       width="239.98402" />
+    <image
+       y="506.1131"
+       x="362.84351"
+       id="image4101"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Small.Plane?format=png"
+       height="60.427631"
+       width="146.75282" />
+    <image
+       y="557.9082"
+       x="473.33975"
+       id="image4166"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Small.Truck?format=png"
+       height="67.333649"
+       width="169.19737" />
+    <image
+       y="633.01111"
+       x="559.66492"
+       id="image4231"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Air.Ground.Transport?format=png"
+       height="115.67575"
+       width="119.12875" />
+    <image
+       y="733.14832"
+       x="352.4845"
+       id="image4312"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Opened.Small.Box?format=png"
+       height="172.65038"
+       width="172.65038" />
+    <image
+       y="520.78839"
+       x="746.12732"
+       id="image4377"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Cash.Register?format=png"
+       height="120.85526"
+       width="126.03477" />
+    <image
+       y="612.29309"
+       x="847.99103"
+       id="image4442"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Dollar.Sign?format=png"
+       height="172.65038"
+       width="172.65038" />
+    <image
+       y="778.03741"
+       x="763.3924"
+       id="image4507"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Dollar.Coins?format=png"
+       height="96.684212"
+       width="81.145676" />
+    <image
+       y="710.7038"
+       x="764.25562"
+       id="image4507-0"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Dollar.Coins?format=png"
+       height="96.684212"
+       width="81.145676" />
+    <image
+       y="788.39642"
+       x="817.77722"
+       id="image4507-3"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Dollar.Coins?format=png"
+       height="96.684212"
+       width="81.145676" />
+    <image
+       y="778.03741"
+       x="710.73401"
+       id="image4507-6"
+       xlink:href="http://www.erp5.com/P-OSOE-Trade.Processus.Dollar.Coins?format=png"
+       height="96.684212"
+       width="81.145676" />
+  </g>
+</svg>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1022"
+   height="649"
+   sodipodi:docname="P-CLOUDIA-Configuration.Questionnaire.HowTo.Click.Questionnaires.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-1.0229263"
+     x="-0.42891824"
+     id="image3050"
+     xlink:href="http://www.erp5.com/P-CLOUDIA-Configuration.Questionnaire.HowTo.Click.Questionnaires.Screenshot?format=png"
+     height="653"
+     width="1024" />
+  <rect
+     style="fill:none;stroke:#f00421;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2987"
+     width="123.90913"
+     height="21.825443"
+     x="614.76672"
+     y="169.01329"
+     rx="3.8752646"
+     ry="1.2127049" />
+  <rect
+     style="fill:#ffffff;stroke:#f00421;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect3757"
+     width="363.19272"
+     height="76.630905"
+     x="205.65112"
+     y="109.03917"
+     rx="9.7998095"
+     ry="1.7320294" />
+  <path
+     style="fill:none;stroke:#f00421;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 569.39071,178.04385 43.67605,0"
+     id="path3759"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cc" />
+  <text
+     xml:space="preserve"
+     style="font-size:27.59499930999999862px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
+     x="387.58548"
+     y="138.987"
+     id="text3756"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3758"
+       x="387.58548"
+       y="138.987">After log in,</tspan><tspan
+       sodipodi:role="line"
+       x="387.58548"
+       y="173.48074"
+       id="tspan3760">click on &quot;Questionnaires&quot;</tspan></text>
+</svg>

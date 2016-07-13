@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="894"
+   height="632"
+   sodipodi:docname="user-Tickets.Support.Request.Worklist.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Send"
+       style="overflow:visible;">
+      <path
+         id="path3958"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.2) rotate(180) translate(6,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective3021"
+       inkscape:persp3d-origin="558.82802 : 452.75896 : 1"
+       inkscape:vp_z="558.78835 : 452.76216 : 1"
+       inkscape:vp_y="0 : 19.14442 : 0"
+       inkscape:vp_x="558.86768 : 452.76216 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3019"
+       inkscape:persp3d-origin="558.82802 : 475.41833 : 1"
+       inkscape:vp_z="558.78835 : 475.42153 : 1"
+       inkscape:vp_y="0 : 19.14442 : 0"
+       inkscape:vp_x="558.86768 : 475.42153 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3017"
+       inkscape:persp3d-origin="558.82802 : 497.25928 : 1"
+       inkscape:vp_z="558.78835 : 497.26247 : 1"
+       inkscape:vp_y="0 : 19.14442 : 0"
+       inkscape:vp_x="558.86768 : 497.26247 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3009"
+       inkscape:persp3d-origin="530.03733 : 488.14893 : 1"
+       inkscape:vp_z="529.99766 : 488.15213 : 1"
+       inkscape:vp_y="0 : 19.14442 : 0"
+       inkscape:vp_x="530.07699 : 488.15213 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3007"
+       inkscape:persp3d-origin="530.03733 : 510.8083 : 1"
+       inkscape:vp_z="529.99766 : 510.8115 : 1"
+       inkscape:vp_y="0 : 19.14442 : 0"
+       inkscape:vp_x="530.07699 : 510.8115 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3005"
+       inkscape:persp3d-origin="530.03733 : 532.64925 : 1"
+       inkscape:vp_z="529.99766 : 532.65244 : 1"
+       inkscape:vp_y="0 : 19.14442 : 0"
+       inkscape:vp_x="530.07699 : 532.65244 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="622.89754 : 383.59174 : 1"
+       inkscape:vp_y="0 : 22.722579 : 0"
+       inkscape:vp_z="622.80454 : 383.59174 : 1"
+       inkscape:persp3d-origin="622.85105 : 383.58794 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective2934"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3726"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3748"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3770"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3792"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3830"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="542.32006 : 439.23044 : 1"
+       inkscape:vp_y="0 : 31.718857 : 0"
+       inkscape:vp_z="542.20476 : 439.23044 : 1"
+       inkscape:persp3d-origin="542.26241 : 439.22514 : 1"
+       id="perspective10-8" />
+    <inkscape:perspective
+       id="perspective3873"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="622.89754 : 357.66866 : 1"
+       inkscape:vp_y="0 : 22.722579 : 0"
+       inkscape:vp_z="622.80454 : 357.66866 : 1"
+       inkscape:persp3d-origin="622.85105 : 357.66484 : 1"
+       id="perspective10-6" />
+    <inkscape:perspective
+       id="perspective3873-4"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="622.89754 : 409.10979 : 1"
+       inkscape:vp_y="0 : 22.722579 : 0"
+       inkscape:vp_z="622.80454 : 409.10979 : 1"
+       inkscape:persp3d-origin="622.85105 : 409.10601 : 1"
+       id="perspective10-7" />
+    <inkscape:perspective
+       id="perspective3943"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective3943-2"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2999"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.80231747"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="398.1037"
+     x="-0.36354649"
+     id="image3090"
+     xlink:href="http://www.erp5.com/P-OSOE-Ticket.Support.Request.3.Screenshot?format=png"
+     height="152"
+     width="896" />
+  <image
+     y="60.809811"
+     x="490.05856"
+     id="image3168"
+     xlink:href="http://www.erp5.com/P-OSOE-Ticket.Worklist.Screenshot?format=png"
+     height="280"
+     width="390" />
+  <path
+     style="fill:none;stroke:#ce4848;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+     d="m 493.37361,282.05202 26.95964,0"
+     id="path3933"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:none;stroke:#ce4848;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+     d="m 493.29479,300.91005 26.95967,0"
+     id="path3933-5"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:none;stroke:#ce4848;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+     d="m 493.29479,319.21307 26.95967,0"
+     id="path3933-54"
+     inkscape:connector-curvature="0" />
+</svg>

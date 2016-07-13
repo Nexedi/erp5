@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1780"
+   height="560"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Events.Keep.Tracks.Of.Interactions.Event.Origin.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview102"
+     showgrid="false"
+     inkscape:zoom="0.64180791"
+     inkscape:cx="890.86276"
+     inkscape:cy="144.03203"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g11" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <defs
+     id="defs5">
+    <marker
+       id="Arrow2Lstart"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <path
+         transform="matrix(1.1,0,0,1.1,1.1,0)"
+         d="M 8.71859,4.03374 -2.20729,0.01601 8.71859,-4.00171 c -1.7455,2.37206 -1.73544,5.61745 0,8.03545 z"
+         id="path6481"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round" />
+    </marker>
+    <marker
+       id="EmptyTriangleOutL"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <path
+         transform="matrix(0.8,0,0,0.8,-4.8,0)"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         id="path6624"
+         inkscape:connector-curvature="0"
+         style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+  </defs>
+  <g
+     id="g11"
+     transform="translate(0,-184.09448)">
+    <title
+       id="title13">Layer 1</title>
+    <path
+       stroke-miterlimit="4"
+       id="path8986"
+       d="m 1169.1455,256.67854 329.1771,15.88166 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.96740997;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-84"
+       d="m 1168.9965,316.01401 328.9684,-25.99043 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.96740997;stroke-miterlimit:4;marker-start:url(#Arrow2Lstart);marker-end:none" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-7"
+       d="m 1170.3527,335.98732 329.1771,15.88168 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.96740997;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-84-2"
+       d="m 1170.2036,395.3228 328.9685,-25.99049 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.96740997;stroke-miterlimit:4;marker-start:url(#Arrow2Lstart);marker-end:none" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-6"
+       d="m 1170.3527,421.74432 329.1771,15.88165 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.96740997;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-1"
+       d="m 1170.1711,473.7709 329.1771,15.88165 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.96740997;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-84-7"
+       d="m 1170.0221,533.10638 328.9683,-25.99045 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.96740997;stroke-miterlimit:4;marker-start:url(#Arrow2Lstart);marker-end:none" />
+    <text
+       font-size="54.50244141px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(1.0453452,0.95662179)"
+       id="text3617"
+       y="429.89609"
+       x="136.74626"
+       xml:space="preserve"
+       style="font-size:54.50244141px;font-style:normal;font-weight:normal;fill:#000000;stroke:#00ff00;stroke-width:1.36256003;font-family:Bitstream Vera Sans" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png"
+       width="15.80221"
+       height="42.992481"
+       id="image7408"
+       x="1290.746"
+       y="315.82935" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png"
+       width="20.96731"
+       height="27.54068"
+       id="image7840"
+       x="1334.4052"
+       y="287.15582" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Telephone.Fax?format=png"
+       width="30.608641"
+       height="45.108662"
+       id="image8488"
+       x="1236.9973"
+       y="505.577" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"
+       width="28.887329"
+       height="67.352448"
+       id="image8756"
+       x="1124.4357"
+       y="257.06912" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       width="74.534409"
+       height="258.33704"
+       id="image8982"
+       x="1500.5847"
+       y="248.32651" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png"
+       width="15.80221"
+       height="42.992481"
+       id="image7408-7"
+       x="1328.7158"
+       y="361.37402" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png"
+       width="20.96731"
+       height="27.54068"
+       id="image7840-1"
+       x="1267.0483"
+       y="244.61403" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png"
+       width="15.80221"
+       height="42.992481"
+       id="image7408-7-1"
+       x="1313.7477"
+       y="459.57974" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Desk?format=png"
+       width="29.455099"
+       height="93.346573"
+       id="image10217"
+       x="1370.7332"
+       y="381.1503" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"
+       width="28.887329"
+       height="67.352448"
+       id="image8756-0"
+       x="1122.7725"
+       y="353.62863" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"
+       width="28.887329"
+       height="67.352448"
+       id="image8756-8"
+       x="1123.5603"
+       y="455.9837" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-4"
+       d="m 285.10547,255.84356 302.80026,15.88166 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.88694;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-84-8"
+       d="m 284.96837,315.17905 302.60835,-25.99045 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.88694;stroke-miterlimit:4;marker-start:url(#Arrow2Lstart);marker-end:none" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-7-1"
+       d="m 286.21591,335.15234 302.80027,15.8817 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.88694;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-84-2-2"
+       d="m 286.07881,394.48784 302.60833,-25.99049 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.88694;stroke-miterlimit:4;marker-start:url(#Arrow2Lstart);marker-end:none" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-6-9"
+       d="m 286.21592,420.90933 302.80025,15.88168 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.88694;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-1-3"
+       d="m 286.04885,472.93591 302.80028,15.88165 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#00ff00;stroke-width:1.88694;stroke-miterlimit:4;marker-end:url(#EmptyTriangleOutL)" />
+    <path
+       stroke-miterlimit="4"
+       id="path8986-84-7-9"
+       d="m 285.91174,532.27139 302.60835,-25.99042 0,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#ff7f2a;stroke-width:1.88694;stroke-miterlimit:4;marker-start:url(#Arrow2Lstart);marker-end:none" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png"
+       y="314.99432"
+       x="396.96213"
+       id="image7408-0"
+       height="42.992481"
+       width="14.53599" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png"
+       y="286.3208"
+       x="437.12311"
+       id="image7840-8"
+       height="27.54068"
+       width="19.28721" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Telephone.Fax?format=png"
+       y="504.74207"
+       x="347.52032"
+       id="image8488-8"
+       height="45.108662"
+       width="28.155991" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"
+       y="250.66257"
+       x="207.37045"
+       id="image8756-5"
+       height="247.24324"
+       width="73.191513" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"
+       y="247.49152"
+       x="593.30151"
+       id="image8982-0"
+       height="258.33704"
+       width="79.585007" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png"
+       y="360.53909"
+       x="431.88956"
+       id="image7408-7-9"
+       height="42.992481"
+       width="14.53599" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png"
+       y="243.77911"
+       x="375.16336"
+       id="image7840-1-6"
+       height="27.54068"
+       width="19.28721" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png"
+       y="458.74469"
+       x="418.1207"
+       id="image7408-7-1-3"
+       height="42.992481"
+       width="14.53599" />
+    <image
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Desk?format=png"
+       y="380.31531"
+       x="470.53983"
+       id="image10217-8"
+       height="93.346573"
+       width="27.094879" />
+    <path
+       stroke-miterlimit="4"
+       d="M 423.19696,258.70927"
+       id="path10221-56"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1"
+       y="192.26707"
+       x="561.4632"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="192.26707"
+   x="561.4632"
+   id="tspan10225-1">1</tspan>   </text>
+    <text
+       font-size="20.07040787px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.94929142,1.0534173)"
+       id="text3298"
+       y="328.10675"
+       x="1164.7844"
+       xml:space="preserve"
+       style="font-size:20.07040787px;font-style:normal;font-weight:normal;fill:#008080;font-family:Sans">    <tspan
+   y="328.10675"
+   x="1164.7844"
+   id="tspan3300">Staff A</tspan>   </text>
+    <text
+       font-size="20.07040787px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.94929142,1.0534173)"
+       id="text3302"
+       y="424.12338"
+       x="1164.7844"
+       xml:space="preserve"
+       style="font-size:20.07040787px;font-style:normal;font-weight:normal;fill:#008080;font-family:Sans">    <tspan
+   y="424.12338"
+   x="1164.7844"
+   id="tspan3304">Staff B</tspan>   </text>
+    <text
+       font-size="20.07040787px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.94929142,1.0534173)"
+       id="text3306"
+       y="518.76831"
+       x="1166.156"
+       xml:space="preserve"
+       style="font-size:20.07040787px;font-style:normal;font-weight:normal;fill:#008080;font-family:Sans">    <tspan
+   y="518.76831"
+   x="1166.156"
+   id="tspan3308">Staff A</tspan>   </text>
+    <text
+       font-size="20.07040787px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.94929142,1.0534173)"
+       id="text3310"
+       y="518.76831"
+       x="1561.1957"
+       xml:space="preserve"
+       style="font-size:20.07040787px;font-style:normal;font-weight:normal;fill:#008080;font-family:Sans">    <tspan
+   y="518.76831"
+   x="1561.1957"
+   id="tspan3312">Customer</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 494.13416,299.65068"
+       id="path10221-56-4"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-3"
+       y="221.90143"
+       x="659.46674"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="221.90143"
+   x="659.46674"
+   id="tspan10225-1-4">2</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 388.66324,338.66396"
+       id="path10221-56-5"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-7"
+       y="250.14006"
+       x="513.75305"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="250.14006"
+   x="513.75305"
+   id="tspan10225-1-8">3</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 422.55782,382.19759"
+       id="path10221-56-0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-0"
+       y="281.65063"
+       x="560.5802"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="281.65063"
+   x="560.5802"
+   id="tspan10225-1-1">4</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 534.49958,426.80504"
+       id="path10221-56-6"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-70"
+       y="313.93854"
+       x="715.2337"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="313.93854"
+   x="715.2337"
+   id="tspan10225-1-81">5</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 408.31066,477.24933"
+       id="path10221-56-50"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-2"
+       y="350.45129"
+       x="540.89697"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="350.45129"
+   x="540.89697"
+   id="tspan10225-1-7">6</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 341.78727,525.0607"
+       id="path10221-56-43"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-73"
+       y="385.05823"
+       x="448.99142"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="385.05823"
+   x="448.99142"
+   id="tspan10225-1-0">7</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1391.4252,300.84038"
+       id="path10221-56-4-6"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-3-5"
+       y="222.76259"
+       x="1899.1221"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="222.76259"
+   x="1899.1221"
+   id="tspan10225-1-4-3">2</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1282.048,338.40868"
+       id="path10221-56-5-3"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-7-5"
+       y="249.95538"
+       x="1748.0116"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="249.95538"
+   x="1748.0116"
+   id="tspan10225-1-8-1">3</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1323.7156,384.64664"
+       id="path10221-56-0-1"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-0-0"
+       y="283.42352"
+       x="1805.5775"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="283.42352"
+   x="1805.5775"
+   id="tspan10225-1-1-0">4</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1435.697,430.88458"
+       id="path10221-56-6-7"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-70-0"
+       y="316.8916"
+       x="1960.2859"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="316.8916"
+   x="1960.2859"
+   id="tspan10225-1-81-8">5</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1301.5797,481.45734"
+       id="path10221-56-50-1"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-2-6"
+       y="353.49725"
+       x="1774.9955"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="353.49725"
+   x="1774.9955"
+   id="tspan10225-1-7-4">6</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1229.9636,524.67694"
+       id="path10221-56-43-9"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-73-9"
+       y="384.78058"
+       x="1676.0542"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="384.78058"
+   x="1676.0542"
+   id="tspan10225-1-0-8">7</tspan>   </text>
+    <path
+       stroke-miterlimit="4"
+       d="M 1313.2987,261.8271"
+       id="path10221-56-46"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-miterlimit:4" />
+    <text
+       font-size="15.09553814px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.72382306,1.3815531)"
+       id="text10223-1-38"
+       y="194.5239"
+       x="1791.186"
+       xml:space="preserve"
+       style="font-size:15.09553814px;font-style:normal;font-weight:normal;fill:#008080;font-family:Bitstream Vera Sans">    <tspan
+   y="194.5239"
+   x="1791.186"
+   id="tspan10225-1-04">1</tspan>   </text>
+    <image
+       y="581.39014"
+       x="5.1843147"
+       id="image3141"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Simple.Conversation.Screenshot?format=png"
+       height="149"
+       width="881" />
+    <image
+       y="580.7829"
+       x="893.76758"
+       id="image3187"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Complex.Conversation.Screenshot?format=png"
+       height="149"
+       width="883" />
+  </g>
+</svg>
