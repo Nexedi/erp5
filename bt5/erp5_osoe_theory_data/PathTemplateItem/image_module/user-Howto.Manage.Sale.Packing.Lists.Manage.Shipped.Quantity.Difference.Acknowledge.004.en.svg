@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Manage.Sale.Packing.Lists.Manage.Shipped.Quantity.Difference.Acknowledge.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible">
+      <path
+         id="path3803"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send-2"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3803-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send-29"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3803-4"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send-29-0"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3803-4-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="581.87922"
+     inkscape:cy="385.11984"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26769)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4087"
+       width="1041.1816"
+       height="739.65289"
+       x="5.1436539"
+       y="312.6507" />
+    <image
+       y="355.33871"
+       x="603.16144"
+       id="image3047"
+       xlink:href="http://www.erp5.com/P-OSOE-Manage.Packing.Lists.Invoice.Generation.Invoice?format=png"
+       height="238.53163"
+       width="175.17609" />
+    <text
+       xml:space="preserve"
+       style="font-size:34.4026413px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="143.8501"
+       y="655.82007"
+       id="text3234"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98656651,1.0136164)"><tspan
+         sodipodi:role="line"
+         id="tspan3236"
+         x="143.8501"
+         y="655.82007">Sale Order:</tspan><tspan
+         sodipodi:role="line"
+         x="143.8501"
+         y="698.82336"
+         id="tspan4568">Number of</tspan><tspan
+         sodipodi:role="line"
+         x="143.8501"
+         y="741.82666"
+         id="tspan3238">items ordered</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:34.4026413px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="419.49103"
+       y="656.12061"
+       id="text3234-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98656651,1.0136164)"><tspan
+         sodipodi:role="line"
+         id="tspan3236-4"
+         x="424.96722"
+         y="656.12061">Packing List: </tspan><tspan
+         sodipodi:role="line"
+         x="419.49103"
+         y="699.1239"
+         id="tspan4570">Number of</tspan><tspan
+         sodipodi:role="line"
+         x="419.49103"
+         y="742.1272"
+         id="tspan3238-5">items shipped</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:34.4026413px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="704.01215"
+       y="649.80719"
+       id="text3234-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98656651,1.0136164)"><tspan
+         sodipodi:role="line"
+         id="tspan3236-3"
+         x="704.01215"
+         y="649.80719">Invoice</tspan><tspan
+         sodipodi:role="line"
+         x="704.01215"
+         y="692.81049"
+         id="tspan3238-6">Generation</tspan></text>
+    <rect
+       style="fill:#d2d2d2;fill-opacity:1;stroke:#0b0b17;stroke-width:3.67420435;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.69818187;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3275"
+       width="1035.3459"
+       height="92.654465"
+       x="8.8612928"
+       y="786.6167" />
+    <rect
+       style="fill:#498000;fill-opacity:0.46545452;stroke:#0b0b17;stroke-width:3.67412257;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.25454544;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3275-1"
+       width="1035.2999"
+       height="92.654465"
+       x="8.4332705"
+       y="936.5589" />
+    <path
+       style="fill:#94bd5e;fill-opacity:1;stroke:#0b0b17;stroke-width:3.92480183;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:0.25454544;stroke-dasharray:none;stroke-dashoffset:0"
+       d="m 8.237078,980.3764 0,-49.02 517.769322,0 517.7693,0 0,49.02 0,49.02 -517.7693,0 -517.769322,0 0,-49.02 z"
+       id="path4133"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:48.32332993px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="81.471397"
+       y="812.5368"
+       id="text4135"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137"
+         x="81.471397"
+         y="812.5368">X</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:48.32332993px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="408.53235"
+       y="958.3952"
+       id="text4135-0"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-6"
+         x="408.53235"
+         y="958.3952">Y</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:48.32332993px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="78.974197"
+       y="955.17371"
+       id="text4135-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-2"
+         x="78.974197"
+         y="955.17371">X</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:48.32332993px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="408.53235"
+       y="807.59967"
+       id="text4135-06"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1"
+         x="408.53235"
+         y="807.59967">X</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:54.07241821px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="292.15305"
+       y="727.9621"
+       id="text4135-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.85593523,1.1683127)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-5"
+         x="292.15305"
+         y="727.9621">=</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:48.32332993px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="656.88147"
+       y="816.85785"
+       id="text4135-06-4"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7"
+         x="656.88147"
+         y="816.85785">SHIP</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:43.9148941px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="647.76044"
+       y="981.1792"
+       id="text4135-06-4-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7-5"
+         x="647.76044"
+         y="981.1792">SHIP2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:54.07241821px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="292.12051"
+       y="858.55511"
+       id="text4135-5-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.85593523,1.1683127)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-5-7"
+         x="292.12051"
+         y="858.55511">=</tspan></text>
+    <path
+       style="fill:#ff0000;stroke:#ff0000;stroke-width:5.40724182;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 259.2627,953.80769 c 13.88475,63.17341 13.88475,63.17341 13.88475,63.17341"
+       id="path4295"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.38157082;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+       d="m 761.39077,830.84994 c 79.84527,0 79.84527,0 79.84527,0"
+       id="path3015"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:48.32332993px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="892.40521"
+       y="815.2627"
+       id="text4135-06-4-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7-8"
+         x="892.40521"
+         y="815.2627">Deliver</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:31.93810463px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:89.99999762%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="511.00537"
+       y="924.23694"
+       id="text4135-06-4-6-8"
+       sodipodi:linespacing="89.999998%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7-5-5"
+         x="511.00537"
+         y="924.23694">Split</tspan><tspan
+         sodipodi:role="line"
+         x="511.00537"
+         y="952.98126"
+         id="tspan4301">and</tspan><tspan
+         sodipodi:role="line"
+         x="511.00537"
+         y="981.72552"
+         id="tspan4303">Defer</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.38157082;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+       d="m 778.84521,1004.957 c 79.84526,0 79.84526,0 79.84526,0"
+       id="path3015-8"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:43.9148941px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="910.62927"
+       y="982.01654"
+       id="text4135-06-4-9-6"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7-8-2"
+         x="910.62927"
+         y="982.01654">Deliver</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:43.9148941px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="649.54175"
+       y="933.79614"
+       id="text4135-06-4-6-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7-5-52"
+         x="649.54175"
+         y="933.79614">SHIP1</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.38157082;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+       d="m 778.84523,951.06141 c 79.84526,0 79.84526,0 79.84526,0"
+       id="path3015-8-3"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:43.9148941px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="910.62933"
+       y="930.39734"
+       id="text4135-06-4-9-6-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95776689,1.0440954)"><tspan
+         sodipodi:role="line"
+         id="tspan4137-1-7-8-2-1"
+         x="910.62933"
+         y="930.39734">Deliver</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.38157082;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send-29)"
+       d="m 572.97713,985.63022 c 40.2407,-27.75401 40.2407,-27.75401 40.2407,-27.75401"
+       id="path4356"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5.38157082;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send-29)"
+       d="m 572.22882,982.6997 c 40.24072,27.754 40.24072,27.754 40.24072,27.754"
+       id="path4356-0"
+       inkscape:connector-curvature="0" />
+    <image
+       y="358.26883"
+       x="811.50482"
+       id="image3047-2"
+       xlink:href="http://www.erp5.com/user-Howto.Manage.Sale.Packing.Lists.Manage.Shipped.Quantity.Difference.Acknowledge.Screenshot?format=png"
+       height="238.53163"
+       width="200.63193" />
+    <text
+       xml:space="preserve"
+       style="font-size:34.4026413px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="917.94897"
+       y="651.49774"
+       id="text3234-0-5"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98656651,1.0136164)"><tspan
+         sodipodi:role="line"
+         x="917.94897"
+         y="651.49774"
+         id="tspan4666">Products</tspan><tspan
+         sodipodi:role="line"
+         x="917.94897"
+         y="694.50104"
+         id="tspan4670">Delivered</tspan></text>
+    <image
+       y="388.62042"
+       x="12.078184"
+       id="image3189"
+       xlink:href="http://www.erp5.com/P-OSOE-Manage.Packing.Lists.Invoice.Generation.Number.Items.Ordered?format=png"
+       height="165"
+       width="270" />
+    <image
+       y="405.62042"
+       x="326.86462"
+       id="image3251"
+       xlink:href="http://www.erp5.com/P-OSOE-Manage.Packing.Lists.Invoice.Generation.Number.Items.Shipped?format=png"
+       height="131"
+       width="175" />
+  </g>
+</svg>

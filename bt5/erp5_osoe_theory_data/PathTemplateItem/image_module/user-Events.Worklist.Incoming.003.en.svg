@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1008"
+   height="744.09448"
+   id="svg4619"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Events.Worklist.Incoming-.svg">
+  <defs
+     id="defs4621">
+    <linearGradient
+       id="linearGradient3761"
+       osb:paint="gradient">
+      <stop
+         style="stop-color:#f5f9fa;stop-opacity:1;"
+         offset="0"
+         id="stop3763" />
+      <stop
+         style="stop-color:#f5f9fa;stop-opacity:0;"
+         offset="1"
+         id="stop3765" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-units="mm"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.68998665"
+     inkscape:cx="402.93499"
+     inkscape:cy="390.56124"
+     inkscape:current-layer="layer1"
+     id="namedview4623"
+     showgrid="false"
+     inkscape:window-width="1301"
+     inkscape:window-height="716"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     units="px" />
+  <metadata
+     id="metadata4625">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,1.2421875e-5)">
+    <image
+       y="-0.91712809"
+       x="-0.6424132"
+       id="image3070"
+       xlink:href="http://www.slapos.org/user-Event.Worklist.Screenshot?format=png"
+       height="286"
+       width="1010" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect5248"
+       width="224.92062"
+       height="41.801132"
+       x="2.27601"
+       y="2.0169659" />
+    <path
+       style="fill:#ff0000;fill-opacity:1;stroke:none"
+       d="m 379.19668,421.04725 -15.06325,-44.96269 -10.75944,8.56433 -68.8605,-100.63081 -8.60755,8.56433 68.8605,100.63081 -10.75945,8.56429 z"
+       id="path5250"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#faf5f5;fill-opacity:1;stroke:#000003;stroke-width:4.96961927;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2989"
+       width="430.34021"
+       height="382.38165"
+       x="450.69254"
+       y="334.46173"
+       rx="106.79012"
+       ry="0.91098934" />
+    <text
+       xml:space="preserve"
+       style="font-size:19.08094406px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="478.42252"
+       y="411.05508"
+       id="text3773"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3775"
+         x="478.42252"
+         y="411.05508">--Events Workflow--</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="434.90625"
+         id="tspan3783">· Draft Events to Process (3)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="458.75745"
+         id="tspan3777">· Planned Events to Comfirm (5)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="482.60861"
+         id="tspan3779">· Comfirmed Events to Generate (8)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="506.45981"
+         id="tspan3781">· Received Events to Deliver (3)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="530.31097"
+         id="tspan3785">--Document Publication Workflow--</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="554.16217"
+         id="tspan3787">· Documents to Submit (67)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="578.01337"
+         id="tspan3789">: Documents to Review (21)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="601.8645"
+         id="tspan3791">--Inventory Workflow--</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="625.7157"
+         id="tspan3793">· Inventories to Validate (2)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="649.56689"
+         id="tspan3795">--Orders Workflow--</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="673.41809"
+         id="tspan3797">· Purchase Orders to plan (5)</tspan><tspan
+         sodipodi:role="line"
+         x="478.42252"
+         y="697.26923"
+         id="tspan3799">· Sales Orders to plan (172)</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 479.99489,440.44384 283.46895,-1.12021"
+       id="path3503-5" />
+    <rect
+       style="fill:#95bfca;fill-opacity:0.5606936;stroke:#000003;stroke-width:4.96961927;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect2991"
+       width="430.34021"
+       height="45.243633"
+       x="450.69257"
+       y="334.46185"
+       rx="106.79012"
+       ry="0.91098934" />
+    <text
+       xml:space="preserve"
+       style="font-size:27.77955055px;font-style:normal;font-weight:normal;line-height:0%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="460.15009"
+       y="366.92056"
+       id="text3769"
+       sodipodi:linespacing="0%"><tspan
+         sodipodi:role="line"
+         id="tspan3771"
+         x="460.15009"
+         y="366.92056">ERP5 Worklists</tspan></text>
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 481.77031,514.3608 317.91493,-1.1202"
+       id="path3503-5-4" />
+  </g>
+</svg>

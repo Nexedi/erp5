@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="user-Events.Incoming.and.Outgoing.Event-001-en.svg">
+  <defs
+     id="defs35" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="722"
+     id="namedview33"
+     showgrid="false"
+     inkscape:zoom="0.63432805"
+     inkscape:cx="262.20471"
+     inkscape:cy="438.25904"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title></dc:title>
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     id="g5"
+     transform="matrix(2.0232475,0,0,2.0232475,-5.9790299,8.4726412)">
+    <title
+       id="title7">Layer 1</title>
+    <text
+       font-size="34.52421951px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.88581631,1.1289022)"
+       id="text3617"
+       y="224.6631"
+       x="75.328232"
+       xml:space="preserve"
+       style="font-size:34.52421951px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans" />
+    <image
+       width="91.534233"
+       height="113.80208"
+       id="image3311"
+       x="11.56166"
+       y="18.54808"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Building.1?format=png" />
+    <image
+       width="89.553383"
+       height="138.53964"
+       id="image3476"
+       x="432.36002"
+       y="10.20772"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Building.2?format=png" />
+    <image
+       width="95.569107"
+       height="121.79521"
+       id="image6240"
+       x="5.8431902"
+       y="174.77521"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.Man.3?format=png" />
+    <image
+       width="95.569107"
+       height="121.79521"
+       id="image6456"
+       x="426.32236"
+       y="174.54146"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.Man.4?format=png" />
+    <image
+       width="34.877441"
+       height="83.900124"
+       id="image7408"
+       x="202.56712"
+       y="65.04631"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+    <image
+       width="61.16423"
+       height="110.10287"
+       id="image7624"
+       x="190.50195"
+       y="211.26607"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Desk?format=png" />
+    <image
+       width="51.560341"
+       height="59.937569"
+       id="image7840"
+       x="268.62112"
+       y="70.49733"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" />
+    <image
+       width="46.24757"
+       height="66.160149"
+       id="image8056"
+       x="345.13376"
+       y="67.386032"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Paper.3?format=png" />
+    <image
+       width="38.953941"
+       height="70.854874"
+       id="image8272"
+       x="355.78885"
+       y="232.95117"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Paper.1?format=png" />
+    <image
+       width="50.993809"
+       height="64.73838"
+       id="image8488"
+       x="275.3735"
+       y="237.38353"
+       xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Telephone.Fax?format=png" />
+    <path
+       id="path2979"
+       d="m 178.74568,192.57851 233.40013,-1.02806 0,12.33684 -233.40013,0 0,13.36493 -49.5824,-16.44913 48.37308,-20.56143 1.20932,12.33685 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d45500;stroke:#000000;stroke-width:1.05075586px" />
+    <path
+       id="path2979-8"
+       d="m 363.58701,168.368 -233.401,0.369 0.021,-12.336 233.39899,0.658 0.024,-13.36501 49.55301,16.589 -48.40802,20.42499 -1.18799,-12.34 0,0 z"
+       inkscape:connector-curvature="0"
+       style="fill:#00ff00;stroke:#000000;stroke-width:1.05075586px" />
+    <text
+       font-size="17.26210976px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(0.88581631,1.1289022)"
+       id="text3176"
+       y="29.124769"
+       x="204.61858"
+       xml:space="preserve"
+       style="font-size:17.26210976px;font-style:normal;font-weight:normal;fill:#000000;font-family:Sans" />
+    <text
+       font-size="13.74542809000000076px"
+       font-style="normal"
+       font-weight="bold"
+       transform="scale(0.95897397,1.0427812)"
+       id="text3180"
+       y="44.513161"
+       x="217.67685"
+       xml:space="preserve"
+       style="font-size:13.74542809px;font-style:normal;font-weight:bold;fill:#008080;font-family:Sans"><tspan
+         y="44.513161"
+         x="217.67685"
+         id="tspan3182">Ausgehende Ereignisse</tspan></text>
+    <text
+       font-size="13.74542903999999943px"
+       font-style="normal"
+       font-weight="bold"
+       transform="scale(0.92193566,1.0846744)"
+       id="text3180-1"
+       y="318.15005"
+       x="250.16"
+       xml:space="preserve"
+       style="font-size:13.74542904px;font-style:normal;font-weight:bold;fill:#008080;font-family:Sans"><tspan
+         y="318.15005"
+         x="250.16"
+         id="tspan3182-4">Eingehende Ereihnisse</tspan></text>
+    <text
+       font-size="12.41714572999999966px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(1.0205567,0.97985737)"
+       id="text3180-1-1"
+       y="338.44769"
+       x="53.021809"
+       xml:space="preserve"
+       style="font-size:12.41714573px;font-style:normal;font-weight:normal;fill:#008080;font-family:Sans"><tspan
+         y="338.44769"
+         x="53.021809"
+         id="tspan3182-4-4">Personal</tspan></text>
+    <text
+       font-size="12.31291771000000068px"
+       font-style="normal"
+       font-weight="normal"
+       transform="scale(1.0291956,0.9716326)"
+       id="text3180-1-2"
+       y="334.90576"
+       x="427.88235"
+       xml:space="preserve"
+       style="font-size:12.31291771px;font-style:normal;font-weight:normal;fill:#008080;font-family:Sans"><tspan
+         y="334.90576"
+         x="427.88235"
+         id="tspan3182-4-9">Kunden</tspan><tspan
+         id="tspan3187"
+         y="350.29691"
+         x="427.88235">Lieferanten</tspan><tspan
+         id="tspan3189"
+         y="365.68805"
+         x="427.88235">...</tspan></text>
+  </g>
+</svg>

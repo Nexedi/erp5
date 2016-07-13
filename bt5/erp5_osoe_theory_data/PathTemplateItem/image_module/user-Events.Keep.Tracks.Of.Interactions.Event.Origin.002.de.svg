@@ -1,0 +1,119 @@
+<svg width="1052.3622" height="744.09448" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata8">image/svg xml</metadata>
+ <defs>
+  <marker id="Arrow2Lstart" refX="0" refY="0" orient="auto">
+   <path fill-rule="evenodd" stroke-width="0.625" stroke-linejoin="round" transform="matrix(1.1,0,0,1.1,1.1,0)" d="m8.71859,4.03374l-10.92588,-4.01773l10.92588,-4.01772c-1.7455,2.37206 -1.73544,5.61745 0,8.03545z" id="path6481"/>
+  </marker>
+  <marker id="EmptyTriangleOutL" refX="0" refY="0" orient="auto">
+   <path fill="#ffffff" fill-rule="evenodd" stroke="#000000" stroke-width="1pt" marker-start="none" transform="matrix(0.8,0,0,0.8,-4.8,0)" d="m5.77,0l-8.65,5l0,-10l8.65,5z" id="path6624"/>
+  </marker>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.96741" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986" d="m645.62439,75.9391l329.17706,15.88166l0,0"/>
+  <path fill="none" stroke="#ff7f2a" stroke-width="1.96741" stroke-miterlimit="4" marker-start="url(#Arrow2Lstart)" marker-end="none" id="path8986-84" d="m645.4754,135.27457l328.96838,-25.99043l0,0"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.96741" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-7" d="m646.8316,155.24788l329.17706,15.88168l0,0"/>
+  <path fill="none" stroke="#ff7f2a" stroke-width="1.96741" stroke-miterlimit="4" marker-start="url(#Arrow2Lstart)" marker-end="none" id="path8986-84-2" d="m646.6825,214.58336l328.96844,-25.99049l0,0"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.96741" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-6" d="m646.8316,241.00488l329.17706,15.88165l0,0"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.96741" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-1" d="m646.64996,293.03146l329.17706,15.88165l0,0"/>
+  <path fill="none" stroke="#ff7f2a" stroke-width="1.96741" stroke-miterlimit="4" marker-start="url(#Arrow2Lstart)" marker-end="none" id="path8986-84-7" d="m646.50092,352.36694l328.96838,-25.99045l0,0"/>
+  <text font-size="54.50244141px" font-style="normal" font-weight="normal" fill="#000000" stroke="#00ff00" stroke-width="1.36256" font-family="Bitstream Vera Sans" transform="scale(1.0453452,0.95662179)" id="text3617" y="429.89609" x="136.74626" xml:space="preserve"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" width="15.80221" height="42.99248" id="image7408" x="767.22479" y="135.08989"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" width="20.96731" height="27.54068" id="image7840" x="810.88403" y="106.41637"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Telephone.Fax?format=png" width="30.60864" height="45.10866" id="image8488" x="713.47614" y="324.83755"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" width="28.88733" height="67.35245" id="image8756" x="600.91449" y="76.32967"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" width="74.53441" height="258.33704" id="image8982" x="977.0636" y="67.58707"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" width="15.80221" height="42.99248" id="image7408-7" x="805.1947" y="180.63458"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" width="20.96731" height="27.54068" id="image7840-1" x="743.52722" y="63.87459"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" width="15.80221" height="42.99248" id="image7408-7-1" x="790.2265" y="278.8403"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Desk?format=png" width="29.4551" height="93.34657" id="image10217" x="847.21204" y="200.41086"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Complex.Conversation.Screenshot?format=png" width="541.22296" height="290.41827" id="image10602" x="510.05124" y="387.80551"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" width="28.88733" height="67.35245" id="image8756-0" x="599.25128" y="172.88918"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" width="28.88733" height="67.35245" id="image8756-8" x="600.03912" y="275.24426"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.88694" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-4" d="m79.43646,74.84884l302.80026,15.88166l0,0"/>
+  <path fill="none" stroke="#ff7f2a" stroke-width="1.88694" stroke-miterlimit="4" marker-start="url(#Arrow2Lstart)" marker-end="none" id="path8986-84-8" d="m79.29936,134.18433l302.60835,-25.99045l0,0"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.88694" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-7-1" d="m80.5469,154.15762l302.80027,15.8817l0,0"/>
+  <path fill="none" stroke="#ff7f2a" stroke-width="1.88694" stroke-miterlimit="4" marker-start="url(#Arrow2Lstart)" marker-end="none" id="path8986-84-2-2" d="m80.4098,213.49312l302.60833,-25.99049l0,0"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.88694" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-6-9" d="m80.54691,239.91461l302.80025,15.88168l0,0"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="1.88694" stroke-miterlimit="4" marker-end="url(#EmptyTriangleOutL)" id="path8986-1-3" d="m80.37984,291.94119l302.80028,15.88165l0,0"/>
+  <path fill="none" stroke="#ff7f2a" stroke-width="1.88694" stroke-miterlimit="4" marker-start="url(#Arrow2Lstart)" marker-end="none" id="path8986-84-7-9" d="m80.24273,351.27667l302.60835,-25.99042l0,0"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" y="133.99962" x="191.29312" id="image7408-0" height="42.99248" width="14.53599"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" y="105.32608" x="231.45409" id="image7840-8" height="27.54068" width="19.28721"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Telephone.Fax?format=png" y="323.74734" x="141.8513" id="image8488-8" height="45.10866" width="28.15599"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" y="69.66786" x="1.70144" id="image8756-5" height="247.24324" width="73.19151"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" y="66.4968" x="387.63251" id="image8982-0" height="258.33704" width="79.58501"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" y="179.54437" x="226.22054" id="image7408-7-9" height="42.99248" width="14.53599"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" y="62.78438" x="169.49435" id="image7840-1-6" height="27.54068" width="19.28721"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" y="277.74997" x="212.45169" id="image7408-7-1-3" height="42.99248" width="14.53599"/>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Desk?format=png" y="199.32059" x="264.87082" id="image10217-8" height="93.34657" width="27.09488"/>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m217.52795,77.71455a13.56439,15.05223 0 1 1-27.1288,0a13.56439,15.05223 0 1 127.1288,0z" id="path10221-56"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1" y="61.25893" x="277.32056" xml:space="preserve">
+   <tspan y="61.25893" x="277.32056" id="tspan10225-1">1</tspan>
+  </text>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Simple.Conversation.Screenshot?format=png" y="388.27353" x="1.22124" id="image10602-6" height="288.20828" width="504.13397"/>
+  <text font-size="20.07040787px" font-style="normal" font-weight="normal" fill="#008080" font-family="Sans" transform="scale(0.94929142,1.0534173)" id="text3298" y="156.53236" x="613.29822" xml:space="preserve">
+   <tspan y="156.53236" x="613.29822" id="tspan3300">Personal A</tspan>
+  </text>
+  <text font-size="20.07040787px" font-style="normal" font-weight="normal" fill="#008080" font-family="Sans" transform="scale(0.94929142,1.0534173)" id="text3302" y="252.54898" x="613.29822" xml:space="preserve">
+   <tspan y="252.54898" x="613.29822" id="tspan3304">Personal B</tspan>
+  </text>
+  <text font-size="20.07040787px" font-style="normal" font-weight="normal" fill="#008080" font-family="Sans" transform="scale(0.94929142,1.0534173)" id="text3306" y="347.19391" x="614.6698" xml:space="preserve">
+   <tspan y="347.19391" x="614.6698" id="tspan3308">Personal A</tspan>
+  </text>
+  <text font-size="20.07040787px" font-style="normal" font-weight="normal" fill="#008080" font-family="Sans" transform="scale(0.94929142,1.0534173)" id="text3310" y="347.19391" x="1009.7094" xml:space="preserve">
+   <tspan y="347.19391" x="1009.7094" id="tspan3312">Kunde</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m288.46515,118.65596a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-4"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-3" y="90.89329" x="375.32407" xml:space="preserve">
+   <tspan y="90.89329" x="375.32407" id="tspan10225-1-4">2</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m182.99423,157.66924a13.56439,15.05223 0 1 1-27.1288,0a13.56439,15.05223 0 1 127.1288,0z" id="path10221-56-5"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-7" y="119.132" x="229.6104" xml:space="preserve">
+   <tspan y="119.132" x="229.6104" id="tspan10225-1-8">3</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m216.88881,201.20287a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-0"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-0" y="150.64265" x="276.43756" xml:space="preserve">
+   <tspan y="150.64265" x="276.43756" id="tspan10225-1-1">4</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m328.83057,245.81032a13.56439,15.05223 0 1 1-27.12881,0a13.56439,15.05223 0 1 127.12881,0z" id="path10221-56-6"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-70" y="182.93054" x="431.09103" xml:space="preserve">
+   <tspan y="182.93054" x="431.09103" id="tspan10225-1-81">5</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m202.64165,296.25461a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-50"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-2" y="219.4433" x="256.75433" xml:space="preserve">
+   <tspan y="219.4433" x="256.75433" id="tspan10225-1-7">6</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m136.11826,344.06598a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-43"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-73" y="254.05023" x="164.84877" xml:space="preserve">
+   <tspan y="254.05023" x="164.84877" id="tspan10225-1-0">7</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m867.90411,120.10094a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-4-6"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-3-5" y="91.93922" x="1175.8499" xml:space="preserve">
+   <tspan y="91.93922" x="1175.8499" id="tspan10225-1-4-3">2</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m758.52686,157.66924a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-5-3"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-7-5" y="119.132" x="1024.7394" xml:space="preserve">
+   <tspan y="119.132" x="1024.7394" id="tspan10225-1-8-1">3</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m800.19446,203.9072a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-0-1"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-0-0" y="152.60014" x="1082.3053" xml:space="preserve">
+   <tspan y="152.60014" x="1082.3053" id="tspan10225-1-1-0">4</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m912.1759,250.14514a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-6-7"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-70-0" y="186.06824" x="1237.0137" xml:space="preserve">
+   <tspan y="186.06824" x="1237.0137" id="tspan10225-1-81-8">5</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m778.05853,300.7179a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-50-1"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-2-6" y="222.67389" x="1051.7233" xml:space="preserve">
+   <tspan y="222.67389" x="1051.7233" id="tspan10225-1-7-4">6</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m706.4425,343.9375a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-43-9"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-73-9" y="253.95721" x="952.78204" xml:space="preserve">
+   <tspan y="253.95721" x="952.78204" id="tspan10225-1-0-8">7</tspan>
+  </text>
+  <path fill="none" stroke="#000000" stroke-miterlimit="4" d="m789.77753,81.08766a13.56439,15.05223 0 1 1-27.12878,0a13.56439,15.05223 0 1 127.12878,0z" id="path10221-56-46"/>
+  <text font-size="15.09553814px" font-style="normal" font-weight="normal" fill="#008080" font-family="Bitstream Vera Sans" transform="scale(0.72382306,1.3815531)" id="text10223-1-38" y="63.70052" x="1067.9138" xml:space="preserve">
+   <tspan y="63.70052" x="1067.9138" id="tspan10225-1-04">1</tspan>
+  </text>
+ </g>
+</svg>

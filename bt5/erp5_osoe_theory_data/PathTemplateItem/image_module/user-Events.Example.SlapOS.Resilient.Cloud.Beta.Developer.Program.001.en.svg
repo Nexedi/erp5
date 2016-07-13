@@ -1,0 +1,73 @@
+<svg width="1052.3622" height="744.09448" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata8">image/svg xml</metadata>
+ <defs>
+  <marker id="Arrow1Lend-81" refX="0" refY="0" orient="auto">
+   <path fill-rule="evenodd" stroke="#000000" stroke-width="1pt" marker-start="none" transform="matrix(-0.8,0,0,-0.8,-10,0)" d="m0,0l5,-5l-17.5,5l17.5,5l-5,-5z" id="path4717-2"/>
+  </marker>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <rect fill="#ffffff" transform="matrix(1,0,-0.00473928,0.99998877,0,0)" y="-1.56036" x="5.55392" height="751.44391" width="1054.1465" id="rect3177"/>
+  <path fill="#ffffff" stroke="#000000" stroke-width="2.03408" stroke-miterlimit="4" id="path4042-6" d="m799.80414,603.00067l-29.17108,-19.79004l34.24432,23.74811l-60.87885,0"/>
+  <text font-size="55.965271px" font-style="normal" font-weight="normal" fill="#000000" font-family="Bitstream Vera Sans" transform="scale(0.94417563,1.059125)" id="text3617" y="449.12152" x="188.98351" xml:space="preserve"/>
+  <image y="151.59921" x="16.05056" id="image3311" height="206.51167" width="206.59332" xlink:href="http://www.slapos.org/P-OSOE-Event.Building.1?format=png"/>
+  <image y="55.51487" x="867.94092" id="image3476" height="166.81281" width="126.78981" xlink:href="http://www.slapos.org/P-OSOE-Event.Building.2?format="/>
+  <image y="554.96625" x="891.22772" id="image3476-1" height="166.81281" width="126.78981" xlink:href="http://www.slapos.org/P-OSOE-Event.Building.2?format=png"/>
+  <image y="616.2915" x="824.46631" id="image4158-9" height="102.67542" width="62.84009" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"/>
+  <image y="85.49387" x="783.48151" id="image3663-4" height="108.94468" width="57.25124" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png"/>
+  <image y="201.83647" x="844.65399" id="image4158-9-7" height="102.67542" width="62.84009" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"/>
+  <image y="226.21034" x="880.98157" id="image3663-4-8" height="108.94468" width="57.25124" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png"/>
+  <image y="146.09686" x="812.98395" id="image4158-9-7-4" height="102.67542" width="62.84009" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"/>
+  <image y="186.44702" x="233.33614" id="image3993-0" height="144.4705" width="83.33251" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png"/>
+  <path fill="#ffffff" stroke="#000000" stroke-width="1.95878" stroke-miterlimit="4" id="path4042" d="m319.56421,246.18767l27.0513,-19.79002l-31.75592,23.74808l56.45496,0"/>
+  <image y="449.11099" x="910.16199" id="image4158-9-3" height="102.67542" width="62.84009" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"/>
+  <path fill="#00ff00" stroke="#00ff00" stroke-width="2.8379" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-81)" id="path5640" d="m320.30511,268.82895l502.96033,-101.85873"/>
+  <path fill="#ff7f2a" stroke="#ff7f2a" stroke-width="2.79826" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-81)" id="path5640-0-0" d="m859.39099,280.66199l-550.58197,4.8688"/>
+  <path fill="none" stroke="#00ff00" stroke-width="2.43098402px" marker-end="url(#Arrow1Lend-81)" id="path5640-6" d="m326.18112,323.28564l486.09555,359.2085"/>
+  <path fill="#ff7f2a" stroke="#ff7f2a" stroke-width="1.89325" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-81)" id="path5640-0-0-7" d="m904.97784,519.6795l-574.22806,-221.58139"/>
+  <image y="486.72684" x="825.39789" id="image4158" height="102.67542" width="62.84009" xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png"/>
+  <rect fill="#ffffff" stroke="#000000" stroke-width="2.0778" stroke-miterlimit="4" ry="30.58839" y="76.04484" x="330.13385" height="190.16768" width="444.2001" id="rect3140"/>
+  <text font-size="17.15830994px" font-style="normal" font-weight="normal" fill="#000000" font-family="Sans" transform="matrix(0.97301888,0,0.02100555,1.0277293,0,0)" id="text4080" y="96.36611" x="349.30408" xml:space="preserve">
+   <tspan y="96.36611" x="349.30408" id="tspan4082">Hi, I am the community manager working on</tspan>
+   <tspan id="tspan4084" y="117.81397" x="349.30408">SlapOS. SlapOS is progressing fast towards</tspan>
+   <tspan id="tspan4090" y="139.2619" x="349.30408">release. We are looking for developers or system</tspan>
+   <tspan id="tspan4098" y="160.70976" x="349.30408">administrators interested in open source Cloud.</tspan>
+   <tspan id="tspan4102" y="182.15768" x="349.30408">SlapOS is a fully open source Cloud environment</tspan>
+   <tspan id="tspan4114" y="203.60555" x="349.30408">which is 4 to 10 times more cost efficient than</tspan>
+   <tspan id="tspan4116" y="225.05341" x="349.30408">legacy clouds and includes resilience technologies</tspan>
+   <tspan id="tspan4118" y="246.50133" x="349.30408">to survive natural ...</tspan>
+   <tspan id="tspan4106" y="267.94919" x="349.30408"/>
+  </text>
+  <rect fill="#ffffff" stroke="#000000" stroke-width="2.06021" stroke-miterlimit="4" ry="30.58839" y="476.82599" x="337.58224" height="190.16768" width="436.70883" id="rect3140-5"/>
+  <text font-size="17.19166565px" font-style="normal" font-weight="normal" fill="#000000" font-family="Sans" transform="scale(1.0012576,0.99874397)" id="text4080-9" y="502.52029" x="345.70621" xml:space="preserve">
+   <tspan id="tspan4118-7" y="502.52029" x="345.70621">Bonjour Cédric,</tspan>
+   <tspan id="tspan4233" y="524.00983" x="345.70621">I'm currently not aware of people interested in</tspan>
+   <tspan id="tspan4247" y="545.49939" x="345.70621">building their own cloud, but I will keep talking</tspan>
+   <tspan id="tspan4249" y="566.98907" x="345.70621">about SlapOS.</tspan>
+   <tspan id="tspan4237" y="588.47864" x="345.70621">We provide a service to perform vulnerability</tspan>
+   <tspan id="tspan4253" y="609.9682" x="345.70621">assessments in cloud infrastructures based on</tspan>
+   <tspan id="tspan4255" y="631.45776" x="345.70621">Cloud Stack APIs. The service is available for EC2</tspan>
+   <tspan id="tspan4257" y="652.94733" x="345.70621">(https://elastic ...</tspan>
+   <tspan id="tspan4239" y="674.43701" x="345.70621"/>
+   <tspan id="tspan4106-9" y="695.92657" x="345.70621"/>
+  </text>
+  <rect fill="#ffffff" ry="16.30528" y="343.59311" x="736.43854" height="101.36971" width="305.19485" id="rect3140-5-2"/>
+  <text font-size="16.76253891px" font-style="normal" font-weight="normal" fill="#000000" font-family="Sans" transform="scale(1.023457,0.97708062)" id="text4080-9-0" y="374.93555" x="724.05524" xml:space="preserve">
+   <tspan font-size="19.14884758px" fill="#008080" id="tspan4118-7-6" y="374.93555" x="724.05524">Receivers:</tspan>
+   <tspan font-size="19.14884758px" id="tspan4257-9" y="398.87167" x="724.05524">Software developers,</tspan>
+   <tspan font-size="19.14884758px" id="tspan3239" y="422.80768" x="724.05524">software company managers,</tspan>
+   <tspan font-size="19.14884758px" id="tspan3241" y="446.74377" x="724.05524">college professors, etc.</tspan>
+   <tspan id="tspan4239-5" y="470.67978" x="724.05524"/>
+   <tspan id="tspan4106-9-0" y="494.61591" x="724.05524"/>
+  </text>
+  <rect fill="#ffffff" ry="8.26063" y="364.49249" x="17.6318" height="51.35622" width="554.33789" id="rect3140-5-2-6"/>
+  <text font-size="17.19166374px" font-style="normal" font-weight="normal" fill="#000000" font-family="Sans" transform="scale(0.99189642,1.0081698)" id="text4080-9-0-9" y="382.22357" x="23.71386" xml:space="preserve">
+   <tspan font-size="19.14884758px" fill="#008080" id="tspan4118-7-6-8" y="382.22357" x="23.71386">Sender:</tspan>
+   <tspan font-size="19.14884758px" fill="#000000" id="tspan4182" y="406.1597" x="23.71386">Cédric de Saint Martin, SlapOS community leader (VIFIB)</tspan>
+   <tspan id="tspan3241-8" y="430.0957" x="23.71386"/>
+   <tspan id="tspan4239-5-2" y="454.03183" x="23.71386"/>
+   <tspan id="tspan4106-9-0-9" y="477.9678" x="23.71386"/>
+  </text>
+  <image xlink:href="http://www.slapos.org/P-OSOE-Event.Building.2?format=png" width="126.78981" height="166.81281" id="image3176" x="867.94092" y="55.51487"/>
+ </g>
+</svg>

@@ -1,0 +1,174 @@
+<svg width="1052.3622" height="744.09448" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <marker orient="auto" refY="0" refX="0" id="Arrow1Lend">
+   <path id="path4129" d="m-10,0l-4,4l14,-4l-14,-4l4,4z" marker-start="none" stroke-width="1pt" stroke="#000000" fill-rule="evenodd"/>
+  </marker>
+  <marker orient="auto" refY="0" refX="0" id="Arrow1Lend-2">
+   <path id="path4095-26" d="m-10,0l-4,4l14,-4l-14,-4l4,4z" marker-start="none" stroke-width="1pt" stroke="#000000" fill-rule="evenodd"/>
+  </marker>
+  <marker orient="auto" refY="0" refX="0" id="Arrow1Lstart-8">
+   <path id="path4291-5" d="m10,0l4,-4l-14,4l14,4l-4,-4z" marker-start="none" stroke-width="1pt" stroke="#000000" fill-rule="evenodd"/>
+  </marker>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-18" xlink:href="#linearGradient3842-9-4-0-5-2-3"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-3">
+   <stop offset="0" id="stop3844-4-15-51-5-8-01" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-66" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-6" xlink:href="#linearGradient3842-9-4-0-5-2-25"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-25">
+   <stop offset="0" id="stop3844-4-15-51-5-8-69" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-67" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-0" xlink:href="#linearGradient3842-9-4-0-5-2-7"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-7">
+   <stop offset="0" id="stop3844-4-15-51-5-8-60" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-8" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-5" xlink:href="#linearGradient3842-9-4-0-5-2-9"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-9">
+   <stop offset="0" id="stop3844-4-15-51-5-8-44" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-68" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-9" xlink:href="#linearGradient3842-9-4-0-5-2-0"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-0">
+   <stop offset="0" id="stop3844-4-15-51-5-8-4" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-4" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7215-0" xlink:href="#linearGradient3842-9-4-0-5-2"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2">
+   <stop offset="0" id="stop3844-4-15-51-5-8" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266" xlink:href="#linearGradient3842-9-4-0-5-2-2"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-2">
+   <stop offset="0" id="stop3844-4-15-51-5-8-6" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-6" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7215" xlink:href="#linearGradient3842-9-4-0-5-7"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-7">
+   <stop offset="0" id="stop3844-4-15-51-5-5" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-4" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-1" xlink:href="#linearGradient3842-9-4-0-5-2-00"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-00">
+   <stop offset="0" id="stop3844-4-15-51-5-8-1" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-1" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7156" xlink:href="#linearGradient3842-9-4-0-5"/>
+  <linearGradient id="linearGradient3842-9-4-0-5">
+   <stop offset="0" id="stop3844-4-15-51-5" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient7266-3" xlink:href="#linearGradient3842-9-4-0-5-2-6"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-6">
+   <stop offset="0" id="stop3844-4-15-51-5-8-5" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-81" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00165" x2="0.51006" y1="0.11637" x1="0.52234" id="linearGradient7266-90" xlink:href="#linearGradient3842-9-4-0-5-2-99"/>
+  <linearGradient id="linearGradient3842-9-4-0-5-2-99">
+   <stop offset="0" id="stop3844-4-15-51-5-8-0" stop-color="#fdfc7c"/>
+   <stop offset="1" id="stop3846-5-0-1-7-0-9" stop-opacity="0" stop-color="#fdfc7c"/>
+  </linearGradient>
+  <linearGradient y2="1.00166" x2="0.51006" y1="0.11638" x1="0.52234" id="linearGradient6730-9" xlink:href="#linearGradient3842-9-4-0-5-2-6"/>
+ </defs>
+ <metadata id="metadata7">image/svg+xml</metadata>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="1054.3622" height="746.09448" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <rect id="rect9837" width="1044.3325" height="738.98535" x="3.80643" y="1.8251" stroke-dashoffset="0" stroke-miterlimit="0" stroke-linejoin="round" stroke-linecap="round" stroke-width="2.08441" stroke="#ffffff" fill="#ffffff"/>
+   <image y="85.71912" x="480.92255" id="image4947" xlink:href="http://www.erp5.com/P-OSOE-ERP.Configuration.Introduction.Documents.Screenshot?format=png" height="124.9526" width="307.69055"/>
+   <text xml:space="preserve" x="599.4386" y="958.15558" id="text3191" transform="translate(0,-308.2677001953125) scale(0.9587017893791199,1.0430772304534912) " font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="16.86691px"/>
+   <path d="m595.6843,411.85259" id="path7657" stroke-miterlimit="4" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <g transform="matrix(1.269948,0,0,1.3382574,109.35887,542.47791) " id="g3329" stroke-miterlimit="4" stroke-width="1.00012">
+    <rect id="rect3961-9-9-6-8-7-3-34" width="74.68368" height="19.68988" x="396.15121" y="-74.08873" ry="6.51236" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="0.98653" stroke="#000000" fill="url(#linearGradient7266-90)"/>
+    <text id="text3958-43-7-4-4-5-6" y="171.87469" x="401.2601" font-weight="normal" font-style="normal" font-size="10.85054px" transform="translate(0,-230.35008239746094) scale(1.0137745141983032,0.9864126443862915) " font-family="Sans" stroke-miterlimit="4" stroke-width="1.00012" fill="#000000" text-anchor="start">cancelled</text>
+    <text id="text3958-43-7-4-4-5-6-5" y="30.58725" x="244.10316" font-weight="normal" font-style="normal" font-size="15.36549px" transform="translate(0,-230.35008239746094) scale(1.0137745141983032,0.9864126443862915) " font-family="Sans" stroke-miterlimit="4" stroke-width="1.00012" fill="#000000" text-anchor="start">draft</text>
+    <text xml:space="preserve" x="-23.13324" y="87.36722" id="text3474-3-3-0" transform="translate(0,-230.35008239746094) scale(1.0074512958526611,0.9926038384437561) " font-family="Sans" fill="#010000" font-weight="normal" font-style="normal" font-size="10.69969px">
+     <tspan id="tspan3476-9-9-0" x="-23.13324" y="87.36722" fill="#010000">Document</tspan>
+     <tspan x="-23.13324" y="100.74183" id="tspan4239-4" fill="#010000">workflow state</tspan>
+    </text>
+    <rect id="rect3961-9-9-5-6-1-0-2-8-5" width="40.7761" height="4.23116" x="-68.56079" y="-142.74437" ry="1.39944" stroke-miterlimit="4" stroke-width="0.29923" stroke="#000000" fill="url(#linearGradient6730-9)"/>
+    <path d="m-67.55434,-97.52767l41.82227,-0.0704" id="path5079-7-9-9-7" marker-end="url(#Arrow1Lend)" stroke-miterlimit="4" stroke-width="0.72358" stroke="#000000" fill="none"/>
+    <text xml:space="preserve" x="-20.3934" y="131.2513" id="text3474-3-3-5-0" transform="translate(0,-230.35008239746094) scale(1.0074512958526611,0.9926038384437561) " font-family="Sans" fill="#010000" font-weight="normal" font-style="normal" font-size="10.69969px">
+     <tspan id="tspan3476-9-9-4-5" x="-20.3934" y="131.2513" fill="#010000">Document</tspan>
+     <tspan x="-20.3934" y="144.62592" id="tspan4212" fill="#010000">workflow transition</tspan>
+    </text>
+    <text xml:space="preserve" x="34.78813" y="12.40873" id="text5945-8" transform="translate(0,-230.35008239746094) scale(1.0074512958526611,0.9926038384437561) " font-family="Sans" fill="#008080" text-anchor="middle" font-weight="bold" font-style="normal" font-size="15.57746px">
+     <tspan x="34.78813" y="12.40873" id="tspan5949-0">Document Management</tspan>
+     <tspan x="34.78813" y="31.88055" id="tspan7500">Workflow</tspan>
+    </text>
+   </g>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3344" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-53" width="74.68368" height="20.23605" x="24.18466" y="64.01503" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-3)"/>
+    <text id="text3958-43-7-4-4-5-5" y="77.90334" x="37.4942" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">released</text>
+   </g>
+   <rect id="rect3961-9-9-6-8-7" width="103.74279" height="26.35012" x="225.4373" y="367.6972" ry="8.71521" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.30091" stroke="#000000" fill="url(#linearGradient7156)"/>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3299" stroke-miterlimit="4" stroke-width="1.01164">
+    <text x="28.75979" y="-167.89935" id="use3291" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">embedded</text>
+   </g>
+   <path d="m439.15533,311.92848l-163.01072,0l0,52.08551" id="path3356" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" marker-start="url(#Arrow1Lstart-8)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m450.28788,311.92848l0,52.08551" id="path4626" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m461.1987,311.92848l200.14686,0l0,130.21377" id="path4888" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" marker-start="url(#Arrow1Lstart-8)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path id="path2985-6" d="m459.01718,311.92846" stroke-miterlimit="4" stroke-width="1.30091" stroke="#000000" fill="#ea0000"/>
+   <path d="m451.3975,391.72986l0,27.03485" id="path5415" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m451.3975,447.62107l0,26.04278" id="path5417" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m451.3975,501.14382l0,26.0428" id="path5419" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m451.3975,552.55087l0,25.43309" id="path5421" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m400.59951,590.58589l-76.19689,0" id="path5423" marker-end="url(#Arrow1Lend-2)" marker-start="url(#Arrow1Lstart-8)" stroke-miterlimit="4" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <g transform="matrix(1.269948,0,0,1.3021376,125.09198,578.96978) " id="g3324" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-37" width="74.68368" height="20.23605" x="80.05392" y="0.08914" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-1)"/>
+    <text id="text3958-43-7-4-4-5" y="13.51685" x="95.11338" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">rejected</text>
+   </g>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3304" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-0" width="136.00462" height="20.23605" x="127.4901" y="-181.57579" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7215)"/>
+    <text id="text3958-43-7" y="-167.63595" x="137" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">translation requested</text>
+   </g>
+   <path d="m403.13939,431.72513l-25.39894,0l0,104.17105l25.39894,0l0,0" id="path7247" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m499.18004,535.89618l18.71803,0l0,-104.17105l-18.71803,0" id="path7509" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3309" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3" width="74.68368" height="20.23605" x="157.06793" y="-138.89935" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7215-0)"/>
+    <text id="text3958-43-7-4-4-4" y="-126.28715" x="170.45114" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">assigned</text>
+    <rect id="rect3961-9-9-6-8-7-3-6" width="74.68368" height="20.23605" x="158.10657" y="-97.83336" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266)"/>
+   </g>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3319" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-3" width="74.68368" height="20.23605" x="156.46335" y="-57.57257" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-9)"/>
+    <text id="text3958-43-7-4-4-0" y="-44.10326" x="165.31679" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">translated</text>
+   </g>
+   <path d="m452.60178,650.01157l212.14695,0l0,34.32825" id="path7771" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m451.71818,606.12613l0,78.21369" id="path8557" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m451.75218,650.08279l-167.9879,0l0,34.25703" id="path8819" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m497.11563,591.01647l88.89636,0l0,-135.85286l25.39902,0" id="path9081" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g5410" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-9" width="74.68368" height="20.23605" x="156.46335" y="-18.11699" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-5)"/>
+    <text id="text3958-43-7-4-4-06" y="-4.72868" x="167.31679" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">submitted</text>
+   </g>
+   <path d="m662.2089,520.27053l0,-47.28136" id="path9343" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3334" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-99" width="74.68368" height="20.23605" x="327.35757" y="-62.40387" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-0)"/>
+    <text id="text3958-43-7-4-4-5-6-9" y="-48.60252" x="346.08582" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">hidden</text>
+   </g>
+   <path d="m283.76428,713.0452l0,8.291l0,12.4848l462.80813,0l0,-199.75848l-31.26362,0" id="path9875" stroke-miterlimit="4" marker-end="url(#Arrow1Lend-2)" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m453.01364,713.4307l0,20.7923" id="path10137" stroke-miterlimit="4" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <path d="m664.74873,712.9428l0,20.8782" id="path10139" stroke-miterlimit="4" stroke-width="1.30091" stroke="#000000" fill="none"/>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3349" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-4" width="74.68368" height="20.23605" x="324.07114" y="64.82021" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-6)"/>
+    <text id="text3958-43-7-4-4-06-43" y="78.76009" x="333.50735" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">published</text>
+   </g>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,601.96625) " id="g3339" stroke-miterlimit="4" stroke-width="1.01164">
+    <rect id="rect3961-9-9-6-8-7-3-5" width="74.68368" height="20.23605" x="158.92816" y="64.82024" ry="6.69301" stroke-opacity="0.97647" stroke-miterlimit="4" stroke-width="1.01164" stroke="#000000" fill="url(#linearGradient7266-18)"/>
+    <text id="text3958-43-7-4-4-06-4" y="78.76015" x="175.88721" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">shared</text>
+   </g>
+   <g transform="matrix(1.269948,0,0,1.3021376,203.75757,604.84082) " id="g3314" stroke-miterlimit="4" stroke-width="1.01164">
+    <text id="text3958-43-7-4-4-3" y="-87.01781" x="173.62953" font-weight="normal" font-style="normal" font-size="11px" font-family="Sans" stroke-miterlimit="4" stroke-width="1.01164" fill="#000000" text-anchor="start">splitted</text>
+   </g>
+   <path id="path7438" d="m459.79154,310.11041c0,4.91188 -3.96251,8.89375 -8.85051,8.89375c-4.88801,0 -8.85051,-3.98187 -8.85051,-8.89375c0,-4.91189 3.96251,-8.89376 8.85051,-8.89376c4.888,0 8.85051,3.98187 8.85051,8.89376z" stroke-miterlimit="4" stroke-width="1.76413" stroke="#000000" fill="#ff0000"/>
+   <text xml:space="preserve" x="454.86615" y="67.27838" id="text3871" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="24px">
+    <tspan id="tspan3873" x="454.86615" y="67.27838">Session 6: How to Manage Document</tspan>
+   </text>
+  </g>
+ </g>
+</svg>

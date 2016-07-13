@@ -1,0 +1,24 @@
+<svg width="1375" height="660" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata7">image/svg xml</metadata>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image xlink:href="http://www.erp5.com/P-CLOUDIA-Configuration.Questionnaire.HowTo.Assign.Students.Search.Action.Screenshot?format=png" width="1366" height="653" id="image3086" x="4.71428" y="3.21427"/>
+   <rect fill="none" stroke="#d40000" stroke-width="4.09704" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" y="526.20838" x="399.56894" height="28.17708" width="238.28882" id="rect3089"/>
+   <rect fill="none" stroke="#d40000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" y="611.5127" x="55.55839" height="45.45686" width="87.88327" id="rect3091"/>
+   <path fill="#ffffff" stroke="#d40000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" fill-opacity="0.98446" d="m690.94434,514.03296c0,11.43677 -9.94971,20.70813 -22.22333,20.70813c-12.27362,0 -22.22339,-9.27136 -22.22339,-20.70813c0,-11.43677 9.94977,-20.70813 22.22339,-20.70813c12.27362,0 22.22333,9.27136 22.22333,20.70813z" id="path3093"/>
+   <text font-size="32.72599px" font-style="normal" font-weight="normal" fill="#000000" font-family="Sans" transform="translate(0,-392.36199951171875) scale(1.080049991607666,0.925881028175354) " id="text3870" y="990.38824" x="608.44366" xml:space="preserve">
+    <tspan y="990.38824" x="608.44366" id="tspan3872">1</tspan>
+   </text>
+   <path fill="#ffffff" fill-opacity="0.98446" stroke="#0016d4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" id="path3874" d="m202.03052,599.89594c0,11.43677 -9.94971,20.70813 -22.22333,20.70813c-12.27362,0 -22.22339,-9.27136 -22.22339,-20.70813c0,-11.43677 9.94977,-20.70813 22.22339,-20.70813c12.27362,0 22.22333,9.27136 22.22333,20.70813z"/>
+   <text font-size="31.29633px" font-style="normal" font-weight="normal" fill="#000000" font-family="Sans" transform="translate(0,-392.36199951171875) scale(1.0710200071334839,0.9336889982223511) " id="text3880" y="1072.4786" x="158.23674" xml:space="preserve">
+    <tspan y="1072.4786" x="158.23674" id="tspan3882">2</tspan>
+   </text>
+  </g>
+ </g>
+</svg>
