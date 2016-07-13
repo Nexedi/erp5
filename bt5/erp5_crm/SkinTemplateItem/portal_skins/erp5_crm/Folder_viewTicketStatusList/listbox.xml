@@ -298,7 +298,9 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -310,9 +312,7 @@
                 </item>
                 <item>
                     <key> <string>stat_columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
@@ -360,8 +360,40 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>ticket_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section</string>
+                          <string>Customer</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_decision</string>
+                          <string>Requester</string>
+                        </tuple>
+                        <tuple>
+                          <string>source</string>
+                          <string>Operations Manager</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                        <tuple>
                           <string>simulation_state</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>event_count</string>
+                          <string>Events</string>
                         </tuple>
                       </list>
                     </value>
@@ -411,7 +443,16 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>start_date</string>
+                          <string>Begin Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>stop_date</string>
+                          <string>End Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -504,7 +545,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>event_module_activity_list_selection</string> </value>
+                    <value> <string>_status_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -526,43 +567,12 @@
                 <item>
                     <key> <string>stat_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>validation_state</string>
-                          <string>validation_state</string>
-                        </tuple>
-                        <tuple>
-                          <string>Campaign</string>
-                          <string>Campaign</string>
-                        </tuple>
-                        <tuple>
-                          <string>Meeting</string>
-                          <string>Meeting</string>
-                        </tuple>
-                        <tuple>
-                          <string>SaleOpportunity</string>
-                          <string>SaleOpportunity</string>
-                        </tuple>
-                        <tuple>
-                          <string>SupportRequest</string>
-                          <string>SupportRequest</string>
-                        </tuple>
-                        <tuple>
-                          <string>unassigned</string>
-                          <string>unassigned</string>
-                        </tuple>
-                        <tuple>
-                          <string>total</string>
-                          <string>total</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>style_columns</string> </key>
@@ -572,7 +582,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Events</string> </value>
+                    <value> <string>Tickets</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>
@@ -600,7 +610,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(i.replace(\' \', \'\'), i.replace(\' \', \'\')) for i in ((\'validation_state\',)+here.getPortalTicketTypeList()+(\'unassigned\', \'total\'))]</string> </value>
+            <value> <string>python:here.getId()+\'_status_list_selection\'</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -613,20 +623,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>EventModule_getEventActivityLineList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>EventModule_statEventActivityLineList</string> </value>
+            <value> <string>Folder_getTicketStatusLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
