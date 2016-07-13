@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1200"
+   height="736"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.2.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview34"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g9" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <defs
+     id="defs5">
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mend"
+       style="overflow:visible;">
+      <path
+         id="path3878"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       id="Arrow1Lend"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         id="path3983"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+  </defs>
+  <g
+     id="g9"
+     transform="matrix(0.44261788,0,0,0.44261788,1.9369307,387.79063)">
+    <title
+       id="title11">Layer 1</title>
+    <image
+       y="-876.1438"
+       x="390.80771"
+       id="image3068"
+       xlink:href="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Complex.Prices.Quantity.Steps.2.Screenshot?format=png"
+       height="1665.0931"
+       width="2313.5081"
+       sodipodi:absref="/home/jingjing/jingjing/Klaus/OSOE book images/How to create Products/Crémeux de pomme de terre, ballotin de racines aux truffes de Bourgogne" />
+    <rect
+       stroke-miterlimit="4"
+       y="-129.67477"
+       x="1226.1412"
+       height="89.329483"
+       width="343.98413"
+       id="rect3805-1-1"
+       style="fill:#ffffff;stroke:#00000f;stroke-width:6.7778554;stroke-miterlimit:4;stroke-opacity:0.94118;stroke-dasharray:none" />
+    <rect
+       stroke-miterlimit="4"
+       y="-135.99635"
+       x="2029.8748"
+       height="92.93557"
+       width="313.65808"
+       id="rect3805-1-4"
+       style="fill:#ffffff;stroke:#00000f;stroke-width:6.7778554;stroke-miterlimit:4;stroke-opacity:0.94118;stroke-dasharray:none" />
+    <rect
+       stroke-miterlimit="4"
+       y="-130.1163"
+       x="749.14001"
+       height="92.068047"
+       width="335.33783"
+       id="rect3805-1-1-7"
+       style="fill:#ffffff;stroke:#00000f;stroke-width:6.7778554;stroke-miterlimit:4;stroke-opacity:0.94118;stroke-dasharray:none" />
+    <path
+       id="path3731"
+       d="m 903.6363,-32.855468 0,124.334169 -55.74296,0 72.70822,43.456629 67.86098,-41.042391 -55.74296,0 0,-127.955515 -29.08328,1.207108 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40000;stroke:#000000;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       id="path3731-3"
+       d="m 1381.3799,-37.026159 0,124.334169 -55.7429,0 72.7081,43.45663 67.8611,-41.042392 -55.7431,0 0,-127.955514 -29.0832,1.207107 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40000;stroke:#000000;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       id="path3731-1"
+       d="m 2180.3205,-37.026159 0,124.334169 -55.7429,0 72.7081,43.45663 67.8612,-41.042392 -55.7431,0 0,-127.955514 -29.0833,1.207107 z"
+       inkscape:connector-curvature="0"
+       style="fill:#d40000;stroke:#000000;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       stroke-miterlimit="4"
+       id="path3793"
+       d="m 115.6116,220.55205 238.19563,0"
+       inkscape:connector-curvature="0"
+       style="fill:#0000ff;stroke:#0000ff;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)" />
+    <path
+       stroke-miterlimit="4"
+       id="path3793-0"
+       d="m 115.6116,275.63512 238.19563,0"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)" />
+    <path
+       stroke-miterlimit="4"
+       id="path4453"
+       d="m 113.65361,220.55205 0,-142.056307"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#0000ff;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       stroke-miterlimit="4"
+       id="path4453-6"
+       d="m 114.06787,416.24188 0,-142.05631"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:6.7778554;stroke-miterlimit:4;stroke-dasharray:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:63.25998306px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="1246.7428"
+       y="-60.078789"
+       id="text3075"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3077"
+         x="1246.7428"
+         y="-60.078789">50 to 100 </tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:63.25998306px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="2128.7859"
+       y="-65.819611"
+       id="text3079"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3081"
+         x="2128.7859"
+         y="-65.819611">100</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:90.37140656px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="46.290924"
+       y="44.181133"
+       id="text3083"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3085"
+         x="46.290924"
+         y="44.181133">Var 1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:90.37140656px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="29.809351"
+       y="492.48022"
+       id="text3087"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3089"
+         x="29.809351"
+         y="492.48022">Var 2</tspan></text>
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="355.35895"
+     y="360.11673"
+     id="text3071"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3073"
+       x="355.35895"
+       y="360.11673"
+       style="font-size:28px">0 to 50</tspan></text>
+</svg>

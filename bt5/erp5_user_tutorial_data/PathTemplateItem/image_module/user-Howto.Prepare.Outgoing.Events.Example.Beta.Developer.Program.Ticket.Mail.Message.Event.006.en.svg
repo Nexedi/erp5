@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="2710"
+   height="1300"
+   id="svg3091"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Prepare.Outgoing.Events.Example.Beta.Developer.Program.Ticket.Mail.Message.Event.svg">
+  <defs
+     id="defs3093">
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path4402"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mstart"
+       style="overflow:visible">
+      <path
+         id="path4417"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(0.6,0.6)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-units="mm"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.37866667"
+     inkscape:cx="1477.3283"
+     inkscape:cy="711"
+     inkscape:current-layer="layer1"
+     id="namedview3095"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3097">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,555.90552)">
+    <image
+       y="-88.053413"
+       x="10.96484"
+       id="image3453"
+       xlink:href="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Edit.Event.Document.Description.Senders.And.Recipients.Screenshot?format=png"
+       height="768"
+       width="1351" />
+    <image
+       y="-245.63322"
+       x="1406.3633"
+       id="image3305"
+       xlink:href="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Check.Events.List.In.Ticket.Document.Screenshot?format=png"
+       height="678"
+       width="1300" />
+    <text
+       xml:space="preserve"
+       style="font-size:56px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       x="2039.4702"
+       y="-434.91754"
+       id="text6238"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0043048,0.99571366)"><tspan
+         sodipodi:role="line"
+         id="tspan6240"
+         x="2039.4702"
+         y="-434.91754"
+         style="font-size:56px;font-weight:bold;-inkscape-font-specification:Sans Bold">Ticket: Beta Developer Program</tspan><tspan
+         sodipodi:role="line"
+         x="2039.4702"
+         y="-364.91754"
+         id="tspan6371"
+         style="font-size:56px;font-weight:bold;-inkscape-font-specification:Sans Bold">- Marketing Campaign</tspan></text>
+    <rect
+       style="fill:none;stroke:#fb0000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect4293-5"
+       width="475.72031"
+       height="24.059351"
+       x="680.89948"
+       y="181.42075" />
+    <path
+       style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
+       d="m 1156.2588,191.82697 187.4853,0.32125 0,0"
+       id="path3903"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:56px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="1739.2502"
+       y="146.92078"
+       id="text3487-3-9-1-4"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="1739.2502"
+         y="146.92078"
+         id="tspan3523-5-5-4"
+         style="font-size:56px;fill:#d40000;fill-opacity:1">Follow up Ticket</tspan></text>
+    <rect
+       style="fill:none;stroke:#fb0000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect4293-5-4"
+       width="153.68352"
+       height="24.09798"
+       x="1417.6476"
+       y="330.64005" />
+    <path
+       style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mstart)"
+       d="m 1396.8833,342.71626 -114.6682,-48.11183 7.9289,3.21281"
+       id="path3903-9"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:56px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="1058.9023"
+       y="315.7131"
+       id="text3487-3-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="1058.9023"
+         y="315.7131"
+         id="tspan3523-5"
+         style="font-size:56px;fill:#d40000;fill-opacity:1">Related Event</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:29.14827919px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       x="676.33032"
+       y="-298.99142"
+       id="text6238-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96024056,1.0414057)"><tspan
+         sodipodi:role="line"
+         x="676.33032"
+         y="-298.99142"
+         id="tspan6399"
+         style="font-size:48px;font-weight:bold;-inkscape-font-specification:Sans Bold">Event: SlapOS Recruits</tspan><tspan
+         sodipodi:role="line"
+         x="676.33032"
+         y="-238.99142"
+         style="font-size:48px;font-weight:bold;-inkscape-font-specification:Sans Bold"
+         id="tspan3010"> Beta Developers</tspan><tspan
+         sodipodi:role="line"
+         x="676.33032"
+         y="-178.99142"
+         id="tspan6401"
+         style="font-size:48px;font-weight:bold;-inkscape-font-specification:Sans Bold">- Mail Message Event</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1296"
+   height="668"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Configure.ERP5.for.SMB.With.Configurator.Organisation.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.68932229"
+     inkscape:cx="655.27132"
+     inkscape:cy="423.44607"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-384.36224)">
+    <image
+       y="384.60254"
+       x="-0.53700781"
+       id="image3069"
+       xlink:href="http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Configurator.Organisation.Screenshot?format=png"
+       height="670"
+       width="1298" />
+    <rect
+       style="fill:none;stroke:#f10e06;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:2.02539999999999987;stroke-linejoin:round"
+       id="rect3051"
+       width="161.97891"
+       height="23.525469"
+       x="586.61548"
+       y="548.5177"
+       rx="1.3597971"
+       ry="0.29338646" />
+    <rect
+       style="fill:#ffffff;stroke:#f10e06;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:2.02539999999999987;stroke-linejoin:round"
+       id="rect3051-29"
+       width="636.46814"
+       height="72.708961"
+       x="546.77002"
+       y="452.84839"
+       rx="5.3430877"
+       ry="0.90675455" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="863.91339"
+       y="479.87912"
+       id="text3853"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="863.91339"
+         y="479.87912"
+         style="font-size:27.65999985px;text-align:center;text-anchor:middle"
+         id="tspan3867">Replace VIFIB with the company you created</tspan><tspan
+         sodipodi:role="line"
+         x="863.91339"
+         y="514.4541"
+         style="font-size:27.65999985px;text-align:center;text-anchor:middle"
+         id="tspan3871">when you configured your ERP5 instance</tspan></text>
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 747.67181,561.53356 76.80093,0 0,-37.37941 0,0"
+       id="path3016"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

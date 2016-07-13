@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="919"
+   height="649"
+   id="svg2989"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Link.People.To.Organisations.Front.Page.John.Scott.Doh.Z.Company.svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     inkscape:document-units="mm"
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="350"
+     inkscape:cy="520"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     width="919mm"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-403.36206)">
+    <image
+       sodipodi:absref="/tmp/user-Howto.Link.Persons.and.Organisations.John.Scott.Doh?format=jpg"
+       xlink:href="http://www.erp5.com/user-Howto.Link.Persons.and.Organisations.John.Scott.Doh?format=png"
+       id="image4042"
+       x="3.3723145"
+       y="440.08224"
+       width="307.65445"
+       height="307.65445" />
+    <image
+       sodipodi:absref="/tmp/user-Howto.Create.Organisations.Building?format=jpg"
+       id="image2928-9"
+       x="546.91724"
+       y="673.21716"
+       xlink:href="http://www.erp5.com/user-Howto.Create.Organisations.Building?format=png"
+       width="351.42474"
+       height="351.42474" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:2.04975963px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 371.43964,477.36957 z"
+       id="path3821"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.04975963px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 328.7294,472.02482 33.03737,-28.33699 -3e-5,61.39682 z"
+       id="path3827"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2.04975963px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 735.5091,658.67033 -28.3177,-33.05983 61.355,2e-5 z"
+       id="path3827-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 362.19121,474.0843 376.42429,1.45901 0,148.8189"
+       id="path3008"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

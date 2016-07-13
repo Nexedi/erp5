@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1005"
+   height="710"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Generate.Report.Home.Reports.Tab.svg">
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview12"
+     showgrid="false"
+     units="px"
+     inkscape:zoom="0.78863937"
+     inkscape:cx="502.91524"
+     inkscape:cy="333.04448"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     id="g5"
+     transform="translate(0,-57.999964)">
+    <title
+       id="title7">Layer 1</title>
+    <image
+       y="50.455482"
+       x="-0.58476448"
+       id="image3048"
+       xlink:href="http://www.erp5.com/user-Howto.Generate.Report.Home.Reports.Tab.Screenshot?format=png"
+       height="757"
+       width="1007" />
+    <rect
+       stroke-miterlimit="4"
+       y="137.2795"
+       x="438.98865"
+       height="31.09671"
+       width="83.679512"
+       id="rect2818"
+       style="fill:none;stroke:#d41d19;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <rect
+       stroke-miterlimit="4"
+       y="189.07162"
+       x="69.562904"
+       height="179.71504"
+       width="132.10402"
+       id="rect3592"
+       style="fill:none;stroke:#d41d19;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+  </g>
+</svg>
