@@ -1063,18 +1063,12 @@ class Catalog(Folder,
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
     """
-    search_tables = self.sql_search_tables
-    if len(search_tables) > 0:
-      if search_tables[0] != 'catalog':
-        result = ['catalog']
-        for t in search_tables:
-          if t != 'catalog':
-            result.append(t)
-        self.sql_search_tables = result
-    else:
-      self.sql_search_tables = ['catalog']
-
-    return self.sql_search_tables
+    search_tables = list(self.sql_search_tables) or ['catalog']
+    if search_tables[0] != 'catalog':
+      search_tables = ['catalog'] + [x for x in search_tables if x != 'catalog']
+      # XXX: cast to tuple to avoid a mutable persistent property ?
+      self.sql_search_tables = search_tables
+    return search_tables
 
   security.declarePublic('getCatalogSearchResultKeys')
   def getCatalogSearchResultKeys(self):
