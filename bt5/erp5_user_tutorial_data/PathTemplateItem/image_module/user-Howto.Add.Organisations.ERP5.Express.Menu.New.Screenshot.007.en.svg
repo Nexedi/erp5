@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1000"
+   height="650"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="new.svg">
+  <defs
+     id="defs21" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview19"
+     showgrid="false"
+     inkscape:zoom="0.80231747"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     width="1006px" />
+  <metadata
+     id="metadata7">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <image
+     y="-1.0539865"
+     x="-2.7050667"
+     id="image3122"
+     xlink:href="http://www.erp5.com/user-Howto.Create.New.Persons.ERP5.Menu.Png?format=png"
+     height="653"
+     width="1006" />
+  <g
+     id="g5"
+     transform="translate(-26.927788,-37.978123)">
+    <rect
+       id="rect3246"
+       width="64.824409"
+       height="31.710739"
+       x="348.18033"
+       y="122.4588"
+       stroke-miterlimit="4"
+       style="fill:none;stroke:#fe0000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       id="rect3008"
+       width="355.49792"
+       height="144.96365"
+       x="206.79779"
+       y="271.84213"
+       rx="9.5533895"
+       ry="22.068237"
+       stroke-miterlimit="4"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000003;stroke-width:4.96174908;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       width="106.17565"
+       height="17.318344"
+       rx="6.2186999"
+       ry="3.1221988"
+       x="328.56924"
+       y="177.55127"
+       id="rect2818-1"
+       stroke-miterlimit="4"
+       style="fill:none;stroke:#1221c6;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+    <path
+       d="m 338.91818,195.80769 c 0.0113,8.62469 0.02,16.26571 0.0265,23.03526 0.051,52.58533 -0.0265,52.58533 -0.0265,52.58533"
+       id="path3707"
+       stroke-miterlimit="4"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
+       sodipodi:nodetypes="csc" />
+    <title
+       id="title17">Layer 1</title>
+    <text
+       xml:space="preserve"
+       style="font-size:27.65999985px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="216.51013"
+       y="302.55405"
+       id="text3761"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3763"
+         x="216.51013"
+         y="302.55405">The &quot;Base&quot; module</tspan><tspan
+         sodipodi:role="line"
+         x="216.51013"
+         y="337.12906"
+         id="tspan3765">helps you manage</tspan><tspan
+         sodipodi:role="line"
+         x="216.51013"
+         y="371.70404"
+         id="tspan3767">persons or organisations</tspan><tspan
+         sodipodi:role="line"
+         x="216.51013"
+         y="406.27905"
+         id="tspan3769">and currencies</tspan></text>
+  </g>
+</svg>

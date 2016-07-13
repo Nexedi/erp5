@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1020"
+   height="652.09003"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Create.and.Manage.Products.Product.Module.Fill.Purchase.Tab.svg">
+  <defs
+     id="defs37" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview35"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="399.12624"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     id="g5"
+     transform="matrix(0.50968903,0,0,0.48143382,1.0196071,281.38563)">
+    <title
+       id="title7">Layer 1</title>
+    <image
+       y="-586.93982"
+       x="-5.7045045"
+       id="image3067"
+       xlink:href="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Fill.Purchase.Screenshot?format=png"
+       height="1358.4421"
+       width="2009.0681" />
+    <rect
+       stroke-miterlimit="4"
+       y="138.31325"
+       x="1258.9154"
+       height="540.86804"
+       width="591.36554"
+       id="rect2839"
+       style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:10.09366909999999962;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <path
+       id="path2880"
+       d="m 1305.2985,255.42905 c 300.8296,-0.36746 300.8296,-0.36746 300.8296,-0.36746"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:2.01641202px" />
+    <path
+       id="path2880-1"
+       d="m 1309.5636,306.50862 c 318.9466,-0.42416 318.9466,-0.42416 318.9466,-0.42416"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:2.06606674px" />
+    <path
+       id="path2880-4"
+       d="m 1312.6359,355.79755 c 426.9418,-0.62633 426.9418,-0.62633 426.9418,-0.62633"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:2.3329556px" />
+    <path
+       id="path2880-8"
+       d="m 1315.0211,411.165 c 157.1454,0.14024 157.1454,0.14024 157.1454,0.14024"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#000000;stroke-width:1.51906037px" />
+    <text
+       xml:space="preserve"
+       style="font-size:38.45155334px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="1338.9935"
+       y="214.23486"
+       id="text3020"
+       sodipodi:linespacing="125%"
+       transform="scale(0.97395042,1.0267463)"><tspan
+         sodipodi:role="line"
+         id="tspan3022"
+         x="1338.9935"
+         y="214.23486"
+         style="font-weight:bold;-inkscape-font-specification:Sans Bold">Characteristics</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="262.29932"
+         id="tspan3024"
+         style="font-weight:normal;fill:#000000;-inkscape-font-specification:Sans">Title: Red LED</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="310.36377"
+         id="tspan3026"
+         style="font-weight:normal;fill:#000000;-inkscape-font-specification:Sans">Reference: RL01</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="358.42819"
+         id="tspan3028"
+         style="font-weight:normal;fill:#000000;-inkscape-font-specification:Sans">Electronic component</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="406.49265"
+         id="tspan3030"
+         style="font-weight:normal;fill:#000000;-inkscape-font-specification:Sans">Taxable</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="454.5571"
+         id="tspan3032"
+         style="font-weight:bold;fill:#d40000;-inkscape-font-specification:Sans Bold">Purchase price: 0.5€</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="502.62152"
+         id="tspan3038">Sales price: 1€</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="550.68591"
+         id="tspan3034"
+         style="font-weight:bold;fill:#800080;-inkscape-font-specification:Sans Bold">Validity: 01/01/2010</tspan><tspan
+         sodipodi:role="line"
+         x="1338.9935"
+         y="598.75037"
+         id="tspan3036"
+         style="font-weight:bold;fill:#0000ff;-inkscape-font-specification:Sans Bold">Supplier: EC China</tspan></text>
+    <rect
+       id="rect3805"
+       width="147.9138"
+       height="63.873569"
+       x="328.62961"
+       y="-351.04684"
+       stroke-miterlimit="4"
+       style="fill:none;stroke:#d41d19;stroke-width:10.09366909999999962;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <path
+       style="fill:#d40000;stroke:#000000;stroke-width:0.62493914px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 579.45007,-166.82888 40.32792,-20.74963 0,15.71943 110.4635,0 0,11.94673 -109.5868,0 0,15.71941 z"
+       id="path3070"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.62493914px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 579.57877,-247.33521 40.32792,-20.7496 0,15.71942 110.4635,0 0,11.94672 -109.5868,0 0,15.71942 z"
+       id="path3070-3"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#800080;stroke:#000000;stroke-width:0.62493914px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 582.76475,64.209026 40.3279,-20.74963 0,15.71943 110.4635,0 0,11.94673 -109.5868,0 0,15.7194 z"
+       id="path3070-2"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#d40000;stroke:#000000;stroke-width:0.62493914px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 582.69444,15.405298 40.32792,-20.7496166 0,15.7194196 110.4635,0 0,11.946721 -109.5868,0 0,15.719398 z"
+       id="path3070-6"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#d40000;stroke:#000000;stroke-width:0.62493914px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 582.69444,-75.988358 40.32792,-20.749615 0,15.719418 110.4635,0 0,11.946721 -109.5868,0 0,15.719398 z"
+       id="path3070-5"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

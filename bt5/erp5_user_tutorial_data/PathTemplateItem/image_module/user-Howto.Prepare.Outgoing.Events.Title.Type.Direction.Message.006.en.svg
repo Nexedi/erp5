@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1364"
+   height="763"
+   id="svg4536"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Prepare.Outgoing.Events.Title.Type.Direction.Message.svg">
+  <defs
+     id="defs3">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3169"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3171"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker3169-9"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend">
+      <path
+         transform="scale(-0.6,-0.6)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         id="path3171-8"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     inkscape:document-units="mm"
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.78243775"
+     inkscape:cx="682"
+     inkscape:cy="363.96837"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-289.36218)">
+    <image
+       y="287.51376"
+       x="-0.70184803"
+       id="image3205"
+       xlink:href="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Title.Type.Direction.Message.Screenshot?format=png"
+       height="767"
+       width="1366" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3091"
+       width="299.67398"
+       height="62.27816"
+       x="589.31085"
+       y="336.18521" />
+    <text
+       xml:space="preserve"
+       style="font-size:20.90909003999999882px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none"
+       x="601.25055"
+       y="357.66507"
+       id="text3861"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98936865,1.0107456)"><tspan
+         sodipodi:role="line"
+         id="tspan3863"
+         x="601.25055"
+         y="357.66507"
+         style="font-size:20.90909003999999882px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1313;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none">The title will be displayed in</tspan><tspan
+         sodipodi:role="line"
+         x="601.25055"
+         y="383.80142"
+         id="tspan3865"
+         style="font-size:20.90909003999999882px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ff1313;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none">the final email</tspan></text>
+    <image
+       y="390.53513"
+       x="404.992"
+       id="image3155"
+       xlink:href="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Set.Type.Screenshot?format=png"
+       height="187.4276"
+       style="stroke:#000000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       width="155.94186" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3091-1"
+       width="243.44077"
+       height="62.27816"
+       x="132.47327"
+       y="538.54352" />
+    <text
+       xml:space="preserve"
+       style="font-size:20.90909003999999882px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none"
+       x="139.50385"
+       y="557.87219"
+       id="text3861-9"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98936865,1.0107456)"><tspan
+         sodipodi:role="line"
+         x="139.50385"
+         y="557.87219"
+         style="font-size:20.90909003999999882px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none"
+         id="tspan3901">Set <tspan
+   style="fill:#0000ff;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none"
+   id="tspan3907">&quot;outgoing&quot; </tspan>for the </tspan><tspan
+         sodipodi:role="line"
+         x="139.50385"
+         y="584.00854"
+         style="font-size:20.90909003999999882px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none"
+         id="tspan3913">events to be <tspan
+   style="fill:#0000ff;stroke-width:4.99999998;stroke-miterlimit:4;stroke-dasharray:none"
+   id="tspan3919">sent</tspan></tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#marker3169)"
+       d="m 518.09073,372.9605 61.5753,0"
+       id="path3904"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3691"
+       width="71.166733"
+       height="21.83864"
+       x="97.380875"
+       y="1010.9551" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3691-7"
+       width="19.96739"
+       height="19.583715"
+       x="413.63428"
+       y="962.6889" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3691-7-4"
+       width="134.64305"
+       height="19.583715"
+       x="216.97343"
+       y="385.90012" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3691-70"
+       width="73.95166"
+       height="21.879637"
+       x="284.91895"
+       y="431.974" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 320.54795,450.85773 0,88.2848"
+       id="path4532"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 354.31685,393.27313 52.0033,0"
+       id="path4534"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect4701"
+       width="153.38081"
+       height="184.38585"
+       x="407.4101"
+       y="393.13239" />
+    <image
+       y="411.29016"
+       x="104.81324"
+       id="image3251"
+       xlink:href="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Set.Nature.Screenshot?format=png"
+       height="114"
+       width="115"
+       style="stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3691-7-4-4"
+       width="134.64305"
+       height="19.583715"
+       x="216.4071"
+       y="412.48822" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:4.96521759;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect4701-4"
+       width="110.34268"
+       height="112.51436"
+       x="105.27853"
+       y="411.2496" />
+  </g>
+</svg>

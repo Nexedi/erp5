@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1298"
+   height="674"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Prepare.Outgoing.Events.Event.Check.Events.List.In.Ticket.Document.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-378.36217)">
+    <image
+       y="377.24915"
+       x="-1.2820845"
+       id="image3102"
+       xlink:href="http://www.erp5.com/user-Howto.Prepare.Outgoing.Events.Check.Events.List.In.Ticket.Document.Screenshot?format=png"
+       height="678"
+       width="1300" />
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3073"
+       width="1283.0652"
+       height="76.83622"
+       x="8.0980597"
+       y="953.98944" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3075"
+       width="487.50839"
+       height="105.08752"
+       x="446.50885"
+       y="821.50183" />
+    <text
+       xml:space="preserve"
+       style="font-size:26.76953887999999893px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:5.00000002;stroke-miterlimit:4;stroke-dasharray:none"
+       x="481.05051"
+       y="846.02643"
+       id="text3845"
+       sodipodi:linespacing="100%"
+       transform="scale(0.99148335,1.0085898)"><tspan
+         sodipodi:role="line"
+         x="481.05051"
+         y="846.02643"
+         id="tspan3849">The outgoing event is now</tspan><tspan
+         sodipodi:role="line"
+         x="481.05051"
+         y="872.79596"
+         id="tspan3857">showed on the campaign</tspan><tspan
+         sodipodi:role="line"
+         x="481.05051"
+         y="899.56549"
+         id="tspan3851">document, waiting to be sent</tspan></text>
+  </g>
+</svg>

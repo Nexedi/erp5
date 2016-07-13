@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.2 r9819"
+   sodipodi:docname="user-Howto.Manage.Sale.Packing.Lists.Model-002-en.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="EmptyTriangleOutM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="EmptyTriangleOutM"
+       style="overflow:visible">
+      <path
+         id="path4521"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,-1.8,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path4500"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="scale(0.8,0.8)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="TriangleOutM"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="TriangleOutM"
+       style="overflow:visible">
+      <path
+         id="path4503"
+         d="m 5.77,0 -8.65,5 0,-10 8.65,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="scale(0.4,0.4)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mend"
+       style="overflow:visible">
+      <path
+         id="path4384"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path4366"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible">
+      <path
+         id="path4378"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path4360"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1024"
+     inkscape:window-height="718"
+     inkscape:window-x="-3"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid7566"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26769)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.8847326;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect2985"
+       width="1047.032"
+       height="739.50018"
+       x="2.3461874"
+       y="313.79343" />
+    <image
+       y="352.16013"
+       x="552.49835"
+       id="image3255"
+       xlink:href="http://www.erp5.com/P-OSOE-Yellow.Headpiece?format=png"
+       height="206.82402"
+       width="205.15526" />
+    <image
+       y="880.92712"
+       x="799.65387"
+       id="image3255-4"
+       xlink:href="http://www.erp5.com/P-OSOE-Yellow.Headpiece?format=png"
+       height="74.144463"
+       width="75.923599" />
+    <rect
+       style="fill:none;stroke:#190505;stroke-width:2.1358602;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3332"
+       width="251.66409"
+       height="334.98575"
+       x="790.19983"
+       y="701.08099" />
+    <text
+       xml:space="preserve"
+       style="font-size:27.55633545px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="932.93066"
+       y="768.38019"
+       id="text4182"
+       sodipodi:linespacing="125%"
+       transform="scale(0.95110712,1.0514063)"><tspan
+         sodipodi:role="line"
+         id="tspan4184"
+         x="932.93066"
+         y="768.38019"
+         style="font-size:27.55633545px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">Sales man</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:27.55633545px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="899.85352"
+       y="907.75812"
+       id="text4182-6"
+       sodipodi:linespacing="100%"
+       transform="scale(0.98573482,1.0144716)"><tspan
+         sodipodi:role="line"
+         id="tspan4184-3"
+         x="899.85352"
+         y="907.75812"
+         style="font-size:27.55633545px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">Warehouse</tspan><tspan
+         sodipodi:role="line"
+         x="899.85352"
+         y="935.31451"
+         style="font-size:27.55633545px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"
+         id="tspan4207">man</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:27.55633354px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="894.12061"
+       y="1012.5448"
+       id="text4182-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.99847781,1.0015245)"><tspan
+         sodipodi:role="line"
+         id="tspan4184-0"
+         x="894.12061"
+         y="1012.5448"
+         style="font-size:27.55633354px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans">Workflow</tspan></text>
+    <g
+       id="g7769"
+       transform="matrix(1.6153957,0,0,1.95117,-0.77471977,-990.95151)">
+      <rect
+         y="954.6532"
+         x="21.496449"
+         height="78.769699"
+         width="140.48759"
+         id="rect4102-1"
+         style="fill:none;stroke:#000000;stroke-width:7.29687786;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <text
+         sodipodi:linespacing="110%"
+         id="text4307"
+         y="1079.9482"
+         x="81.810661"
+         style="font-size:13.27088833px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:110.00000238%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"
+         transform="scale(1.1033492,0.90633138)"><tspan
+           id="tspan4311"
+           style="font-size:13.27088833px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:110.00000238%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="1079.9482"
+           x="83.923119"
+           sodipodi:role="line">Aknowledges </tspan><tspan
+           id="tspan4313"
+           style="font-size:13.27088833px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:110.00000238%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="1094.5463"
+           x="81.810661"
+           sodipodi:role="line">shipment and</tspan><tspan
+           id="tspan7767"
+           style="font-size:13.27088833px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:110.00000238%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="1109.1442"
+           x="81.810661"
+           sodipodi:role="line">changes status to</tspan><tspan
+           id="tspan4315"
+           style="font-size:13.27088833px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:110.00000238%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="1123.7422"
+           x="81.810661"
+           sodipodi:role="line"> « Delivered »</tspan></text>
+    </g>
+    <g
+       id="g7700"
+       transform="matrix(1.6153957,0,0,1.95117,34.763986,-1002.6585)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path7560"
+         d="m 390.7891,937.86218 -13.2891,0 5.47198,20.67449 z"
+         style="fill:#ff6600;fill-opacity:1;stroke:#ff6600;stroke-width:0.82060677px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path7568"
+         d="m 384,900.45927 0,38.90291"
+         style="fill:none;stroke:#ff6600;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g7803"
+       transform="matrix(1.6153957,0,0,1.95117,-26.62105,-1002.6585)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path7560-6"
+         d="m 219.63592,995.86218 0,13.46102 -20.39914,-5.5428 z"
+         style="fill:#ff6600;fill-opacity:1;stroke:#ff6600;stroke-width:0.82037807px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path7568-8"
+         d="m 343.02379,1002.8622 -124.41166,0"
+         style="fill:none;stroke:#ff6600;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g7797"
+       transform="matrix(1.6153957,0,0,1.95117,-0.77471977,-1002.6585)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path7560-8"
+         d="m 309,843.86218 0,13.36585 19.40131,-5.50358 z"
+         style="fill:#ff6600;fill-opacity:1;stroke:#ff6600;stroke-width:0.79723036px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path7568-4"
+         d="m 166.65142,850.86218 146.34858,0"
+         style="fill:none;stroke:#ff6600;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g7676"
+       transform="matrix(1.6153957,0,0,1.95117,-121.9294,-608.5222)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path7560-4"
+         d="m 607,819.86218 0,13.5 15.3164,-5.55882 z"
+         style="fill:#ff6600;fill-opacity:1;stroke:#ff6600;stroke-width:0.71189374px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path7568-9"
+         d="m 570.08252,826.86218 37.91748,0"
+         style="fill:none;stroke:#ff6600;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:27.55633545px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ff6600;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       x="411.83038"
+       y="499.36273"
+       id="text7704"
+       sodipodi:linespacing="100%"
+       transform="scale(0.93468563,1.0698784)"><tspan
+         sodipodi:role="line"
+         id="tspan7706"
+         x="411.83038"
+         y="499.36273"
+         style="font-size:27.55633545px">Sale Packing List is</tspan><tspan
+         sodipodi:role="line"
+         x="411.83038"
+         y="526.91913"
+         id="tspan7708"
+         style="font-size:27.55633545px">automatically created</tspan></text>
+    <g
+       id="g7783"
+       transform="matrix(1.6153957,0,0,1.95117,-4.0055111,-1006.5609)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text4182-5-4"
+         y="903.1189"
+         x="386.57874"
+         style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"
+         transform="scale(1.0628702,0.94084865)"><tspan
+           id="tspan4253-6"
+           style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="903.1189"
+           x="389.04944"
+           sodipodi:role="line">Prepares Sale </tspan><tspan
+           id="tspan4281"
+           style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="922.52081"
+           x="386.57874"
+           sodipodi:role="line">Paking List</tspan></text>
+      <rect
+         y="818.7074"
+         x="345.30554"
+         height="67.309593"
+         width="129.38892"
+         id="rect4102-6"
+         style="fill:none;stroke:#000000;stroke-width:6.47329807;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <g
+       id="g7777"
+       transform="matrix(1.6153957,0,0,1.95117,-13.697885,-1002.6585)">
+      <text
+         sodipodi:linespacing="125%"
+         id="text4182-5-4-5"
+         y="1098.209"
+         x="378.13742"
+         style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"
+         transform="scale(1.1002702,0.90886764)"><tspan
+           id="tspan4253-6-6"
+           style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="1098.209"
+           x="380.60812"
+           sodipodi:role="line">Ships Sale </tspan><tspan
+           id="tspan4281-9"
+           style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="1117.6108"
+           x="378.13742"
+           sodipodi:role="line">Paking List</tspan></text>
+      <rect
+         y="967.7074"
+         x="352.30554"
+         height="67.309593"
+         width="129.38892"
+         id="rect4102-6-8"
+         style="fill:none;stroke:#000000;stroke-width:6.47329807;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    </g>
+    <image
+       y="311.18555"
+       x="58.994919"
+       id="image7869"
+       height="277.06613"
+       width="145.38562"
+       xlink:href="http://www.erp5.com/P-OSOE-Business.Woman.Young.Small?format=png" />
+    <g
+       id="g7789"
+       transform="matrix(1.6153957,0,0,1.95117,-0.77471977,-1002.6585)">
+      <rect
+         y="818.36218"
+         x="22.138969"
+         height="67.309593"
+         width="129.38892"
+         id="rect4102"
+         style="fill:none;stroke:#000000;stroke-width:6.47329807;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:0;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text4182-5"
+         y="893.22418"
+         x="84.70192"
+         style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+         xml:space="preserve"
+         transform="scale(1.0524905,0.95012731)"><tspan
+           style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="893.22418"
+           x="84.70192"
+           id="tspan4184-5"
+           sodipodi:role="line">Confirms the</tspan><tspan
+           id="tspan4253"
+           style="font-size:15.52152634px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Sans;-inkscape-font-specification:Sans"
+           y="912.6261"
+           x="84.70192"
+           sodipodi:role="line">Sale Order</tspan></text>
+    </g>
+    <image
+       y="713.12659"
+       x="798.84613"
+       id="image7869-9"
+       xlink:href="http://www.erp5.com/P-OSOE-Business.Woman.Young.Small?format=png"
+       height="150.24008"
+       width="79.154388" />
+  </g>
+</svg>

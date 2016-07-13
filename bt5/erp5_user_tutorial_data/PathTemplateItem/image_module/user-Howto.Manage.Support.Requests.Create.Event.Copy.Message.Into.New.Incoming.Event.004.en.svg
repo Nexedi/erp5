@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1022"
+   height="644"
+   sodipodi:docname="user-Howto.Manage.Support.Requests.Create.Event.Copy.Message.Into.New.Incoming.Event.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="648.35513"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-0.81797171"
+     x="-1.3469241"
+     id="image3058"
+     xlink:href="http://www.erp5.com/user-howto.manage.support.requests.create.event.copy.message.into.new.incoming.event.screenshot?format=png"
+     height="648"
+     width="1024" />
+  <rect
+     style="fill:none;stroke:#ff1300;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2987"
+     width="998.33459"
+     height="205.14656"
+     x="8.9278755"
+     y="435.18216"
+     rx="4.308466"
+     ry="1.08473" />
+  <rect
+     style="fill:#ffffff;stroke:#ff1300;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2989"
+     width="413.09735"
+     height="104.71107"
+     x="332.79266"
+     y="242.89145"
+     rx="4.3548942"
+     ry="0.93525136" />
+  <path
+     style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 545.05175,349.64386 0,82.42729 1.38018,0"
+     id="path2991"
+     inkscape:connector-curvature="0" />
+  <text
+     xml:space="preserve"
+     style="font-size:26.87153435000000101px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;stroke-width:5.00000000999999994;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="344.99948"
+     y="271.56207"
+     id="text3052"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0020007,0.99800329)"><tspan
+       sodipodi:role="line"
+       id="tspan3054"
+       x="344.99948"
+       y="271.56207">Copy/paste the email sent to</tspan><tspan
+       sodipodi:role="line"
+       x="344.99948"
+       y="305.15149"
+       id="tspan3056">the ERP5 support team here </tspan><tspan
+       sodipodi:role="line"
+       x="344.99948"
+       y="338.74091"
+       id="tspan3058">in the Text area.</tspan></text>
+  <path
+     sodipodi:type="arc"
+     style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:4.01281496999999998;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="path3898"
+     sodipodi:cx="303.51724"
+     sodipodi:cy="155.48277"
+     sodipodi:rx="25.13793"
+     sodipodi:ry="25.13793"
+     d="m 328.65517,155.48277 a 25.13793,25.13793 0 1 1 -50.27586,0 25.13793,25.13793 0 1 1 50.27586,0 z"
+     transform="matrix(1.248501,0,0,1.2435202,-104.70491,66.416425)" />
+  <text
+     xml:space="preserve"
+     style="font-size:44.80862044999999938px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="257.51663"
+     y="277.76489"
+     id="text3900"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0054875,0.99454245)"><tspan
+       sodipodi:role="line"
+       id="tspan3902"
+       x="257.51663"
+       y="277.76489">1</tspan></text>
+  <path
+     sodipodi:type="arc"
+     style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:4.01281496999999998;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="path3898-3"
+     sodipodi:cx="303.51724"
+     sodipodi:cy="155.48277"
+     sodipodi:rx="25.13793"
+     sodipodi:ry="25.13793"
+     d="m 328.65517,155.48277 a 25.13793,25.13793 0 1 1 -50.27586,0 25.13793,25.13793 0 1 1 50.27586,0 z"
+     transform="matrix(1.248501,0,0,1.2435202,594.56318,11.6601)" />
+  <text
+     xml:space="preserve"
+     style="font-size:44.80862044999999938px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="953.23657"
+     y="222.7081"
+     id="text3900-2"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0054875,0.99454245)"><tspan
+       sodipodi:role="line"
+       id="tspan3902-0"
+       x="953.23657"
+       y="222.7081">2</tspan></text>
+  <rect
+     style="fill:none;stroke:#ff1300;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2989-2"
+     width="56.576118"
+     height="51.524899"
+     x="958.05591"
+     y="95.394798"
+     rx="0.59642851"
+     ry="0.4602066" />
+</svg>

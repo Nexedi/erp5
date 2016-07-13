@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1022"
+   height="514"
+   sodipodi:docname="user-Howto.Manage.Support.Requests.Click.Persons.Line.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="359.26224"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-0.89995575"
+     x="-0.4289186"
+     id="image3065-1"
+     xlink:href="http://www.erp5.com/user-howto.manage.support.requests.click.persons.line.screenshot?format=png"
+     height="518"
+     width="1024" />
+  <rect
+     style="fill:none;stroke:#ff0000;stroke-width:4.99000597;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2987"
+     width="901.33673"
+     height="25.550631"
+     x="107.2631"
+     y="223.91595"
+     rx="2.9041018"
+     ry="0.71638906" />
+  <rect
+     style="fill:#ffffff;stroke:#ff2400;stroke-width:4.99000597;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect3757"
+     width="230.22719"
+     height="35.670677"
+     x="272.63763"
+     y="147.69174"
+     rx="6.3252683"
+     ry="0.67934895" />
+  <path
+     style="fill:none;stroke:#ff0000;stroke-width:4.99000597;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 339.2066,183.83584 0,37.4832 -1.64538,0"
+     id="path3759"
+     inkscape:connector-curvature="0" />
+  <text
+     xml:space="preserve"
+     style="font-size:27.60471535px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="386.94885"
+     y="173.79407"
+     id="text3068"
+     sodipodi:linespacing="125%"
+     transform="scale(0.99937628,1.0006241)"><tspan
+       sodipodi:role="line"
+       id="tspan3070"
+       x="386.94885"
+       y="173.79407">Request Sender</tspan></text>
+</svg>
