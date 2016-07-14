@@ -195,7 +195,16 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     import_fixer = ImportFixer()
     environment_collector = EnvironmentParser()
     ast_node = import_fixer.visit(ast_node)
-    ast_node = environment_collector.visit(ast_node)
+    
+    # The collector also raises errors when environment.define and undefine
+    # calls are made incorrectly, so we need to capture them to propagate
+    # to Jupyter for rendering.
+    try:
+      ast_node = environment_collector.visit(ast_node)
+    except (EnvironmentDefinitionError, EnvironmentUndefineError) as e:
+      transaction.abort()
+      return getErrorMessageForException(self, e, notebook_context)
+      
     
     # Get the node list from the parsed tree
     nodelist = ast_node.body
@@ -277,7 +286,17 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
             break
         if not found:
           transaction.abort()
-          raise Exception("Trying to remove non existing function/variable from environment: '%s'\nEnvironment: %s" % (func_alias, str(notebook_context['setup'])))
+          result = {
+            'result_string': "EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias,
+            'notebook_context': notebook_context,
+            'status': 'ok',
+            'mime_type': 'text/plain',
+            'evalue': None,
+            'ename': None,
+            'traceback': None,
+          }
+          return result
+            
       
       # Removing all the setup functions if user call environment.clearAll()
       if environment_collector.clearAll():
@@ -402,6 +421,14 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   return result
 
 
+class EnvironmentUndefineError(TypeError):
+  pass
+
+
+class EnvironmentDefinitionError(TypeError):
+  pass
+
+
 def canSerialize(obj):
   result = False
         
@@ -429,7 +456,7 @@ def canSerialize(obj):
       try:
         writer.serialize(obj)
       # Because writer.serialize(obj) relies on the implementation of __getstate__
-      # of obj, all errors can happen, so the "except all" is necessary here. 
+      # of obj, all errors can happen, so the "except all" is necessary here.
       except:
         return False
     return True
@@ -503,11 +530,20 @@ class EnvironmentParser(ast.NodeTransformer):
           name = attribute.id
           if name == 'environment' and function.attr == 'define' and not value.keywords:
             if not len(value.args) == 2:
-              message = (
-                'Not enough arguments for environment definition. Function '
-                'name and alias are required.'
-              )
-              raise Exception(message)
+              raise EnvironmentDefinitionError('environment.define calls receive 2 arguments')
+              
+            self._ensureType(
+              obj=value.args[0], 
+              klass=ast.Name, 
+              error_message='Type mismatch. environment.define receives a function as first argument.'
+            )
+            
+            self._ensureType(
+              obj=value.args[1], 
+              klass=ast.Str, 
+              error_message='Type mismatch. environment.define receives a string as second argument.'
+            )
+            
             func_name = value.args[0].id
             func_alias = value.args[1].s
             function_node = self.function_dict[func_name]
@@ -532,6 +568,13 @@ class EnvironmentParser(ast.NodeTransformer):
               arg_value = node_value_dict[type(arg_value_node)](arg_value_node)
               self.environment_var_dict[arg_name] = arg_value
           elif name == 'environment' and function.attr == 'undefine':
+            self._ensureType(
+              obj=value.args[0], 
+              klass=ast.Str, 
+              call_type='undefine',
+              error_message='Type mismatch. environment.undefine receives only a string as argument.'
+            )
+            
             func_alias = value.args[0].s
             self.environment_remove_list.append(func_alias)
           elif name == 'environment' and function.attr == 'clearAll':
@@ -539,6 +582,14 @@ class EnvironmentParser(ast.NodeTransformer):
           elif name == 'environment'and function.attr == 'showSetup':
             self.show_environment_setup = True
     return node
+    
+  def _ensureType(self, obj=None, klass=None, error_message=None, call_type='define'):
+    if not isinstance(obj, klass):
+      if call_type == 'define':
+        error_class = EnvironmentDefinitionError
+      elif call_type == 'undefine':
+        error_class = EnvironmentUndefineError
+      raise error_class(error_message)
     
   def clearAll(self):
     return self.environment_clear_all
@@ -912,4 +963,3 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
-
