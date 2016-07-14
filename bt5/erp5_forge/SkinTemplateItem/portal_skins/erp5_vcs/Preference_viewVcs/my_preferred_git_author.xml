@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>description</string>
+                <string>extra</string>
                 <string>title</string>
               </list>
             </value>
@@ -83,6 +84,14 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>default identity (name + email) to commit in the git repository</string> </value>
+                </item>
+                <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+placeholder="Your name <you@example.com>"
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
