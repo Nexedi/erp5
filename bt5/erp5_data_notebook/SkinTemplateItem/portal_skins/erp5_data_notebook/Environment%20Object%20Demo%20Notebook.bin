@@ -1,0 +1,462 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Environment object manager demonstration\n",
+    "\n",
+    "The environment object was introduced to the ERP5 kernel to solve issues regarding the parallelism of ERP5. Code ran from Jupyter can be executed by different ERP5 nodes and a solution was necessary to handle global state.\n",
+    "\n",
+    "## Environment definition\n",
+    "\n",
+    "The output of the first 3 calls to `random.randint(1, 10)` using `1` as seed are respectively: 2, 9 and 8. We will use this example to illustrate how the user can use the environment object to setup global context for code execution.\n",
+    "\n",
+    "BE CAREFUL: if you don't execute code cells in the right order, or another user is using this notebook at the same time as you, the state in the environment object will be unknown, thus you might see awkward errors. Run `environment.clearAll()` in the first code cell (above this) to reset the environment properly and restart."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Now a setup function is created to ensure the code executed will always use the same random seed. Then we add that function to the `environment` object through its `define` function. It receives the function that will be added to the environment as first parameter and an alias that describes it as second parameter.\n",
+    "\n",
+    "The setup function will import the `random` module, set the seed and return a dict with the string `'random'` as key and the module itself as its value. This will do the setup and add the random module automatically to all the next code cell executions."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 407,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": []
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "def setup():\n",
+    "    import random\n",
+    "    random.seed(1)\n",
+    "    return {'random': random}\n",
+    "\n",
+    "\n",
+    "environment.define(setup, 'random setup')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "All code cells below will print exactly the same as we saw  in the first code cell: 2, 9, 8. This happens because the environment is being re-executed before each code cell is ran."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 400,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2\n",
+       "9\n",
+       "8\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "for _ in range(3):\n",
+    "    print random.randint(1, 10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 401,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2\n",
+       "9\n",
+       "8\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "for _ in range(3):\n",
+    "    print random.randint(1, 10)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Removing definition from the environment object\n",
+    "\n",
+    "Now, we remove the `'random setup'` definition created earlier, because we do not need it anymore. Note that the user will always use the function's alias to remove it from the environment."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 408,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "setup (random setup) was removed from the setup list. Variables it may have added to the context and are not pickleable were automatically removed.\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "environment.undefine('random setup')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "And then we check that the `random` module is not available anymore in the context."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 409,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'random' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "Traceback (most recent call last):",
+      "  File \"<portal_components/extension.erp5.JupyterCompile>\", line 234, in Base_compileJupyterCode",
+      "    exec(code, user_context, user_context)",
+      "  File \"<string>\", line 1, in <module>",
+      "NameError: name 'random' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "print random"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Automatically rewrite of normal imports to use the environment object"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "If, by some reason, the user tries to import any module in the usual way, which is not supported by our kernel because of the parallel architecture, the kernel will automatically convert this import to an environment setup function and warn the user about it."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 410,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "WARNING: Your imported the module random without using the environment object, which is not recomended. Your import was automatically converted to use such method.The setup function registered was named random_setup.\n",
+       "\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "import random"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Then the module will be avaialable again and its setup function will be registered in the environment object, as seen in the code cell below."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 411,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[['random_setup', 'random_setup']]\n",
+       "<module 'random' from '/srv/slapgrid/slappart0/srv/runner/software/3d94ee99a02b46b3d2531f882b794f0f/parts/python2.7/lib/python2.7/random.pyc'>\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "environment.showSetup()\n",
+    "print random"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Using the environment to add variables (function, classes, etc) to execution context"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The user can also define functions and classes in the setup and make them available in every code cell. Doing this is simple: you just need to return them in a dictionary. This dictionary will be merged with the code execution context."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 426,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": []
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "def adds_foobar_class_and_couscous_function():\n",
+    "    class Foobar(object):\n",
+    "        def __init__(self):\n",
+    "            print \"foobar's __init__\"\n",
+    "            \n",
+    "    def couscous():\n",
+    "        print 'couscous'\n",
+    "    return {'foobar': Foobar, 'couscous': couscous}\n",
+    "\n",
+    "environment.define(adds_foobar_class_and_couscous_function, 'adds foobar class and couscous function')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 427,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "foobar's __init__\n",
+       "couscous\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "foobar()\n",
+    "couscous()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 428,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "adds_foobar_class_and_couscous_function (adds foobar class and couscous function) was removed from the setup list. Variables it may have added to the context and are not pickleable were automatically removed.\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "environment.undefine('adds foobar class and couscous function')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 429,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[['random_setup', 'random_setup']]\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "environment.showSetup()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Simple variable definition with the environment object"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The user can also define simple variables, of course, without needing to create a function for this."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 433,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": []
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "environment.define(couscous=True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 434,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "print couscous"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 435,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "couscous (couscous) was removed from the setup list. Variables it may have added to the context and are not pickleable were automatically removed.\n"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "environment.undefine('couscous')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "And these defined variables can be undefined just like functions:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 436,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'couscous' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "Traceback (most recent call last):",
+      "  File \"<portal_components/extension.erp5.JupyterCompile>\", line 237, in Base_compileJupyterCode",
+      "    exec(code, user_context, user_context)",
+      "  File \"<string>\", line 2, in <module>",
+      "NameError: name 'couscous' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "# should throw NameEror\n",
+    "print couscous"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "ERP5",
+   "language": "python",
+   "name": "erp5"
+  },
+  "language_info": {
+   "mimetype": "text/plain",
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
