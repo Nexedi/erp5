@@ -197,6 +197,15 @@ class FunctionalTestRunner:
 // Don't ask if we want to switch default browsers
 user_pref("browser.shell.checkDefaultBrowser", false);
 
+// Disable auto update
+// according to https://developer.mozilla.org/en-US/Firefox/Enterprise_deployment we have
+// to use lockPref to manipulate update preferences.
+lockPref("app.update.auto", false);
+lockPref("app.update.enabled", false);
+lockPref("app.update.mode", 0);
+lockPref("app.update.service.enabled", false);
+
+
 // Disable pop-up blocking
 user_pref("browser.allowpopups", true);
 user_pref("dom.disable_open_during_load", false);
