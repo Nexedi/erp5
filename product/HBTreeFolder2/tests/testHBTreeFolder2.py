@@ -196,23 +196,6 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         expect = '<option value="%s">%s</option>' % (name, name)
         self.assert_(info['formatted_list'].find(expect) > 0)
 
-    def testCleanup(self):
-        self.assert_(self.f._cleanup())
-        key = TrojanKey('a')
-        self.f._htree[key] = 'b'
-        self.assert_(self.f._cleanup())
-        key.value = 'z'
-
-        # With a key in the wrong place, there should now be damage.
-        self.assert_(not self.f._cleanup())
-        # Now it's fixed.
-        self.assert_(self.f._cleanup())
-        # Verify the management interface also works,
-        # but don't test return values.
-        self.f.manage_cleanup()
-        key.value = 'a'
-        self.f.manage_cleanup()
-
     def testIterItems(self):
         h = HBTreeFolder2()
         id_list = ['a-b', 'a-cd',
@@ -349,21 +332,6 @@ class HBTreeFolder2Tests(ERP5TypeTestCase):
         self.assertTrue(t2 > t3)
         self.assertTrue(t2_2 > t2_3)
         self.assertTrue(t3_2 > t3_3)
-
-
-class TrojanKey:
-    """Pretends to be a consistent, immutable, humble citizen...
-
-    then sweeps the rug out from under the HBTree.
-    """
-    def __init__(self, value):
-        self.value = value
-
-    def __cmp__(self, other):
-        return cmp(self.value, other)
-
-    def __hash__(self):
-        return hash(self.value)
 
 
 def test_suite():

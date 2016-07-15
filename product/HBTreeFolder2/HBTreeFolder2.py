@@ -31,7 +31,7 @@ from OFS.Folder import Folder
 from AccessControl import getSecurityManager, ClassSecurityInfo
 from AccessControl.Permissions import access_contents_information, \
      view_management_screens
-from zLOG import LOG, INFO, ERROR, WARNING
+from zLOG import LOG, ERROR
 from AccessControl.SimpleObjectPolicies import ContainerAssertions
 
 
@@ -205,64 +205,6 @@ class HBTreeFolder2Base (Persistent):
         if old != new and not dry_run:
             self._count.set(new)
         return old, new
-
-
-    security.declareProtected(view_management_screens, 'manage_cleanup')
-    def manage_cleanup(self):
-        """Calls self._cleanup() and reports the result as text.
-        """
-        v = self._cleanup()
-        path = '/'.join(self.getPhysicalPath())
-        if v:
-            return "No damage detected in HBTreeFolder2 at %s." % path
-        else:
-            return ("Fixed HBTreeFolder2 at %s.  "
-                    "See the log for more details." % path)
-
-
-    def _cleanup(self):
-        """Cleans up errors in the BTrees.
-
-        Certain ZODB bugs have caused BTrees to become slightly insane.
-        Fortunately, there is a way to clean up damaged BTrees that
-        always seems to work: make a new BTree containing the items()
-        of the old one.
-
-        Returns 1 if no damage was detected, or 0 if damage was
-        detected and fixed.
-        """
-        def hCheck(htree):
-          """
-              Recursively check the btree
-          """
-          check(htree)
-          for key in htree.keys():
-              if not htree.has_key(key):
-                  raise AssertionError(
-                      "Missing value for key: %s" % repr(key))
-              else:
-                ob = htree[key]
-                if isinstance(ob, OOBTree):
-                  hCheck(ob)
-          return 1
-
-        from BTrees.check import check
-        path = '/'.join(self.getPhysicalPath())
-        try:
-            return hCheck(self._htree)
-        except AssertionError:
-            LOG('HBTreeFolder2', WARNING,
-                'Detected damage to %s. Fixing now.' % path,
-                error=sys.exc_info())
-            try:
-                self._htree = OOBTree(self._htree) # XXX hFix needed
-            except Exception:
-                LOG('HBTreeFolder2', ERROR, 'Failed to fix %s.' % path,
-                    error=sys.exc_info())
-                raise
-            else:
-                LOG('HBTreeFolder2', INFO, 'Fixed %s.' % path)
-            return 0
 
     def hashId(self, id):
         return id.split(H_SEPARATOR)
