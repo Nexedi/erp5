@@ -27,6 +27,14 @@ DAU1\n
             <value> <string>addXMLObject</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>item</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Data Acquisition Unit</string> </value>
         </item>
