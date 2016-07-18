@@ -1678,6 +1678,112 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'migrateZopePythonScriptToERP5PythonScript')
+  def migrateZopePythonScriptToERP5PythonScript(self, erp5_catalog_id=None):
+    """
+    This function moves the ZopePython Scripts and methods and move them to
+    ERP5PythonScript objects.
+    It doesn't change the id or title of the scripts or methods while shifting.
+    The portal_catalog will rely on the migrated scripts afterward the shift and
+    the original one would get deleted.
+
+    NOTE: This function for now is explicilty used only for erp5_catalog,
+    i.e, Catalog which are ERP5 objects.
+
+    TODO: Update proxy rules for this object too
+    """
+
+    portal_catalog = self.portal_catalog
+
+    if not erp5_catalog_id:
+      erp5_catalog = portal_catalog.getERP5Catalog()
+
+    # We also expect the erp5_catalog object to be part of Catalog Tool
+    erp5_catalog = portal_catalog._getOb(erp5_catalog_id)
+    if not erp5_catalog: return
+
+    object_id_list = erp5_catalog.getObjectIds()
+    if not object_id_list: return
+
+    for script_id in object_id_list:
+      python_script = erp5_catalog._getOb(script_id)
+      # Filter only the objects which are of 'Script (Python)' meta_type
+      if python_script.meta_type == "Script (Python)":
+        python_script  = python_script
+        title       = python_script.title
+        code        = python_script._body
+        parameter   = python_script._params
+        _v_change   = python_script._v_change
+        # Delete the python_script object from ther erp5_catalog
+        erp5_catalog.manage_delObjects(ids=script_id)
+        # Create new Python Script object inside erp5_catalog from the info data
+        # of the zope python script object.
+        erp5_python_script = erp5_catalog.newContent(portal_type='Python Script', \
+                          id = script_id )
+        erp5_python_script.title   = title
+        # Calling setter function for body would also compile the code body
+        erp5_python_script._setBody(code)
+        erp5_python_script._setParameterSignature(parameter)
+        erp5_python_script._v_change = _v_change
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'migrateZopeSQLMethodToERP5SQLMethod')
+  def migrateZopeSQLMethodToERP5SQLMethod(self, erp5_catalog_id=None):
+    """
+    Function to move Zope SQLMethod objects to ERP5 SQLMethod objects.
+    """
+
+    portal_catalog = self.portal_catalog
+
+    if not erp5_catalog_id:
+      erp5_catalog = portal_catalog.getERP5Catalog()
+
+    # We also expect the erp5_catalog object to be part of Catalog Tool
+    erp5_catalog = portal_catalog._getOb(erp5_catalog_id)
+    if not erp5_catalog: return
+
+    object_id_list = erp5_catalog.getObjectIds()
+    if not object_id_list: return
+
+    for method_id in object_id_list:
+      method = erp5_catalog._getOb(method_id)
+      # Filter only the objects which are of 'Z SQL Method' meta_type
+      if method.meta_type == "Z SQL Method":
+        sql_method = method
+
+        # We create an erp5 sql_method object for now with some temporary id
+        # later on after deletion of the zope sql_method from erp5, we will
+        # reassign its id to erp5_sql_method
+        erp5_catalog.manage_delObjects(ids=method_id)
+        erp5_sql_method = erp5_catalog.newContent(portal_type='SQL Method',\
+                    id = method_id)
+
+        # Update properties and attributes of erp5_sql_catalog with the info
+        # data of same attributes of sql_method
+        erp5_sql_method.title = sql_method.title
+        erp5_sql_method.setConnectionId(sql_method.connection_id)
+        erp5_sql_method.setSrc(sql_method.src)
+
+        # Update advanced attributes for the SQL Method
+        erp5_sql_method.setConnectionHook(sql_method.connection_hook)
+        erp5_sql_method.setMaxRows(sql_method.max_rows_)
+        erp5_sql_method.setMaxCache(sql_method.max_cache_)
+        erp5_sql_method.setCacheTime(sql_method.cache_time_)
+        erp5_sql_method.setAllowSimpleOneArgumentTraversal(\
+                sql_method.allow_simple_one_argument_traversal)
+        erp5_sql_method.setClassFile(sql_method.class_file_)
+        erp5_sql_method.setClassName(sql_method.class_name_)
+
+        # Update argument at last cause this will update other attributes by
+        # calling manage_edit for SQLMethod in ZRDB.DA
+        erp5_sql_method._setArgument(sql_method.arguments_src)
+
+        # Delete sql_method object from erp5_catalog and update the Id of
+        # erp5_catalog_object with the Id of sql_method
+        #erp5_catalog._delOb(id=method_id)
+        #erp5_sql_method.manage_renameObject(method_id)
+
   def migrateSQLCatalogToERP5Catalog(self):
     """
       Migrate SQLCatalog objects to ERP5Catalog objects which is a Folder object
@@ -1773,6 +1879,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
           accessor_name = 'get' + UpperCase(p['id'])
           value = getattr(sql_catalog, p['id'])
           setattr(erp5_catalog, p['id'], value)
+
+      # Migrate the updated SQL methods and Python Scripts of erp5_catalog and
+      # make them erp5_object
+      self.migrateZopeSQLMethodToERP5SQLMethod(erp5_catalog_id)
+      self.migrateZopePythonScriptToERP5PythonScript(erp5_catalog_id)
 
 Globals.InitializeClass(ERP5Site)
 
