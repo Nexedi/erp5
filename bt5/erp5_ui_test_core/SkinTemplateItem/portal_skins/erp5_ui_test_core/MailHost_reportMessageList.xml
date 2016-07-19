@@ -50,12 +50,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   Get the Message List from DummyMailHost.\n
 \n
   This is used by functional tests to get all\n
-  emails sent by the instance. This will prevent \n
-  the instance spam mailing lists during the \n
+  emails sent by the instance. This will prevent\n
+  the instance spam mailing lists during the\n
   Functional Tests.\n
 """\n
 if getattr(context.MailHost, "getMessageList", None) is None:\n
@@ -66,11 +68,22 @@ for mail in message_list:\n
   for part in mail:\n
     print part\n
   print "="*79\n
-  print ""  \n
+  print ""\n
 \n
 print "Total messages: %s" %len(message_list)\n
+\n
+# If messages "looks like html", zope will set content type to text/html,\n
+# and the assertTextPresent from selenium will be applied after the emails\n
+# are interpreted as html.\n
+# For example, the email  "Name <email@example.com>" would be interpreted as\n
+# an html entity and we cannot use assertTextPresent on it.\n
+# To prevent that, we force content type to text.\n
+container.REQUEST.RESPONSE.setHeader(\'Content-Type\', \'text/plain;charset=utf-8\')\n
+\n
 return printed\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
