@@ -14,8 +14,8 @@
    height="744.09003"
    id="svg4619"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="user-Events.Worklist.Outgoing.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="user-Events.Worklist.Outgoing.003.en.svg">
   <defs
      id="defs4621" />
   <sodipodi:namedview
@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.69784835"
-     inkscape:cx="509.4554"
+     inkscape:cx="298.09143"
      inkscape:cy="380.98009"
      inkscape:current-layer="layer1"
      id="namedview4623"
      showgrid="false"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      units="px"
      showguides="true"
@@ -47,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -76,7 +76,7 @@
        id="path5250"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:#faf5f5;fill-opacity:1;stroke:#000003;stroke-width:4.95487165;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:4.95487165;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect2989"
        width="429.06314"
        height="381.24692"
@@ -149,7 +149,7 @@
        d="m 452.93089,439.54569 267.29777,-1.11688"
        id="path3503-5" />
     <rect
-       style="fill:#95bfca;fill-opacity:0.5606936;stroke:#000003;stroke-width:4.95487165;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#04446a;fill-opacity:1;stroke:none;stroke-width:4.95487165;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect2991"
        width="429.06314"
        height="45.109371"
@@ -159,7 +159,7 @@
        ry="0.90828592" />
     <text
        xml:space="preserve"
-       style="font-size:27.69711304px;font-style:normal;font-weight:normal;line-height:0%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:27.69711304px;font-style:normal;font-weight:normal;line-height:0%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="436.87357"
        y="364.24063"
        id="text3769"

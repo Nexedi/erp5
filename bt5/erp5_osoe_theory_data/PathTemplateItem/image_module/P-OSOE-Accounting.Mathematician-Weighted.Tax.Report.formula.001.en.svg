@@ -13,10 +13,24 @@
    height="300"
    id="svg3019"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="P-OSOE-Accounting.Mathematician-Weighted.Tax.Report.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="P-OSOE-Accounting.Mathematician-Weighted.Tax.Report.formula.001.en.svg">
   <defs
      id="defs3021">
+    <marker
+       inkscape:stockid="TriangleOutL"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutL"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4359"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#04446a;stroke-width:1pt;stroke-opacity:1;fill:#04446a;fill-opacity:1"
+         transform="scale(0.8)" />
+    </marker>
     <marker
        inkscape:stockid="Arrow2Lend"
        orient="auto"
@@ -68,15 +82,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="401.63837"
-     inkscape:cy="150"
+     inkscape:cx="254.13837"
+     inkscape:cy="70"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1276"
-     inkscape:window-height="742"
-     inkscape:window-x="-1"
-     inkscape:window-y="-2"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -94,7 +108,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -138,7 +152,7 @@
          style="font-size:40px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium" /></text>
     <text
        xml:space="preserve"
-       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;"
        x="73.705032"
        y="866.94543"
        id="text3011-7"
@@ -147,20 +161,20 @@
          id="tspan3190-4"
          x="73.705032"
          y="866.94543"
-         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium">(a<tspan
-   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;">(a<tspan
+   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4205">i</tspan>, s<tspan
-   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4209">i</tspan>, a'<tspan
-   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4211">i</tspan>, d<tspan
-   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4213">i</tspan>, c<tspan
-   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4215">i</tspan>, p<tspan
-   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4217">i</tspan>) ∈ <tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan5323">T</tspan></tspan></text>
     <text
        xml:space="preserve"
@@ -176,7 +190,7 @@
          style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans" /></text>
     <text
        xml:space="preserve"
-       style="font-size:34.89488602px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:34.89488602px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="10.376811"
        y="1100.2744"
        id="text4337-6"
@@ -186,10 +200,10 @@
          id="tspan4341-9"
          x="10.376811"
          y="1100.2744"
-         style="font-size:62.8107872px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif">∑</tspan></text>
+         style="font-size:62.8107872px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif;fill:#04446a;fill-opacity:1;">∑</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif;"
        x="16.793671"
        y="869.64001"
        id="text4444-1-4"
@@ -198,7 +212,7 @@
          id="tspan4450-7-9"
          x="16.793671"
          y="869.64001"
-         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif">T ∈ J</tspan></text>
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;">T ∈ J</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.03;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 95,759.36218 10,0"
@@ -210,26 +224,26 @@
        id="path5580"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.08764863;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:none;stroke:#04446a;stroke-width:1.08764863;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 330.20797,844.24357 -4.79191,0 0,-38.40207 4.79191,0"
        id="path5582"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:34.89488602px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;font-size:34.89488602px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;"
        x="101.03728"
-       y="1094.85"
+       y="1100.1337"
        id="text4337-6-9"
        sodipodi:linespacing="125%"
        transform="scale(1.3208984,0.7570605)"><tspan
          sodipodi:role="line"
          id="tspan4341-9-9"
          x="101.03728"
-         y="1094.85"
-         style="font-size:62.8107872px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif">∑</tspan></text>
+         y="1100.1337"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:62.8107872px;line-height:125%;font-family:'Liberation Serif';-inkscape-font-specification:'Liberation Serif';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;">∑</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif;"
        x="275.08398"
        y="912.61414"
        id="text4444-1-4-5"
@@ -238,10 +252,10 @@
          id="tspan4450-7-9-5"
          x="275.08398"
          y="912.61414"
-         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif">Where</tspan></text>
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;">Where</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif;"
        x="275.08398"
        y="1034.614"
        id="text4444-1-4-1"
@@ -250,26 +264,26 @@
          id="tspan5676"
          x="275.08398"
          y="1034.614"
-         style="font-size:40px">R <tspan
-   style="font-size:36px"
+         style="font-size:40px;fill:#04446a;fill-opacity:1;">R <tspan
+   style="font-size:36px;fill:#04446a;fill-opacity:1;"
    id="tspan5838">⊂</tspan> A</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+       style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:16px;line-height:125%;font-family:KerkisCalligraphic;-inkscape-font-specification:'KerkisCalligraphic Medium';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none"
        x="264.53668"
-       y="865.27295"
+       y="867.27295"
        id="text3011-7-3"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3190-4-3"
          x="264.53668"
-         y="865.27295"
-         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium">a ∈ <tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+         y="867.27295"
+         style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:16px;line-height:125%;font-family:KerkisCalligraphic;-inkscape-font-specification:'KerkisCalligraphic Medium';text-align:start;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1">a ∈ <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1"
    id="tspan6016">R</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:34.89488602px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:34.89488602px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="196.29947"
        y="1101.887"
        id="text4337-6-9-7"
@@ -279,15 +293,15 @@
          id="tspan4341-9-9-8"
          x="196.29947"
          y="1101.887"
-         style="font-size:62.8107872px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif">∑</tspan></text>
+         style="font-size:62.8107872px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif;fill:#04446a;fill-opacity:1;">∑</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1.08764863;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:none;stroke:#04446a;stroke-width:1.08764863;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 632.60405,844.56322 4.7919,0 0,-38.40207 -4.7919,0"
        id="path5582-1"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:28px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="338"
        y="837.36218"
        id="text6117"
@@ -296,29 +310,29 @@
          id="tspan6119"
          x="338"
          y="837.36218"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan6121">W</tspan>(<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan6123">a<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan6129">i</tspan>,a</tspan>).<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan6131">s<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan6133">i </tspan></tspan>- <tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan6137">W</tspan>(<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan6139">a'<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan6141">i</tspan>,a</tspan>).<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan6143">d<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan6145">i</tspan></tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="138.09998"
        y="976.76141"
        id="text3011"
@@ -327,17 +341,17 @@
          id="tspan6336"
          x="138.09998"
          y="976.76141"
-         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif">W : A <tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;">W : A <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#04446a;fill-opacity:1;"
    id="tspan6231">x </tspan>A</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Lend)"
+       style="fill:none;stroke:#04446a;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutL)"
        d="m 349.3086,959.1501 c 45.25483,0 45.96194,0 45.96194,0"
        id="path4402-4"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="420.44299"
        y="974.99432"
        id="text3011-0"

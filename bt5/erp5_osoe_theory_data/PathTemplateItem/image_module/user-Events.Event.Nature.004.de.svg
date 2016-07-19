@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -9,160 +11,215 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1052.3622"
    height="744.09448"
-   id="svg2"
+   viewBox="0 0 1052.3622 744.09448"
+   id="svg4284"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="user-Events.Event.Nature.W-004-de.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="user-Events.Event.Nature.svg">
   <defs
-     id="defs27" />
+     id="defs4286" />
   <sodipodi:namedview
+     id="base"
      pagecolor="#ffffff"
      bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1366"
-     inkscape:window-height="722"
-     id="namedview25"
+     inkscape:zoom="0.41"
+     inkscape:cx="451.31404"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:zoom="0.63432805"
-     inkscape:cx="262.20471"
-     inkscape:cy="457.24708"
-     inkscape:window-x="-2"
-     inkscape:window-y="-3"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     units="px"
+     showborder="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
   <metadata
-     id="metadata8">image/svg xml<rdf:RDF>
-  <cc:Work
-     rdf:about="">
-    <dc:format>image/svg+xml</dc:format>
-    <dc:type
-       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-    <dc:title></dc:title>
-  </cc:Work>
-</rdf:RDF>
-</metadata>
+     id="metadata4289">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <g
-     id="g5"
-     transform="matrix(3.1882798,0,0,3.1882798,-357.85434,-190.82342)">
-    <title
-       id="title7">Layer 1</title>
-    <path
-       d="M 439.45151,181.73877"
-       id="path3101"
-       inkscape:connector-curvature="0"
-       style="fill:#ffffff" />
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-308.26772)">
+    <rect
+       style="opacity:1;fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect5033"
+       width="243.90244"
+       height="719.51221"
+       x="107.31706"
+       y="325.0939" />
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="332.70807" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3617"
-       y="228.77802"
-       x="142.15697"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans" />
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="468.58878"
+       y="359.29575"
+       id="text4855"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857"
+         x="468.58878"
+         y="359.29575">Information Request</tspan></text>
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832-9"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="438.19583" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084"
-       y="148.21442"
-       x="133.74765"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="148.21442"
-         x="133.74765"
-         id="tspan3086"
-         style="font-family:Sans">Beschwerde</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="521.88751"
+       y="466.26672"
+       id="text4855-3"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857-7"
+         x="521.88751"
+         y="466.26672">Public Relation</tspan></text>
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832-8"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="543.68372" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084-3"
-       y="154.08156"
-       x="313.65808"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="154.08156"
-         x="313.65808"
-         id="tspan3086-2"
-         style="font-family:Sans">Presseerklärung</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="601.29419"
+       y="572.06171"
+       id="text4855-1"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857-5"
+         x="601.29419"
+         y="572.06171">Query</tspan></text>
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832-5"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="649.17151" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084-1"
-       y="98.76017"
-       x="211.14047"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="98.76017"
-         x="211.14047"
-         id="tspan3086-3"
-         style="font-family:Sans">Anfrage</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="522.56439"
+       y="677.85724"
+       id="text4855-15"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857-54"
+         x="522.56439"
+         y="677.85724">Advertisement</tspan></text>
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832-98"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="754.6593" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084-5"
-       y="209.9583"
-       x="369.37411"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="209.9583"
-         x="369.37411"
-         id="tspan3086-4"
-         style="font-family:Sans">Spam</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="517.51062"
+       y="778.95062"
+       id="text4855-8"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857-0"
+         x="517.51062"
+         y="778.95062">Announcement</tspan></text>
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832-2"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="860.14709" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084-8"
-       y="265.83505"
-       x="254.97046"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="265.83505"
-         x="254.97046"
-         id="tspan3086-1"
-         style="font-family:Sans">Werbung</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="589.7428"
+       y="875.34204"
+       id="text4855-2"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857-1"
+         x="589.7428"
+         y="875.34204">Answer</tspan></text>
+    <rect
+       style="opacity:1;fill:#024268;fill-opacity:1;stroke:#024268;stroke-width:12.49663639;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:2.28079414;stroke-opacity:1"
+       id="rect4832-4"
+       width="658.91803"
+       height="73.552139"
+       x="304.7832"
+       y="965.63489" />
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084-9"
-       y="242.19489"
-       x="153.93861"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="242.19489"
-         x="153.93861"
-         id="tspan3086-7"
-         style="font-family:Sans">Ankündigung</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:36.96438599px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="562.85883"
+       y="969.38245"
+       id="text4855-81"
+       sodipodi:linespacing="125%"
+       transform="scale(0.96391423,1.0374367)"><tspan
+         sodipodi:role="line"
+         id="tspan4857-6"
+         x="562.85883"
+         y="969.38245">Complaint</tspan></text>
     <text
-       font-size="13.79300022px"
-       font-style="normal"
-       font-weight="normal"
-       transform="scale(0.98199338,1.0183368)"
-       id="text3084-8-6"
-       y="208.4297"
-       x="118.84523"
        xml:space="preserve"
-       style="font-size:13.79300022px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"><tspan
-         y="208.4297"
-         x="118.84523"
-         id="tspan3086-1-5"
-         style="font-family:Sans">Information</tspan></text>
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#024268;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="143.90244"
+       y="631.67926"
+       id="text5063"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5065"
+         x="143.90244"
+         y="631.67926">Event</tspan><tspan
+         sodipodi:role="line"
+         x="143.90244"
+         y="681.67926"
+         id="tspan5067" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#024268;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="136.58536"
+       y="719.48413"
+       id="text5069"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5071"
+         x="136.58536"
+         y="719.48413">Nature</tspan></text>
   </g>
 </svg>

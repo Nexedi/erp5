@@ -13,8 +13,8 @@
    height="230"
    id="svg3019"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="P-OSOE-Accounting.Mathematician-Accounting.Transactions.T.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="P-OSOE-Accounting.Mathematician-Accounting.Transactions.T.Formula.001.en.svg">
   <defs
      id="defs3021">
     <marker
@@ -40,15 +40,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="314.50391"
+     inkscape:cx="167.00391"
      inkscape:cy="100"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1276"
-     inkscape:window-height="742"
-     inkscape:window-x="-1"
-     inkscape:window-y="-2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata3024">
@@ -58,7 +58,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -90,7 +90,7 @@
        id="g4305" />
     <text
        xml:space="preserve"
-       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="10.876213"
        y="883.02899"
        id="text3011"
@@ -99,16 +99,16 @@
          id="tspan3190"
          x="10.876213"
          y="883.02899"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#044466;fill-opacity:1;"
    id="tspan3194">T :</tspan> ℕ</tspan></text>
     <path
-       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Lend)"
+       style="fill:#044466;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Lend);fill-opacity:1"
        d="m 159.08482,863.41773 c 45.25483,0 45.96194,0 45.96194,0"
        id="path4402-4"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="211.21918"
        y="883.26178"
        id="text3011-0"
@@ -117,27 +117,27 @@
          id="tspan6336-5"
          x="211.21918"
          y="883.26178"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#044466;fill-opacity:1;"
    id="tspan3196">A<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#044466;fill-opacity:1;"
    id="tspan4012">x</tspan></tspan>ℝx<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#044466;fill-opacity:1;"
    id="tspan3206">A<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#044466;fill-opacity:1;"
    id="tspan3208">xℝx</tspan>C</tspan>xℝ</tspan></text>
     <path
-       style="fill:none;stroke:#347f1e;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;stroke:#b4cd3b;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
        d="m 515.89303,897.877 123.5,0"
        id="path6369"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:#744081;fill-opacity:1;stroke:#883f90;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:#b4cd3b;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 101.89304,898.877 49.99999,0"
        id="path6369-2"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="102.89305"
        y="1016.8772"
        id="text6389"
@@ -146,10 +146,10 @@
          id="tspan6391"
          x="102.89305"
          y="1016.8772"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#883f90;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans">Transaction Line Number</tspan></text>
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;">Transaction Line Number</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="409.89301"
        y="928.8772"
        id="text6393"
@@ -157,16 +157,16 @@
          sodipodi:role="line"
          x="409.89301"
          y="928.8772"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#347f1e;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;"
          id="tspan6397">Amount in Price Currency</tspan></text>
     <path
-       style="fill:none;stroke:#bf1e1e;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;stroke:#b4cd3b;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
        d="m 361.25,899.36218 123.5,0"
        id="path6369-3"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="359.16016"
        y="955.77625"
        id="text6393-7"
@@ -174,11 +174,11 @@
          sodipodi:role="line"
          x="359.16016"
          y="955.77625"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#bf1e1e;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;"
          id="tspan6397-5">Destination Amount</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="208.16016"
        y="980.77625"
        id="text6393-2"
@@ -186,10 +186,10 @@
          sodipodi:role="line"
          x="208.16016"
          y="980.77625"
-         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#170092;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans"
+         style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#b4cd3b;fill-opacity:1;font-family:Sans;-inkscape-font-specification:Sans;"
          id="tspan6397-8">Source Amount</tspan></text>
     <path
-       style="fill:none;stroke:#170092;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;stroke:#b4cd3b;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
        d="m 210.25,901.36218 123.5,0"
        id="path6369-3-4"
        inkscape:connector-curvature="0" />

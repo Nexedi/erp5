@@ -14,8 +14,8 @@
    height="744.09448"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="P-OSOE-ERP.Configuration.Introduction.Sale.Orders.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="P-OSOE-ERP.Configuration.Introduction.Sale.Orders.003.en.svg">
   <defs
      id="defs4">
     <marker
@@ -844,94 +844,6 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          inkscape:connector-curvature="0" />
     </marker>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0085695,0,0,0.71152622,-50.505972,333.27215)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3118"
-       xlink:href="#linearGradient3842-9-4-3"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-3">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-6" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-5" />
-    </linearGradient>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0085695,0,0,0.71152622,-47.655908,466.90588)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3118-4"
-       xlink:href="#linearGradient3842-9-4-8"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-8">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-5" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-7" />
-    </linearGradient>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0085695,0,0,0.71152622,-46.680008,534.92761)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3118-9"
-       xlink:href="#linearGradient3842-9-4-30"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-30">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-3" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-0" />
-    </linearGradient>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0085695,0,0,0.71152622,165.66058,279.69836)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3118-0"
-       xlink:href="#linearGradient3842-9-4-0"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-0">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-51" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-1" />
-    </linearGradient>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -946,28 +858,6 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          inkscape:connector-curvature="0" />
     </marker>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0193015,0,0,0.73817375,-51.482835,598.44535)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4371"
-       xlink:href="#linearGradient4046-3"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4046-3">
-      <stop
-         style="stop-color:#ff0000;stop-opacity:1;"
-         offset="0"
-         id="stop4048-3" />
-      <stop
-         style="stop-color:#ff0000;stop-opacity:0;"
-         offset="1"
-         id="stop4050-3" />
-    </linearGradient>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -996,50 +886,6 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          inkscape:connector-curvature="0" />
     </marker>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(0.49862549,0,0,0.19855238,-174.4854,580.77248)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient6277"
-       xlink:href="#linearGradient3842-9-4-30-0"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-30-0">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-3-1" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-0-4" />
-    </linearGradient>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(0.5039313,0,0,0.20598841,-176.81364,861.60047)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient4371-5"
-       xlink:href="#linearGradient4046-3-3"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient4046-3-3">
-      <stop
-         style="stop-color:#ff0000;stop-opacity:1;"
-         offset="0"
-         id="stop4048-3-6" />
-      <stop
-         style="stop-color:#ff0000;stop-opacity:0;"
-         offset="1"
-         id="stop4050-3-3" />
-    </linearGradient>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -1068,28 +914,6 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          inkscape:connector-curvature="0" />
     </marker>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0085695,0,0,0.71152622,-49.450162,400.84851)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3262"
-       xlink:href="#linearGradient3842-9-4-8-7"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-8-7">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-5-3" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-7-2" />
-    </linearGradient>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -1132,28 +956,6 @@
          transform="matrix(-0.8,0,0,-0.8,-10,0)"
          inkscape:connector-curvature="0" />
     </marker>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(1.0085695,0,0,0.71152622,124.43649,331.06736)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient6151"
-       xlink:href="#linearGradient3842-9-4-0-0"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-0-0">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-51-6" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-1-2" />
-    </linearGradient>
     <marker
        inkscape:stockid="Arrow1Lend"
        orient="auto"
@@ -1176,16 +978,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.68539683"
-     inkscape:cx="526.18109"
-     inkscape:cy="372.04724"
+     inkscape:zoom="0.98"
+     inkscape:cx="238.25118"
+     inkscape:cy="453.67989"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -1235,7 +1037,7 @@
        y="538.84442"
        ry="10.210807" />
     <path
-       style="fill:none;stroke:#008080;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none;marker-end:none"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none;marker-end:none"
        d="m 450.19598,753.04947 c 59.95038,0.80277 57.09762,-0.86488 112.60766,0.39328 0,0 35.01552,1.03012 46.39277,-6.77052 30.56543,-20.95665 21.63578,-96.7367 21.63578,-96.7367"
        id="path4390-69"
        inkscape:connector-curvature="0"
@@ -1249,14 +1051,14 @@
        y="907.61554"
        ry="3.3603826" />
     <path
-       style="fill:none;stroke:#00808f;stroke-width:1.16030347;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.94117647;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.16030347;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 397.56129,634.58143 -0.18307,39.51425"
        id="path5079"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="360.59818"
        y="643.47375"
        id="text6221"
@@ -1278,18 +1080,15 @@
          id="tspan3193"
          x="599.4386"
          y="958.15558" /></text>
-    <path
-       sodipodi:type="arc"
-       style="fill:#d41d19;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+    <ellipse
+       style="fill:#b4cd3b;fill-opacity:1;stroke:#000000;stroke-width:0.85218304;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path11099"
-       sodipodi:cx="437.72925"
-       sodipodi:cy="60.674309"
-       sodipodi:rx="5.83639"
-       sodipodi:ry="6.897552"
-       d="m 443.56564,60.674309 c 0,3.809413 -2.61304,6.897552 -5.83639,6.897552 -3.22335,0 -5.83639,-3.088139 -5.83639,-6.897552 0,-3.809413 2.61304,-6.897552 5.83639,-6.897552 3.22335,0 5.83639,3.088139 5.83639,6.897552 z"
-       transform="matrix(0.98237778,0,0,0.739243,-31.470505,583.14883)" />
+       cx="398.54498"
+       cy="630.00189"
+       rx="5.7335401"
+       ry="5.0989671" />
     <rect
-       style="fill:url(#linearGradient3118);fill-opacity:1;stroke:#000000;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-6"
        width="94.137405"
        height="24.307318"
@@ -1309,7 +1108,7 @@
          x="383.38669"
          y="683.58728">offered</tspan></text>
     <rect
-       style="fill:url(#linearGradient3118-4);fill-opacity:1;stroke:#000000;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-18"
        width="94.137405"
        height="24.307318"
@@ -1329,7 +1128,7 @@
          x="388.69662"
          y="815.70288">placed</tspan></text>
     <rect
-       style="fill:url(#linearGradient3118-9);fill-opacity:1;stroke:#000000;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-25"
        width="94.137405"
        height="24.307318"
@@ -1349,7 +1148,7 @@
          x="380.20462"
          y="883.79358">confirmed</tspan></text>
     <rect
-       style="fill:url(#linearGradient3118-0);fill-opacity:1;stroke:#000000;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-8"
        width="94.137405"
        height="24.307318"
@@ -1370,19 +1169,19 @@
          y="630.97308">cancelled</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
-       x="355.43964"
+       style="font-style:normal;font-weight:normal;font-size:18.32725143px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none"
+       x="332.32623"
        y="681.04535"
        id="text6205-6"
        sodipodi:linespacing="125%"
-       transform="scale(1.0383549,0.96306184)"><tspan
+       transform="scale(1.0383549,0.96306185)"><tspan
          sodipodi:role="line"
          id="tspan6207-8"
-         x="355.43964"
-         y="681.04535">make</tspan></text>
+         x="332.32623"
+         y="681.04535">make offer</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="363.26703"
        y="817.38959"
        id="text6205-6-9"
@@ -1394,7 +1193,7 @@
          y="817.38959">place</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="354.42273"
        y="747.46356"
        id="text6205-6-9-9"
@@ -1405,13 +1204,13 @@
          x="354.42273"
          y="747.46356">accept</tspan></text>
     <path
-       style="fill:none;stroke:#0000ff;stroke-width:1.16026938;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#04446a;stroke-width:1.16026938;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 401.32987,906.83348 0.18307,44.95147"
        id="path5079-7-9-9"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:url(#linearGradient4371);fill-opacity:1;stroke:#000000;stroke-width:1.11585164;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#a2a1a0;fill-opacity:1;stroke:none;stroke-width:1.11585164;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-5-6-1"
        width="95.139122"
        height="25.217663"
@@ -1419,20 +1218,20 @@
        y="954.86646"
        ry="8.3406534" />
     <path
-       style="fill:none;stroke:#008080;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none;marker-end:url(#Arrow1Lend-4-3)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-mid:none;marker-end:url(#Arrow1Lend-4-3)"
        d="m 453.38562,822.81816 c 187.5112,0.84016 184.17851,17.80986 178.74262,-174.68795"
        id="path4390"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:none;stroke:#008080;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="M 397.82587,634.32312 568.22612,634.1351"
        id="path5079-1"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="445.7395"
        y="652.44287"
        id="text6205-6-7"
@@ -1444,7 +1243,7 @@
          y="652.44287">cancel</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="584.09137"
        y="754.30115"
        id="text6205-6-7-2-8-4"
@@ -1456,7 +1255,7 @@
          y="754.30115">cancel</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18.32724953px;font-style:normal;font-weight:bold;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       style="font-size:18.32724953px;font-style:normal;font-weight:bold;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;"
        x="87.997139"
        y="597.04297"
        id="text5945"
@@ -1468,7 +1267,7 @@
          id="tspan5949">Sale Orders</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:18.32724953px;font-style:normal;font-weight:bold;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#0000c6;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+       style="font-size:18.32724953px;font-style:normal;font-weight:bold;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;"
        x="113.04984"
        y="921.3363"
        id="text5945-8"
@@ -1479,7 +1278,7 @@
          y="921.3363"
          id="tspan5949-0">Sale Packing Lists</tspan></text>
     <rect
-       style="fill:url(#linearGradient6277);fill-opacity:1;stroke:#000000;stroke-width:0.40476272;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:0.40476272;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-25-2"
        width="46.540489"
        height="6.7829905"
@@ -1487,7 +1286,7 @@
        y="676.64178"
        ry="2.2434509" />
     <rect
-       style="fill:url(#linearGradient4371-5);fill-opacity:1;stroke:#000000;stroke-width:0.41446018;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#a2a1a0;fill-opacity:1;stroke:none;stroke-width:0.41446018;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-5-6-1-7"
        width="47.035717"
        height="7.0370221"
@@ -1496,7 +1295,7 @@
        ry="2.3274708" />
     <text
        xml:space="preserve"
-       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#010000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="79.361427"
        y="675.83936"
        id="text3474-3-3"
@@ -1505,23 +1304,23 @@
          sodipodi:role="line"
          x="79.361427"
          y="675.83936"
-         style="line-height:125%;fill:#010000;fill-opacity:1"
+         style="line-height:125%;fill:#04446a;fill-opacity:1;"
          id="tspan4239">Order workflow state</tspan></text>
     <path
-       style="fill:none;stroke:#00808f;stroke-width:0.85130519;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.94117647;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:0.85130519;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 26.204237,717.98995 45.989713,-0.0846"
        id="path5079-7-4"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#0000ff;stroke-width:0.85130519;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#04446a;stroke-width:0.85130519;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 25.526064,1005.9563 48.194539,-0.084"
        id="path5079-7-9-9-7"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#010000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="80.04274"
        y="712.24622"
        id="text3474-3-3-5"
@@ -1530,11 +1329,11 @@
          sodipodi:role="line"
          x="80.04274"
          y="712.24622"
-         style="line-height:125%;fill:#010000;fill-opacity:1"
+         style="line-height:125%;fill:#04446a;fill-opacity:1;"
          id="tspan4237">Order workflow transition</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#010000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="80.766563"
        y="989.62939"
        id="text3474-3-3-5-0"
@@ -1544,15 +1343,15 @@
          id="tspan3476-9-9-4-5"
          x="80.766563"
          y="989.62939"
-         style="line-height:125%;fill:#010000;fill-opacity:1">Packing List</tspan><tspan
+         style="line-height:125%;fill:#04446a;fill-opacity:1;">Packing List</tspan><tspan
          sodipodi:role="line"
          x="80.766563"
          y="1005.3649"
-         style="line-height:125%;fill:#010000;fill-opacity:1"
+         style="line-height:125%;fill:#04446a;fill-opacity:1;"
          id="tspan4212">workflow transition</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#010000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.5884409px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="80.072182"
        y="948.91791"
        id="text3474-3-3-6"
@@ -1562,14 +1361,14 @@
          id="tspan3476-9-9-1"
          x="80.072182"
          y="948.91791"
-         style="line-height:125%;fill:#010000;fill-opacity:1">Packing List</tspan><tspan
+         style="line-height:125%;fill:#04446a;fill-opacity:1;">Packing List</tspan><tspan
          sodipodi:role="line"
          x="80.072182"
          y="964.65344"
-         style="line-height:125%;fill:#010000;fill-opacity:1"
+         style="line-height:125%;fill:#04446a;fill-opacity:1;"
          id="tspan4235">workflow state</tspan></text>
     <rect
-       style="fill:url(#linearGradient3262);fill-opacity:1;stroke:#000000;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-18-6"
        width="94.137405"
        height="24.307318"
@@ -1589,26 +1388,26 @@
          x="381.61719"
          y="750.51984">planned</tspan></text>
     <path
-       style="fill:none;stroke:#00808f;stroke-width:1.16030347;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.94117647;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.16030347;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 399.54918,702.08856 -0.18307,39.51423"
        id="path5079-5"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#00808f;stroke-width:1.16026938;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.94117647;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.16026938;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 400.49597,769.79369 -0.18306,39.51424"
        id="path5079-7"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#00808f;stroke-width:1.16026938;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.94117647;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.16026938;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 401.44276,836.28165 -0.18307,39.51424"
        id="path5079-19"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="353.15771"
        y="886.89801"
        id="text6205-6-9-9-9"
@@ -1619,7 +1418,7 @@
          x="353.15771"
          y="886.89801">confirm</tspan></text>
     <rect
-       style="fill:url(#linearGradient6151);fill-opacity:1;stroke:#000000;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.08974302;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3961-9-9-8-2"
        width="94.137405"
        height="24.307318"
@@ -1639,14 +1438,14 @@
          x="559.7063"
          y="681.66217">rejected</tspan></text>
     <path
-       style="fill:none;stroke:#008080;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#b4cd3b;stroke-width:1.55052388;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 449.38734,687.62655 76.46269,-0.188"
        id="path5079-1-8"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:18.32725143px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="446.15811"
        y="702.76904"
        id="text6205-6-7-1"
@@ -1670,7 +1469,7 @@
          y="958.85889">confirmed</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12.43174076px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.43174076px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="413.23285"
        y="728.69861"
        id="text4483"
@@ -1682,7 +1481,7 @@
          y="728.69861">(client accepted the offer)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12.43174076px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.43174076px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="414.08231"
        y="793.97528"
        id="text4483-9"
@@ -1694,7 +1493,7 @@
          y="793.97528">(client made the order)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:12.43174076px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:12.43174076px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="415.56985"
        y="859.5213"
        id="text4483-9-5"

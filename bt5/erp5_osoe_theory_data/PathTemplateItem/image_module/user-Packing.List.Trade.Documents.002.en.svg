@@ -7,15 +7,14 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1052.3622"
    height="744.09448"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="user-Packing.List.Trade.Documents.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="user-Packing.List.Trade.Documents.002.en.svg">
   <defs
      id="defs4">
     <marker
@@ -110,16 +109,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.68539683"
-     inkscape:cx="522.4211"
+     inkscape:zoom="0.59714111"
+     inkscape:cx="351.94591"
      inkscape:cy="372.04724"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -138,17 +137,85 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-308.26769)">
-    <image
-       y="492.96136"
-       x="259.86859"
-       id="image3048"
-       xlink:href="http://www.erp5.com/user-Packing.List.Trade.Documents.Image?format=png"
-       height="366.78699"
-       width="543.74548" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 259.70356,859.39599 544.21028,0"
-       id="path2995"
-       inkscape:connector-curvature="0" />
+    <g
+       id="g4240"
+       transform="matrix(9.4429945,0,0,11.350988,240.45384,312.0594)">
+      <g
+         id="Envelope-2">
+        <g
+           id="g4-2">
+          <path
+             id="path6-5"
+             d="m 0,0 0,60 c 0,2.209 1.791,4 4,4 l 56,0 c 2.209,0 4,-1.791 4,-4 L 64,0 0,0 Z"
+             style="fill:#ffcc66"
+             inkscape:connector-curvature="0" />
+        </g>
+      </g>
+      <g
+         id="Envelope_1_">
+        <g
+           id="g9">
+          <path
+             id="path11"
+             d="m 0,0 c 0,0 0.831,16 6,16 l 52,0 C 63.169,16 64,0 64,0 L 0,0 Z"
+             style="fill:#cca352"
+             inkscape:connector-curvature="0" />
+        </g>
+      </g>
+      <g
+         id="String_1_">
+        <g
+           id="g14">
+          <polygon
+             id="polygon16"
+             points="36,8 34,8 32,13.333 30,8 28,8 31,16 28,24 30,24 32,18.667 34,24 36,24 33,16 "
+             style="clip-rule:evenodd;fill:#997a3d;fill-rule:evenodd" />
+        </g>
+      </g>
+      <g
+         id="Elipse">
+        <g
+           id="g19">
+          <circle
+             id="circle21"
+             r="4"
+             cy="24"
+             cx="32"
+             style="fill:#ffffff" />
+        </g>
+      </g>
+      <g
+         id="Elipse_1_">
+        <g
+           id="g24">
+          <circle
+             id="circle26"
+             r="4"
+             cy="8"
+             cx="32"
+             style="fill:#ffffff" />
+        </g>
+      </g>
+    </g>
+    <rect
+       style="opacity:1;fill:#ff0000;fill-opacity:0.98039216;stroke:#000e00;stroke-width:9.302;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4249"
+       width="503.5361"
+       height="128.03694"
+       x="290.8616"
+       y="699.51416"
+       ry="9.3911848" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:60.8880806px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:9.30200005;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       x="409.69138"
+       y="591.12854"
+       id="text4251"
+       sodipodi:linespacing="125%"
+       transform="scale(0.74521268,1.3418988)"><tspan
+         sodipodi:role="line"
+         id="tspan4253"
+         x="409.69138"
+         y="591.12854">PACKING LIST ENCLOSED</tspan></text>
   </g>
 </svg>

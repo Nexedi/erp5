@@ -40,10 +40,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts69100949.5</string> </value>
-        </item>
-        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -89,28 +85,23 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>classification/collaborative/staff</string>
                 <string>publication_section/documentation/user</string>
-                <string>classification/collaborative/team</string>
                 <string>group/nexedi</string>
-                <string>contributor/person_module/16</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>d25edde62e134a3a12d0fe6acc61bb5d</string> </value>
+            <value> <string>ed00848d97ecae9148316c35d75f24da</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>image/svg+xml</string> </value>
+            <value> <string>image/png</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.ERP.Consulting.Configuration</string> </value>
-        </item>
-        <item>
-            <key> <string>default_source_reference</string> </key>
-            <value> <string>P-OSOE-ERP.Data.Mining.Introduction-Document.Management.svg</string> </value>
+            <value> <string>osoe-erp-101.cover.background</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -120,15 +111,15 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.ERP.Consulting.Configuration.003.en.svg</string> </value>
+            <value> <string>osoe-erp-101.cover.background-002.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>-1</int> </value>
+            <value> <int>745</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.ERP.Consulting.Configuration.003.en</string> </value>
+            <value> <string>osoe-erp-101.cover.background.001.en</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -140,25 +131,21 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>ERP Consulting and Configuration</string> </value>
-        </item>
-        <item>
-            <key> <string>subject</string> </key>
             <value>
-              <tuple/>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP Consulting and Configuration</string> </value>
+            <value> <string>ERP 101 Cover Background</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>003</string> </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>-1</int> </value>
+            <value> <int>1053</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -213,12 +200,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -240,7 +221,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>jingjing</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -262,7 +243,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1380546533.65</float>
+                        <float>1473251189.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -293,7 +274,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>xueyun.qian@hotmail.com</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -307,7 +288,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.45923.21798.34645</string> </value>
+                <value> <string>953.49579.26430.2952</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -325,64 +306,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1469100949.51</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_uploaded_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>jingjing</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>uploaded</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1380546195.15</float>
+                        <float>1473251414.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

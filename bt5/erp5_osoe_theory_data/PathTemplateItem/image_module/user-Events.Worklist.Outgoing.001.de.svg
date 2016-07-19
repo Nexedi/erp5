@@ -14,8 +14,8 @@
    height="744.09448"
    id="svg4619"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="user-Events.Worklist.Outgoing.W-001-de.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="user-Events.Worklist.Outgoing.001.de.svg">
   <defs
      id="defs4621" />
   <sodipodi:namedview
@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.4934533"
-     inkscape:cx="221.8801"
+     inkscape:cx="197.04371"
      inkscape:cy="252.60356"
      inkscape:current-layer="layer1"
      id="namedview4623"
      showgrid="false"
      inkscape:window-width="1366"
-     inkscape:window-height="722"
-     inkscape:window-x="-2"
-     inkscape:window-y="-3"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      units="mm" />
   <metadata
@@ -74,7 +74,7 @@
        id="path5250"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:#faf5f5;fill-opacity:1;stroke:#000003;stroke-width:5.15511227;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:#b4cd3b;stroke-width:5.15511227;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect2989"
        width="464.68732"
        height="381.04666"
@@ -123,7 +123,7 @@
        d="m 468.76924,491.40031 396.74895,-0.82612"
        id="path3503-5" />
     <rect
-       style="fill:#95bfca;fill-opacity:0.5606936;stroke:#000003;stroke-width:5.130651;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#04446a;fill-opacity:1;stroke:#04446a;stroke-width:5.130651;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect2991"
        width="461.84583"
        height="44.933594"
@@ -133,7 +133,7 @@
        ry="0.90474659" />
     <text
        xml:space="preserve"
-       style="font-size:27.69711304px;font-style:normal;font-weight:normal;line-height:0%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:27.69711304px;font-style:normal;font-weight:normal;line-height:0%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="436.87357"
        y="392.24063"
        id="text3769"

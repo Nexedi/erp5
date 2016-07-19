@@ -14,8 +14,8 @@
    height="744.09448"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
-   sodipodi:docname="osoe-erp..web-ebusiness-screenshot-001-en.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="osoe-erp..web-ebusiness-screenshot.002.en.svg">
   <defs
      id="defs4">
     <marker
@@ -123,15 +123,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.68539683"
-     inkscape:cx="526.18109"
+     inkscape:cx="555.81716"
      inkscape:cy="372.04724"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1024"
-     inkscape:window-height="718"
-     inkscape:window-x="-3"
-     inkscape:window-y="-3"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
@@ -141,7 +141,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -151,29 +151,23 @@
      id="layer1"
      transform="translate(0,-308.26769)">
     <image
-       y="496.94049"
-       x="46.033566"
+       y="467.76031"
+       x="9.5583458"
        id="image6058"
        xlink:href="http://www.erp5.com/User-Graphics-ERP-Web?format=png"
-       height="347.60324"
-       width="868.36047" />
-    <path
-       style="fill:#008080;stroke:#2dcef8;stroke-width:2.85990882;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:3.20000005;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-mid:none;marker-end:url(#Arrow1Lend)"
-       d="m 591.8627,686.16558 198.22306,-0.20536"
-       id="path6061"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0" />
+       height="376.78342"
+       width="750.18079" />
     <text
        xml:space="preserve"
-       style="font-size:33.539814px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
-       x="842.83173"
-       y="678.09747"
+       style="font-style:normal;font-weight:normal;font-size:62.89149475px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none"
+       x="782.92743"
+       y="627.46283"
        id="text6615"
        sodipodi:linespacing="125%"
-       transform="scale(0.90162536,1.1091081)"><tspan
+       transform="scale(0.81902135,1.2209694)"><tspan
          sodipodi:role="line"
          id="tspan6617"
-         x="842.83173"
-         y="678.09747">Unfrequent User </tspan></text>
+         x="782.92743"
+         y="627.46283">eBusiness </tspan></text>
   </g>
 </svg>

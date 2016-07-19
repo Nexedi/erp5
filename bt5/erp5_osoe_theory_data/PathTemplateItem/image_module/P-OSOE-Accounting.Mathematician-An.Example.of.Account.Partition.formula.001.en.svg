@@ -13,8 +13,8 @@
    height="140"
    id="svg3019"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="P-OSOE-Accounting.Mathematician-An.Example.of.Account.Partition.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="P-OSOE-Accounting.Mathematician-An.Example.of.Account.Partition.formula.001.en.svg">
   <defs
      id="defs3021">
     <marker
@@ -54,15 +54,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="325"
+     inkscape:cx="320.20109"
      inkscape:cy="150"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1276"
-     inkscape:window-height="742"
-     inkscape:window-x="-1"
-     inkscape:window-y="-2"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -80,7 +80,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -136,7 +136,7 @@
          style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans" /></text>
     <text
        xml:space="preserve"
-       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="17.609375"
        y="961.08679"
        id="text3011-6"
@@ -145,14 +145,14 @@
          id="tspan3538"
          x="17.609375"
          y="961.08679"
-         style="font-size:28px">A = A<tspan
-   style="font-size:18px;font-style:italic;baseline-shift:sub;-inkscape-font-specification:Sans Italic"
+         style="font-size:28px;fill:#04446a;fill-opacity:1;">A = A<tspan
+   style="font-size:18px;font-style:italic;baseline-shift:sub;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3540">acme</tspan> ᑌ (A \ A<tspan
-   style="font-size:18px;font-style:italic;baseline-shift:sub;-inkscape-font-specification:Sans Italic"
+   style="font-size:18px;font-style:italic;baseline-shift:sub;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3542">acme</tspan>)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="15.434143"
        y="1019.7505"
        id="text3011-6-2"
@@ -161,20 +161,20 @@
          id="tspan3538-0"
          x="15.434143"
          y="1019.7505"
-         style="font-size:24px"><tspan
-   style="font-size:28px"
+         style="font-size:24px;fill:#04446a;fill-opacity:1;"><tspan
+   style="font-size:28px;fill:#04446a;fill-opacity:1;"
    id="tspan3591">A</tspan><tspan
-   style="font-size:18px;font-style:italic;baseline-shift:sub;-inkscape-font-specification:Sans Italic"
+   style="font-size:18px;font-style:italic;baseline-shift:sub;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3540-1">acme</tspan>= <tspan
-   style="font-size:28px"
+   style="font-size:28px;fill:#04446a;fill-opacity:1;"
    id="tspan3593"><tspan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   style="font-style:italic;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3613">Asset</tspan> ᑌ <tspan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   style="font-style:italic;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3615">Liability</tspan> ᑌ <tspan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   style="font-style:italic;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3617">Income</tspan> U <tspan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   style="font-style:italic;-inkscape-font-specification:Sans Italic;fill:#04446a;fill-opacity:1;"
    id="tspan3619">Expense  </tspan></tspan></tspan></text>
   </g>
 </svg>

@@ -14,8 +14,8 @@
    height="720"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="osoe-howto-manage.document.versioning-screenshot.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="osoe-howto-manage.document.versioning-screenshot.003.en.svg">
   <defs
      id="defs4">
     <marker
@@ -55,15 +55,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.597"
-     inkscape:cx="600"
+     inkscape:cx="352.93132"
      inkscape:cy="500"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      height="744.09px" />
   <metadata
@@ -84,12 +84,12 @@
      id="layer1"
      transform="translate(0,-332.36235)">
     <path
-       style="fill:none;stroke:#12d600;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:none"
+       style="fill:none;stroke:#044466;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:none"
        d="m 253.73719,694.29725 0,168.9558 417.92766,0 0,-1.79737"
        id="path3007"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       style="fill:none;stroke:#044466;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
        d="m 513.41048,438.29111 364.1239,0 0,70.97109"
        id="path3009"
        inkscape:connector-curvature="0" />

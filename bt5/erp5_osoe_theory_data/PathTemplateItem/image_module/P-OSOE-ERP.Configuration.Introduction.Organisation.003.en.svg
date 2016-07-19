@@ -14,8 +14,8 @@
    height="864"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="P-OSOE-ERP.Configuration.Introduction.Organisation.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="P-OSOE-ERP.Configuration.Introduction.Organisation.003.en.svg">
   <defs
      id="defs4">
     <marker
@@ -291,28 +291,6 @@
        x1="450.91852"
        gradientTransform="matrix(0.80528848,0,0,1.0539578,-301.96774,-304.59859)"
        gradientUnits="userSpaceOnUse"
-       id="linearGradient7266-1"
-       xlink:href="#linearGradient3842-9-4-0-5-2-00"
-       inkscape:collect="always" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient3842-9-4-0-5-2-00">
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:1;"
-         offset="0"
-         id="stop3844-4-15-51-5-8-1" />
-      <stop
-         style="stop-color:#fdfc7c;stop-opacity:0;"
-         offset="1"
-         id="stop3846-5-0-1-7-0-1" />
-    </linearGradient>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(0.80528848,0,0,1.0539578,-301.96774,-304.59859)"
-       gradientUnits="userSpaceOnUse"
        id="linearGradient7266-1-1"
        xlink:href="#linearGradient3842-9-4-0-5-2-00-5"
        inkscape:collect="always" />
@@ -335,16 +313,6 @@
        x1="450.91852"
        gradientTransform="matrix(0.80528848,0,0,1.0539578,-301.96774,-304.59859)"
        gradientUnits="userSpaceOnUse"
-       id="linearGradient3098"
-       xlink:href="#linearGradient3842-9-4-0-5-2-00-5"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(0.80528848,0,0,1.0539578,-301.96774,-304.59859)"
-       gradientUnits="userSpaceOnUse"
        id="linearGradient7266-1-9"
        xlink:href="#linearGradient3842-9-4-0-5-2-00-4"
        inkscape:collect="always" />
@@ -360,16 +328,6 @@
          offset="1"
          id="stop3846-5-0-1-7-0-1-93" />
     </linearGradient>
-    <linearGradient
-       y2="517.06073"
-       x2="449.7724"
-       y1="486.81754"
-       x1="450.91852"
-       gradientTransform="matrix(0.80528848,0,0,1.0539578,-301.96774,-304.59859)"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3098-5"
-       xlink:href="#linearGradient3842-9-4-0-5-2-00-4"
-       inkscape:collect="always" />
   </defs>
   <sodipodi:namedview
      id="base"
@@ -379,18 +337,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.68539683"
-     inkscape:cx="642.08011"
+     inkscape:cx="378.71854"
      inkscape:cy="431.9314"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1301"
-     inkscape:window-height="744"
-     inkscape:window-x="65"
-     inkscape:window-y="24"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      showguides="true"
-     inkscape:guide-bbox="true">
+     inkscape:guide-bbox="true"
+     inkscape:snap-text-baseline="true">
     <inkscape:grid
        type="xygrid"
        id="grid4119"
@@ -418,13 +377,13 @@
      transform="translate(0,-188.36217)">
     <path
        sodipodi:type="arc"
-       style="fill:#ea0000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="path2985"
        sodipodi:cx="254.5"
        sodipodi:cy="23.5"
        sodipodi:rx="9.5"
        sodipodi:ry="9.5"
-       d="m 264,23.5 a 9.5,9.5 0 1 1 -19,0 9.5,9.5 0 1 1 19,0 z"
+       d="M 264,23.5 A 9.5,9.5 0 0 1 254.5,33 9.5,9.5 0 0 1 245,23.5 9.5,9.5 0 0 1 254.5,14 9.5,9.5 0 0 1 264,23.5 Z"
        transform="matrix(1.4049228,0,0,1.3678128,-240.6028,274.49072)" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2.18057609px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
@@ -442,7 +401,7 @@
        id="path3091-0"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:2.61352587px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend-4)"
+       style="fill:none;stroke:#044466;stroke-width:2.61352587px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow2Lend-4);fill-opacity:1"
        d="m 10.287085,931.29617 1204.956515,0"
        id="path3125"
        inkscape:connector-curvature="0" />
@@ -478,7 +437,7 @@
        inkscape:connector-curvature="0" />
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="14.570995"
        y="1039.8937"
        id="text3223"
@@ -490,7 +449,7 @@
          y="1039.8937">0h</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="272.2457"
        y="1039.356"
        id="text3223-4"
@@ -502,7 +461,7 @@
          y="1039.356">3/4h</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="556.66431"
        y="1038.0419"
        id="text3223-4-3"
@@ -514,7 +473,7 @@
          y="1038.0419">1h30</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="842.38257"
        y="1039.356"
        id="text3223-4-3-7"
@@ -526,7 +485,7 @@
          y="1039.356">2h15</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="1137.6918"
        y="1041.2133"
        id="text3223-4-3-6"
@@ -538,7 +497,7 @@
          y="1041.2133">3h</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#044466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="315.82617"
        y="329.95572"
        id="text3223-4-4"
@@ -550,7 +509,7 @@
          y="329.95572">Tutorial 1</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#054466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="622.54974"
        y="330.25748"
        id="text3223-4-4-1"
@@ -562,7 +521,7 @@
          y="330.25748">Tutorial 2</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:33.94643402px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#054466;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="964.9408"
        y="326.50601"
        id="text3223-4-4-9"
@@ -581,9 +540,9 @@
     <g
        transform="matrix(1.8760005,0,0,2.1210055,0.4617748,-28.292376)"
        id="g3324"
-       style="stroke-width:1.00012124;stroke-miterlimit:4;stroke-dasharray:none">
+       style="stroke-width:1.00012124;stroke-miterlimit:4;stroke-dasharray:none;fill:#b4cd3b;fill-opacity:1;stroke:none">
       <rect
-         style="fill:url(#linearGradient7266-1);fill-opacity:1;stroke:#000000;stroke-width:1.33833706;stroke-miterlimit:4;stroke-opacity:0.97647059;stroke-dasharray:none"
+         style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.33833706;stroke-miterlimit:4;stroke-opacity:0.97647059;stroke-dasharray:none"
          id="rect3961-9-9-6-8-7-3-37"
          width="75.163651"
          height="36.005543"
@@ -593,7 +552,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:34.19203568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:34.19203568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="65.385101"
        y="455.26166"
        id="text3189"
@@ -606,9 +565,9 @@
     <g
        transform="matrix(2.7318081,0,0,2.1210055,-46.068357,140.26814)"
        id="g3324-2"
-       style="stroke-width:1.00012124;stroke-miterlimit:4;stroke-dasharray:none">
+       style="stroke-width:1.00012124;stroke-miterlimit:4;stroke-dasharray:none;stroke:none;fill:#b4cd3b;fill-opacity:1">
       <rect
-         style="fill:url(#linearGradient3098);fill-opacity:1;stroke:#000000;stroke-width:1.33833706;stroke-miterlimit:4;stroke-opacity:0.97647059;stroke-dasharray:none"
+         style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.33833706;stroke-miterlimit:4;stroke-opacity:0.97647059;stroke-dasharray:none"
          id="rect3961-9-9-6-8-7-3-37-5"
          width="75.163651"
          height="36.005543"
@@ -618,7 +577,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:34.19203568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:34.19203568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#040000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="34.762062"
        y="623.21338"
        id="text3189-7"
@@ -631,9 +590,9 @@
     <g
        transform="matrix(2.0786917,0,0,2.1210055,-6.1532031,300.80764)"
        id="g3324-7"
-       style="stroke-width:1.00012124;stroke-miterlimit:4;stroke-dasharray:none">
+       style="stroke-width:1.00012124;stroke-miterlimit:4;stroke-dasharray:none;stroke:none;fill:#b4cd3b;fill-opacity:1">
       <rect
-         style="fill:url(#linearGradient3098-5);fill-opacity:1;stroke:#000000;stroke-width:1.33833706;stroke-miterlimit:4;stroke-opacity:0.97647059;stroke-dasharray:none"
+         style="fill:#b4cd3b;fill-opacity:1;stroke:none;stroke-width:1.33833706;stroke-miterlimit:4;stroke-opacity:0.97647059;stroke-dasharray:none"
          id="rect3961-9-9-6-8-7-3-37-0"
          width="75.163651"
          height="36.005543"
@@ -643,7 +602,7 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:34.19203568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       style="font-size:34.19203568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans;"
        x="56.105198"
        y="783.53925"
        id="text3189-5"

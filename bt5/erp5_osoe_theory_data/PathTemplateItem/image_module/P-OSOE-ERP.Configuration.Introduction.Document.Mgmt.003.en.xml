@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts69099670.24</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -88,15 +92,13 @@
                 <string>publication_section/documentation/user</string>
                 <string>classification/collaborative/team</string>
                 <string>group/nexedi</string>
-                <string>contributor/person_module/20111027-2BE16E4</string>
-                <string>contributor/person_module/510</string>
-                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/16</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>d4967fede6ac44958703a12e8d02df84</string> </value>
+            <value> <string>009cedb9c0d20e4b35085c3c72448f91</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -118,7 +120,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.Document.Mgmt.svg</string> </value>
+            <value> <string>P-OSOE-ERP.Configuration.Introduction.Document.Mgmt.svg.svg</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -291,7 +293,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>superklaus</string> </value>
+                <value> <string>xueyun.qian@hotmail.com</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,7 +307,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32887.21262.59741</string> </value>
+                <value> <string>952.45910.35930.5051</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -323,7 +325,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468331416.58</float>
+                        <float>1469099670.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

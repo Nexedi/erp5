@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts69098884.45</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -86,16 +90,15 @@
             <value>
               <tuple>
                 <string>publication_section/documentation/user</string>
-                <string>contributor/person_module/20111027-2BE16E4</string>
                 <string>classification/collaborative/team</string>
-                <string>contributor/person_module/510</string>
                 <string>group/nexedi</string>
+                <string>contributor/person_module/16</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>364fe4cf30ec4588c0f61b56d719b23c</string> </value>
+            <value> <string>6e238ef9955577806cdd4f77907c06be</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -117,7 +120,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.IFRS.Accounting.svg</string> </value>
+            <value> <string>P-OSOE-ERP.Configuration.Introduction.IFRS.Accounting.003.en.svg</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -295,11 +298,13 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supertristan</string> </value>
+                <value> <string>xueyun.qian@hotmail.com</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touched for reconversion</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -307,7 +312,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32887.21262.59741</string> </value>
+                <value> <string>952.45898.24236.47837</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -325,7 +330,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468331315.67</float>
+                        <float>1469098884.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

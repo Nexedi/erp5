@@ -40,6 +40,10 @@
             </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts69096885.72</string> </value>
+        </item>
+        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -88,15 +92,13 @@
                 <string>publication_section/documentation/user</string>
                 <string>classification/collaborative/team</string>
                 <string>group/nexedi</string>
-                <string>contributor/person_module/20111027-2BE16E4</string>
-                <string>contributor/person_module/510</string>
-                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/16</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>71530b96d420f354caec78ff5bc1d1f0</string> </value>
+            <value> <string>1f7af8003278f0c0755771ffdda7e6e0</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -118,7 +120,7 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>P-OSOE-ERP.Configuration.Introduction.CRM.Tickets.And.Events.svg</string> </value>
+            <value> <string>P-OSOE-ERP.Configuration.Introduction.CRM.Tickets.And.Events.003.en.svg</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -294,11 +296,13 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supertristan</string> </value>
+                <value> <string>xueyun.qian@hotmail.com</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touched for reconversion</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -306,7 +310,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32887.21262.59741</string> </value>
+                <value> <string>952.43250.54500.37341</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -324,7 +328,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468331421.86</float>
+                        <float>1469096885.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

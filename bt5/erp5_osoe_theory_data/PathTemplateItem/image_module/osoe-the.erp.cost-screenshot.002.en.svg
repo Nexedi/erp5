@@ -14,8 +14,8 @@
    height="744.09448"
    id="svg3616"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
-   sodipodi:docname="osoe-the.erp.cost-screenshot.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="osoe-the.erp.cost-screenshot.002.en.svg">
   <defs
      id="defs3618" />
   <sodipodi:namedview
@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.68539683"
-     inkscape:cx="526.18109"
+     inkscape:cx="507.65855"
      inkscape:cy="372.04724"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1024"
-     inkscape:window-height="718"
-     inkscape:window-x="-3"
-     inkscape:window-y="-3"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata3621">
@@ -44,7 +44,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,78 +61,93 @@
        height="100.71429"
        width="201.42857" />
     <image
-       y="582.49805"
-       x="89.511024"
+       y="410.33502"
+       x="395.90286"
        id="image3684"
        xlink:href="http://www.erp5.com/graphic-SlapOS.logo?format=png"
        height="130"
        width="176" />
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
-       x="286.27548"
-       y="611.90955"
+       style="font-style:normal;font-weight:normal;font-size:47.13512421px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
+       x="210.01909"
+       y="478.65158"
        id="text4328"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       transform="scale(0.85582069,1.1684691)"><tspan
          sodipodi:role="line"
          id="tspan4330"
-         x="286.27548"
-         y="611.90955" /><tspan
+         x="210.01909"
+         y="478.65158" /><tspan
          sodipodi:role="line"
-         x="286.27548"
-         y="661.90955"
+         x="210.01909"
+         y="528.65161"
          id="tspan4336"
-         style="text-align:start;text-anchor:start;fill:#008080;fill-opacity:1">( licence +configuration + server )</tspan></text>
+         style="text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">( licence +configuration + server )</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
-       x="506.42709"
-       y="521.41174"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:64.84751129px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
+       x="903.04041"
+       y="299.59521"
        id="text4328-4"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       transform="scale(0.75145052,1.3307596)"><tspan
          sodipodi:role="line"
          id="tspan4330-3"
-         x="506.42709"
-         y="521.41174" /><tspan
+         x="903.04041"
+         y="299.59521" /><tspan
          sodipodi:role="line"
-         x="506.42709"
-         y="571.41174"
+         x="903.04041"
+         y="380.6546"
          id="tspan4336-9"
-         style="text-align:start;text-anchor:start;fill:#008080;fill-opacity:1">    0 EUR</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">    0 EUR</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
        x="137.35547"
-       y="895.18774"
+       y="823.69629"
        id="text4328-4-7"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          x="137.35547"
-         y="895.18774"
+         y="823.69629"
          id="tspan4336-9-8"
-         style="text-align:start;text-anchor:start;fill:#008080;fill-opacity:1">Other</tspan></text>
+         style="text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">Other:</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#008080;fill-opacity:1;stroke:none;font-family:Sans"
-       x="391.18472"
-       y="892.47809"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
+       x="338.6604"
+       y="823.90472"
        id="text4328-4-7-1"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         x="391.18472"
-         y="892.47809"
+         x="338.6604"
+         y="823.90472"
          id="tspan4336-9-8-5"
-         style="text-align:start;text-anchor:start;fill:#008080;fill-opacity:1">1000 EUR per user or more</tspan></text>
-    <text
+         style="text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">1000 EUR per User or More</tspan></text>
+    <flowRoot
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="166.08244"
-       y="566.9267"
-       id="text4428"
-       sodipodi:linespacing="125%"><tspan
+       id="flowRoot4147"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       transform="matrix(2.1653861,0,0,2.6801319,-698.17099,-22.123452)"><flowRegion
+         id="flowRegion4149"><rect
+           id="rect4151"
+           width="81.704491"
+           height="45.229271"
+           x="601.11163"
+           y="157.57295"
+           style="fill:#04446a;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara4153">=</flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:80.74789429px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="302.02347"
+       y="488.12549"
+       id="text4155"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98607065,1.0141261)"><tspan
          sodipodi:role="line"
-         id="tspan4430"
-         x="166.08244"
-         y="566.9267">+</tspan></text>
+         id="tspan4157"
+         x="302.02347"
+         y="488.12549">+</tspan></text>
   </g>
 </svg>

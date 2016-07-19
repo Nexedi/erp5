@@ -13,8 +13,8 @@
    height="300"
    id="svg3019"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
-   sodipodi:docname="P-OSOE-Accounting.Mathematician-Supplier.Client.Invariant.svg">
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="P-OSOE-Accounting.Mathematician-Supplier.Client.Invariant.formula.001.en.svg">
   <defs
      id="defs3021">
     <marker
@@ -53,16 +53,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="401.63837"
-     inkscape:cy="150"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="175.89535"
+     inkscape:cy="200.08474"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1276"
-     inkscape:window-height="742"
-     inkscape:window-x="-1"
-     inkscape:window-y="-2"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata3024">
@@ -72,7 +72,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -116,7 +116,7 @@
          style="font-size:40px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium" /></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="58.818314"
        y="806.08893"
        id="text4333-9"
@@ -125,37 +125,37 @@
          id="tspan4335-6"
          x="58.818314"
          y="806.08893"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4432-7"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan4565"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4631">p</tspan><tspan
-   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4625">i</tspan>.E</tspan><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#04446a;fill-opacity:1;"
    id="tspan4567">(</tspan>c<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan4573">i</tspan>,t<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#04446a;fill-opacity:1;"
    id="tspan4569">) </tspan></tspan>= <tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4629">s</tspan><tspan
-   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4621">i</tspan>.<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan4633">E</tspan>(<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4639">c</tspan><tspan
-   style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4619">source</tspan><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4717">,</tspan><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4645">t</tspan>)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="59.097038"
        y="877.29797"
        id="text4333-9-7"
@@ -164,37 +164,37 @@
          id="tspan4335-6-3"
          x="59.097038"
          y="877.29797"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4432-7-4"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan4565-2"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4631-8">p</tspan><tspan
-   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4625-1">i</tspan>.E</tspan><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#04446a;fill-opacity:1;"
    id="tspan4567-2">(</tspan>c<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan4573-3">i</tspan>,t<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans;fill:#04446a;fill-opacity:1;"
    id="tspan4569-2">) </tspan></tspan>= -<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4707">d</tspan><tspan
-   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4621-9">i</tspan>.<tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan4633-8">E</tspan>(<tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4639-6">c</tspan><tspan
    id="tspan4715"
-   style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium">destination</tspan><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;">destination</tspan><tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4719">,</tspan><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4645-3">t</tspan>)</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="144.71422"
        y="954.29797"
        id="text4333-9-2"
@@ -203,15 +203,15 @@
          id="tspan4335-6-38"
          x="144.71422"
          y="954.29797"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
            id="tspan4639-7">c</tspan><tspan
-           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
            id="tspan4619-3">source</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
            id="tspan4717-5">=</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="96.856796"
        y="1016.298"
        id="text4333-9-7-2"
@@ -220,15 +220,15 @@
          id="tspan4335-6-3-7"
          x="96.856796"
          y="1016.298"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
            id="tspan4639-6-1">c</tspan><tspan
            id="tspan4715-1"
-           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium">destination</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;">destination</tspan><tspan
+           style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
            id="tspan4719-3">=</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="268.85681"
        y="951.29797"
        id="text4333-9-7-3"
@@ -237,21 +237,21 @@
          id="tspan4335-6-3-2"
          x="268.85681"
          y="951.29797"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
            id="tspan4432-7-4-9"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4631-8-3"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan4972"><tspan
-   style="font-size:32px"
+   style="font-size:32px;fill:#04446a;fill-opacity:1;"
    id="tspan5059">Currency</tspan>(</tspan>a<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan5051">i,</tspan><tspan
-   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;baseline-shift:sub;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;baseline-shift:sub;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan5043">2</tspan></tspan>)</tspan></tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;font-family:Sans;"
        x="270.30057"
        y="1015.0625"
        id="text4333-9-7-3-3"
@@ -260,17 +260,17 @@
          id="tspan4335-6-3-2-0"
          x="270.30057"
          y="1015.0625"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
            id="tspan4432-7-4-9-8"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium;fill:#04446a;fill-opacity:1;"
    id="tspan4631-8-3-3"><tspan
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan4972-1"><tspan
-   style="font-size:32px"
+   style="font-size:32px;fill:#04446a;fill-opacity:1;"
    id="tspan5061">Currency</tspan>(</tspan>a'<tspan
-   style="font-size:65.00091553%;baseline-shift:sub"
+   style="font-size:65.00091553%;baseline-shift:sub;fill:#04446a;fill-opacity:1;"
    id="tspan5055">i,</tspan><tspan
-   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;baseline-shift:sub;font-family:Serif;-inkscape-font-specification:Serif"
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;baseline-shift:sub;font-family:Serif;-inkscape-font-specification:Serif;fill:#04446a;fill-opacity:1;"
    id="tspan5047">2</tspan></tspan>)</tspan></tspan></text>
   </g>
 </svg>
