@@ -18,6 +18,9 @@ default_site_preference.setPreferredHtmlStyleUnsavedFormWarning(False)
 default_site_preference.setPreferredHtmlStyleDevelopperMode(None)
 default_site_preference.setPreferredHtmlStyleAccessTab('1')
 
+previous_conversion_server_url = portal.portal_preferences.getPreferredOoodocServerUrl()
+default_site_preference.setPreferredOoodocServerUrl(previous_conversion_server_url)
+
 previous_conversion_server_address = portal.portal_preferences.getPreferredOoodocServerAddress()
 default_site_preference.setPreferredOoodocServerAddress(previous_conversion_server_address)
 

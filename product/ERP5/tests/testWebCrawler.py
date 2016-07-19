@@ -95,6 +95,7 @@ class TestWebCrawler(ERP5TypeTestCase):
       system_preference = portal_preferences.newContent(id=self.system_pref_id,
                                                portal_type='System Preference')
     conversion_dict = _getConversionServerDict()
+    system_preference.setPreferredOoodocServerUrl(conversion_dict['url'])
     system_preference.\
                    setPreferredOoodocServerAddress(conversion_dict['hostname'])
     system_preference.\

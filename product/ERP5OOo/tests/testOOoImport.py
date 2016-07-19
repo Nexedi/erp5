@@ -58,6 +58,7 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     self.pref = self.portal.portal_preferences.newContent(
                           portal_type='System Preference')
     conversion_dict = _getConversionServerDict()
+    self.pref.setPreferredOoodocServerUrl(conversion_dict['url'])
     self.pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
     self.pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     self.pref.setPriority(Priority.SITE)

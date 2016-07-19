@@ -129,11 +129,13 @@ def _getConnectionStringDict():
 def _getConversionServerDict():
   """ Returns a dict with hostname and port for Conversion Server (Oood)
   """
+  conversion_server_url = os.environ.get('conversion_server_url')
   conversion_server_hostname = os.environ.get('conversion_server_hostname',
                                               'localhost')
   conversion_server_port = os.environ.get('conversion_server_port',
                                           '8008')
-  return dict(hostname=conversion_server_hostname,
+  return dict(url=conversion_server_url,
+              hostname=conversion_server_hostname,
               port=int(conversion_server_port))
 
 def _getVolatileMemcachedServerDict():
@@ -853,6 +855,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       conversion_dict = _getConversionServerDict()
       preference = self.portal.portal_preferences[
                         self.getDefaultSitePreferenceId()]
+      preference._setPreferredOoodocServerUrl(conversion_dict['url'])
       preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
       preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
 

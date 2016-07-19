@@ -23,6 +23,7 @@ if pref is None:
                                                portal_type="System Preference",
                                                priority=1)
 
+pref.setPreferredOoodocServerUrl(conversion_server_url)
 pref.setPreferredOoodocServerAddress(conversion_server_hostname)
 pref.setPreferredOoodocServerPortNumber(conversion_server_port)
 

@@ -123,6 +123,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
     conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerUrl(conversion_dict['url'])
     default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
     default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
