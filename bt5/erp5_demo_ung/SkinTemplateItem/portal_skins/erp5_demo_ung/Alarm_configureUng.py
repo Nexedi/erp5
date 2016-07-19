@@ -27,4 +27,5 @@ if ung_system_preference is None:
                                                                title='UNG System Preference')
   ung_system_preference.setPreferredOoodocServerAddress('localhost')
   ung_system_preference.setPreferredOoodocServerPortNumber('8008')
+  ung_system_preference.setPreferredDocumentConversionServerUrl('http://localhost:8008')
   ung_system_preference.enable()

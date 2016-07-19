@@ -127,13 +127,15 @@ def _getConnectionStringDict():
   return connection_string_dict
 
 def _getConversionServerDict():
-  """ Returns a dict with hostname and port for Conversion Server (Oood)
+  """ Returns a dict with url for Conversion Server (Oood)
   """
+  conversion_server_url = os.environ.get('conversion_server_url')
   conversion_server_hostname = os.environ.get('conversion_server_hostname',
                                               'localhost')
   conversion_server_port = os.environ.get('conversion_server_port',
                                           '8008')
-  return dict(hostname=conversion_server_hostname,
+  return dict(url=conversion_server_url,
+              hostname=conversion_server_hostname,
               port=int(conversion_server_port))
 
 def _getVolatileMemcachedServerDict():
@@ -157,8 +159,7 @@ def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=N
                              _getVolatileMemcachedServerDict()
   memcached_url = "memcached://%(hostname)s:%(port)s/" % \
                              _getPersistentMemcachedServerDict()
-  cloudooo_url = "cloudooo://%(hostname)s:%(port)s/" % \
-                             _getConversionServerDict()
+  cloudooo_url = _getConversionServerDict()['url']
 
   promise_config = ConfigParser.RawConfigParser()
   promise_config.add_section('external_service')
@@ -853,8 +854,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       conversion_dict = _getConversionServerDict()
       preference = self.portal.portal_preferences[
                         self.getDefaultSitePreferenceId()]
-      preference._setPreferredOoodocServerAddress(conversion_dict['hostname'])
-      preference._setPreferredOoodocServerPortNumber(conversion_dict['port'])
+      preference._setPreferredDocumentConversionServerUrl(conversion_dict['url'])
 
     def _updateMemcachedConfiguration(self):
       """Update default memcached plugin configuration

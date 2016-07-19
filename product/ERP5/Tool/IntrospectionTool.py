@@ -374,6 +374,8 @@ class IntrospectionTool(LogMixin, BaseTool):
                          'getPreferredOoodocServerAddress')
       collect_information_by_method(system_preference,
                          'getPreferredOoodocServerPortNumber')
+      collect_information_by_method(system_preference,
+                         'getPreferredDocumentConversionServerUrl')
 
     def collect_information_by_property(document, property_id):
       key = "%s/%s" % (document.getId(), property_id)

@@ -76,6 +76,7 @@ class TestIngestion(ERP5TypeLiveTestCase):
     portal_preferences = getToolByName(self.portal, 'portal_preferences')
     default_pref = portal_preferences.default_site_preference
     conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
     default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
     default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)

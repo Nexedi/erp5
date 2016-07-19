@@ -380,6 +380,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     # on Business Configuration
     #self.assertEqual('localhost', preference_tool.getPreferredOoodocServerAddress())
     #self.assertEqual(8011, preference_tool.getPreferredOoodocServerPortNumber())
+    #self.assertEqual('http://localhost:8011', preference_tool.getPreferredDocumentConversionServerUrl())
 
     # accounting
     self.assertEqual('group/my_group',

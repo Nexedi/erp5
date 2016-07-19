@@ -7,7 +7,7 @@ promise_url = portal.getPromiseParameter('external_service', 'cloudooo_url')
 if promise_url is None:
   return
 
-url = "cloudooo://%s:%s/" % (portal_preferences.getPreferredOoodocServerAddress(), portal_preferences.getPreferredOoodocServerPortNumber())
+url = portal_preferences.getPreferredDocumentConversionServerUrl()
 
 active_result = ActiveResult()
 

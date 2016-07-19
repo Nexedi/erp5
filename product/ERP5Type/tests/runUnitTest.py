@@ -99,14 +99,20 @@ Options:
                              for performance reasons. Provide list of documents
                              (delimited with comas) for which we want to force
                              indexing. This can only be for now 'portal_types'
+  --conversion_server_url=STRING
+                             URL used to connect to document conversion server,
+                             this value will stored at default preference.
+                             Empty by default.
   --conversion_server_hostname=STRING
                              Hostname used to connect to conversion server (Oood),
                              this value will stored at default preference.
-                             By default localhost is used.
+                             Ignored if --conversion_server_url is not empty.
+                             By default localhost is used. DEPRECATED
   --conversion_server_port=STRING
                              Port number used to connect to conversion server
                              (Oood), the value will be stored at default preference.
-                             By default 8008 is used.
+                             Ignored if --conversion_server_url is not empty.
+                             By default 8008 is used. DEPRECATED
   --volatile_memcached_server_hostname=STRING
                              Hostname used to connect to volatile memcached server,
                              this value will stored on portal_memcached.
@@ -690,6 +696,7 @@ def main(argument_list=None):
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "extra_sql_connection_string_list=",
+        "conversion_server_url=",
         "conversion_server_port=",
         "conversion_server_hostname=",
         "volatile_memcached_server_port=",
@@ -790,6 +797,8 @@ def main(argument_list=None):
       os.environ["update_business_templates"] = "1"
     elif opt == "--update_business_templates":
       os.environ["update_business_templates"] = "1"
+    elif opt == "--conversion_server_url":
+      os.environ["conversion_server_url"] = arg
     elif opt == "--conversion_server_hostname":
       os.environ["conversion_server_hostname"] = arg
     elif opt == "--conversion_server_port":

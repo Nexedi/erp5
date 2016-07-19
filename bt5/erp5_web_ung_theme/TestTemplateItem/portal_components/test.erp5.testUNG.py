@@ -453,6 +453,7 @@ class TestUNG(ERP5TypeTestCase):
     portal_contributions = portal.portal_contributions
     system_preference = portal_preferences.newContent(portal_type='System Preference')
     conversion_dict = _getConversionServerDict()
+    system_preference.setPreferredDocumentConversionServerUrl(conversion_dict["url"])
     system_preference.setPreferredOoodocServerAddress(conversion_dict["hostname"])
     system_preference.setPreferredOoodocServerPortNumber(conversion_dict["port"])
     system_preference.enable()
