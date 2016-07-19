@@ -86,16 +86,28 @@ class OOoServerProxy(ServerProxy):
   def __init__(self, context):
     preference_tool = getToolByName(context, 'portal_preferences')
 
-    address = preference_tool.getPreferredOoodocServerAddress()
-    port = preference_tool.getPreferredOoodocServerPortNumber()
-    if address in ('', None) or port in ('', None) :
-      raise ConversionError('OOoDocument: cannot proceed with conversion:'
-            ' conversion server host and port is not defined in preferences')
+    uri = getattr(preference_tool, "getPreferredOoodocServerUrl", str)()
+    if uri in ('', None):
+      address = preference_tool.getPreferredOoodocServerAddress()
+      port = preference_tool.getPreferredOoodocServerPortNumber()
+      if address in ('', None) or port in ('', None) :
+        raise ConversionError('OOoDocument: cannot proceed with conversion:'
+              ' conversion server url (or host and port) is not defined in preferences')
 
-    uri = 'http://%s:%d' % (address, port)
+      scheme = "http"
+      uri = 'http://%s:%d' % (address, port)
+    else:
+      if uri.startswith("http://"):
+        scheme = "http"
+      elif uri.startswith("https://"):
+        scheme = "https"
+      else:
+        raise ConversionError('OOoDocument: cannot proceed with conversion:'
+              ' preferred conversion server url is invalid')
+
     timeout = preference_tool.getPreferredOoodocServerTimeout() \
                     or OOO_SERVER_PROXY_TIMEOUT
-    transport = TimeoutTransport(timeout=timeout, scheme='http')
+    transport = TimeoutTransport(timeout=timeout, scheme=scheme)
 
     ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
 
