@@ -43,7 +43,7 @@ from Products.ERP5.Document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
-from zLOG import LOG, ERROR
+from zLOG import LOG, WARNING, ERROR
 
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
@@ -86,16 +86,30 @@ class OOoServerProxy(ServerProxy):
   def __init__(self, context):
     preference_tool = getToolByName(context, 'portal_preferences')
 
-    address = preference_tool.getPreferredOoodocServerAddress()
-    port = preference_tool.getPreferredOoodocServerPortNumber()
-    if address in ('', None) or port in ('', None) :
-      raise ConversionError('OOoDocument: cannot proceed with conversion:'
-            ' conversion server host and port is not defined in preferences')
+    uri = getattr(preference_tool, "getPreferredDocumentConversionServerUrl", str)()
+    if uri in ('', None):
+      address = preference_tool.getPreferredOoodocServerAddress()
+      port = preference_tool.getPreferredOoodocServerPortNumber()
+      if address in ('', None) or port in ('', None) :
+        raise ConversionError('OOoDocument: cannot proceed with conversion:'
+              ' conversion server url is not defined in preferences')
 
-    uri = 'http://%s:%d' % (address, port)
+      LOG('OOoDocument', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
+          ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
+      scheme = "http"
+      uri = 'http://%s:%d' % (address, port)
+    else:
+      if uri.startswith("http://"):
+        scheme = "http"
+      elif uri.startswith("https://"):
+        scheme = "https"
+      else:
+        raise ConversionError('OOoDocument: cannot proceed with conversion:'
+              ' preferred conversion server url is invalid')
+
     timeout = preference_tool.getPreferredOoodocServerTimeout() \
                     or OOO_SERVER_PROXY_TIMEOUT
-    transport = TimeoutTransport(timeout=timeout, scheme='http')
+    transport = TimeoutTransport(timeout=timeout, scheme=scheme)
 
     ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
 
