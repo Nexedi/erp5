@@ -376,6 +376,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     conversion_dict = _getConversionServerDict()
     self.portal.Zuite_setPreference(
        working_copy_list=bt5_dir_list,
+       conversion_server_url=conversion_dict['url'],
        conversion_server_hostname=conversion_dict['hostname'],
        conversion_server_port=conversion_dict['port']
       )

@@ -12,11 +12,13 @@ for obj in portal.portal_catalog(path=["%%/%s" % i.replace("**", "%") for i in b
 for document in portal.portal_catalog(portal_type=bt.getTemplatePortalTypeRoleList()):
   document.updateLocalRolesOnSecurityGroups()
 
+conversion_server_url = portal.portal_preferences.getPreferredDocumentConversionServerUrl()
 conversion_server_hostname = portal.portal_preferences.getPreferredOoodocServerAddress()
 conversion_server_port = portal.portal_preferences.getPreferredOoodocServerPortNumber()
 for preference_id in ["default_configurator_preference", "default_configurator_system_preference"]:
   preference = getattr(portal.portal_preferences, preference_id)
   if preference.getPortalType() == "System Preference":
+    preference.setPreferredDocumentConversionServerUrl(conversion_server_url)
     preference.setPreferredOoodocServerPortNumber(conversion_server_port)
     preference.setPreferredOoodocServerAddress(conversion_server_hostname)
 

@@ -131,6 +131,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     else:
       preference = preference_list[0]
     conversion_dict = _getConversionServerDict()
+    preference.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
     preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
     preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):

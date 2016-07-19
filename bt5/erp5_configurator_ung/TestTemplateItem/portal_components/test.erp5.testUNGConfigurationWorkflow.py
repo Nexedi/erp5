@@ -217,6 +217,8 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
                       conversion_dict['port'])
     self.assertEqual(system_preference.getPreferredOoodocServerAddress(),
                       conversion_dict['hostname'])
+    self.assertEqual(system_preference.getPreferredDocumentConversionServerUrl(),
+                      conversion_dict['url'])
 
   def stepCheckUserPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
