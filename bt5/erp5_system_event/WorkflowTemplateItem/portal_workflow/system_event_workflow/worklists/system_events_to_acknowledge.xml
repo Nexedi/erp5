@@ -16,13 +16,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>System Events to Acknowledge</string> </value>
+            <value> <string>System Events to Acknowledge (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-system_event_module/?reset=1&validation_state=confirmed
+system_event_module/?reset=1&validation_state=confirmed&local_roles=%(local_roles)s
 
 ]]></string> </value>
         </item>
@@ -33,7 +33,7 @@ system_event_module/?reset=1&validation_state=confirmed
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
@@ -43,13 +43,30 @@ system_event_module/?reset=1&validation_state=confirmed
         <item>
             <key> <string>var_matches</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
