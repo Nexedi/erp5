@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.Document.Delivery import Delivery
+from zLOG import LOG, INFO
 
 class Inventory(Delivery):
   """
@@ -220,6 +221,7 @@ class Inventory(Delivery):
               key_list.append(method())
           inventory_value = current_inventory_dict.get(tuple(key_list), 0)
           second_key_list = []
+          total_quantity = None
           if inventory_calculation_dict.has_key('second_level'):
             if inventory_value == 0:
               inventory_value = {}
@@ -280,6 +282,15 @@ class Inventory(Delivery):
                 method(category_list, value, base_category)
 
             kwd['category_list'] = category_list
+
+          LOG('Inventory.immediateReindexObject', INFO,
+              "%s: %s: quantity=%s, inventory=%s, diff_quantity=%s" % (
+                movement.getRelativeUrl(),
+                key_list,
+                movement_quantity,
+                total_quantity,
+                diff_quantity))
+
           temp_delivery_line.edit(**kwd)
           stock_append(temp_delivery_line)
 
@@ -322,6 +333,13 @@ class Inventory(Delivery):
                 method(category_list, value, base_category)
 
             kwd['category_list'] = category_list
+
+            LOG('Inventory.immediateReindexObject', INFO,
+                "Not Used Inventory: %s: %s: diff_quantity=%s" % (
+                  self.getRelativeUrl(),
+                  first_level_key,
+                  diff_quantity))
+
             temp_delivery_line.edit(**kwd)
             stock_append(temp_delivery_line)
 
