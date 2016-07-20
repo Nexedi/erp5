@@ -1732,6 +1732,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   def migrateZopeSQLMethodToERP5SQLMethod(self, erp5_catalog_id=None):
     """
     Function to move Zope SQLMethod objects to ERP5 SQLMethod objects.
+
+    UPDATE: This method can also be used to update the data for ERP5 SQL Methods
     """
 
     portal_catalog = self.portal_catalog
@@ -1741,17 +1743,20 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     # We also expect the erp5_catalog object to be part of Catalog Tool
     erp5_catalog = portal_catalog._getOb(erp5_catalog_id)
+    sql_catalog = portal_catalog.getSQLCatalog()
     if not erp5_catalog: return
 
-    object_id_list = erp5_catalog.getObjectIds()
+    object_id_list = [l[0] for l in sql_catalog.getCatalogMethodIds()]
     if not object_id_list: return
 
     for method_id in object_id_list:
-      method = erp5_catalog._getOb(method_id)
+      try:
+        method = sql_catalog._getOb(method_id)
+      except Exception as e:
+        continue
       # Filter only the objects which are of 'Z SQL Method' meta_type
       if method.meta_type == "Z SQL Method":
         sql_method = method
-
         # We create an erp5 sql_method object for now with some temporary id
         # later on after deletion of the zope sql_method from erp5, we will
         # reassign its id to erp5_sql_method
