@@ -67,17 +67,26 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>group/nexedi/hq</string>
-                <string>publication_section/documentation/user</string>
+                <string>follow_up/project_module/82</string>
+                <string>group/nexedi</string>
+                <string>follow_up/product_module/148</string>
                 <string>classification/collaborative/project</string>
+                <string>publication_section/documentation/user</string>
+                <string>publication_section/documentation</string>
+                <string>publication_section/tutorial</string>
                 <string>contributor/person_module/590</string>
-                <string>follow_up/project_module/7</string>
+                <string>contributor/person_module/2326</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/796</string>
+                <string>contributor/person_module/20130927-61A66CC</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>1df3c39ebaff1ac2b0f2d243489dd559</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -85,15 +94,33 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>user-HowTo.Use.FullText.Search-TESTONLY</string> </value>
+            <value> <string>user-Howto.Create.Sale.Orders</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>In this tutorial, you will learn how to use full text search. This tutorial should be rewritten and merged into DMS/Web Tutorial.</string> </value>
+            <value> <string>This guide will teach you how to create and manage sale orders with ERP5. You will also learn how you can generate the sale packing list related to the order.</string> </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>format</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>user-HowTo.Use.FullText.Search-TESTONLY</string> </value>
+            <value> <string>user-Howto.Create.Sale.Orders.005.en</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -105,25 +132,15 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>How To Use Full Text Search</string> </value>
-        </item>
-        <item>
-            <key> <string>subject</string> </key>
-            <value>
-              <tuple>
-                <string>ERP5</string>
-                <string>dms</string>
-                <string>CRM</string>
-              </tuple>
-            </value>
+            <value> <string>Create Sale Orders</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>How To Use Full Text Search (TEST ONLY)</string> </value>
+            <value> <string>Howto Create Sale Orders</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>002</string> </value>
+            <value> <string>005</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -185,7 +202,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -207,7 +224,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332512965.02</float>
+                        <float>1468941684.04</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -222,11 +239,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish_alive_action</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -246,7 +263,46 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332515233.99</float>
+                        <float>1468941697.1</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>ni.yan</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1468941697.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -277,7 +333,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -307,7 +363,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332512964.98</float>
+                        <float>1468941684.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -322,7 +378,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -352,7 +408,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332512965.03</float>
+                        <float>1468941684.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -367,7 +423,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -381,7 +437,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>917.21477.27416.62020</string> </value>
+                <value> <string>952.43289.31210.14703</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -397,7 +453,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332513421.41</float>
+                        <float>1468941691.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -412,7 +468,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -426,7 +482,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>917.21485.2181.12663</string> </value>
+                <value> <string>952.43289.45458.53388</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -442,7 +498,52 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332513988.73</float>
+                        <float>1469088387.22</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertristan</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>952.45734.34823.44331</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1469092844.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -471,7 +572,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -501,7 +602,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332512964.99</float>
+                        <float>1468941684.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -516,7 +617,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -544,7 +645,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332512965.0</float>
+                        <float>1468941684.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -559,7 +660,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>rafael</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -587,7 +688,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1332512965.01</float>
+                        <float>1468941684.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -619,7 +720,7 @@
               <dictionary>
                 <item>
                     <key> <string>source_item</string> </key>
-                    <value> <string>/nexedi/test_page_module/26</string> </value>
+                    <value> <string>/nexedi/test_page_module/139</string> </value>
                 </item>
               </dictionary>
             </value>

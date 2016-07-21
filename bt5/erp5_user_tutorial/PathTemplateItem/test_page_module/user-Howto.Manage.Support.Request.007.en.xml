@@ -10,11 +10,9 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -50,11 +48,9 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -82,18 +78,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>publication_section/documentation/user</string>
+                <string>follow_up/project_module/82</string>
                 <string>group/nexedi</string>
                 <string>contributor/person_module/1088</string>
-                <string>contributor/person_module/851</string>
+                <string>contributor/person_module/20110828-41AAD33</string>
+                <string>follow_up/product_module/148</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/2326</string>
                 <string>contributor/person_module/20110829-FF7377</string>
                 <string>contributor/person_module/20111027-2BE16E4</string>
-                <string>contributor/person_module/20110828-41AAD33</string>
-                <string>contributor/person_module/590</string>
-                <string>contributor/person_module/20120219-45BE264</string>
-                <string>contributor/person_module/2326</string>
-                <string>follow_up/project_module/82</string>
                 <string>classification/collaborative/project</string>
+                <string>publication_section/documentation/user</string>
+                <string>publication_section/documentation</string>
+                <string>contributor/person_module/851</string>
+                <string>contributor/person_module/20120219-45BE264</string>
+                <string>publication_section/tutorial</string>
               </tuple>
             </value>
         </item>
@@ -349,6 +348,45 @@
             <item>
                 <key> <string>validation_state</string> </key>
                 <value> <string>published</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>archive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>ni.yan</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1468940635.3</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>archived</string> </value>
             </item>
           </dictionary>
         </list>
@@ -806,6 +844,141 @@
                     <state>
                       <tuple>
                         <float>1450111895.17</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supersven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>947.51380.938.37161</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1458220677.35</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supersven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>949.58333.62993.30483</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1458220682.11</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supersven</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>949.58334.2601.30651</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1458220689.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

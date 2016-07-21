@@ -24,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -82,16 +85,20 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>publication_section/documentation/user</string>
-                <string>group/nexedi</string>
-                <string>contributor/person_module/1088</string>
-                <string>contributor/person_module/851</string>
-                <string>contributor/person_module/20110829-FF7377</string>
-                <string>contributor/person_module/590</string>
-                <string>contributor/person_module/20111027-2BE16E4</string>
-                <string>contributor/person_module/2326</string>
                 <string>follow_up/project_module/82</string>
+                <string>group/nexedi</string>
+                <string>follow_up/product_module/148</string>
                 <string>classification/collaborative/project</string>
+                <string>publication_section/documentation/user</string>
+                <string>publication_section/documentation</string>
+                <string>publication_section/tutorial</string>
+                <string>contributor/person_module/1088</string>
+                <string>contributor/person_module/590</string>
+                <string>contributor/person_module/2326</string>
+                <string>contributor/person_module/20110829-FF7377</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/851</string>
+                <string>contributor/person_module/20130927-61A66CC</string>
               </tuple>
             </value>
         </item>
@@ -111,9 +118,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This guide will teach how to create and apply sale trade conditions in ERP5\n
-\n
-Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string> </value>
+            <value> <string>This guide will teach how to create and apply sale trade conditions in ERP5</string> </value>
         </item>
         <item>
             <key> <string>effective_date</string> </key>
@@ -129,7 +134,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>user-Howto.Create.Trade.Conditions.007.en</string> </value>
+            <value> <string>user-Howto.Create.Trade.Conditions.008.en</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -155,7 +160,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>007</string> </value>
+            <value> <string>008</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -239,7 +244,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -261,7 +266,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929099.87</float>
+                        <float>1468941368.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -276,11 +281,11 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_action</string> </value>
+                <value> <string>publish_alive_action</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -300,7 +305,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413967469.59</float>
+                        <float>1468941385.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -315,11 +320,11 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -339,7 +344,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413967469.6</float>
+                        <float>1468941385.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -348,7 +353,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -370,7 +375,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -400,7 +405,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929099.83</float>
+                        <float>1468941368.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -415,7 +420,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -445,7 +450,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929099.9</float>
+                        <float>1468941368.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -460,7 +465,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -474,7 +479,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.24068.53536.41096</string> </value>
+                <value> <string>952.43284.14783.45395</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -490,7 +495,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929135.44</float>
+                        <float>1468941376.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -505,7 +510,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -519,7 +524,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.24069.26939.11810</string> </value>
+                <value> <string>952.43284.32849.41816</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -535,7 +540,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929256.93</float>
+                        <float>1469087800.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -550,7 +555,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -564,7 +569,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.24071.28533.27443</string> </value>
+                <value> <string>952.45724.49709.20334</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -580,7 +585,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929571.63</float>
+                        <float>1469087823.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -595,7 +600,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -609,7 +614,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>937.24076.44658.20821</string> </value>
+                <value> <string>952.45725.10005.34920</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -625,7 +630,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413967369.03</float>
+                        <float>1469087834.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -640,7 +645,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -654,7 +659,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.27276.47251.21145</string> </value>
+                <value> <string>952.45725.10005.34920</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -670,7 +675,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413967449.26</float>
+                        <float>1469087851.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -685,7 +690,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -699,7 +704,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>938.27278.3727.20377</string> </value>
+                <value> <string>952.45725.10005.34920</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -715,7 +720,97 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1413967458.06</float>
+                        <float>1469087851.72</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertristan</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>952.45725.10005.34920</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1469092684.05</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supertristan</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>952.45806.5574.44638</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="7.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1469092791.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -744,7 +839,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -774,7 +869,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929099.84</float>
+                        <float>1468941368.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -789,7 +884,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -817,7 +912,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929099.85</float>
+                        <float>1468941368.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -832,7 +927,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -860,7 +955,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1409929099.86</float>
+                        <float>1468941368.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -892,7 +987,7 @@ Copied from: https://www.tiolive.com/tiolivemaster/document_module/2001</string>
               <dictionary>
                 <item>
                     <key> <string>source_item</string> </key>
-                    <value> <string>/nexedi/test_page_module/user-Howto.Create.Trade.Conditions</string> </value>
+                    <value> <string>/nexedi/test_page_module/user-Howto.Create.Trade.Conditions.007.en</string> </value>
                 </item>
               </dictionary>
             </value>
