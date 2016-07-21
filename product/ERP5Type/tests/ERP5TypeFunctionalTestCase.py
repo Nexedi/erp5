@@ -234,6 +234,11 @@ user_pref("browser.download.folderList", 2);
 user_pref("browser.download.manager.showWhenStarting", false);
 user_pref("browser.download.dir", "%s");
 user_pref("browser.helperApps.neverAsk.saveToDisk", "application/pdf");
+// Otherwise clear previously defined PDF-related extensions
+// => browser/extensions/pdfjs/content/PdfJs.jsm:_migrate()
+user_pref("pdfjs.disabled", true);
+// Not really necessary (just FTR)
+user_pref("pdfjs.migrationVersion", 42);
 """ % (self.host, self.port,
        os.path.join(getConfiguration().instancehome, 'var'))
 
