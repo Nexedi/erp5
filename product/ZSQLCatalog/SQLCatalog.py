@@ -2821,7 +2821,7 @@ class Catalog(Folder,
     If 'deferred' is True, then returns the deferred connection
     """
     for method in self.objectValues():
-      if method.meta_type in ['Z SQL Method',]:
+      if method.meta_type in ['Z SQL Method', 'ERP5 SQL Method']:
         if deferred:
           if 'deferred' in method.connection_id:
             return method.connection_id
