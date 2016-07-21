@@ -93,12 +93,13 @@
               <tuple>
                 <string>group/nexedi/tiolive</string>
                 <string>classification/collaborative/team</string>
-                <string>contributor/person_module/2326</string>
-                <string>contributor/person_module/20111027-2BE16E4</string>
                 <string>successor/web_page_module/1453</string>
                 <string>successor/web_page_module/1452</string>
                 <string>publication_section/documentation/user</string>
                 <string>group/nexedi</string>
+                <string>contributor/person_module/2326</string>
+                <string>contributor/person_module/20111027-2BE16E4</string>
+                <string>contributor/person_module/20130927-61A66CC</string>
               </tuple>
             </value>
         </item>
@@ -337,11 +338,13 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supertristan</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touched for reconversion</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -349,7 +352,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32877.46862.45983</string> </value>
+                <value> <string>952.43325.44721.45848</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +370,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468329747.39</float>
+                        <float>1468943887.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

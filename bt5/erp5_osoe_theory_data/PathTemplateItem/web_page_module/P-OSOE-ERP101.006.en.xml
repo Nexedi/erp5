@@ -114,16 +114,17 @@
             <value>
               <tuple>
                 <string>publication_section/marketing</string>
+                <string>publication_section/marketing/osoe</string>
+                <string>group/nexedi</string>
+                <string>classification/collaborative/staff</string>
                 <string>contributor/person_module/590</string>
                 <string>contributor/person_module/2326</string>
                 <string>contributor/person_module/jps</string>
                 <string>contributor/person_module/20111027-2BE16E4</string>
                 <string>contributor/person_module/20110829-FF7377</string>
                 <string>contributor/person_module/20110503-EE9699</string>
-                <string>publication_section/marketing/osoe</string>
                 <string>contributor/person_module/851</string>
-                <string>group/nexedi</string>
-                <string>classification/collaborative/staff</string>
+                <string>contributor/person_module/20130927-61A66CC</string>
               </tuple>
             </value>
         </item>
@@ -411,11 +412,13 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supertristan</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touched for reconversion</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -423,7 +426,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32890.50966.19835</string> </value>
+                <value> <string>952.43177.23057.51300</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -441,7 +444,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468329793.9</float>
+                        <float>1468934959.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

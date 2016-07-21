@@ -114,13 +114,14 @@
             <value>
               <tuple>
                 <string>classification/collaborative/public</string>
+                <string>publication_section/documentation/user</string>
+                <string>group/nexedi</string>
                 <string>contributor/person_module/2326</string>
                 <string>contributor/person_module/jps</string>
                 <string>contributor/person_module/20111027-2BE16E4</string>
                 <string>contributor/person_module/20110829-FF7377</string>
-                <string>publication_section/documentation/user</string>
                 <string>contributor/person_module/20110909-25A6346</string>
-                <string>group/nexedi</string>
+                <string>contributor/person_module/20130927-61A66CC</string>
               </tuple>
             </value>
         </item>
@@ -405,11 +406,13 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supertristan</string> </value>
+                <value> <string>ni.yan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touched for reconversion</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -435,7 +438,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468329758.07</float>
+                        <float>1468943052.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
