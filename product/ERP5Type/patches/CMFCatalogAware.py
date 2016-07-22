@@ -18,7 +18,7 @@ from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 
-def reindexObject(self, idxs=[], *args, **kw):
+def reindexCatalogObject(self, idxs=[], *args, **kw):
     """
         Reindex the object in the portal catalog.
         If idxs is present, only those indexes are reindexed.
@@ -33,6 +33,6 @@ def reindexObject(self, idxs=[], *args, **kw):
             self.notifyModified()
     catalog = getToolByName(self, 'portal_catalog', None)
     if catalog is not None:
-        catalog.reindexObject(self, idxs=idxs, *args, **kw)
+        catalog.reindexCatalogObject(self, idxs=idxs, *args, **kw)
 
-CMFCatalogAware.reindexObject = reindexObject
+CMFCatalogAware.reindexObject = reindexCatalogObject
