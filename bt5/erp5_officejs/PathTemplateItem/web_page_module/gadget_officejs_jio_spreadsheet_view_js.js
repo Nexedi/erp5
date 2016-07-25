@@ -2,6 +2,12 @@
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, document, RSVP, rJS, Handlebars, loopEventListener) {
   "use strict";
+  
+  function this_func_link(name) {
+    return function () {
+      return this[name].apply(this, arguments[0]);
+    };
+  }
 
   function saveContent(gadget, submit_event) {
     var i,
@@ -22,7 +28,7 @@
       })
       .push(function (data) {
         doc.data = data.text_content;
-        return gadget.put(gadget.options.jio_key, doc);
+        return gadget.jio_put(gadget.options.jio_key, doc);
       });
   }
 
@@ -96,11 +102,17 @@
     })
 
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("put", "jio_put")
-    .declareAcquiredMethod('allDocs', 'jio_allDocs')
-    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("jio_get", "jio_get")
+    .allowPublicAcquisition("jio_get", this_func_link("jio_get"))
+    .declareAcquiredMethod("jio_put", "jio_put")
+    .allowPublicAcquisition("jio_put", this_func_link("jio_put"))
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .allowPublicAcquisition("jio_getAttachment", this_func_link("jio_getAttachment"))
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .allowPublicAcquisition("jio_putAttachment", function (jio_key, part_name, blob){
+      this.jio_putAttachment(jio_key, part_name, new Blob());
+    })
 
     .allowPublicAcquisition('setFillStyle', function () {
       return setFillStyle(this);
@@ -183,14 +195,20 @@
           text_gadget = text_content_gadget;
           gadget.setFillStyle();
           // switchMaximizeMode(gadget);
+          return text_content_gadget;
+        })
+        .push(function (text_content_gadget) {
+          console.log('prerender');
           return text_content_gadget.render({
-            "key": 'text_content',
-            "value": gadget.options.doc.data,
-            "portal_type": gadget.options.doc.portal_type
+            "jio_key": gadget.options.jio_key
           });
         })
         .push(function () {
+          console.log('getelement');
           return text_gadget.getElement();
+        })
+        .push(undefined, function (error) {
+          console.log('render subgadget error:' + error);
         });
     })
 
