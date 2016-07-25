@@ -79,6 +79,7 @@
                 <string>contributor/person_module/796</string>
                 <string>contributor/person_module/20121115-586BC0F</string>
                 <string>contributor/person_module/20130927-61A66CC</string>
+                <string>contributor/person_module/20120402-3479F4E</string>
               </tuple>
             </value>
         </item>
@@ -411,6 +412,51 @@
                     <state>
                       <tuple>
                         <float>1468936012.35</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>tristan</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>952.43193.5421.10308</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1469447057.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

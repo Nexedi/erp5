@@ -1,4 +1,3 @@
-    
       <section class="master">
         <h1>How to Add Organisations</h1>
         <img alt="Photo of the building of Z Company" src="http://img.erp5.cn/user-Howto.Add.Organisations.Front.Page.Building.Zcompany?format=png" title="Add organisation: Z Company">
@@ -14,7 +13,7 @@
               <tr class="" style="opacity: 1;">
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment"&gt;init&lt;/span&gt;</td>
               </tr>
-              <tr>
+              <tr class="" style="opacity: 1; z-index: 0;">
                 <td>openAndWait</td>
                 <td>${base_url}/Zuite_setUpOrganisationTest</td>
                 <td></td>
@@ -75,21 +74,37 @@
                 <td>//div[@id="breadcrumb"]/a[2]</td>
                 <td>Organisations</td>
               </tr>
+              <tr style="opacity: 1; z-index: 0;" class="">
+                <td>clickAndWait</td>
+                <td>//div[@class="listbox-title"]/a[1]</td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </test>
-      </section><section class="screenshot"> 
+      </section><section class="screenshot">
         <h1>Click on the "Browse" tab</h1>
         <img src="http://img.erp5.cn/user-Howto.Add.Organisations.Check.Creation.Browse.Organisations.Base.Screenshot?format=png" alt="Check organisation creation: Browse the 'Organisations' database" title="Check organisation creation: Browse the 'Organisations' database">
         <details open="open">
-         <p>Click on the Browse Tab and then on "Organisations" to find our client Z Company.</p>
+          <p>Click on the Browse Tab and then on "Organisations" to find our client Z Company.</p>
         </details>
-      </section><section class="screenshot">    
+      </section><section class="screenshot">
         <h1>Click on "Z Company"</h1>
         <img src="http://img.erp5.cn/user-Howto.Add.Organisations.Check.Creation.3.Organisationline.Screenshot?format=png" alt="Check organisation creation (3): Check the organisation's line" title="Check organisation creation (3): Check the organisation's line">
         <details open="open">
           <p>You will find our client Z Company in the Organisation Module. Click on the line to open the organisation.</p>
         </details>
+        <test>
+          <table style="display: none;" class="test">
+            <tbody>
+              <tr>
+                <td>clickAndWait</td>
+                <td>//td[@class='listbox-table-data-cell']//a[text()='Z Company']</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </test>
       </section><section class="screenshot">
         <h1>Fill the “view” tab and save</h1>
         <img alt="Add organisations: Fill the 'View' page and save" src="http://img.erp5.cn/user-Howto.Add.Organisations.View.Save?format=png" title="Add organisations: Fill the 'View' page and save">
@@ -100,7 +115,7 @@
         <test>
           <table style="display: none;" class="test">
             <tbody>
-              <tr>
+              <tr class="" style="opacity: 1; z-index: 0;">
                 <td>type</td>
                 <td>//input[@name="field_my_title"]</td>
                 <td>Z Company</td>
