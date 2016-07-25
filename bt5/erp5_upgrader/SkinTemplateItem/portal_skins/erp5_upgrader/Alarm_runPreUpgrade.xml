@@ -53,18 +53,22 @@
             <value> <string>"""\n
   Run Pre upgrade\n
 """\n
-context.ERP5Site_checkUpgraderConsistency(fixit=True,\n
+activate_kw = params or {}\n
+\n
+with context.defaultActivateParameterDict(activate_kw, placeless=True):\n
+  active_process = context.newActiveProcess()\n
+\n
+context.ERP5Site_checkUpgraderConsistency(fixit=fixit,\n
   activate_kw=activate_kw,\n
-  active_process=context.newActiveProcess(),\n
+  active_process=active_process,\n
   filter_dict={"constraint_type": "pre_upgrade"})\n
 \n
 context.setEnabled(False)\n
-return\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>force=0, activate_kw={}, **kw</string> </value>
+            <value> <string>tag, fixit, params</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

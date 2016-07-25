@@ -70,6 +70,7 @@ if portal_type_list:\n
       \'fixit\': fixit,\n
       \'filter\': filter_dict,\n
       \'active_process\': active_process.getRelativeUrl(),\n
+      \'activate_kw\': activate_kw,\n
     },\n
   )\n
 </string> </value>
