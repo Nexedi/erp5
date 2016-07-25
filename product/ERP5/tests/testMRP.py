@@ -335,6 +335,50 @@ class TestMRPImplementation(TestMRPMixin):
                           (self.consumed_resource_2, -10.0, None)]
     self.checkExpectedLineList(production_report, expected_line_list)
 
+  def _test_add_and_clone_tranformed_resource(self, portal_type):
+    test_product = self.portal.product_module.newContent()
+
+    transformation = self.portal.transformation_module.newContent(
+        portal_type='Transformation',
+        reference='TR1',
+        resource_value=test_product)
+
+    transformed_resource = transformation.newContent(
+        portal_type=portal_type)
+
+    # transformation transformed resource is initialised with int index
+    self.assertEqual(1, transformed_resource.getIntIndex())
+
+    transformed_resource_2 = transformation.newContent(
+        portal_type=portal_type)
+    # int index increments as the number of lines increase
+    self.assertEqual(2, transformed_resource_2.getIntIndex())
+    transformed_resource_2.setReference('user defined reference')
+
+    # when cloning a transformation transformed resource, int index is also
+    # cloned and not incremented.
+    transformed_resource_3 = transformed_resource_2.Base_createCloneDocument(batch_mode=True)
+    self.assertEqual(2, transformed_resource_3.getIntIndex())
+    self.assertEqual('user defined reference', transformed_resource_3.getReference())
+
+    # Cloning a transformation properly keep the transformation transformed resources references
+    transformed_resource_2.setIntIndex(123)
+    transformation_2 = transformation.Base_createCloneDocument(batch_mode=True)
+    self.assertEqual(1, transformation_2['1'].getIntIndex())
+    self.assertEqual(123, transformation_2['2'].getIntIndex())
+    self.assertEqual(2, transformation_2['3'].getIntIndex())
+
+    self.assertEqual('user defined reference', transformation_2['2'].getReference())
+
+  def test_add_and_clone_transformation_transformed_resource(self):
+    self._test_add_and_clone_tranformed_resource('Transformation Transformed Resource')
+
+  def test_add_and_clone_transformation_optional_resource(self):
+    self._test_add_and_clone_tranformed_resource('Transformation Optional Resource')
+
+  def test_add_and_clone_transformation_operation(self):
+    self._test_add_and_clone_tranformed_resource('Transformation Operation')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestMRPImplementation))
