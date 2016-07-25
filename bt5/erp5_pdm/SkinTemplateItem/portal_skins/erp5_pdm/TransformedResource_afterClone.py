@@ -1,1 +1,1 @@
-context.Base_initIntIndexAndReference(*args,**kw)
+context.Base_initIntIndex(*args,**kw)
