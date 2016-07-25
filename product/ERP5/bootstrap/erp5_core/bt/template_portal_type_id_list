@@ -18,6 +18,8 @@ Business Template
 Cache Bag
 Cache Factory
 Cache Tool
+Catalog
+Catalog Tool
 Category
 Category Acquired Membership State Constraint
 Category Existence Constraint
@@ -64,6 +66,7 @@ Python Script
 Ram Cache
 Role Information
 Rule Tool
+SQL Method
 SQL Non Continuous Increasing Id Generator
 Script Constraint
 Selection Tool

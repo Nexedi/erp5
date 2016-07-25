@@ -43,6 +43,14 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
+Catalog Tool | view
+Catalog | catalog_filter_view
+Catalog | clear_catalog
+Catalog | clear_reserved
+Catalog | content_view
+Catalog | export_property_content
+Catalog | property
+Catalog | update_catalog
 Category Acquired Membership State Constraint | predicate
 Category Acquired Membership State Constraint | view
 Category Existence Constraint | predicate
@@ -102,6 +110,7 @@ Property Sheet | jump_portal_types
 Property Sheet | view
 Property Type Validity Constraint | predicate
 Property Type Validity Constraint | view
+Python Script | filter_view
 Python Script | proxy_role_view
 Python Script | repository_history_view
 Python Script | view
@@ -109,6 +118,10 @@ Ram Cache | statistics
 Ram Cache | view
 Role Information | view
 Rule Tool | view
+SQL Method | advanced_view
+SQL Method | filter_view
+SQL Method | run
+SQL Method | view
 SQL Non Continuous Increasing Id Generator | view
 Script Constraint | predicate
 Script Constraint | view
