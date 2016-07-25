@@ -108,6 +108,10 @@
                           <string>Person</string>
                           <string>Person</string>
                         </tuple>
+                        <tuple>
+                          <string>Account</string>
+                          <string>Account</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
