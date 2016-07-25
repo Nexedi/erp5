@@ -1,6 +1,8 @@
 Attribute Blacklisted Constraint | ConstraintType
 Attribute Equality Constraint | ConstraintType
 Attribute Unicity Constraint | ConstraintType
+Catalog Tool | CatalogTool
+Catalog | Catalog
 Category Acquired Membership State Constraint | ConstraintType
 Category Existence Constraint | ConstraintType
 Category Membership Arity Constraint | ConstraintType
@@ -12,6 +14,9 @@ Document Component | SortIndex
 Extension Component | SortIndex
 Property Existence Constraint | ConstraintType
 Property Type Validity Constraint | ConstraintType
+Python Script | CatalogFilter
+SQL Method | CatalogFilter
+SQL Method | SQLMethod
 Script Constraint | ConstraintType
 Script Constraint | ConstraintType
 Script Constraint | Predicate
