@@ -74,6 +74,16 @@ def _generatePreferenceToolAccessorHolder(portal_type_name,
       attr_list = [ 'get%s' % convertToUpperCase(attribute)]
       if prop['type'] == 'boolean':
         attr_list.append('is%s' % convertToUpperCase(attribute))
+      if prop['type'] == 'content':
+        if prop.get('acquisition_accessor_id') not in ('', None):
+          attr_list.append(prop['acquisition_accessor_id'])
+        if prop.get('alt_accessor_id'):  # alt_accessor_id is a list
+          attr_list.extend(prop['alt_accessor_id'])
+        if prop.get('acquired_property_id'):  # acquired_property_id is a list
+          for sub_attribute_name in prop['acquired_property_id']:
+            attr_list.append('get%s%s' % (
+              convertToUpperCase(attribute),
+              convertToUpperCase(sub_attribute_name)))
       if prop['type'] in list_types :
         attr_list.append('get%sList' % convertToUpperCase(attribute))
       read_permission = prop.get('read_permission')
