@@ -12,6 +12,9 @@ Cache Factory | Cache Bag
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Tool | Cache Factory
+Catalog Tool | Catalog
+Catalog | Python Script
+Catalog | SQL Method
 Category Tool | Base Category
 Category | Category
 Component Tool | Document Component
