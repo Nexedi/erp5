@@ -25,6 +25,7 @@ from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path
 from OFS.CopySupport import sanity_check
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base, aq_inner, aq_parent
+from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
@@ -34,6 +35,7 @@ from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.CMFActivity.Errors import ActivityPendingError
 
 from cgi import escape
+from warnings import warn
 import sys
 
 _marker = object()
@@ -311,10 +313,13 @@ class CopyContainer:
 
     self.__recurse('manage_afterClone', item)
 
-    # Call a type based method to reset so properties if necessary
+    # Call a type based method to reset some properties if necessary
     script = self._getTypeBasedMethod('afterClone')
     if script is not None and callable(script):
-      script()
+      if isinstance(script, PythonScript) and not script.params():
+        warn("After clone script %s does not accept `item` positional argument", DeprecationWarning)
+        return script()
+      script(item)
 
 
   security.declarePrivate('manage_afterAdd')
