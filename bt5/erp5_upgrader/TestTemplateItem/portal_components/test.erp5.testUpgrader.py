@@ -343,27 +343,11 @@ class TestUpgrader(ERP5TypeTestCase):
     self.assertEqual({'immediateReindexObject', 'unindexObject'},
       {x.method_id for x in portal_activities.getMessageList()})
 
-  def stepCreateBigIncosistentData(self, sequence=None):
-    for _ in range(101):
-      self.portal.organisation_module.newContent(
-        portal_type="Organisation",
-        title="org_%s" % self.portal.organisation_module.getLastId())
-
   def stepCreateSmallIncosistentData(self, sequence=None):
     for _ in range(4):
       self.portal.organisation_module.newContent(
         portal_type="Organisation",
         title="org_%s" % self.portal.organisation_module.getLastId())
-
-  def stepCheckActivitiesCreated(self, sequence=None):
-    portal_activities = self.getActivityTool()
-    self.assertEqual({'Alarm_runUpgrader', 'notify'},
-      {x.method_id for x in portal_activities.getMessageList()})
-    for message in portal_activities.getMessageList():
-      portal_activities.manageInvoke(message.object_path, message.method_id)
-    self.commit()
-    self.assertIn('Base_postCheckConsistencyResult',
-      {x.method_id for x in portal_activities.getMessageList()})
 
   def stepUninstallERP5UpgraderTestBT(self, sequence=None):
     bt5 = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_web')
@@ -656,12 +640,6 @@ class TestUpgrader(ERP5TypeTestCase):
       stepTic
       stepRunUpgrader
       stepCheckNoActivitiesCreated
-      stepCreateBigIncosistentData
-      stepTic
-      stepActiveSenseUpgradeAlarm
-      stepTic
-      stepRunUpgrader
-      stepCheckActivitiesCreated
       stepRemoveConstraintFromOrganisationPortalType
     """
     sequence_list.addSequenceString(sequence_string)
