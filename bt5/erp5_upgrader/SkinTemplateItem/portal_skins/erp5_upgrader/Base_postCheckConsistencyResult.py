@@ -4,8 +4,9 @@ active_process = context.getPortalObject().restrictedTraverse(active_process)
 if active_process.ActiveProcess_sense() and not fixit:
   return
 
-constraint_message_list = context.checkConsistency(
-  fixit=fixit, filter=filter,)
+with context.defaultActivateParameterDict(activate_kw, placeless=True):
+  constraint_message_list = context.checkConsistency(
+    fixit=fixit, filter=filter,)
 
 if constraint_message_list and not active_process.getResultList():
   active_process.postActiveResult(

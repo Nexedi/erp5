@@ -1,34 +1,39 @@
-"""
-  Run upgrader
+"""Run all upgrader steps:
+
+ - pre-upgrade
+ - upgrade
+ - post-upgrade
+
 """
 portal = context.getPortalObject()
 portal_alarms = portal.portal_alarms
 
-def launchUpgraderAlarm(alarm_id, after_tag=None):
-  """ Get the alarm and use sense and solve """
-  if after_tag is None:
-    after_tag = []
-  upgrader_alarm = getattr(portal_alarms, alarm_id, None)
-  if upgrader_alarm is not None and (force or upgrader_alarm.sense()):
-    # call solve method
-    tag = alarm_id
-    activate_kw = dict(tag=tag)
-    activate_kw["after_tag"] = after_tag
-    method_id = upgrader_alarm.getSolveMethodId()
-    if method_id not in (None, ''):
-      method = getattr(upgrader_alarm.activate(**activate_kw), method_id)
-      method(force=force, activate_kw=activate_kw)
-    return [tag] + after_tag
-  return after_tag
+pre_upgrade_tag = '%s-preupgrade' % tag
+upgrade_tag = '%s-upgrade' % tag
+post_upgrade_tag = '%s-postupgrade' % tag
 
-previous_tag = launchUpgraderAlarm('upgrader_check_pre_upgrade')
+portal_alarms.upgrader_check_pre_upgrade.activate(
+  activity='SQLQueue',
+  tag=pre_upgrade_tag,
+).activeSense(fixit=fixit, params={'tag': pre_upgrade_tag})
 
-previous_tag = launchUpgraderAlarm('upgrader_check_upgrader',
-                                   after_tag=previous_tag)
+portal_alarms.upgrader_check_upgrader.activate(
+  activity='SQLQueue',
+  tag=upgrade_tag,
+  after_tag=pre_upgrade_tag,
+ ).activeSense(fixit=fixit, params={'tag': upgrade_tag})
 
-previous_tag = launchUpgraderAlarm('upgrader_check_post_upgrade',
-                                   after_tag=previous_tag)
+portal_alarms.upgrader_check_post_upgrade.activate(
+  activity='SQLQueue',
+  tag=post_upgrade_tag,
+  after_tag=upgrade_tag,
+).activeSense(fixit=fixit, params={'tag': post_upgrade_tag})
+
+
+# start another activity to collect the results from each upgrader step
+active_process = context.newActiveProcess()
+context.activate(after_tag=post_upgrade_tag).Alarm_postFullUpgradeNeed(
+  active_process=active_process.getRelativeUrl())
 
 # Nothing else to do, so we can disable.
 context.setEnabled(False)
-return

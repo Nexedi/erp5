@@ -18,5 +18,6 @@ if portal_type_list:
       'fixit': fixit,
       'filter': filter_dict,
       'active_process': active_process.getRelativeUrl(),
+      'activate_kw': activate_kw,
     },
   )
