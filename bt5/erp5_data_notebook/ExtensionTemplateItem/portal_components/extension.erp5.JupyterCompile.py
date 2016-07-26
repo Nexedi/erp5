@@ -175,6 +175,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- user_context = globals(); user_context['context'] = self;
   user_context = {}
+  
+  output = ''
 
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
@@ -193,8 +195,11 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     
     # Fixing "normal" imports and detecting environment object usage
     import_fixer = ImportFixer()
+    print_fixer = PrintFixer()
     environment_collector = EnvironmentParser()
     ast_node = import_fixer.visit(ast_node)
+    ast_node = print_fixer.visit(ast_node)
+    ast.fix_missing_locations(ast_node)
     
     # The collector also raises errors when environment.define and undefine
     # calls are made incorrectly, so we need to capture them to propagate
@@ -204,7 +209,6 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     except (EnvironmentDefinitionError, EnvironmentUndefineError) as e:
       transaction.abort()
       return getErrorMessageForException(self, e, notebook_context)
-      
     
     # Get the node list from the parsed tree
     nodelist = ast_node.body
@@ -224,13 +228,6 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         to_run_exec, to_run_interactive = nodelist, []
       elif interactivity == 'last':
         to_run_exec, to_run_interactive = nodelist[:-1], nodelist[-1:]
-
-      # TODO: fix this global handling by replacing the print statement with
-      # a custom print function. Tip: create an ast.NodeTransformer, like the
-      # one used to fix imports.
-      old_stdout = sys.stdout
-      result = StringIO()
-      sys.stdout = result
       
       # Variables used at the display hook to get the proper form to display
       # the last returning variable of any code cell.
@@ -255,7 +252,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         'environment': Environment(),
         '_display_data': display_data,
         '_processor_list': processor_list,
-        '_volatile_variable_list': []
+        '_volatile_variable_list': [],
+        '_print': CustomPrint()
       }
       user_context.update(inject_variable_dict)
       user_context.update(notebook_context['variables'])
@@ -337,6 +335,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           "func_name": func_name,
           "code": setup_string
         }
+        inject_variable_dict['_print'].write(setup_string)
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
@@ -349,7 +348,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         user_context['_volatile_variable_list'] += variable
         
       if environment_collector.showEnvironmentSetup():
-        result_string += "%s\n" % str(notebook_context['setup'])
+        inject_variable_dict.write("%s\n" % str(notebook_context['setup']))
 
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
@@ -381,9 +380,9 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           # Clear the portal cache from previous transaction
           return getErrorMessageForException(self, e, notebook_context)
 
-      sys.stdout = old_stdout
       mime_type = display_data['mime_type'] or mime_type
-      result_string += "\n".join(removed_setup_message_list) + result.getvalue() + display_data['result']
+      inject_variable_dict['_print'].write("\n".join(removed_setup_message_list) + display_data['result'])
+    
     
     # Saves a list of all the variables we injected into the user context and
     # shall be deleted before saving the context.
@@ -396,21 +395,24 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           notebook_context['variables'][key] = val
         else:
           del user_context[key]
-          result_string += (
+          message = (
             "Cannot serialize the variable named %s whose value is %s, "
             "thus it will not be stored in the context. "
             "You should move it's definition to a function and " 
             "use the environment object to load it.\n"
           ) % (key, val)
+          inject_variable_dict['_print'].write(message)
     
     # Deleting from the variable storage the keys that are not in the user 
     # context anymore (i.e., variables that are deleted by the user).
     for key in notebook_context['variables'].keys():
       if not key in user_context:
         del notebook_context['variables'][key]
+    
+    output = inject_variable_dict['_print'].getCapturedOutputString()
   
   result = {
-    'result_string': result_string,
+    'result_string': output,
     'notebook_context': notebook_context,
     'status': status,
     'mime_type': mime_type,
@@ -484,6 +486,26 @@ def canSerialize(obj):
         raise e
     else:
       return True
+  
+  
+class CustomPrint(object):
+  
+  def __init__(self):
+    self.captured_output_list = []
+    
+  def write(self, *args):
+    self.captured_output_list += args
+    
+  def getCapturedOutputString(self):
+    return ''.join(self.captured_output_list)
+    
+
+class PrintFixer(ast.NodeTransformer):
+    
+  def visit_Print(self, node):
+    _print_name_node = ast.Name(id="_print", ctx=ast.Load())
+    node.dest = _print_name_node
+    return node
   
 
 class EnvironmentParser(ast.NodeTransformer):
@@ -741,7 +763,7 @@ def renderAsHtml(self, renderable_object):
   compile_jupyter_locals = compile_jupyter_frame.f_locals
   processor = compile_jupyter_locals['processor_list'].getProcessorFor(renderable_object)
   result, mime_type = processor(renderable_object).process()
-  compile_jupyter_locals['result'].write(result)
+  compile_jupyter_locals['inject_variable_dict']['_print'].write(result)
   compile_jupyter_locals['display_data']['mime_type'] = 'text/html'
 
 def getErrorMessageForException(self, exception, notebook_context):
@@ -963,3 +985,4 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
+
