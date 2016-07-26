@@ -332,11 +332,12 @@ class TestUpgrader(ERP5TypeTestCase):
 
   def stepCheckNoActivitiesCreated(self, sequence=None):
     portal_activities = self.getActivityTool()
-    message, = portal_activities.getMessageList()
-    self.assertEqual(message.method_id, "Alarm_runUpgrader")
+    self.assertEqual({'Alarm_runUpgrader', 'notify'},
+      {x.method_id for x in portal_activities.getMessageList()})
     getTitleList = self.getTemplateTool().getInstalledBusinessTemplateTitleList
     self.assertNotIn('erp5_web', getTitleList())
-    portal_activities.manageInvoke(message.object_path, message.method_id)
+    for message in portal_activities.getMessageList():
+      portal_activities.manageInvoke(message.object_path, message.method_id)
     self.assertIn('erp5_web', getTitleList())
     self.commit()
     self.assertEqual({'immediateReindexObject', 'unindexObject'},
@@ -356,9 +357,10 @@ class TestUpgrader(ERP5TypeTestCase):
 
   def stepCheckActivitiesCreated(self, sequence=None):
     portal_activities = self.getActivityTool()
-    message, = portal_activities.getMessageList()
-    self.assertEqual(message.method_id, "Alarm_runUpgrader")
-    portal_activities.manageInvoke(message.object_path, message.method_id)
+    self.assertEqual({'Alarm_runUpgrader', 'notify'},
+      {x.method_id for x in portal_activities.getMessageList()})
+    for message in portal_activities.getMessageList():
+      portal_activities.manageInvoke(message.object_path, message.method_id)
     self.commit()
     self.assertIn('Base_postCheckConsistencyResult',
       {x.method_id for x in portal_activities.getMessageList()})
