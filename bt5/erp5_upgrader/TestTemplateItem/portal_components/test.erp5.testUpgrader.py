@@ -311,6 +311,16 @@ class TestUpgrader(ERP5TypeTestCase):
       alarm_id="upgrader_check_post_upgrade")
     self.assertFalse(sense, detail_list)
 
+  def stepCheckPreUpgradeRequired(self, sequence=None):
+    sense, detail_list = self._checkAlarmSense(
+      alarm_id="upgrader_check_pre_upgrade")
+    self.assertTrue(sense, detail_list)
+
+  def stepCheckPreUpgradeNotRequired(self, sequence=None):
+    sense, detail_list = self._checkAlarmSense(
+      alarm_id="upgrader_check_pre_upgrade")
+    self.assertFalse(sense, detail_list)
+
   def stepUninstallERP5Web(self, sequence=None):
     bt5 = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_web')
     if bt5 is not None:
@@ -366,12 +376,6 @@ class TestUpgrader(ERP5TypeTestCase):
     portal = self.portal
     return portal.portal_catalog(select_list=['indexation_timestamp'],
       uid=portal.portal_templates.getUid())[0].indexation_timestamp
-
-  def stepCheckSummaryForPreUpgradeRequired(self, sequence=None):
-    alarm = self.portal.portal_alarms.upgrader_check_upgrader
-    active_process = alarm.getLastActiveProcess()
-    detail_list = active_process.getResultList()[0].detail
-    self.assertTrue("Is required solve Pre Upgrade first. You need run active sense once at least on this alarm" in detail_list)
 
   def stepCheckPersonNotInConstraintTypeListPerPortalType(self, sequence=None):
     constraint_type_per_type, _ = \
@@ -588,9 +592,9 @@ class TestUpgrader(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_can_not_run_post_upgrade_without_solve_upgrade(self):
-    """Check that if there is something to solve in pre_upgrade and upgrade is
-    not possible run the post upgrade"""
+  def test_can_run_post_upgrade_without_solve_upgrade(self):
+    """Check that if there is something to solve in upgrade, it is still possible
+    to run the post upgrade step directly."""
     sequence_list = SequenceList()
     sequence_string = """
       stepUninstallERP5Web
@@ -605,14 +609,14 @@ class TestUpgrader(ERP5TypeTestCase):
       stepRunPostUpgrade
       stepTic
       stepCheckUpgradeRequired
-      stepCheckPostUpgradeRequired
+      stepCheckPostUpgradeNotRequired
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_can_not_run_upgrade_without_solve_pre_upgrade(self):
-    """Check that if there is something to solve in pre_upgrade is not possible
-    run the upgrade"""
+  def test_can_run_upgrade_without_solve_pre_upgrade(self):
+    """Check that if there is something to solve in pre_upgrade is still possible
+    run only the upgrade step directly (eventhough this does not really make sense)"""
     sequence_list = SequenceList()
     sequence_string = """
       stepCreatePerson
@@ -625,7 +629,7 @@ class TestUpgrader(ERP5TypeTestCase):
       stepTic
       stepRunUpgrader
       stepTic
-      stepCheckSummaryForPreUpgradeRequired
+      stepCheckPreUpgradeRequired
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
