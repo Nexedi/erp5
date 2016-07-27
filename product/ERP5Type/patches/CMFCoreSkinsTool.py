@@ -59,7 +59,8 @@ def CMFCoreSkinsTool__updateCacheEntry(self, container_id, object_id):
       if not isinstance(selection_name, basestring):
         del skin_location_list[selection_name]
     for selection_name, skin_folder_id_string in self._getSelections().iteritems():
-      skin_folder_id_list = skin_folder_id_string.split(',')
+      # Add portal_callables to every selection
+      skin_folder_id_list = skin_folder_id_string.split(',') + ['portal_callables']
       if container_id in skin_folder_id_list:
         skin_folder_id_list.reverse()
         this_folder_index = skin_folder_id_list.index(container_id)
