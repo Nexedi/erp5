@@ -30,7 +30,7 @@ from Acquisition import aq_base
   during the same request.
 """
 
-def _initializeCache(skin_tool, skin_folder_id_list):
+def _initializeCache(portal_callables, skin_tool, skin_folder_id_list):
     skin_list = {}
     for skin_folder_id in skin_folder_id_list[::-1]:
       try:
@@ -40,6 +40,9 @@ def _initializeCache(skin_tool, skin_folder_id_list):
                                ' but does not exist.' % skin_folder_id)
       else:
         skin_list.update(dict.fromkeys(skin_folder.objectIds(), skin_folder_id))
+    # update skin_list with objects in portal_callables
+    if portal_callables is not None:
+      skin_list.update(dict.fromkeys(portal_callables.objectIds(), "portal_callables"))
     return skin_list
 
 def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
@@ -50,10 +53,13 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   if portal_skins is None:
     return
   portal_skins = portal_skins.aq_base
+  portal_callables = getattr(self, 'portal_callables', None)
+  if portal_callables is not None:
+    portal_callables = portal_callables.aq_base
   skin_selection_mapping = {}
   for selection_name, skin_folder_id_string in portal_skins._getSelections().iteritems():
-    skin_selection_mapping[selection_name] = _initializeCache(portal_skins,
-      skin_folder_id_string.split(','))
+    skin_selection_mapping[selection_name] = _initializeCache(portal_callables,
+      portal_skins, skin_folder_id_string.split(','))
   portal_skins._v_skin_location_list = skin_selection_mapping
   return skin_selection_mapping
 
@@ -79,7 +85,8 @@ def skinResolve(self, selection, name):
       if selection in skin_selection_mapping or \
          isinstance(selection, basestring):
         return
-      skin_list = portal_skins._getSelections()[selection[0]].split(',')
+      skin_list = portal_skins._getSelections()[selection[0]].split(',') \
+                  + ['portal_callables']
       skin_selection_mapping[selection] = skin_list = _initializeCache(
         portal_skins, skin_list[1+skin_list.index(selection[1]):])
       try:
@@ -88,6 +95,8 @@ def skinResolve(self, selection, name):
         return
       reset = True
     try:
+      if skin_folder_id == "portal_callables":
+        return aq_base(getattr(aq_base(self.portal_callables), name))
       return aq_base(getattr(getattr(portal_skins, skin_folder_id), name))
     except AttributeError:
       if reset:
