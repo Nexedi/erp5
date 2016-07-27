@@ -7,7 +7,8 @@ if parent.getPortalType() != 'Applied Rule':
 parent_rule = parent.getSpecialiseValue()
 if parent_rule.getPortalType() not in ('Invoice Root Simulation Rule',
                                        'Invoice Simulation Rule',
-                                       'Trade Model Simulation Rule'):
+                                       'Trade Model Simulation Rule',
+                                       'Pay Sheet Root Simulation Rule'):
   return False
 
 delivery_movement = movement.getDeliveryValue()
