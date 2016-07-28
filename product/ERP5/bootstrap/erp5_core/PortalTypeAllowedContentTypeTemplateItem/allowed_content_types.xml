@@ -31,6 +31,10 @@
  <portal_type id="Cache Tool">
   <item>Cache Factory</item>
  </portal_type>
+ <portal_type id="Callable Tool">
+  <item>PyData Script</item>
+  <item>Python Script</item>
+ </portal_type>
  <portal_type id="Category">
   <item>Category</item>
  </portal_type>
