@@ -102,6 +102,9 @@ Property Sheet | jump_portal_types
 Property Sheet | view
 Property Type Validity Constraint | predicate
 Property Type Validity Constraint | view
+PyData Script | proxy_role_view
+PyData Script | repository_history_view
+PyData Script | view
 Python Script | proxy_role_view
 Python Script | repository_history_view
 Python Script | view
