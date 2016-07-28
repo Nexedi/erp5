@@ -108,8 +108,12 @@ class PythonScript(XMLObject, ZopePythonScript):
     def _setParameterSignature(self, value):
       """
       override to call ZopePythonScript methods to force compiling code
+      and prevent setting to None
       """
-      self._baseSetParameterSignature(value)
+      if value is None:
+        self._params = ''
+      else:
+        self._baseSetParameterSignature(value)
       self._compile()
 
     def _setProxyRoleList(self, value):
