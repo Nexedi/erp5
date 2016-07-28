@@ -32,6 +32,7 @@ import time
 import shutil
 import logging
 import Utils
+from requests.exceptions import RequestException
 
 import traceback
 
@@ -430,8 +431,8 @@ from the distributor.")
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
-        except (SubprocessError, CalledProcessError) as e:
-          log("SubprocessError", exc_info=sys.exc_info())
+        except (SubprocessError, CalledProcessError, RequestException) as e:
+          log("SubprocessError or RequestException", exc_info=sys.exc_info())
           if remote_test_result_needs_cleanup:
             status_dict = e.status_dict or {}
             test_result.reportFailure(

@@ -25,6 +25,7 @@
 #
 ##############################################################################
 import os
+import getpass
 import psutil
 import re
 import subprocess
@@ -187,6 +188,19 @@ class ProcessManager(object):
     help_words = set(help_string.split())
     return help_words.intersection(set(parameter_list))
 
+  def killall(self, name):
+    """
+    Allow to kill process with given name.
+    Will try to kill only process belonging to current user
+    """
+    user_login = getpass.getuser()
+    to_kill_list = []
+    for process in psutil.process_iter():
+      if process.username() == user_login and process.name() == name:
+        self.log('ProcesssManager, killall on %s having pid %s' % (name, process.pid))
+        to_kill_list.append(process.pid)
+    for pid in to_kill_list:
+      killCommand(pid, self.log)
 
   def killPreviousRun(self, cancellation=False):
     self.log('ProcessManager killPreviousRun, going to kill %r' % (self.process_pid_set,))

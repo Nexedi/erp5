@@ -273,6 +273,8 @@ class SlapOSControler(object):
       slapproxy_log_fp = open(slapproxy_log, 'w')
       kwargs['stdout'] = slapproxy_log_fp
       kwargs['stderr'] = slapproxy_log_fp
+    # Make sure there is no slapos alive from previous run
+    process_manager.killall('slapos')
     proxy = subprocess.Popen([config['slapos_binary'], 
       'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)
