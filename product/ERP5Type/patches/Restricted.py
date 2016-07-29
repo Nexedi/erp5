@@ -178,6 +178,7 @@ allow_module('fnmatch')
 allow_module('re')
 allow_type(type(re.compile('')))
 allow_type(type(re.match('x','x')))
+allow_type(type(re.finditer('x','x')))
 
 import cStringIO
 f = cStringIO.StringIO()
