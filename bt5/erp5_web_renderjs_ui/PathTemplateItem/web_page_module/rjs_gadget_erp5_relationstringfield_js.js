@@ -5,18 +5,13 @@
 
 
   rJS(window)
-
     /////////////////////////////////////////////////////////////////
     // ready
     /////////////////////////////////////////////////////////////////
     // Init local properties
     .ready(function (my_gadget) {
       my_gadget.props = {};
-      return my_gadget.getElement()
-        .push(function (element) {
-          my_gadget.props.element = element;
-          return my_gadget.getDeclaredGadget("relation_input");
-        })
+      return my_gadget.getDeclaredGadget("relation_input")
         .push(function (relation_input_gadget) {
           my_gadget.props.relation_input_gadget = relation_input_gadget;
         });

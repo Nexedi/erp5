@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, loopEventListener */
+/*global window, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, loopEventListener) {
+(function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -79,4 +79,4 @@
       return result;
     });
 
-}(window, rJS, RSVP, Handlebars, loopEventListener));
+}(window, rJS, RSVP, Handlebars));
