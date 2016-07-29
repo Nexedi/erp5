@@ -1,0 +1,47 @@
+Embedded File | document_conversion_interaction_workflow
+Embedded File | edit_workflow
+Embedded File | embedded_workflow
+File | document_conversion_interaction_workflow
+File | document_publication_workflow
+File | document_security_interaction_workflow
+File | edit_workflow
+Image | document_conversion_interaction_workflow
+Image | document_publication_workflow
+Image | document_security_interaction_workflow
+Image | edit_workflow
+Role Definition | edit_workflow
+Role Definition | local_permission_interaction_workflow
+Web Illustration | document_conversion_interaction_workflow
+Web Illustration | document_publication_workflow
+Web Illustration | document_security_interaction_workflow
+Web Illustration | edit_workflow
+Web Illustration | processing_status_workflow
+Web Manifest | document_conversion_interaction_workflow
+Web Manifest | document_publication_workflow
+Web Manifest | document_security_interaction_workflow
+Web Manifest | edit_workflow
+Web Manifest | processing_status_workflow
+Web Page | document_conversion_interaction_workflow
+Web Page | document_publication_workflow
+Web Page | document_security_interaction_workflow
+Web Page | edit_workflow
+Web Page | processing_status_workflow
+Web Script | document_conversion_interaction_workflow
+Web Script | document_publication_workflow
+Web Script | document_security_interaction_workflow
+Web Script | edit_workflow
+Web Script | processing_status_workflow
+Web Section | category_publication_workflow
+Web Section | edit_workflow
+Web Site | category_publication_workflow
+Web Site | edit_workflow
+Web Style | document_conversion_interaction_workflow
+Web Style | document_publication_workflow
+Web Style | document_security_interaction_workflow
+Web Style | edit_workflow
+Web Style | processing_status_workflow
+Web Table | document_conversion_interaction_workflow
+Web Table | document_publication_workflow
+Web Table | document_security_interaction_workflow
+Web Table | edit_workflow
+Web Table | processing_status_workflow

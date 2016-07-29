@@ -1,0 +1,101 @@
+Embedded File | download
+Embedded File | export
+Embedded File | file_upload
+Embedded File | fullsize_view
+Embedded File | view
+Embedded File | web_view
+File | download
+File | file_upload
+File | jump_to_all_related
+File | jump_to_predecessor
+File | jump_to_similar
+File | jump_to_similarity_cloud
+File | jump_to_successor
+File | jump_to_wiki_predecessor
+File | local_permission
+File | related_document
+File | update_content_from_url
+File | version_view
+File | view
+File | view_editor
+File | web_view
+Image | change_function
+Image | download
+Image | export
+Image | file_upload
+Image | fullsize_view
+Image | jump_to_all_related
+Image | jump_to_predecessor
+Image | jump_to_similar
+Image | jump_to_similarity_cloud
+Image | jump_to_successor
+Image | jump_to_wiki_predecessor
+Image | local_permission
+Image | related_document
+Image | update_content_from_url
+Image | version_view
+Image | view
+Image | view_editor
+Image | web_view
+Role Definition | view
+Web Illustration | jio_view
+Web Illustration | list
+Web Illustration | local_permission
+Web Illustration | related
+Web Illustration | send_email
+Web Illustration | view
+Web Illustration | view_editor
+Web Illustration | web_view
+Web Manifest | version_view
+Web Manifest | view
+Web Manifest | view_editor
+Web Manifest | web_view
+Web Page Module | list_ui
+Web Page Module | sort_on
+Web Page Module | view
+Web Page | jio_view
+Web Page | list
+Web Page | local_permission
+Web Page | related
+Web Page | send_email
+Web Page | version_view
+Web Page | view
+Web Page | view_editor
+Web Page | web_view
+Web Script | version_view
+Web Script | view
+Web Script | view_editor
+Web Script | view_syntax
+Web Script | web_view
+Web Section | generate_section
+Web Section | layout_configuration
+Web Section | local_permission
+Web Section | new_default_page
+Web Section | new_page
+Web Section | predicate
+Web Section | section_content
+Web Section | view
+Web Section | web_view
+Web Site Module | list_ui
+Web Site Module | sort_on
+Web Site Module | view
+Web Site | generate_section
+Web Site | layout_configuration
+Web Site | local_permission
+Web Site | new_default_page
+Web Site | predicate
+Web Site | preference
+Web Site | section_content
+Web Site | view
+Web Site | web_view
+Web Style | version_view
+Web Style | view
+Web Style | view_editor
+Web Style | web_view
+Web Table | list
+Web Table | local_permission
+Web Table | related
+Web Table | send_email
+Web Table | view
+Web Table | view_editor
+Web Table | web_view
