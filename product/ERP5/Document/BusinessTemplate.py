@@ -138,6 +138,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "OOoTemplate":         ("oot",  1, "_text"),
   "PDF":                 ("pdf",  0, "data"),
   "PDFForm":             ("pdf",  0, "data"),
+  "PyData Script":       ("py",   0, "_body"),
   "Python Script":       ("py",   0, "_body"),
   "PythonScript":        ("py",   0, "_body"),
   "Spreadsheet":         (None,   0, "data"),
