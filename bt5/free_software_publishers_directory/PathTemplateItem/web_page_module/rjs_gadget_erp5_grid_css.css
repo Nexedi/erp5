@@ -1,0 +1,199 @@
+/* custom grid css */
+/* assume there will be a gadget wrapping grid cell content, set to 100% */
+.ui-grid-container li > div {
+  display: table;
+  border-spacing: .25em;
+  width: 100%;
+}
+.ui-grid-container li > div .custom-grid-wrap {
+  display: table-row;
+}
+.ui-grid-container li > div .custom-grid-wrap .custom-grid {
+  display: table-cell;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* weather gadget should not have border around input */
+.ui-grid-container li > div .custom-grid-wrap .custom-grid-no-border {
+  border-width: 0;
+}
+/* I hate hardcoding, but for now... */
+.custom-map-dimensions .custom-grid {
+  height: 20em;
+}
+/* prevent table cells from breaking */
+.ui-grid-container li > div .custom-grid-wrap .custom-grid .ui-link {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@media (min-width: 62em) {
+  /* when setting %-max-width on td/th, only table-layout:fixed makes it work
+     (not in IE!) */
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table {
+    table-layout: fixed;
+  }
+  /* set width depending on number of cols... */
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(1),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(1) {
+    max-width: 100%;
+  }
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(2),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(2) ~ th,
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(2),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(2) ~ td {
+    max-width: 50%;
+  }
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(3),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(3) ~ th,
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(3),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(3) ~ td {
+    max-width: 33.3333%;
+  }
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(4),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(4) ~ th,
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(4),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(4) ~ td {
+    max-width: 25%;
+  }
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(5),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr th:first-child:nth-last-child(5) ~ th,
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(5),
+  .ui-grid-container li > div .custom-grid-wrap .custom-grid table tr td:first-child:nth-last-child(5) ~ td {
+    max-width: 20%;
+  }
+}
+
+/* set correct border-radius */
+.custom-grid .ui-header {
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-top-left-radius: .3125em;
+  border-top-left-radius: .3125em;
+  -webkit-border-top-right-radius: .3125em;
+  border-top-right-radius: .3125em;
+}
+
+/* reset border-spacing and max-width of header */
+.custom-grid .ui-header .ui-controlgroup {
+  max-width: none;
+  min-width: 0;
+  border-spacing: 0;
+}
+/* remove button border */
+.custom-grid .ui-header .ui-controlgroup-controls .ui-btn {
+  border: 0 none;
+}
+/* remove top borders on tables inside grid */
+.custom-grid .ui-table-inset {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+/* remove margin on search field */
+.custom-grid .ui-field-contain {
+  margin: 0;
+}
+
+/* add top border to table with header and search form in between */
+.custom-grid .ui-table-header ~ form ~ table {
+  border-top-width: 1px;
+}
+/* remove margin from listview and top borders */
+.custom-grid .ui-table-header ~ .ui-listview {
+  margin: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.custom-grid .ui-table-header ~ .ui-listview > li.ui-first-child > a.ui-btn {
+  border-top-width: 0;
+}
+/* corners again */
+.custom-grid .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-first-child {
+  -webkit-border-top-left-radius: .3125em;
+  border-top-left-radius: .3125em;
+    -webkit-border-bottom-left-radius: .3125em;
+  border-bottom-left-radius: .3125em;
+}
+.custom-grid .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-last-child {
+  -webkit-border-top-right-radius: .3125em;
+  border-top-right-radius: .3125em;
+  -webkit-border-bottom-right-radius: .3125em;
+  border-bottom-right-radius: .3125em;
+}
+/* align tag-list */
+.custom-grid .ui-tag-list {
+  text-align: center;
+}
+
+/* search field - stretch field to available space */
+.custom-grid form .center {
+  width: 100%;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+/* search field - remove spacing on field container */
+.custom-grid form .center .ui-field-contain {
+  margin: 0;
+  padding: 0;
+}
+.custom-grid form .center .ui-field-contain:after,
+.custom-grid form .center .ui-field-contain:before {
+  content: none;
+  display: none;
+}
+/* search field - remove corners and spacing */
+html.ui-mobile head + body .custom-grid form .center .ui-field-contain .ui-input-text {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+
+/* create button controlgroup */
+html body .custom-link-list {
+  margin: 0;
+}
+html body .custom-link-list span {
+  -webkit-border-radius: .325em;
+  border-radius: .325em;
+}
+html body .custom-link-list .ui-controlgroup-controls {
+  width: 100%;
+  border-spacing: 0;
+  margin: 0;
+  padding: 0;
+}
+html body .custom-link-list .ui-controlgroup-controls a {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5em 0.5em 0.15em;
+  width: 24.66%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* make it responsive - XXX not perfect switching widths */
+@media (max-width: 48em) {
+  html body .custom-link-list .ui-controlgroup-controls a {
+    width: 49.6%;
+  }
+}
+@media (max-width: 32em) {
+  html body .custom-link-list .ui-controlgroup-controls a {
+    width: 99.5%;
+  }
+}
+/* make navigation bar responsive */
+html body .ui-custom-navigation-bar {
+  text-align: center;
+}
+

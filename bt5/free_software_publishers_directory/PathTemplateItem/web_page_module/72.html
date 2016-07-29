@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story List</title>
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  <!-- script src="gadget_global.js" ></script -->
+  <script src="gadget_erp5_page_publisher.js"></script>
+  
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <ul class="grid-items">
+        <li><img style="max-width:100%;" src="{{logo}}" alt></li>
+      </ul>
+      <section class="ui-content-header-plain ui-bar-c">
+        <h3>{{title}}
+        </h3>
+      </section>
+      <ul class="grid-items">
+        
+        <li>Founded: {{founded_year}}</li>
+        
+        <li>Country: {{country}}</li>
+
+        <li>Website: <a href="{{website}}">{{website}}</a></li>
+
+        <li>Presence:
+            {{#each presence}}
+              {{this}} 
+            {{/each}}
+        </li>
+      </ul>
+      <p>{{description}}</p>
+      <p><a href="{{wikipedia_url}}">Read more on Wikipedia</a></p>
+      <section class="ui-content-header-plain ui-bar-c">
+        <h3>
+          Free software:
+        </h3>
+      </section>
+      <ul class="grid-items">
+        {{#each free_software_list}}
+          <li>
+            <h1>{{title}}</h1>
+            {{#if logo}}
+              <img style="max-width:100%;height:5em;" src="{{logo}}" alt>
+            {{else}}
+              <div style="width:1em;height:5em;">&nbsp</div>
+            {{/if}}
+            
+            <p>{{description}}</p>
+            <div>
+              Categories:
+              <ul>
+                {{#each category_list}}
+                  <li>{{this}}</li>
+                {{/each}}
+              </ul>
+            </div>
+            <p><a href="{{source_code_download}}">Download source code</a></p>
+            <p>Free software commercial support: 
+              {{#if commercial_support}}
+                <a href="{{commercial_support}}"> Yes</a>
+              {{else}}
+                 No 
+              {{/if}}
+              <abbr title="{{commercial_support_description}}">(?)</abbr>
+            </p>
+            {{#if wikipedia_url}}
+              <p><a href="{{wikipedia_url}}" class="">Wikipedia page</a></p>
+            {{/if}}
+            {{#if success_case_list}}
+              <ul class="grid-items">
+                {{#each success_case_list}}
+                  <li data-role="list-divider" role="heading" class="ui-li-divider ui-bar-inherit">&nbsp;</li>
+                  <li>
+                    <p>{{title}}</p>
+                    
+                    <p>Customer: {{customer}}</p>
+                    <p>Country: {{country}}</p>
+                    <p>Language: {{language}}</p>
+                    <p><a href="{{url}}">Read more</a></p>
+                  </li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    </section>
+  </script>
+  </head>
+  <body>
+    <article class="display-widget ui-content"></article>
+  </body>
+</html>

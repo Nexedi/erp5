@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>kasra-Free Software Publishers Directory</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_global.js" type="text/javascript"></script>
+    <script src="gadget_erp5_free_software_publishers_directory_jio.js"></script>
+    <script src="gadget_erp5_page_free_software_publisher_directory.js" type="text/javascript"></script>
+
+    
+    <!-- templates -->
+    <script id="frontpage-template" type="text/x-handlebars-template">
+      <ul class="grid-items">
+        {{#each this}}
+          <li>
+            {{>list-partial}}
+          </li>
+        {{/each}}
+      </ul>
+    </script>
+    
+    <script id="list-partial" type="text/x-handlebars-template">
+      <section class="ui-content-section ui-body-c">
+        <h1>{{category}}</h1>
+        <ul>
+          {{#each softwares}}
+            <li><a href="{{value.href}}">{{value.title}}</a></li>
+          {{/each}}
+        </ul>
+      </section>
+    </script>
+
+  </head>
+  <body>
+    <section class="ui-responsive ui-grid-container body"></section>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+
+	  <title>Free Software Publishers Directory</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="rsvp.js"></script>
+    <script type="text/javascript" src="kasra_jio_latest.js"></script>
+    <script type="text/javascript" src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="erp5_launcher.js" ></script>
+
+    <script type="text/javascript" src="data_publisher_storage.js"></script>
+
+    <script>
+      var publisher_storage = jIO.createJIO({
+        check_local_modification: false,
+        check_local_creation: false,
+        check_local_deletion: false,
+        type: "replicate",
+        local_sub_storage : {
+          type: "query",
+          sub_storage: {
+          type: "memory",
+          }
+        },
+        remote_sub_storage : {
+          type: "query",
+          sub_storage: {
+            type: "publisher_storage",
+          }
+        },
+      });
+      
+      var software_category_list = [];
+    </script>
+</head>
+
+<body>
+  <h1>Free Software Publishers Directory</h1>
+  
+  <select class="category_list_select_field">
+    <option value=""></option>
+  </select>
+
+  <hr />
+  
+  <ul class="software_list">
+  </ul>
+
+  <hr />
+
+  <ul class="publisher_list">
+  </ul>
+
+  <template id="publisher_list_item">
+    <li>
+      <p class="logo"><img width="200px" src=""></p>
+      <p class="title"></p>
+      <p class="country"></p>
+      <p class="website"><a href="#"></a></p>
+      <p class="founded_year"></p>
+      <ul class="presence_list"></ul>
+    </li>
+  </template>
+  
+  <template id="software_list_item">
+    <li>
+      <p class="logo"><img width="200px" src=""></p>
+      <p class="title"></p>
+      <p class="publisher"></p>
+      <ul class="category_list"></ul>
+      <p class="source_code_download"><a href="#"></a></p>
+      <p class="commercial_support"><a href="#"></a></p>
+      <p class="wikipedia_url"><a href="#"></a></p>
+    </li>
+  </template>
+
+  <script src="kasra_index.js"></script>
+  
+  <script>
+    //////////////////////////////////////////////////
+    // Event Listeners
+    //////////////////////////////////////////////////
+    document.querySelector(".category_list_select_field")
+    .addEventListener("change", function (event) {
+      var category = event.target.value;
+      console.log(category);
+      publisher_storage.allDocs({
+        select_list: ['title', 'logo', 'category_list', 'source_code_download', 'commercial_support', 'wikipedia_url', 'success_case_list', 'publisher'],
+        query: '(portal_type: "software") AND (category_list: "' + category + '")',
+      })
+      .push(function (software_list) {
+        console.log(software_list.data);
+        document.querySelector(".software_list").innerHTML = "";
+        displaySoftwareList(software_list.data);
+      });
+    });
+  </script>
+</body>
+
+</html>
