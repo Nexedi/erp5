@@ -38,6 +38,7 @@ class ERP5TestNode(TestCase):
     self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
     self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
     self.remote_repository2 = os.path.join(self._temp_dir, 'rep2')
+    self.remote_repository_broken = os.path.join(self._temp_dir, 'broken')
     self.system_temp_folder = os.path.join(self._temp_dir,'tmp')
     os.mkdir(self.working_directory)
     os.mkdir(self.slapos_directory)
@@ -89,7 +90,8 @@ class ERP5TestNode(TestCase):
 
     return TestNode(self.log, config)
 
-  def getTestSuiteData(self, add_third_repository=False, reference="foo"):
+  def getTestSuiteData(self, add_third_repository=False,
+                       add_broken_repository=False, reference="foo"):
     data = [{
        "test_suite": "Foo",
        "project_title": reference,
@@ -110,15 +112,22 @@ class ERP5TestNode(TestCase):
             {'url': self.remote_repository2,
              'buildout_section_id': 'rep2',
              'branch': 'foo'})
+    if add_broken_repository:
+      data[0]['vcs_repository_list'].append(
+            {'url': self.remote_repository_broken,
+             'buildout_section_id': 'rep2',
+             'branch': 'foo'})
     return data
 
   def updateNodeTestSuiteData(self, node_test_suite,
-                              add_third_repository=False):
+                              add_third_repository=False,
+                              add_broken_repository=False):
     """
     Update from zero/Regenerate the testsuite
     """
     node_test_suite.edit(working_directory=self.working_directory,
-       **self.getTestSuiteData(add_third_repository=add_third_repository)[0])
+       **self.getTestSuiteData(add_third_repository=add_third_repository,
+                               add_broken_repository=add_broken_repository)[0])
 
   def getCaller(self, **kw):
     class Caller(object):
@@ -360,7 +369,7 @@ develop = false
     finally:
       Updater.deleteRepository = original_deleteRepository
 
-  def test_05d_LocalModifcationOnRepository(self):
+  def test_05d_LocalModificationOnRepository(self):
     """
     It could happen that there is local modification to to either bug of
     git or any manual operation.
@@ -388,6 +397,19 @@ develop = false
     my_file = open(os.path.join(rep0_clone_path, 'first_file'), 'r')
     self.assertEqual("initial_content0", my_file.read())
     my_file.close()
+
+  def test_05e_IgnoringIncorrectRepository(self):
+    """
+    If someone add a test suite with a bad url for git repository (or wrong
+    crendentials), the testnode should not block forever and should work on
+    other test suites. This method should be able to run
+    """
+    commit_dict = self.generateTestRepositoryList()
+    test_node = self.getTestNode()
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite, add_broken_repository=True)
+    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    self.assertEqual(None, rev_list)
 
   def test_06_checkRevision(self):
     """

@@ -189,19 +189,23 @@ develop = false
     full_revision_list = []
     config = self.config
     log = self.log
-    for vcs_repository in node_test_suite.vcs_repository_list:
-      repository_path = vcs_repository['repository_path']
-      repository_id = vcs_repository['repository_id']
-      branch = vcs_repository.get('branch')
-      # Make sure we have local repository
-      updater = Updater(repository_path, git_binary=config['git_binary'],
-         branch=branch, log=log, process_manager=self.process_manager,
-         working_directory=node_test_suite.working_directory,
-         url=vcs_repository["url"])
-      updater.checkout()
-      revision = "-".join(updater.getRevision())
-      full_revision_list.append('%s=%s' % (repository_id, revision))
-    node_test_suite.revision = ','.join(full_revision_list)
+    try:
+      for vcs_repository in node_test_suite.vcs_repository_list:
+        repository_path = vcs_repository['repository_path']
+        repository_id = vcs_repository['repository_id']
+        branch = vcs_repository.get('branch')
+        # Make sure we have local repository
+        updater = Updater(repository_path, git_binary=config['git_binary'],
+           branch=branch, log=log, process_manager=self.process_manager,
+           working_directory=node_test_suite.working_directory,
+           url=vcs_repository["url"])
+        updater.checkout()
+        revision = "-".join(updater.getRevision())
+        full_revision_list.append('%s=%s' % (repository_id, revision))
+      node_test_suite.revision = ','.join(full_revision_list)
+    except SubprocessError, e:
+      log("Error while getting repository, ignoring this test suite : %r" % (e,), exc_info=sys.exc_info())
+      full_revision_list = None
     return full_revision_list
 
   def registerSuiteLog(self, test_result, node_test_suite):
@@ -379,7 +383,9 @@ from the distributor.")
             run_software = True
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
-            self.getAndUpdateFullRevisionList(node_test_suite)
+            revision_list = self.getAndUpdateFullRevisionList(node_test_suite)
+            if revision_list is None:
+              continue
             # Write our own software.cfg to use the local repository
             self.constructProfile(node_test_suite, my_test_type, 
                                   runner.getRelativePathUsage())
@@ -432,7 +438,7 @@ from the distributor.")
               break
             self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError, RequestException) as e:
-          log("SubprocessError or RequestException", exc_info=sys.exc_info())
+          log("SubprocessError or RequestException : %r" % (e,), exc_info=sys.exc_info())
           if remote_test_result_needs_cleanup:
             status_dict = e.status_dict or {}
             test_result.reportFailure(
@@ -443,7 +449,7 @@ from the distributor.")
           continue
         except ValueError as e:
           # This could at least happens if runTestSuite is not found
-          log("ValueError", exc_info=sys.exc_info())
+          log("ValueError : %r" % (e,), exc_info=sys.exc_info())
           if node_test_suite is not None:
             node_test_suite.retry_software_count += 1
           if remote_test_result_needs_cleanup:
@@ -467,8 +473,8 @@ from the distributor.")
           sleep_time = 120 - (now-begin)
           log("End of processing, going to sleep %s" % sleep_time)
           time.sleep(sleep_time)
-    except:
-      log("Exception in error handling", exc_info=sys.exc_info())
+    except Exception as e:
+      log("Exception in error handling : %r" % (e,), exc_info=sys.exc_info())
     finally:
       if 'tb' in locals():
         del tb
