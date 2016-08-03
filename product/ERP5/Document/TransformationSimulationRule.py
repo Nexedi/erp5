@@ -134,6 +134,8 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
                                         amount.getCategoryList(),
                                         base=True)
         movement.quantity = - movement.quantity
+        # aggregation of items should not be propagated to what comes from transformation
+        movement.setAggregateList([])
         yield movement
     phase_dict = parent_movement.asComposedDocument() \
                                 .getPreviousTradePhaseDict(phase_set)
