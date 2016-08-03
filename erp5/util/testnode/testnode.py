@@ -32,7 +32,7 @@ import time
 import shutil
 import logging
 import Utils
-from requests.exceptions import RequestException
+from slapos.slap.slap import ConnectionError
 
 import traceback
 
@@ -437,8 +437,8 @@ from the distributor.")
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
-        except (SubprocessError, CalledProcessError, RequestException) as e:
-          log("SubprocessError or RequestException : %r" % (e,), exc_info=sys.exc_info())
+        except (SubprocessError, CalledProcessError, ConnectionError) as e:
+          log("SubprocessError or ConnectionError : %r" % (e,), exc_info=sys.exc_info())
           if remote_test_result_needs_cleanup:
             status_dict = e.status_dict or {}
             test_result.reportFailure(
