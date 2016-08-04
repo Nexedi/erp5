@@ -20,26 +20,38 @@
     })
     .declareMethod('render', function (options) {
       var element,
-        text,
-        field_json = options.field_json || {};
+        field_json = options.field_json || {},
+        created = false;
       this.props.value = field_json.value || field_json.default || "";
       this.props.editable = field_json.editable;
       if (field_json.editable) {
-        element = document.createElement('input');
-        element.setAttribute("type", "text");
+        element = this.element.querySelector('input');
+        if (element === null) {
+          element = document.createElement('input');
+          element.setAttribute("type", "text");
+          created = true;
+        }
         element.setAttribute('value', this.props.value);
         element.setAttribute('name', field_json.key);
         element.setAttribute('title', field_json.title);
         if (field_json.required === 1) {
           element.setAttribute('required', 'required');
+        } else {
+          element.removeAttribute('required');
         }
       } else {
-        element = document.createElement("p");
-        element.setAttribute("class", "ui-content-non-editable");
-        text = document.createTextNode(this.props.value);
-        element.appendChild(text);
+        element = this.element.querySelector('p');
+        if (element === null) {
+          element = document.createElement("p");
+          element.setAttribute("class", "ui-content-non-editable");
+          created = true;
+        }
+        element.textContent = this.props.value;
       }
-      this.element.appendChild(element);
+      if (created) {
+        this.element.innerHTML = '';
+        this.element.appendChild(element);
+      }
     })
 
     .declareMethod('getContent', function () {
