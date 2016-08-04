@@ -39,6 +39,11 @@
         } else {
           element.removeAttribute('required');
         }
+        if (field_json.disabled) {
+          element.setAttribute("disabled", "disabled");
+        } else {
+          element.removeAttribute('disabled');
+        }
       } else {
         element = this.element.querySelector('p');
         if (element === null) {
