@@ -309,8 +309,9 @@ class TestMRPImplementation(TestMRPMixin):
     for line in delivery.getMovementList():
       found_line_list.append((line.getResourceValue(), line.getQuantity(),
                               line.getAggregateValue()))
-    found_line_list.sort()
-    expected_line_list.sort()
+    sortKey = lambda x: x[0].getRelativeUrl()
+    found_line_list.sort(key=sortKey)
+    expected_line_list.sort(key=sortKey)
     self.assertEqual(expected_line_list, found_line_list)
 
   def testOrderWithItem(self):
