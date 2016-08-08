@@ -614,6 +614,34 @@ print random.randint(1,1)
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '1')
     
+  def testImportFixerWithAlias(self):
+    self.login('dev_user')
+    import_code = '''
+import random as rand
+'''
+
+    reference = 'Test.Notebook.EnvironmentObject.ImportFixer'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    
+    self.tic()
+    self.assertEquals(json.loads(result)['status'], 'ok')
+    
+    jupyter_code = '''
+print rand.randint(1,1)
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    
+    self.tic()
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), '1')  
+
   def testPivotTableJsIntegration(self):
     '''
       This test ensures the PivotTableJs user interface is correctly integrated
