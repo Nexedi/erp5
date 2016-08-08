@@ -594,7 +594,11 @@ class ImportFixer(ast.NodeTransformer):
     for child in node.body:
       if isinstance(child, ast.Import):
         for alias in child.names:
-          self.import_func_dict[alias.name] = node.name  
+          if getattr(alias, 'asname'):
+            import_name = alias.asname
+          else:
+            import_name = alias.name
+          self.import_func_dict[import_name] = node.name  
     return self.generic_visit(node)
     
   def visit_ImportFrom(self, node):
