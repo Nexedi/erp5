@@ -479,11 +479,8 @@ def canSerialize(obj):
     # 
     # Even though the issue seems complicated, this quickfix should be 
     # properly rewritten in a better way as soon as possible.
-    except Exception as e:
-      if type(e).__name__ in ('PicklingError', 'TypeError', 'NameError', 'AttributeError'):
-        return False
-      else:
-        raise e
+    except (cPickle.PicklingError, TypeError, NameError, AttributeError) as e:
+      return False
     else:
       return True
   
