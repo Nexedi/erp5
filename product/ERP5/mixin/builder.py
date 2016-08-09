@@ -167,8 +167,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
-  def generateMovementListForStockOptimisation(self, **kw):
+  def generateMovementListForStockOptimisation(self, group_by_node=1, **kw):
     from Products.ERP5Type.Document import newTempMovement
+    now = DateTime()
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
                               ('section_uid', 'getDestinationSectionUid')]:
@@ -181,7 +182,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     sql_list = self.portal_simulation.getFutureInventoryList(
                                                    group_by_variation=1,
                                                    group_by_resource=1,
-                                                   group_by_node=1,
+                                                   group_by_node=group_by_node,
                                                    group_by_section=0,
                                                    **kw)
     # min_flow and max_delay are stored on a supply line. By default
@@ -203,7 +204,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       movement = newTempMovement(self.getPortalObject(), "temp")
       dumb_movement = inventory_item.getObject()
       resource_portal_type = resource.getPortalType()
-      assert resource_portal_type in (resource_portal_type_list), \
+      assert resource_portal_type in resource_portal_type_list, \
         "Builder %r does not support resource of type : %r" % (
         self.getRelativeUrl(), resource_portal_type)
       movement.edit(
@@ -232,17 +233,18 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           stop_date = resource.getNextAlertInventoryDate(
                                reference_quantity=min_stock,
                                variation_text=inventory_item.variation_text,
-                               from_date=DateTime(),
+                               from_date=now,
+                               group_by_node=group_by_node,
                                **kw)
-          if stop_date != None:
-            movement = newMovement(inventory_item, resource)
-            max_delay = resource.getMaxDelay(0)
-            movement.edit(
-              start_date=stop_date-max_delay,
-              stop_date=stop_date,
-              quantity=max(min_flow, -inventory_item.inventory),
-            )
-            movement_list.append(movement)
+          if stop_date is None:
+            stop_date = now
+          movement = newMovement(inventory_item, resource)
+          movement.edit(
+            start_date=stop_date-max_delay,
+            stop_date=stop_date,
+            quantity=max(min_flow, -inventory_item.inventory),
+          )
+          movement_list.append(movement)
         # We could need to cancel automated stock optimization if for some reasons
         # previous optimisations are obsolete
         elif round(inventory_item.inventory, 5) > min_stock:
@@ -253,6 +255,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                                variation_text=inventory_item.variation_text,
                                simulation_state="auto_planned",
                                sort_on=[("date", "descending")],
+                               group_by_node=group_by_node
                                )
           for optimized_inventory in optimized_inventory_list:
             movement = newMovement(inventory_item, resource)

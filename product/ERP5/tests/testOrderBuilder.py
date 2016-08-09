@@ -33,8 +33,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testOrder import TestOrderMixin
+from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
-class TestOrderBuilderMixin(TestOrderMixin):
+class TestOrderBuilderMixin(TestOrderMixin, InventoryAPITestCase):
 
   run_all_test = 1
 
@@ -63,6 +65,10 @@ class TestOrderBuilderMixin(TestOrderMixin):
     """
     self.createCategories()
     self.validateRules()
+    InventoryAPITestCase.afterSetUp(self)
+    self.node_1 = self.portal.organisation_module.newContent(title="Node 1")
+    self.node_2 = self.portal.organisation_module.newContent(title="Node 2")
+    self.pinDateTime(None)
 
   def assertDateAlmostEquals(self, first_date, second_date):
     self.assertTrue(abs(first_date - second_date) < 1.0/86400,
@@ -73,7 +79,7 @@ class TestOrderBuilderMixin(TestOrderMixin):
     Sets max_delay on resource
     """
     resource = sequence.get('resource')
-    resource.edit(max_delay=self.max_delay)
+    resource.edit(purchase_supply_line_max_delay=self.max_delay)
 
   def stepSetMinFlowOnResource(self, sequence):
     """
@@ -83,12 +89,17 @@ class TestOrderBuilderMixin(TestOrderMixin):
     resource.edit(purchase_supply_line_min_flow=self.min_flow)
 
   def stepFillOrderBuilder(self, sequence):
+    self.fillOrderBuilder(sequence=sequence)
+
+  def fillOrderBuilder(self, sequence=None):
     """
     Fills Order Builder with proper quantites
     """
-    order_builder = sequence.get('order_builder')
-    organisation = sequence.get('organisation')
-    resource = sequence.get('resource')
+    order_builder = self.order_builder
+    if sequence is not None:
+      organisation = sequence.get('organisation')
+    else:
+      organisation = None
 
     order_builder.edit(
       delivery_module = self.order_module,
@@ -183,12 +194,17 @@ class TestOrderBuilderMixin(TestOrderMixin):
     generated_document_list = order_builder.build()
     sequence.set('generated_document_list', generated_document_list)
 
-  def stepCreateOrderBuilder(self, sequence):
+  def createOrderBuilder(self):
     """
     Creates empty Order Builder
     """
     order_builder = self.portal.portal_orders.newContent(
       portal_type=self.order_builder_portal_type)
+    self.order_builder = order_builder
+    return order_builder
+
+  def stepCreateOrderBuilder(self, sequence):
+    order_builder = self.createOrderBuilder()
     sequence.set('order_builder', order_builder)
 
   def stepDecreaseOrganisationResourceQuantityVariated(self, sequence):
@@ -408,6 +424,73 @@ class TestOrderBuilder(TestOrderBuilderMixin, ERP5TypeTestCase):
     self.wanted_quantity = self.min_flow
 
     sequence_list.play(self)
+
+  def createSelectMethodForBuilder(self):
+    portal = self.getPortal()
+
+  def checkOrderBuilderStockOptimisationResult(self, expected_result, **kw):
+    result_list = [(x.getResource(), x.getQuantity(),
+                    x.getStartDate().strftime("%Y/%m/%d"),
+                    x.getStopDate().strftime("%Y/%m/%d")) for x in \
+                    self.order_builder.generateMovementListForStockOptimisation(**kw)]
+    result_list.sort()
+    expected_result.sort()
+    self.assertEqual(expected_result, result_list)
+
+  def test_04_generateMovementListWithDateInThePast(self):
+    """
+    If we can not find a future date for stock optimisation, make sure to
+    take current date as default value (before if no date was found, no
+    result was returned, introducing risk to forget ordering something, this
+    could be big issue in real life)
+    """
+    node_1 = self.node_1
+    fixed_date = DateTime('2016/08/30')
+    self.pinDateTime(fixed_date)
+    self.createOrderBuilder()
+    self.fillOrderBuilder()
+    node_1_uid = node_1.getUid()
+    self.checkOrderBuilderStockOptimisationResult([], node_uid=node_1.getUid())
+    self._makeMovement(quantity=-3, destination_value=node_1, simulation_state='confirmed')
+    resource_url = self.resource.getRelativeUrl()
+    self.checkOrderBuilderStockOptimisationResult(
+       [(resource_url, 3.0, '2016/08/30', '2016/08/30')], node_uid=node_1.getUid())
+
+  def test_05_generateMovementListForStockOptimisationForSeveralNodes(self):
+    """
+    It's common to have a warehouse composed of subparts, each subpart could have
+    it's own subpart, etc. So we have to look at stock optimisation for the whole
+    warehouse, since every resource might be stored in several distinct sub parts.
+    Make sure that stock optimisation works fine in such case.
+    """
+    node_1 = self.node_1
+    node_2 = self.node_2
+    resource = self.resource
+    self.createOrderBuilder()
+    self.fillOrderBuilder()
+    fixed_date = DateTime('2016/08/10')
+    self.pinDateTime(fixed_date)
+    resource_url = self.resource.getRelativeUrl()
+    node_uid_list = [node_1.getUid(), self.node_2.getUid()]
+    def checkStockOptimisationForTwoNodes(expected_result):
+      self.checkOrderBuilderStockOptimisationResult(expected_result, node_uid=node_uid_list,
+                                                    group_by_node=0)
+    checkStockOptimisationForTwoNodes([])
+    self._makeMovement(quantity=-3, destination_value=node_1, simulation_state='confirmed',
+                       start_date=DateTime('2016/08/20'))
+    checkStockOptimisationForTwoNodes([(resource_url, 3.0, '2016/08/20', '2016/08/20')])
+    self._makeMovement(quantity=-2, destination_value=node_1, simulation_state='confirmed',
+                       start_date=DateTime('2016/08/18'))
+    checkStockOptimisationForTwoNodes([(resource_url, 5.0, '2016/08/18', '2016/08/18')])
+    self._makeMovement(quantity=-7, destination_value=node_2, simulation_state='confirmed',
+                       start_date=DateTime('2016/08/19'))
+    checkStockOptimisationForTwoNodes([(resource_url, 12.0, '2016/08/18', '2016/08/18')])
+    self._makeMovement(quantity=11, destination_value=node_2, simulation_state='confirmed',
+                       start_date=DateTime('2016/08/16'))
+    checkStockOptimisationForTwoNodes([(resource_url, 1.0, '2016/08/20', '2016/08/20')])
+    self._makeMovement(quantity=7, destination_value=node_1, simulation_state='confirmed',
+                       start_date=DateTime('2016/08/15'))
+    checkStockOptimisationForTwoNodes([])
 
 def test_suite():
   suite = unittest.TestSuite()
