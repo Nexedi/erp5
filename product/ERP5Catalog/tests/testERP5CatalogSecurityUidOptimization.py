@@ -48,6 +48,7 @@ class TestERP5CatalogSecurityUidOptimization(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    portal.migrateSQLCatalogToERP5Catalog()
     group = portal.portal_categories.group
     if 'g1' not in group.objectIds():
       group.newContent(portal_type='Category', id='g1', codification='GROUP1')
@@ -73,12 +74,12 @@ CREATE TABLE alternate_roles_and_users (
       'alternate_roles_and_users']
 
     # Configure sql method to insert this table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(portal_type='SQL Method',
           id='z_catalog_alternate_roles_and_users_list',
           title='',
           connection_id='erp5_sql_connection',
-          arguments="\n".join(['uid', 'alternate_security_uid']),
-          template="""REPLACE INTO alternate_roles_and_users VALUES
+          arguments_src="\n".join(['uid', 'alternate_security_uid']),
+          src="""REPLACE INTO alternate_roles_and_users VALUES
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 ( <dtml-sqlvar expr="uid[loop_item]" type="int">,
   <dtml-sqlvar expr="alternate_security_uid[loop_item]" type="int" optional>
