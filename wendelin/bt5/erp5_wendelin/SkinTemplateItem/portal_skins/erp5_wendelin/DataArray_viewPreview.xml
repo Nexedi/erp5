@@ -61,7 +61,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_size_warning</string>
+                      </list>
                     </value>
                 </item>
                 <item>

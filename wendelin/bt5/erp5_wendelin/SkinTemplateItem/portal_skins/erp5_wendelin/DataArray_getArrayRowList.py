@@ -2,6 +2,10 @@ from Products.ERP5Type.Document import newTempBase
 
 if context.getArray() is None:
   return []
+  
+length = context.getArrayShape()[0]
+if length == 0:
+  return []
 
 class SequenceSliceMap():
   def __init__(self, sequence_slice, usual_slice_length, total_length):
@@ -37,7 +41,7 @@ def createTempBase(nr, row):
                      **{col[0]: str(getElement(row, i)) for i, col in column_iterator})
 
 
-length = context.getArrayShape()[0]
+
 
 # never access more than 1000 lines at once
 list_lines = min(list_lines, limit, 1000)
