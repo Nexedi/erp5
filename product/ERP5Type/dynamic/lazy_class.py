@@ -20,6 +20,7 @@ from zLOG import LOG, WARNING, BLATHER
 from portal_type_class import generatePortalTypeClass
 from accessor_holder import AccessorHolderType
 import persistent_migration
+from ZODB.POSException import ConflictError
 
 class ERP5BaseBroken(Broken, ERP5Base, PersistentBroken):
   # PersistentBroken can't be reused directly
@@ -108,7 +109,16 @@ class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
         return super(cls, self).__getattribute__(attr)
       #LOG("ERP5Type.Dynamic", BLATHER,
       #    "loading attribute %s.%s..." % (name, attr))
-      self.__class__.loadClass()
+      # Errors in __getattribute__ are ignored silently. Since loadClass calls
+      # various code, make sure we have explicitely a log in case of failure
+      try:
+        self.__class__.loadClass()
+      except ConflictError:
+        raise
+      except Exception, e:
+        LOG('lazy_class.__getattribute__', WARNING, 'Failed to load class : %r' % (e,),
+            error=sys.exc_info())
+        raise
       return getattr(self, attr)
 
     cls.__getattribute__ = __getattribute__
