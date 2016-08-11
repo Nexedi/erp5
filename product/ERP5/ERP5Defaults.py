@@ -195,6 +195,14 @@ portal_supply_path_type_list = ('Supply Line','Supply Cell')
 portal_business_process_type_list = ('Business Process',)
 portal_business_link_type_list = ('Business Link',)
 
+portal_data_descriptor_type_list = ()
+
+portal_device_type_list = ('Data Acquisition Unit',
+                           'Data Aggregation Unit'
+                           'Sensor')
+
+portal_device_configuration_type_list = ()
+
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)
 
