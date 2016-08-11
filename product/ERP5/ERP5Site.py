@@ -1545,6 +1545,33 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('login')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDataDescriptorTypeList')
+  def getPortalDataDescriptorTypeList(self):
+    """
+    Returns Data Descriptor types.
+    """
+    return self._getPortalGroupedTypeList('data_descriptor') or\
+           self._getPortalConfiguration('portal_data_descriptor_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDeviceTypeList')
+  def getPortalDeviceTypeList(self):
+    """
+    Returns Device types.
+    """
+    return self._getPortalGroupedTypeList('device') or\
+           self._getPortalConfiguration('portal_device_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDeviceConfigurationTypeList')
+  def getPortalDeviceConfigurationTypeList(self):
+    """
+    Returns Device Configuration types.
+    """
+    return self._getPortalGroupedTypeList('device_configuration') or\
+           self._getPortalConfiguration('portal_device_configuation_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER, only_visible=False):
     """
