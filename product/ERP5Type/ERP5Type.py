@@ -306,6 +306,10 @@ class ERP5TypeInformation(XMLObject,
       'personal_item',
       # Base
       'entity',
+      # Wendelin
+      'device',
+      'device_configuration',
+      'data_descriptor',
       # LEGACY - needs a warning - XXX-JPS
       'tax_movement',
     )
