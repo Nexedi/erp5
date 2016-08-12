@@ -287,14 +287,9 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     conversion_server_port = os.environ.get('conversion_server_port', '8008')
     urllib2.urlopen('%s/Zuite_setPreference?__ac_name='
                     '%s&__ac_password=%s&working_copy_list=%s'
-                    '&conversion_server_url=%s'
-                    '&conversion_server_hostname=%s'
-                    '&conversion_server_port=%s'%
+                    '&conversion_server_url=%s'%
                     (self.portal_url, self.user, self.password,
-                      bt5_dir_list, conversion_server_url,
-                      conversion_server_hostname,
-                      conversion_server_port))
-
+                      bt5_dir_list, conversion_server_url,))
 
   def unsubscribeFromTimerService(self):
     urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
