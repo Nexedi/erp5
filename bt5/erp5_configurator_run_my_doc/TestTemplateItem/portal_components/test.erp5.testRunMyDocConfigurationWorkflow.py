@@ -187,10 +187,6 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Check System Preference"""
     system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
     conversion_dict = _getConversionServerDict()
-    self.assertEqual(system_preference.getPreferredOoodocServerPortNumber(),
-                      conversion_dict['port'])
-    self.assertEqual(system_preference.getPreferredOoodocServerAddress(),
-                      conversion_dict['hostname'])
     self.assertEqual(system_preference.getPreferredDocumentConversionServerUrl(),
                       conversion_dict['url'])
 

@@ -13,14 +13,10 @@ for document in portal.portal_catalog(portal_type=bt.getTemplatePortalTypeRoleLi
   document.updateLocalRolesOnSecurityGroups()
 
 conversion_server_url = portal.portal_preferences.getPreferredDocumentConversionServerUrl()
-conversion_server_hostname = portal.portal_preferences.getPreferredOoodocServerAddress()
-conversion_server_port = portal.portal_preferences.getPreferredOoodocServerPortNumber()
 for preference_id in ["default_configurator_preference", "default_configurator_system_preference"]:
   preference = getattr(portal.portal_preferences, preference_id)
   if preference.getPortalType() == "System Preference":
     preference.setPreferredDocumentConversionServerUrl(conversion_server_url)
-    preference.setPreferredOoodocServerPortNumber(conversion_server_port)
-    preference.setPreferredOoodocServerAddress(conversion_server_hostname)
 
   if isTransitionPossible(preference, "enable"):
     preference.enable()

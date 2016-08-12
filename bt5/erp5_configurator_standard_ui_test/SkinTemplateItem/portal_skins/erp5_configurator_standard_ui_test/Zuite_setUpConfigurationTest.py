@@ -21,12 +21,6 @@ default_site_preference.setPreferredHtmlStyleAccessTab('1')
 previous_conversion_server_url = portal.portal_preferences.getPreferredDocumentConversionServerUrl()
 default_site_preference.setPreferredDocumentConversionServerUrl(previous_conversion_server_url)
 
-previous_conversion_server_address = portal.portal_preferences.getPreferredOoodocServerAddress()
-default_site_preference.setPreferredOoodocServerAddress(previous_conversion_server_address)
-
-previous_conversion_port = portal.portal_preferences.getPreferredOoodocServerPortNumber()
-default_site_preference.setPreferredOoodocServerPortNumber(previous_conversion_port)
-
 if default_site_preference.getPreferenceState() != 'global':
   default_site_preference.enable()
 
