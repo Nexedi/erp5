@@ -96,10 +96,6 @@ class TestWebCrawler(ERP5TypeTestCase):
                                                portal_type='System Preference')
     conversion_dict = _getConversionServerDict()
     system_preference.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    system_preference.\
-                   setPreferredOoodocServerAddress(conversion_dict['hostname'])
-    system_preference.\
-                    setPreferredOoodocServerPortNumber(conversion_dict['port'])
     system_preference.setPreferredDocumentFilenameRegularExpression(
                                                    FILENAME_REGULAR_EXPRESSION)
     system_preference.setPreferredDocumentReferenceRegularExpression(
