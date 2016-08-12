@@ -10,6 +10,7 @@ import signal
 import shutil
 import errno
 import random
+from warnings import warn
 import transaction
 from glob import glob
 try:
@@ -735,6 +736,9 @@ def main(argument_list=None):
 
   bt5_path_list = []
 
+  conversion_server_hostname = None
+  conversion_server_port = None
+
   for opt, arg in opts:
     if opt in ("-v", "--verbose"):
       os.environ['VERBOSE'] = "1"
@@ -800,9 +804,9 @@ def main(argument_list=None):
     elif opt == "--conversion_server_url":
       os.environ["conversion_server_url"] = arg
     elif opt == "--conversion_server_hostname":
-      os.environ["conversion_server_hostname"] = arg
+      conversion_server_hostname = arg
     elif opt == "--conversion_server_port":
-      os.environ["conversion_server_port"] = arg
+      conversion_server_port = arg
     elif opt == "--volatile_memcached_server_hostname":
       os.environ["volatile_memcached_server_hostname"] = arg
     elif opt == "--volatile_memcached_server_port":
@@ -836,6 +840,17 @@ def main(argument_list=None):
       sys.path.extend(arg.split(','))
     elif opt == "--instance_home":
       instance_home = os.path.abspath(arg)
+
+  # BBB rewrite deprecated conversion_server_hostname / conversion_server_port into
+  # the equivalent conversion_server_url
+  if conversion_server_hostname and conversion_server_port and \
+        not os.environ.get('conversion_server_url'):
+    conversion_server_url = 'http://%s:%s' % (
+      conversion_server_hostname, conversion_server_port)
+    warn('conversion_server_hostname/conversion_server_port are deprecated.\n'
+      'Using %s as conversion_server_url instead' % conversion_server_url,
+      DeprecationWarning)
+    os.environ['conversion_server_url'] = conversion_server_url
 
   bt5_path_list += filter(None,
     os.environ.get("erp5_tests_bt5_path", "").split(','))
