@@ -128,7 +128,7 @@ class ArchiveTool(BaseTool):
     source_catalog_id = source_catalog.getId()
     if source_connection_id is None or source_deferred_connection_id is None:
       for method in source_catalog.objectValues():
-        if method.meta_type == "Z SQL Method":
+        if method.meta_type in ["Z SQL Method", "ERP5 SQL Method"]:
           if source_deferred_connection_id is None and 'deferred' in method.connection_id:
             source_deferred_connection_id = method.connection_id
           elif source_connection_id is None and 'transactionless' not in method.connection_id:
