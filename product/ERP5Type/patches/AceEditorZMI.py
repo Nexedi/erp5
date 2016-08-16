@@ -67,7 +67,7 @@ def manage_page_footer(self):
        + ['printed', 'same_type', 'string', 'sequence', 'random', 'DateTime',
            'whrandom', 'reorder', 'sets', 'test', 'math'])
     live_check_python_script = 1 # XXX make it a preference ?
-  elif document.meta_type in ('Z SQL Method', ):
+  elif document.meta_type in ('Z SQL Method', 'ERP5 SQL Method'):
     mode = 'sql'
     textarea_selector = 'textarea[name="template:text"]'
   elif document.meta_type in ('Page Template', 'ERP5 OOo Template', ):
