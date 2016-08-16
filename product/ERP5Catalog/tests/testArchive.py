@@ -88,14 +88,13 @@ class TestArchive(InventoryAPITestCase):
     portal_skins_custom = portal.portal_skins.custom
     zsql_method = getattr(portal_skins_custom, zsql_method_id, None)
     if zsql_method is None:
-      portal_skins_custom.manage_addProduct['ZSQLMethods']\
-               .manage_addZSQLMethod(
+      zsql_method = portal_skins_custom.newContent( \
+          portal_type = 'SQL Method',
           id = zsql_method_id,
           title = '',
           connection_id = connection_id,
           arguments = "",
-          template = "select path from catalog")
-      zsql_method = portal_skins_custom[zsql_method_id]
+          src = "select path from catalog")
       zsql_method.max_rows_ = 0
     # it is mandatory to provide connection_id, or the
     # zsql method will look at preference and use the one
