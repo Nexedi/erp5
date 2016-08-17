@@ -368,7 +368,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   security.declarePrivate('changeSQLConnectionIds')
   def changeSQLConnectionIds(self, folder, sql_connection_id_dict):
     if sql_connection_id_dict is not None:
-      if folder.meta_type == 'Z SQL Method':
+      if folder.meta_type in ['Z SQL Method', 'ERP5 SQL Method']:
         connection_id = folder.connection_id
         if connection_id in sql_connection_id_dict:
           folder.connection_id = sql_connection_id_dict[connection_id]
