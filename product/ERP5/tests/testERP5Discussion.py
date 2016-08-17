@@ -111,6 +111,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
       Create a disucssion thread
     """
     portal = self.portal
+    discussion_thread_id_set = set([
+      o.getId()
+      for o in portal.discussion_thread_module.objectValues()
+    ])
 
     # create web sections & set predicates
     group1 = portal.portal_categories.group.newContent(portal_type='Category',
@@ -122,8 +126,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.tic()
 
     web_section1.WebSection_createNewDiscussionThread('test1-new', 'test1 body')
-    discussion_thread = [x for x in self.portal.discussion_thread_module.objectValues() \
-                          if x.getReference()=='test1-new'][0]
+    discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
+                          if x.getId() not in discussion_thread_id_set]
+    discussion_thread_id_set.add(discussion_thread.getId())
+    self.assertTrue(discussion_thread.getReference().startswith("test1-new-"))
     # not indexed yet
     self.assertSameSet([], web_section1.WebSection_getDiscussionThreadList())
 
@@ -142,8 +148,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
     # check attachment creation
     file = makeFileUpload('TEST-en-002.doc')
     web_section1.WebSection_createNewDiscussionThread('test1-new-with-attachment', 'test1 body', file=file)
-    discussion_thread = [x for x in self.portal.discussion_thread_module.objectValues() \
-                          if x.getReference()=='test1-new-with-attachment'][0]
+    discussion_thread, = [x for x in self.portal.discussion_thread_module.objectValues() \
+                          if x.getId() not in discussion_thread_id_set]
+    discussion_thread_id_set.add(discussion_thread.getId())
+    self.assertTrue(discussion_thread.getReference().startswith("test1-new-with-attachment-"))
     self.tic()
 
     discussion_post = discussion_thread.contentValues(filter={'portal_type': 'Discussion Post'})[0]
