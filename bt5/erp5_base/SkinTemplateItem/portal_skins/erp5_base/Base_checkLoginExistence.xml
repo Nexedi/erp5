@@ -49,26 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery\n
-query = ComplexQuery(\n
-  SimpleQuery(portal_type=portal_type),\n
-  SimpleQuery(reference=reference),\n
-)\n
-login_list = [x for x in context.getPortalObject().portal_catalog(\n
-  select_list=(\'reference\',),\n
-  query=query)\n
-  if x.reference == reference]\n
-if ignore_uid is not None:\n
-  login_list = [x for x in login_list if x.uid != ignore_uid]\n
-return len(login_list) > 0\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type, reference, ignore_uid=None</string> </value>
         </item>

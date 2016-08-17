@@ -49,27 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>def migrateLogin():\n
-  login = context.newContent(\n
-    portal_type=\'Login\',\n
-    reference=context.getReference(),\n
-    password=context.getPassword(),\n
-  )\n
-  login.validate()\n
-  return login\n
-\n
-login_list = context.objectValues(portal_type=\'Login\')\n
-\n
-if not login_list:\n
-  return [migrateLogin()]\n
-elif not [x for x in login_list if x.getValidationState() == \'validated\']:\n
-  return [migrateLogin()] + login_list\n
-else:\n
-  return login_list\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>

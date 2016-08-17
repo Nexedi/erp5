@@ -49,31 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-result = []\n
-sql_result = portal.ERP5Site_zGetDuplicateLoginReferenceList()\n
-if len(sql_result):\n
-  from Products.CMFActivity.ActiveResult import ActiveResult\n
-  from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery\n
-  query = ComplexQuery(\n
-    *[ComplexQuery(SimpleQuery(portal_type=i[\'portal_type\']),\n
-                   SimpleQuery(reference=i[\'reference\'])) for i in sql_result],\n
-    operator=\'OR\')\n
-  active_result = ActiveResult()\n
-  for i in portal.portal_catalog(\n
-      select_list=(\'portal_type\', \'reference\',),\n
-      query=query):\n
-    result.append(\'%r, %r, %r\' % (i[\'portal_type\'], i[\'reference\'], i[\'path\']))\n
-  active_result.edit(summary=\'Logins having the same reference exist\',\n
-                     severity=len(sql_result),\n
-                     detail=\'\\n\'.join(result))\n
-  active_process = context.newActiveProcess()\n
-  active_process.postResult(active_result)\n
-  return active_process\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>

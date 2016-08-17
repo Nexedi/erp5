@@ -49,14 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>obj = state_change[\'object\']\n
-for plugin in obj.getPortalObject().acl_users.objectValues():\n
-  if getattr(plugin, \'getLoginPortalType\', lambda: None)() == obj.getPortalType():\n
-    plugin.unregisterLogin(obj)\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change</string> </value>
         </item>

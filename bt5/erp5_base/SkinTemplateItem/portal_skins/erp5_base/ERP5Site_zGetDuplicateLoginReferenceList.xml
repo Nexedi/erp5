@@ -62,25 +62,6 @@
             <value> <string>ERP5Site_zGetDuplicateLoginReferenceList</string> </value>
         </item>
         <item>
-            <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  reference, portal_type\n
-FROM\n
-  catalog\n
-WHERE\n
-  portal_type in (<dtml-in expr="portal_catalog.getPortalLoginTypeList()"><dtml-sqlvar sequence-item type="string"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
-  AND validation_state=\'validated\'\n
-GROUP BY\n
-  reference, portal_type\n
-HAVING\n
-  count(*) > 1\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

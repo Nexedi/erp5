@@ -49,16 +49,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_body</string> </key>
-            <value> <string>person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if person is None:\n
-  return []\n
-else:\n
-  return [x.getReference() for x in person.objectValues(portal_type=portal_type) \\\n
-          if x.getValidationState() == \'validated\']\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>portal_type=\'ERP5 Login\'</string> </value>
         </item>
