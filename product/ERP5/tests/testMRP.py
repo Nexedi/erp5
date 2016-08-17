@@ -133,31 +133,40 @@ class TestMRPMixin(TestBPMMixin):
 
   def createDefaultTransformation(self):
     resource = lambda: self.createProduct(quantity_unit_list=['weight/kg'])
-    transformation = self.createTransformation(resource_value=resource())
+    self.produced_resource = resource()
+    transformation = self.createTransformation(resource_value=self.produced_resource)
+    self.consumed_resource_1 = resource()
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource(),
+                                   resource_value=self.consumed_resource_1,
                                    quantity=3,
                                    quantity_unit_list=['weight/kg'],
                                    trade_phase='mrp/p0')
+    self.consumed_resource_2 = resource()
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource(),
+                                   resource_value=self.consumed_resource_2,
                                    quantity=1,
                                    quantity_unit_list=['weight/kg'],
                                    trade_phase='mrp/p0')
+    self.consumed_resource_3 = resource()
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource(),
+                                   resource_value=self.consumed_resource_3,
                                    quantity=4,
                                    quantity_unit_list=['weight/kg'],
                                    trade_phase='mrp/p1')
+    self.consumed_resource_4 = resource()
     self.createTransformedResource(transformation=transformation,
-                                   resource_value=resource(),
+                                   resource_value=self.consumed_resource_4,
                                    quantity=1,
                                    quantity_unit_list=['weight/kg'],
                                    trade_phase='mrp/p1')
     return transformation
 
   def createBusinessProcess1(self, node_p0=None):
-    """ order      p0      s0      p1     deliver
+    """
+    PPL : Production Packing List
+    PR  : Production Report
+    PO  : Production Order
+        order      p0      s0      p1     deliver
        ------- S0 ---- S1 ---- S2 ---- S3 ------- S4
          PO        PR     PPL      PR       PPL
     """
@@ -207,18 +216,23 @@ class TestMRPMixin(TestBPMMixin):
 class TestMRPImplementation(TestMRPMixin):
   """the test for implementation"""
 
-  def test(self):
-    workshop = self.createNode(title='workshop')
-    workshop2 = self.createNode(title='workshop2')
-    destination = self.createNode(title='destination')
-    business_process = self.createBusinessProcess1(workshop2)
-    order = self.createDefaultOrder(business_process)
-    order_line, = order.objectValues()
-    order._edit(source_value=workshop, destination_value=destination)
+  def createMRPOrder(self, use_item=False):
+    self.workshop = self.createNode(title='workshop')
+    self.workshop2 = self.createNode(title='workshop2')
+    self.destination = self.createNode(title='destination')
+    business_process = self.createBusinessProcess1(self.workshop2)
+    self.order = self.createDefaultOrder(business_process)
+    self.order_line, = self.order.objectValues()
+    if use_item:
+     self.item = self.portal.item_module.newContent()
+     self.order_line.setAggregateValue(self.item)
+    self.order._edit(source_value=self.workshop, destination_value=self.destination)
+    self.order.plan()
     self.tic()
 
-    order.plan()
-    self.tic()
+  def testSimpleOrder(self):
+    self.createMRPOrder()
+    order = self.order
 
     ar, = order.getCausalityRelatedValueList(portal_type="Applied Rule")
     sm, = ar.objectValues() # order
@@ -227,7 +241,7 @@ class TestMRPImplementation(TestMRPMixin):
     ar, = sm.objectValues()
 
     movement_list = []
-    resource = order_line.getResource()
+    resource = self.order_line.getResource()
     for sm in ar.objectValues():
       self.assertEqual(sm.getSource(), None)
       self.assertTrue(sm.getDestination())
@@ -266,14 +280,14 @@ class TestMRPImplementation(TestMRPMixin):
     order.localBuild()
     self.tic()
     variation = 'industrial_phase/trade_phase/mrp/p0'
-    self.checkStock(resource, (workshop2, variation, 10))
+    self.checkStock(resource, (self.workshop2, variation, 10))
 
     ppl1, = getRelatedDeliveryList("Production Packing List")
     ppl1.start()
     ppl1.deliver()
     order.localBuild()
     self.tic()
-    self.checkStock(resource, (workshop, variation, 10))
+    self.checkStock(resource, (self.workshop, variation, 10))
 
     pr2, = (x for x in getRelatedDeliveryList("Production Report")
               if x.aq_base is not pr1.aq_base)
@@ -281,15 +295,45 @@ class TestMRPImplementation(TestMRPMixin):
     pr2.deliver()
     order.localBuild()
     self.tic()
-    self.checkStock(resource, (workshop, '', 10))
+    self.checkStock(resource, (self.workshop, '', 10))
 
     ppl2, = (x for x in getRelatedDeliveryList("Production Packing List")
                if x.aq_base is not ppl1.aq_base)
     ppl2.start()
     ppl2.deliver()
     self.tic()
-    self.checkStock(resource, (destination, '', 10))
+    self.checkStock(resource, (self.destination, '', 10))
 
+  def checkExpectedLineList(self, delivery, expected_line_list):
+    found_line_list = []
+    for line in delivery.getMovementList():
+      found_line_list.append((line.getResourceValue(), line.getQuantity(),
+                              line.getAggregateValue()))
+    sortKey = lambda x: x[0].getRelativeUrl()
+    found_line_list.sort(key=sortKey)
+    expected_line_list.sort(key=sortKey)
+    self.assertEqual(expected_line_list, found_line_list)
+
+  def testOrderWithItem(self):
+    """
+    Check item propagation from Production Order to Production Report
+    and Production Packing List
+    """
+    self.createMRPOrder(use_item=True)
+    order = self.order
+    order.confirm()
+    order.localBuild()
+    order_line = self.order_line
+    resource = order_line.getResourceValue()
+    self.tic()
+
+    production_report, = order.getCausalityRelatedValueList(
+                                portal_type="Production Report")
+    #                        resource,            quantity, item
+    expected_line_list = [(self.produced_resource, 10.0, self.item),
+                          (self.consumed_resource_1, -30.0, None),
+                          (self.consumed_resource_2, -10.0, None)]
+    self.checkExpectedLineList(production_report, expected_line_list)
 
 def test_suite():
   suite = unittest.TestSuite()

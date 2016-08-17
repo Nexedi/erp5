@@ -3,7 +3,7 @@
 (function (self, caches, fetch) {
   "use strict";
 
-  var CACHE_NAME = 'Tue, 12 Apr 2016 16:30:00 GMT',
+  var CACHE_NAME = 'Thu, 12 July 2016 12:00:00 GMT',
     // Files required to make this app work offline
     REQUIRED_FILES = [
       './',
@@ -14,7 +14,6 @@
       'https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0',
       'https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular',
       'URI.js',
-      'erp5_launcher.html',
       'erp5_launcher.js',
       'gadget_erp5.css',
       'gadget_erp5_editor_panel.html',
@@ -63,7 +62,6 @@
       'gadget_erp5_header.js',
       'gadget_erp5_jio.html',
       'gadget_erp5_jio.js',
-      'gadget_erp5_latest.css',
       'gadget_erp5_page_action.html',
       'gadget_erp5_page_action.js',
       'gadget_erp5_page_form.html',
@@ -78,6 +76,8 @@
       'gadget_erp5_page_logout.js',
       'gadget_erp5_page_preference.html',
       'gadget_erp5_page_preference.js',
+      'gadget_erp5_page_relation_search.html',
+      'gadget_erp5_page_relation_search.js',
       'gadget_erp5_page_search.html',
       'gadget_erp5_page_search.js',
       'gadget_erp5_page_tab.html',
@@ -86,7 +86,6 @@
       'gadget_erp5_page_worklist.js',
       'gadget_erp5_panel.html',
       'gadget_erp5_panel.js',
-      'gadget_erp5_panel_configuration.html',
       'gadget_erp5_pt_form_dialog.html',
       'gadget_erp5_pt_form_dialog.js',
       'gadget_erp5_pt_form_list.html',
@@ -99,6 +98,8 @@
       'gadget_erp5_pt_report_view.js',
       'gadget_erp5_router.html',
       'gadget_erp5_router.js',
+      'gadget_erp5_relation_input.html',
+      'gadget_erp5_relation_input.js',
       'gadget_erp5_search_editor.html',
       'gadget_erp5_search_editor.js',
       'gadget_erp5_searchfield.html',
@@ -115,9 +116,6 @@
       'handlebars.js',
       'i18next.js',
       'jiodev.js',
-      'jquery.js',
-      'jquerymobile.css',
-      'jquerymobile.js',
       'renderjs.js',
       'rsvp.js'
     ];

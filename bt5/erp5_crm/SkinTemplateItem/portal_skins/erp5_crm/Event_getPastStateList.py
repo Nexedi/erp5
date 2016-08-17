@@ -1,1 +1,0 @@
-return ['draft', 'planned', 'confirmed',]

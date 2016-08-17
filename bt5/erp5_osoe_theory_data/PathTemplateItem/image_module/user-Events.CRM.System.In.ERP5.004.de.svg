@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1052.3622"
+   height="744.09448"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="user-Events.CRM.System.In.ERP5-004-en.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="722"
+     id="namedview62"
+     showgrid="false"
+     inkscape:zoom="0.63432805"
+     inkscape:cx="262.23946"
+     inkscape:cy="375.74842"
+     inkscape:window-x="-2"
+     inkscape:window-y="-3"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title></dc:title>
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <defs
+     id="defs5">
+    <marker
+       id="Arrow1Lend"
+       refX="0"
+       refY="0"
+       orient="auto">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         id="path4717"
+         inkscape:connector-curvature="0"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none" />
+    </marker>
+  </defs>
+  <rect
+     style="fill:#ffffff;fill-opacity:1"
+     id="rect3035"
+     width="1051.5063"
+     height="733.0592"
+     x="-1.5764713"
+     y="3.152946" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1"
+     id="rect3039"
+     width="1046.7771"
+     height="736.2121"
+     x="5.1529417"
+     y="3.1529427"
+     ry="0.31215915" />
+  <text
+     style="font-size:40.52568054px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans"
+     xml:space="preserve"
+     x="187.60403"
+     y="445.68433"
+     id="text3617"
+     transform="scale(1.0716635,0.93312874)"
+     font-weight="normal"
+     font-style="normal"
+     font-size="17.16892624px" />
+  <path
+     style="fill:none;stroke:#a89797;stroke-width:2.36040854px"
+     inkscape:connector-curvature="0"
+     id="path2883"
+     d="M 623.58553,294.76375" />
+  <path
+     style="fill:none;stroke:#a89797;stroke-width:2.36040854px"
+     inkscape:connector-curvature="0"
+     id="path2883-4"
+     d="M 1001.7715,294.55802" />
+  <path
+     style="fill:none;stroke:#a89797;stroke-width:2.36040854px"
+     inkscape:connector-curvature="0"
+     id="path2883-4-7"
+     d="M 762.56389,501.87346" />
+  <image
+     y="115.7049"
+     x="313.08627"
+     id="image3255"
+     height="105.50127"
+     width="88.395721"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" />
+  <image
+     y="290.16687"
+     x="91.623619"
+     id="image3346"
+     height="130.83243"
+     width="89.926872"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" />
+  <image
+     y="326.13531"
+     x="824.2688"
+     id="image3437"
+     height="114.83379"
+     width="91.458015"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png" />
+  <image
+     y="157.66954"
+     x="42.530479"
+     id="image3164-8"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <image
+     y="361.60315"
+     x="588.09247"
+     id="image3255-4"
+     height="105.50127"
+     width="88.395721"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" />
+  <image
+     y="172.35808"
+     x="464.31967"
+     id="image3255-0"
+     height="105.50127"
+     width="88.395721"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" />
+  <image
+     y="184.28503"
+     x="689.1485"
+     id="image3255-4-3"
+     height="105.50127"
+     width="88.395721"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.1?format=png" />
+  <image
+     y="256.94543"
+     x="193.05537"
+     id="image3437-6"
+     height="114.83379"
+     width="91.458015"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png" />
+  <image
+     y="136.49283"
+     x="127.78764"
+     id="image3346-1"
+     height="130.83243"
+     width="89.926872"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" />
+  <image
+     y="353.27667"
+     x="323.82938"
+     id="image3346-1-3"
+     height="130.83243"
+     width="89.926872"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" />
+  <image
+     y="502.25763"
+     x="353.06067"
+     id="image3346-1-0"
+     height="130.83243"
+     width="89.926872"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" />
+  <image
+     y="507.25104"
+     x="593.18683"
+     id="image3437-6-6"
+     height="114.83379"
+     width="91.458015"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png" />
+  <image
+     y="305.71698"
+     x="474.67618"
+     id="image3437-6-6-5"
+     height="114.83379"
+     width="91.458015"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png" />
+  <image
+     y="108.83681"
+     x="606.71674"
+     id="image3437-5"
+     height="114.83379"
+     width="91.458015"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.3?format=png" />
+  <image
+     y="171.61946"
+     x="813.93744"
+     id="image3346-1-0-4"
+     height="130.83243"
+     width="89.926872"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Person.2?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 371.16327,486.86197 C 226.72618,569.77219 136.23048,566.57372 138.54403,415.22045"
+     id="path3937"
+     stroke-miterlimit="4" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1.90204084;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 176.90589,143.66814 C 171.90947,24.68922 341.44695,129.63454 346.21316,133.11773"
+     id="path3937-7"
+     stroke-miterlimit="4" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 166.52422,141.52326 C 149.36849,44.353666 90.871664,133.4851 73.715931,156.12711"
+     id="path3937-7-0"
+     stroke-miterlimit="4" />
+  <image
+     y="78.635719"
+     x="232.79675"
+     id="image3876"
+     height="44.823307"
+     width="67.096619"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="m 73.20004,259.55693 46.37438,45.61634"
+     id="path3937-7-0-3"
+     stroke-miterlimit="4" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1.98465514;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 372.70063,534.63815 C 284.71286,495.68607 292.50296,423.74004 264.0209,364.28923"
+     id="path3937-7-0-3-2"
+     stroke-miterlimit="4" />
+  <image
+     y="396.31561"
+     x="273.73438"
+     id="image3164-0-6"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <image
+     y="471.93521"
+     x="124.08498"
+     id="image3876-4"
+     height="44.823307"
+     width="67.096619"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="m 419.73689,616.86223 c 83.62628,117.61026 155.54979,95.5351 203.08984,-37.04872"
+     id="path3937-7-0-3-8"
+     stroke-miterlimit="4" />
+  <image
+     y="657.5921"
+     x="490.03021"
+     id="image3876-2"
+     height="44.823307"
+     width="67.096619"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="m 657.83098,521.23273 c 57.59668,-75.7065 144.83174,2.20972 192.37186,-130.37401"
+     id="path3937-7-0-3-8-1"
+     stroke-miterlimit="4" />
+  <image
+     y="441.64499"
+     x="736.14215"
+     id="image3164-7-5"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 382.25429,138.7955 C 380.69918,94.842947 713.25082,10.461078 739.26977,179.90771"
+     id="path3937-7-0-3-8-1-2-9"
+     stroke-miterlimit="4" />
+  <image
+     y="73.676788"
+     x="488.09561"
+     id="image3164"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 531.11497,322.60118 C 529.55983,278.64863 869.76725,306.2571 661.51999,413.0425"
+     id="path3937-7-0-3-8-1-2-9-7"
+     stroke-miterlimit="4" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="m 844.88248,262.3992 c -93.32872,40.53102 -58.35882,80.40942 -175.60654,174.58689"
+     id="path3937-7-0-3-8-1-9"
+     stroke-miterlimit="4" />
+  <image
+     y="288.32495"
+     x="740.73566"
+     id="image3164-7-6"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <image
+     y="311.94897"
+     x="692.14227"
+     id="image3876-6"
+     height="44.823307"
+     width="67.096619"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="m 877.80222,228.40216 c 110.31445,9.86696 131.50398,35.08004 14.2563,129.25746"
+     id="path3937-7-0-3-8-1-9-3"
+     stroke-miterlimit="4" />
+  <image
+     y="266.61954"
+     x="921.81512"
+     id="image3876-3"
+     height="44.823307"
+     width="67.096619"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Icone.Message?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:1.96999693;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 381.42793,382.24205 C 434.2323,304.18919 372.42996,189.33572 481.99092,217.58745"
+     id="path3937-7-0-3-8-1-94"
+     stroke-miterlimit="4" />
+  <image
+     y="250.46198"
+     x="373.00879"
+     id="image3164-0"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <path
+     style="fill:none;stroke:#000000;stroke-width:2.0262928;stroke-linecap:square;stroke-miterlimit:4;marker-end:url(#Arrow1Lend)"
+     inkscape:connector-curvature="0"
+     d="M 425.08539,545.41323 C 571.48886,415.04477 490.29727,266.31386 260.69891,288.38345"
+     id="path3937-7-0-3-8-1-2"
+     stroke-miterlimit="4" />
+  <image
+     y="420.74976"
+     x="472.78415"
+     id="image3164-7"
+     height="92.07135"
+     width="52.592026"
+     xlink:href="http://www.slapos.org/P-OSOE-Event.Mobile.Phone?format=png" />
+  <text
+     style="font-size:32.55711746px;font-style:normal;font-weight:bold;fill:#008080;font-family:Sans"
+     xml:space="preserve"
+     x="221.27744"
+     y="247.13362"
+     id="text3996"
+     font-weight="bold"
+     font-style="normal"
+     font-size="13.79300021999999970px"><tspan
+       id="tspan3998"
+       x="221.27744"
+       y="247.13362">Kunden</tspan></text>
+  <text
+     style="font-size:32.55711746px;font-style:normal;font-weight:bold;fill:#008080;font-family:Sans"
+     xml:space="preserve"
+     x="897.66858"
+     y="338.59076"
+     id="text4000"
+     font-weight="bold"
+     font-style="normal"
+     font-size="13.79300021999999970px"><tspan
+       id="tspan4002"
+       x="897.66858"
+       y="338.59076">Personal</tspan></text>
+  <text
+     style="font-size:32.55711746px;font-style:normal;font-weight:bold;fill:#008080;font-family:Sans"
+     xml:space="preserve"
+     x="431.15192"
+     y="636.85071"
+     id="text4004"
+     font-weight="bold"
+     font-style="normal"
+     font-size="13.79300021999999970px"><tspan
+       id="tspan4006"
+       x="431.15192"
+       y="636.85071">Lieferanten</tspan></text>
+</svg>

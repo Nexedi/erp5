@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, Handlebars, jIO, location */
+/*global window, rJS, RSVP, Handlebars, jIO, location, console */
 /*jslint nomen: true, maxlen:80, indent:2*/
 (function (rJS, jIO, Handlebars, RSVP, window) {
   "use strict";
@@ -57,6 +57,12 @@
 
             form_gadget.props.element.querySelector(".activity_watcher_gadget")
                             .innerHTML = html_content;
+          }, function (error) {
+            //Exception is raised if network is lost for some reasons,
+            //in this case, try patiently until network is back.
+            console.log("Unable to fetch activities from ERP5", error);
+          })
+          .push(function () {
             return RSVP.delay(1000);
           })
           .push(function () {

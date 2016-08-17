@@ -108,20 +108,18 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Tue, 12 Apr 2016 16:30:00 GMT\n
+# generated on Tue, 29 Jul 2016 13:00:00 GMT .\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+font-awesome/font-awesome-webfont.eot?v=4.6.3\n
+font-awesome/font-awesome-webfont.eot?#iefix&v=4.6.3\n
+font-awesome/font-awesome-webfont.woff?v=4.6.3\n
+font-awesome/font-awesome-webfont.ttf?v=4.6.3\n
+font-awesome/font-awesome-webfont.svg?v=4.6.3#fontawesomeregular\n
 URI.js\n
-erp5_launcher.html\n
-erp5_launcher.js\n
-gadget_erp5.css\n
+erp5_launcher_nojqm.js\n
+gadget_erp5_nojqm.css\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
 gadget_erp5_field_checkbox.html\n
@@ -168,7 +166,6 @@ gadget_erp5_header.html\n
 gadget_erp5_header.js\n
 gadget_erp5_jio.html\n
 gadget_erp5_jio.js\n
-gadget_erp5_latest.css\n
 gadget_erp5_page_action.html\n
 gadget_erp5_page_action.js\n
 gadget_erp5_page_form.html\n
@@ -183,6 +180,8 @@ gadget_erp5_page_logout.html\n
 gadget_erp5_page_logout.js\n
 gadget_erp5_page_preference.html\n
 gadget_erp5_page_preference.js\n
+gadget_erp5_page_relation_search.html\n
+gadget_erp5_page_relation_search.js\n
 gadget_erp5_page_search.html\n
 gadget_erp5_page_search.js\n
 gadget_erp5_page_tab.html\n
@@ -191,7 +190,6 @@ gadget_erp5_page_worklist.html\n
 gadget_erp5_page_worklist.js\n
 gadget_erp5_panel.html\n
 gadget_erp5_panel.js\n
-gadget_erp5_panel_configuration.html\n
 gadget_erp5_pt_form_dialog.html\n
 gadget_erp5_pt_form_dialog.js\n
 gadget_erp5_pt_form_list.html\n
@@ -204,6 +202,8 @@ gadget_erp5_pt_report_view.html\n
 gadget_erp5_pt_report_view.js\n
 gadget_erp5_router.html\n
 gadget_erp5_router.js\n
+gadget_erp5_relation_input.html\n
+gadget_erp5_relation_input.js\n
 gadget_erp5_search_editor.html\n
 gadget_erp5_search_editor.js\n
 gadget_erp5_searchfield.html\n
@@ -220,9 +220,6 @@ gadget_translation_data.js\n
 handlebars.js\n
 i18next.js\n
 jiodev.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
 NETWORK:\n
@@ -312,8 +309,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1421252934.14</float>
-                        <string>GMT</string>
+                        <float>1465381395.69</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -357,7 +354,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>950.30301.41545.13926</string> </value>
+                <value> <string>952.57579.5740.15394</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -375,7 +372,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460476136.13</float>
+                        <float>1469799631.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

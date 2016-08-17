@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1002"
+   height="650"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Create.and.Manage.Products.Product.Module.Fill.View.Tab.svg">
+  <defs
+     id="defs29" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="716"
+     id="namedview27"
+     showgrid="false"
+     inkscape:zoom="0.84171598"
+     inkscape:cx="520"
+     inkscape:cy="338"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     id="g5"
+     transform="matrix(0.9673731,0,0,0.96838889,26.924734,-66.982493)">
+    <title
+       id="title7">Layer 1</title>
+    <image
+       y="68.40062"
+       x="-28.538816"
+       id="image3065"
+       xlink:href="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Fill.View.Tab.Screenshot?format=png"
+       height="676.38116"
+       width="1040.9634" />
+    <rect
+       id="rect2839"
+       width="277.07932"
+       height="269.71057"
+       x="721.11871"
+       y="361.11407"
+       stroke-miterlimit="4"
+       style="fill:#f9f9f9;fill-rule:evenodd;stroke:#000000;stroke-width:5.16592503;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+    <text
+       xml:space="preserve"
+       style="font-size:19.69191551px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="738.76703"
+       y="403.89185"
+       id="text3020"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3022"
+         x="738.76703"
+         y="403.89185"
+         style="font-weight:bold;-inkscape-font-specification:Sans Bold">Characteristics</tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="428.50674"
+         id="tspan3024">Title: <tspan
+   style="font-weight:bold;fill:#d40000;-inkscape-font-specification:Sans Bold"
+   id="tspan3042">Red LED</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="453.12164"
+         id="tspan3026">Reference: <tspan
+   style="font-weight:bold;fill:#0000ff;-inkscape-font-specification:Sans Bold"
+   id="tspan3044">RL01</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="477.73654"
+         id="tspan3028"
+         style="font-weight:bold;fill:#800080;-inkscape-font-specification:Sans Bold">Electronic component</tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="502.35141"
+         id="tspan3030"
+         style="font-weight:bold;fill:#ff6600;-inkscape-font-specification:Sans Bold">Taxable</tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="526.96631"
+         id="tspan3032">Purchase price: 0.5€</tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="551.58124"
+         id="tspan3038">Sales price: 1€</tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="576.19611"
+         id="tspan3034">Validity: 01/01/2010</tspan><tspan
+         sodipodi:role="line"
+         x="738.76703"
+         y="600.81097"
+         id="tspan3036">Supplier: EC China</tspan></text>
+    <path
+       style="fill:#d40000;stroke:#000000;stroke-width:0.31984293px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 385.55077,247.59235 21.24796,-10.31566 0,7.8149 58.20096,0 0,5.93931 -57.73904,0 0,7.81489 z"
+       id="path3070"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#0000ff;stroke:#000000;stroke-width:0.31984293px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 385.61858,272.354 21.24797,-10.31565 0,7.8149 58.20095,0 0,5.9393 -57.73903,0 0,7.8149 z"
+       id="path3070-3"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#800080;stroke:#000000;stroke-width:0.31984293px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 475.33302,301.79793 21.24796,-10.31566 0,7.8149 58.20096,0 0,5.93931 -57.73904,0 0,7.81489 z"
+       id="path3070-2"
+       inkscape:connector-curvature="0" />
+  </g>
+  <rect
+     id="rect3805"
+     width="49.022015"
+     height="28.707939"
+     x="4.8696642"
+     y="127.00278"
+     stroke-miterlimit="4"
+     style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+  <rect
+     id="rect3805-0"
+     width="83.632614"
+     height="20.812292"
+     x="162.51387"
+     y="381.56256"
+     stroke-miterlimit="4"
+     style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+  <path
+     style="fill:#ff6600;stroke:#000000;stroke-width:0.30956987px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 262.08832,496.1505 20.5547,-9.98957 0,7.56786 56.30205,0 0,5.75156 -55.8552,0 0,7.56785 z"
+     id="path3070-27"
+     inkscape:connector-curvature="0" />
+</svg>

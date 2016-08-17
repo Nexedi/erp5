@@ -56,7 +56,7 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
   def getBusinessTemplateList(self):
     """ """
     return TestPayrollMixin.getBusinessTemplateList(self) +\
-          ('erp5_payroll_l10n_fr',)
+          ('erp5_calendar', 'erp5_payroll_l10n_fr',)
 
   def stepCheckYearToDateSliceAmount(self, sequence=None, **kw):
     paysheet_module = self.portal.getDefaultModule(portal_type=\

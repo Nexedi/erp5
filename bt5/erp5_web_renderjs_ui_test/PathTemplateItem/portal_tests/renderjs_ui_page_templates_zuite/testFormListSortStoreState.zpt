@@ -78,7 +78,7 @@
 
 <tr>
   <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]/div[2]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
   <td>index=0</td>
 </tr>
 

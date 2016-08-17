@@ -79,6 +79,16 @@ if mirror_section:
   mirror_section_uid = portal.restrictedTraverse(mirror_section).getUid()
   params['mirror_section_uid'] = mirror_section_uid
 
+ledger = request.get('ledger', None)
+if ledger:
+  if not isinstance(ledger, list):
+    # Allows the generation of reports on different ledgers as the same time
+    ledger = [ledger]
+  ledger_value_list = [cat_tool.restrictedTraverse(ledger_category, None)
+                       for ledger_category in ledger]
+  for ledger_value in ledger_value_list:
+    params.setdefault('ledger_uid', []).append(ledger_value.getUid())
+
 default_selection_params = params.copy()
 default_selection_params['period_start_date'] = period_start_date
 default_selection_params['movement_portal_type'] = portal.getPortalAccountingMovementTypeList()

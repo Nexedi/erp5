@@ -19,17 +19,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h3[@data-i18n='Other']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//h3[@data-i18n='Other']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Foos']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Foos' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=foo_module')]</td>
   <td></td>
 </tr>
 <tr>
@@ -133,7 +123,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-open')]</td>
+  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]</td>
   <td></td>
 </tr>
 <tr>

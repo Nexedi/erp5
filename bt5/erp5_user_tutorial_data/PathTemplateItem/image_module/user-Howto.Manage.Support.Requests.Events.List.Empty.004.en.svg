@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1022"
+   height="385"
+   sodipodi:docname="user-Howto.Manage.Support.Requests.Events.List.Empty.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-2.0891585"
+     x="-1.3469262"
+     id="image3049"
+     xlink:href="http://www.erp5.com/user-howto.manage.support.requests.events.list.empty.screenshot?format=png"
+     height="389"
+     width="1024"
+     style="stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+  <rect
+     style="fill:none;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2987"
+     width="1006.1769"
+     height="70.61721"
+     x="6.8818216"
+     y="151.48949"
+     rx="3.7374518"
+     ry="0.97501051" />
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2989"
+     width="247.16811"
+     height="40.498631"
+     x="464.95276"
+     y="327.99069"
+     rx="3.091244"
+     ry="0.60778689" />
+  <text
+     xml:space="preserve"
+     style="font-size:20.40783881999999849px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;stroke-width:5.00000000999999994;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="607.59686"
+     y="344.18344"
+     id="text5014"
+     sodipodi:linespacing="125%"
+     transform="scale(0.96921633,1.0317614)"><tspan
+       sodipodi:role="line"
+       x="607.59686"
+       y="344.18344"
+       id="tspan5018"
+       style="text-align:center;text-anchor:middle;fill:#000000;stroke-width:5.00000000999999994;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round">The Events list is empty</tspan></text>
+  <path
+     style="fill:none;stroke:#000000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     d="m 488.76795,223.05002 0,63.96888 90.45854,0 0,41.57975"
+     id="path3820"
+     inkscape:connector-curvature="0" />
+</svg>

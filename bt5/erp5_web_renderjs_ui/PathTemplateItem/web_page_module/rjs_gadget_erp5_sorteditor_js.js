@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, RSVP, Handlebars, $, loopEventListener*/
-(function (window, document, rJS, RSVP, Handlebars, $, loopEventListener) {
+/*global window, document, rJS, RSVP, Handlebars, loopEventListener*/
+(function (window, document, rJS, RSVP, Handlebars, loopEventListener) {
   "use strict";
   var gadget_klass = rJS(window),
     sort_item_source = gadget_klass.__template_element
@@ -105,15 +105,12 @@
           return RSVP.all(list);
         })
         .push(function (all_result) {
-          var innerHTML = "",
-            select_list;
+          var div,
+            container = gadget.props.element.querySelector(".sort_item_container");
           for (i = 0; i < all_result.length; i += 1) {
-            innerHTML += all_result[i];
-          }
-          gadget.props.element.querySelector(".sort_item_container").innerHTML = innerHTML;
-          select_list = gadget.props.element.querySelector(".sort_item_container").querySelectorAll("select");
-          for (i = 0; i < select_list.length; i += 1) {
-            $(select_list[i]).selectmenu();
+            div = document.createElement("div");
+            div.innerHTML = all_result[i];
+            container.appendChild(div);
           }
         });
     })
@@ -175,15 +172,9 @@
             })
             .push(function (template) {
               var tmp = document.createElement("div"),
-                container = gadget.props.element.querySelector(".sort_item_container"),
-                select_list,
-                i;
+                container = gadget.props.element.querySelector(".sort_item_container");
               tmp.innerHTML = template;
-              select_list = tmp.querySelectorAll("select");
-              for (i = 0; i < select_list.length; i += 1) {
-                $(select_list[i]).selectmenu();
-              }
-              container.appendChild(tmp.querySelector("div"));
+              container.appendChild(tmp);
             });
         }
       );
@@ -200,4 +191,4 @@
       );
     });
 
-}(window, document, rJS, RSVP, Handlebars, $, loopEventListener));
+}(window, document, rJS, RSVP, Handlebars, loopEventListener));

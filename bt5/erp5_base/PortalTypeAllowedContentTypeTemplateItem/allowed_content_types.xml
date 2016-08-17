@@ -44,6 +44,10 @@
  <portal_type id="Delivery Tool">
   <item>Delivery Builder</item>
  </portal_type>
+ <portal_type id="Delivery Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Embedded Folder">
   <item>Embedded File</item>
  </portal_type>

@@ -96,14 +96,14 @@
 
 <tr>
   <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]/div[2]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
   <td>index=0</td>
 </tr>
 
 
 <tr>
   <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]/div[1]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]//select[1]</td>
   <td>index=1</td>
 </tr>
 
@@ -145,26 +145,26 @@
 
 <tr>
   <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]/div[1]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
   <td>id</td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]/div[2]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
   <td>ascending</td>
 </tr>
 
 
 <tr>
   <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]/div[1]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]//select[1]</td>
   <td>title</td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]/div[2]//select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]//select[2]</td>
   <td>descending</td>
 </tr>
 

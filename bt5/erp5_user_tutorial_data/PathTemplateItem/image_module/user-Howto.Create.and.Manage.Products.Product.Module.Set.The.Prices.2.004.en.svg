@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1018"
+   height="719"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.2.svg">
+  <defs
+     id="defs25" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview23"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="491.40965"
+     inkscape:cy="308.91233"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     id="g5"
+     transform="matrix(0.49981004,0,0,0.49981004,6.8266667,350.6399)">
+    <title
+       id="title7">Layer 1</title>
+    <image
+       y="-702.80542"
+       x="-14.516644"
+       id="image3055"
+       xlink:href="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.2.Screenshot?format=png"
+       height="1474.5602"
+       width="2048.7783" />
+    <rect
+       stroke-miterlimit="4"
+       y="-309.1333"
+       x="1295.5181"
+       height="121.35426"
+       width="172.55708"
+       id="rect3805"
+       style="fill:none;stroke:#00000f;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-opacity:0.94118000000000002;stroke-dasharray:none;stroke-linejoin:round" />
+    <rect
+       stroke-miterlimit="4"
+       y="-435.01996"
+       x="1919.5865"
+       height="97.174759"
+       width="96.517036"
+       id="rect3805-1"
+       style="fill:none;stroke:#1221c6;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <path
+       stroke-miterlimit="4"
+       d="M 1860.2293,-483.36433"
+       id="path3620-1"
+       inkscape:connector-curvature="0"
+       style="fill:#f9f9f9;stroke:#000000;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <path
+       stroke-miterlimit="4"
+       d="M 1180.042,-398.16173"
+       id="path3620-7"
+       inkscape:connector-curvature="0"
+       style="fill:#f9f9f9;stroke:#000000;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <rect
+       stroke-miterlimit="4"
+       y="-34.878227"
+       x="804.83087"
+       height="138.30606"
+       width="300.56384"
+       id="rect3805-0"
+       style="fill:#ffffff;stroke:#00000f;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-opacity:0.94118000000000002;stroke-dasharray:none;stroke-linejoin:round" />
+    <text
+       font-size="24px"
+       font-style="normal"
+       font-weight="normal"
+       id="text3728"
+       y="20.836575"
+       x="809.64783"
+       xml:space="preserve"
+       style="font-size:48.84044647000000339px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans;stroke-width:10.00380061000000076;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+       transform="scale(1.010497,0.98961205)">    <tspan
+   y="20.836575"
+   x="809.64783"
+   id="tspan3730"
+   style="stroke-width:10.00380061000000076;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round">Click on</tspan>    <tspan
+   id="tspan3732"
+   y="81.887146"
+   x="809.64783"
+   style="stroke-width:10.00380061000000076;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round">&quot;Variation&quot;</tspan>   </text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:10.00380039;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 1291.1911,-250.74699 -312.34659,0 0,210.177109"
+       id="path3826"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

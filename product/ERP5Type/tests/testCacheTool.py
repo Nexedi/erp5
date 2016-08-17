@@ -72,19 +72,17 @@ class TestCacheTool(ERP5TypeTestCase):
     self.commit()
 
   def login(self):
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('admin', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('admin').__of__(uf)
     newSecurityManager(None, user)
 
   def checkCacheTool(self):
-    portal = self.getPortal()
-    self.assertNotEqual(None, getattr(portal, 'portal_caches', None))
+    self.assertIsNot(None, self.portal.portal_caches)
 
   def checkPortalTypes(self):
-    portal = self.getPortal()
-    portal_types = portal.portal_types
+    portal_types = self.portal.portal_types
     typeinfo_names = ("Cache Factory",
                       "Ram Cache",
                       "Distributed Ram Cache",
@@ -108,8 +106,7 @@ class TestCacheTool(ERP5TypeTestCase):
                                   priority=1)
 
   def createCacheFactories(self):
-    portal = self.getPortal()
-    portal_caches = portal.portal_caches
+    portal_caches = self.portal.portal_caches
 
     # Cache plugins are organised into 'Cache factories' so we create
     # factories first ram_cache_factory (to test Ram Cache Plugin)
@@ -175,7 +172,7 @@ class TestCacheTool(ERP5TypeTestCase):
     self.assertTrue('erp5_user_factory' in CachingMethod.factories)
 
   def createCachedMethod(self):
-    portal = self.getPortal()
+    portal = self.portal
     if getattr(portal, self.python_script_id, None) is not None:
       portal.manage_delObjects(ids=[self.python_script_id])
     ## add test cached method
@@ -194,7 +191,7 @@ return result
 
   def test_01_CacheFactoryOnePlugin(self):
     """ Test cache factory containing only one cache plugin. """
-    portal = self.getPortal()
+    portal = self.portal
     py_script_obj = getattr(portal, self.python_script_id)
     for cf_name, clear_allowed in (('ram_cache_factory', True),
                     ('distributed_ram_cache_factory', False),
@@ -207,8 +204,7 @@ return result
 
   def test_02_CacheFactoryMultiPlugins(self):
     """ Test a cache factory containing multiple cache plugins. """
-    portal = self.getPortal()
-    py_script_obj = getattr(portal, self.python_script_id)
+    py_script_obj = getattr(self.portal, self.python_script_id)
     cf_name = 'erp5_user_factory'
     my_cache = CachingMethod(py_script_obj,
                              'py_script_obj',
@@ -217,15 +213,13 @@ return result
 
 
   def _getCacheCookieValue(self):
-    portal = self.getPortal()
-    return portal.getCacheCookie('cache_tool_test')
+    return self.portal.getCacheCookie('cache_tool_test')
 
   def _callCache(self, my_cache, real_calculation=False, result=""):
-    portal = self.getPortal()
     before_cookie_value = self._getCacheCookieValue()
     start = time.time()
     cached =  my_cache(self.nb_iterations,
-                        portal_path=('', portal.getId()),
+                        portal_path=('', self.portal.getId()),
                         result=result)
     end = time.time()
     calculation_time = end-start
@@ -238,7 +232,7 @@ return result
     return calculation_time
 
   def _cacheFactoryInstanceTest(self, my_cache, cf_name, clear_allowed):
-    portal = self.getPortal()
+    portal = self.portal
     print
     print "="*40
     print "TESTING:", cf_name
@@ -311,7 +305,7 @@ return result
     print
     print "="*40
     print "TESTING: Concurrent RamCache"
-    portal = self.getPortal()
+    portal = self.portal
     result = 'Something short'
 
     py_script_obj = getattr(portal, self.python_script_id)
@@ -366,7 +360,7 @@ return result
     print
     print '=' * 40
     print 'TESTING: Long Keys and Large values'
-    portal = self.getPortal()
+    portal = self.portal
     # import the local and clear it
     from Products.ERP5Type.CachePlugins.DistributedRamCache import\
                                                                 connection_pool
@@ -446,9 +440,8 @@ return 'a' * 1024 * 1024 * 25
     print
     print "="*40
     print "TESTING: Cache Expiration Time"
-    portal = self.getPortal()
 
-    py_script_obj = getattr(portal, self.python_script_id)
+    py_script_obj = getattr(self.portal, self.python_script_id)
 
     cache_factory_list = ('ram_cache_factory', 'distributed_ram_cache_factory',
                           'distributed_persistent_cache_factory')

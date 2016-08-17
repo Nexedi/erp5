@@ -206,7 +206,7 @@ class Widget:
       render_prefix, attr_dict, local_name)
 
   def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
-                      render_prefix, attr_dict, local_name):
+                      render_prefix, attr_dict, local_name, escape=False):
     """
       Return a field value rendered in odt format as read-only mode.
       - as_string return value as string or as xml object
@@ -222,7 +222,10 @@ class Widget:
     if value is None:
       value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-    text_node.text = value
+    if escape:
+      RE_OOO_ESCAPE.sub(OOoEscaper(text_node), value)
+    else:
+      text_node.text = value
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
@@ -412,6 +415,17 @@ class TextWidget(Widget):
       # except for editor field
       return "<span class='%s'>%s</span>" % (css_class, value)
     return value
+
+  def render_odt_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    if value is None:
+      value = ['']
+    elif not isinstance(value, (types.ListType, types.TupleType)):
+      value = [str(value)]
+    return Widget.render_odt_view(
+      self, field, '\n'.join(value), as_string, ooo_builder, REQUEST,
+      render_prefix, attr_dict, local_name, escape=True,
+    )
 
 TextWidgetInstance = TextWidget()
 

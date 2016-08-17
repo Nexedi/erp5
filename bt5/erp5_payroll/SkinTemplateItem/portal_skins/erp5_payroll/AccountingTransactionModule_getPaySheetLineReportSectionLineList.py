@@ -19,6 +19,7 @@ if request.get('from_date'):
 at_date = DateTime(request['at_date'])
 simulation_state = request['simulation_state']
 resource = request['resource']
+ledger = request.get('ledger', None)
 
 portal_simulation = context.getPortalObject().portal_simulation
 
@@ -31,7 +32,8 @@ employee_params = {
     'from_date' : from_date,
     'simulation_state' : simulation_state,
     'precision' : precision,
-    'resource' : resource
+    'resource' : resource,
+    'ledger' : ledger,
   }
 
 employer_params = {
@@ -43,7 +45,8 @@ employer_params = {
     'from_date' : from_date,
     'simulation_state' : simulation_state,
     'precision' : precision,
-    'resource' : resource
+    'resource' : resource,
+    'ledger' : ledger,
   }
 
 if request.get('mirror_section'):

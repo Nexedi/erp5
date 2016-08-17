@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, Handlebars, loopEventListener */
+/*global window, rJS, RSVP, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars, loopEventListener) {
+(function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -77,20 +77,6 @@
 
       result[input.getAttribute('name')] = value;
       return result;
-    })
-    .declareService(function () {
-      var gadget = this,
-        clear_button = gadget.props.element.querySelector(".clear_button"),
-        search_input = gadget.props.element.querySelector("input");
-      return loopEventListener(
-        clear_button,
-        "click",
-        false,
-        function () {
-          search_input.value = "";
-          search_input.focus();
-        }
-      );
     });
 
-}(window, rJS, RSVP, Handlebars, loopEventListener));
+}(window, rJS, RSVP, Handlebars));

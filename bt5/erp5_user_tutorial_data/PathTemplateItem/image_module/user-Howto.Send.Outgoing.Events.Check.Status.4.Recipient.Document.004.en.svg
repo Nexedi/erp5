@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1534"
+   height="1084"
+   sodipodi:docname="user-Howto.Send.Outgoing.Events.Check.Status.4.Recipient.Document.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Mend"
+       style="overflow:visible;">
+      <path
+         id="path3945"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.4) rotate(180) translate(10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible">
+      <path
+         id="path4419"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       id="perspective10" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.55073801"
+     inkscape:cx="767"
+     inkscape:cy="542"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-0.50516295"
+     x="0.25533578"
+     id="image3058"
+     xlink:href="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Check.Status.4.Recipient.Document.Screenshot?format=png"
+     height="655"
+     width="1023" />
+  <image
+     y="695.89948"
+     x="510.44891"
+     id="image3155"
+     xlink:href="http://www.erp5.com/user-Howto.Send.Outgoing.Events.Check.Status.4.Recipient.Document.Event.Screenshot?format=png"
+     height="388"
+     width="1024" />
+  <rect
+     style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="rect2839"
+     width="58.21957"
+     height="28.403339"
+     x="507.59201"
+     y="114.84404" />
+  <text
+     xml:space="preserve"
+     style="font-size:20.50734329px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+     x="437.05756"
+     y="809.6344"
+     id="text3615"
+     transform="scale(1.0096806,0.99041221)"><tspan
+       sodipodi:role="line"
+       id="tspan3617"
+       x="437.05756"
+       y="809.6344" /></text>
+  <path
+     style="fill:none;stroke:#dd0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:url(#Arrow1Mend)"
+     d="m 1040.9373,513.5697 164.6429,157.90963"
+     id="path4213"
+     inkscape:connector-curvature="0" />
+  <rect
+     style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="rect2839-8"
+     width="1010.2271"
+     height="111.10583"
+     x="518.88159"
+     y="857.02295" />
+  <rect
+     style="fill:#ffffff;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="rect3613"
+     width="487.97284"
+     height="79.657158"
+     x="11.023691"
+     y="823.2016" />
+  <text
+     xml:space="preserve"
+     style="font-size:19.17163276999999866px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none"
+     x="15.446106"
+     y="854.20459"
+     id="text3055"
+     sodipodi:linespacing="125%"
+     transform="scale(0.9999802,1.0000198)"><tspan
+       sodipodi:role="line"
+       x="15.446106"
+       y="854.20459"
+       id="tspan4870"
+       style="font-size:27px;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none">This is the mail message-the Event</tspan><tspan
+       sodipodi:role="line"
+       x="15.446106"
+       y="887.95459"
+       id="tspan3059"
+       style="font-size:27px;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none">we sent to Rafaël Dubois</tspan></text>
+</svg>

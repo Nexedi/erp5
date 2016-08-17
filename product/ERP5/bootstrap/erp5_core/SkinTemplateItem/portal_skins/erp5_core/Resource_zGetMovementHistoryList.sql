@@ -1,3 +1,9 @@
+<dtml-let optimizer_switch_key_list="portal_catalog.getSQLCatalog().getOptimizerSwitchKeyList()">
+<dtml-if "'derived_merge' in optimizer_switch_key_list">
+  SET @current_optimizer_switch = @@optimizer_switch,
+      @@optimizer_switch = 'derived_merge=off'
+  <dtml-var sql_delimiter>
+</dtml-if>
 SET @running_total_quantity := <dtml-var initial_running_total_quantity>,
     @running_total_price := <dtml-var initial_running_total_price>;
 <dtml-var sql_delimiter>
@@ -9,7 +15,7 @@ SELECT
   @running_total_price := IFNULL(q1.total_price, 0) + 
             @running_total_price AS running_total_price
 FROM (
-SELECT DISTINCT
+SELECT
   catalog.path as path,
   catalog.uid as uid,
   catalog.relative_url as relative_url,
@@ -153,3 +159,8 @@ LIMIT
 ORDER BY
   <dtml-var order_by_expression>
 </dtml-if>
+<dtml-if "'derived_merge' in optimizer_switch_key_list">
+  <dtml-var sql_delimiter>
+  SET @@optimizer_switch = @current_optimizer_switch
+</dtml-if>
+</dtml-let>

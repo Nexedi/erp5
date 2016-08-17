@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="650"
+   height="300"
+   id="svg3019"
+   version="1.1"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="P-OSOE-Accounting.Mathematician-Debit.Credit.Invariance.a.Myth.svg">
+  <defs
+     id="defs3021">
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible">
+      <path
+         id="path4608"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend-5"
+       style="overflow:visible">
+      <path
+         id="path4608-6"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="325"
+     inkscape:cy="150"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1276"
+     inkscape:window-height="742"
+     inkscape:window-x="-1"
+     inkscape:window-y="-2"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3024">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-752.36218)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:3.0968709;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3446"
+       width="643.95789"
+       height="295.87878"
+       x="3.4136772"
+       y="755.25946" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="267.35394"
+       y="1019.4572"
+       id="text3331"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3333"
+         x="267.35394"
+         y="1019.4572" /></text>
+    <g
+       transform="translate(0.893042,44.514933)"
+       id="g4305" />
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+       x="22.097656"
+       y="800.7821"
+       id="text3011-7"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3190-4"
+         x="22.097656"
+         y="800.7821"
+         style="font-size:48px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"><tspan
+   style="font-size:48px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4201">T</tspan><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4221">(</tspan>i<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4223">)=(</tspan>a<tspan
+   style="font-size:36px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4205">i</tspan>, s<tspan
+   style="font-size:36px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4209">i</tspan>, a'<tspan
+   style="font-size:36px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4211">i</tspan>, d<tspan
+   style="font-size:36px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4213">i</tspan>, c<tspan
+   style="font-size:36px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4215">i</tspan>, p<tspan
+   style="font-size:36px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4217">i</tspan><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4235">)</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:48px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+       x="242.24609"
+       y="911.50854"
+       id="text3011-7-0"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3190-4-2"
+         x="242.24609"
+         y="911.50854"
+         style="font-size:40px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr;text-anchor:start;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="109"
+       y="886.36218"
+       id="text4333"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335"
+         x="109"
+         y="886.36218"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4432">s<tspan
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4436">i</tspan></tspan>=<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4442">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:38.63021851px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="44.939659"
+       y="986.11383"
+       id="text4337"
+       sodipodi:linespacing="125%"
+       transform="scale(1.1075888,0.90286214)"><tspan
+         sodipodi:role="line"
+         id="tspan4341"
+         x="44.939659"
+         y="986.11383"
+         style="font-size:69.53438568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif">∑</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:38.63021851px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="48.309532"
+       y="1101.2015"
+       id="text4337-9"
+       sodipodi:linespacing="125%"
+       transform="scale(1.1075888,0.90286214)"><tspan
+         sodipodi:role="line"
+         id="tspan4341-3"
+         x="48.309532"
+         y="1101.2015"
+         style="font-size:69.53438568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif">∑</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="57"
+       y="931.36218"
+       id="text4444"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4450"
+         x="57"
+         y="931.36218"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4456">i</tspan>∈ℕ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="57.690086"
+       y="1033.993"
+       id="text4444-2"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4450-3"
+         x="57.690086"
+         y="1033.993"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4456-2">i</tspan>∈ℕ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="298.82419"
+       y="886.31726"
+       id="text4333-5"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335-4"
+         x="298.82419"
+         y="886.31726"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4432-0"><tspan
+     style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+     id="tspan4527">d</tspan><tspan
+     style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+     id="tspan4436-0">i</tspan></tspan>=<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4442-4">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:38.63021851px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="214.51894"
+       y="986.06421"
+       id="text4337-0"
+       sodipodi:linespacing="125%"
+       transform="scale(1.1075888,0.90286214)"><tspan
+         sodipodi:role="line"
+         id="tspan4341-9"
+         x="214.51894"
+         y="986.06421"
+         style="font-size:69.53438568px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Liberation Serif;-inkscape-font-specification:Liberation Serif">∑</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="244.82416"
+       y="931.31726"
+       id="text4444-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4450-7"
+         x="244.82416"
+         y="931.31726"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Sans;-inkscape-font-specification:Sans"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4456-3">i</tspan>∈ℕ</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="425"
+       y="881.36218"
+       id="text4529"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4531"
+         x="425"
+         y="881.36218">Tax Debit = Tax Credit</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="116.81831"
+       y="994.08893"
+       id="text4333-9"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4335-6"
+         x="116.81831"
+         y="994.08893"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4432-7"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4563"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4565">E</tspan><tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   id="tspan4567">(</tspan>c<tspan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="tspan4573">i</tspan>,t<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans"
+   id="tspan4569">)</tspan></tspan>.p<tspan
+   style="font-size:65.00091553%;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;baseline-shift:sub;font-family:KerkisCalligraphic;-inkscape-font-specification:KerkisCalligraphic Medium"
+   id="tspan4436-5">i</tspan></tspan>=<tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Serif;-inkscape-font-specification:Serif"
+   id="tspan4442-6">0</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="370.80402"
+       y="987.43182"
+       id="text4529-5"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4531-3"
+         x="370.80402"
+         y="987.43182">Price Debit = Price Credit</tspan></text>
+  </g>
+</svg>

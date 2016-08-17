@@ -32,7 +32,7 @@
 <!-- Page has a search field -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//div[@data-gadget-scope='erp5_searchfield']//input[@type='text' and @name='search']</td>
+  <td>//div[@data-gadget-scope='m']//div[@data-gadget-scope='erp5_searchfield']//input[@type='search' and @name='search']</td>
   <td></td>
 </tr>
 <tr>
@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@class='search_button' and @type='submit']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
   <td></td>
 </tr>
 <tr>
@@ -53,7 +53,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//div[@data-gadget-scope='erp5_searchfield']//input[@type='text' and @name='search' and @value='foobar']</td>
+  <td>//div[@data-gadget-scope='m']//div[@data-gadget-scope='erp5_searchfield']//input[@type='search' and @name='search' and @value='foobar']</td>
   <td></td>
 </tr>
 

@@ -3,6 +3,7 @@ from Products.PythonScripts.standard import Object
 from ZTUtils import LazyFilter
 
 portal = context.getPortalObject()
+portal_categories = portal.portal_categories
 request = portal.REQUEST
 getInventoryList_ = portal.portal_simulation.getInventoryList
 traverse = portal.restrictedTraverse
@@ -90,6 +91,18 @@ if project:
     inventory_params['project'] = project
 if mirror_section_category:
   inventory_params['mirror_section_category'] = mirror_section_category
+
+if ledger:
+  if ledger == 'None':
+    inventory_params['ledger_uid'] = Query(ledger_uid=None)
+  else:
+    if not isinstance(ledger, list):
+      # Allows the generation of reports on different ledgers as the same time
+      ledger = [ledger]
+    ledger_value_list = [portal_categories.restrictedTraverse(ledger_category, None)
+                         for ledger_category in ledger]
+    for ledger_value in ledger_value_list:
+      inventory_params.setdefault('ledger_uid', []).append(ledger_value.getUid())
 
 # a dictionary (node_relative_url, mirror_section_uid, payment_uid + analytic)
 #                        -> {'debit'=, 'credit'=}

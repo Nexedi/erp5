@@ -105,7 +105,7 @@ property values, edit the values and click &quot;Save Changes&quot;.
       </dtml-in>
     </select>
     </div>
-    <dtml-elif "_.has_key(select_variable)">
+    <dtml-elif "_.has_key('select_variable')">
     <div class="form-element">
     <select name="&dtml-id;:<dtml-var "REQUEST['management_page_charset_tag']">text">
       <dtml-in "_[select_variable]">
@@ -135,7 +135,7 @@ property values, edit the values and click &quot;Save Changes&quot;.
       </dtml-in>
     </select>
     </div>
-    <dtml-elif "_.has_key(select_variable)">
+    <dtml-elif "_.has_key('select_variable')">
     <div class="form-element">
     <select name="&dtml-id;:<dtml-var "REQUEST['management_page_charset_tag']">list:string" multiple
       size="<dtml-var "_.min(7, _.len(_[select_variable]))">">

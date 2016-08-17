@@ -37,7 +37,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@class='search_button' and @type='submit']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
   <td></td>
 </tr>
 <tr>
@@ -91,7 +91,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='text' and @name='search']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='search' and @name='search']</td>
   <td></td>
 </tr>
 <tr>

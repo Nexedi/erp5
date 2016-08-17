@@ -1,1 +1,0 @@
-return ['started', 'stopped', 'delivered',]

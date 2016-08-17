@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1023"
+   height="719.29132"
+   sodipodi:docname="user-Howto.Link.People.To.Existing.Organisations.Persons.Line.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective3887"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="575.60372"
+     inkscape:cy="352.4637"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     units="mm"
+     borderlayer="false"
+     inkscape:showpageshadow="false" />
+  <image
+     y="-2.4280396"
+     x="0.1120907"
+     id="image4098"
+     xlink:href="http://www.erp5.com/user-Howto.Link.Persons.and.Organisations.Person.List.Screenshot?format=png"
+     height="768"
+     width="1024" />
+  <rect
+     style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:2.9333334;stroke-opacity:1;stroke-dasharray:none"
+     id="rect2818"
+     width="1012.396"
+     height="21.452406"
+     x="6.1135798"
+     y="186.05939"
+     ry="1.0438029" />
+  <path
+     style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:2.9333334;stroke-opacity:1;stroke-dasharray:none"
+     d="m 404.49487,208.13587 -2.96366,185.9674 411.94756,1.3983 0,46.1422"
+     id="path3620"
+     inkscape:connector-curvature="0" />
+  <image
+     sodipodi:absref="/tmp/user-Howto.Link.Persons.and.Organisations.John.Scott.Doh?format=jpg"
+     xlink:href="http://www.erp5.com/user-Howto.Link.Persons.and.Organisations.John.Scott.Doh?format=png"
+     id="image3889"
+     x="747.53503"
+     y="441.35211"
+     width="134.03242"
+     height="134.03242" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:#d41d19;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:2.9333334;stroke-opacity:1;stroke-dasharray:none"
+     id="rect3893"
+     width="295.14178"
+     height="73.96244"
+     x="209.23624"
+     y="483.97052"
+     ry="0.91086984" />
+  <text
+     xml:space="preserve"
+     style="font-size:27.65999985px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="355.99814"
+     y="512.88263"
+     id="text3235"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3237"
+       x="355.99814"
+       y="512.88263">Find John Doh in the</tspan><tspan
+       sodipodi:role="line"
+       x="355.99814"
+       y="547.45764"
+       id="tspan3239">list and click his line</tspan></text>
+</svg>

@@ -27,15 +27,17 @@
 #
 ##############################################################################
 
+import time
 import unittest
 
-from Testing import ZopeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
+from Testing.ZopeTestCase import _print, PortalTestCase
+from AccessControl.SecurityManagement import \
+  getSecurityManager, newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import getExtraSqlConnectionStringList
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
-from Products.ERP5Type.tests.utils import reindex
+from Products.ERP5Type.tests.utils import reindex, createZODBPythonScript
 
 
 class TestArchive(InventoryAPITestCase):
@@ -133,7 +135,7 @@ class TestArchive(InventoryAPITestCase):
     if not run: return
     if not quiet:
       message = 'Archive'
-      ZopeTestCase._print('\n%s ' % message)
+      _print('\n%s ' % message)
       LOG('Testing... ',0,message)
 
     portal = self.getPortal()
@@ -342,9 +344,42 @@ class TestArchive(InventoryAPITestCase):
     # check the current archive
     self.assertEqual(portal_archive.getCurrentArchive(), dest)
 
+  def test_MaximumRecursionDepthExceededWithComplexSecurity(self):
+    skin = self.portal.portal_skins.custom
+    colour = self.portal.portal_categories.colour
+    colour.hasObject('green') or colour.newContent('green')
+    login = str(time.time())
+    script_id = ["ERP5Type_getSecurityCategoryMapping",
+                 "ERP5Type_getSecurityCategory"]
+    createZODBPythonScript(skin, script_id[0], "",
+      "return ((%r, ('colour',)),)" % script_id[1])
+    createZODBPythonScript(skin, script_id[1],
+      "base_category_list, user_name, object, portal_type, depth=[]", """if 1:
+      # This should not be called recursively, or at least if should not fail.
+      # Because RuntimeError is catched by 'except:' clauses, we detect it
+      # with a static variable.
+      depth.append(None)
+      assert not portal_type, portal_type
+      # the following line calls Base_zSearchRelatedObjectsByCategoryList
+      object.getSourceDecisionRelatedValueList()
+      bc, = base_category_list
+      depth.pop()
+      return [] if depth else [{bc: 'green'}]
+      """)
+    person = self.portal.person_module.newContent(reference=login)
+    try:
+      self.tic()
+      PortalTestCase.login(self, login)
+      self.assertEqual(['green'], getSecurityManager().getUser().getGroups())
+      self.portal.portal_caches.clearAllCache()
+      PortalTestCase.login(self, login)
+      unittest.expectedFailure(self.assertEqual)(
+        ['green'], getSecurityManager().getUser().getGroups())
+    finally:
+      skin.manage_delObjects(script_id)
+      self.commit()
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestArchive))
   return suite
-

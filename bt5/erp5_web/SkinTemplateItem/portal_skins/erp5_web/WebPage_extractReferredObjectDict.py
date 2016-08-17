@@ -2,12 +2,22 @@ from zExceptions import Unauthorized
 portal = context.getPortalObject()
 
 href_object_dict = {}
+if not isinstance(allow_tag_list, (list, tuple)):
+  allow_tag_list = None
+if not isinstance(deny_tag_list, (list, tuple)):
+  deny_tag_list = []
+
 def main():
   for part in context.Base_parseHtml(context.getTextContent("").decode("utf-8")):
     handleHtmlPart(part)
   return href_object_dict
 
 def handleHtmlTag(tag, attrs):
+  if allow_tag_list is not None:
+    if tag not in allow_tag_list:
+      return
+  if tag in deny_tag_list:
+    return
   #if tag == "base": and "href" in attrs:  # should not exist in safe-html
   #  NotImplemented
   if tag == "object":
@@ -21,6 +31,10 @@ def handleHtmlTag(tag, attrs):
     for i in range(len(attrs)):
       if attrs[i][0] in ("src", "href"):
         handleHref(attrs[i][1])
+  for i in range(len(attrs)):
+    if attrs[i][0] == "style":
+      handleCss(attrs[i][1])
+
 
 on_next_data = [lambda x: x]
 def handleHtmlPart(part):
@@ -68,10 +82,11 @@ def traverseHref(url, allow_method=True, allow_hash=False):
 site_object_dict = context.ERP5Site_getWebSiteDomainDict()
 base_url_root_object = getattr(context, "getWebSiteValue", str)() or portal
 base_url_object = context
-assert base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl())
-base_url = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
-if not base_url.startswith("/"):
-  base_url = "/" + base_url
+base_url = "."
+if base_url_object.getRelativeUrl().startswith(base_url_root_object.getRelativeUrl()):
+  base_url = base_url_object.getRelativeUrl()[len(base_url_root_object.getRelativeUrl()):]
+  if base_url and not base_url.startswith("/"):
+    base_url = "/" + base_url
 
 normalize_kw = {"keep_empty": False, "keep_trailing_slash": False}
 def prepareHrefTraverse(url, allow_hash=False):

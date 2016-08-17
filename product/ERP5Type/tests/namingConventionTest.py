@@ -68,7 +68,7 @@ class TestNamingConvention(ERP5TypeTestCase):
 
     def testNamingConvention(self):
         result = 'installed templates: %s\n' % repr(self.getBusinessTemplateList())
-        result += self.getPortal().portal_skins.erp5_core.ERP5Site_checkNamingConventions(html_output=None)
+        result += self.portal.portal_skins.erp5_core.ERP5Site_checkNamingConventions(html_output=None)
         problems_re = re.compile('([0-9]+) problems found')
         problems = int(problems_re.search(result).group(1))
         self.assertEqual(0, problems, result)

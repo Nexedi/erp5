@@ -1,6 +1,6 @@
-/*global window, rJS, document, RSVP, loopEventListener, jQuery */
+/*global window, rJS, document, RSVP, loopEventListener */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, document, RSVP, loopEventListener, $) {
+(function (window, rJS, document, RSVP, loopEventListener) {
   "use strict";
 
   rJS(window)
@@ -58,24 +58,6 @@
       }
       result[this.property_dict.name] = value;
       return result;
-    })
-
-    .declareService(function () {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.property_dict.textarea_deferred.promise;
-        })
-        .push(function (textarea) {
-          return loopEventListener(
-            textarea,
-            'focus',
-            false,
-            function () {
-              $(textarea).keyup();
-            }
-          );
-        });
     });
 
-}(window, rJS, document, RSVP, loopEventListener, jQuery));
+}(window, rJS, document, RSVP, loopEventListener));

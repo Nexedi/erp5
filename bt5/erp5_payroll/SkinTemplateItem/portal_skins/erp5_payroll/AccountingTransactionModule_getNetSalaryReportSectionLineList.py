@@ -24,6 +24,8 @@ if request.get('from_date'):
 at_date = DateTime(request['at_date'])
 simulation_state = request['simulation_state']
 
+ledger = request.get('ledger', None)
+
 object_list = []
 total_price = 0
 
@@ -38,7 +40,8 @@ for inventory in portal.portal_simulation.getInventoryList(
                     from_date=from_date,
                     at_date=at_date,
                     group_by_resource=0,
-                    group_by_node=1, ):
+                    group_by_node=1,
+                    ledger=ledger, ):
   price = inventory.total_price or 0
   total_price += price
   movement = inventory.getObject()

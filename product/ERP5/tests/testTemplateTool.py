@@ -687,7 +687,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     before = {bt.getTitle(): bt.getId()
       for bt in template_tool.getInstalledBusinessTemplateList()}
-    bt_title = 'erp5_calendar'
+    bt_title = 'erp5_forge'
     template_tool.installBusinessTemplateListFromRepository([bt_title],
         install_dependency=True)
     self.tic()

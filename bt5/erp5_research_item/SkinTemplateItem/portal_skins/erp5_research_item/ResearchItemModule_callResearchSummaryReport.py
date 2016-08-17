@@ -5,7 +5,7 @@ inventory_kw["at_date"] = at_date
 inventory_kw["from_date"] = from_date
 inventory_kw["quantity"] = "<0"
 if ledger:
-  inventory_kw["parent_ledger_relative_url"] = "ledger/%s" % ledger
+  inventory_kw["ledger"] = "ledger/%s" % ledger
 if multiplier is None:
   multiplier = 1
 

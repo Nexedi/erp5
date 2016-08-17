@@ -48,7 +48,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>type_definition</string>
+              </tuple>
             </value>
         </item>
         <item>

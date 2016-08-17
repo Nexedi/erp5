@@ -41,10 +41,6 @@
 
       function stopTail() {
         clearTimeout(t);
-        var pause = "The log viewer has been paused. To begin viewing logs again, click the Start Viewer button.";
-        logDiv = document.getElementById("log");
-        var newNode=document.createTextNode(pause);
-        logDiv.replaceChild(newNode,logDiv.childNodes[0]);
       }
 
       function updatePage() {

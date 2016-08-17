@@ -142,11 +142,13 @@
         ],
         possible_right_link_list = [
           ['edit_url', 'Editable', 'pencil'],
-          ['view_url', 'Viewable', 'eye']
+          ['view_url', 'Viewable', 'eye'],
+          ['right_url', 'New', 'plus']
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
           ['submit_action', 'Proceed', 'check', 'submit'],
+          ['add_action', 'Add', 'check', 'submit'],
           ['filter_action', 'Filter', 'filter', 'submit']
         ],
         possible_sub_header_list = [

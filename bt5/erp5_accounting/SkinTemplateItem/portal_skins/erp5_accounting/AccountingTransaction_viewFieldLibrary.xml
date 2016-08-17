@@ -113,6 +113,7 @@
                         <string>listbox_source_asset_debit</string>
                         <string>listbox_function</string>
                         <string>listbox_funding</string>
+                        <string>my_ledger</string>
                       </list>
                     </value>
                 </item>

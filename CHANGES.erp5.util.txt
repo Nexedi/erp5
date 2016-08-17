@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.45 (2016-08-05)
+-------------------
+
+ * erp5.util.testnode: 
+
+   - Do not block all test suites if one of them define broken repository [Sebastien Robin]
+   - Make sure proxy is really dead before starting new one [Sebastien Robin] 
+
 0.4.44 (2016-03-22)
 -------------------
 

@@ -100,7 +100,7 @@ def initialize( context ):
   content_constructors = ()
   content_classes = ( Base,
                       XMLObject.XMLObject,
-                      ERP5TypeInformation )
+                      ERP5TypeInformation, )
   portal_tools = ( CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
                    SessionTool.SessionTool,

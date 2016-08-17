@@ -13,7 +13,8 @@
 from Products.DCWorkflow.Guard import Guard
 from Products.PythonScripts.PythonScript import PythonScript
 from App.special_dtml import DTMLFile
-from Products.ERP5Type import _dtmldir
+from .. import _dtmldir
+from . import PatchClass
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.class_init import InitializeClass
 from AccessControl.PermissionRole import rolesForPermissionOn
@@ -22,45 +23,7 @@ from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
 
-security = ClassSecurityInfo()
-PythonScript.security = security
-
-def haveProxyRole(self):
-  """if a script has proxy role, return True"""
-  return bool(self._proxy_roles)
-
-def om_icons(self):
-  """Return a list of icon URLs to be displayed by an ObjectManager"""
-  icons = ({'path': 'misc_/PythonScripts/pyscript.gif',
-            'alt': self.meta_type, 'title': self.meta_type},)
-  if self.haveProxyRole():
-    icons = ({'path': 'p_/PythonScript_ProxyRole_icon',
-              'alt': 'Proxy Roled Python Script',
-              'title': 'This script has proxy role.'},)
-  return icons
-
-pyscript_proxyrole = ImageFile('pyscript_proxyrole.gif', globals())
-
-#
-# Add proxy role icon in ZMI
-#
-security.declarePrivate('haveProxyRole')
-PythonScript.haveProxyRole = haveProxyRole
-
-PythonScript.om_icons = om_icons
-p_.PythonScript_ProxyRole_icon = pyscript_proxyrole
-
-
-# Patch for displaying textearea in full window instead of
-# remembering a quantity of lines to display in a cookie
-manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
-manage_editForm._setName('manage_editForm')
-PythonScript.ZPythonScriptHTML_editForm = manage_editForm
-PythonScript.manage_editForm = manage_editForm
-PythonScript.manage = manage_editForm
-PythonScript.manage_main = manage_editForm
-PythonScript.manage_editDocument = manage_editForm
-PythonScript.manage_editForm = manage_editForm
+### Guards
 
 _guard_manage_options = (
   {
@@ -68,11 +31,9 @@ _guard_manage_options = (
     'action':'manage_guardForm',
   },
 )
-PythonScript.manage_options += _guard_manage_options
 
 _guard_form = DTMLFile(
   'editGuardForm', _dtmldir)
-PythonScript._guard_form = _guard_form
 
 def manage_guardForm(self, REQUEST, manage_tabs_message=None):
   '''
@@ -81,64 +42,63 @@ def manage_guardForm(self, REQUEST, manage_tabs_message=None):
                           management_view='Guard',
                           manage_tabs_message=manage_tabs_message,
     )
-PythonScript.manage_guardForm = manage_guardForm
-security.declareProtected('View management screens', 'manage_guardForm')
 
 def manage_setGuard(self, props=None, REQUEST=None):
   '''
   '''
   g = Guard()
   if g.changeFromProperties(props or REQUEST):
-    self.guard = g
+    guard = self.guard
+    if guard is None:
+      self.guard = g
+    else:
+      guard._p_activate()
+      if guard.__dict__ != g.__dict__:
+        guard.__dict__.clear()
+        guard.__dict__.update(g.__dict__)
+        guard._p_changed = 1
   else:
-    self.guard = None
+    try:
+      del self.guard
+    except AttributeError:
+      pass
   if REQUEST is not None:
     return self.manage_guardForm(REQUEST, 'Properties changed.')
-PythonScript.manage_setGuard = manage_setGuard
-security.declareProtected('Change Python Scripts', 'manage_setGuard')
 
 def getGuard(self):
-  guard = getattr(self, 'guard', None)
-  if guard is not None:
-    return guard
-  else:
+  guard = self.guard
+  if guard is None:
     return Guard().__of__(self)  # Create a temporary guard.
-PythonScript.getGuard = getGuard
+  return guard
 
-def checkGuard(guard, ob):
+def getRoles(ob):
+  sm = getSecurityManager()
+  stack = sm._context.stack
+  if stack:
+    proxy_roles = getattr(stack[-1], '_proxy_roles', None)
+    if proxy_roles:
+      return set(proxy_roles)
+  return set(sm.getUser().getRolesInContext(ob))
+
+def _checkGuard(guard, ob):
   # returns 1 if guard passes against ob, else 0.
   # TODO : implement TALES evaluation by defining an appropriate
   # context.
-  u_roles = None
-  def getRoles():
-    sm = getSecurityManager()
-    u = sm.getUser()
-    stack = sm._context.stack
-    if stack and len(stack) > 1:
-      eo = stack[-2] # -1 is the current script.
-      proxy_roles = getattr(eo, '_proxy_roles', None)
-      if proxy_roles:
-        roles = proxy_roles
-        return proxy_roles
-    roles = u.getRolesInContext(ob)
-    return roles
   if guard.permissions:
     # Require at least one role for required roles for the given permission.
-    if u_roles is None:
-      u_roles = getRoles()
+    u_roles = getRoles(ob)
     for p in guard.permissions:
-      if set(rolesForPermissionOn(p, ob)).intersection(u_roles):
+      if not u_roles.isdisjoint(rolesForPermissionOn(p, ob)):
         break
     else:
       return 0
+  else:
+    u_roles = None
   if guard.roles:
     # Require at least one of the given roles.
     if u_roles is None:
-      u_roles = getRoles()
-    for role in guard.roles:
-      if role in u_roles:
-        break
-    else:
+      u_roles = getRoles(ob)
+    if u_roles.isdisjoint(guard.roles):
       return 0
   if guard.groups:
     # Require at least one of the specified groups.
@@ -158,15 +118,75 @@ def checkGuard(guard, ob):
       return 0
   return 1
 
-PythonScript_exec = PythonScript._exec
-def _exec(self, *args):
-  # PATCH BEGIN : check guard against context, if guard exists.
-  guard = getattr(aq_base(self), 'guard', None)
-  if guard is not None:
-    if not checkGuard(guard, aq_parent(self)):
-      raise Forbidden, 'Calling %s %s is denied by Guard.' % (self.meta_type, self.id)
-  # PATCH END
-  return PythonScript_exec(self, *args)
-PythonScript._exec = _exec
+def checkGuard(aq_parent=aq_parent, _checkGuard=_checkGuard):
+  def checkGuard(self, _exec=False):
+    guard = self.guard
+    if guard is None or _checkGuard(guard, aq_parent(self)):
+      return 1
+    if _exec:
+      raise Forbidden('Calling %s %s is denied by Guard.'
+                      % (self.meta_type, self.id))
+  return checkGuard
+checkGuard = checkGuard()
+
+def addGuard(cls, set_permission):
+  security = cls.security
+
+  cls.guard = None
+  cls.getGuard = getGuard
+  cls.checkGuard = checkGuard
+
+  cls.manage_options += _guard_manage_options
+  cls._guard_form = _guard_form
+
+  security.declareProtected('View management screens', 'manage_guardForm')
+  cls.manage_guardForm = manage_guardForm
+
+  security.declareProtected(set_permission, 'manage_setGuard')
+  cls.manage_setGuard = manage_setGuard
+
+###
+
+class _(PatchClass(PythonScript)):
+
+  security = ClassSecurityInfo()
+
+  # Add proxy role icon in ZMI
+
+  def om_icons(self):
+    """Return a list of icon URLs to be displayed by an ObjectManager"""
+    if self._proxy_roles:
+      return {'path': 'p_/PythonScript_ProxyRole_icon',
+              'alt': 'Proxy Roled Python Script',
+              'title': 'This script has proxy role.'},
+    return {'path': 'misc_/PythonScripts/pyscript.gif',
+            'alt': self.meta_type, 'title': self.meta_type},
+
+  p_.PythonScript_ProxyRole_icon = \
+    ImageFile('pyscript_proxyrole.gif', globals())
+
+  # Patch for displaying textearea in full window instead of
+  # remembering a quantity of lines to display in a cookie
+  manage = manage_editDocument = manage_main = ZPythonScriptHTML_editForm = \
+  manage_editForm = DTMLFile("pyScriptEdit", _dtmldir)
+  manage_editForm._setName('manage_editForm')
+
+  # Guards
+
+  def __call__(self, *args, **kw):
+    '''Calls the script.'''
+    self.checkGuard(True) # patch
+    return self._orig_bindAndExec(args, kw, None)
+
+  security.declarePublic("render")
+  render = __call__
+
+  # For __render_with_namespace__ (we prefer to monkey-patch __call__
+  # because it's called more often, and this makes debugging easier)
+  _orig_bindAndExec = PythonScript._bindAndExec
+  def _bindAndExec(self, args, kw, caller_namespace):
+    return self(*args, **kw) # caller_namespace not used by PythonScript
+
+addGuard(PythonScript, 'Change Python Scripts')
 
 InitializeClass(PythonScript)

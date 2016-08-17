@@ -25,6 +25,7 @@
    
   
     <script id="filter-item-template" type="text/x-handlebars-template">
+      <button type="submit" class="ui-icon ui-btn ui-btn-inline ui-icon-minus ui-icon-shadow"></button>
       <div class="filter_item {{class_value}}" >
         <select data-iconpos="left">
           {{#each option}}
@@ -45,8 +46,7 @@
           {{/each}}
         </select>
         <div class="ui-controlgroup-controls">
-          <input type= "{{input_type}}" value="{{input_value}}"></input>
-          <button type="submit" class="ui-icon ui-btn ui-btn-inline ui-icon-delete ui-icon-shadow"></button>
+          <input type="{{input_type}}" value="{{input_value}}"></input>
         </div>
       </div>
     
@@ -81,17 +81,10 @@
 
          <section class="ui-body-c ui-content-section">
           <fieldset class="ui-controlgroup ui-corner-all">
-            <div  class="ui-controlgroup-controls">
-              <div class="ui-radio">
-               <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-on" data-i18n="All criterions(AND)">All criterions(AND)</label>
-                <input type="radio" value="on" checked="checked" name="heard_about" id="heard_about_a" class="and checkboxradio" data-cacheval="false" data-enhanced="true">
-              </div>
-              <div class="ui-radio">
-                <label class="ui-btn ui-corner-all ui-btn-inherit ui-btn-icon-left ui-radio-off" data-i18n="At lease one(OR)">At lease one(OR)</label>
-                <input type="radio" value="Off" name="heard_about" id="heard_about_b" class="or checkboxradio" data-cacheval="true" data-enhanced="true">
-              </div>
-            </div>
-
+            <select data-iconpos="left" name="heard_about">
+              <option data-i18n="All criterions (AND)" value="AND">All criterions (AND)</option>
+              <option data-i18n="At lease one (OR)" value="OR">At lease one (OR)</option>
+            </select>
            </fieldset>
          
            <div class="filter_item_container">

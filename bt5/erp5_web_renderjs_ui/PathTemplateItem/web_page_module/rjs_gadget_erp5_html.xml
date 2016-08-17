@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>erp5_launcher.html</string> </value>
+            <value> <string>officejs_launcher.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 Application Launcher</string> </value>
+            <value> <string>OfficeJS Application Launcher</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.64733.4438.11997</string> </value>
+                <value> <string>952.55927.14574.22152</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1447067588.44</float>
+                        <float>1469701010.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

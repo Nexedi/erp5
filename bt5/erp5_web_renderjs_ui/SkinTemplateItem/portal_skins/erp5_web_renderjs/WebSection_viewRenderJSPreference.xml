@@ -84,6 +84,7 @@
                         <string>my_configuration_router_gadget_url</string>
                         <string>my_configuration_header_gadget_url</string>
                         <string>my_configuration_content_security_policy</string>
+                        <string>my_configuration_x_frame_options</string>
                       </list>
                     </value>
                 </item>

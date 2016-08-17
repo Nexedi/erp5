@@ -109,7 +109,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       # in order to detect the difference between their behaviors.
       tv['toto'] = 'titi'
       self.assertEqual(tv['toto'], 'titi')
-      portal = self.getPortal()
+      portal = self.portal
       vattr = '_v_erp5type_test_durability'
       setattr(portal, vattr, 'dummy')
       self.assertEqual(getattr(portal, vattr), 'dummy')

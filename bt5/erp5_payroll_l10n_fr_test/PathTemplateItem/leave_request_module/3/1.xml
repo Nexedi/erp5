@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Leave Request Period" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>resource/calendar_period_type/social_declaration/l10n/fr/illness</string>
+                <string>aggregate/social_declaration_report_module/4</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>expiration_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1445212800.0</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Leave Request Period</string> </value>
+        </item>
+        <item>
+            <key> <string>start_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1444435200.0</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>stop_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1445126400.0</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>illness period</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

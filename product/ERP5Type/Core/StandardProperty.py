@@ -133,6 +133,10 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
                                      'translation_domain',
                                      'string')
 
+  getSelectVariable = Base.Getter('getSelectVariable',
+                                  'select_variable',
+                                  'string')
+
   @classmethod
   def _asPropertyMap(cls, property_dict):
     """
@@ -157,6 +161,13 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
     if property_dict['type'] in list_types or property_dict['multivalued']:
       property_dict['base_id'] = property_dict['id']
       property_dict['id'] = property_dict['id'] + '_list'
+
+    # Maintain consistency while displaying properties form.
+    # Addition of select_variable property is required for 'selection'
+    # and 'multiple selection' property type as while rendering properties
+    # dtml file, it asks for 'select_variable' property
+    if property_dict['type'] in ['selection', 'multiple selection']:
+      property_dict['select_variable'] = property_dict.pop('select_variable')
 
     return property_dict
 
@@ -609,7 +620,8 @@ class StandardProperty(IdAsReferenceMixin('_property'), XMLObject):
             'read_permission': self.getReadPermission(),
             'write_permission': self.getWritePermission(),
             'translatable': self.getTranslatable(),
-            'translation_domain': self.getTranslationDomain()}
+            'translation_domain': self.getTranslationDomain(),
+            'select_variable': self.getSelectVariable()}
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'applyOnAccessorHolder')

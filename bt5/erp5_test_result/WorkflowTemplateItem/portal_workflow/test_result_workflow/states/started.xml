@@ -31,6 +31,8 @@
                 <string>cancel</string>
                 <string>cancel_action</string>
                 <string>fail</string>
+                <string>redraft</string>
+                <string>redraft_action</string>
                 <string>stop</string>
               </tuple>
             </value>

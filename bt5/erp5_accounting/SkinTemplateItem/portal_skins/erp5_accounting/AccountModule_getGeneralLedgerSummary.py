@@ -20,6 +20,8 @@ if mirror_section_category:
   inventory_kw['mirror_section_category'] = mirror_section_category
 if mirror_section_uid:
   inventory_kw['mirror_section_uid'] = mirror_section_uid
+if ledger_uid:
+  inventory_kw['ledger_uid'] = ledger_uid
 
 if node_category:
   # XXX if node category is passed, income or balance accounts are not

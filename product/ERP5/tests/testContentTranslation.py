@@ -201,6 +201,7 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assert_(not person.hasJaKanaTranslatedFirstName())
 
     # if there is no translation, original value is returned.
+    self.assertEqual(None, getattr(person, '__translation_dict', None))
     self.assertEqual('Yusei', person.getTranslatedFirstName())
     self.assertEqual('Yusei Tahara', person.getTranslatedTitle())
     self.assertEqual('Yusei', person.getJaKanaTranslatedFirstName())
@@ -208,9 +209,16 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assertEqual('', person.getTranslatedFirstName(no_original_value=True))
     self.assertEqual('', person.getTranslatedTitle(no_original_value=True))
     self.assertEqual('', person.getJaKanaTranslatedFirstName(no_original_value=True))
+    # Make sure that until any value is set, we do not create useless __translation_dict
+    self.assertEqual(None, getattr(person, '__translation_dict', None))
 
     person.setJaKanaTranslatedFirstName('タハラ')
     person.setJaKanaTranslatedLastName('ユウセイ')
+    # Since we add some translated value, we now must have some data in __translation_dict
+    translation_dict = getattr(person, '__translation_dict', None)
+    self.assertNotEqual(None, translation_dict)
+    self.assertEqual(set([('last_name', 'ja-kana'), ('first_name', 'ja-kana')]),
+                     set(translation_dict.keys()))
 
     self.assert_(person.hasJaKanaTranslatedFirstName())
 

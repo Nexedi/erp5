@@ -214,6 +214,10 @@
                           <string>source_title</string>
                           <string>Sender or Provider</string>
                         </tuple>
+                        <tuple>
+                          <string>ledger_translated_title</string>
+                          <string>Ledger</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

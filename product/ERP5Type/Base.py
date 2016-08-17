@@ -2314,7 +2314,7 @@ class Base( CopyContainer,
                             'getTranslatedTitleOrId')
   def getTranslatedTitleOrId(self):
     """
-    Returns the translated title or the id if the id is empty
+    Returns the translated title or the id if the title is empty
     """
     title = self.getTranslatedTitle()
     if title is not None:
@@ -2713,7 +2713,11 @@ class Base( CopyContainer,
     else:
       original = getattr(self, '_original', None)
       if original is not None:
-        return aq_inner(original)
+        original = aq_inner(original)
+        if original.isTempObject():
+          return original.getOriginalDocument()
+        else:
+          return original
       else:
         return None
 

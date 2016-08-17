@@ -1,0 +1,134 @@
+/* ========================================================================== */
+/* CSS ci_presentation - wkhtmltopdf specific                                 */
+/* ========================================================================== */
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+/* font-sizes */
+.ci-presentation .ci-presentation-footer div {
+  font-size: 8pt;
+}
+.ci-presentation .ci-presentation-intro.present:before,
+.ci-presentation pre {
+  font-size: 14pt !important;
+}
+.ci-presentation ul,
+.ci-presentation p {
+  font-size: 18pt !important;
+}
+.ci-presentation .ci-presentation-intro.present > h2 {
+  font-size: 30pt;
+}
+.ci-presentation h1 {
+  font-size: 28pt !important;
+}
+
+/* page breaks (elements must be childs of <body> */
+section {
+  page-break-after: always !important;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+	height: 160mm !important;
+}
+
+/* container */
+.reveal {
+  position: relative;
+  width: auto;
+  height: 100%;
+}
+.reveal .slides {
+  position: absolute;
+  width: 84%;
+  height: inherit;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  overflow: visible;
+  z-index: 1;
+  text-align: center;
+}
+
+/* first slide box */
+.ci-presentation .ci-presentation-intro.present:before {
+  height: 8em;
+  top: -5%;
+  padding-top: 6.5em;
+}
+/* first slide header */
+.ci-presentation .ci-presentation-intro.present > h2 {
+  letter-spacing: normal;
+  text-align: center;
+  width: inherit;
+}
+
+/* header */
+.ci-presentation h1 {
+  margin: 0 auto;
+}
+/* footer */
+.ci-presentation .ci-presentation-footer {
+  position: static !important;
+}
+.ci-presentation .ci-presentation-footer div {
+  display: inline-block;
+  vertical-align: middle;
+  width: 33%;
+  text-align: center;
+}
+html .ci-presentation-footer .ci-presentation-container-left img {
+  max-width: 30mm;
+}
+html .ci-presentation-footer .ci-presentation-container-left {
+  text-align: left;
+}
+html .ci-presentation-footer .ci-presentation-container-right {
+  text-align: right;
+}
+
+/* sectin styles (moved from .reveal .slides) */
+section {
+  width: 84%;
+  margin: 0 auto 12mm;
+  text-align: center;
+}
+section:first-child {
+  margin-bottom: 16mm !important;
+}
+h1:first-child {
+  padding-top: 4mm !important;
+}
+details {
+  display: none !important;
+}
+
+/* content */
+.ci-presentation ul {
+  margin: 2mm auto 0 !important;
+  display: inline-block;
+  text-align: left;
+}
+.ci-presentation img {
+  margin-top: 4mm;
+}
+.ci-presentation code {
+  text-align: left;
+}
+.ci-presentation pre {
+  font-size: 10pt !important;
+}
+

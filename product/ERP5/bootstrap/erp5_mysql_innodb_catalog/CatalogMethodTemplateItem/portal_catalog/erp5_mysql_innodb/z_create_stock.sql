@@ -12,6 +12,7 @@ CREATE TABLE `stock` (
   `function_uid` BIGINT UNSIGNED,
   `project_uid` BIGINT UNSIGNED,
   `funding_uid` BIGINT UNSIGNED,
+  `ledger_uid` BIGINT UNSIGNED,
   `payment_request_uid` BIGINT UNSIGNED,
   `mirror_section_uid` BIGINT UNSIGNED,
   `mirror_node_uid` BIGINT UNSIGNED,

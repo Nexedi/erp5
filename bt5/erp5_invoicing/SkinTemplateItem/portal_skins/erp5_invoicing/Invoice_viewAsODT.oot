@@ -331,7 +331,14 @@
                       <text:p text:style-name="Table_20_Contents_20_Left" tal:condition='data_dict/source_section_vatid' tal:content='python:data_dict["source_section_vatid"]'>VAT ID: FR72440047504</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="Table2.A1" office:value-type="string">
-                      <text:p text:style-name="Table_20_Heading">Client:</text:p>
+                      <tal:block tal:define="orig_string string:Client;
+                                 orig_message python:here.Base_translateString(orig_string, lang=default_language);
+                                 translated_message python:here.Base_translateString(orig_string);">
+                        <text:p text:style-name='Table_20_Heading'>
+                          <tal:block tal:replace='orig_message'/>:</text:p>
+                        <text:p text:style-name='Table_20_Heading'
+                                tal:condition='python:translated_message != orig_message'><span tal:replace='translated_message'/>:</text:p>
+                      </tal:block>
                     </table:table-cell>
                     <table:table-cell table:style-name="Table2.A1" office:value-type="string">
                       <text:p text:style-name="Big_20_Table_20_Content_20_Left" tal:content='python:data_dict["destination_section_title"]'>Astrium Geo-Information Services, Infoterra GmbH</text:p>

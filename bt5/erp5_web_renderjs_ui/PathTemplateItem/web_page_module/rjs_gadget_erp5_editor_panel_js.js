@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, rJS, RSVP, $ */
-(function (window, rJS, RSVP, $) {
+/*global window, rJS, RSVP */
+(function (window, rJS, RSVP) {
   "use strict";
   rJS(window)
     /////////////////////////////////////////////////////////////////
@@ -15,20 +15,12 @@
         .push(function (element) {
           g.props.element = element;
           g.props.container = element.querySelector(".jqm-navmenu-panel");
-          g.props.jelement = $(g.props.container);
         });
     })
-    .ready(function (g) {
-      g.props.jelement.panel({
-        display: "overlay",
-        position: "right",
-        theme: "c"
-      });
-    })
-
 
     .allowPublicAcquisition('trigger', function () {
-      return this.props.jelement.panel("toggle");
+      this.props.element.classList.toggle('visible');
+      // return this.props.jelement.panel("toggle");
     })
     //////////////////////////////////////////////
     // acquired method
@@ -36,9 +28,11 @@
     //local method
     .declareMethod('close', function () {
       var container = this.props.container;
-      this.props.jelement.panel("close");
       while (container.firstChild) {
         container.removeChild(container.firstChild);
+      }
+      if (this.props.element.classList.contains('visible')) {
+        this.props.element.classList.remove('visible');
       }
     })
     .declareMethod('render', function (url, options) {
@@ -63,10 +57,9 @@
           .push(function (result) {
             var fragment = result[1];
             gadget.props.container.appendChild(fragment);
-            gadget.props.jelement.trigger("create");
-            gadget.props.jelement.panel("toggle");
+            gadget.props.element.classList.toggle('visible');
           });
       }
-      gadget.props.jelement.panel("toggle");
+      gadget.props.element.classList.toggle('visible');
     });
-}(window, rJS, RSVP, $));
+}(window, rJS, RSVP));

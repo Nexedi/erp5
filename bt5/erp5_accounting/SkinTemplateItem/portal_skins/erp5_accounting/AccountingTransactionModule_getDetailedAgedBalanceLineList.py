@@ -38,6 +38,19 @@ def getSectionTitle(uid):
 last_period_id = 'period_%s' % len(period_list)
 line_list = []
 
+extra_kw = {}
+
+ledger = kw.get('ledger', None)
+if ledger:
+  if not isinstance(ledger, list):
+    # Allows the generation of reports on different ledgers as the same time
+    ledger = [ledger]
+  portal_categories = portal.portal_categories
+  ledger_value_list = [portal_categories.restrictedTraverse(ledger_category, None)
+                       for ledger_category in ledger]
+  for ledger_value in ledger_value_list:
+    extra_kw.setdefault('ledger_uid', []).append(ledger_value.getUid())
+
 for brain in portal.portal_simulation.getMovementHistoryList(
                                 at_date=at_date,
                                 simulation_state=simulation_state,
@@ -47,7 +60,8 @@ for brain in portal.portal_simulation.getMovementHistoryList(
                                 grouping_query=grouping_query,
                                 sort_on=(('stock.mirror_section_uid', 'ASC'),
                                          ('stock.date', 'ASC'),
-                                         ('stock.uid', 'ASC'))):
+                                         ('stock.uid', 'ASC')),
+                                **extra_kw):
   movement = brain.getObject()
   transaction = movement.getParentValue()
 

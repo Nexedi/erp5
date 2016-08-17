@@ -1,0 +1,50 @@
+<svg width="1052.3622" height="744.09448" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata7">image/svg+xml</metadata>
+
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="1054.3622" height="746.09448" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image y="35.86887" x="213.10947" id="image5701" xlink:href="https://www.erp5.com/User-Graphics-CAR?format=png" height="350.21802" width="595.65558"/>
+   <g id="g5721" transform="matrix(2.5149226,0,0,2.5529479,-20.625908,-1586.1978) " stroke-miterlimit="4" stroke-width="2.12876">
+    <rect ry="0.12565" rx="1.85114" y="879.3398" x="12.12121" height="21.21212" width="71.9697" id="rect5715" stroke-dashoffset="2.0254" stroke-miterlimit="4" stroke-width="2.12876" stroke="#000000" fill="#b3b3b3"/>
+    <text transform="translate(0,-120.74970245361328) scale(0.909522533416748,1.099478006362915) " id="text5717" y="923.08807" x="21.77014" xml:space="preserve" stroke-miterlimit="4" stroke-width="2.12876" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="14.87008px">
+     <tspan y="923.08807" x="21.77014" id="tspan5719">Wheel (4)</tspan>
+    </text>
+   </g>
+   <g id="g5721-2" transform="matrix(2.5149226,0,0,2.5529479,195.61933,-1584.2638) " stroke-miterlimit="4" stroke-width="2.12876">
+    <rect ry="0.12565" rx="1.85114" y="879.3398" x="12.12121" height="21.21212" width="71.9697" id="rect5715-9" stroke-dashoffset="2.0254" stroke-miterlimit="4" stroke-width="2.12876" stroke="#000000" fill="#b3b3b3"/>
+    <text transform="translate(-1.4210854715202004e-14,-120.74970245361328) scale(0.909522533416748,1.099478006362915) " id="text5717-0" y="923.08807" x="21.77014" xml:space="preserve" stroke-miterlimit="4" stroke-width="2.12876" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="14.87008px">
+     <tspan y="923.08807" x="21.77014" id="tspan5719-5">Steel (1t)</tspan>
+    </text>
+   </g>
+   <g id="g5721-0" transform="matrix(2.5149226,0,0,2.5529479,407.10147,-1582.3298) " stroke-miterlimit="4" stroke-width="2.12876">
+    <rect ry="0.12565" rx="1.85114" y="879.3398" x="12.12121" height="21.21212" width="71.9697" id="rect5715-4" stroke-dashoffset="2.0254" stroke-miterlimit="4" stroke-width="2.12876" stroke="#000000" fill="#b3b3b3"/>
+    <text transform="translate(0,-120.74970245361328) scale(0.909522533416748,1.099478006362915) " id="text5717-1" y="923.08807" x="21.77014" xml:space="preserve" stroke-miterlimit="4" stroke-width="2.12876" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="14.87008px">
+     <tspan y="923.08807" x="21.77014" id="tspan5719-7">Glass (1t)</tspan>
+    </text>
+   </g>
+   <g id="g5721-9" transform="matrix(2.5149226,0,0,2.5529479,616.67835,-1580.3957) " stroke-miterlimit="4" stroke-width="2.12876">
+    <rect ry="0.12565" rx="1.85114" y="879.3398" x="12.12121" height="21.21212" width="71.9697" id="rect5715-3" stroke-dashoffset="2.0254" stroke-miterlimit="4" stroke-width="2.12876" stroke="#000000" fill="#b3b3b3"/>
+    <text transform="translate(0,-120.74970245361328) scale(0.909522533416748,1.099478006362915) " id="text5717-6" y="923.08807" x="21.77014" xml:space="preserve" stroke-miterlimit="4" stroke-width="2.12876" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="14.87008px">
+     <tspan y="923.08807" x="21.77014" id="tspan5719-2">Engine</tspan>
+    </text>
+   </g>
+   <g id="g5721-1" transform="matrix(2.5149226,0,0,2.5529479,830.06571,-1580.4617) " stroke-miterlimit="4" stroke-width="2.12876">
+    <rect ry="0.12565" rx="1.85114" y="879.3398" x="12.12121" height="21.21212" width="71.9697" id="rect5715-2" stroke-dashoffset="2.0254" stroke-miterlimit="4" stroke-width="2.12876" stroke="#000000" fill="#b3b3b3"/>
+    <text transform="translate(0,-120.74970245361328) scale(0.909522533416748,1.099478006362915) " id="text5717-5" y="923.08807" x="21.77014" xml:space="preserve" stroke-miterlimit="4" stroke-width="2.12876" font-family="Sans" fill="#000000" font-weight="normal" font-style="normal" font-size="14.87008px">
+     <tspan y="923.08807" x="21.77014" id="tspan5719-3">Seat (32)</tspan>
+    </text>
+   </g>
+   <path d="m87.97302,401.48195l901.18061,1.93404" id="path5806" stroke-miterlimit="4" stroke-width="5.394" stroke="#000000" fill="none"/>
+   <path d="m88.48826,401.07307l-0.20721,259.9806" id="path5810" stroke-miterlimit="4" stroke-width="5.394" stroke="#000000" fill="none"/>
+   <path d="m309.41347,401.58078l-0.20721,259.9806" id="path5810-8" stroke-miterlimit="4" stroke-width="5.394" stroke="#000000" fill="none"/>
+   <path d="m726.68998,402.9416l-0.20721,259.9806" id="path5810-5" stroke-miterlimit="4" stroke-width="5.394" stroke="#000000" fill="none"/>
+   <path d="m988.01652,403.03979l-0.20721,259.9806" id="path5810-4" stroke-miterlimit="4" stroke-width="5.394" stroke="#000000" fill="none"/>
+   <path d="m526.27572,316.07812l-0.18926,347.95043" id="path5810-1" stroke-miterlimit="4" stroke-width="5.394" stroke="#000000" fill="none"/>
+  </g>
+ </g>
+</svg>

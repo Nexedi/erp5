@@ -106,17 +106,28 @@
   <td>input</td>
 </tr>
 
+
+
+
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='subfield_field_my_successor_title_relation']</td>
+  <td>//li[@name='Foo']</td>
   <td></td>
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_successor_title']</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name='Foo']</td>
   <td></td>
 </tr>
+
+
 
 <tr>
   <td>type</td>
@@ -134,6 +145,12 @@
   <td>waitForElementPresent</td>
   <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
   <td></td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
 </tr>
 
 <tr>
@@ -168,13 +185,7 @@
   <td>//input[@name='field_my_successor_title']</td>
   <td></td>
 </tr>
-<!--
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_successor_title']/a[@class='ui-btn ui-corner-all ui-btn-icon-notext ui-icon-plane ui-shadow-inset ui-btn-inline']</td>
-  <td></td>
-</tr>
--->
+
 
 <tr>
   <td>verifyValue</td>
@@ -188,25 +199,6 @@
   <td>a1</td>
 </tr>
 
-<!--
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='field_my_successor_title']/a</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Jump']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name='field_my_title']</td>
-  <td>A new foo</td>
-</tr>
--->
 </tbody></table>
 </body>
 </html>

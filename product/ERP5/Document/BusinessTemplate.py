@@ -2515,6 +2515,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # First convert all workflow_ids into list.
     for key, value in chain_dict.iteritems():
       chain_dict[key] = value.split(self._chain_string_separator)
+    orig_chain_dict = chain_dict.copy()
     # Set the default chain to the empty string is probably the
     # best solution, by default it is 'default_workflow', which is
     # not very usefull
@@ -2589,6 +2590,9 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                                                      .join(self._objects[path])
                                                , portal_type))
           chain_dict[chain_key] = self._objects[path]
+    if orig_chain_dict == chain_dict:
+      return
+    self._resetDynamicModules()
     # convert workflow list into string only at the end.
     for key, value in chain_dict.iteritems():
       chain_dict[key] =  self._chain_string_separator.join(value)

@@ -66,14 +66,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@class='and checkboxradio']</td>
+  <td>//select[@name='heard_about']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@class='and checkboxradio']</td>
-  <td>on</td>
+  <td>//select[@name='heard_about']</td>
+  <td>AND</td>
 </tr>
 
 
@@ -190,27 +190,27 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@class='and checkboxradio']</td>
+  <td>//select[@name='heard_about']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@class='and checkboxradio']</td>
-  <td>on</td>
+  <td>//select[@name='heard_about']</td>
+  <td>AND</td>
 </tr>
 
 
 <tr>
-  <td>check</td>
-  <td>//input[@class='or checkboxradio']</td>
-  <td></td>
+  <td>select</td>
+  <td>//select[@name='heard_about']</td>
+  <td>index=1</td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@class='and checkboxradio']</td>
-  <td>off</td>
+  <td>//select[@name='heard_about']</td>
+  <td>OR</td>
 </tr>
 
 

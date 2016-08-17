@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1024"
+   height="720"
+   id="svg3849"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="Howto.Link.People.To.Existing.Organisations.Check.Relation.2.Check.Person.Line.svg">
+  <defs
+     id="defs3851" />
+  <sodipodi:namedview
+     inkscape:document-units="mm"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.43415836"
+     inkscape:cx="490"
+     inkscape:cy="103.60316"
+     inkscape:current-layer="layer1"
+     id="namedview3853"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3855">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-24.09448)">
+    <image
+       y="24.114962"
+       x="-0.36252892"
+       id="image3064"
+       xlink:href="http://www.erp5.com/user-Howto.Link.Persons.and.Organisations.Person.Module.Check.Relation.2.Screenshot?format=png"
+       height="768"
+       width="1024"
+       inkscape:transform-center-x="-180.91709"
+       inkscape:transform-center-y="121.09773" />
+    <path
+       style="fill:none;stroke:#d41d19;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 4.1816264,112.78073 c 73.9583296,0 147.9166736,0 221.8750036,0 0,-7.23958 0,-14.47916 0,-21.718747 -73.95833,0 -147.916674,0 -221.8750036,0 0,7.239587 0,14.479167 0,21.718747 z"
+       id="rect3000"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#1221c6;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 9.931626,627.78073 c 335.802084,0 671.604174,0 1007.406274,0 0,-6.17708 0,-12.35417 0,-18.53125 -335.8021,0 -671.60419,0 -1007.406274,0 0,6.17708 0,12.35417 0,18.53125 z"
+       id="rect3776"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 126.92479,534.08528 c 143.64154,0 287.28309,0 430.92463,0 0,-34.82 0,-69.64001 0,-104.46 -143.64154,0 -287.28309,0 -430.92463,0 0,34.81999 0,69.64 0,104.46 z"
+       id="rect3782"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:27.65999985px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+       x="133.8461"
+       y="456.53058"
+       id="text3004"
+       sodipodi:linespacing="125%"
+       transform="scale(1.0022646,0.99774052)"><tspan
+         sodipodi:role="line"
+         id="tspan3006"
+         x="133.8461"
+         y="456.53058">The detail page of <tspan
+   style="font-size:27.65999985px;text-align:start;text-anchor:start;fill:#800000"
+   id="tspan3012">Z Company</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="133.8461"
+         y="491.10559"
+         id="tspan3008">now displays <tspan
+   style="font-size:27.65999985px;text-align:start;text-anchor:start;fill:#0000ff"
+   id="tspan3014">John Doh</tspan></tspan><tspan
+         sodipodi:role="line"
+         x="133.8461"
+         y="525.6806"
+         id="tspan3010"
+         style="font-size:27.65999985px;text-align:start;text-anchor:start;fill:#800080">as one of its member.</tspan></text>
+    <path
+       style="fill:none;stroke:#9d2b9d;stroke-width:5;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 10.087876,586.37448 c 48.125,0 96.250004,0 144.375004,0 0,-7.625 0,-15.25 0,-22.875 -48.125,0 -96.250004,0 -144.375004,0 0,7.625 0,15.25 0,22.875 z"
+       id="rect3000-8"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1020"
+   height="708"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.4.svg">
+  <defs
+     id="defs18" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview16"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g5" />
+  <metadata
+     id="metadata8">image/svg xml<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:title />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     id="g5"
+     transform="matrix(0.49981004,0,0,0.49981004,6.8266667,339.63995)">
+    <title
+       id="title7">Layer 1</title>
+    <image
+       y="-678.79626"
+       x="-17.435787"
+       id="image3052"
+       xlink:href="http://www.erp5.com/user-Howto.Create.and.Manage.Products.Product.Module.Set.The.Prices.4.Screenshot?format=png"
+       height="1474.5602"
+       width="2048.7783" />
+    <rect
+       id="rect3805"
+       width="122.54754"
+       height="62.786549"
+       x="442.72903"
+       y="-390.09033"
+       stroke-miterlimit="4"
+       style="fill:none;stroke:#d41d19;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <rect
+       id="rect3805-1"
+       width="458.87997"
+       height="85.913773"
+       x="-3.5944207"
+       y="210.90427"
+       stroke-miterlimit="4"
+       style="fill:none;stroke:#d41d19;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <rect
+       id="rect3805-0"
+       width="1248.151"
+       height="96.456017"
+       x="8.490715"
+       y="336.05594"
+       stroke-miterlimit="4"
+       style="fill:#ffffff;stroke:#d41d19;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+    <text
+       xml:space="preserve"
+       x="32.645714"
+       y="401.75977"
+       id="text3728"
+       font-weight="normal"
+       font-style="normal"
+       font-size="24px"
+       style="font-size:48.90991592000000310px;font-style:normal;font-weight:normal;fill:#000000;font-family:Bitstream Vera Sans;stroke-width:10.00380065999999957;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+       transform="scale(1.0080045,0.99205906)">    <tspan
+   x="32.645714"
+   y="401.75977"
+   id="tspan3732"
+   style="stroke-width:10.00380065999999957;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round">You can now set the Sale price of each variation</tspan>   </text>
+    <path
+       d="m 439.58676,-339.12824 -127.45687,0 0,548.35971"
+       id="path3637"
+       stroke-miterlimit="4"
+       inkscape:connector-curvature="0"
+       style="fill:none;stroke:#d41d19;stroke-width:10.00380063999999969;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round" />
+  </g>
+</svg>

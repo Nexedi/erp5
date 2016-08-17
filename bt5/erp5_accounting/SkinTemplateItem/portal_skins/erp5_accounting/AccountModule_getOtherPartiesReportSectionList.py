@@ -12,6 +12,7 @@ role_filter_list = request.get('mirror_section_category_list', None)
 omit_balanced_accounts = request['omit_balanced_accounts']
 from_date = request.get('from_date', None)
 project = request.get('project', None)
+ledger = request.get('ledger', None)
 
 currency = portal.Base_getCurrencyForSection(request['section_category'])
 precision = portal.account_module.getQuantityPrecisionFromResource(currency)
@@ -45,6 +46,16 @@ if project:
     params['project_uid'] = project
   else:
     params['project_uid'] = portal.restrictedTraverse(project).getUid()
+
+if ledger:
+  if not isinstance(ledger, list):
+    # Allows the generation of reports on different ledgers as the same time
+    ledger = [ledger]
+  portal_categories = portal.portal_categories
+  ledger_value_list = [portal_categories.restrictedTraverse(ledger_category, None)
+                       for ledger_category in ledger]
+  for ledger_value in ledger_value_list:
+    params.setdefault('ledger_uid', []).append(ledger_value.getUid())
 
 simulation_tool = portal.portal_simulation
 

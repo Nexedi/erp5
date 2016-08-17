@@ -1111,11 +1111,14 @@ def initializeProduct( context,
   mixin_module = getattr(this_module, 'mixin', None)
   if mixin_module is not None:
     from Products.ERP5Type import mixin_class_registry
-    for k, submodule in inspect.getmembers(mixin_module, inspect.ismodule):
+    import importlib
+    path, module_id_list = getModuleIdList(package_home(this_module.__dict__), 'mixin')
+    for module_id in module_id_list:
+      submodule = importlib.import_module('%s.%s' % (mixin_module.__name__, module_id))
       for klassname, klass in inspect.getmembers(submodule, inspect.isclass):
         # only classes defined here
         if 'mixin' in klass.__module__ and not issubclass(klass, Exception):
-          classpath = '.'.join((module_name, 'mixin', k, klassname))
+          classpath = '.'.join((module_name, 'mixin', module_id, klassname))
           mixin_class_registry[klassname] = classpath
 
   product_name = module_name.split('.')[-1]

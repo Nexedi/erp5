@@ -55,8 +55,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
 
   def setUp(self):
     super(TestMemcachedTool, self).setUp()
-    installRealMemcachedTool(self.getPortal())
-    memcached_tool = self.getPortal().portal_memcached
+    installRealMemcachedTool(self.portal)
+    memcached_tool = self.portal.portal_memcached
     #create Memcache Plugin
     url_string = "%(hostname)s:%(port)s" % _getVolatileMemcachedServerDict()
     if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
@@ -77,17 +77,17 @@ class TestMemcachedTool(ERP5TypeTestCase):
     self.login()
 
   def login(self):
-    uf = self.getPortal().acl_users
+    uf = self.portal.acl_users
     uf._doAddUser('vincent', '', ['Manager'], [])
     user = uf.getUserById('vincent').__of__(uf)
     newSecurityManager(None, user)
 
   def getMemcachedDict(self):
-    return self.getPortal().portal_memcached.getMemcachedDict(key_prefix='unit_test',
+    return self.portal.portal_memcached.getMemcachedDict(key_prefix='unit_test',
                                                               plugin_path='portal_memcached/default_memcached_plugin')
 
   def getMemcachedDictWithExpiration(self):
-    return self.getPortal().portal_memcached.getMemcachedDict(
+    return self.portal.portal_memcached.getMemcachedDict(
                                                         key_prefix='unit_test',
                plugin_path='portal_memcached/memcached_plugin_with_expiration')
 
@@ -101,7 +101,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
                                              'USE_MEMCACHED_TOOL')
     self.assertFalse(os.access(memcached_tool_enable_path, os.F_OK),
                      'A static file %s is obsolete. Please remove it and retry this unit test.' % memcached_tool_enable_path)
-    memcached_tool = self.getPortal().portal_memcached
+    memcached_tool = self.portal.portal_memcached
     try:
       import memcache
     except ImportError:

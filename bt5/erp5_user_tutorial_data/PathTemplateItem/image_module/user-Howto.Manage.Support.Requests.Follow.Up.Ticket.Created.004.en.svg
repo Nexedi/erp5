@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1004"
+   height="670"
+   sodipodi:docname="user-Howto.Manage.Support.Requests.Follow.Up.Ticket.Created.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Send"
+       style="overflow:visible;">
+      <path
+         id="path4040"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.2) rotate(180) translate(6,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path3775"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send-7"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4040-9"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send-2"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4040-7"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="526.18109"
+     inkscape:cy="372.04724"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-1.2769775"
+     x="-0.55998993"
+     id="image3060"
+     xlink:href="http://www.erp5.com/user-howto.manage.support.requests.follow.up.ticket.created.screenshot?format=png"
+     height="674"
+     width="1006" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2987-8"
+     width="650.2901"
+     height="149.11011"
+     x="242.46344"
+     y="364.89529"
+     rx="7.846837"
+     ry="0.30513054" />
+  <text
+     xml:space="preserve"
+     style="font-size:27.67817497px;font-style:normal;font-weight:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
+     x="252.63812"
+     y="399.16342"
+     id="text4103"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0032157,0.9967946)"><tspan
+       sodipodi:role="line"
+       x="252.63812"
+       y="399.16342"
+       id="tspan4119">The <tspan
+   style="text-align:start;text-anchor:start;fill:#800080"
+   id="tspan4123">Follow Up Ticket </tspan>&quot;John Doh - Help for </tspan><tspan
+       sodipodi:role="line"
+       x="252.63812"
+       y="433.76114"
+       id="tspan4233">configuration of ERP5&quot; of this<tspan
+   style="text-align:start;text-anchor:start;fill:#0000ff"
+   id="tspan4236"> incoming Event</tspan></tspan><tspan
+       sodipodi:role="line"
+       x="252.63812"
+       y="468.35886"
+       id="tspan4152">is now <tspan
+   style="text-align:start;text-anchor:start;fill:#ff0000"
+   id="tspan4162">created</tspan>.</tspan><tspan
+       sodipodi:role="line"
+       x="252.63812"
+       y="502.95657"
+       id="tspan3792">The Event is now &quot;<tspan
+   style="text-align:start;text-anchor:start;fill:#008080"
+   id="tspan3806">Delivered</tspan>&quot; automatically.</tspan></text>
+  <rect
+     style="fill:none;stroke:#008080;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-linejoin:round"
+     id="rect3016"
+     width="61.187229"
+     height="20.279421"
+     x="647.35571"
+     y="275.00183"
+     rx="0.989492"
+     ry="0.17800112" />
+  <path
+     style="fill:none;stroke:#631e63;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+     d="m 411.44047,265.85457 86.08152,0"
+     id="path4467"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:none;stroke:#0000ac;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+     d="m 66.990421,165.18296 86.081519,0"
+     id="path4467-4"
+     inkscape:connector-curvature="0" />
+  <path
+     style="fill:none;stroke:#ff0000;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Send)"
+     d="m 262.74557,83.478468 -86.08152,0"
+     id="path4467-1"
+     inkscape:connector-curvature="0" />
+</svg>

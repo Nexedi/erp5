@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   width="1022"
+   height="648"
+   sodipodi:docname="user-Howto.Manage.Invoices.Check.Accounting.Lines.svg">
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs6" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1301"
+     inkscape:window-height="744"
+     id="namedview4"
+     showgrid="false"
+     inkscape:zoom="0.68539683"
+     inkscape:cx="541.22107"
+     inkscape:cy="267.72018"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <image
+     y="-3.3589592"
+     x="-0.051892281"
+     id="image3064"
+     xlink:href="http://www.erp5.com/user-Howto.Manage.Invoices.Check.Accounting.Lines.Screenshot?format=png"
+     height="652"
+     width="1024" />
+  <rect
+     style="fill:none;stroke:#fd0909;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2989"
+     width="226.11278"
+     height="19.96353"
+     x="509.31409"
+     y="324.42511"
+     rx="3.1236136"
+     ry="0.72383422" />
+  <rect
+     style="fill:none;stroke:#0909fd;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2989-0"
+     width="1004.2964"
+     height="112.46461"
+     x="10.013566"
+     y="369.34219"
+     rx="13.873758"
+     ry="4.0777225" />
+  <path
+     sodipodi:type="arc"
+     style="fill:none;stroke:#e80202;stroke-width:2.07515210999999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-linejoin:round"
+     id="path3952"
+     sodipodi:cx="-22.249884"
+     sodipodi:cy="132.0403"
+     sodipodi:rx="13.495831"
+     sodipodi:ry="11.672071"
+     d="m -8.7540531,132.0403 a 13.495831,11.672071 0 1 1 -26.9916609,0 13.495831,11.672071 0 1 1 26.9916609,0 z"
+     transform="matrix(2.2467455,0,0,2.5839628,946.1805,-17.684834)" />
+  <text
+     xml:space="preserve"
+     style="font-size:46.07538604999999876px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#d40000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:4.99999998000000012;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="880.54828"
+     y="339.08023"
+     id="text3954"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0026738,0.99733334)"><tspan
+       sodipodi:role="line"
+       id="tspan3956"
+       x="880.54828"
+       y="339.08023">1</tspan></text>
+  <path
+     sodipodi:type="arc"
+     style="fill:none;stroke:#2602e8;stroke-width:2.07515210999999988;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-linejoin:round"
+     id="path3952-5"
+     sodipodi:cx="-22.249884"
+     sodipodi:cy="132.0403"
+     sodipodi:rx="13.495831"
+     sodipodi:ry="11.672071"
+     d="m -8.7540531,132.0403 a 13.495831,11.672071 0 1 1 -26.9916609,0 13.495831,11.672071 0 1 1 26.9916609,0 z"
+     transform="matrix(2.2467455,0,0,2.5839628,910.86656,189.38529)" />
+  <text
+     xml:space="preserve"
+     style="font-size:46.07538604999999876px;font-style:normal;font-weight:bold;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold;stroke-width:4.99999998000000012;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="845.32959"
+     y="546.70435"
+     id="text3954-7"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0026738,0.99733334)"><tspan
+       sodipodi:role="line"
+       id="tspan3956-3"
+       x="845.32959"
+       y="546.70435">2</tspan></text>
+  <rect
+     style="fill:#ffffff;stroke:#fe0612;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2993"
+     width="375.10669"
+     height="74.994713"
+     x="510.12378"
+     y="174.01331"
+     rx="3.0800292"
+     ry="1.455979" />
+  <path
+     style="fill:none;stroke:#fe0612;stroke-width:5;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     d="m 839.55521,247.8464 0,86.46449 -101.6383,0 0,-1.33021"
+     id="path2995"
+     inkscape:connector-curvature="0" />
+  <text
+     xml:space="preserve"
+     style="font-size:27.63121032999999827px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;stroke-width:4.99999998000000012;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round"
+     x="697.73486"
+     y="201.92021"
+     id="text4016"
+     sodipodi:linespacing="125%"
+     transform="scale(1.0026738,0.99733334)"><tspan
+       sodipodi:role="line"
+       id="tspan4018"
+       x="697.73486"
+       y="201.92021"
+       style="text-align:center;text-anchor:middle;stroke-width:4.99999998000000012;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round">The state has changed to</tspan><tspan
+       sodipodi:role="line"
+       x="702.53796"
+       y="236.45923"
+       id="tspan4020"
+       style="font-weight:bold;text-align:center;text-anchor:middle;-inkscape-font-specification:Sans Bold;stroke-width:4.99999998000000012;stroke-miterlimit:4;stroke-dasharray:none;stroke-linejoin:round">Journalised </tspan></text>
+  <rect
+     style="fill:#ffffff;stroke:#0922fd;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;stroke-linejoin:round"
+     id="rect2991"
+     width="544.85333"
+     height="112.34866"
+     x="257.56146"
+     y="513.49438"
+     rx="2.9651129"
+     ry="1.2393093" />
+  <text
+     xml:space="preserve"
+     style="font-size:27px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     x="529.7677"
+     y="545.86938"
+     id="text3835"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       x="529.7677"
+       y="545.86938"
+       id="tspan3839">Accounting lines have been created,</tspan><tspan
+       sodipodi:role="line"
+       x="529.7677"
+       y="579.61938"
+       id="tspan3841">but they are still changeable in the</tspan><tspan
+       sodipodi:role="line"
+       x="529.7677"
+       y="613.36938"
+       id="tspan3857">state Journalised.</tspan></text>
+</svg>

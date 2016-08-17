@@ -1,10 +1,24 @@
-/*global window, rJS, URI, jQuery */
+/*global window, rJS, URI */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, URI, $) {
+(function (window, rJS, URI) {
   "use strict";
 
   var gadget_klass = rJS(window);
   // DEFAULT_VIEW_REFERENCE = "view";
+
+  function loadFormContent(gadget, result) {
+    var key;
+    if (gadget.props.options.form_content) {
+      for (key in result) {
+        if (result.hasOwnProperty(key)) {
+          if (gadget.props.options.form_content[result[key].key]) {
+            result[key].default = gadget.props.options.form_content[result[key].key];
+          }
+        }
+      }
+    }
+  }
+
 
   gadget_klass
     /////////////////////////////////////////////////////////////////
@@ -27,12 +41,25 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+      var gadget = this;
+      return gadget.jio_allDocs(param_list[0])
+        .push(function (result) {
+          var i;
+          if (result.data.rows.length) {
+            for (i = 0; i < result.data.rows.length; i += 1) {
+              loadFormContent(gadget, result.data.rows[i].value);
+            }
+          }
+          return result;
+        });
+    })
     .declareMethod('triggerSubmit', function () {
       return this.getDeclaredGadget('fg')
         .push(function (g) {
@@ -75,7 +102,7 @@
             })
             .push(function (result) {
               erp5_form = result;
-
+              loadFormContent(gadget, erp5_document._embedded._view);
               var url = "gadget_erp5_pt_" + erp5_form.pt;
               // XXX Hardcoded specific behaviour for form_view
               if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {
@@ -108,9 +135,6 @@
                 element.removeChild(element.firstChild);
               }
               element.appendChild(fragment);
-              if (options.hasOwnProperty("form_validation_error")) {
-                $(element).trigger("create");
-              }
             });
         });
       return queue;
@@ -122,4 +146,4 @@
       return this.render(options);
     });
 
-}(window, rJS, URI, jQuery));
+}(window, rJS, URI));

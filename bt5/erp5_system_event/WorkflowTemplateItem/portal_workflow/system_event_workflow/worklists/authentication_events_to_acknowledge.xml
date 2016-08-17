@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>User logins to Unblock</string> </value>
+            <value> <string>User logins to Unblock (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

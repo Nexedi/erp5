@@ -1,0 +1,565 @@
+/* ========================================================================== */
+/* CSS ci_presentation                                                        */
+/* ========================================================================== */
+/* GLOBAL FONT DECLARATION */
+.ci-presentation,
+.reveal {
+  font-family: 'Roboto', 'Times New Roman', Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+}
+.ci-presentation-intro h2 {
+  font-family: 'Roboto Condensed', Arial, 'Noto Sans Sc', SimHei, STXihei, sans-serif;
+}
+
+/* unset */
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* inherit height, else slide height is 0 with pos:absolute content */
+section {
+  height: inherit !important;
+}
+
+/* header */
+html .ci-presentation .reveal .slides > section {
+  padding: 0;
+}
+html .ci-presentation .ci-presentation-header {
+  display: none;
+}
+html .ci-presentation .ci-presentation-header h2 {
+  text-align: center;
+}
+html .ci-presentation h1 {
+  font-size: 1.5em;
+  margin-top: -.5em;
+  text-transform: capitalize;
+  text-align: center;
+}
+html .ci-presentation img {
+  border: 0 none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  max-width: 100%;
+  max-height: 80%;
+  width: 100%;
+}
+
+/* margin on no-image-slides */
+html .ci-presentation  ul {
+  margin-top: 10%;
+}
+html .ci-presentation ul li {
+  font-size: 1.5em;
+}
+html .ci-presentation details ul {
+  margin-top: 5%;
+}
+html .ci-presentation details ul li {
+  font-size: 100%;
+}
+html .ci-presentation img + ul,
+html .ci-presentation div + ul {
+  margin: 0;
+}
+html .ci-presentation img + ul li,
+html .ci-presentation div + ul li{
+  font-size: 100%;
+}
+
+/* code */
+html .ci-presentation code {
+  background-color: #eee;
+}
+html .ci-presentation pre {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-color: #eee;
+  font-size: 50%; /* 9pt/9px does not work when used without <code> */
+  text-align: left;
+}
+html .ci-presentation li code {
+  font-size: 65%;
+}
+html .ci-presentation li code pre {
+  font-size: 100%;
+}
+
+/* footer */
+html .ci-presentation .ci-presentation-footer {
+  position:absolute;
+  bottom: -3%;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 40%;
+}
+
+/* toolbar containers */
+html .ci-presentation .ci-presentation-header > div,
+html .ci-presentation .ci-presentation-footer > div {
+  display: inline-block;
+  width: 33%;
+  vertical-align: middle;
+}
+
+/* force logo size */
+html .ci-presentation .ci-presentation-header > div img,
+html .ci-presentation .ci-presentation-footer > div img {
+  max-width: 8em;
+}
+
+/* move side elements to edges */
+html .ci-presentation .ci-presentation-container-left {
+  text-align: left; 
+}
+html .ci-presentation .ci-presentation-container-right  {
+  text-align: right;
+}
+
+/* introductory slide */
+html .ci-presentation .ci-presentation-intro.present {
+  width: 100%;
+  height: 80%;
+  padding: 0 .5em;
+  top: 0 !important; /* overwrite reveal-js */
+}
+html .ci-presentation .ci-presentation-intro.present > h2 {
+  width: 100%;
+}
+
+/* header on all slides */
+html .ci-presentation .ci-presentation-intro.present > h2 {
+  position: absolute;
+  letter-spacing: normal;
+  bottom: 1em;
+  /* wkhtmltopdf doesn't do linear gradient background, so we make a fat header*/
+  bottom: -20px;
+  padding: .75em 0 1.25em;
+  background: #fff;
+}
+
+/* feature logo css, image-src set in WebPage_viewAsWeb */
+.ci-presentation .ci-presentation-intro.present:before {
+  position: absolute;
+  width: 30%;
+  left: 5%;
+  height: 8em;
+  font-size: 22pt;
+  top: -6%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding-top: 6.5em;
+}
+
+/* hide slides header while on first slide */
+html .ci-presentation .ci-presentation-intro.present + .ci-presentation-header {
+  display: none;
+}
+
+/* ===============================   Themes   =============================== */
+
+/* ------------------------- NEXEDI THEME (Default) ------------------------- */
+/* colors: #2B2B5D, #1C76BB, #ffffff, #969696 */
+
+/* presentation themed css */
+
+/* grey header/footer/intro font color */
+.ci-nexedi .ci-presentation-header h2,
+.ci-nexedi .ci-presentation-footer, 
+.ci-nexedi .ci-presentation-intro.present > h2,
+.ci-nexedi .ci-presentation-intro.present:before,
+.ci-nexedi h1,
+.ci-nexedi ul li,
+.ci-nexedi p,
+.ci-nexedi div {
+  color: #969696;
+}
+
+/* background logo size */
+.ci-nexedi .ci-presentation-intro.present:before {
+  background-size: 90%;
+}
+
+/* intro slide background */
+.ci-nexedi .ci-presentation-intro.present {
+  /* background: linear-gradient(180deg, #2B2B5D 80%, white 0px); */
+  background: #2B2B5D;
+  color: #fff;
+}
+.ci-nexedi .ci-presentation-intro.present > h2 {
+  background: #fff;
+}
+
+/* override reveal.js colors */
+.ci-nexedi .slide-number {
+  background-color: #2B2B5D;
+}
+.ci-nexedi .slide-number span {
+  color: #fff;
+}
+.ci-nexedi .reveal .controls .navigate-left,
+.ci-nexedi .reveal .controls .navigate-left.enabled {
+  border-right-color: #2B2B5D;
+}
+.ci-nexedi .reveal .controls .navigate-right,
+.ci-nexedi .reveal .controls .navigate-right.enabled {
+  border-left-color: #2B2B5D;
+}
+.ci-nexedi .reveal .controls .navigate-up,
+.ci-nexedi .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #2B2B5D;
+}
+.ci-nexedi .reveal .controls .navigate-down,
+.ci-nexedi .reveal .controls .navigate-down.enabled {
+  border-top-color: #2B2B5D;
+}
+.ci-nexedi .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #1C76BB;
+}
+.ci-nexedi .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #1C76BB;
+}
+.ci-nexedi .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #1C76BB;
+}
+.ci-nexedi .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #1C76BB;
+}
+
+/* progress bar */
+.ci-nexedi .reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.ci-nexedi .reveal .progress span {
+  background: #2B2B5D;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+
+
+/* -------------------------  ERP5 THEME   ---------------------------------- */
+/* colors: #1C76BB, #96C0E0, #ffffff, #969696 */
+
+/* presentation themed css */
+/* header/footer/intro font color */
+.ci-erp5 .ci-presentation-header h2,
+.ci-erp5 .ci-presentation-footer, 
+.ci-erp5 .ci-presentation-intro.present > h2,
+.ci-erp5 .ci-presentation-intro.present:before,
+.ci-erp5 h1,
+.ci-erp5 ul li,
+.ci-erp5 p,
+.ci-erp5 div {
+  color: #969696;
+}
+
+/* background logo size */
+.ci-erp5 .ci-presentation-intro.present:before {
+  background-size: 70%;
+}
+
+/* intro slide background */
+.ci-erp5 .ci-presentation-intro.present {
+  /* background: linear-gradient(180deg, #1C76BB 80%, white 0px);*/
+  background: #1C76BB;
+  color: #fff;
+}
+.ci-erp5 .ci-presentation-intro.present > h2 {
+  background: #fff;
+}
+
+/* override reveal.js colors */
+.ci-erp5 .slide-number {
+  background-color: #1C76BB;
+}
+.ci-erp5 .slide-number span {
+  color: #fff;
+}
+.ci-erp5 .reveal .controls .navigate-left,
+.ci-erp5 .reveal .controls .navigate-left.enabled {
+  border-right-color: #1C76BB;
+}
+.ci-erp5 .reveal .controls .navigate-right,
+.ci-erp5 .reveal .controls .navigate-right.enabled {
+  border-left-color: #1C76BB;
+}
+.ci-erp5 .reveal .controls .navigate-up,
+.ci-erp5 .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #1C76BB;
+}
+.ci-erp5 .reveal .controls .navigate-down,
+.ci-erp5 .reveal .controls .navigate-down.enabled {
+  border-top-color: #1C76BB;
+}
+.ci-erp5 .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #96C0E0;
+}
+.ci-erp5 .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #96C0E0;
+}
+.ci-erp5 .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #96C0E0;
+}
+.ci-erp5 .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #96C0E0;
+}
+
+/* progress bar */
+.ci-erp5 .reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.ci-erp5 .reveal .progress span {
+  background: #1C76BB;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+
+
+
+/* ----------------------  Slapos THEME  ----------------------------------   */
+/* colors: #267B87, #4DAAAD, #ffffff, #969696 */
+
+/* presentation themed css */
+
+/* header/footer/intro font color */
+.ci-slapos .ci-presentation-header h2,
+.ci-slapos .ci-presentation-footer, 
+.ci-slapos .ci-presentation-intro.present > h2,
+.ci-slapos .ci-presentation-intro.present:before,
+.ci-slapos h1,
+.ci-slapos ul li,
+.ci-slapos p,
+.ci-slapos div {
+  color: #969696;
+}
+
+/* background logo size */
+.ci-slapos .ci-presentation-intro.present:before {
+  background-size: 45%;
+}
+
+/* intro slide background */
+.ci-slapos .ci-presentation-intro.present {
+  /* background: linear-gradient(180deg, #267B87 80%, white 0px); */
+  background: #267B87;
+  color: #fff;
+}
+.ci-slapos .ci-presentation-intro.present > h2 {
+  background: #fff;
+}
+
+/* override reveal.js colors */
+.ci-slapos .slide-number {
+  background-color: #267B87;
+}
+.ci-slapos .slide-number span {
+  color: #fff;
+}
+.ci-slapos .reveal .controls .navigate-left,
+.ci-slapos .reveal .controls .navigate-left.enabled {
+  border-right-color: #267B87;
+}
+.ci-slapos .reveal .controls .navigate-right,
+.ci-slapos .reveal .controls .navigate-right.enabled {
+  border-left-color: #267B87;
+}
+.ci-slapos .reveal .controls .navigate-up,
+.ci-slapos .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #267B87;
+}
+.ci-slapos .reveal .controls .navigate-down,
+.ci-slapos .reveal .controls .navigate-down.enabled {
+  border-top-color: #267B87;
+}
+.ci-slapos .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #4DAAAD;
+}
+.ci-slapos .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #4DAAAD;
+}
+.ci-slapos .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #4DAAAD;
+}
+.ci-slapos .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #4DAAAD;
+}
+
+/* progress bar */
+.ci-slapos .reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.ci-slapos .reveal .progress span {
+  background: #267B87;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}
+
+/* ----------------------  Wendelin THEME  ---------------------------------- */
+/* colors: #33A8A8, #6B8A9A, #ffffff, #969696 */
+
+/* presentation themed css */
+/* header/footer/intro font color */
+.ci-wendelin .ci-presentation-header h2,
+.ci-wendelin .ci-presentation-footer, 
+.ci-wendelin .ci-presentation-intro.present > h2,
+.ci-wendelin .ci-presentation-intro.present:before,
+.ci-wendelin h1,
+.ci-wendelin ul li,
+.ci-wendelin p,
+.ci-wendelin div {
+  color: #969696;
+}
+
+/* presentation logo */
+.custom-logo-wendelin {
+  background: url("../NXD-Media.Logo.Wendelin?format=png") no-repeat center center; /* QUICKFIX */
+  width: 100%;
+  height: 15%;
+  margin-top: 23%;
+}
+
+/* background logo size */
+.ci-wendelin .ci-presentation-intro.present:before {
+  background-size: 33%;
+}
+
+/* intro slide background */
+.ci-wendelin .ci-presentation-intro.present {
+  /* background: linear-gradient(180deg, #33A8A8 80%, white 0px); not in wkhtmltopdf*/
+  background: #33A8A8;
+  color: #fff;
+}
+.ci-pdf.ci-wendelin .ci-presentation-intro.present > h2 {
+  background: #fff;
+}
+
+/* override reveal.js colors */
+.ci-wendelin .slide-number {
+  background-color: #33A8A8;
+}
+.ci-wendelin .slide-number span {
+  color: #fff;
+}
+.ci-wendelin .reveal .controls .navigate-left,
+.ci-wendelin .reveal .controls .navigate-left.enabled {
+  border-right-color: #33A8A8;
+}
+.ci-wendelin .reveal .controls .navigate-right,
+.ci-wendelin .reveal .controls .navigate-right.enabled {
+  border-left-color: #33A8A8;
+}
+.ci-wendelin .reveal .controls .navigate-up,
+.ci-wendelin .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #33A8A8;
+}
+.ci-wendelin .reveal .controls .navigate-down,
+.ci-wendelin .reveal .controls .navigate-down.enabled {
+  border-top-color: #33A8A8;
+}
+.ci-wendelin .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #6B8A9A;
+}
+.ci-wendelin .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #6B8A9A;
+}
+.ci-wendelin .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #6B8A9A;
+}
+.ci-wendelin .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #6B8A9A;
+}
+
+/* progress bar */
+.ci-wendelin .reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.ci-wendelin .reveal .progress span {
+  background: #33A8A8;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}
+
+
+/* ----------------------  NEO THEME  ---------------------------------- */
+/* colors: #434371, (#55557C,) #797993, (?,) #ffffff, #969696 */
+
+/* ----------------------  VIFIB THEME  ---------------------------------- */
+/* colors: #6B8A9A, #33A8A8, #ffffff, #969696 */
+
+/* presentation themed css */
+/* header/footer/intro font color */
+.ci-vifib .ci-presentation-header h2,
+.ci-vifib .ci-presentation-footer, 
+.ci-vifib .ci-presentation-intro.present > h2,
+.ci-vifib .ci-presentation-intro.present:before,
+.ci-vifib h1,
+.ci-vifib ul li,
+.ci-vifib p,
+.ci-vifib div {
+  color: #969696;
+}
+
+/* background logo size */
+.ci-vifib .ci-presentation-intro.present:before {
+  background-size: 25%;
+}
+
+/* intro slide background */
+.ci-vifib .ci-presentation-intro.present {
+  /* background: linear-gradient(180deg, #6B8A9A 80%, white 0px); */
+  background: #6B8A9A;
+  color: #fff;
+}
+.ci-vifib .ci-presentation-intro.present > h2 {
+  background: #fff;
+}
+
+/* override reveal.js colors */
+.ci-vifib .reveal .slide-number {
+  background-color: #6B8A9A;
+}
+.ci-vifib .reveal .slide-number span {
+  color: #fff;
+}
+.ci-vifib .reveal .controls .navigate-left, .reveal .controls .navigate-left.enabled {
+  border-right-color: #6B8A9A;
+}
+.ci-vifib .reveal .controls .navigate-right, .reveal .controls .navigate-right.enabled {
+  border-left-color: #6B8A9A;
+}
+.ci-vifib .reveal .controls .navigate-up, .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #6B8A9A;
+}
+.ci-vifib .reveal .controls .navigate-down, .reveal .controls .navigate-down.enabled {
+  border-top-color: #6B8A9A;
+}
+.ci-vifib .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #33A8A8;
+}
+.ci-vifib .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #33A8A8;
+}
+.ci-vifib .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #33A8A8;
+}
+.ci-vifib .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #33A8A8;
+}
+
+/* progress bar */
+.ci-vifib .reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.ci-vifib .reveal .progress span {
+  background: #6B8A9A;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+}

@@ -134,7 +134,7 @@ class SecurityTestCase(ERP5TypeTestCase):
     if username is None:
       newSecurityManager(None, SpecialUsers.nobody)
     else:
-      uf = self.getPortal().acl_users
+      uf = self.portal.acl_users
       user = uf.getUserById(username)
       self.assertNotEquals(user, None, 'No user %s' % username)
       newSecurityManager(None, user.__of__(uf))

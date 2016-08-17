@@ -67,10 +67,10 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>publication_section/documentation/user</string>
-                <string>contributor/person_module/590</string>
                 <string>group/nexedi/hq</string>
+                <string>publication_section/documentation/user</string>
                 <string>classification/collaborative/project</string>
+                <string>contributor/person_module/590</string>
                 <string>follow_up/project_module/7</string>
               </tuple>
             </value>

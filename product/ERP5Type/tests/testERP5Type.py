@@ -37,6 +37,7 @@ from Acquisition import aq_base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from zLOG import INFO
+from zExceptions import Forbidden
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -159,24 +160,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def getRandomString(self):
       return str(randint(-10000000,100000000))
-
-    def getTemplateTool(self):
-      return getattr(self.portal, 'portal_templates', None)
-
-    def getCategoryTool(self):
-      return getattr(self.portal, 'portal_categories', None)
-
-    def getTypeTool(self):
-      return getattr(self.portal, 'portal_types', None)
-
-    # Here are the tests
-    def testHasTemplateTool(self):
-      # Test if portal_templates was created
-      self.assertNotEquals(self.getTemplateTool(), None)
-
-    def testHasCategoryTool(self):
-      # Test if portal_categories was created
-      self.assertNotEquals(self.getCategoryTool(), None)
 
     def testTemplateToolHasGetId(self):
       # Test if portal_templates has getId method (RAD)
@@ -363,7 +346,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         of a region and should thus be accessible from the region
         category through getRegionRelated accessors
       """
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
 
       category_title = "Solar System"
       category_id = "solar_system"
@@ -527,7 +510,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                     .manage_addPythonScript(id = method_id)
       script = custom_skin[method_id]
       script.ZPythonScript_edit('', "context.setTitle('reseted')")
-      self.getPortal().changeSkin(None)
+      self.portal.changeSkin(None)
 
       # copy / pasted person have their title reseted
       folder = self.getPersonModule()
@@ -627,7 +610,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               portal_type = "Category",
               id =          "zeta",
               title =       "Zeta System", )
-      function_category = self.getPortal().portal_categories.function
+      function_category = self.portal.portal_categories.function
       nofunction = function_category.newContent(
               portal_type = "Category",
               id =          "nofunction",
@@ -1565,7 +1548,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           float_index=2.0)
       addCustomAction('action1','python: here.getDescription()=="foo"')
       obj = self.getOrganisationModule().newContent(portal_type='Organisation')
-      action_tool = self.getPortal().portal_actions
+      action_tool = self.portal.portal_actions
       actions = action_tool.listFilteredActionsFor(obj)
       action_id_list = [x['id'] for x in actions.get('object_action',[])]
       self.assertTrue('action1' not in action_id_list)
@@ -1826,7 +1809,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       """
       portal = self.portal
       # Clear out all generated methods.
-      self.portal.portal_types.resetDynamicDocuments()
+      portal.portal_types.resetDynamicDocuments()
 
       # Create a new temporary person object.
       from Products.ERP5Type.Document import newTempPerson
@@ -2175,7 +2158,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Category Accessors raises Unauthorized when you try to access objects
       # you cannot Access, unless you explictly pass checked_permission=
 
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
       beta_id = "beta"
       beta_title = "Beta System"
       beta = region_category.newContent(
@@ -2234,7 +2217,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Acquired Accessors raises Unauthorized when you try to access objects
       # you cannot Access, unless you explictly pass checked_permission=
 
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
       beta_id = "beta"
       beta_title = "Beta System"
       beta = region_category.newContent(
@@ -2316,7 +2299,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_category_accessor_to_non_existing_documents(self):
       # tests behaviour of category accessors with relations to non existing
       # documents.
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
       beta_id = "beta"
       beta_title = "Beta System"
       beta = region_category.newContent(
@@ -3030,7 +3013,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       """Tests action priority
       """
       portal = self.getPortalObject()
-      portal_actions = self.getPortal().portal_actions
+      portal_actions = self.portal.portal_actions
       try:
         module = self.getPersonModule()
         person = module.newContent(id='1', portal_type='Person')
@@ -3092,6 +3075,19 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Values from which acquired properties are fetched are not returned.
       self.assertFalse("address" in result_set)
 
+    def test_callable_guards(self):
+      skin = self.getSkinsTool().custom
+      script = createZODBPythonScript(skin, self.id(), 'x', 'return x+1')
+      script.manage_setGuard({'guard_roles': 'Manager'})
+      self.assertEqual(script(1), 2)
+      self.assertTrue(script.checkGuard())
+      self.loginWithNoRole()
+      self.assertRaises(Forbidden, script, 2)
+      self.assertFalse(script.checkGuard())
+      script.manage_setGuard({})
+      self.assertEqual(script(1), 2)
+      self.assertTrue(script.checkGuard())
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
@@ -3118,7 +3114,7 @@ class TestAccessControl(ERP5TypeTestCase):
                           ).manage_proxy(('Manager',))
 
   def test(self):
-    self.getPortal().person_module.newContent().Base_immediateReindexObject()
+    self.portal.person_module.newContent().Base_immediateReindexObject()
 
 
 def test_suite():

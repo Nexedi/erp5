@@ -1,136 +1,91 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("table-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
-
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function () {
-      var gadget = this;
-
-      return gadget.jio_allDocs({
-        "query": 'meta_type:"ERP5 Folder" AND id:"%_module"',
-        "select_list": ["title", "business_application_title"],
-        "limit": 1000
-      })
+    .allowPublicAcquisition('updateHeader', function () {
+      return;
+    })
+    .allowPublicAcquisition('getUrlFor', function (argument_list) {
+      if (argument_list[0].command === 'index') {
+        return this.getUrlFor({command: 'display_stored_state', options: {jio_key: argument_list[0].options.jio_key}});
+      }
+      return this.getUrlFor.apply(this, argument_list);
+    })
+    .allowPublicAcquisition('getUrlParameter', function (argument_list) {
+      return this.getUrlParameter(argument_list)
         .push(function (result) {
-          var result_list = [],
-            i;
-          for (i = 0; i < result.data.rows.length; i += 1) {
-            result_list.push(RSVP.all([
-              gadget.getUrlFor({command: 'display_stored_state', options: {jio_key: result.data.rows[i].id}}),
-              result.data.rows[i].value.title || result.data.rows[i].id,
-              result.data.rows[i].value.business_application_title
-            ]));
+          if ((result === undefined) && (argument_list[0] === 'field_listbox_sort_list:json')) {
+            return [['title', 'ascending']];
           }
-          return RSVP.all(result_list);
+          return result;
+        });
+    })
+    .declareMethod("triggerSubmit", function () {
+      var argument_list = arguments;
+      return this.getDeclaredGadget('form_list')
+        .push(function (gadget) {
+          return gadget.triggerSubmit.apply(gadget, argument_list);
+        });
+    })
+    .declareMethod("render", function () {
+      var gadget = this,
+        header_dict = {
+          page_title: 'Modules',
+          filter_action: true
+        };
+
+      return gadget.updateHeader(header_dict)
+        .push(function () {
+          return gadget.getDeclaredGadget('form_list');
         })
-        .push(function (document_list) {
-          var i,
-            business_application_dict = {},
-            business_application_list = [],
-            business_application,
-            module_info,
-            result_html = '<div data-role="collapsible-set" data-theme="c">',
-            doc;
-          for (i = 0; i < document_list.length; i += 1) {
-            doc = document_list[i];
-            if (doc[2] === undefined) {
-              doc[2] = "Other";
+        .push(function (form_gadget) {
+          var column_list = [
+            ['title', 'Title']
+          ];
+          return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              "listbox": {
+                "column_list": column_list,
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 1,
+                "editable_column_list": [],
+                "key": "field_listbox",
+                "lines": 1000,
+                "list_method": "portal_catalog",
+                "query": "urn:jio:allDocs?query=meta_type%3A%22ERP5%20Folder%22%20AND%20id%3A%22%25_module%22",
+                "portal_type": [],
+                "search_column_list": column_list,
+                "sort_column_list": column_list,
+                "title": "Modules",
+                "type": "ListBox"
+              }
+            }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }},
+            form_definition: {
+              group_list: [[
+                "bottom",
+                [["listbox"]]
+              ]]
             }
-            module_info = {
-              link: doc[0],
-              title: doc[1]
-            };
-            if (business_application_dict[doc[2]] === undefined) {
-              business_application_dict[doc[2]] = [module_info];
-              business_application_list.push(doc[2]);
-            } else {
-              business_application_dict[doc[2]].push(module_info);
-            }
-          }
-
-          business_application_list.sort(function (a, b) {
-            // Push the "Other" value at the end
-            var result = 0;
-            if (a === "Other") {
-              result = 1;
-            } else if (b === "Other") {
-              result = -1;
-            } else if (a < b) {
-              result = -1;
-            } else if (a > b) {
-              result = 1;
-            }
-            return result;
-          });
-
-          function sort_module(a, b) {
-            var result = 0;
-            if (a.title < b.title) {
-              result = -1;
-            } else if (a.title > b.title) {
-              result = 1;
-            }
-            return result;
-          }
-
-          for (i = 0; i < business_application_list.length; i += 1) {
-            business_application = business_application_list[i];
-            business_application_dict[business_application].sort(sort_module);
-
-            result_html += table_template({
-              definition_title: business_application,
-              documentlist: business_application_dict[business_application]
-            });
-          }
-
-          result_html += '</div>';
-
-          return gadget.translateHtml(result_html);
-        })
-        .push(function (my_translated_html) {
-          gadget.props.element.querySelector('.document_list').innerHTML =
-            my_translated_html;
-          return gadget.updateHeader({
-            page_title: 'Modules'
           });
         });
     });
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS));

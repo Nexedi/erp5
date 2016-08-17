@@ -36,6 +36,8 @@ if project_uid:
   inventory_query['project_uid'] = project_uid
 if function:
   inventory_query['function_category'] = function
+if params.get('ledger', None):
+  inventory_query['ledger'] = params.get('ledger')
 
 if 'parent_portal_type' in params:
   portal_type_list = params['parent_portal_type']

@@ -985,4 +985,3 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
-

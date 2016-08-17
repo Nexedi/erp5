@@ -47,7 +47,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Ledger is used to split movements, deliveries, or orders of the same type in different subsets. It will replace the "journal" base category which is less generic</string> </value>
+            <value> <string>Ledger is used to split movements, deliveries, or orders of the same type in different subsets</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

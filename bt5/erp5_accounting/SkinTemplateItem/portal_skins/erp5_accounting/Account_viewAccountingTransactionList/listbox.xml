@@ -124,6 +124,10 @@
                           <string>quantity</string>
                           <string>Transaction Currency Balance</string>
                         </tuple>
+                        <tuple>
+                          <string>ledger_translated_title</string>
+                          <string>Ledger</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

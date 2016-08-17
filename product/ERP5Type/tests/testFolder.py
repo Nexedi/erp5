@@ -101,7 +101,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       """
       id_generator_script_name = 'testIdGenerator'
       id_generator_id_list = ['first_id', 'second_id']
-      createZODBPythonScript(self.getPortal().portal_skins.erp5_core,
+      createZODBPythonScript(self.portal.portal_skins.erp5_core,
                id_generator_script_name, '',
                'return %s[len(context)]' % (repr(id_generator_id_list), ))
       self.folder.setIdGenerator(id_generator_script_name)
@@ -168,10 +168,10 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
 
     def _createUpgradeObjectClassPythonScript(self):
       """Create a simple python script """
-      createZODBPythonScript(self.getPortal().portal_skins.custom,
+      createZODBPythonScript(self.portal.portal_skins.custom,
                      "test_upgradeObject", 'x',
                      'return [1]')
-      return self.getPortal().portal_skins.custom.test_upgradeObject
+      return self.portal.portal_skins.custom.test_upgradeObject
 
 
     def test_upgradeObjectClass(self):

@@ -31,6 +31,7 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareMethod('getTextContent', function () {
       var select = this.element.querySelector('select');
       return select.options[select.selectedIndex || 0].text;
@@ -102,6 +103,29 @@
       result[input.getAttribute('name')] = input.options[input.selectedIndex].value;
       return result;
     })
+
+    .declareService(function () {
+      ////////////////////////////////////
+      // Check field validity when the value changes
+      ////////////////////////////////////
+      var field_gadget = this;
+
+      function notifyChange() {
+        return RSVP.all([
+          field_gadget.checkValidity(),
+          field_gadget.notifyChange()
+        ]);
+      }
+
+      // Listen to input change
+      return loopEventListener(
+        field_gadget.element.querySelector('select'),
+        'change',
+        false,
+        notifyChange
+      );
+    })
+
     .declareService(function () {
       ////////////////////////////////////
       // Inform when the field input is invalid

@@ -36,8 +36,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-closed')]</td>
+  <td>assertElementNotPresent</td>
+  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]</td>
   <td></td>
 </tr>
 <tr>
@@ -47,7 +47,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel']//div[contains(@class, 'ui-panel-open')]</td>
+  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]</td>
   <td></td>
 </tr>
 

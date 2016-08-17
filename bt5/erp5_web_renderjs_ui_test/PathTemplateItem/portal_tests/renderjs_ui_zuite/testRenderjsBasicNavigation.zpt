@@ -52,22 +52,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h3[@data-i18n='Other']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
   <td></td>
 </tr>
+
+
 <tr>
   <td>click</td>
-  <td>//h3[@data-i18n='Other']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Bars']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=Bars</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Bars' and contains(@href, '#!display_stored_state') and contains(@href, 'n.jio_key=bar_module')]</td>
   <td></td>
 </tr>
 <tr>

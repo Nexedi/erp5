@@ -673,7 +673,7 @@ if (typeof document.contains !== 'function') {
  * http://www.renderjs.org/documentation
  */
 (function (document, window, RSVP, DOMParser, Channel, MutationObserver,
-           Node, FileReader, Blob) {
+           Node, FileReader, Blob, navigator, Event) {
   "use strict";
 
   function readBlobAsDataURL(blob) {
@@ -737,7 +737,19 @@ if (typeof document.contains !== 'function') {
     renderJS,
     Monitor,
     scope_increment = 0,
-    isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i');
+    isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i'),
+    is_page_unloaded = false,
+    error_list = [];
+
+  window.addEventListener('error', function (error) {
+    error_list.push(error);
+  });
+
+  window.addEventListener('beforeunload', function () {
+    // XXX If another listener cancel the page unload,
+    // it will not restore renderJS crash report
+    is_page_unloaded = true;
+  });
 
   /////////////////////////////////////////////////////////////////
   // Helper functions
@@ -751,23 +763,107 @@ if (typeof document.contains !== 'function') {
   }
 
   function letsCrash(e) {
-    if (e.constructor === XMLHttpRequest) {
-      e = {
-        readyState: e.readyState,
-        status: e.status,
-        statusText: e.statusText,
-        response_headers: e.getAllResponseHeaders()
-      };
+    var i,
+      body,
+      container,
+      paragraph,
+      link,
+      error;
+    if (is_page_unloaded) {
+      /*global console*/
+      console.info('-- Error dropped, as page is unloaded');
+      console.info(e);
+      return;
     }
-    if (e.constructor === Array ||
-        e.constructor === String ||
-        e.constructor === Object) {
-      try {
-        e = JSON.stringify(e);
-      } catch (ignore) {
+
+    error_list.push(e);
+    // Add error handling stack
+    error_list.push(new Error('stopping renderJS'));
+
+    body = document.getElementsByTagName('body')[0];
+    while (body.firstChild) {
+      body.removeChild(body.firstChild);
+    }
+
+    container = document.createElement("section");
+    paragraph = document.createElement("h1");
+    paragraph.textContent = 'Unhandled Error';
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'Please report this error to the support team';
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'Location: ';
+    link = document.createElement("a");
+    link.href = link.textContent = window.location.toString();
+    paragraph.appendChild(link);
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'User-agent: ' + navigator.userAgent;
+    container.appendChild(paragraph);
+
+    body.appendChild(container);
+
+    for (i = 0; i < error_list.length; i += 1) {
+      error = error_list[i];
+
+      if (error instanceof Event) {
+        error = {
+          string: error.toString(),
+          message: error.message,
+          type: error.type,
+          target: error.target
+        };
+        if (error.target !== undefined) {
+          error_list.splice(i + 1, 0, error.target);
+        }
       }
+
+      if (error instanceof XMLHttpRequest) {
+        error = {
+          message: error.toString(),
+          readyState: error.readyState,
+          status: error.status,
+          statusText: error.statusText,
+          response: error.response,
+          responseUrl: error.responseUrl,
+          response_headers: error.getAllResponseHeaders()
+        };
+      }
+      if (error.constructor === Array ||
+          error.constructor === String ||
+          error.constructor === Object) {
+        try {
+          error = JSON.stringify(error);
+        } catch (ignore) {
+        }
+      }
+
+      container = document.createElement("section");
+
+      paragraph = document.createElement("h2");
+      paragraph.textContent = error.message || error;
+      container.appendChild(paragraph);
+
+      if (error.fileName !== undefined) {
+        paragraph = document.createElement("p");
+        paragraph.textContent = 'File: ' +
+          error.fileName +
+          ': ' + error.lineNumber;
+        container.appendChild(paragraph);
+      }
+
+      if (error.stack !== undefined) {
+        paragraph = document.createElement("pre");
+        paragraph.textContent = 'Stack: ' + error.stack;
+        container.appendChild(paragraph);
+      }
+
+      body.appendChild(container);
     }
-    document.getElementsByTagName('body')[0].textContent = e;
     // XXX Do not crash the application if it fails
     // Where to write the error?
     /*global console*/
@@ -1273,7 +1369,13 @@ if (typeof document.contains !== 'function') {
       iframe_loading_deferred.promise,
       // Timeout to prevent non renderJS embeddable gadget
       // XXX Maybe using iframe.onload/onerror would be safer?
-      RSVP.timeout(5000)
+      new RSVP.Queue()
+        .push(function () {
+          return RSVP.timeout(5000);
+        })
+        .push(undefined, function () {
+          throw new Error('Timeout while loading: ' + url);
+        })
     ]);
   }
 
@@ -1701,9 +1803,6 @@ if (typeof document.contains !== 'function') {
 
       last_acquisition_gadget = new RenderJSGadget();
       last_acquisition_gadget.__acquired_method_dict = {
-        getTopURL: function () {
-          return url;
-        },
         reportServiceError: function (param_list) {
           letsCrash(param_list[0]);
         }
@@ -1815,30 +1914,19 @@ if (typeof document.contains !== 'function') {
               });
               return;
             }
-            // Get Top URL
-            return tmp_constructor.prototype.__aq_parent('getTopURL', [])
-              .then(function (topURL) {
-                var base = document.createElement('base');
-                base.href = topURL;
-                base.target = "_top";
-                document.head.appendChild(base);
-                connection_ready = true;
-                notifyReady();
-                //the channel is ok
-                //so bind calls to renderJS method on the instance
-                embedded_channel.bind("methodCall", function (trans, v) {
-                  root_gadget[v[0]].apply(root_gadget, v[1])
-                    .then(function (g) {
-                      trans.complete(g);
-                    }).fail(function (e) {
-                      trans.error(e.toString());
-                    });
-                  trans.delayReturn(true);
+            connection_ready = true;
+            notifyReady();
+            //the channel is ok
+            //so bind calls to renderJS method on the instance
+            embedded_channel.bind("methodCall", function (trans, v) {
+              root_gadget[v[0]].apply(root_gadget, v[1])
+                .then(function (g) {
+                  trans.complete(g);
+                }).fail(function (e) {
+                  trans.error(e.toString());
                 });
-              })
-              .fail(function (error) {
-                throw error;
-              });
+              trans.delayReturn(true);
+            });
           }
         });
 
@@ -2047,4 +2135,4 @@ if (typeof document.contains !== 'function') {
   bootstrap();
 
 }(document, window, RSVP, DOMParser, Channel, MutationObserver, Node,
-  FileReader, Blob));
+  FileReader, Blob, navigator, Event));

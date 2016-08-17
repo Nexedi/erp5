@@ -24,6 +24,13 @@ Delivery Builder | view_predicate_group
 Delivery Builder | view_profile
 Delivery Causality Assignment Movement Group | view
 Delivery Tool | view
+Delivery Type | action_view
+Delivery Type | copy_roles
+Delivery Type | jump_property_sheets
+Delivery Type | role_view
+Delivery Type | translation_view
+Delivery Type | update_local_roles
+Delivery Type | view
 Email | change_function
 Email | view
 Embedded File | download

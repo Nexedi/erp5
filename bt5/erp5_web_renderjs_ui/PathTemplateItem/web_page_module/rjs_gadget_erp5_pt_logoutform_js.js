@@ -26,6 +26,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -33,6 +34,9 @@
      .declareMethod("render", function () {
       var gadget = this;
       return new RSVP.Queue()
+        .push(function () {
+          return gadget.updateHeader({page_title: 'Logout'});
+        })
         .push(function () {
           return gadget.translateHtml(gadget.props.element.innerHTML);
         })

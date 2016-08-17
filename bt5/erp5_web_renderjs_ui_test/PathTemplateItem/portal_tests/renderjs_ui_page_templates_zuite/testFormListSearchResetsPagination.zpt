@@ -76,7 +76,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@class='search_button' and @type='submit']</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
   <td></td>
 </tr>
 <tr>

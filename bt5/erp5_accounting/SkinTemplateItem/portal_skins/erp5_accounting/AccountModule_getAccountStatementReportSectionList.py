@@ -24,6 +24,7 @@ mirror_section = request.get('mirror_section', None)
 payment = request.get('payment', None)
 function = request.get('function', None)
 funding = request.get('funding', None)
+ledger = request.get('ledger', None)
 project = request.get('project', None)
 simulation_state = request['simulation_state']
 hide_analytic = request['hide_analytic']
@@ -83,6 +84,8 @@ if mirror_section:
   params['mirror_section_uid'] = traverse(mirror_section).getUid()
 if parent_portal_type:
   params['parent_portal_type'] = parent_portal_type
+if ledger:
+  params['ledger'] = ledger
 
 analytic_column_list = ()
 if hide_analytic:

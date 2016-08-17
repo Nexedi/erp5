@@ -44,22 +44,24 @@ import os
 # specific testing environment. We must always try to stay below max
 # historical values.
                                     # Historical values
-MIN_OBJECT_VIEW=0.020               # 0.112
-MAX_OBJECT_VIEW=0.050               # 0.120
-MIN_OBJECT_MANY_LINES_VIEW=0.040    # 0.274
-MAX_OBJECT_MANY_LINES_VIEW=0.090    # 0.294
-MIN_OBJECT_PROXYFIELD_VIEW=0.020    # 0.199
-MAX_OBJECT_PROXYFIELD_VIEW=0.090    # 0.220
+MIN_OBJECT_VIEW=0.160               # 0.020, 0.112
+MAX_OBJECT_VIEW=0.174               # 0.050, 0.120
+MIN_OBJECT_MANY_LINES_VIEW=0.040    # 0.040, 0.274
+MAX_OBJECT_MANY_LINES_VIEW=0.090    # 0.090, 0.294
+MIN_OBJECT_PROXYFIELD_VIEW=0.242    # 0.020, 0.199
+MAX_OBJECT_PROXYFIELD_VIEW=0.257    # 0.090, 0.220
 #CURRENT_MIN_OBJECT_VIEW=0.1220
 #CURRENT_MAX_OBJECT_VIEW=0.1280
-MIN_MODULE_VIEW=0.020               # 0.125
-MAX_MODULE_VIEW=0.070               # 0.175
-MIN_TIC=0.0020                      # 0.260
-MAX_TIC=0.0090                      # 0.343
-MIN_OBJECT_CREATION=0.0010          # 0.0070
-MAX_OBJECT_CREATION=0.0040          # 0.0082
+MIN_MODULE_VIEW=0.160               # 0.020, 0.125
+MAX_MODULE_VIEW=0.174               # 0.070, 0.175
+MIN_TIC=0.0333                      # 0.0020, 0.260
+MAX_TIC=0.0354                      # 0.0090, 0.343
+MIN_OBJECT_CREATION=0.0130          # 0.0010, 0.0070
+MAX_OBJECT_CREATION=0.0145          # 0.0040, 0.0082
 LISTBOX_COEF=0.00173                # 0.02472
 # Change history
+# 2016-08-11
+#   Adapt values with new hardware from online.net.
 # 2013-03-01
 #   Adapt values with new hardware and last improvements
 # 2010-02-09
@@ -131,7 +133,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       Return the bar module
       """
-      return self.getPortal()['bar_module']
+      return self.portal['bar_module']
 
     def afterSetUp(self):
       """
@@ -158,16 +160,16 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       self.abort()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
       self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
-      gender = self.getPortal().portal_categories['gender']
+      gender = self.portal.portal_categories['gender']
       gender.manage_delObjects(list(gender.objectIds()))
-      gender = self.getPortal().portal_caches.clearAllCache()
+      gender = self.portal.portal_caches.clearAllCache()
       self.tic()
 
     def checkViewBarObject(self, min, max, quiet=quiet, prefix=None):
       # Some init to display form with some value
       if prefix is None:
         prefix = ''
-      gender = self.getPortal().portal_categories['gender']
+      gender = self.portal.portal_categories['gender']
       if 'male' not in gender.objectIds():
         gender.newContent(id='male', title='Male', portal_type='Category')
       if 'female' not in gender.objectIds():

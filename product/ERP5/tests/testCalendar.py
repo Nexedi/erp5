@@ -40,8 +40,10 @@ class TestCalendar(ERP5ReportTestCase):
   person_portal_type = "Person"
   group_calendar_portal_type = "Group Calendar"
   leave_request_portal_type = "Leave Request"
+  presence_request_portal_type = "Presence Request"
   group_presence_period_portal_type = "Group Presence Period"
   leave_request_period_portal_type = "Leave Request Period"
+  presence_request_period_portal_type = "Presence Request Period"
   start_date = DateTime(DateTime().ISO8601())
   stop_date = start_date + 0.5
   middle_date = start_date + 0.25
@@ -394,6 +396,95 @@ class TestCalendar(ERP5ReportTestCase):
 #     self.assertEqual(len(obj_to_check.getDatePeriodList()),
 #                       uid_list.count(obj_to_check.getUid()))
 
+  def stepCreatePresenceRequest(self, sequence=None,
+                                 sequence_list=None, **kw):
+    """
+    Create a personal calendar
+    """
+    portal = self.getPortal()
+    module = portal.getDefaultModule(self.presence_request_portal_type)
+    pc = module.newContent(portal_type=self.presence_request_portal_type)
+    sequence.edit(
+        presence_request=pc,
+    )
+
+  def stepSetPresenceRequestDestination(self, sequence=None,
+                                         sequence_list=None, **kw):
+    """
+    Set the destination
+    """
+    presence_request = sequence.get('presence_request')
+    person = sequence.get('person')
+    presence_request.setDestinationValue(person)
+
+  def stepCreatePersonalPresencePeriod(self, sequence=None,
+                                    sequence_list=None, **kw):
+    """
+    Create an personal calendar period
+    """
+    presence_request = sequence.get('presence_request')
+    personal_presence_period = presence_request.newContent(
+        portal_type=self.presence_request_period_portal_type,
+        resource_value=self.portal.service_module.consulting_service
+    )
+    sequence.edit(
+        personal_presence_period=personal_presence_period,
+    )
+
+  def stepSetPersonalPresencePeriodToCheck(self, sequence=None,
+                                        sequence_list=None, **kw):
+    """
+    Set personal presence period to check
+    """
+    personal_presence_period = sequence.get('personal_presence_period')
+    sequence.edit(obj_to_check=personal_presence_period)
+
+  def stepSetPersonalPresencePeriodValues(self, sequence=None,
+                                       sequence_list=None, **kw):
+    """
+    Set values on personal calendar event
+    """
+    personal_presence_period = sequence.get('personal_presence_period')
+
+  def stepSetPersonalPresencePeriodDates(self, sequence=None,
+                                      sequence_list=None, **kw):
+    """
+    Set values on personal calendar
+    """
+    personal_presence_period = sequence.get('personal_presence_period')
+    personal_presence_period.edit(
+      start_date=self.start_date,
+      stop_date=self.stop_date,
+    )
+
+  def stepSetPersonalPresencePeriodPerStopDate(self, sequence=None,
+                                            sequence_list=None, **kw):
+    """
+    Set values on personal calendar event
+    """
+    personal_presence_period = sequence.get('personal_presence_period')
+    personal_presence_period.edit(
+      periodicity_stop_date=self.periodicity_stop_date,
+    )
+
+  def stepPlanPresenceRequest(self, sequence=None,
+                               sequence_list=None, **kw):
+    """
+    Plan personal calendar
+    """
+    presence_request = sequence.get('presence_request')
+    presence_request.plan()
+    self.assertEqual('planned', presence_request.getSimulationState())
+
+  def stepConfirmPresenceRequest(self, sequence=None,
+                               sequence_list=None, **kw):
+    """
+    Confirm personal calendar
+    """
+    presence_request = sequence.get('presence_request')
+    presence_request.confirm()
+    self.assertEqual('confirmed', presence_request.getSimulationState())
+
   def test_01_CatalogCalendarPeriod(self, quiet=0, run=run_all_test):
     """
     Test indexing
@@ -450,6 +541,36 @@ class TestCalendar(ERP5ReportTestCase):
               Tic \
               CheckCatalogued \
               '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_CatalogPresenceRequest(self, quiet=0, run=run_all_test):
+    """
+    Test indexing
+    """
+    if not run: return
+
+    sequence_list = SequenceList()
+    sequence_string = '''
+              CreatePerson
+              CreateLeaveRequest
+              SetLeaveRequestDestination
+              CreatePersonalLeavePeriod
+              SetPersonalLeavePeriodValues
+              Tic
+              SetPersonalLeavePeriodToCheck
+              CheckNotCatalogued
+              PlanLeaveRequest
+              ConfirmLeaveRequest
+              Tic
+              CheckNotCatalogued
+              SetPersonalLeavePeriodDates
+              Tic
+              CheckCatalogued
+              SetPersonalLeavePeriodPerStopDate
+              Tic
+              CheckCatalogued
+              '''
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 

@@ -474,12 +474,17 @@ class Catalog(Folder,
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_tables',
-      'description' : 'Method to get the main catalog tables',
+    { 'id'      : 'sql_optimizer_switch',
+      'description': 'Method to get optimizer_switch value',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
     { 'id'      : 'sql_catalog_schema',
+      'description' : 'Method to get the main catalog schema',
+      'type'    : 'selection',
+      'select_variable' : 'getCatalogMethodIds',
+      'mode'    : 'w' },
+    { 'id'      : 'sql_catalog_multi_schema',
       'description' : 'Method to get the main catalog schema',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
@@ -599,9 +604,10 @@ class Catalog(Folder,
   sql_count_results = ''
   sql_getitem_by_path = ''
   sql_getitem_by_uid = ''
-  sql_catalog_tables = ''
+  sql_optimizer_switch = ''
   sql_search_tables = ()
   sql_catalog_schema = ''
+  sql_catalog_multi_schema = ''
   sql_catalog_index = ''
   sql_unique_values = ''
   sql_catalog_paths = ''
@@ -1057,18 +1063,12 @@ class Catalog(Folder,
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
     """
-    search_tables = self.sql_search_tables
-    if len(search_tables) > 0:
-      if search_tables[0] != 'catalog':
-        result = ['catalog']
-        for t in search_tables:
-          if t != 'catalog':
-            result.append(t)
-        self.sql_search_tables = result
-    else:
-      self.sql_search_tables = ['catalog']
-
-    return self.sql_search_tables
+    search_tables = list(self.sql_search_tables) or ['catalog']
+    if search_tables[0] != 'catalog':
+      search_tables = ['catalog'] + [x for x in search_tables if x != 'catalog']
+      # XXX: cast to tuple to avoid a mutable persistent property ?
+      self.sql_search_tables = search_tables
+    return search_tables
 
   security.declarePublic('getCatalogSearchResultKeys')
   def getCatalogSearchResultKeys(self):
@@ -1076,30 +1076,54 @@ class Catalog(Folder,
     """
     return self.sql_search_result_keys
 
-  def _getCatalogSchema(self, table=None):
-    method_name = self.sql_catalog_schema
-    try:
-      method = getattr(self, method_name)
-    except AttributeError:
-      pass
-    else:
+  @transactional_cache_decorator('SQLCatalog._getCatalogSchema')
+  def _getCatalogSchema(self):
+    method = getattr(self, self.sql_catalog_multi_schema, None)
+    result = {}
+    if method is None:
+      # BBB: deprecated
+      warnings.warn("The usage of sql_catalog_schema is much slower. "
+              "than sql_catalog_multi_schema. It makes many SQL queries "
+              "instead of one",
+              DeprecationWarning)
+      method_name = self.sql_catalog_schema
       try:
-        return tuple(c.Field for c in method(table=table))
-      except (ConflictError, DatabaseError):
-        raise
-      except Exception:
-        pass
+        method = getattr(self, method_name)
+      except AttributeError:
+        return {}
+      for table in self.getCatalogSearchTableIds():
+        try:
+          result[table] = [c.Field for c in method(table=table)]
+        except (ConflictError, DatabaseError):
+          raise
+        except Exception:
+          LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s'
+            % method_name, error=sys.exc_info())
+      return result
+    for row in method():
+      result.setdefault(row.TABLE_NAME, []).append(row.COLUMN_NAME)
+    return result
 
-    LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s'
-        % method_name, error=sys.exc_info())
-    return ()
+  security.declarePrivate('getTableColumnList')
+  def getTableColumnList(self, table):
+    """
+    Returns the list of columns in given table.
+    Raises KeyError on unknown table.
+    """
+    return self._getCatalogSchema()[table]
 
+  security.declarePrivate('getColumnIds')
   @transactional_cache_decorator('SQLCatalog.getColumnIds')
-  def _getColumnIds(self):
+  def getColumnIds(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    """
     keys = set()
     add_key = keys.add
+    table_dict = self._getCatalogSchema()
     for table in self.getCatalogSearchTableIds():
-      for field in self._getCatalogSchema(table=table):
+      for field in table_dict[table]:
         add_key(field)
         add_key('%s.%s' % (table, field))  # Is this inconsistent ?
     for related in self.getSQLCatalogRelatedKeyList():
@@ -1110,14 +1134,6 @@ class Catalog(Folder,
       add_key(scriptable_tuple[0].strip())
     return sorted(keys)
 
-  security.declarePrivate('getColumnIds')
-  def getColumnIds(self):
-    """
-    Calls the show column method and returns dictionnary of
-    Field Ids
-    """
-    return self._getColumnIds()[:]
-
   security.declarePrivate('getColumnMap')
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
   def getColumnMap(self):
@@ -1126,8 +1142,9 @@ class Catalog(Folder,
     Field Ids
     """
     result = {}
+    table_dict = self._getCatalogSchema()
     for table in self.getCatalogSearchTableIds():
-      for field in self._getCatalogSchema(table=table):
+      for field in table_dict[table]:
         result.setdefault(field, []).append(table)
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
@@ -1140,8 +1157,9 @@ class Catalog(Folder,
     Field Ids
     """
     keys = set()
+    table_dict = self._getCatalogSchema()
     for table in self.getCatalogSearchTableIds():
-      for field in self._getCatalogSchema(table=table):
+      for field in table_dict[table]:
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
@@ -1153,8 +1171,9 @@ class Catalog(Folder,
     Field Ids that can be used for a sort
     """
     keys = set()
+    table_dict = self._getCatalogSchema()
     for table in self.getTableIds():
-      for field in self._getCatalogSchema(table=table):
+      for field in table_dict[table]:
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
@@ -1164,22 +1183,7 @@ class Catalog(Folder,
     Calls the show table method and returns dictionnary of
     Field Ids
     """
-    method_name = self.sql_catalog_tables
-    try:
-      method = getattr(self, method_name)
-    except AttributeError:
-      pass
-    else:
-      try:
-        return [c[0] for c in method()]
-      except (ConflictError, DatabaseError):
-        raise
-      except Exception:
-        pass
-
-    LOG('SQLCatalog', WARNING, 'getTableIds failed with the method %s'
-        % method_name, error=sys.exc_info())
-    return []
+    return self._getCatalogSchema().keys()
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
@@ -2898,6 +2902,30 @@ class Catalog(Folder,
             'isInventoryMovement': ob.isInventoryMovement,
             }
         return getEngine().getContext(data)
+
+  def _getOptimizerSwitch(self):
+    method_name = self.sql_optimizer_switch
+    try:
+      method = getattr(self, method_name)
+    except AttributeError:
+      pass
+    else:
+      try:
+        return method()[0][0]
+      except (ConflictError, DatabaseError):
+        raise
+      except Exception:
+        pass
+
+    LOG('SQLCatalog', WARNING, 'getTableIds failed with the method %s'
+        % method_name, error=sys.exc_info())
+    return ''
+
+  security.declarePublic('getOptimizerSwitchKeyList')
+  @transactional_cache_decorator('SQLCatalog.getOptimizerSwitchKeyList')
+  def getOptimizerSwitchKeyList(self):
+    return [pair.split('=', 1)[0] for pair in \
+              self._getOptimizerSwitch().split(',')]
 
 InitializeClass(Catalog)
 
