@@ -27,17 +27,15 @@ membership_criterion_category_list = context.getMembershipCriterionCategoryList(
 multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
 
 reference = context.Base_generateReferenceFromString(title)
+random_string_length = 10
+while True:
+  random_reference = "%s-%s" % (reference, context.Base_generateRandomString(string_length=random_string_length))
+  if context.restrictedTraverse(random_reference, None) is None:
+    # object does not already exist (module, web site, web section, action, bound method, ...)
+    break
+  random_string_length += 1
 
-existing_document = context.getDocumentValue(reference)
-existing_web_section_list = portal.portal_catalog(id=reference, portal_type=['Web Site', 'Web Section'])
-existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())
-if existing_document is not None \
-  or len(existing_web_section_list) \
-  or len(existing_module_list):
-  # if there are other document or any tarversal objects (module, web section)
-  # which ID or reference duplicates just add some random part
-  # so we can distinguish)
-  reference = '%s-%s' %(context.Base_generateRandomString(), reference)
+reference = random_reference
 
 category_list = []
 create_kw = dict(title = title,
