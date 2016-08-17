@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html manifest="master.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Serverless WebRTC - Master</title>
+
+    <style type="text/css">
+      body {
+        background-color: #f9f9f9;
+        color: #2C3E50;
+        font-family: Arial;  
+      }
+      .ui-content, .ui-responsive {
+        background-color: white;
+        border: 1px solid #2C3E50;
+        border-radius: .375em;
+        padding: 1em;
+        width: 50%;
+        margin: 0 auto 1em;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      .ui-responsive div p:first-child {
+        display: none;
+      }
+      @media (max-width: 48em) {
+        .ui-content, .ui-responsive {
+          width: 100%;
+        }
+      }
+      h2, h3 {
+        padding: 0;
+        margin: 0;
+        font-size: 1.17em;
+        text-align: center;
+      }
+     label {
+        width: 60%;
+        display: inline-block;
+        padding: .5em 0;
+      }
+      label span {
+        display: inline-block;
+        width: 40%;
+        padding-right: .5em;
+      }
+    </style>
+
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="gadget_global.js" type="text/javascript"></script>
+    
+    <!-- custom -->
+    <script src="gadget_webrtc_serverless_demo_master.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    <!-- MASTER -->
+    <!-- NOTE: must have BroadCaster running on same device to work  -->
+
+    <div class="ui-content">
+      <h3>Master</h3>
+      <ul>
+      <li>The master gadget contains a jIO storage indexedDB.</li>
+      <li>Slaves connect to master over WebSockets URL set by the Broadcaster</li>
+      <li>Once webRTC is active the slave can access the storage over webRTC</li>
+    </div>
+    
+     <div class="ui-content">
+      <form class="ops-form-initializer">
+        <h3> Create a Room </h3>
+        <br>
+        <label><span>Name your room</span><input type="text" class="ops-socket-connector" /></label>
+        <input type="submit" value="Do It" />
+      </form>
+    </div>
+    
+
+    <!-- socket broadcaster -->
+    <div data-gadget-url="gadget_webrtc_serverless_demo_master_helper.html"
+         data-gadget-scope="share_storage_via_webrtc"
+         data-gadget-sandbox="public"></div>
+
+    <!-- storage -->
+    <div data-gadget-url="gadget_jio.html"
+         data-gadget-scope="jio_gadget"
+         data-gadget-sandbox="public"></div>
+
+  </body>
+</html>
+
+
+
+
+    
