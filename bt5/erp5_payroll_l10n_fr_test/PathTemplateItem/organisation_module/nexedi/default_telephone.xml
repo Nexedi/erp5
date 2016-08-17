@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Telephone" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>int_index</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_telephone</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Telephone</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>telephone_area</string> </key>
+            <value> <string>9</string> </value>
+        </item>
+        <item>
+            <key> <string>telephone_city</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>telephone_country</string> </key>
+            <value> <string>33</string> </value>
+        </item>
+        <item>
+            <key> <string>telephone_extension</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>telephone_number</string> </key>
+            <value> <string>51085055</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

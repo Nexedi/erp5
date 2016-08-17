@@ -31,4 +31,12 @@
   <type>Pay Sheet Transaction Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Payroll Enrollment Record</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Social Declaration Report</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
 </workflow_chain>

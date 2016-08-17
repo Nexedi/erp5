@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="DSN Change Block">
+  <item>use</item>
+ </portal_type>
+ <portal_type id="DSN Early Recovery Report">
+  <item>source_administration</item>
+ </portal_type>
+ <portal_type id="DSN Monthly Report">
+  <item>source_administration</item>
+ </portal_type>
+</base_category_list>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Annotation Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>quantity_unit/time/hour</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>work_time_annotation_line</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Annotation Line</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>154.0</float> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

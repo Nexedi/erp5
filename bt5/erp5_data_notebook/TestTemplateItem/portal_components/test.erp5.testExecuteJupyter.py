@@ -642,6 +642,69 @@ print rand.randint(1,1)
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '1')  
 
+  def testEnvorinmentUndefineErrors(self):
+    """
+      Tests if environment.undefine wrong usage errors are correctly captured 
+      and rendered in Jupyter.
+    """
+    self.login('dev_user')
+    undefine_not_found = 'environment.undefine("foobar")' 
+    
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Undefine'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=undefine_not_found
+    )
+    self.tic()
+    
+    error_substring = 'EnvironmentUndefineError: Trying to remove non existing'
+    self.assertTrue(error_substring in result)
+    
+    not_string_code = 'def foobar(): pass\nenvironment.undefine(foobar)'
+    
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Undefine'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=not_string_code
+    )
+    self.tic()
+    
+    error_substring = 'EnvironmentUndefineError: Type mismatch.'
+    self.assertTrue(error_substring in result)
+    
+  def testEnvironmentDefineErrrors(self):
+    """
+      Tests if environment.define wrong usage errors are correctly captured 
+      and rendered in Jupyter.
+    """
+    self.login('dev_user')
+    
+    first_arg_type_code = "environment.define('foobar', 'foobar')" 
+    
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Define'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=first_arg_type_code
+    )
+    self.tic()
+    
+    error_substring = 'EnvironmentDefinitionError: Type mismatch'
+    self.assertTrue(error_substring in result)
+    self.assertTrue('first argument' in result)
+    
+    second_arg_type_code = 'def couscous(): pass\nenvironment.define(couscous, 123)'
+    
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Define'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=second_arg_type_code
+    )
+    self.tic()
+    
+    error_substring = 'EnvironmentDefinitionError: Type mismatch'
+    self.assertTrue(error_substring in result)
+    self.assertTrue('second argument' in result)
+    
   def testPivotTableJsIntegration(self):
     '''
       This test ensures the PivotTableJs user interface is correctly integrated

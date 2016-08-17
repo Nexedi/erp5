@@ -116,6 +116,7 @@
                         <string>your_simulation_state</string>
                         <string>my_view_mode_category</string>
                         <string>my_ledger</string>
+                        <string>my_view_mode_translated_workflow_state_title</string>
                       </list>
                     </value>
                 </item>

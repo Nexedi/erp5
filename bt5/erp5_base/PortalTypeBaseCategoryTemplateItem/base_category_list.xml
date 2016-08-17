@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Career">
+  <item>aggregate</item>
+ </portal_type>
  <portal_type id="Currency Exchange Cell">
   <item>currency_exchange_type</item>
   <item>price_currency</item>

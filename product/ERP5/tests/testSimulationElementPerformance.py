@@ -112,26 +112,26 @@ HISTORICAL_EXPECTED_MIN_MAX_TIME = {
 }
 
 EXPECTED_MIN_MAX_TIME = {
-  'Creation Of New Applied Rules': (5, 10),
+  'Creation Of New Applied Rules': (30, 35),
 
-  'Expansion of Existing Applied Rules': (5, 10),
+  'Expansion of Existing Applied Rules': (41, 47),
 
-  'Creation of New Sale Packing Lists': (5, 10),
+  'Creation of New Sale Packing Lists': (27, 32),
 
-  'Expansion of Converged Changes': (8, 12),
+  'Expansion of Converged Changes': (48, 54),
 
-  'Expansion of Diverged Changes': (9, 13),
+  'Expansion of Diverged Changes': (53, 59),
 
-  'Adoption of Previsions': (20, 25),
+  'Adoption of Previsions': (105, 114),
 
-  'Acceptance of Decisions': (20, 25),
+  'Acceptance of Decisions': (104, 113),
 
   'Creation of New Applied Rules from Partially Simulated Deliveries':
-    (12, 17),
+    (38, 44),
 
-  'Creation Of New Sale Invoices': (9, 14),
+  'Creation Of New Sale Invoices': (48, 54),
 
-  'Addition of New Invoices Lines': (32, 39),
+  'Addition of New Invoices Lines': (116, 125),
 }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
