@@ -85,7 +85,6 @@
         .push(function (text) {
           var line_list = text.split('\n'),
             line,
-            tmp_line,
             i,
             index,
             displayed_text = '',
@@ -136,7 +135,7 @@
                 // If we receive one multiline message, then the lines after the first
                 // would not start with the date. So this would return Invalid Date
                 message_date = new Date(line.substring(1, index));
-                // Check direction and cut the date from the start of the line. 
+                // Check direction and cut the date from the start of the line.
                 // This should be done only if it is a unique line or the first
                 // line of a multi-line message. Other lines will retain direction
                 // of the first
@@ -147,13 +146,12 @@
                   if (message_date - previous_message_date > MESSAGE_FRESHNESS) {
                     is_old = true;
                   }
-                  tmp_line = line.substring(index + 2);
-                  if (tmp_line.indexOf('> ') === 0) {
+                  line = line.substring(index + 2);
+                  if (line.indexOf('> ') === 0) {
                     message_is_incoming = false;
-                  } else if (tmp_line.indexOf('< ') === 0) {
+                  } else if (line.indexOf('< ') === 0) {
                     message_is_incoming = true;
                   }
-                  line = tmp_line.substring(2);
                 }
                 if (message_is_incoming !== is_incoming || is_old) {
                   appendText(displayed_text, is_incoming);
