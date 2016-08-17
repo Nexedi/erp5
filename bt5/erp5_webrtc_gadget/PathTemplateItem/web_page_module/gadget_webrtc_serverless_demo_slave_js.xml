@@ -1,0 +1,458 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_webrtc_serverless_demo_slave.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Webrtc with JIO demo App</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_webrtc_serverless_demo_slave_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*global window, rJS, document, RSVP */\n
+/*jslint indent: 2, maxerr: 3 */\n
+(function (window, rJS, document, RSVP) {\n
+  "use strict";\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Some functions\n
+  /////////////////////////////////////////////////////////////////\n
+  function displayError(gadget, error) {\n
+    // Do not break the application in case of errors.\n
+    // Display it to the user for now, and allow user to go back to the frontpage\n
+    var error_text = "",\n
+      status = gadget.state_parameter_dict.status_message;\n
+\n
+    if (error instanceof RSVP.CancellationError) {\n
+      return;\n
+    }\n
+\n
+    if (error instanceof XMLHttpRequest) {\n
+      error_text = error.toString() + " " +\n
+        error.status + " " +\n
+        error.statusText;\n
+    } else if (error instanceof Error) {\n
+      error_text = error.toString();\n
+    } else {\n
+      error_text = JSON.stringify(error);\n
+    }\n
+\n
+    console.error(error);\n
+    console.error(error.stack);\n
+    status.textContent = "Error: " + error_text; \n
+  }\n
+  \n
+  function escapeString(my_string) {\n
+    //return my_string.replace(/\\"/g, "\\\\\\"");\n
+    return my_string;\n
+  }\n
+\n
+  function findList(my_target) {\n
+    var list = my_target.nextSibling;\n
+\n
+    while(list && list.nodeType != 1) {\n
+      list = list.nextSibling;\n
+    }\n
+    return list;\n
+  }\n
+\n
+  function clearList(my_list) {\n
+    while (my_list.firstChild) {\n
+      my_list.removeChild(my_list.firstChild);\n
+    }\n
+  }\n
+\n
+  function queryRecordOverWebrtc(my_gadget, my_event) {\n
+    var target = my_event.target,\n
+      search_string = target.elements.field_search_string.value,\n
+      status = my_gadget.state_parameter_dict.status_message,\n
+      list = findList(target),\n
+      lookup;\n
+\n
+    if (search_string) {\n
+      lookup = escapeString(search_string);\n
+      clearList(list);\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          status.textContent = "Querying storage...";\n
+          return my_gadget.shared_jio_allDocs({\n
+            "query": \'first:"%\' + lookup + \'%" OR last:"%\' + lookup + \'%"\',\n
+            //"include_docs": true NOT SUPPORTED ON INDEXEDDB \n
+          });\n
+        })\n
+        .push(function (my_result) {\n
+          var promise_list = [], \n
+            i, \n
+            i_len;\n
+          \n
+          // fetch records one by one\n
+          for (i = 0, i_len = my_result.data.total_rows; i < i_len; i += 1) {\n
+            promise_list.push(\n
+              my_gadget.shared_jio_get(my_result.data.rows[i].id)\n
+            );\n
+          }\n
+          return RSVP.all(promise_list);\n
+        })\n
+        .push(function (my_result_list) {\n
+          var fragment = document.createDocumentFragment(),\n
+            result,\n
+            doc,\n
+            i,\n
+            i_len;\n
+\n
+          status.textContent = "";\n
+\n
+          for (i = 0, i_len = my_result_list.length; i < i_len; i += 1) {\n
+            doc = my_result_list[i];\n
+            result = document.createElement("li");\n
+            result.textContent = doc.first + " " + doc.last;\n
+            fragment.appendChild(result);\n
+          }\n
+          list.appendChild(fragment);\n
+        });\n
+    }\n
+    status.textContent = "Please enter search string.";\n
+  }\n
+\n
+  function createRecordOverWebrtc(my_gadget, my_event) {\n
+    var target = my_event.target,\n
+      first = target.elements.field_first_name.value,\n
+      last = target.elements.field_last_name.value,\n
+      status =  my_gadget.state_parameter_dict.status_message;\n
+\n
+    if (first && last) {\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          status.textContent = "Posting to storage...";\n
+          return my_gadget.shared_jio_post({"first": first, "last": last});\n
+        })\n
+        .push(function (my_storage_reply) {\n
+          status.textContent = "ok, record created: " + my_storage_reply;\n
+        });\n
+    }\n
+    status.textContent = "Please enter first and last name.";\n
+    return;\n
+  }\n
+\n
+  function initializeWebrtcConnecton(my_gadget, my_event) {\n
+    var target = my_event.target,\n
+      value = target.querySelector(".ops-socket-connector").value,\n
+      status =  my_gadget.state_parameter_dict.status_message;\n
+\n
+    if (value) {\n
+      status.textContent = "Try to connect over to room" + value + " ...";\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return my_gadget.shared_jio_create({"room": value});\n
+        })\n
+        .push(function () {\n
+          status.textContent = "WebRTC active.";\n
+        });\n
+    }\n
+    status.textContent = "Please enter WebSocket Url.";\n
+    return false;\n
+  }\n
+\n
+  /////////////////////////////////////////////////////////////////\n
+  // Gadget behaviour\n
+  /////////////////////////////////////////////////////////////////\n
+\n
+  rJS(window)\n
+    /////////////////////////////////////////////////////////////////\n
+    // ready\n
+    /////////////////////////////////////////////////////////////////\n
+    .ready(function (gadget) {\n
+      gadget.state_parameter_dict = {};\n
+      return gadget.getElement()\n
+        .push(function (element) {\n
+          gadget.state_parameter_dict.element = element;\n
+          gadget.state_parameter_dict.status_message = \n
+            element.querySelector(".ops-status");\n
+        });\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // acquired methods\n
+    /////////////////////////////////////////////////////////////////\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // published methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .allowPublicAcquisition(\'reportServiceError\', function (param_list, gadget_scope) {\n
+      if (gadget_scope === undefined) {\n
+        // don\'t fail in case of dropped subgadget (like previous page)\n
+        // only accept errors from header, panel and displayed page\n
+        return;\n
+      }\n
+      return displayError(this, param_list[0]);\n
+    })\n
+\n
+    /////////////////////////////////////////////////////////////////\n
+    // declared methods\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareMethod(\'shared_jio_create\', function (my_param_list) {\n
+      var gadget = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget("access_storage_via_webrtc");\n
+        })\n
+        .push(function (my_gadget) {\n
+          return my_gadget.createJio(my_param_list);  \n
+        });\n
+    })\n
+    .declareMethod("shared_jio_post", function (my_param_dict) {\n
+      var gadget = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget("access_storage_via_webrtc");\n
+        })\n
+        .push(function (my_gadget) {\n
+          return my_gadget.post(my_param_dict);\n
+        });\n
+    })\n
+    .declareMethod("shared_jio_get", function (my_param_dict) {\n
+      var gadget = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget("access_storage_via_webrtc");\n
+        })\n
+        .push(function (my_gadget) {\n
+          return my_gadget.get(my_param_dict);\n
+        });\n
+    })\n
+    .declareMethod("shared_jio_allDocs", function (my_param_dict) {\n
+      var gadget = this;\n
+      return new RSVP.Queue()\n
+        .push(function () {\n
+          return gadget.getDeclaredGadget("access_storage_via_webrtc");\n
+        })\n
+        .push(function (my_gadget) {\n
+          return my_gadget.allDocs(my_param_dict);\n
+        });\n
+    })\n
+    \n
+    /////////////////////////////////////////////////////////////////\n
+    // declared services\n
+    /////////////////////////////////////////////////////////////////\n
+    .declareService(function () {\n
+      var gadget = this;\n
+\n
+      function handleFormSubmit(my_event) {\n
+        \n
+        switch (my_event.target.className) {\n
+          case "ops-form-initializer":\n
+            return initializeWebrtcConnecton(gadget, my_event);\n
+          case "ops-form-create":\n
+            return createRecordOverWebrtc(gadget, my_event);\n
+          case "ops-form-query":\n
+            return queryRecordOverWebrtc(gadget, my_event);\n
+        }\n
+      }\n
+\n
+      // Listen to form submit\n
+      return loopEventListener(\n
+        gadget.state_parameter_dict.element,\n
+        \'submit\',\n
+        false,\n
+        handleFormSubmit\n
+      );\n
+    });\n
+\n
+}(window, rJS, document, RSVP));\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Slave for demo WebRTC application</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>953.39271.9120.48793</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1472632772.63</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
