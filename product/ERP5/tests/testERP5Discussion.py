@@ -210,6 +210,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
     # test new thread reference do no overlap any other traversable object
     web_section1.WebSection_createNewDiscussionThread(web_section1.getId(), 'test reference using web section')
     web_section1.WebSection_createNewDiscussionThread('image_module', 'test1 body')
+    web_section1.WebSection_createNewDiscussionThread('manage_main', 'test1 body')
     self.tic()
     self.assertNotEqual(web_section1.getId(),
                         portal.portal_catalog.getResultValue(
@@ -219,6 +220,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
                         portal.portal_catalog.getResultValue(
                           portal_type = 'Discussion Thread',
                           title = 'image_module').getReference())
+    self.assertNotEqual('manage_main',
+                        portal.portal_catalog.getResultValue(
+                          portal_type = 'Discussion Thread',
+                          title = 'manage_main').getReference())
 
   def test_02_ReferenceGenerationFromString(self):
     s = "a test by ivan !@#$%^&*()[]\\é"
