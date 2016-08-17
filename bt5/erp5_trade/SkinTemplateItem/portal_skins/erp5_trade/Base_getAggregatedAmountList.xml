@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kwargs</string> </value>
+            <value> <string>rounding=False, amount_generator_type_list=None, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_getSpecialisedAggregatedAmountList</string> </value>
+            <value> <string>Base_getAggregatedAmountList</string> </value>
         </item>
       </dictionary>
     </pickle>
