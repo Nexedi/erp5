@@ -59,7 +59,7 @@ class CatalogKeywordKeyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     error_list = []
     portal = self.getPortalObject()
     catalog = portal.portal_catalog.getSQLCatalog()
-    key_list = list(catalog.getProperty('sql_catalog_keyword_search_keys', ()))
+    key_list = list(getattr(catalog, 'sql_catalog_keyword_search_keys', ()))
     for k in self.key_list:
       if k not in key_list:
         error_list.append(self._createConstraintMessage(
