@@ -31,6 +31,7 @@ from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import _www
 
 
+from ZODB.POSException import ConflictError
 from zLOG import WARNING
 
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
@@ -546,6 +547,18 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             o = getattr(self, id)
             o.reload()
             reloaded.append((id, o.module))
+            try:
+                self._unmapTransform(o)
+            except ConflictError:
+                raise
+            except:
+                pass
+            try:
+                self._mapTransform(o)
+            except ConflictError:
+                raise
+            except:
+                pass
         return reloaded
 
     # Policy handling methods
