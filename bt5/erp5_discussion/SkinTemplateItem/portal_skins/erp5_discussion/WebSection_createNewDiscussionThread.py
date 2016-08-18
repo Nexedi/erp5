@@ -10,7 +10,6 @@ person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
 
 version = '001'
 language = portal.Localizer.get_selected_language()
-has_website = context.getWebSiteValue() is not None
 
 try:
   user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()
@@ -24,23 +23,21 @@ if site_list in MARKER:
   site_list = user_assignment_dict['site_list']
 
 # set predicate settings for current Web Section
-if has_website:
-  membership_criterion_category_list = context.getMembershipCriterionCategoryList()
-  multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
+membership_criterion_category_list = context.getMembershipCriterionCategoryList()
+multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()
 
 reference = context.Base_generateReferenceFromString(title)
 
-if has_website:
-  existing_document = context.getDocumentValue(reference)
-  existing_web_section_list = portal.portal_catalog(id=reference, portal_type=['Web Site', 'Web Section'])
-  existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())
-  if existing_document is not None \
-    or len(existing_web_section_list) \
-    or len(existing_module_list):
-    # if there are other document or any tarversal objects (module, web section)
-    # which ID or reference duplicates just add some random part
-    # so we can distinguish)
-    reference = '%s-%s' %(context.Base_generateRandomString(), reference)
+existing_document = context.getDocumentValue(reference)
+existing_web_section_list = portal.portal_catalog(id=reference, portal_type=['Web Site', 'Web Section'])
+existing_module_list = portal.portal_catalog(id=reference, parent_uid=portal.getUid())
+if existing_document is not None \
+  or len(existing_web_section_list) \
+  or len(existing_module_list):
+  # if there are other document or any tarversal objects (module, web section)
+  # which ID or reference duplicates just add some random part
+  # so we can distinguish)
+  reference = '%s-%s' %(context.Base_generateRandomString(), reference)
 
 category_list = []
 create_kw = dict(title = title,
@@ -54,10 +51,9 @@ create_kw = dict(title = title,
                  group_list=group_list,
                  site_list=site_list)
 
-if has_website:
-  for base_category in multimembership_criterion_base_category_list:
-    #create_kw['%s_list' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]
-    category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])
+for base_category in multimembership_criterion_base_category_list:
+  #create_kw['%s_list' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]
+  category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])
 
 discussion_thread = portal.discussion_thread_module.newContent(
                       portal_type = "Discussion Thread",
