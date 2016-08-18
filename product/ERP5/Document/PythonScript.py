@@ -87,6 +87,7 @@ class PythonScript(XMLObject, ZopePythonScript):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.PythonScript
+                      , PropertySheet.CatalogFilter
                       )
 
     def __init__(self, *args, **kw):
