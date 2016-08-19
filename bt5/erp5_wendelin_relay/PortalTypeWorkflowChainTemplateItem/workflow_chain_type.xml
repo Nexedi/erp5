@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Ingestion Policy</type>
+  <workflow>ingestion_policy_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
