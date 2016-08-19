@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Data Analysis</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>data_simulation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Data Analysis Line</type>
@@ -25,7 +25,7 @@
  </chain>
  <chain>
   <type>Data Ingestion</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>data_simulation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Data Ingestion Line</type>
