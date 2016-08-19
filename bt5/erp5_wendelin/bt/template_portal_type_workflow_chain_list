@@ -3,14 +3,14 @@ Data Acquisition Unit | validation_workflow
 Data Aggregation Unit | edit_workflow
 Data Aggregation Unit | validation_workflow
 Data Analysis Line | edit_workflow
+Data Analysis | data_simulation_workflow
 Data Analysis | edit_workflow
-Data Analysis | validation_workflow
 Data Array | edit_workflow
 Data Array | validation_workflow
 Data Event | edit_workflow
 Data Ingestion Line | edit_workflow
+Data Ingestion | data_simulation_workflow
 Data Ingestion | edit_workflow
-Data Ingestion | validation_workflow
 Data License | edit_workflow
 Data License | validation_workflow
 Data Operation | edit_workflow
