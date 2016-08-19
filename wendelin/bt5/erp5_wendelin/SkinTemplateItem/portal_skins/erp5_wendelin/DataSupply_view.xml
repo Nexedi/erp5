@@ -69,7 +69,11 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_int_index</string>
+                        <string>listbox_reference</string>
+                        <string>listbox_use</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -77,9 +81,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_specialise_title</string>
                         <string>my_reference</string>
                         <string>my_version</string>
+                        <string>my_specialise_title_list</string>
                       </list>
                     </value>
                 </item>
@@ -91,8 +95,9 @@
                         <string>my_source_section_title</string>
                         <string>my_destination_title</string>
                         <string>my_destination_section_title</string>
-                        <string>my_start_date</string>
-                        <string>my_stop_date</string>
+                        <string>my_destination_project_title</string>
+                        <string>my_start_date_range_min</string>
+                        <string>my_start_date_range_max</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>

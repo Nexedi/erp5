@@ -103,16 +103,20 @@
                           <string>Index</string>
                         </tuple>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
                           <string>Resource</string>
+                        </tuple>
+                        <tuple>
+                          <string>use_title</string>
+                          <string>Use</string>
                         </tuple>
                         <tuple>
                           <string>quantity</string>
@@ -184,7 +188,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Analysis Streams</string> </value>
+                    <value> <string>Analysis Lines</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -80,6 +80,7 @@
                         <string>my_product_line</string>
                         <string>my_quantity_unit_list</string>
                         <string>my_reference</string>
+                        <string>my_aggregated_portal_type_list</string>
                         <string>my_required_aggregated_portal_type_list</string>
                         <string>my_use_list</string>
                         <string>my_variation_base_category_list</string>
