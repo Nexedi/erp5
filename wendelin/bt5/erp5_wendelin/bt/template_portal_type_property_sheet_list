@@ -1,10 +1,13 @@
+Data Analysis Line | DataMovement
 Data Array Line Existence Constraint | ConstraintType
 Data Array Line Existence Constraint | DataArrayLine
 Data Array Line | DataArrayLine
 Data Array | DataArray
 Data Event | DataEvent
+Data Ingestion Line | DataMovement
 Data Product | DefaultImage
 Data Release | Predicate
 Data Set | Predicate
 Data Stream | OffsetIndex
+Data Supply Line | DataMovement
 Ingestion Policy | IngestionPolicy

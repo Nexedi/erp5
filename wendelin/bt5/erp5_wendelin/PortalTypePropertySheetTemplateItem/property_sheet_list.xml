@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Data Analysis Line">
+  <item>DataMovement</item>
+ </portal_type>
  <portal_type id="Data Array">
   <item>DataArray</item>
  </portal_type>
@@ -12,6 +15,9 @@
  <portal_type id="Data Event">
   <item>DataEvent</item>
  </portal_type>
+ <portal_type id="Data Ingestion Line">
+  <item>DataMovement</item>
+ </portal_type>
  <portal_type id="Data Product">
   <item>DefaultImage</item>
  </portal_type>
@@ -23,6 +29,9 @@
  </portal_type>
  <portal_type id="Data Stream">
   <item>OffsetIndex</item>
+ </portal_type>
+ <portal_type id="Data Supply Line">
+  <item>DataMovement</item>
  </portal_type>
  <portal_type id="Ingestion Policy">
   <item>IngestionPolicy</item>
