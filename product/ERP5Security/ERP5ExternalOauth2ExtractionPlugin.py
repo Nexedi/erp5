@@ -91,7 +91,7 @@ def addERP5GoogleExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
 
 class ERP5ExternalOauth2ExtractionPluginBase(BasePlugin):
 
-  cache_factory_name = 'extrenal_oauth2_token_cache_factory'
+  cache_factory_name = 'external_oauth2_token_cache_factory'
   security = ClassSecurityInfo()
 
   def __init__(self, id, title=None):
@@ -146,68 +146,55 @@ class ERP5ExternalOauth2ExtractionPluginBase(BasePlugin):
           'No Base_createOauth2User script available, install '
             'erp5_credential_oauth2, disabled authentication.')
       return DumbHTTPExtractor().extractCredentials(request)
+    creds, user_dict = {"login_portal_type": self.login_portal_type}, None
+    cookie_hash = request.get(self.cookie_name)
+    if cookie_hash is not None:
+      try:
+        user_dict = self.getToken(cookie_hash)
+      except KeyError:
+        LOG(self.getId(), INFO, 'Hash %s not found' % cookie_hash)
+        return DumbHTTPExtractor().extractCredentials(request)
 
-    creds = {}
-    token = None
-    if request._auth is not None:
-      # 1st - try to fetch from Authorization header
-      if self.header_string.lower() in request._auth.lower():
-        l = request._auth.split()
-        if len(l) == 2:
-          token = l[1]
-
-    if token is None:
+    if user_dict is None:
       return creds
 
-    # token is available
-    user = None
-    user_entry = None
-    try:
-      user = self.getToken(self.prefix + token)
-    except KeyError:
-      user_entry = self.getUserEntry(token)
-      if user_entry is not None:
-        user = user_entry['reference']
-
-    if user is None:
-      return creds
-
-    tag = '%s_user_creation_in_progress' % user.encode('hex')
+    tag = '%s_user_creation_in_progress' % cookie_hash.encode('hex')
 
     if self.getPortalObject().portal_activities.countMessageWithTag(tag) > 0:
-      self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
+      self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
     else:
       # create the user if not found
-      person_list = self.erp5_users.getPersonByReference(user)
+      person_list = self.erp5_users.getUserByLogin(user_dict["login"])
       if len(person_list) == 0:
         sm = getSecurityManager()
         if sm.getUser().getId() != SUPER_USER:
           newSecurityManager(self, self.getUser(SUPER_USER))
         try:
-          self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
-          if user_entry is None:
-            user_entry = self.getUserEntry(token)
+          self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
+          #if user_entry is None:
+          user_entry = self.getUserEntry(user_dict)
+          user_entry["erp5_username"] = user_dict.get("erp5_username")
           try:
-            self.Base_createOauth2User(tag, **user_entry)
+            Base_createOauth2User(tag, **user_entry)
           except Exception:
             LOG(self.getId(), ERROR,
               'Issue while calling creation script:', error=True)
             raise
         finally:
           setSecurityManager(sm)
-    try:
-      self.setToken(self.prefix + token, user)
-    except KeyError:
-      # allow to work w/o cache
-      pass
-    creds['external_login'] = user
-    creds['login_portal_type'] = self.login_portal_type
-    creds['remote_host'] = request.get('REMOTE_HOST', '')
-    try:
-      creds['remote_address'] = request.getClientAddr()
-    except AttributeError:
-      creds['remote_address'] = request.get('REMOTE_ADDR', '')
-    return creds
+      try:
+        self.setToken(cookie_hash, user_dict)
+      except KeyError:
+        LOG("user_dict", INFO, '%s not found' % cookie_hash)
+    if 'login' in user_dict:
+      creds['external_login'] = user_dict['login']
+      creds['remote_host'] = request.get('REMOTE_HOST', '')
+      try:
+        creds['remote_address'] = request.getClientAddr()
+      except AttributeError:
+        creds['remote_address'] = request.get('REMOTE_ADDR', '')
+      return creds
+    return DumbHTTPExtractor().extractCredentials(request)
 
 class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
   """
@@ -216,7 +203,8 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
 
   meta_type = "ERP5 Facebook Extraction Plugin"
   prefix = 'fb_'
-  header_string = 'facebook'
+  cache_factory_name = 'facebook_server_auth_token_cache_factory'
+  cookie_name = '__ac_facebook_hash'
   login_portal_type = 'Facebook Login'
 
   def getUserEntry(self, token):
@@ -256,10 +244,11 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
 
   meta_type = "ERP5 Google Extraction Plugin"
   prefix = 'go_'
-  header_string = 'google'
+  cache_factory_name = 'google_server_auth_token_cache_factory'
+  cookie_name = "__ac_google_hash"
   login_portal_type = 'Google Login'
 
-  def getUserEntry(self, token):
+  def getUserEntry(self, user_dict):
     if httplib2 is None:
       LOG('ERP5GoogleExtractionPlugin', INFO,
         'No Google modules available, please install google-api-python-client '
@@ -269,7 +258,8 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
     try:
       # require really fast interaction
       socket.setdefaulttimeout(5)
-      http = oauth2client.client.AccessTokenCredentials(token, 'ERP5 Client'
+      http = oauth2client.client.AccessTokenCredentials(user_dict["access_token"],
+                                                        'ERP5 Client'
         ).authorize(httplib2.Http())
       service = apiclient.discovery.build("oauth2", "v1", http=http)
       google_entry = service.userinfo().get().execute()
@@ -284,14 +274,12 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPluginBase):
       try:
         for k in (('first_name', 'given_name'),
             ('last_name', 'family_name'),
-            ('reference', 'id'),
             ('email', 'email')):
           value = google_entry[k[1]].encode('utf-8')
-          if k[0] == 'reference':
-            value = self.prefix + value
           user_entry[k[0]] = value
       except KeyError:
         user_entry = None
+    user_entry["reference"] = user_dict["login"]
     return user_entry
 
 #List implementation of class

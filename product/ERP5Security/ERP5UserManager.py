@@ -71,7 +71,7 @@ def getUserByLogin(portal, login, exact_match=True):
     raise RuntimeError('Catalog does not have column information. Make sure RDB is working and disk is not full.')
   result = portal.portal_catalog.unrestrictedSearchResults(
     select_expression='reference, portal_type',
-    portal_type=("ERP5 Login"),
+    portal_type=portal.getPortalLoginTypeList(),
     reference=dict(query=login, key=reference_key))
   # XXX: Here, we filter catalog result list ALTHOUGH we did pass
   # parameters to unrestrictedSearchResults to restrict result set.
