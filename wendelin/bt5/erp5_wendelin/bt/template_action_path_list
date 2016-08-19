@@ -34,6 +34,10 @@ Data Stream | view
 Data Supply Line | view
 Data Supply Module | view
 Data Supply | view
+Data Transformation Module | view
+Data Transformation Operation Line | view
+Data Transformation Resource Line | view
+Data Transformation | view
 Ingestion Policy Tool | add_ingestion_policy
 Ingestion Policy Tool | view
 Ingestion Policy | view

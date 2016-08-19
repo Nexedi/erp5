@@ -11,4 +11,5 @@ data_release_module
 data_set_module
 data_stream_module
 data_supply_module
+data_transformation_module
 sensor_module

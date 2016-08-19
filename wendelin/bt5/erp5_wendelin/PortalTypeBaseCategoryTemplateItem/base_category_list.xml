@@ -5,4 +5,7 @@
   <item>resource</item>
   <item>source</item>
  </portal_type>
+ <portal_type id="Data Transformation Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>
