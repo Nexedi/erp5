@@ -5,6 +5,8 @@ Data Array Line | DataArrayLine
 Data Array | DataArray
 Data Event | DataEvent
 Data Ingestion Line | DataMovement
+Data Operation | DataOperation
+Data Operation | Version
 Data Product | DefaultImage
 Data Release | Predicate
 Data Set | Predicate
