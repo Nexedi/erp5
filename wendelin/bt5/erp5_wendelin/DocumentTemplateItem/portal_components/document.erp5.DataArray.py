@@ -62,6 +62,7 @@ class DataArray(BigFile):
     """
     array = ZBigArray(shape, dtype)
     self._setArray(array)
+    return array
 
   def getArray(self, default=None):
     """
