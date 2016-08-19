@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="OAuth Tool">
+  <item>Google Connector</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Google Login</item>
+ </portal_type>
+</allowed_content_type_list>
