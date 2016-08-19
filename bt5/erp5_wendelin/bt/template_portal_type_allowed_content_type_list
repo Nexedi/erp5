@@ -16,6 +16,9 @@ Data Set Module | Data Set
 Data Stream Module | Data Stream
 Data Supply Module | Data Supply
 Data Supply | Data Supply Line
+Data Transformation Module | Data Transformation
+Data Transformation | Data Transformation Operation Line
+Data Transformation | Data Transformation Resource Line
 Ingestion Policy Tool | Ingestion Policy
 Property Sheet | Data Array Line Existence Constraint
 Sensor Module | Sensor

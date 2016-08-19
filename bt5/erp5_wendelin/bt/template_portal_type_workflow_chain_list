@@ -30,6 +30,8 @@ Data Supply Line | validation_workflow
 Data Supply | edit_workflow
 Data Supply | validation_workflow
 Data Supply | validation_workflow
+Data Transformation | edit_workflow
+Data Transformation | validation_workflow
 Ingestion Policy | edit_workflow
 Ingestion Policy | validation_workflow
 Sensor | edit_workflow
