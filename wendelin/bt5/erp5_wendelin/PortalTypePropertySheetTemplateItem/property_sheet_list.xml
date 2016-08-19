@@ -18,6 +18,10 @@
  <portal_type id="Data Ingestion Line">
   <item>DataMovement</item>
  </portal_type>
+ <portal_type id="Data Operation">
+  <item>DataOperation</item>
+  <item>Version</item>
+ </portal_type>
  <portal_type id="Data Product">
   <item>DefaultImage</item>
  </portal_type>
