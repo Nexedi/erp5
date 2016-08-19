@@ -77,7 +77,7 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_data_operation_script_id</string>
+                        <string>my_script_id</string>
                         <string>my_quantity_unit_list</string>
                         <string>my_aggregated_portal_type_list</string>
                         <string>my_base_contribution_list</string>

@@ -10,15 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_type</string>
-                <string>proxy_listbox_ids</string>
+                <string>date_only</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_specialise_title</string> </value>
+            <value> <string>listbox_delivery_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,34 +73,16 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>date_only</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_specialise_title</string> </value>
+                    <value> <string>my_view_mode_listbox_read_only_stop_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewTradeFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Business Process</string>
-                          <string>Business Process</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>proxy_listbox_ids</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>BusinessProcessModule_viewBusinessProcessList/listbox</string>
-                          <string>Business Process</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -109,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Process</string> </value>
+                    <value> <string>Stop Date</string> </value>
                 </item>
               </dictionary>
             </value>
