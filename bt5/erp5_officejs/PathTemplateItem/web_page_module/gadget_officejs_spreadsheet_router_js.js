@@ -6,7 +6,7 @@
   var gadget_klass = rJS(window),
     NAME = "spreadsheet",
     MAIN_PAGE_PREFIX = "gadget_officejs_",
-    DEFAULT_PAGE = NAME + "_list",
+    DEFAULT_PAGE = "document_list",
     REDIRECT_TIMEOUT = 5000;
 
   (function () {
@@ -14,6 +14,16 @@
       jio_erp5_cache_storage;
     if ('serviceWorker' in navigator) {
       erp5_query = [
+        "ooffice/apps/common/%",
+        "ooffice/apps/spreadsheeteditor/main/%",
+        "ooffice/vendor/%",
+        "ooffice/sdkjs/common/%",
+        "ooffice/sdkjs/word/%",
+        "ooffice/sdkjs/cell/%"
+      ].map(function (currentValue) {
+        return 'url_string: "' + currentValue + '"';
+      }).join(' OR ');
+      erp5_query = erp5_query + ' OR ' + [
         "ooffice/gadget_ooffice.js",
         "ooffice/gadget_ooffice.html",
         "ooffice/apps/require.js",
@@ -23,23 +33,19 @@
         "ooffice/apps/bootstrap.js",
         "ooffice/apps/text.js",
         "ooffice/apps/xregexp-all-min.js",
-        "ooffice/apps/jquery.mousewheel.js",
-        "ooffice/apps/common/%",
-        "ooffice/apps/spreadsheeteditor/main/%",
-        "ooffice/sdk/Common/%",
-        "ooffice/sdk/Excel/%"
+        "ooffice/apps/jquery.mousewheel.js"
       ].map(function (currentValue) {
-        return 'url_string: "' + currentValue + '"';
+        return 'url_string: ="' + currentValue + '"';
       }).join(' OR ');
-      erp5_query = '(' + erp5_query + ' OR ' + [
+      erp5_query = erp5_query + ' OR ' + [
         "gadget_officejs_spreadsheet_router.html",
         "gadget_officejs_spreadsheet_router.js",
-        "gadget_officejs_page_spreadsheet_list.html",
-        "gadget_officejs_page_spreadsheet_list.js",
+        "gadget_officejs_page_document_list.html",
+        "gadget_officejs_page_document_list.js",
         "gadget_officejs_jio_spreadsheet_view.html",
         "gadget_officejs_jio_spreadsheet_view.js",
-        "gadget_officejs_page_add_spreadsheet.html",
-        "gadget_officejs_page_add_spreadsheet.js",
+        "gadget_officejs_page_add_document.html",
+        "gadget_officejs_page_add_document.js",
         "gadget_erp5_editor_panel.html",
         "gadget_erp5_editor_panel.js",
         "URI.js",
@@ -88,7 +94,7 @@
         "erp5_launcher.html"
       ].map(function (currentValue) {
         return '(reference: ="' + currentValue + '")';
-      }).join(' OR ') + ')';
+      }).join(' OR ');
 
       jio_erp5_cache_storage = {
         type: "query",
@@ -133,6 +139,15 @@
         }
       });
 
+      /*navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
+        .then(function (reg) {
+        // registration worked
+        console.log('Registration succeeded. Scope is ' + reg.scope);
+      })
+        .then(undefined, function (error) {
+        // registration failed
+        console.log('Registration failed with ' + error);
+      });*/
       jio_erp5_cache_storage.repair().push(function () {
         navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
           .then(function (reg) {

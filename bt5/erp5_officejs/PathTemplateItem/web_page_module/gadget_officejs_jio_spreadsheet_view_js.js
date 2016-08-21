@@ -2,7 +2,7 @@
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, document, RSVP, rJS, Handlebars, loopEventListener) {
   "use strict";
-  
+
   function this_func_link(name) {
     return function () {
       return this[name].apply(this, arguments[0]);
@@ -103,6 +103,8 @@
 
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod('getSetting', 'getSetting')
+    .allowPublicAcquisition("getSetting", this_func_link("getSetting"))
     .declareAcquiredMethod("jio_get", "jio_get")
     .allowPublicAcquisition("jio_get", this_func_link("jio_get"))
     .declareAcquiredMethod("jio_put", "jio_put")
@@ -157,8 +159,7 @@
               gadget.props.element.innerHTML = html;
               return gadget.updateHeader({
                 page_title: options.doc.title + " | " + options.doc.portal_type,
-                back_url: "#page=" +
-                    options.doc.portal_type.toLowerCase() + "_list",
+                back_url: "#page=document_list",
                 panel_action: false,
                 // breadcrumb_url: all_result[4],
                 save_action: true
@@ -198,13 +199,11 @@
           return text_content_gadget;
         })
         .push(function (text_content_gadget) {
-          console.log('prerender');
           return text_content_gadget.render({
             "jio_key": gadget.options.jio_key
           });
         })
         .push(function () {
-          console.log('getelement');
           return text_gadget.getElement();
         })
         .push(undefined, function (error) {

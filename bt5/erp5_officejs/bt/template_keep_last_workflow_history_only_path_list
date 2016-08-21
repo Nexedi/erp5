@@ -8,3 +8,7 @@ web_site_module/officejs_text_editor
 web_site_module/officejs_text_editor/**
 web_site_module/officejs_spreadsheet
 web_site_module/officejs_spreadsheet/**
+web_site_module/officejs_presentation
+web_site_module/officejs_presentation/**
+web_site_module/officejs_text
+web_site_module/officejs_text/**
