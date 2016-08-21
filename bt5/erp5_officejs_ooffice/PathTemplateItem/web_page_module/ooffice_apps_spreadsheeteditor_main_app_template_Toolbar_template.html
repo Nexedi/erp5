@@ -1,4 +1,4 @@
-<div class="toolbar" style="<%= (isCompactView || isEditDiagram) ? 'height: 41px;' : 'height: 67px;' %>">
+<div class="toolbar" style="<%= (isCompactView || isEditDiagram || isEditMailMerge) ? 'height: 41px;' : 'height: 67px;' %>">
     <!----------------------->
     <!-- Edit diagram mode -->
     <!----------------------->
@@ -33,10 +33,44 @@
         </div>
         <div class="toolbar-group" style="width: 100%;"></div>
     </div>
+    <!----------------------->
+    <!-- Edit mail merge mode -->
+    <!----------------------->
+    <div id="id-toolbar-merge" style="<%= isEditMailMerge ? 'display: table;' : 'display: none;' %> width: 100%;" >
+        <div class="toolbar-group">
+            <div class="toolbar-row">
+                <span class="btn-placeholder split" id="id-toolbar-merge-placeholder-btn-copy"></span>
+                <span class="btn-placeholder split" id="id-toolbar-merge-placeholder-btn-paste"></span>
+                <span class="btn-placeholder split" id="id-toolbar-merge-placeholder-btn-undo"></span>
+                <span class="btn-placeholder" id="id-toolbar-merge-placeholder-btn-redo"></span>
+            </div>
+        </div>
+        <div class="separator short"></div>
+        <div class="toolbar-group">
+            <div class="toolbar-row">
+                <span class="btn-placeholder split" id="id-toolbar-merge-placeholder-btn-sortdesc"></span>
+                <span class="btn-placeholder" id="id-toolbar-merge-placeholder-btn-sortasc"></span>
+            </div>
+        </div>
+        <div class="separator short" style="margin-left: 5px;"></div>
+        <div class="toolbar-group">
+            <div class="toolbar-row">
+                <span class="btn-placeholder split" id="id-toolbar-merge-placeholder-btn-setfilter"></span>
+                <span class="btn-placeholder" id="id-toolbar-merge-placeholder-btn-clear-filter"></span>
+            </div>
+        </div>
+        <div class="separator short"></div>
+        <div class="toolbar-group">
+            <div class="toolbar-row">
+                <span class="btn-placeholder" id="id-toolbar-merge-placeholder-btn-search"></span>
+            </div>
+        </div>
+        <div class="toolbar-group" style="width: 100%;"></div>
+    </div>
     <!------------------------>
     <!-- Short view toolbar -->
     <!------------------------>
-    <div id="id-toolbar-short" style="<%= (!isCompactView || isEditDiagram) ? 'display: none;' : 'display: table;' %> width: 100%;" >
+    <div id="id-toolbar-short" style="<%= (!isCompactView || isEditDiagram || isEditMailMerge) ? 'display: none;' : 'display: table;' %> width: 100%;" >
         <div class="toolbar-group no-mask">
             <div class="toolbar-row">
                 <span class="btn-placeholder split" id="id-toolbar-short-placeholder-btn-print"></span>
@@ -116,7 +150,7 @@
     <!------------------------>
     <!-- Fully view toolbar -->
     <!------------------------>
-    <div id="id-toolbar-full" style="<%= (isCompactView || isEditDiagram)? 'display: none;' : 'display: table;' %> width: 100%;" >
+    <div id="id-toolbar-full" style="<%= (isCompactView || isEditDiagram || isEditMailMerge)? 'display: none;' : 'display: table;' %> width: 100%;" >
         <div class="toolbar-group toolbar-group-native">
             <div class="toolbar-row">
                 <span class="btn-placeholder" id="id-toolbar-full-placeholder-btn-newdocument"></span>
@@ -187,9 +221,17 @@
                 <span class="btn-placeholder" id="id-toolbar-full-placeholder-btn-text"></span>
             </div>
             <div class="toolbar-row">
-                <span class="btn-placeholder split" id="id-toolbar-full-placeholder-btn-formula"></span>
                 <span class="btn-placeholder split" id="id-toolbar-full-placeholder-btn-inserthyperlink"></span>
                 <span class="btn-placeholder " id="id-toolbar-full-placeholder-btn-insertshape"></span>
+            </div>
+        </div>
+        <div class="separator long"></div>
+         <div class="toolbar-group">
+            <div class="toolbar-row">
+                <span class="btn-placeholder" id="id-toolbar-full-placeholder-btn-formula"></span>
+            </div>
+            <div class="toolbar-row">
+                <span class="btn-placeholder" id="id-toolbar-full-placeholder-btn-named-range"></span>
             </div>
         </div>
         <div class="separator long"></div>
@@ -241,7 +283,7 @@
                 <span class="btn-placeholder" id="id-toolbar-full-placeholder-btn-table-tpl"></span>
             </div>
         </div>
-        <div class="toolbar-group" id="id-toolbar-full-placeholder-field-styles" style="width: 100%; min-width: 100px;">
+        <div class="toolbar-group" id="id-toolbar-full-placeholder-field-styles" style="width: 100%; min-width: 160px;">
         </div>
         <div class="toolbar-group no-mask">
             <div class="toolbar-row">
