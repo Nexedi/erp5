@@ -82,6 +82,25 @@
             <value> <string>ooffice_gadget_ooffice_js</string> </value>
         </item>
         <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1469784552.01</float>
+                    <string>UTC</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Script</string> </value>
         </item>
@@ -214,7 +233,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.18557.38681.54596</string> </value>
+                <value> <string>953.19553.46972.42632</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -232,7 +251,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467457775.67</float>
+                        <float>1471734891.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -1,3 +1,35 @@
+/*
+ *
+ * (c) Copyright Ascensio System Limited 2010-2016
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation. In accordance with
+ * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
+ * that Ascensio System SIA expressly excludes the warranty of non-infringement
+ * of any third-party rights.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
+ * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,
+ * EU, LV-1021.
+ *
+ * The  interactive user interfaces in modified source and object code versions
+ * of the Program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * Pursuant to Section 7(b) of the License you must retain the original Product
+ * logo when distributing the program. Pursuant to Section 7(e) we decline to
+ * grant you any rights under trademark law for use of our trademarks.
+ *
+ * All the Product's GUI elements, including illustrations and icon sets, as
+ * well as technical writing content are licensed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International. See the License
+ * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+*/
 /**
  *  StatusBar View
  *
@@ -30,12 +62,12 @@ define([
         var _tplPages = _.template('Page <%= current %> of <%= count %>');
 
         function _updatePagesCaption(model,value,opts) {
-            $('#status-label-pages').text(
+            $('.statusbar #label-pages',this.$el).text(
                 Common.Utils.String.format(this.pageIndexText, model.get('current'), model.get('count')) );
         }
 
         function _clickLanguage(menu, item, state) {
-            var $parent = $(menu.el.parentNode);
+            var $parent = $(menu.el.parentNode, this.$el);
 
             $parent.find('#status-label-lang').text(item.caption);
             $parent.find('.icon-lang-flag')
@@ -54,19 +86,36 @@ define([
             el: '#statusbar',
             template: _.template(template),
 
+            storeUsers: undefined,
+            
+            tplUser: ['<li id="status-chat-user-<%= user.get("id") %>" class="<% if (!user.get("online")) { %> offline <% } if (user.get("view")) {%> viewmode <% } %>">',
+                '<div class="color" style="background-color: <%= user.get("color") %>;" >',
+                    '<label class="name"><%= scope.getUserName(user.get("username")) %></label>',
+                '</div>',
+            '</li>'].join(''),
+
+            templateUserList: _.template('<ul>' +
+                '<% _.each(users, function(item) { %>' +
+                    '<%= _.template(usertpl, {user: item, scope: scope}) %>' +
+                '<% }); %>' +
+            '</ul>'),
+
             events: {
             },
 
             api: undefined,
             pages: undefined,
 
-            initialize: function () {
+            initialize: function (options) {
+                _.extend(this, options);
                 this.pages = new DE.Models.Pages({current:1, count:1});
                 this.pages.on('change', _.bind(_updatePagesCaption,this));
+                this.state = {};
             },
 
             render: function () {
-                $(this.el).html(this.template({
+                var me = this;
+                this.$el.html(this.template({
                     scope: this
                 }));
 
@@ -111,10 +160,43 @@ define([
                     hintAnchor: 'top'
                 });
 
+                this.btnReview = new Common.UI.Button({
+                    cls         : 'btn-toolbar',
+                    iconCls     : 'btn-ic-review',
+                    hint        : this.tipReview,
+                    hintAnchor: 'top',
+                    enableToggle: true,
+                    split       : true,
+                    menu        : new Common.UI.Menu({
+                        menuAlign: 'bl-tl',
+                        style: 'margin-top:-5px;',
+                        items: [
+                            this.mnuTrackChanges = new Common.UI.MenuItem({
+                                caption: this.textTrackChanges,
+                                checkable: true,
+                                value: 'track'
+                            }),
+                            this.mnuChangesPanel = new Common.UI.MenuItem({
+                                caption: this.textChangesPanel,
+                                checkable: true,
+                                value: 'panel'
+                            })
+                        ]
+                    })
+                });
+                this.btnReview.render($('#btn-doc-review'));
+                this.btnReviewCls = 'btn-ic-review';
+
                 var panelLang = $('.cnt-lang',this.el);
                 this.langMenu = new Common.UI.Menu({
                     style: 'margin-top:-5px;',
                     maxHeight: 300,
+                    itemTemplate: _.template([
+                        '<a id="<%= id %>" tabindex="-1" type="menuitem">',
+                            '<span class="lang-item-icon img-toolbarmenu lang-flag <%= iconCls %>"></span>',
+                            '<%= caption %>',
+                        '</a>'
+                    ].join('')),
                     menuAlign: 'bl-tl'
                 });
 
@@ -184,16 +266,40 @@ define([
                 this.langMenu.on('item:click', _.bind(_clickLanguage,this));
 
                 /** coauthoring begin **/
+                this.panelUsersList = $('#status-users-list', this.el);
+                this.storeUsers.bind({
+                    add     : _.bind(this._onAddUser, this),
+                    change  : _.bind(this._onUsersChanged, this),
+                    reset   : _.bind(this._onResetUsers, this)
+                });
+
                 this.panelUsers = $('#status-users-ct', this.el);
-                this.panelUsers.find('#status-users-block').on('click', _.bind(this.onUsersClick, this));
+                this.panelUsers.on('shown.bs.dropdown', function () {
+                    me.panelUsersList.scroller.update({minScrollbarLength  : 40, alwaysVisibleY: true});
+                });
+
+                this.panelUsersBlock = this.panelUsers.find('#status-users-block');
+                this.panelUsersBlock.tooltip({
+                    title: this.tipAccessRights,
+                    html: true,
+                    placement: 'top'
+                });
+                this.panelUsersBlock.on('click', _.bind(this.onUsersClick, this));
+
+                this.lblUserCount = this.panelUsers.find('#status-users-count');
+
+                this.lblChangeRights = this.panelUsers.find('#status-change-rights');
+                this.lblChangeRights.on('click', _.bind(this.onUsersClick, this));
+
+                this.$el.find('#status-users-menu').on('click', function() {
+                    return false;
+                });
                 /** coauthoring end **/
 
                 // Go To Page
 
-                var me = this;
-
                 this.txtGoToPage = new Common.UI.InputField({
-                    el          : $('#status-goto-page'),
+                    el          : $('#status-goto-page', me.$el),
                     allowBlank  : true,
                     validateOnChange: true,
                     style       : 'width: 60px;',
@@ -272,7 +378,11 @@ define([
             },
 
             setMode: function(mode) {
+                this.mode = mode;
                 this.$el.find('.el-edit')[mode.isEdit?'show':'hide']();
+                this.$el.find('.el-review')[(mode.canReview && !mode.isLightVersion)?'show':'hide']();
+                this.lblChangeRights[(!this.mode.isOffline && !this.mode.isReviewOnly && this.mode.sharingSettingsUrl&&this.mode.sharingSettingsUrl.length)?'show':'hide']();
+                this.panelUsers[(!this.mode.isOffline && !this.mode.isReviewOnly && this.mode.sharingSettingsUrl&&this.mode.sharingSettingsUrl.length)?'show':'hide']();
             },
 
             setVisible: function(visible) {
@@ -283,42 +393,63 @@ define([
 
             /** coauthoring begin **/
             onUsersClick: function() {
+                this.panelUsers.removeClass('open');
                 this.fireEvent('click:users', this);
             },
 
             onApiUsersChanged: function(users) {
-                var editusers = [];
+                var length = 0;
                 _.each(users, function(item){
                     if (!item.asc_getView())
-                        editusers.push(item);
+                        length++;
                 });
 
-                var length = _.size(editusers);
-                this.panelUsers[length > 1 ? 'show' : 'hide']();
+                this.panelUsers[(length>1 || !this.mode.isReviewOnly && this.mode.sharingSettingsUrl&&this.mode.sharingSettingsUrl.length)?'show':'hide']();
+                this.lblUserCount.css({
+                    'font-size': (length > 1 ? '11px' : '14px'),
+                    'font-weight': (length > 1 ? 'bold' : 'normal'),
+                    'margin-top': (length > 1 ? '0' : '-1px')
+                });
+                this.lblUserCount.text(length > 1 ? length : '+');
+                $('#users-icon').css('margin-bottom', length > 1 ? '0' : '2px');
 
-                var ttblock = this.panelUsers.find('#status-users-block');
-                if (ttblock.data('bs.tooltip')) ttblock.removeData('bs.tooltip');
+                var usertip = this.panelUsersBlock.data('bs.tooltip');
+                if (usertip) {
+                    usertip.options.title = (length > 1) ? this.tipViewUsers : this.tipAccessRights;
+                    usertip.setContent();
+                }
+                (length > 1) ? this.panelUsersBlock.attr('data-toggle', 'dropdown') : this.panelUsersBlock.removeAttr('data-toggle');
+                (length > 1) ? this.panelUsersBlock.off('click') : this.panelUsersBlock.on('click', _.bind(this.onUsersClick, this));
+            },
 
-                if (length > 1) {
-                    this.panelUsers.find('#status-users-count').text(length);
+            _onAddUser: function(m, c, opts) {
+                if (this.panelUsersList) {
+                    this.panelUsersList.find('ul').append(_.template(this.tplUser, {user: m, scope: this}));
+                    this.panelUsersList.scroller.update({minScrollbarLength  : 40, alwaysVisibleY: true});
+                }
+            },
 
-                    var tip = this.tipUsers + '<br/><br/>', i = 0;
-                    for (var n in editusers) {
-                        tip += '\n' + Common.Utils.String.htmlEncode(editusers[n].asc_getUserName());
-                        if (++i > 3) break;
-                    }
+            _onUsersChanged: function(m) {
+                if (m.changed.online != undefined && this.panelUsersList) {
+                    this.panelUsersList.find('#status-chat-user-'+ m.get('id'))[m.changed.online?'removeClass':'addClass']('offline');
+                    this.panelUsersList.scroller.update({minScrollbarLength  : 40, alwaysVisibleY: true});
+                }
+            },
 
-                    if (length > 4) {
-                        tip += '<br/>' + this.tipMoreUsers.replace('%1', length-4);
-                        tip += '<br/><br/>' + this.tipShowUsers;
-                    }
-
-                    ttblock.tooltip({
-                        title: tip,
-                        html: true,
-                        placement: 'top-left'
+            _onResetUsers: function(c, opts) {
+                if (this.panelUsersList) {
+                    this.panelUsersList.html(this.templateUserList({users: c.models, usertpl: this.tplUser, scope: this}));
+                    this.panelUsersList.scroller = new Common.UI.Scroller({
+                        el              : $('#status-users-list ul'),
+                        useKeyboard     : true,
+                        minScrollbarLength  : 40,
+                        alwaysVisibleY: true
                     });
                 }
+            },
+
+            getUserName: function (username) {
+                return Common.Utils.String.htmlEncode(username);
             },
             /** coauthoring end **/
 
@@ -339,7 +470,7 @@ define([
 
             setLanguage: function(info) {
                 if (this.langMenu.prevTip != info.tip) {
-                    var $parent = $(this.langMenu.el.parentNode);
+                    var $parent = $(this.langMenu.el.parentNode, this.$el);
                     $parent.find('.icon-lang-flag')
                         .removeClass(this.langMenu.prevTip)
                         .addClass(info.tip);
@@ -355,16 +486,26 @@ define([
             },
 
             showStatusMessage: function(message) {
-                $('#status-label-action').text(message);
+                $('.statusbar #label-action').text(message);
             },
 
             clearStatusMessage: function() {
-                $('#status-label-action').text('');
+                $('.statusbar #label-action').text('');
+            },
+
+            SetDisabled: function(disable) {
+                this.btnLanguage.setDisabled(disable);
+                this.btnDocLanguage.setDisabled(disable);
+                if (disable) {
+                    this.state.changespanel = this.mnuChangesPanel.checked;
+                }
+                this.mnuChangesPanel.setChecked(!disable && (this.state.changespanel==true));
+                this.btnReview.setDisabled(disable);
             },
 
             pageIndexText       : 'Page {0} of {1}',
             goToPageText        : 'Go to Page',
-            tipUsers            : 'Document is in the collaborative editing mode.',
+            tipUsers            : 'Document is currently being edited by several users.',
             tipMoreUsers        : 'and %1 users.',
             tipShowUsers        : 'To see all users click the icon below.',
             tipFitPage          : 'Fit Page',
@@ -375,7 +516,13 @@ define([
             tipSetLang          : 'Set Text Language',
             tipSetDocLang       : 'Set Document Language',
             tipSetSpelling      : 'Turn on spell checking option',
-            txtPageNumInvalid   : 'Page number invalid'
+            txtPageNumInvalid   : 'Page number invalid',
+            tipReview           : 'Review',
+            textTrackChanges    : 'Track Changes',
+            textChangesPanel    : 'Changes panel',
+            tipAccessRights     : 'Manage document access rights',
+            tipViewUsers        : 'View users and manage document access rights',
+            txAccessRights      : 'Change access rights'
         }, DE.Views.Statusbar || {}));
 
         DE.Views.Statusbar.LanguageDialog = Common.UI.Window.extend(_.extend({
@@ -421,13 +568,13 @@ define([
                     template: _.template([
                         '<span class="input-group combobox <%= cls %> combo-langs" id="<%= id %>" style="<%= style %>">',
                             '<input type="text" class="form-control">',
-                            '<span class="input-lang-icon" style="position: absolute;"></span>',
-                            '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>',
+                            '<span class="input-lang-icon img-toolbarmenu lang-flag" style="position: absolute;"></span>',
+                            '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret img-commonctrl"></span></button>',
                             '<ul class="dropdown-menu <%= menuCls %>" style="<%= menuStyle %>" role="menu">',
                                 '<% _.each(items, function(item) { %>',
                                     '<li id="<%= item.id %>" data-value="<%= item.value %>">',
                                         '<a tabindex="-1" type="menuitem" style="padding-left: 26px !important;">',
-                                            '<span class="menu-item-icon <%= item.value %> " style="position: absolute;margin-left:-21px;"></span>',
+                                            '<span class="lang-item-icon img-toolbarmenu lang-flag <%= item.value %>" style="position: absolute;margin-left:-21px;"></span>',
                                             '<%= scope.getDisplayValue(item) %>',
                                         '</a>',
                                     '</li>',

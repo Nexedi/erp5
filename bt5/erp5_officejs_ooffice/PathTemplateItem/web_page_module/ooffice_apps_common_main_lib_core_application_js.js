@@ -1,335 +1,565 @@
-/*
- * (c) Copyright Ascensio System SIA 2010-2015
- *
- * This program is a free software product. You can redistribute it and/or 
- * modify it under the terms of the GNU Affero General Public License (AGPL) 
- * version 3 as published by the Free Software Foundation. In accordance with 
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect 
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
- *
- * This program is distributed WITHOUT ANY WARRANTY; without even the implied 
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For 
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
- *
- * You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia,
- * EU, LV-1021.
- *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under 
- * Section 5 of the GNU AGPL version 3.
- *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
- *
- */
- (function () {
-    var resolveNamespace = function (className, root) {
-        var parts = className.split("."),
-        current = root || window;
-        for (var a = 0, b = parts.length; a < b; a++) {
+(function(){
+    var resolveNamespace = function(className, root) {
+        var parts = className.split('.'),
+            current = root || window;
+
+        for(var a = 0, b = parts.length; a < b; a++) {
             current = current[parts[a]] || {};
         }
+
         return current;
     };
-    var Application = function (options) {
+
+    /**
+     * @class Backbone.Application
+     * @cfg {Object} options The list of options available within Application
+     */
+    var Application = function(options) {
         _.extend(this, options || {});
-        this.eventbus = new EventBus({
-            application: this
-        });
+        
+        this.eventbus = new EventBus({application: this});
+        
         this.createApplicationNamespace();
         this.initialize.apply(this, arguments);
-        if (this.autoCreate !== false) {
+
+        if (this.autoCreate !== false)
             $($.proxy(this.onReady, this));
-        }
     };
+
     _.extend(Application.prototype, {
-        nameSpace: "Application",
+        /**
+         * @cfg {Object} nameSpace (required)
+         * Define the application namespace       
+         */
+        nameSpace: 'Application',
+        
         models: {},
         collections: {},
         controllers: {},
+        
+        /**
+         * @cfg allocationMap Define the inner structure of our application object
+         * @cfg allocationMap.model The key for models map
+         * @cfg allocationMap.collection The key for collections map
+         * @cfg allocationMap.controller The key for controllers map
+         * @cfg allocationMap.view The key for views map
+         */        
         allocationMap: {
-            model: "Models",
-            collection: "Collections",
-            controller: "Controllers",
-            view: "Views"
+            model: 'Models',
+            collection: 'Collections',
+            controller: 'Controllers',
+            view: 'Views'
         },
-        createApplicationNamespace: function () {
+
+        /**
+         * Function to create inner structure of the application using {@link #allocationMap allocationMap} config
+         */           
+        createApplicationNamespace: function() {
             var nameSpace = window;
-            if (this.nameSpace) {
-                if (typeof nameSpace[this.nameSpace] == "undefined") {
-                    nameSpace[this.nameSpace] = {};
+
+            // create global reference in the defined namespace
+            if(this.nameSpace) {
+                // if it wasn't already defined, create it
+                if(typeof nameSpace[this.nameSpace] == 'undefined') {
+                    nameSpace[this.nameSpace] = {}
                 }
             }
+
+            // let's have a link to the application namespace
+            // this way we will be able to get all references to Models, Collections and Controllers
+            // using given namespace
             nameSpace[this.nameSpace] = this;
-            _.each(this.allocationMap, function (name, key) {
+            
+            _.each(this.allocationMap, function(name, key) {
                 this[name] = this[name] || {};
-            },
-            this);
+            }, this);
         },
-        initialize: function () {},
-        onReady: function () {
+        
+        /**
+         * Function that will be called during application instance creation
+         */
+        initialize: function() {},
+
+        /**
+         * Called when DOM is ready. This is global callback is used to:         
+         * * Used to initialize controllers and execute {@link Backbone.Controller#onLaunch onLaunch} callback
+         * * Execute {@link Backbone.Application#launch launch} callback
+         */
+        onReady: function() {
             this.start();
         },
-        start: function () {
+
+        start: function() {
+            // initialize controllers
             this.initializeControllers(this.controllers || {});
+            // call to controller.onLaunch callback
             this.launchControllers();
+            // call application.launch callback
             this.launch.call(this);
         },
-        getClasseRefs: function (type, classes) {
+
+        /**
+         * Function that will convert string identifier into the instance reference
+         * @param {String} type Type of instance that should be resolved. See {@link #allocationMap} for valid values
+         * @param {String[]} classes The list of class references
+         * @return {Object} The objects map
+         */ 
+        getClasseRefs: function(type, classes) {
             var hashMap = {},
-            allocationMap = this.allocationMap[type],
-            root = this[allocationMap];
-            _.each(classes, function (cls) {
-                hashMap[cls] = resolveNamespace(cls, (cls.indexOf(".") > -1) ? window : root);
-            },
-            this);
+                allocationMap = this.allocationMap[type],
+                root = this[allocationMap];
+
+            _.each(classes, function(cls) {
+                hashMap[cls] = resolveNamespace(cls, (cls.indexOf('.') > -1) ? window : root);
+            }, this);
+
             return hashMap;
         },
-        initializeControllers: function (controllers) {
+        
+        /**
+         * Function that will loop through all application controllers and create their instances
+         * Additionally, read the list of models and collections from each controller and save the reference within application
+         */
+        initializeControllers: function(controllers) {
             this.controllers = {};
-            _.each(controllers, function (ctrl) {
-                var root = (ctrl.indexOf(".") > -1) ? window : this[this.allocationMap.controller],
-                classReference = resolveNamespace(ctrl, root),
-                id = ctrl.split(".").pop();
+
+            _.each(controllers, function(ctrl) {
+                var root = (ctrl.indexOf('.') > -1) ? window : this[this.allocationMap.controller],
+                    classReference = resolveNamespace(ctrl, root),
+                    id = ctrl.split('.').pop();
+
                 var controller = new classReference({
                     id: ctrl,
                     application: this
                 });
-                controller.views = this.getClasseRefs("view", controller.views || []);
-                _.extend(this.models, this.getClasseRefs("model", controller.models || []));
-                _.extend(this.collections, this.getClasseRefs("collection", controller.collections || {}));
+
+                controller.views = this.getClasseRefs('view', controller.views || []);
+
+                _.extend(this.models, this.getClasseRefs('model', controller.models || []));
+                _.extend(this.collections, this.getClasseRefs('collection', controller.collections || {}));
+
                 this.buildCollections();
                 this.controllers[ctrl] = controller;
-            },
-            this);
+            }, this);
         },
-        launchControllers: function () {
-            _.each(this.controllers, function (ctrl, id) {
+
+        /**
+         * Launch all controllers using {@link Backbone.Controller#onLaunch callback}
+         */
+        launchControllers: function() {
+            _.each(this.controllers, function(ctrl, id) {
                 ctrl.onLaunch(this);
-            },
-            this);
+            }, this);
         },
-        launch: function () {},
-        addListeners: function (listeners, controller) {
-            this.eventbus.addListeners(listeners, controller);
+
+        /**
+         * Called during application launch
+         * @template
+         */
+        launch: function() {},
+
+        /**
+         * Function to add event listeners to the {@link #Backbone.EventBus EventBus}
+         */
+        addListeners: function(listeners, controller) {
+            this.eventbus.addListeners(listeners, controller)
         },
-        getController: function (name) {
+
+        /**
+         * Getter to retreive link to the particular controller instance by name
+         * @param {String} name
+         * @return {Backbone.Controller} The controller instance
+         */
+        getController: function(name) {
             return this.controllers[name];
         },
-        getModel: function (name) {
+
+        /**
+         * Getter to retrieve link to the particular model instance by name
+         * If model instance isn't created, create it
+         * @param {String} name
+         * @return {Backbone.Model} The model instance
+         */
+        getModel: function(name) {
             this._modelsCache = this._modelsCache || {};
+
             var model = this._modelsCache[name],
-            modelClass = this.getModelConstructor(name);
-            if (!model && modelClass) {
+                modelClass = this.getModelConstructor(name);
+
+            if(!model && modelClass) {
                 model = this.createModel(name);
                 this._modelsCache[name] = model;
             }
+
             return model || null;
         },
-        getModelConstructor: function (name) {
+
+        /**
+         * Getter to retrieve link to the particular model constructor by name
+         * @param {String} name
+         * @return {Backbone.Model} The model constructor
+         */
+        getModelConstructor: function(name) {
             return this.models[name];
         },
-        createModel: function (name, options) {
+
+        /**
+         * Function to create new model instance
+         * @param {String} name The name of the model that needs to be created
+         * @param {Object} [options] The list of option that should be passed to the model constructor
+         */
+        createModel: function(name, options) {
             var modelClass = this.getModelConstructor(name),
-            model = null;
-            if (modelClass) {
+                model = null;
+
+            if (modelClass)
                 model = new modelClass(_.extend(options || {}));
-            }
+
             return model;
         },
-        getCollection: function (name) {
+
+        /**
+         * Getter to retrieve link to the particular collection instance by name
+         * If collection instance isn't created, create it
+         * @param {String} name
+         * @return {Backbone.Collection} The collection instance         
+         */
+        getCollection: function(name) {
             this._collectionsCache = this._collectionsCache || {};
+
             var collection = this._collectionsCache[name],
-            collectionClass = this.getCollectionConstructor(name);
-            if (!collection && collectionClass) {
+                collectionClass = this.getCollectionConstructor(name);
+
+            if(!collection && collectionClass) {
                 collection = this.createCollection(name);
                 this._collectionsCache[name] = collection;
             }
+
             return collection || null;
         },
-        getCollectionConstructor: function (name) {
+
+        /**
+         * Getter to retrieve link to the particular collection constructor
+         * @param {String} name
+         * @return {Backbone.Collection} The collection constructor               
+         */
+        getCollectionConstructor: function(name) {
             return this.collections[name];
         },
-        createCollection: function (name) {
+
+        /**
+         * Function to create new collection instance
+         * @param {String} name The name of the collection that needs to be created
+         */
+        createCollection: function(name) {
             var collectionClass = this.getCollectionConstructor(name),
-            collection = null;
-            if (collectionClass) {
+                collection = null;
+
+            if (collectionClass)
                 collection = new collectionClass();
-            }
+
             return collection;
         },
-        buildCollections: function () {
-            _.each(this.collections, function (collection, alias) {
+
+        /**
+         * Function that will loop throught the list of collection constructors and create instances
+         */
+        buildCollections: function() {
+            _.each(this.collections, function(collection, alias) {
                 this.getCollection(alias);
-            },
-            this);
+            }, this);
         }
     });
-    if (typeof Backbone.Application == "undefined") {
+
+
+    // Since we are using Backbone let's make sure that there are no conflicts in namespaces
+    if(typeof Backbone.Application == 'undefined') {
         Backbone.Application = Application;
-        Backbone.Application.extend = Backbone.Model.extend;
-    } else {
-        throw ("Native Backbone.Application instance already defined.");
+        /**
+         * @method extend
+         * Method to create new Backbone.Application class
+         * @static
+         */    
+        Backbone.Application.extend = Backbone.Model.extend;        
     }
-    var Controller = function (options) {
+    else {
+        throw ('Native Backbone.Application instance already defined.')
+    }
+
+    /**
+     * @class Backbone.Controller
+     * @cfg {Object} options The list of options available within Controller
+     */    
+    var Controller = function(options) {
         _.extend(this, options || {});
         this.initialize.apply(this, arguments);
     };
+
     _.extend(Controller.prototype, {
         name: null,
         views: {},
         models: {},
         collections: {},
-        initialize: function (options) {},
-        addListeners: function (listeners) {
+
+        initialize: function(options) {
+        },
+
+        /**
+         * Add new listener to the application event bus
+         * Delegate to {@link Backbone.Application#addListeners addListeners} callback
+         */
+        addListeners: function(listeners) {
             this.getApplication().addListeners(listeners, this);
         },
-        onLaunch: function (application) {},
-        getApplication: function () {
+
+        /**
+         * Called after application launch
+         * @template
+         */
+        onLaunch: function(application) {
+        },
+
+        /**
+         * Getter that will return the reference to the application instance
+         */
+        getApplication: function() {
             return this.application;
         },
-        getView: function (name) {
+
+        /**
+         * Getter that will return the reference to the view instance
+         */
+        getView: function(name) {
             return this._viewsCache[name];
         },
-        getViewConstructor: function (name) {
+
+        /**
+         * Getter that will return the reference to the view constructor by name
+         * @param {String} name
+         * @return {Backbone.View} The view constructor            
+         */
+        getViewConstructor: function(name) {
             return this.views[name];
         },
-        createView: function (name, options) {
+
+        /**
+         * Function to create a new view instance
+         * All views are cached within _viewsCache hash map
+         * @param {String} name
+         * @param {Object} options Options to be passed within view constructor
+         * @return {Backbone.View} The view instance            
+         */
+        createView: function(name, options) {
             var view = this.getViewConstructor(name),
-            viewOptions = _.extend(options || {},
-            {
-                alias: name
-            });
+                viewOptions = _.extend(options || {}, {
+                    alias: name
+                });
+
             this._viewsCache = this._viewsCache || {};
             this._viewsCache[name] = new view(viewOptions);
-            this._viewsCache[name].options = _.extend({},
-            viewOptions);
+
+            this._viewsCache[name].options = _.extend({}, viewOptions);
+
             return this._viewsCache[name];
         },
-        getModel: function (name) {
+
+        /**
+         * Method to get model instance reference by name
+         * Delegate to {@link Backbone.Application#getModel getModel} method
+         */
+        getModel: function(name) {
             return this.application.getModel(name);
         },
-        getModelConstructor: function (name) {
+
+        /**
+         * Method to get model constructor reference by name
+         * Delegate to {@link Backbone.Application#getModelConstructor getModelConstructor} method
+         */
+        getModelConstructor: function(name) {
             return this.application.getModelConstructor(name);
         },
-        createModel: function (name, options) {
-            return this.application.createModel(name);
+
+        /**
+         * Method to create model instance by name
+         * Delegate to {@link Backbone.Application#createModel createModel} method
+         */
+        createModel: function(name, options) {
+            return this.application.createModel(name)
         },
-        getCollection: function (name) {
+
+        /**
+         * Delegate method to get collection instance reference by name
+         * Delegate to {@link Backbone.Application#getCollection getCollection} method
+         */
+        getCollection: function(name) {
             return this.application.getCollection(name);
         },
-        getCollectionConstructor: function (name) {
+
+        /**
+         * Delegate method to get collection constructor reference by name
+         * Delegate to {@link Backbone.Application#getCollectionConstructor getCollectionConstructor} method
+         */
+        getCollectionConstructor: function(name) {
             return this.application.getCollectionConstructor(name);
         },
-        createCollection: function (name) {
+
+        /**
+         * Delegate method to create collection instance
+         * Delegate to {@link Backbone.Application#createCollection createCollection} method
+         */
+        createCollection: function(name) {
             return this.application.createCollection(name);
         },
-        fireEvent: function (selector, event, args) {
+
+        /**
+         * Method to fire cross-controller event
+         * Delegate to {@link Backbone.Application#fireEvent fireEvent} method
+         */
+        fireEvent: function(selector, event, args) {
             this.application.eventbus.fireEvent(selector, event, args);
         },
-        bindViewEvents: function (view, events) {
+
+        /**
+         * Method to bind events from controlling view to controller
+         * probably isn't safe, testing needed
+         */
+        bindViewEvents: function(view, events) {
             this.unbindViewEvents(view);
+
             events = _.isFunction(events) ? events.call(this) : events;
+
             for (var key in events) {
                 var method = events[key];
-                if (!_.isFunction(method)) {
-                    method = this[events[key]];
-                }
+                if (!_.isFunction(method)) method = this[events[key]];
+
                 var match = key.match(/^(\S+)\s*(.*)$/);
-                var eventName = match[1],
-                selector = match[2];
+                var eventName = match[1], selector = match[2];
                 method = _.bind(method, this);
-                eventName += ".bindViewEvents" + view.cid;
+                eventName += '.bindViewEvents' + view.cid;
                 view.$el.on(eventName, selector, method);
             }
+
             return this;
         },
-        unbindViewEvents: function (view) {
-            view.$el.off(".bindViewEvents" + view.cid);
+
+        /**
+         * Method to unbind events from view to controller
+         *
+         */
+        unbindViewEvents: function(view) {
+            view.$el.off('.bindViewEvents' + view.cid);
             return this;
         }
     });
-    if (typeof Backbone.Controller == "undefined") {
+
+    if(typeof Backbone.Controller == 'undefined') {
         Backbone.Controller = Controller;
-        Backbone.Controller.extend = Backbone.Model.extend;
-    } else {
-        throw ("Native Backbone.Controller instance already defined.");
+        /**
+         * @method extend
+         * Method to create new Backbone.Controller class
+         * @static
+         */
+        Backbone.Controller.extend = Backbone.Model.extend;        
     }
-    var EventBus = function (options) {
+    else {
+        throw ('Native Backbone.Controller instance already defined.')
+    }
+
+    /**
+     * @class Backbone.EventBus
+     * @cfg {Object} options The list of options available within Controller
+     * @private
+     */     
+    var EventBus = function(options) {
         var me = this;
+
         _.extend(this, options || {});
+
         _.extend(Backbone.View.prototype, {
             alias: null,
             hidden: false,
-            getAlias: function () {
+            getAlias: function() {
                 return this.options.alias;
             },
-            fireEvent: function (event, args) {
+            /**
+             * Instead of calling View.trigger lets use custom function
+             * It will notify the EventBus about new event
+             */
+            fireEvent: function(event, args) {
                 this.trigger.apply(this, arguments);
                 me.fireEvent(this.getAlias(), event, args);
             },
-            hide: function () {
+            hide: function() {
                 this.$el.hide();
                 this.hidden = true;
             },
-            show: function () {
+            show: function() {
                 this.$el.show();
                 this.hidden = false;
             }
         });
     };
+
     _.extend(EventBus.prototype, {
         pool: {},
-        addListeners: function (selectors, controller) {
+        /**
+         * Add new listeners to the event bus
+         */
+        addListeners: function(selectors, controller) {
+
             this.pool[controller.id] = this.pool[controller.id] || {};
             var pool = this.pool[controller.id];
-            if (_.isArray(selectors)) {
-                _.each(selectors, function (selector) {
+
+            if(_.isArray(selectors)) {
+                _.each(selectors, function(selector) {
                     this.addListeners(selector, controller);
-                },
-                this);
-            } else {
-                if (_.isObject(selectors)) {
-                    _.each(selectors, function (listeners, selector) {
-                        _.each(listeners, function (listener, event) {
-                            pool[selector] = pool[selector] || {};
-                            pool[selector][event] = pool[selector][event] || [];
-                            pool[selector][event].push(listener);
-                        },
-                        this);
-                    },
-                    this);
-                }
+                }, this)
+            }
+            else if(_.isObject(selectors)) {
+                _.each(selectors, function(listeners, selector) {
+                    _.each(listeners, function(listener, event) {
+                        pool[selector] = pool[selector] || {};
+                        pool[selector][event] = pool[selector][event] || [];
+                        pool[selector][event].push(listener);
+
+                    }, this);
+                }, this)
+
             }
         },
-        fireEvent: function (selector, event, args) {
+
+        /**
+         * Execute event listener by given selector and event name
+         */
+        fireEvent: function(selector, event, args) {
             var application = this.getApplication();
-            _.each(this.pool, function (eventsPoolByAlias, controllerId) {
+
+            _.each(this.pool, function(eventsPoolByAlias, controllerId) {
                 var events = eventsPoolByAlias[selector];
-                if (events) {
+
+                if(events) {
                     var listeners = events[event],
-                    controller = application.getController(controllerId);
-                    _.each(listeners, function (fn) {
+                        controller = application.getController(controllerId);
+
+                    _.each(listeners, function(fn) {
                         fn.apply(controller, args);
                     });
                 }
-            },
-            this);
+
+
+            }, this);
         },
-        getApplication: function () {
+
+        getApplication: function() {
             return this.application;
         }
     });
-    if (typeof Backbone.EventBus == "undefined") {
+
+    // Since we are using Backbone let's make sure that there are no conflicts in namespaces
+    if(typeof Backbone.EventBus == 'undefined') {
         Backbone.EventBus = EventBus;
-    } else {
-        throw ("Native Backbone.Application instance already defined.");
+    }
+    else {
+        throw ('Native Backbone.Application instance already defined.')
     }
 })();

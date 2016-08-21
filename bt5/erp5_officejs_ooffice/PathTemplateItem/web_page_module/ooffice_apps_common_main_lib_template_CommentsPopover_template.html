@@ -8,7 +8,7 @@
         <div class="user-message"><%=scope.pickLink(comment)%></div>
     <% } else { %>
         <div class="inner-edit-ct">
-            <textarea class="msg-reply"><%=comment%></textarea>
+            <textarea class="msg-reply user-select" maxlength="maxCommLength"><%=comment%></textarea>
             <% if (hideAddReply) { %>
                 <button class="btn normal dlg-btn primary btn-inner-edit" id="id-comments-change-popover">textAdd</button>
             <% } else { %>
@@ -21,22 +21,22 @@
     <!-- replys elements -->
 
     <% if (replys.length) { %>
-        <div class="reply-arrow "></div>
+        <div class="reply-arrow img-commonctrl"></div>
         <% _.each(replys, function (item) { %>
             <div class="reply-item-ct">
-                <div class="user-name"><%=scope.getFixedQuote(item.get("username"))%></div>
+                <div class="user-name"><%=scope.getUserName(item.get("username"))%></div>
                 <div class="user-date"><%=item.get("date")%></div>
                 <% if (!item.get("editTextInPopover")) { %>
                     <div class="user-message"><%=scope.pickLink(item.get("reply"))%></div>
                     <% if (!hint) { %>
                         <div class="btns-reply-ct">
-                            <div class="btn-edit" data-value="<%=item.get("id")%>"></div>
-                            <div class="btn-delete" data-value="<%=item.get("id")%>"></div>
+                            <div class="btn-edit img-commonctrl" data-value="<%=item.get("id")%>"></div>
+                            <div class="btn-delete img-commonctrl" data-value="<%=item.get("id")%>"></div>
                         </div>
                     <%}%>
                 <% } else { %>
                     <div class="inner-edit-ct">
-                        <textarea class="msg-reply textarea-fix"><%=item.get("reply")%></textarea>
+                        <textarea class="msg-reply textarea-fix user-select" maxlength="maxCommLength"><%=item.get("reply")%></textarea>
                         <button class="btn normal dlg-btn primary btn-inner-edit btn-fix" id="id-comments-change-popover">textEdit</button>
                         <button class="btn normal dlg-btn btn-inner-close">textClose</button>
                     </div>
@@ -60,17 +60,13 @@
 
     <% if (!editTextInPopover && !lock && !hint) { %>
         <div class="edit-ct">
-            <div class="btn-edit"></div>
-            <div class="btn-delete"></div>
+            <div class="btn-edit img-commonctrl"></div>
+            <div class="btn-delete img-commonctrl"></div>
             <% if (resolved) { %>
-                <div class="resolve-ct-check" style="float:left;">
-                <div class="resolved"></div>
-                <div class="btn-resolve-check">textResolved</div>
+            <div class="btn-resolve-check img-commonctrl" data-toggle="tooltip"></div>
             <% } else { %>
-                <div class="resolve-ct" style="float:left;">
-                <div class="btn-resolve">textResolve</div>
+            <div class="btn-resolve img-commonctrl" data-toggle="tooltip"></div>
             <% } %>
-            </div>
         </div>
     <% } %>
 
@@ -78,7 +74,7 @@
 
     <% if (showReplyInPopover) { %>
         <div class="reply-ct">
-            <textarea class="msg-reply" placeholder="textAddReply"></textarea>
+            <textarea class="msg-reply user-select" placeholder="textAddReply" maxlength="maxCommLength"></textarea>
             <button class="btn normal dlg-btn primary btn-reply" id="id-comments-change-popover">textReply</button>
             <button class="btn normal dlg-btn btn-close">textClose</button>
         </div>
