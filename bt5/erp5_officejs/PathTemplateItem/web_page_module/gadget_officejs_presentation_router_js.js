@@ -4,7 +4,7 @@
   "use strict";
 
   var gadget_klass = rJS(window),
-    NAME = "text",
+    NAME = "presentation",
     MAIN_PAGE_PREFIX = "gadget_officejs_",
     DEFAULT_PAGE = "document_list",
     REDIRECT_TIMEOUT = 5000;
@@ -15,12 +15,12 @@
     if ('serviceWorker' in navigator) {
       erp5_query = [
         "ooffice/apps/common/%",
-        "ooffice/apps/documenteditor/main/%",
+        "ooffice/apps/presentationeditor/main/%",
         "ooffice/vendor/%",
         "ooffice/sdkjs/common/%",
+        "ooffice/sdkjs/cell/%",
         "ooffice/sdkjs/word/%",
-        "ooffice/sdkjs/cell/model/%",
-        "ooffice/sdkjs/cell/utils/%"
+        "ooffice/sdkjs/slide/%"
       ].map(function (currentValue) {
         return 'url_string: "' + currentValue + '"';
       }).join(' OR ');
@@ -39,11 +39,11 @@
         return 'url_string: ="' + currentValue + '"';
       }).join(' OR ');
       erp5_query = '(' + erp5_query + ' OR ' + [
-        "gadget_officejs_text_router.html",
-        "gadget_officejs_text_router.js",
+        "gadget_officejs_presentation_router.html",
+        "gadget_officejs_presentation_router.js",
         "gadget_officejs_page_document_list.html",
         "gadget_officejs_page_document_list.js",
-        "gadget_officejs_jio_text_view.html",
+        "gadget_officejs_jio_presentation_view.html",
         "gadget_officejs_jio_spreadsheet_view.js",
         "gadget_officejs_page_add_document.html",
         "gadget_officejs_page_add_document.js",
@@ -140,6 +140,15 @@
         }
       });
 
+      /*navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
+        .then(function (reg) {
+        // registration worked
+        console.log('Registration succeeded. Scope is ' + reg.scope);
+      })
+        .then(undefined, function (error) {
+        // registration failed
+        console.log('Registration failed with ' + error);
+      });*/
       jio_erp5_cache_storage.repair().push(function () {
         navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
           .then(function (reg) {
@@ -154,6 +163,7 @@
 
     }
   }());
+
 
   function listenHashChange(gadget) {
     function extractHashAndDispatch(evt) {
