@@ -121,6 +121,8 @@ var global = self,
       'Web Style': 'text/css'
     },
     map_url2id_prefix = {},
+    map_url2url = {},
+    exclude_urls = [],
     map_content_type2portal_type = {},
     websections_url = [],
     query_portal_types = "",
@@ -137,6 +139,34 @@ var global = self,
         return attach_name;
       }
       return 'text_content';
+    },
+    is_excluded_url = function (url) {
+      var prefix, i;
+      for (i = 0; i < exclude_urls.length; i++) {
+        prefix = exclude_urls[i];
+        if (url === prefix) {
+          return true;
+        }
+        if (url.startsWith(prefix + '/')) {
+          return true;
+        }
+      }
+      return false;
+    },
+    get_mapped_url = function (url) {
+      var prefix,
+        prefix_id,
+        key;
+      for (key in map_url2url) {
+        if (map_url2url.hasOwnProperty(key)) {
+          if (url === key) {
+            return map_url2url[key];
+          }
+          if (url.startsWith(key)) {
+            return url.replace(key, map_url2url[key]);
+          }
+        }
+      }
     },
     get_relative_url = function (url) {
       var prefix,
@@ -388,6 +418,13 @@ var global = self,
   map_url2id_prefix[site_url] = '';
   map_url2id_prefix['https:'] = '';
 
+  exclude_urls.push(site_url + 'hateoas');
+  exclude_urls.push(site_url + 'hateoasnoauth');
+
+  map_url2url[site_url + 'rjsunsafe/ooffice/apps/'] = 'https://localhost/OfficeWebDeploy/apps/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/sdkjs/'] = 'https://localhost/OfficeWebDeploy/sdkjs/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/vendor/'] = 'https://localhost/OfficeWebDeploy/vendor/';
+
   (function () {
     var url;
     for (url in map_url2id_prefix) {
@@ -513,62 +550,100 @@ var global = self,
 
   self.jio_cache_fetch = function (event) {
     var url = event.request.url,
+      mapped_url,
       relative_url = get_relative_url(url),
       specific_url = get_specific_url(url) || relative_url,
       not_found_in_dev_storage = false,
       queue;
 
-    queue = Promise.resolve()
-      .then(function () {
-        if (self.jio_cache.development_mode) {
-          // 1 level storage development
-          return get_from_storage(url, self.jio_dev_storage);
-        } else {
-          throw {status_code: 404};
-        }
-      })
-      .then(undefined, function (error) {
-        if (error.status_code === 404) {
-          if (self.jio_cache.development_mode) {
-            console.log(url + ',' + specific_url + ' not found in dev storage');
-            not_found_in_dev_storage = true;
-          }
-          // 2 level storage from erp5
-          return get_from_storage(url, self.jio_erp5_cache_storage);
-        } else {
-          throw error;
-        }
-      })
-      .then(undefined, function (error) {
-        if (error.status_code === 404) {
-          console.log(url + ',' + specific_url + ' not found in erp5 cache storage');
-          // 3 level cache urls one for all aplications
-          return get_from_cache_storage(url);
-        } else {
-          throw error;
-        }
-      })
-      .then(undefined, function (error) {
-        if (error.status_code === 404) {
-          console.log(url + ',' + relative_url + ' not found in cache storage');
-          // fetch
-          return fetch(event.request);
-        } else {
-          throw error;
-        }
-      })
-      .then(function (response) {
-        if (response.ok) {
-          if (not_found_in_dev_storage) {
-            save_in_dev_storage(url, response.clone());
-          }
-          //console.log('returned: ' + url);
-          return response;
-        }
-      })
-      .then(undefined, function (error) {
-        console.log(error);
-      });
+    if (is_excluded_url(url)) {
+      queue = fetch(event.request);
+    } else {
+      mapped_url = get_mapped_url(url);
+      if (self.jio_cache.development_mode && mapped_url) {
+        queue = fetch(mapped_url)
+          .then(undefined, function (error) {
+            if (error.status_code === 404) {
+              console.log(url + ',' + specific_url + ' not found by ' + mapped_url + ' storage');
+              return get_from_storage(url, self.jio_erp5_cache_storage);
+            } else {
+              throw error;
+            }
+          })
+          .then(undefined, function (error) {
+            if (error.status_code === 404) {
+              console.log(url + ',' + specific_url + ' not found in erp5 cache storage');
+              return get_from_cache_storage(url);
+            } else {
+              throw error;
+            }
+          })
+          .then(function (response) {
+            if (response.ok) {
+              save_in_dev_storage(url, response.clone());
+              //console.log('returned: ' + url);
+              return response;
+            } else {
+              debugger;
+            }
+          })
+          .then(undefined, function (error) {
+            console.log(error);
+          });
+      } else {
+        queue = Promise.resolve()
+          .then(function () {
+            if (self.jio_cache.development_mode) {
+              // 1 level storage development
+              return get_from_storage(url, self.jio_dev_storage);
+            } else {
+              throw {status_code: 404};
+            }
+          })
+          .then(undefined, function (error) {
+            if (error.status_code === 404) {
+              if (self.jio_cache.development_mode) {
+                console.log(url + ',' + specific_url + ' not found in dev storage');
+                not_found_in_dev_storage = true;
+              }
+              // 2 level storage from erp5
+              return get_from_storage(url, self.jio_erp5_cache_storage);
+            } else {
+              throw error;
+            }
+          })
+          .then(undefined, function (error) {
+            if (error.status_code === 404) {
+              console.log(url + ',' + specific_url + ' not found in erp5 cache storage');
+              // 3 level cache urls one for all aplications
+              return get_from_cache_storage(url);
+            } else {
+              throw error;
+            }
+          })
+          .then(undefined, function (error) {
+            if (error.status_code === 404) {
+              console.log(url + ',' + relative_url + ' not found in cache storage');
+              // fetch
+              return fetch(event.request);
+            } else {
+              throw error;
+            }
+          })
+          .then(function (response) {
+            if (response.ok) {
+              if (not_found_in_dev_storage) {
+                save_in_dev_storage(url, response.clone());
+              }
+              //console.log('returned: ' + url);
+              return response;
+            }
+          })
+          .then(undefined, function (error) {
+            console.log(error);
+          });
+      }
+    }
     event.respondWith(queue);
   };
 
