@@ -413,6 +413,7 @@ var global = self,
   }());
 
   // TODO: generate from special websections current website
+  map_url2id_prefix[site_url + 'rjsunsafe/ooffice_fonts/'] = 'ooffice_fonts';
   map_url2id_prefix[site_url + 'rjsunsafe/ooffice/'] = 'ooffice';
   map_url2id_prefix[site_url + 'rjsunsafe/'] = '';
   map_url2id_prefix[site_url] = '';
