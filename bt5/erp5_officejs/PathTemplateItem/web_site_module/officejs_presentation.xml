@@ -9,9 +9,19 @@
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>Anonymous</string>
-              </list>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -57,16 +67,25 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>Anonymous</string>
-              </list>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -304,6 +323,7 @@
             <value>
               <tuple>
                 <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
+                <string>caching_policy/must-revalidate</string>
               </tuple>
             </value>
         </item>
@@ -525,9 +545,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -553,7 +571,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1471090979.99</float>
+                        <float>1471888395.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -562,7 +580,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -598,7 +616,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.13593.35930.9779</string> </value>
+                <value> <string>953.26865.16887.45294</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -616,7 +634,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1471452773.4</float>
+                        <float>1471900178.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
