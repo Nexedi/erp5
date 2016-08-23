@@ -253,20 +253,32 @@ var global = self,
         var find_queue;
         if (url_string !== undefined) {
           erp5_id = 'web_page_module/' + url_string.replace(/\//g, '_').replace(/\./g, '_');
-          find_queue = storage.get(erp5_id)
-          .push(function (doc) {
-            doc.id = erp5_id;
-            return doc;
-          })
-          .push(undefined, function (error) {
-            if (error.status_code === 404) {
-              return find_and_get({
-                query: query_portal_types + ' AND (url_string: ="' + url_string + '")'
-              }, storage);
-            } else {
-              throw error;
-            }
-          });
+          if (erp5_id.endsWith('_js')) {
+            // for *.js files use only one request to jio
+            // bypass metadata request
+            find_queue = RSVP.Queue()
+            .push(function () {
+              return {
+                id: erp5_id,
+                portal_type: "Web Script"
+              };
+            });
+          } else {
+            find_queue = storage.get(erp5_id)
+            .push(function (doc) {
+              doc.id = erp5_id;
+              return doc;
+            })
+            .push(undefined, function (error) {
+              if (error.status_code === 404) {
+                return find_and_get({
+                  query: query_portal_types + ' AND (url_string: ="' + url_string + '")'
+                }, storage);
+              } else {
+                throw error;
+              }
+            });
+          }
           if (!self.jio_cache.development_mode) {
             find_queue = find_queue
               .push(undefined, function (error) {
