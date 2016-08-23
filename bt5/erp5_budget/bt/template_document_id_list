@@ -1,0 +1,12 @@
+document.erp5.Budget
+document.erp5.BudgetCell
+document.erp5.BudgetLine
+document.erp5.BudgetModel
+document.erp5.BudgetTransaction
+document.erp5.BudgetTransfer
+document.erp5.BudgetTransferLine
+document.erp5.BudgetVariation
+document.erp5.CategoryBudgetVariation
+document.erp5.NodeBudgetVariation
+document.erp5.TransactionQuantityValueFeasabilityConstraint
+document.erp5.TransactionQuantityValueValidityConstraint

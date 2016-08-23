@@ -28,7 +28,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.BudgetVariation import BudgetVariation
+from erp5.component.document.BudgetVariation import BudgetVariation
 
 
 class CategoryBudgetVariation(BudgetVariation):
