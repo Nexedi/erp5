@@ -29,7 +29,8 @@ from AccessControl import ClassSecurityInfo
 
 from AccessControl.ZopeGuards import guarded_getattr
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.BudgetVariation import BudgetVariation
+from erp5.component.document.BudgetVariation import BudgetVariation
+
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
 
 
