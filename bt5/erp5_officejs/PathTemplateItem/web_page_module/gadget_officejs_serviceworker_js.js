@@ -243,6 +243,7 @@ var global = self,
     },
     get_from_storage = function (url, storage) {
       var url_string = get_specific_url(url),
+        erp5_id,
         url_object = new URI(url),
         reference = url_object.filename();
       if (!storage) {
@@ -251,9 +252,21 @@ var global = self,
       return new Promise(function (resolve, reject) {
         var find_queue;
         if (url_string !== undefined) {
-          find_queue = find_and_get({
-            query: query_portal_types + ' AND (url_string: ="' + url_string + '")'
-          }, storage);
+          erp5_id = 'web_page_module/' + url_string.replace(/\//g, '_').replace(/\./g, '_');
+          find_queue = storage.get(erp5_id)
+          .push(function (doc) {
+            doc.id = erp5_id;
+            return doc;
+          })
+          .push(undefined, function (error) {
+            if (error.status_code === 404) {
+              return find_and_get({
+                query: query_portal_types + ' AND (url_string: ="' + url_string + '")'
+              }, storage);
+            } else {
+              throw error;
+            }
+          });
           if (!self.jio_cache.development_mode) {
             find_queue = find_queue
               .push(undefined, function (error) {
