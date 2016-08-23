@@ -34,7 +34,7 @@ for sync in sync_list:
                                                             'sendHttpResponse', 'PubSync',
                                                             'activateSyncModif', 'immediateReindexObject'],
                                            after_tag=after_tag).processClientSynchronization(sub.getPath())
-  afer_tag = [sub.getId(), pub.getId(), tag]
+  after_tag = [sub.getRelativeUrl(), pub.getRelativeUrl(), tag]
   portal_status_message = translateString("Synchronization started.")
 
 # Add to the integration site view the clock which show activities -Aurel : really necessary ?
