@@ -13,6 +13,7 @@ from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal, View
 from Products.CMFCore.utils import registerToolInterface, UniqueObject
 from Products.CMFCore.utils import getToolByName
+from Products.MimetypesRegistry.common import MimeTypeException
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.PortalTransforms.data import datastream
@@ -549,15 +550,11 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             reloaded.append((id, o.module))
             try:
                 self._unmapTransform(o)
-            except ConflictError:
-                raise
-            except:
+            except MimeTypeException:
                 pass
             try:
                 self._mapTransform(o)
-            except ConflictError:
-                raise
-            except:
+            except MimeTypeException:
                 pass
         return reloaded
 
