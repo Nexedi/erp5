@@ -100,7 +100,7 @@
           return gadget.translateHtml(template(options.doc));
         })
         .push(function (html) {
-          gadget.props.element.innerHTML = html;
+          gadget.props.element.innerHTML += html;
           return gadget.updateHeader({
             title: options.doc.title + " | Web Page",
             save_action: true
@@ -109,6 +109,55 @@
         .push(function () {
           return gadget.props.deferred.resolve();
         });
+    })
+    
+    .declareMethod("shareDoc", function () {
+      var gadget = this;
+      if(window.location.hash) {
+        var index = window.location.hash.indexOf('room=');
+        if (index === -1) {
+          var S4 = function() {
+             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+          };
+          var room = (S4()+S4()+"-"+S4()+S4());
+          return new RSVP.Queue()
+          .push(function () {
+            return gadget.declareGadget(
+              "gadget_officejs_page_share_text.html",
+              {
+                scope: "share_text_via_webrtc",
+                element: gadget.props.element.querySelector(".webrtc-gadget")
+              }
+            );
+          })
+          .push(function(g){
+            var config = {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  //type: "indexeddb",
+                  //"database": "handshake"
+                  "type": "dav",
+                  "url": "https://softinst67513.host.vifib.net/share/",
+                  "basic_login": btoa("admin:vowhkida")
+                }
+              }
+            }
+
+            var sharelink = window.location.origin + window.location.pathname + '#page=webrtc_viewer&room='+room+'&config='+encodeURIComponent(JSON.stringify(config));
+            gadget.props.element.querySelector('#sharelink').value = sharelink;
+            gadget.props.element.querySelector('#sharelink').style.display = 'block';
+            gadget.props.element.querySelector('#generatelink').remove();
+            
+            if(config) {
+              return g.initiate(room, gadget, config);
+            } else {
+              return g.initiate(room, gadget);
+            }
+          })
+        }
+      }
     })
 
     /////////////////////////////////////////
@@ -165,7 +214,11 @@
             'submit',
             true,
             function (event) {
-              return saveContent(gadget, event);
+              if (document.activeElement.name === "generatelink") {
+                return gadget.shareDoc();
+              } else {
+                return saveContent(gadget, event);
+              }
             }
           );
         });

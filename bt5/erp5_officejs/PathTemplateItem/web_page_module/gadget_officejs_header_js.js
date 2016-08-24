@@ -103,13 +103,16 @@
         this.stats.modified = true;
         return this.render(this.stats.options);
       }
-    })
+    }) 
+*/
+
     .declareMethod('notifySubmitting', function () {
       if (this.stats.submitted) {
         this.stats.submitted = false;
         return this.render(this.stats.options);
       }
     })
+
     .declareMethod('notifySubmitted', function () {
       if (!this.stats.submitted) {
         this.stats.submitted = true;
@@ -118,7 +121,7 @@
         return this.render(this.stats.options);
       }
     })
-*/
+
     .declareMethod('render', function (options) {
       var gadget = this,
         possible_left_link_list = [
@@ -138,7 +141,8 @@
         ],
         possible_right_button_list = [
           ['save_action', 'Save', 'check', 'submit'],
-          ['submit_action', 'Proceed', 'check', 'submit']
+          ['submit_action', 'Proceed', 'check', 'submit'],
+          ['refresh_action', 'Refresh', 'check', 'submit']
         ],
         i,
         klass,
