@@ -14,16 +14,21 @@
 
         <form class="view-web-page-form">
 
-                <div class="center">
-                        <div class="ui-field-contain">
-
+            <div class="center">
+                <div class="ui-field-contain">
                   <label data-i18n="Title:">Title:</label>
                   <input type="text" name="title" value="{{title}}">
                 </div>
-                  <button type="submit" data-i18n="Save" style="display:none;">Save</button>
+                <div class="ui-field-contain">
+                  <label data-i18n="Public Link:"> Public Link: </label>
+                  <button type="submit" id="generatelink" name="generatelink" data-i18n="Generate Link" style="display:block;"> Generate Link </button>
+                  <input type="text" id="sharelink" name="share" style="display:none" value=""/>
                 </div>
+                <button type="submit" data-i18n="Save" style="display:none;">Save</button>
+            </div>
+
             <div class="ui-field-contain">
-            <fieldset data-role="collapsible">
+              <fieldset data-role="collapsible">
               <legend>Extra Properties</legend>
 
                 <div class="ui-field-contain">
@@ -41,14 +46,15 @@
                 <input type="text" name="language" value="{{language}}">
               </div>
 
-              <div class="ui-field-contain">
-                <label data-i18n="Description:">Description:</label>
-                <textarea name="description">{{description}}</textarea>
-              </div>
+                <div class="ui-field-contain">
+                  <label data-i18n="Description:">Description:</label>
+                  <textarea name="description">{{description}}</textarea>
+                </div>
             </div>
 
             </fieldset>
             <div class='document-content'></div>
+            <div class='webrtc-gadget'></div>
 
           </div>
 

@@ -103,13 +103,16 @@
         this.stats.modified = true;
         return this.render(this.stats.options);
       }
-    })
+    }) 
+*/
+
     .declareMethod('notifySubmitting', function () {
       if (this.stats.submitted) {
         this.stats.submitted = false;
         return this.render(this.stats.options);
       }
     })
+
     .declareMethod('notifySubmitted', function () {
       if (!this.stats.submitted) {
         this.stats.submitted = true;
@@ -118,7 +121,7 @@
         return this.render(this.stats.options);
       }
     })
-*/
+
     .declareMethod('render', function (options) {
       var gadget = this,
         possible_left_link_list = [

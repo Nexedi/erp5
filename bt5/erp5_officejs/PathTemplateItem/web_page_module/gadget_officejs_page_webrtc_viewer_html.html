@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>OfficeJS Editor Remote Viewer</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="jquerymobile.js"></script>
+    <script src="gadget_officejs_page_webrtc_viewer.js"></script>
+
+  </head>
+
+  <body>
+    <div class="center">
+      <div class="ui-field-contain">
+        <label data-i18n="Title:">Title:</label>
+        <input type="text" name="title" value="">
+      </div>
+    </div>
+    <div class="ui-field-contain">
+      <div data-role="content" id="extra">
+      </div>
+    </div>
+    <div data-gadget-url="gadget_officejs_page_share_text.html"
+       data-gadget-scope="share_text_via_webrtc"
+       data-gadget-sandbox="public"></div>
+    <div class="viewer-content"></div>
+  </body>
+</html>
