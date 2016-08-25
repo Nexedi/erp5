@@ -412,6 +412,11 @@ class DB(TM):
                 error=sys.exc_info())
             raise
 
+    def tpc_vote(self, *ignored):
+        # Raise if a disconnection is detected, to avoid detecting this later
+        self._query("SELECT 1")
+        return TM.tpc_vote(self, *ignored)
+
     def _finish(self, *ignored):
         """Commit a transaction (when TM is enabled)."""
         if not self._transaction_begun:
@@ -585,4 +590,5 @@ class DeferredDB(DB):
             del self._sql_string_list[:]
             DB._finish(self)
 
+    tpc_vote = TM.tpc_vote
     _abort = _begin
