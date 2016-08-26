@@ -210,7 +210,7 @@ class TestWebCrawler(ERP5TypeTestCase):
     web_page.edit(text_content=text_content)
     self.assertEqual(web_page.getContentBaseURL(), "http://www.example.com")
     self.assertEqual(web_page.getContentNormalisedURLList(),
-                    ["http://www.example.com/I%20don't%20care%20I%20put%20what/%20I%20want/",
+                    ["http://www.example.com/I don't care I put what/ I want/",
                      'http://www.example.com/section',
                      'http://www.example.com/section2',
                      'http://www.example.com/?title=\xc3\xa9crit',])
