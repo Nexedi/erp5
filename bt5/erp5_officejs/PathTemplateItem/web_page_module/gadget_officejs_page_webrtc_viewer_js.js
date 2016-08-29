@@ -34,6 +34,7 @@
         .push(function (element) {
           g.props.element = element;
           g.props.deferred = RSVP.defer();
+          g.props.content = '';
         });
     })
     
@@ -48,56 +49,46 @@
         $('#extra').find('[data-role=collapsible]').collapsible({ enhanced: true });
       }
       if (data.title) {
+        this.props.element.querySelector(".viewer-content").firstChild.contentDocument.body.innerHTML = data.content;
         this.props.element.querySelector(".ui-field-contain").childNodes[3].firstChild.value = data.title;
         this.props.title = data.title;
       }
 
-      this.props.element.querySelector(".viewer-content").firstChild.contentDocument.body.innerHTML = data.content;
+      this.props.content = data.content;
       
     })
     
+    .allowPublicAcquisition('triggerSubmit', function () {
+      return this.props.element.querySelector('button').click();
+    })
+
+    .declareMethod('triggerSubmit', function () {
+      return this.props.element.querySelector('button').click();
+    })    
+
     .declareMethod("render", function(options) {
       var gadget = this;
+      gadget.props.options = options;
       return new RSVP.Queue()
         .push(function () {
           return gadget.updateHeader({
-              title: "Document Viewer",
-            });
-        })
+            title: "Document Viewer",
+            refresh_action: true
+          });
+        });
     })
+
     .declareService(function () {
       var gadget = this;
       if(window.location.hash) {
-        var subhashes = window.location.hash.split('#')[1].split('&'),
-            subhash,
-            keyvalue,
-            dict = {};
-
-        for (var index in subhashes) {
-          if (subhashes.hasOwnProperty(index)) {
-            subhash = subhashes[index];
-            if (subhash !== '') {
-              keyvalue = subhash.split('=');
-              if (keyvalue.length === 2) {
-                dict[keyvalue[0]] = keyvalue[1];
-              } else {
-                // Special case to handle '=' in config file
-                if (!subhash.indexOf('config=')) {
-                  dict['config'] = subhash.substr(subhash.indexOf('config=')+7);
-                }
-              }
-            }
-          }
-        }
-        
-        var room = dict["room"];
+        var room = gadget.props.options["room"];
         return gadget.notifySubmitting()
         .push(function() {
           return gadget.getDeclaredGadget('share_text_via_webrtc')
         })
         .push(function(g){
-          if(dict['config']) {
-            return g.slaveInitiate(room, gadget, dict['config']);
+          if(gadget.props.options['config']) {
+            return g.slaveInitiate(room, gadget, gadget.props.options['config']);
           } else {
             return g.slaveInitiate(room, gadget)
             .push(null, function(error){
@@ -121,4 +112,22 @@
       return setFillStyle(gadget);
     })
     
+    /////////////////////////////////////////
+    // Form submit
+    /////////////////////////////////////////
+    .declareService(function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
+        .push(function () {
+          return loopEventListener(
+            gadget.props.element.querySelector('form'),
+            'submit',
+            true,
+            function (event) {
+              gadget.props.element.querySelector(".viewer-content").firstChild.contentDocument.body.innerHTML = gadget.props.content;
+            }
+          );
+        });
+    });
 }(window, RSVP, rJS));

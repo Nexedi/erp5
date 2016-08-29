@@ -136,6 +136,8 @@
               sub_storage: {
                 type: "uuid",
                 sub_storage: {
+                  //type: "indexeddb",
+                  //"database": "handshake"
                   "type": "dav",
                   "url": "https://softinst67513.host.vifib.net/share/",
                   "basic_login": btoa("admin:vowhkida")
@@ -143,7 +145,7 @@
               }
             }
 
-            var sharelink = window.location.origin + window.location.pathname + '#page=webrtc_viewer&room='+room+'&config='+JSON.stringify(config);
+            var sharelink = window.location.origin + window.location.pathname + '#page=webrtc_viewer&room='+room+'&config='+encodeURIComponent(JSON.stringify(config));
             gadget.props.element.querySelector('#sharelink').value = sharelink;
             gadget.props.element.querySelector('#sharelink').style.display = 'block';
             gadget.props.element.querySelector('#generatelink').remove();
