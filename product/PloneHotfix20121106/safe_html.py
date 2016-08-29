@@ -8,7 +8,10 @@ ENTITYREF_RE = re.compile(r"&(\w{1,32});?")
 
 CHR_RE = re.compile(r'\\(\d+)')
 def unescape_chr(matchobj):
-       return chr(int(matchobj.group(1), 16))
+    try:
+        return chr(int(matchobj.group(1), 16))
+    except ValueError:
+        return matchobj.group(1)
 
 
 def decode_charref(s):
