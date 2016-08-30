@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="JSON Type">
+  <item>TextDocument</item>
+  <item>Url</item>
+ </portal_type>
+</property_sheet_list>
