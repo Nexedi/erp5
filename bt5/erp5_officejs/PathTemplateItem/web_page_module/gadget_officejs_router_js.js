@@ -154,8 +154,14 @@
       local_sub_storage: {
         type: "attachasproperty",
         map: {
-          text_content: "text_content",
-          data: "data"
+          text_content: {
+            body_name: "text_content",
+            content_type_name: "content_type"
+          },
+          data: {
+            body_name: "data",
+            content_type_name: "content_type"
+          }
         },
         sub_storage: get_jio_cache_storage(name)
       },

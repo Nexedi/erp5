@@ -51,12 +51,24 @@ var global = self,
 
   // 2. readonly cache for end user
   self.jio_erp5_cache_storage = {
-    type: "query",
+    type: "memoryindex",
+    select_list: ['reference', 'url_string'],
+    index: {
+      url_string: null,
+      reference: function (obj) {
+        if (!obj.url_string) {
+          return obj.reference;
+        }
+      }
+    },
     sub_storage: {
-      type: "uuid",
+      type: "query",
       sub_storage: {
-        type: "indexeddb",
-        database: self.jio_cache.name + '_erp5'
+        type: "uuid",
+        sub_storage: {
+          type: "indexeddb",
+          database: self.jio_cache.name + '_erp5'
+        }
       }
     }
   };
@@ -196,12 +208,13 @@ var global = self,
         storage = self.jio_cache_storage;
       }
       return new Promise(function (resolve, reject) {
-        storage.get(jio_key)
-          .push(function (metadata) {
-            return storage.getAttachment(jio_key, 'body')
-              .push(function (body) {
-                resolve(new Response(body, {'headers': metadata.headers}));
-              });
+        storage.getAttachment(jio_key, 'body')
+          .push(function (body) {
+            resolve(new Response(body, {
+              'headers': {
+                'content-type': body.type
+              }
+            }));
           })
           .push(undefined, function (error) {
             reject(error);
@@ -227,15 +240,15 @@ var global = self,
       if (!storage) {
         storage = self.jio_dev_storage;
       }
+      query.limit = [0, 1];
+      query.select_list = ['portal_type'];
       return storage.allDocs(query)
         .push(function (result) {
-          if (result.data.total_rows >= 1) {
-            var id = result.data.rows[0].id;
-            return storage.get(id)
-              .push(function (doc) {
-                doc.id = id;
-                return doc;
-              });
+          if (result.data.total_rows == 1) {
+            return {
+              id: result.data.rows[0].id,
+              portal_type: result.data.rows[0].value.portal_type
+            };
           } else {
             throw {status_code: 404};
           }
@@ -244,6 +257,7 @@ var global = self,
     get_from_storage = function (url, storage) {
       var url_string = get_specific_url(url),
         url_object = new URI(url),
+        key,
         reference = url_object.filename();
       if (!storage) {
         storage = self.jio_dev_storage;
@@ -251,50 +265,25 @@ var global = self,
       return new Promise(function (resolve, reject) {
         var find_queue;
         if (url_string !== undefined) {
-          find_queue = find_and_get({
-            query: query_portal_types + ' AND (url_string: ="' + url_string + '")'
-          }, storage);
-          if (!self.jio_cache.development_mode) {
-            find_queue = find_queue
-              .push(undefined, function (error) {
-                if (error.status_code === 404) {
-                  return find_and_get({
-                    query: query_portal_types + ' AND (reference: ="' + reference + '")',
-                    sort_on: [["url_string", "ascending"]]
-                  }, storage);
-                } else {
-                  throw error;
-                }
-              });
-          }
-          //} else if (reference !== "") {
+          key = storage.__storage._find_key('url_string', url_string);
+          //if (!self.jio_cache.development_mode && !key) {
+          //  key = storage.__storage._find_key('reference', reference);
+          //}
         } else if (reference === get_relative_url(url)) {
-          // i use sort_on for emulate query:
-          // '(url_string: "" ) AND (reference: "' + reference + '")'
-          find_queue = find_and_get({
-            query: query_portal_types + ' AND (reference: ="' + reference + '")',
-            sort_on: [["url_string", "ascending"]]
-          }, storage);
-        } else {
+          key = storage.__storage._find_key('reference', reference);
+        }
+        if (!key) {
           reject({status_code: 404});
           return;
         }
-        find_queue
-          .push(function (doc) {
-            return storage.getAttachment(doc.id, portal_type2attach_name(doc.portal_type))
+        find_queue = storage.getAttachment(key, 'text_content')
               .push(function (body) {
-                var content_type;
-                content_type = doc.content_type;
-                if (content_type === undefined) {
-                  content_type = map_portal_type2content_type[doc.portal_type];
-                }
                 resolve(new Response(body, {
                   'headers': {
-                    'content-type': content_type
+                    'content-type': body.type
                   }
                 }));
-              });
-          })
+              })
           .push(undefined, function (error) {
             reject(error);
           });
