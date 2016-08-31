@@ -1950,23 +1950,26 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
           continue
         value = getattr(sql_catalog, property_id)
         property_type = sql_catalog.getPropertyType(property_id)
+        # For selection property type, we change the type to 'string', cause
+        # 'selection' in CMF and 'selection' in erp5 have different behaviour,
+        # For ex: property 'sql_catalog_clear_reserved'(of type selection) in
+        # gives a string in sql_catalog, but if we define it as selection for
+        # erp5_catalog, it'd give us a tuple(as it is defined inside list_types)
+        # So, to maintain better consistency, we have changed all the selection
+        # property_type in Catalog and CatalogTool property sheet to 'string'
+        if property_type == 'selection':
+          property_type = 'string'
         erp5_catalog.setProperty(key=property_id, value=value, type=property_type)
 
-      # This step is required as we don't have consistency between the properties
-      # of new ERP5Catalog object and SQLCatalog.Catalog objects, i.e,
-      # for example: Trying to get property `sql_catalog_clear_reserved` for
-      # `erp5_catalog` would give us a tuple cause it is basically calling the
-      # getter function getSqlCatalogClearReserved, which when called for
-      # `sql_catalog.sql_catalog_clear_reserved` would give a string.
-      # This inconsistency arised due to the generation of getter functions where
-      # 'selection' type is taken as list_types which leads to creating getters
-      # and setters accordingly to create list and tuples instead of just a
-      # string. Well, imo(Ayush), this might not be good way to solve this
-      # problem. Other way would be to leave the proeprties as it is for ERP5Catalog
-      # objects and change the function calls in ERP5Catalog accordignly instead.
+      # This step is required as for list_types properties, erp5 generate 2 Ids
+      # in property map: id and base_id, where id = base_id+'list'.
+      # But to maintain consistency between the sql_catalog and erp5_catalog
+      # attributes, we need to have same attributes giving same results in both
+      # of them, so we explicitly add these attributes in erp5_catalog.
+      # Note: Regarding why we aren't fixing attributes for 'selection' type,
+      # you can read the last comment, where we set the properties for erp5_catalgo
       for p in sql_catalog.propertyMap():
-        if p['type'] in ['selection', 'multiple selection', 'lines']:
-          accessor_name = 'get' + UpperCase(p['id'])
+        if p['type'] in ['multiple selection', 'lines']:
           value = getattr(sql_catalog, p['id'])
           setattr(erp5_catalog, p['id'], value)
 
