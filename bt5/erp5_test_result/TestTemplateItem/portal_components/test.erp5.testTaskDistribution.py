@@ -484,10 +484,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.tic()
     self._callOptimizeAlarm()
     for test_node, aggregate_list in args:
-      self.assertEqual(set(test_node.getAggregateList()),
+      test_note_aggregate_title_list = [x.split(" ")[-1] for x in test_node.getAggregateTitleList()]
+      self.assertEqual(set(test_note_aggregate_title_list),
         set(aggregate_list),
         "incorrect aggregate for %r, got %r instead of %r" % \
-        (test_node.getTitle(), test_node.getAggregateList(), aggregate_list))
+        (test_node.getTitle(), test_note_aggregate_title_list, aggregate_list))
 
   def test_11_checkERP5ProjectOptimizationIsStable(self):
     """
@@ -497,96 +498,121 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_node_one, test_node_two = self._createTestNode(quantity=2)
     test_suite_one = self._createTestSuite(reference_correction=+0,
                               title='one')[0]
-    test_suite_one_url = test_suite_one.getRelativeUrl()
-    test_suite_two_url = self._createTestSuite(reference_correction=+1,
+    self._createTestSuite(reference_correction=+1,
                               title='two')[0].getRelativeUrl()
     self.tic()
     self._callOptimizeAlarm()
     check = self._checkTestSuiteAggregateList
-    check([test_node_one, [test_suite_one_url]],
-          [test_node_two, [test_suite_two_url]])
+    check([test_node_one, ["one"]],
+          [test_node_two, ["two"]])
     # first test suite is invalidated, so it should be removed from nodes, 
     # but this should not change assignment of second test suite
     test_suite_one.invalidate()
     check([test_node_one, []],
-          [test_node_two, [test_suite_two_url]])
+          [test_node_two, ["two"]])
     # an additional test node is added, with lower title, this should
     # still not change anyting
     test_node_zero = self._createTestNode(quantity=1, reference_correction=-1)[0]
     check([test_node_zero, []],
           [test_node_one, []],
-          [test_node_two, [test_suite_two_url]])
+          [test_node_two, ["two"]])
     # test suite one is validated again, it is installed on first
     # available test node
     test_suite_one.validate()
-    check([test_node_zero, [test_suite_one_url]],
+    check([test_node_zero, ["one"]],
           [test_node_one, []],
-          [test_node_two, [test_suite_two_url]])
+          [test_node_two, ["two"]])
     # for some reasons, test_node two is dead, so the work is distributed
     # to remaining test nodes
     test_node_two.invalidate()
-    check([test_node_zero, [test_suite_one_url]],
-          [test_node_one, [test_suite_two_url]],
+    check([test_node_zero, ["one"]],
+          [test_node_one, ["two"]],
           [test_node_two, []])
     # we add another test suite, since all test node already have one
     # test suite, the new test suite is given to first available one
-    test_suite_three_url = self._createTestSuite(reference_correction=+2,
+    self._createTestSuite(reference_correction=+2,
                                 title='three')[0].getRelativeUrl()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url]],
-          [test_node_one, [test_suite_two_url]],
+    check([test_node_zero, ["one", "three"]],
+          [test_node_one, ["two"]],
           [test_node_two, []])
-    # test node two is coming back. However we do not change any assignment
-    # to avoid uninstalling stuff on nodes
+    # test node two is coming back. To have better repartition of work,
+    # move some work from overloaded test node to less busy test node, while
+    # still trying to move as less test suite as possible (here only one)
     test_node_two.validate()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url]],
-          [test_node_one, [test_suite_two_url]],
-          [test_node_two, []])
+    check([test_node_zero, ["three"]],
+          [test_node_one, ["two"]],
+          [test_node_two, ["one"]])
     # Now let's create a test suite needing between 1 to 2 test nodes
-    # We check that nodes with less suites are completed first
-    test_suite_four_url = self._createTestSuite(reference_correction=+5,
+    # Make sure additional work is added without moving other test suites
+    self._createTestSuite(reference_correction=+3,
                              priority=4, title='four')[0].getRelativeUrl()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url]],
-          [test_node_one, [test_suite_two_url, test_suite_four_url]],
-          [test_node_two, [test_suite_four_url]])
-    # Now let's create a 2 test suite needing between 2 to 3 test nodes
-    # to make all test nodes almost satured
-    test_suite_five_url = self._createTestSuite(reference_correction=+6,
-                             priority=7, title='five')[0].getRelativeUrl()
-    test_suite_six_url = self._createTestSuite(reference_correction=+7,
-                             priority=7, title='six')[0].getRelativeUrl()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
-                            test_suite_five_url, test_suite_six_url]],
-          [test_node_one, [test_suite_two_url, test_suite_four_url,
-                            test_suite_five_url, test_suite_six_url]],
-          [test_node_two, [test_suite_four_url,
-                            test_suite_five_url, test_suite_six_url]])
+    check([test_node_zero, ["three", "four"]],
+          [test_node_one, ["two", "four"]],
+          [test_node_two, ["one"]])
+    # Now let's create a a test suite needing 1 nodes
+    # to make sure test nodes with less work get the work first
+    test_suite_five = self._createTestSuite(reference_correction=+4,
+                             title='five')[0]
+    check([test_node_zero, ["three", "four"]],
+          [test_node_one, ["two", "four"]],
+          [test_node_two, ["one", "five"]])
+    # Now let's create another test suite needing between 2 to 3 test nodes
+    # and increase priority of one suite to make all test nodes almost satured
+    test_suite_five.setIntIndex(7)
+    self._createTestSuite(reference_correction=+5,
+                             priority=7, title='six')
+    check([test_node_zero, ["three", "four","five", "six"]],
+          [test_node_one, ["two", "four", "five", "six"]],
+          [test_node_two, ["one", "five", "six"]])
     # Then, check what happens if all nodes are more than saturated
     # with a test suite needing between 3 to 5 test nodes
-    test_suite_seven_url = self._createTestSuite(reference_correction=+4,
-                             priority=9, title='seven')[0].getRelativeUrl()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
-                            test_suite_five_url, test_suite_six_url]],
-          [test_node_one, [test_suite_two_url, test_suite_four_url,
-                            test_suite_five_url, test_suite_six_url]],
-          [test_node_two, [test_suite_four_url, test_suite_seven_url,
-                            test_suite_five_url, test_suite_six_url]])
+    self._createTestSuite(reference_correction=+6,
+                             priority=9, title='seven')
+    check([test_node_zero, ["three", "four", "five", "six"]],
+          [test_node_one, ["two", "four", "five", "six"]],
+          [test_node_two, ["one", "seven", "five", "six"]])
     # No place any more, adding more test suite has no consequence
-    test_suite_height_url = self._createTestSuite(reference_correction=+8,
-                             priority=9, title='height')[0].getRelativeUrl()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
-                            test_suite_five_url, test_suite_six_url]],
-          [test_node_one, [test_suite_two_url, test_suite_four_url,
-                            test_suite_five_url, test_suite_six_url]],
-          [test_node_two, [test_suite_four_url, test_suite_seven_url,
-                            test_suite_five_url, test_suite_six_url]])
+    # we need 5*2 + 3*2  + 2*1 + 1*3 => 21 slots
+    self._createTestSuite(reference_correction=+7,
+                             priority=9, title='height')
+    check([test_node_zero, ["three", "four", "five", "six"]],
+          [test_node_one, ["two", "four", "five", "six"]],
+          [test_node_two, ["one", "seven", "five", "six"]])
     # free some place by removing a test suite
-    self.portal.unrestrictedTraverse(test_suite_five_url).invalidate()
-    check([test_node_zero, [test_suite_one_url, test_suite_three_url,
-                            test_suite_six_url, test_suite_seven_url]],
-          [test_node_one, [test_suite_two_url, test_suite_four_url,
-                            test_suite_six_url, test_suite_seven_url]],
-          [test_node_two, [test_suite_four_url, test_suite_six_url,
-                            test_suite_seven_url, test_suite_height_url]])
+    # make sure free slots are fairly distributed to test suite having
+    # less test nodes
+    # We remove 3 slots, so we would need 18 slots
+    test_suite_five.invalidate()
+    check([test_node_zero, ["three", "four", "height", "six"]],
+          [test_node_one, ["two", "four", "seven" , "six"]],
+          [test_node_two, ["one", "seven", "height" , "six"]])
+    # Check that additional test node would get work for missing assignments
+    # No move a test suite is done since in average we miss slots
+    test_node_three, = self._createTestNode(reference_correction=2)
+    check([test_node_zero, ["three", "four", "height", "six"]],
+          [test_node_one, ["two", "four", "seven" , "six"]],
+          [test_node_two, ["one", "seven", "height" , "six"]],
+          [test_node_three, ["seven", "height"]])
+    # With even more test node, check that we move some work to less
+    # busy test nodes
+    test_node_four, = self._createTestNode(reference_correction=3)
+    test_node_five, = self._createTestNode(reference_correction=4)
+    check([test_node_zero, ["three", "six", "height"]],
+          [test_node_one, ["two", "six", "seven"]],
+          [test_node_two, ["one", "seven", "height"]],
+          [test_node_three, ["four", "seven", "height"]],
+          [test_node_four, ["four", "seven", "height"]],
+          [test_node_five, ["six", "seven", "height"]])
+    test_node_six, = self._createTestNode(reference_correction=5)
+    test_node_seven, = self._createTestNode(reference_correction=6)
+    check([test_node_zero, ["three", "height"]],
+          [test_node_one, ["two", "seven"]],
+          [test_node_two, ["one", "height"]],
+          [test_node_three, ["seven", "height"]],
+          [test_node_four, ["four", "seven", "height"]],
+          [test_node_five, ["six", "seven", "height"]],
+          [test_node_six, ["six", "seven"]],
+          [test_node_seven, ["four", "six"]])
 
   def test_12_checkCloudPerformanceOptimizationIsStable(self):
     """
@@ -595,58 +621,51 @@ class TestTaskDistribution(ERP5TypeTestCase):
     """
     test_node_one, test_node_two = self._createTestNode(quantity=2,
                                specialise_value=self.performance_distributor)
-    test_suite_list = self._createTestSuite(quantity=2,
-                               specialise_value=self.performance_distributor)
+    test_suite_one, = self._createTestSuite(
+                          title='one', specialise_value=self.performance_distributor)
+    self._createTestSuite(title='two', reference_correction=+1,
+                          specialise_value=self.performance_distributor)
     self.tic()
     self._callOptimizeAlarm()
-    test_suite_one, test_suite_two = test_suite_list
-    test_suite_one_url, test_suite_two_url = [x.getRelativeUrl() for x in 
-                                            test_suite_list]
     check = self._checkTestSuiteAggregateList
-    check([test_node_one, [test_suite_one_url, test_suite_two_url]],
-          [test_node_two, [test_suite_one_url, test_suite_two_url]])
+    check([test_node_one, ["one", "two"]],
+          [test_node_two, ["one", "two"]])
     # first test suite is invalidated, so it should be removed from nodes, 
     # but this should not change assignment of second test suite
     test_suite_one.invalidate()
-    check([test_node_one, [test_suite_two_url]],
-          [test_node_two, [test_suite_two_url]])
+    check([test_node_one, ["two"]],
+          [test_node_two, ["two"]])
     # an additional test node is added, with lower title, it should
     # get in any case all test suite
     test_node_zero = self._createTestNode(quantity=1, reference_correction=-1,
                             specialise_value=self.performance_distributor)[0]
-    check([test_node_zero, [test_suite_two_url]],
-          [test_node_one, [test_suite_two_url]],
-          [test_node_two, [test_suite_two_url]])
+    check([test_node_zero, ["two"]],
+          [test_node_one, ["two"]],
+          [test_node_two, ["two"]])
     # test suite one is validating again, it is installed on first
     # available test node
     test_suite_one.validate()
-    check([test_node_zero, [test_suite_one_url, test_suite_two_url]],
-          [test_node_one, [test_suite_one_url, test_suite_two_url]],
-          [test_node_two, [test_suite_one_url, test_suite_two_url]])
+    check([test_node_zero, ["one", "two"]],
+          [test_node_one, ["one", "two"]],
+          [test_node_two, ["one", "two"]])
     # for some reasons, test_node two is dead, this has no consequence
     # for others
     test_node_two.invalidate()
-    check([test_node_zero, [test_suite_one_url, test_suite_two_url]],
-          [test_node_one, [test_suite_one_url, test_suite_two_url]],
-          [test_node_two, [test_suite_one_url, test_suite_two_url]])
+    check([test_node_zero, ["one", "two"]],
+          [test_node_one, ["one", "two"]],
+          [test_node_two, ["one", "two"]])
     # we add another test suite, all test nodes should run it, except
     # test_node_two which is dead
-    test_suite_three_url = self._createTestSuite(reference_correction=+2,
-                             specialise_value=self.performance_distributor)[0]\
-                             .getRelativeUrl()
-    check([test_node_zero, [test_suite_one_url, test_suite_two_url,
-                            test_suite_three_url]],
-          [test_node_one, [test_suite_one_url, test_suite_two_url,
-                            test_suite_three_url]],
-          [test_node_two, [test_suite_one_url, test_suite_two_url]])
+    self._createTestSuite(title="three", reference_correction=+2,
+                             specialise_value=self.performance_distributor)
+    check([test_node_zero, ["one", "two", "three"]],
+          [test_node_one, ["one", "two", "three"]],
+          [test_node_two, ["one", "two"]])
     # test node two is coming back. It should run all test suites
     test_node_two.validate()
-    check([test_node_zero, [test_suite_one_url, test_suite_two_url,
-                            test_suite_three_url]],
-          [test_node_one, [test_suite_one_url, test_suite_two_url,
-                            test_suite_three_url]],
-          [test_node_two, [test_suite_one_url, test_suite_two_url,
-                            test_suite_three_url]])
+    check([test_node_zero, ["one", "two", "three"]],
+          [test_node_one, ["one", "two", "three"]],
+          [test_node_two, ["one", "two", "three"]])
     # now we are going to
 
   def test_13_startTestSuiteWithOneTestNodeAndPerformanceDistributor(self):

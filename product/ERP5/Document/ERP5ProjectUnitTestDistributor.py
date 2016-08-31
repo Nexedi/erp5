@@ -123,12 +123,16 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         specialise_uid=self.getUid(), sort_on=[('title','ascending')])]
 
     test_node_list_len = len(test_node_list)
-    def _optimizeConfiguration(test_suite_list_to_add, level=0):
+    def _optimizeConfiguration(test_suite_list_to_add, level=0,
+                               test_node_list_to_optimize=None,
+                               test_suite_max=TEST_SUITE_MAX):
+      if test_node_list_to_optimize is None:
+        test_node_list_to_optimize = [x for x in test_node_list]
       if test_suite_list_to_add:
         test_node_list_to_remove = []
-        for test_node in test_node_list:
+        for test_node in test_node_list_to_optimize:
           # We can no longer add more test suite on this test node
-          if TEST_SUITE_MAX < (level + 1):
+          if test_suite_max < (level + 1):
             test_node_list_to_remove.append(test_node)
             continue
           test_suite_list = test_node.getAggregateList()
@@ -141,15 +145,53 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
             if len(test_suite_list_to_add) == 0:
               break
         for test_node in test_node_list_to_remove:
-          test_node_list.remove(test_node)
-      if test_suite_list_to_add and test_node_list:
-        _optimizeConfiguration(test_suite_list_to_add, level=level+1)
+          test_node_list_to_optimize.remove(test_node)
+      if test_suite_list_to_add and test_node_list_to_optimize:
+        _optimizeConfiguration(test_suite_list_to_add, level=level+1,
+                      test_node_list_to_optimize=test_node_list_to_optimize,
+                      test_suite_max=test_suite_max)
 
-    test_suite_list_to_add = self._getSortedNodeTestSuiteList()
+    test_suite_score, test_suite_list_to_add = self._getSortedNodeTestSuiteList()
+    average_quantity = float(len(test_suite_list_to_add)) / (test_node_list_len or 1)
     test_suite_list_to_remove = self._checkCurrentConfiguration(test_node_list,
       test_suite_list_to_add)
     self._cleanupTestNodeList(test_node_list, test_suite_list_to_remove)
     _optimizeConfiguration(test_suite_list_to_add)
+    # once we removed useless test suite and added needed ones,
+    # we check if we can move some test suites to testnodes that are
+    # more idle than others. We try to move first test suites using
+    # more test nodes, this reduce risk of moving a test suite assigned
+    # on a single test node (to avoid waiting building)
+    overloaded_test_node_list = []
+    lazy_test_node_list = []
+    int_average_quantity = int(average_quantity)
+    # Find testnode which can accept more work
+    for test_node in test_node_list:
+      aggregate_len = len(test_node.getAggregateList())
+      if aggregate_len <= (average_quantity - 1):
+        lazy_test_node_list.append(test_node)
+    # check on most overloaded test nodes first if we can move some work to lazy
+    # test nodes
+    for aggregate_quantity in range(TEST_SUITE_MAX, int_average_quantity, -1):
+      if len(lazy_test_node_list) == 0:
+        break
+      overloaded_test_node_list = [x for x in test_node_list if len(x.getAggregateList()) == aggregate_quantity]
+      for test_node in overloaded_test_node_list:
+        test_suite_list = test_node.getAggregateList()
+        test_suite_list.sort(key=lambda x: (-test_suite_score[x][-1],
+                                            portal.unrestrictedTraverse(x).getTitle()))
+        for test_suite in test_suite_list:
+          test_suite_list_to_move = [test_suite]
+          _optimizeConfiguration(test_suite_list_to_move,
+                                 test_node_list_to_optimize=lazy_test_node_list,
+                                 test_suite_max=int_average_quantity)
+          if len(test_suite_list_to_move) == 0:
+            # This means we were able to affect the test suite to another test node
+            test_suite_list.remove(test_suite)
+            test_node.setAggregateList(test_suite_list)
+            break
+        if len(lazy_test_node_list) == 0:
+          break
 
   def _getSortedNodeTestSuiteList(self):
     """
@@ -157,12 +199,16 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     can be installed on at most 2 test nodes, it will be twice
     in the returned list. We give a score for every wished test suites.
     The lower score, the better chance it has to be installed.
+
+    A test_suite_score is also returned allowing to quickly identify
+    which test suite migh be removed on test node with too many test suites
   """
     test_suite_module = self._getTestSuiteModule()
     portal = self.getPortalObject()
     test_suite_list = test_suite_module.searchFolder(validation_state="validated",
                                                specialise_uid=self.getUid())
     all_test_suite_list = []
+    test_suite_score = {}
     for test_suite in test_suite_list:
       test_suite = test_suite.getObject()
       test_suite_url = test_suite.getRelativeUrl()
@@ -173,13 +219,17 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       node_quantity_min = PRIORITY_MAPPING[int_index][0]/3
       node_quantity_max = PRIORITY_MAPPING[int_index][1]/3
       for x in xrange(0, node_quantity_min):
-        all_test_suite_list.append((x/(x+1),test_suite_url, title))
+        score = float(x)/(x+1)
+        all_test_suite_list.append((score, test_suite_url, title))
+        test_suite_score.setdefault(test_suite_url, []).append(score)
       # additional suites, lower score
       for x in xrange(0, node_quantity_max -
                    node_quantity_min ):
+        score = float(1) + x/(x+1)
         all_test_suite_list.append((1 + x/(x+1), test_suite_url, title))
+        test_suite_score.setdefault(test_suite_url, []).append(score)
     all_test_suite_list.sort(key=lambda x: (x[0], x[2]))
-    return [x[1] for x in all_test_suite_list]
+    return test_suite_score, [x[1] for x in all_test_suite_list]
 
   def _getTestNodeModule(self):
     return self.getPortalObject().test_node_module
