@@ -25,9 +25,17 @@
 #
 ##############################################################################
 import difflib
+import os
+import time
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
+# As tests rely on documents exported in test bt5, setting up timezone allows
+# consistency between test environment execution and virtual ERP5 instance
+os.environ['TZ'] = 'GMT'
+time.tzset()
+DateTime._localzone0 = 'GMT'
 
 class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
   """
@@ -45,6 +53,13 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     self.portal = self.getPortalObject()
     self.dsn_module = self.portal.getDefaultModuleValue("DSN Monthly Report")
     self.pinDateTime(DateTime(2015, 12, 01))
+
+  def patchSomeDocumentDate(self):
+    """
+    Depending of the timezone, 
+    """
+    
+    date = self.portal.payroll_enrollment_record_module['28'].getCareerStopDate()
 
   def beforeTearDown(self):
     self.unpinDateTime()
