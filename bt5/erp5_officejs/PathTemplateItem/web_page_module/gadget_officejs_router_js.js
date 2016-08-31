@@ -361,9 +361,15 @@
                         });
                     }
                   })
-                  .push(undefined, function () {
+                  .push(undefined, function (error) {
                     // fix offline mode bypass network errors
-                    return {};
+                    if (error instanceof ProgressEvent &&
+                        error.srcElement instanceof XMLHttpRequest &&
+                        error.type === "error") {
+                      return {};
+                    } else {
+                      throw error;
+                    }
                   })
                   .push(function () {
                     navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
