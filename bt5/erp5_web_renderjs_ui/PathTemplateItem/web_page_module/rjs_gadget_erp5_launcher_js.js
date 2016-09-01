@@ -56,8 +56,13 @@
   }
 
   function updateHeader(gadget) {
+    var header_gadget;
     return gadget.getDeclaredGadget("header")
-      .push(function (header_gadget) {
+      .push(function (result) {
+        header_gadget = result;
+        return header_gadget.notifySubmitted();
+      })
+      .push(function () {
         return header_gadget.render(gadget.props.header_argument_list);
       });
   }

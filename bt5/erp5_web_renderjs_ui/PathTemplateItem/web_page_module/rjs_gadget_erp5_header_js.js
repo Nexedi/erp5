@@ -120,10 +120,17 @@
       }
     })
     .declareMethod('notifySubmitted', function () {
+      var render_needed = false;
       if (!this.stats.submitted) {
+        render_needed = true;
         this.stats.submitted = true;
+      }
+      if (this.stats.modified) {
+        render_needed = true;
         // Change modify here, to allow user to redo some modification and being correctly notified
         this.stats.modified = false;
+      }
+      if (render_needed) {
         return this.render(this.stats.options);
       }
     })
