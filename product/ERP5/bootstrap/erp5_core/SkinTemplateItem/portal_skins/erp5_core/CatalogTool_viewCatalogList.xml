@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -86,8 +86,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_default_sql_catalog_id</string>
                         <string>my_default_erp5_catalog_id</string>
+                        <string>my_default_sql_catalog_id</string>
                       </list>
                     </value>
                 </item>
