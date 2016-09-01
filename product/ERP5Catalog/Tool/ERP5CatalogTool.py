@@ -407,7 +407,8 @@ class ERP5CatalogTool (BaseTool, ZCatalog, CMFCoreCatalogTool):
       """
       Get ERP5 Catalog Ids
       """
-      return self.objectIds(spec=('ERP5 Catalog',))
+      id_list = [l for l in self.objectIds(spec=('ERP5 Catalog',))]
+      return id_list
 
     security.declarePublic('getERP5Catalog')
     def getERP5Catalog(self, id=None, default_value=None):
