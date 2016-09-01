@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Expense Record Module">
+  <item>Expense Record</item>
+ </portal_type>
+ <portal_type id="Expense Validation Item Module">
+  <item>Expense Validation Item</item>
+ </portal_type>
+</allowed_content_type_list>

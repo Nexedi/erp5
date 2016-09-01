@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Expense Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, pricing_interaction_workflow, travel_expense_event_simulation_workflow, travel_expense_jio_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Expense Validation Item</type>
+  <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow, travel_expense_jio_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

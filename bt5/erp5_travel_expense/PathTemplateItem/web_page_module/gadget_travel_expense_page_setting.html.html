@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Travel Expense App Setting</title>
+
+    <script src="rsvp.js"></script>
+    <script src="travel_expense_renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+
+    <script class="view-setting-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+
+          <form class="view-setting-form">
+
+            <div class="ui-field-contain">
+              <label data-i18n="Login">Login</label>
+              <input type="text" name="jid" value="{{jid}}">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Password">Password</label>
+              <input type="password" name="passwd" value="">
+            </div>
+
+            <div class="ui-field-contain">
+              <label data-i18n="Language">Language</label>
+              <div>
+                <input type="radio" id="language_en" name="language" value="en">
+                <label for="language_en" data-i18n="English">English</label>
+              </div>
+            </div>
+
+            <input data-inline="true" type="submit" name="save" value="Save" data-theme="b" data-i18n="[value]Save">
+
+          </form>
+
+          <form class="view-advanced-setting-form">
+            <input data-inline="true" type="button" name="reset_database" value="Reset Database" data-theme="b" data-i18n="[value]Reset Database">
+            <input data-inline="true" type="button" name="update_application" value="Update Application" data-theme="b" data-i18n="[value]Update Application">
+          </form>
+
+        </div>
+        <div class="ui-block-c"></div>
+      </div>
+    </script>
+
+    <script src="gadget_travel_expense_page_setting.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>
