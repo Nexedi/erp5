@@ -343,6 +343,8 @@ class ERP5CatalogTool (BaseTool, ZCatalog, CMFCoreCatalogTool):
     # Use reindexObject method from BaseTool class and declare it public
     reindexObject = BaseTool.reindexObject
     security.declarePublic('reindexObject')
+    # Security Declarations
+    security.declarePublic('getSQLCatalogIdList')
 
     # Explicit Inheritance
     __url = CMFCoreCatalogTool._CatalogTool__url
