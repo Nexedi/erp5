@@ -204,7 +204,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 
   elif meta_type in ("RelationStringField", "MultiRelationStringField"):
     portal_type_list = field.get_value('portal_type')
-    jump_reference_list = None
+    jump_reference_list = []
     if portal_type_list:
       portal_type_list = [x[0] for x in portal_type_list]
 
@@ -218,9 +218,8 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
         ''.join([part.capitalize() for part in base_category.split('_')])
       jump_reference_list = getattr(traversed_document, accessor_name)(
         portal_type=[x[0] for x in field.get_value('portal_type')],
-
         filter=kw
-      )
+      ) or []
     query = url_template_dict["jio_search_template"] % {
       "query": make_query({"query": sql_catalog.buildQuery(
         {"portal_type": portal_type_list}
