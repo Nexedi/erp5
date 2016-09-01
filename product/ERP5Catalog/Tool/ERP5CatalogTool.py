@@ -366,6 +366,24 @@ class ERP5CatalogTool (BaseTool, ZCatalog, CMFCoreCatalogTool):
         ZCatalog.__init__(self, self.getId())
         BaseTool.__init__(self, self.getId())
 
+    def _setDefaultErp5CatalogId(self, value):
+      """
+      Override this setter function so as to keep default_sql_catalog_id
+      and default_erp5_catalog_id same for portal_catalog after everyhting has
+      been migrated to erp5 portal_catalog
+      """
+      self._baseSetDefaultErp5CatalogId(value)
+      self._baseSetDefaultSqlCatalogId(value)
+
+    def _edit(self, **kw):
+      """
+      Override to update both default_sql_catalog_id and default_erp5_catalog_id
+      in same edit
+      """
+      BaseTool._edit(self, **kw)
+      value = self.getDefaultErp5CatalogId()
+      self._setDefaultErp5CatalogId(value)
+
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
         # Filters the list of available meta types for CatalogTool
