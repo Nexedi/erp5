@@ -199,36 +199,59 @@
   <td>a1</td>
 </tr>
 
-<!-- Check airplane link -->
+<!-- Switch back to readonly mode -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='field_my_successor_title']//a[contains(@class, "ui-icon-plane")]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Viewable' and contains(@href, '#!change')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Viewable' and contains(@href, '#!change')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.editable=')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.editable=')]</td>
+  <td></td>
+</tr>
+
+<!-- Check airplane link -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_successor_title']//a[text()='A new foo']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_my_successor_title']//a[text()='A new foo']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Editable"]</td>
+  <td>//a[@data-i18n="Foo: A new foo"]</td>
   <td></td>
 </tr>
-
-
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope="field_my_title"]//p</td>
-  <td>A new foo</td>
-</tr>
-
 <tr>
   <td>click</td>
   <td>//a[@data-i18n="Foo: A new foo"]</td>
   <td></td>
 </tr>
 
-
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_successor_title']//a[contains(@class, "ui-icon-plane")]</td>
+  <td>//div[@data-gadget-scope='field_my_successor_title']//a[text()='A new foo']</td>
   <td></td>
 </tr>
 

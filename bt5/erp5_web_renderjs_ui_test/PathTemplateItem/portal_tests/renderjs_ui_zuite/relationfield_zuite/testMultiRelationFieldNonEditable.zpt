@@ -1,0 +1,312 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>select</td>
+  <td>//select[@name='field_your_portal_type']</td>
+  <td>label=Foo</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Save</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Quantity</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Views']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Relation Fields']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Relation Fields']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>a1</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//input[@name='field_my_foo_category_title']</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-plus")]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>type</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>Another Foo</td>
+</tr>
+
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>input</td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>fireEvent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>blur</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//li[@name="Foo"]
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a[contains(@class, "ui-icon-plus")]</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/save" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//input</td>
+  <td>A New Foo</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//input</td>
+  <td>Another Foo</td>
+</tr>
+
+<!-- Switch back to readonly mode -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Viewable' and contains(@href, '#!change')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Viewable' and contains(@href, '#!change')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.editable=')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.editable=')]</td>
+  <td></td>
+</tr>
+
+<!-- Check airplane link -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//a[text()='A New Foo']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//a[text()='A New Foo']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Foo: A New Foo"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Foo: A New Foo"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//a[text()='Another Foo']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//a[text()='Another Foo']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Foo: Another Foo"]</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

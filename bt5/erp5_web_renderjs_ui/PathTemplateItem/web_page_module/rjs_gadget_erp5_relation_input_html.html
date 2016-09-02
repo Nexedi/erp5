@@ -11,6 +11,11 @@
     <script src="gadget_global.js" type="text/javascript"></script>
     <script src="gadget_erp5_relation_input.js" type="text/javascript"></script>
 
+    <script id="relation-link-template" type="text/x-handlebars-template">
+      <div>
+        <a href={{href}} class="{{class_name}}" >{{value}}</a>
+      </div>
+    </script>
 
     <script id="relation-input-template" type="text/x-handlebars-template">
       <div class="relation-input ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset ui-input-has-clear ui-input-has-icon {{readonly}}">
@@ -20,10 +25,7 @@
         </div>
         <a href={{href}} tabindex="-1" class="{{class_name}}" >Jump to this document</a>
       </div>
-        
-
     </script>
-
 
     <script id="relation-listview-template" type="text/x-handlebars-template">
       {{#if list.length}}

@@ -7,6 +7,12 @@
 
 
   var gadget_klass = rJS(window),
+
+    relation_link_source = gadget_klass.__template_element
+                         .getElementById("relation-link-template")
+                         .innerHTML,
+    relation_link_template = Handlebars.compile(relation_link_source),
+
     relation_input_source = gadget_klass.__template_element
                          .getElementById("relation-input-template")
                          .innerHTML,
@@ -20,7 +26,6 @@
 
     searching = "ui-btn ui-corner-all ui-btn-icon-notext" +
         " ui-input-clear ui-icon-spinner ui-icon-spin",
-    searched = "ui-hidden-accessible",
     jump_on = "ui-btn ui-corner-all ui-btn-icon-notext " +
       "ui-icon-plane ui-shadow-inset ui-btn-inline",
     jump_off = "ui-btn ui-corner-all ui-btn-icon-notext " +
@@ -38,7 +43,9 @@
     /////////////////////////////////////////////////////////////////
     // Init local properties
     .ready(function (my_gadget) {
-      my_gadget.props = {};
+      my_gadget.props = {
+        input_deferred: RSVP.defer()
+      };
       return my_gadget.getElement()
         .push(function (element) {
           my_gadget.props.element = element;
@@ -62,6 +69,7 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options, options2) {
+
       var gadget = this,
         field_json = options.field_json || {},
         target_url,
@@ -73,6 +81,26 @@
         value = "",
         not_selected = true,
         index = options2.index || 0;
+      gadget.props.field_json = field_json;
+
+      if (!field_json.editable) {
+        if (field_json.relation_item_relative_url) {
+          return gadget.getUrlFor({
+            command: 'index',
+            options: {
+              jio_key: field_json.relation_item_relative_url[index]
+            }
+          })
+            .push(function (href) {
+              gadget.props.element.innerHTML = relation_link_template({
+                value: field_json.default[index] || "",
+                href: href
+              });
+            });
+        }
+        return;
+      }
+
       gadget.props.index = index;
       gadget.props.addRelationInput = options2.addRelationInput;
       if (field_json.default.value) {
@@ -93,7 +121,6 @@
       if (relation_item_relative_url) {
         target_url = relation_item_relative_url[index];
       }
-      gadget.props.field_json = field_json;
       gadget.props.query = QueryFactory.create(new URI(field_json.query).query(true).query);
       gadget.props.create_object_type = create_object;
       if (!value && target_url && uid) {
@@ -166,14 +193,19 @@
           gadget.props.new_tag_div = gadget.props.element.querySelector(".new_tag");
           gadget.props.spinner = gadget.props.element.querySelector("a");
           gadget.props.plane = gadget.props.element.querySelector("a");
+          gadget.props.input_deferred.resolve();
         });
       return queue;
     })
+
     .declareMethod('getContent', function (options, options2) {
       var element = this.props.element.querySelector('input'),
         result = {},
         tmp = {},
         field_json = this.props.field_json;
+      if (!field_json.editable) {
+        return {};
+      }
       if (options.format === "erp5") {
         if (this.props.plane.className === jump_add) {
           if (options2 && options2.type === 'MultiRelationField') {
@@ -208,11 +240,11 @@
     .declareService(function () {
       var gadget = this,
         props = gadget.props,
-        input = gadget.props.element.querySelector('input'),
+        input,
         search_query,
         simple_query,
         field_json = props.field_json,
-        ul = gadget.props.element.querySelector(".search_ul");
+        ul;
 
       function generateList(event) {
         var index = field_json.catalog_index,
@@ -315,38 +347,45 @@
         props.plane.className = jump_unknown;
       }
 
-      return RSVP.all([
-        loopEventListener(input, 'input', false, generateList),
-        loopEventListener(input, 'blur', false, function () {
-          return new RSVP.Queue()
-            .push(function () {
-              return RSVP.any([
-                RSVP.delay(200),
-                promiseEventListener(ul, "click", true)
-              ]);
-            })
-            .push(function (event) {
-              var queue = new RSVP.Queue();
-              if (event) {
-                queue
-                  .push(function () {
-                    return setSelectedElement(event);
-                  });
-              }
-              if (ul.innerHTML) {
-                ul.innerHTML = "";
-                props.plane.className = jump_unknown;
-                if (gadget.props.addRelationInput) {
-                  gadget.props.addRelationInput = false;
-                  queue.push(function () {
-                    return gadget.addRelationInput();
-                  });
-                }
-              }
-              return queue;
-            });
-        })]
-        );
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.props.input_deferred.promise;
+        })
+        .push(function () {
+          input = gadget.props.element.querySelector('input');
+          ul = gadget.props.element.querySelector(".search_ul");
+          return RSVP.all([
+            loopEventListener(input, 'input', false, generateList),
+            loopEventListener(input, 'blur', false, function () {
+              return new RSVP.Queue()
+                .push(function () {
+                  return RSVP.any([
+                    RSVP.delay(200),
+                    promiseEventListener(ul, "click", true)
+                  ]);
+                })
+                .push(function (event) {
+                  var queue = new RSVP.Queue();
+                  if (event) {
+                    queue
+                      .push(function () {
+                        return setSelectedElement(event);
+                      });
+                  }
+                  if (ul.innerHTML) {
+                    ul.innerHTML = "";
+                    props.plane.className = jump_unknown;
+                    if (gadget.props.addRelationInput) {
+                      gadget.props.addRelationInput = false;
+                      queue.push(function () {
+                        return gadget.addRelationInput();
+                      });
+                    }
+                  }
+                  return queue;
+                });
+            })]);
+        });
     })
 
     .declareService(function () {
@@ -355,15 +394,21 @@
       function notifyInvalid(evt) {
         return gadget.notifyInvalid(evt.target.validationMessage);
       }
-
-      // Listen to input change
-      return loopEventListener(
-        gadget.props.element.querySelector('input'),
-        'invalid',
-        false,
-        notifyInvalid
-      );
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.props.input_deferred.promise;
+        })
+        .push(function () {
+          // Listen to input change
+          return loopEventListener(
+            gadget.props.element.querySelector('input'),
+            'invalid',
+            false,
+            notifyInvalid
+          );
+        });
     })
+
     .declareService(function () {
       ////////////////////////////////////
       // Check field validity when the value changes
@@ -373,12 +418,18 @@
       function notifyChange() {
         return gadget.notifyChange();
       }
-      return loopEventListener(
-        gadget.props.element.querySelector('input'),
-        'change',
-        false,
-        notifyChange
-      );
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.props.input_deferred.promise;
+        })
+        .push(function () {
+          return loopEventListener(
+            gadget.props.element.querySelector('input'),
+            'change',
+            false,
+            notifyChange
+          );
+        });
     });
 
 }(window, rJS, RSVP, URI, loopEventListener, promiseEventListener,
