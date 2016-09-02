@@ -813,6 +813,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                          hot_reindexing=hot_reindexing,
                          erp5_catalog_storage=erp5_catalog_storage)
       PortalTestCase.setUp(self)
+      if os.environ.get('erp5_debug_mode'):
+        try:
+          self.portal.portal_activities.manage_enableActivityTracking()
+        except AttributeError:
+          pass
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
