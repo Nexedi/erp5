@@ -38,7 +38,7 @@
     .declareMethod('render', function (url, options) {
       var gadget = this,
         declared_gadget;
-      if (url && gadget.props.options !== options) {
+      if (url && JSON.stringify(gadget.props.options) !== JSON.stringify(options)) {
         gadget.props.options = options;
         return new RSVP.Queue()
           .push(function () {
