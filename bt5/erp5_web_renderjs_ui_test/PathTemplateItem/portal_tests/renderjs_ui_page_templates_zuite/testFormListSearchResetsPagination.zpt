@@ -100,6 +100,42 @@
   <td></td>
 </tr>
 
+<!-- Pagination keeps search query -->
+<tr>
+  <td>type</td>
+  <td>search</td>
+  <td>%</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Records 1 - 3']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='search' and @value='%']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Records 4 - 6']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@name='search' and @value='%']</td>
+  <td></td>
+</tr>
 
 </tbody></table>
 </body>
