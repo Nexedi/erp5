@@ -626,8 +626,8 @@ var global = self,
                 save_in_dev_storage(url, response.clone());
               }
               //console.log('returned: ' + url);
-              return response;
             }
+            return response;
           })
           .then(undefined, function (error) {
             console.log(error);
