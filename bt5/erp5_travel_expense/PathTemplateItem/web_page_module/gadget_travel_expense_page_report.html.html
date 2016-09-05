@@ -13,7 +13,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/0.9.8/chartist.min.css">
     <script src="https://cdn.jsdelivr.net/chartist.js/0.9.8/chartist.min.js"></script>
-
+    <script src="travel_expense_excellentexport.min.js"></script>
 
 
     <script class="view-report-template" type="text/x-handlebars-template">
@@ -25,7 +25,8 @@
 
             <div class="ct-chart ct-perfect-fourth"></div>
 
-            <input data-inline="true" type="submit" name="save" value="Save" data-theme="b" data-i18n="[value]Save">
+            <a name="download" data-role="button" data-i18n="Download">Download</a>
+            <a download="travel_expense.xls" name="hidden_download" style="visibility: hidden"></a>
 
           </form>
 

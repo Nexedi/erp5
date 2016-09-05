@@ -122,7 +122,8 @@ gadget_jio.js\n
 travel_expense_app.css\n
 travel_expense_js_cookie.js\n
 travel_expense_utility.js\n
-megapix-image.js\n
+travel_expense_megapix_image.js\n
+travel_expense_excellentexport.min.js\n
 handlebars.js\n
 i18next.js\n
 jiodev.js\n
@@ -293,7 +294,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.41954.28591.13226</string> </value>
+                <value> <string>953.46532.22360.47496</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +312,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473065774.89</float>
+                        <float>1473070350.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

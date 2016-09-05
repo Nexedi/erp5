@@ -124,7 +124,7 @@
 
 
     /////////////////////////////////////////
-    // Form submit
+    // Export data as excel
     /////////////////////////////////////////
     .declareService(function () {
       var gadget = this;
@@ -134,18 +134,50 @@
           return gadget.props.deferred.promise;
         })
         .push(function () {
-
-          return promiseEventListener(
-            gadget.props.element.querySelector('form.view-report-form'),
-            'submit',
-            false
+          return loopEventListener(
+            gadget.props.element.querySelector('a[name=download]'),
+            'click',
+            false,
+            function (click_event){
+              var currency_dict = {};
+              return gadget.allDocs({
+                query: 'portal_type: "Currency" AND validation_state: "validated"',
+                select_list: ["title", "relative_url"],
+                limit: [0, 1234567890]
+              })
+              .push(function(result){
+                for (var i = 0; i < result.data.total_rows; i += 1) {
+                  currency_dict[result.data.rows[i].value.relative_url] = result.data.rows[i].value.title;
+                }
+                return new RSVP.Queue();
+              })
+              .push(function(){
+                return gadget.allDocs({
+                query: 'visible_in_html5_app_flag:1 AND portal_type:("Expense Record" OR "Expense Record Temp")',
+                select_list: ["date", "resource", "quantity", "comment"],
+                limit: [0, 1234567890]
+                })
+              })
+              .push(function(result){
+                var data_list = [];
+                for (var i=0; i<result.data.total_rows; i++) {
+                  var currency = currency_dict[result.data.rows[i].value.resource];
+                  var date = result.data.rows[i].value.date;
+                  var quantity = parseFloat(result.data.rows[i].value.quantity);
+                  var comment = result.data.rows[i].value.comment;
+                  data_list.push({currency:currency, date:date, quantity:quantity, comment:comment})
+                }
+                data_list.sort(function(a, b){if(a.date>b.date){return 1;}else if(a.date<b.date){return -1;}else{return 0;}})
+                var table = $("<table><tr><td>date</td><td>comment</td><td>currency</td><td>quantity</td></tr></table>");
+                for(var data of data_list){
+                  table.append('<tr><td>'+data.date+'</td><td>'+comment+'</td><td>'+data.currency+'</td><td>'+data.quantity+'</td></tr>');
+                }
+                ExcellentExport.excel(gadget.props.element.querySelector('a[name="hidden_download"]'), table[0], 'Travel Expense');
+                gadget.props.element.querySelector('a[name="hidden_download"]').click();
+              })
+            }
           );
         })
-        .push(function (submit_event) {
-          gadget.props.element.querySelector("input[type=submit]").disabled = true;
-        })
-        .push(function () {
-        });
     })
 
 
