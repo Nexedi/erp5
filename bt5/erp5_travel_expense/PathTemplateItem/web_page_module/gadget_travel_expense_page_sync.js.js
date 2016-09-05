@@ -58,7 +58,7 @@
         })
         .push(function () {
           alert(translateString('Synchronisation Finished'));
-          return;
+          return gadget.redirect({jio_key:"expense_record_module", page:"view"});
         });
     });
 
