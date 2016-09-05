@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,8 +76,14 @@
             </value>
         </item>
         <item>
+            <key> <string>contributors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_travel_expense_record_application.appcache</string> </value>
+            <value> <string>gadget_travel_expense_page_report.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_travel_expense_record_application.appcache</string> </value>
+            <value> <string>gadget_travel_expense_page_report.js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -104,65 +110,8 @@
             </value>
         </item>
         <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Thu, 15 Oct 2015 17:15:51 +0800\n
-# XXX + fonts ....\n
-# images/ajax-loader.gif\n
-CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://cdn.jsdelivr.net/chartist.js/0.9.8/chartist.min.css\n
-https://cdn.jsdelivr.net/chartist.js/0.9.8/chartist.min.js\n
-gadget_erp5.css\n
-gadget_global.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-travel_expense_app.css\n
-travel_expense_js_cookie.js\n
-travel_expense_utility.js\n
-megapix-image.js\n
-handlebars.js\n
-i18next.js\n
-jiodev.js\n
-travel_expense_jiodev_renderjs_storage.js\n
-jquery.js\n
-jquerymobile.css\n
-jquerymobile.js\n
-travel_expense_renderjs.js\n
-rsvp.js\n
-gadget_travel_expense_jio.html\n
-gadget_travel_expense_jio.js\n
-gadget_travel_expense_jio_expense_record_module_add_expense_record.html\n
-gadget_travel_expense_jio_expense_record_module_add_expense_record.js\n
-gadget_travel_expense_jio_expense_record_module_view.html\n
-gadget_travel_expense_jio_expense_record_module_view.js\n
-gadget_travel_expense_jio_expense_record_view.html\n
-gadget_travel_expense_jio_expense_record_view.js\n
-gadget_travel_expense_page_login.html\n
-gadget_travel_expense_page_login.js\n
-gadget_travel_expense_page_setting.html\n
-gadget_travel_expense_page_setting.js\n
-gadget_travel_expense_page_sync.html\n
-gadget_travel_expense_page_sync.js\n
-gadget_travel_expense_page_report.html\n
-gadget_travel_expense_page_report.js\n
-gadget_travel_expense_record_application.html\n
-gadget_travel_expense_record_application.js\n
-gadget_travel_expense_standalone_jio.html\n
-gadget_travel_expense_standalone_jio.js\n
-gadget_travel_expense_translation.html\n
-gadget_travel_expense_translation.js\n
-gadget_travel_expense_translation_data.js\n
-gadget_travel_expense_widget_listbox.html\n
-gadget_travel_expense_widget_listbox.js\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Travel Expense Record Application AppCache</string> </value>
+            <value> <string>Travel Expense Record Report Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -248,7 +197,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472527126.62</float>
+                        <float>1472793726.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -293,7 +242,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.41954.28591.13226</string> </value>
+                <value> <string>953.46462.30849.58624</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +260,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473065774.89</float>
+                        <float>1473064520.76</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -368,7 +317,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1472527025.1</float>
+                        <float>1472791823.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

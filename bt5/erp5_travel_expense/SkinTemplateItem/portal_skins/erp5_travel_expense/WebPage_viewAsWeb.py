@@ -30,7 +30,7 @@ else:
   response.setHeader("X-Content-Type-Options", "nosniff")
 
   # Only fetch code (html, js, css, image) and data from this ERP5, to prevent any data leak as the web site do not control the gadget's code
-  response.setHeader("Content-Security-Policy", "default-src 'none'; img-src 'self' blob: data:; media-src 'self'; connect-src * 'self' mail.tiolive.com; script-src 'self' 'unsafe-eval'; font-src netdna.bootstrapcdn.com; style-src 'self' netdna.bootstrapcdn.com 'unsafe-inline' data:; frame-src 'self' data:")
+  response.setHeader("Content-Security-Policy", "default-src 'none'; img-src 'self' blob: data:; media-src 'self'; connect-src * 'self' mail.tiolive.com; script-src 'self' 'unsafe-eval' cdn.jsdelivr.net cdnjs.cloudflare.com; font-src netdna.bootstrapcdn.com; style-src 'self' cdn.jsdelivr.net netdna.bootstrapcdn.com cdnjs.cloudflare.com 'unsafe-inline' data:; frame-src 'self' data:")
 
   response.setHeader('Content-Type', 'text/html')
 

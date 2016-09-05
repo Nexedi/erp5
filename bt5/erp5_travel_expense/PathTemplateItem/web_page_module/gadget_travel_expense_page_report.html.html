@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Travel Expense App Report</title>
+
+    <script src="rsvp.js"></script>
+    <script src="travel_expense_renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="handlebars.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/0.9.8/chartist.min.css">
+    <script src="https://cdn.jsdelivr.net/chartist.js/0.9.8/chartist.min.js"></script>
+
+
+
+    <script class="view-report-template" type="text/x-handlebars-template">
+      <div class="ui-grid-b ui-responsive">
+        <div class="ui-block-a"></div>
+        <div class="ui-block-b">
+
+          <form class="view-report-form">
+
+            <div class="ct-chart ct-perfect-fourth"></div>
+
+            <input data-inline="true" type="submit" name="save" value="Save" data-theme="b" data-i18n="[value]Save">
+
+          </form>
+
+        </div>
+        <div class="ui-block-c"></div>
+      </div>
+    </script>
+
+    <script src="gadget_travel_expense_page_report.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>
