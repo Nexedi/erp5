@@ -1,0 +1,80 @@
+/* ========================================================================== */
+/* CSS ci_presentation - wkhtmltopdf specific                                 */
+/* ========================================================================== */
+/* NOTES ON OPTIONS */
+/* 
+  margin-bottom 8 show half, margin-bottom: 12 show full, but not displayed
+  reason stuff above is too large
+*/
+/* details */
+.ci-presentation.ci-handout > section:first-child h1 {
+  position: relative;
+  top: 60mm;
+}
+.ci-presentation.ci-handout section:not(:first-child) {
+  -webkit-transform:scale(0.4);
+  -moz-transform:scale(0.4);
+  -ms-transform:scale(0.4);
+  transform:scale(0.4);
+
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
+/* nothing works in wkhtmltopdf */
+.ci-presentation.ci-handout section:not(:first-child) {
+  /*-webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: url(grayscale.svg);
+  filter: gray;
+  */
+  /* mask: url("https://nexedi.erp5.net/portal_skins/erp5_ci_slideshow/css/grayscale.svg#greyscale"); */
+  border: 1px solid #a1a1a1;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ci-presentation.ci-handout > section {
+  position: relative;
+  top: -40mm;
+}
+.ci-presentation.ci-handout > section section {
+  -webkit-transform:none;
+  -moz-transform:none;
+  -ms-transform:none;
+  transform:none;
+  width: inherit;
+}
+.ci-presentation.ci-handout section {
+  height: initial;
+}
+
+.ci-presentation.ci-handout section img {
+  position: relative;
+  top: -20mm;
+  max-width: 80%;
+}
+.ci-presentation.ci-handout section pre {
+  max-width: 90%;
+  margin: 0 auto;
+  background:#F0F0F0;
+}
+.ci-presentation.ci-handout details {
+  display: block;
+  -webkit-transform:scale(1.5);
+  -moz-transform:scale(1.5);
+  -ms-transform:scale(1.5);
+  transform:scale(1.5);
+}
+details {
+  color: white;
+  display: block !important;
+}
+summary::-webkit-details-marker {
+    display: none;
+}

@@ -1,12 +1,36 @@
 """
 ================================================================================
-Presentation Layout ?portal_skin=CI_presentation
+Presentation Layout ?portal_skin=CI_slideshow
 ================================================================================
 """
 import re
 
+def getSlideList(content):
+  return re.findall(r'<section[^>]*?>(.*?)</section>', content, re.S)
+
 def getDetails(content):
   return content.find("</details>") > -1
+
+def getNestedSection(content):
+  return content.find("<section") > -1
+
+def removeSlidesWithoutDetailsFromNotes(content):
+  slide_list = getSlideList(content)
+  
+  # empty slide if no <detail>
+  for slide in slide_list:
+    if getNestedSection(slide) is False:
+      content = content.replace(slide, '')
+  
+  # remove empty slides
+  content = content.replace('<section></section>','')
+  content = re.sub(r'<section class="[^"]*"></section>', '', content)
+  
+  # remove empty slides with class
+  return content
+
+def removeEmptyDetails(content):
+  return content.replace('<details open="open"></details>', '')
 
 def getThemeFromFirstFollowUpProduct():
   follow_up_list = context.getFollowUpValueList(
@@ -24,7 +48,7 @@ document = context
 # wkhtmltopdf
 document_output_type = document.REQUEST.form.get("output", default=None)
 
-document_content = document.getTextContent()
+document_content = removeEmptyDetails(document.getTextContent())
 document_theme = getThemeFromFirstFollowUpProduct()
 document_title = document.getTitle()
 document_description = document.getDescription()
@@ -42,7 +66,7 @@ document_contributor_list = ""
 # <section> tags. this is done here
 has_details = getDetails(document_content)
 if has_details is True:
-  slide_list = re.findall(r'<section[^>]*?>(.*?)</section>', document_content, re.S)
+  slide_list = getSlideList(document_content)
 
   for slide in slide_list:
     if getDetails(slide) is True:
@@ -185,6 +209,47 @@ if document_output_type == "content":
     document_title,
     document_content
   )
+
+# handouts
+if document_output_type == "details":
+  return """
+  <!Doctype html>
+  <html class="ci-%s">
+    <head>
+  		<meta charset="utf-8">
+      <title>%s</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+      <!-- fonts -->
+      <link rel="stylesheet" href="roboto/roboto.css" />
+      <link rel="stylesheet" href="roboto/roboto-condensed.css" />
+
+      <link rel="stylesheet" href="css/theme/white_custom.css?portal_skin=CI_slideshow" id="theme" />
+      <link rel="stylesheet" href="css/custom.css?portal_skin=CI_slideshow" />
+      <link rel="stylesheet" href="lib/css/zenburn.css?portal_skin=CI_slideshow" />
+      <link rel="stylesheet" href="css/custom_pdf.css?portal_skin=CI_slideshow" />
+      <link rel="stylesheet" href="css/custom_wkhtmltopdf.css?portal_skin=CI_slideshow" />
+
+  	</head>
+
+  	<body class="ci-presentation ci-handout">
+  		<!-- <div class="reveal">
+  			<div class="slides"> -->
+  			<section>
+          <h1>Notes</h1>
+        </section>
+  			  %s
+  			<!-- </div>
+  		</div> -->
+  	</body>
+  </html>
+  """ % (
+    document_theme,
+    document_title,
+    #document_content
+    removeSlidesWithoutDetailsFromNotes(document_content)
+  )
+
 
 # DEFAULT WebPage_viewAsWeb
 
