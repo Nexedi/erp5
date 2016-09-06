@@ -708,21 +708,28 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
         This method will look at the causality and check if the
         causality has already a causality
       """
-      causality_value_list = self.getCausalityValueList()
-      if causality_value_list:
-        initial_list = []
-        for causality in causality_value_list:
-          # The causality may be something which has not this method
-          # (e.g. item)
-          try:
-            getRootCausalityValueList = causality.getRootCausalityValueList
-          except AttributeError:
-            continue
-          assert causality != self
-          initial_list += [x for x in getRootCausalityValueList()
+      seen_set = set()
+      def recursive(self):
+        if self in seen_set:
+          return []
+
+        seen_set.add(self)
+        causality_value_list = self.getCausalityValueList()
+        if causality_value_list:
+          initial_list = []
+          for causality in causality_value_list:
+            # The causality may be something which has not this method
+            # (e.g. item)
+            if getattr(causality, 'getRootCausalityValueList', None) is None:
+                continue
+
+            assert causality != self
+            initial_list += [x for x in recursive(causality)
                              if x not in initial_list]
-        return initial_list
-      return [self]
+          return initial_list
+        return [self]
+
+      return recursive(self)
 
     # XXX Temp hack, should be removed has soon as the structure of
     # the order/delivery builder will be reviewed. It might
