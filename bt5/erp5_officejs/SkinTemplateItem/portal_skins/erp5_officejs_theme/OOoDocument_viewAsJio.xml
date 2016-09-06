@@ -18,7 +18,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_view_editable\n
+ooffice_view</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -73,16 +74,17 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_data</string>
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_revision</string>
                         <string>my_language</string>
                         <string>my_version</string>
                         <string>my_portal_type</string>
-                        <string>my_modification_date</string>
+                        <string>your_modification_date</string>
                         <string>my_content_type</string>
                         <string>my_filename</string>
+                        <string>my_data</string>
+                        <string>your_data</string>
                       </list>
                     </value>
                 </item>
@@ -97,7 +99,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_viewAsJio</string> </value>
+            <value> <string>OOoDocument_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -109,7 +111,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_view_editable</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
