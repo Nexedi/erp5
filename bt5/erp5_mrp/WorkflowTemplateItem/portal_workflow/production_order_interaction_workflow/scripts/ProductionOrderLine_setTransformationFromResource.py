@@ -11,6 +11,6 @@ if transformation is None:
       portal_type=portal.getPortalTransformationTypeList(),
       validation_state="!=invalidated",
       default_resource_uid=resource_uid)
-    if len(transformation_list) >= 1:
+    if len(transformation_list) == 1:
       transformation = transformation_list[0].getRelativeUrl()
       production_order_line.setSpecialise(transformation)
