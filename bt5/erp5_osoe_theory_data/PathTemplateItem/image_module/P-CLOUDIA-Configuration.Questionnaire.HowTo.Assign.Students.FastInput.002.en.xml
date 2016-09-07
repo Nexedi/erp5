@@ -85,10 +85,11 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/20150701-47AE54D</string>
                 <string>publication_section/documentation/user</string>
                 <string>classification/collaborative/team</string>
                 <string>group/nexedi</string>
+                <string>contributor/person_module/20150701-47AE54D</string>
+                <string>contributor/person_module/2326</string>
               </tuple>
             </value>
         </item>
@@ -281,7 +282,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>superklaus</string> </value>
+                <value> <string>klaus.woelfel</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -295,7 +296,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32902.63370.29138</string> </value>
+                <value> <string>952.46130.55665.14971</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -313,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468333204.07</float>
+                        <float>1469112235.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

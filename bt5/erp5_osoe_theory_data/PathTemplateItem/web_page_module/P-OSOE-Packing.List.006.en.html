@@ -5,6 +5,20 @@
         <footer>
           by <a href="http://www.osoe-project.org/contact">OSOE Project</a>
         </footer>
+        <details open="open">
+      <p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) 
+                project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and 
+                the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
+                to undergraduate students or professionals.
+      </p>
+      <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute 
+the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, 
+consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any 
+reuse or distribution, you must make clear to others the license terms of this work. Any of these
+conditions can be waived if you get permission from the copyright holder through a commercial license 
+or an educational license. For more information, contact info@nexedi.com
+</p>
+    </details>
       </section><section class="">
         <h1>Agenda</h1>
         <ul>
@@ -73,7 +87,10 @@
           </p><p>Employees in charge of preparing the goods are then able to prepare the goods, and to enter which containers have been used, etc.</p><p>They can also decide not to send exactly what has been ordered. For example, they don't have all products which have been ordered.</p><p>
             Once the Packing List has been prepared, they can mark the packing list as "Ready" to be shipped. We will then wait for the carrier to pick up the prepared packing list. <strong>Once they pick it up, we will mark the packing list as "Shipped". This will create the related invoice</strong>
             .
-          </p><p>When the carrier tell us the the customer has received the goods, we can then mark the packing list as "Received".</p><p>When the customer receive the goods, he will check what has been delivered to him. So he or she will compare the packing list we provided to him with what he received. And an error is still possible. Either that we made a mistake while preparing, or maybe some packages have been damaged etc. So we need to wait until the customer accepts the delivery before marking the packing list as "Delivered".</p><p>
+          </p><p>When the carrier tell us the the customer has received the goods, we can then mark the packing list as "Received".</p><p>When the customer receive the goods, he will check what has been delivered to him. So he or she will compare the packing list we provided to him with what he received. And an error is still possible. Either that we made a mistake while preparing, or maybe some packages have been damaged etc. So we need to wait until the customer accepts the delivery before marking the packing list as "Delivered".</p>
+        </details>
+        <details open="open">
+          <p>
             <strong>Note that if the goods ready to be shipped are different from what has been ordered, eg, the quantity is less, you can "Split and Defer" the Packing List before shipping them. In this way, ERP5 will create another Packing List for the remaining goods to be shipped as soon as they are prepared.</strong>
           </p><p>Once you ship the Sale Packing List, a related Sale Invoice Transaction will be generated automatically for the next step of the trade process. We will talk about this in the following tutorials.</p>
         </details>

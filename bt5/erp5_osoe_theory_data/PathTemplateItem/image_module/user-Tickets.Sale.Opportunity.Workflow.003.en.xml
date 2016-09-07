@@ -94,7 +94,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>32afe1f69ab590a99b434c334cb56e5b</string> </value>
+            <value> <string>9e5564507078d39a1cb9abcea66adff9</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -293,11 +293,13 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supertristan</string> </value>
+                <value> <string>klaus.woelfel</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touched for reconversion</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -323,7 +325,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468329684.73</float>
+                        <float>1469717523.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

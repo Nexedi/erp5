@@ -1,6 +1,21 @@
 <section class="illustration"> 
     <h1>Session 3: Sale Orders</h1> <img alt="Sale Orders Workflow" title="Sale Orders Workflow" type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Order.Sale.Order.Workflow?format=png" /> <footer>
-          by <a href="/contact">OSOE Project</a> </footer> </section><section> 
+          by <a href="/contact">OSOE Project</a> </footer> 
+    <details open="open">
+      <p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) 
+                project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and 
+                the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
+                to undergraduate students or professionals.
+      </p>
+      <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute 
+the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, 
+consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any 
+reuse or distribution, you must make clear to others the license terms of this work. Any of these
+conditions can be waived if you get permission from the copyright holder through a commercial license 
+or an educational license. For more information, contact info@nexedi.com
+</p>
+    </details>
+          </section><section> 
     <h1>Agenda</h1> 
     <ul> 
       <li>The trade process</li> 
@@ -8,8 +23,8 @@
       <li>What is a product</li> 
       <li>What are the conditions of a trade order?</li> 
       <li>The workflow of a sale order</li> 
-    </ul> <details open="true"> 
-      <p>This guide has been created to teach the fundamentals of a sale/purchase order.</p> 
+    </ul> <details open="true">
+      <p>This guide has been created to teach the fundamentals of a sale/purchase order.</p>
       <p> <strong>
               Note: in this session &quot;Sale Orders&quot;, we will use another company Hongzhao as an example to explain how to create products, trade conditions and sale orders in ERP5. Hongzhao is also configured when we installed another ERP5 instance, the same way as presented in the tutorial <a href="user-Howto.Configure.ERP5.for.SMB.With.Configurator/view">&quot;Configure your instance using ERP5 Configurator&quot;</a>. So when you are practicing, please replace Hongzhao with the company you created when you configured your ERP5 instance.
             </strong> </p> </details> </section><section class="illustration"> 
@@ -29,7 +44,7 @@
       <p>An order represents a movement of resource (goods, services) from a company to another. So in every order we will have a source (the supplier) and a destination (the buyer). But the destination can be more than one person or even organisation.</p> 
       <p>About the destination, We must distinguish three things:</p> 
       <p>The person or organisation which receives the goods, the person or organisation which is invoiced, and the person which is taking the decision to buy. This is why on an order we must have three fields to let us represent correctly the reality.</p> 
-      <p>To illustrate those, we can take a look at how is organised the supermarket in France. The companies have buying centres in which they negotiate the prices for all of their brands. It allows them to have more power in the negotiation. But once they have bought one hundred thousand yoghurt, they ask for them to be delivered in small quantities in each of their distribution centre. So we already have a different destination point from the person which takes the decision to buy. Then we might have to invoice the buying centre, and not the distribution centre</p> 
+      <p>To illustrate those, we can take a look at how the supermarket is organised in France. The companies have buying centres in which they negotiate the prices for all of their brands. It allows them to have more power in the negotiation. But once they have bought one hundred thousand yoghurt, they ask for them to be delivered in small quantities in each of their distribution centre. So we already have a different destination point from the person which takes the decision to buy. Then we might have to invoice the buying centre, and not the distribution centre</p> 
       <p>We have also those kinds of distinction with the source of the movement.</p> </details> </section><section class="illustration"> 
     <h1>A seller</h1> <img alt="A seller" title="A seller" type="image/png" src="http://img.erp5.cn/P-OSOE-Seller.Goods.and.Services?format=png" /> <details open="true"> 
       <p>With the source of the movement, we will have a person who is responsible for the offer which has been made. This person is responsible for the client, or at least for the conditions of the transaction. But it doesn't mean that this person is in the same organisation which will deliver the goods or this person is not the one which will deliver the service.</p> 

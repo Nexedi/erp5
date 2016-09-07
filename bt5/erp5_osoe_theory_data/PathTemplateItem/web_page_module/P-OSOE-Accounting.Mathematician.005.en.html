@@ -1,6 +1,20 @@
 <section> 
     <h1>Accounting for Mathematicians</h1> 
-    <footer>by <a href="http://www.osoe-project.org/contact">OSOE Project </a></footer> 
+    <footer>by <a href="http://www.osoe-project.org/contact">OSOE Project </a></footer>
+    <details open="open">
+      <p>This visual guide is part of a collection of documents created by the One Student One ERP (OSOE) 
+                project in collaboration with Institut Mines Telecom, Telecom Bretagne, Dresden University of Technology and 
+                the South Westfalia University of Applied Sciences. It can be used to teach modern ERP theory and practice
+                to undergraduate students or professionals.
+      </p>
+      <p><b>Copyright</b>: You are free to copy, distribute, display, and perform the work under the following conditions: you must attribute 
+the work in the manner specified by the author or licensor; you may not use this work for any commercial purposes including training, 
+consulting, advertising, self-advertising, publishing, etc.; you may not alter, transform, or build upon this work. For any 
+reuse or distribution, you must make clear to others the license terms of this work. Any of these
+conditions can be waived if you get permission from the copyright holder through a commercial license 
+or an educational license. For more information, contact info@nexedi.com
+</p>
+    </details>
 </section> <section> 
     <h1>Agenda</h1> 
     <ul> 
@@ -12,16 +26,24 @@
       <li>Reports</li> 
       <li>Profits</li> 
     </ul> 
+    <details open="open">
+      <p>The goal of this lesson is to teach accounting in a way which will be valid in the next 100 years or more. For that purpose, we introduce in the lesson 
+      the concepts of accounting using a set theory formalism.</p> 
+      <p>We believe that too much fashion, too many fuzzy words are used in the current approaches of accounting education. Students learn about the so-called 
+      general accounting, which is not general at all and which is usually presented in a way which is specific to each legislation. Students learn about 
+      the so-called cost accounting, which has no relation to costs. Students learn about analytical accounting, with a singular, instead of learning about 
+      accounting analytics, with a plural. Students learn about activity based accounting, which is just one example of accounting analytics.</p> 
+      <p>We hope, through this lesson, to exhibit the concept of universal accounting in such a way that students can learn a model which is useful to 
+      understand and explain all the types of accounting which exist or will be created in the near or distant future, based on the ever evolving fashion 
+      in corporate management.</p>
+    </details>
     </section> <section> 
     <h1>The Account Space: A</h1> <img type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Accounting.Mathematician-Account.SpaceA?format=" /> <details open="true"> 
-      <p>The goal of this lesson is to teach accounting in a way which will be valid in the next 100 years or more. For that purpose, we introduce in the lesson the concepts of accounting using a set theory formalism.</p> 
-      <p>We believe that too much fashion, too many fuzzy words are used in the current approaches of accounting education. Students learn about the so-called general accounting, which is not general at all and which is usually presented in a way which is specific to each legislation. Students learn about the so-called cost accounting, which has no relation to costs. Students learn about analytical accounting, with a singular, instead of learning about accounting analytics, with a plural. Students learn about activity based accounting, which is just one example of accounting analytics.</p> 
-      <p>We hope, through this lesson, to exhibit the concept of universal accounting in such a way that students can learn a model which is useful to understand and explain all the types of accounting which exist or will be created in the near or distant future, based on the ever evolving fashion in corporate management.</p> 
       <p>The first concept in accounting is the <strong>Account</strong>. An account is a point in an arbitrary N-dimensional discrete space. Some people like to give names to those dimensions, names which will likely become irrelevant in a century. Dimension 1 is called “General Account”. It represents the economic nature of the account: income, expense, inventory, etc. Dimension 2, the “Party”, represents a supplier, a client, a business unit or any 3rd party. Dimension 3, the “Project”, represents a project in a company which does project management. Dimension 4, the “Activity”, represents activities such as gardening. More dimensions could be used to provide more powerful accounting analytics.</p> </details> </section> <section> 
     <h1>Legislation: L</h1> <img type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Accounting.Mathematician-Legislation.l?format=" /> <details open="true"> 
       <p>Governments, especially in countries of Civil Law, like to define an official space of accounts, called <strong>L</strong>. This space of account contains usually a few thousand standard account names which are required to be used to produce legislation dependent tax reports and exchange data.</p> 
       <p>This space of account can evolve. Many accountants believe that Dimension 1 of the space of accounts is the space of accounts provided by the government. This creates a lot of troubles each time the legislation changes or whenever a company has subsidiaries in different countries. </p> 
-      <p>To solve all these problems, we define here a Legislation L as a mapping between the space of Accounts A and a single dimension discrete space which represents one possible legislation. Thanks to this approach, called indirection, our space of accounts no longer depends on political fashion, a long as A is a superset of L.</p> 
+      <p>To solve all these problems, we define here a Legislation L as a mapping between the space of Accounts A and a single dimension discrete space which represents one possible legislation. Thanks to this approach, called indirection, our space of accounts no longer depends on political fashion, as long as A is a superset of L.</p> 
       <p>In countries, especially in countries of Common Law, governments prefer to define accounting principles through quite ambiguous rules. Those rules are then interpreted by chartered accountants who use their legal expertise to create their own space of account. It is like the Legislation L is provided here by chartered accountants instead of being provided by the government.</p> </details> </section> <section> 
     <h1>The Currency Space: C</h1> <img type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Accounting.Mathematician-Currency.Space.C.formula?format=" /> <details open="true"> 
       <p>Accounting lives in a world of currencies. We introduce a space of currencies: <strong>C</strong>. C is a single dimension discrete space. <strong>A</strong> currency exchange function E is also introduced, whether currencies can be really exchanged or not. The currency exchange space is required because most tax reports must be produced using a single currency, the currency of the country, although most companies use multiple currencies.</p> 
@@ -40,12 +62,12 @@
       <p>Assets, a positive value, are displayed as a debit. Debts, a negative value, are displayed as credit.</p> 
       <p>Moreover, they consider that sales income are future profits, that profits are debts to the owner of the company, and that income should thus be considered as a negative value, just like debts. Just the same way, expenses are future losses, which will reduce the capital of the company, i.e. reduce a debt to the owner of the company, and should thus be considered positive values. It is a bit weird at first but consistent.</p> 
       <p>Income, a negative value, is displayed as credit. Expense, a positive value, is displayed as debit.</p> 
-      <p>Now, where does this debit and credit invariant comes from? The sad truth is that this debit and credit invariant has no well defined rationale. Many companies in the world do accounting without following this invariant, even if accounts in countries of Civil Law hate to hear that.</p> 
+      <p>Now, where does this debit and credit invariant comes from? The sad truth is that this debit and credit invariant has no well defined rationale. Many companies in the world do accounting without following this invariant, even if accountants in countries of Civil Law hate to hear that.</p> 
       <p>The only rationale of the debit and credit invariant is to help making sure that every transaction can be partitioned in 2 subsets of opposite total, consistently with the partitioning of accounts introduced later. However, it is not the only way to reach that goal.</p> </details> </section> <section> 
     <h1>Supplier &amp; Client Invariant</h1> <img type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Accounting.Mathematician-Supplier.Client.Invariant.formula?format=" /> <details open="true"> 
       <p>The supplier and client invariant is a real and universal invariant which most accountants are not aware of. It relates to the principles of chemistry “nothing is created, nothing disappears, everything is transformed”.</p> 
       <p>What this invariant says is that whenever a supplier has an income, its client has an expense of equivalent amount, consistently with the exchange rate of the transaction currency.</p> 
-      <p>This invariant applies to many situations, even in situations where the same company acts as supplier and as client. For example, amortization of an asset, could be represented with a single transaction line with same company in Dimension 2 of the space of accounts on both sides. The company at the source acts as a supplier and provides a share of machine which reduces the Immobilisation amount (an asset). The company at the destination acts as a client which consumes a share of machine, just like it would rent the machine, which is represented as an Expense. No other line is required since no cash is transferred and nothing would anyway appear at consolidation time. (XXX-JPS NOT SURE - CHECK IF CONSISTENT WITH CONSOLIDATION). Another common example is the case of currency transfer, which is represented much more efficiently with a single transaction with same company at both ends. Last but not least, some companies prefer to enter only a single for every sales they make and then, at the end of the month, gather all sales transactions into a single receivable.</p> 
+      <p>This invariant applies to many situations, even in situations where the same company acts as supplier and as client. For example, amortization of an asset, could be represented with a single transaction line with same company in Dimension 2 of the space of accounts on both sides. The company at the source acts as a supplier and provides a share of machine which reduces the Immobilisation amount (an asset). The company at the destination acts as a client which consumes a share of machine, just like it would rent the machine, which is represented as an Expense. No other line is required since no cash is transferred and nothing would anyway appear at consolidation time. Another common example is the case of currency transfer, which is represented much more efficiently with a single transaction with same company at both ends. Last but not least, some companies prefer to enter only a single for every sales they make and then, at the end of the month, gather all sales transactions into a single receivable.</p> 
       <p>In short: the invariance of Debit &amp; Credit is a myth, the supplier and client invariance is universal.</p> </details> </section> <section> 
     <h1>Tax Report</h1> <img type="image/svg+xml" src="http://img.erp5.cn/P-OSOE-Accounting.Mathematician-Tax.Report.formula?format=" /> <details open="true"> 
       <p>Tax reports are made by calculating the total of transaction amounts expressed in the national currency of a single organisation for a subset of the space of accounts. Both source and destination amounts should be taken into account since the organisation for which the tax report is calculated could appear on both side.</p> 

@@ -126,6 +126,7 @@
                 <string>contributor/person_module/20110503-EE9699</string>
                 <string>contributor/person_module/851</string>
                 <string>contributor/person_module/20130927-61A66CC</string>
+                <string>follow_up/product_module/148</string>
               </tuple>
             </value>
         </item>
@@ -428,7 +429,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.43180.10614.37484</string> </value>
+                <value> <string>952.53181.50613.54073</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -446,7 +447,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468935171.09</float>
+                        <float>1471593170.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
