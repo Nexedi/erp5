@@ -40,10 +40,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts68939029.53</string> </value>
-        </item>
-        <item>
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -141,10 +137,6 @@
         <item>
             <key> <string>short_title</string> </key>
             <value> <string>Sessions Organisation</string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>26452</int> </value>
         </item>
         <item>
             <key> <string>subject</string> </key>
@@ -303,13 +295,11 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>supertristan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>touched for reconversion</string> </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -317,7 +307,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.43245.10464.20889</string> </value>
+                <value> <string>953.49679.23358.8455</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -335,7 +325,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468939946.14</float>
+                        <float>1473259378.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

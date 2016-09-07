@@ -285,7 +285,7 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>touch for reconversion</string> </value>
+                <value> <string>touched for reconversion</string> </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -293,7 +293,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.33031.6054.48331</string> </value>
+                <value> <string>953.49679.23358.8455</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468326893.12</float>
+                        <float>1473258707.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

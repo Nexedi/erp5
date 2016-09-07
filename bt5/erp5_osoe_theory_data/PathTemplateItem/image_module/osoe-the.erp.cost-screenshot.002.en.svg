@@ -1,153 +1,32 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="1052.3622" height="744.09448" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata3621">image/svg+xml</metadata>
 
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1052.3622"
-   height="744.09448"
-   id="svg3616"
-   version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="osoe-the.erp.cost-screenshot.002.en.svg">
-  <defs
-     id="defs3618" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.68539683"
-     inkscape:cx="507.65855"
-     inkscape:cy="372.04724"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
-  <metadata
-     id="metadata3621">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Ebene 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-308.2677)">
-    <image
-       y="420.35532"
-       x="77.511009"
-       id="image3662"
-       xlink:href="http://www.erp5.com/graphic-ERP5.Logo?format=png"
-       height="100.71429"
-       width="201.42857" />
-    <image
-       y="410.33502"
-       x="395.90286"
-       id="image3684"
-       xlink:href="http://www.erp5.com/graphic-SlapOS.logo?format=png"
-       height="130"
-       width="176" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:47.13512421px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
-       x="210.01909"
-       y="478.65158"
-       id="text4328"
-       sodipodi:linespacing="125%"
-       transform="scale(0.85582069,1.1684691)"><tspan
-         sodipodi:role="line"
-         id="tspan4330"
-         x="210.01909"
-         y="478.65158" /><tspan
-         sodipodi:role="line"
-         x="210.01909"
-         y="528.65161"
-         id="tspan4336"
-         style="text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">( licence +configuration + server )</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:64.84751129px;line-height:125%;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
-       x="903.04041"
-       y="299.59521"
-       id="text4328-4"
-       sodipodi:linespacing="125%"
-       transform="scale(0.75145052,1.3307596)"><tspan
-         sodipodi:role="line"
-         id="tspan4330-3"
-         x="903.04041"
-         y="299.59521" /><tspan
-         sodipodi:role="line"
-         x="903.04041"
-         y="380.6546"
-         id="tspan4336-9"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">    0 EUR</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
-       x="137.35547"
-       y="823.69629"
-       id="text4328-4-7"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         x="137.35547"
-         y="823.69629"
-         id="tspan4336-9-8"
-         style="text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">Other:</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#04446a;fill-opacity:1;stroke:none"
-       x="338.6604"
-       y="823.90472"
-       id="text4328-4-7-1"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         x="338.6604"
-         y="823.90472"
-         id="tspan4336-9-8-5"
-         style="text-align:start;text-anchor:start;fill:#04446a;fill-opacity:1">1000 EUR per User or More</tspan></text>
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot4147"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       transform="matrix(2.1653861,0,0,2.6801319,-698.17099,-22.123452)"><flowRegion
-         id="flowRegion4149"><rect
-           id="rect4151"
-           width="81.704491"
-           height="45.229271"
-           x="601.11163"
-           y="157.57295"
-           style="fill:#04446a;fill-opacity:1" /></flowRegion><flowPara
-         id="flowPara4153">=</flowPara></flowRoot>    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:80.74789429px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="302.02347"
-       y="488.12549"
-       id="text4155"
-       sodipodi:linespacing="125%"
-       transform="scale(0.98607065,1.0141261)"><tspan
-         sodipodi:role="line"
-         id="tspan4157"
-         x="302.02347"
-         y="488.12549">+</tspan></text>
-  </g>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="1054.3622" height="746.09448" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image y="112.08762" x="77.51101" id="image3662" xlink:href="http://www.erp5.com/graphic-ERP5-new.logo?format=png" height="100.71429" width="201.42857"/>
+   <image y="102.06732" x="395.90286" id="image3684" xlink:href="http://www.erp5.com/graphic-SlapOS.logo?format=png" height="130" width="176"/>
+   <text xml:space="preserve" x="210.01909" y="478.65158" id="text4328" transform="translate(0,-308.2677001953125) scale(0.8558207154273987,1.1684690713882446) " fill="#04446a" text-anchor="middle" font-family="Sans" font-size="47.13512px" font-weight="normal" font-style="normal">
+    <tspan id="tspan4330" x="210.01909" y="478.65158"/>
+    <tspan x="210.01909" y="528.65161" id="tspan4336" fill="#04446a" text-anchor="start">( licence +configuration + server )</tspan>
+   </text>
+   <text xml:space="preserve" x="903.04041" y="299.59521" id="text4328-4" transform="translate(0,-308.2677001953125) scale(0.7514505386352539,1.3307596445083618) " fill="#04446a" text-anchor="middle" font-family="Sans" font-size="64.84751px" font-weight="bold" font-style="normal">
+    <tspan id="tspan4330-3" x="903.04041" y="299.59521"/>
+    <tspan x="903.04041" y="380.6546" id="tspan4336-9" fill="#04446a" text-anchor="start" font-family="Sans" font-weight="bold" font-style="normal">0 EUR</tspan>
+   </text>
+   <text xml:space="preserve" x="137.35547" y="515.42859" id="text4328-4-7" fill="#04446a" text-anchor="middle" font-family="Sans" font-size="40px" font-weight="normal" font-style="normal">
+    <tspan x="137.35547" y="515.42859" id="tspan4336-9-8" fill="#04446a" text-anchor="start">Other:</tspan>
+   </text>
+   <text xml:space="preserve" x="338.6604" y="515.63702" id="text4328-4-7-1" fill="#04446a" text-anchor="middle" font-family="Sans" font-size="40px" font-weight="normal" font-style="normal">
+    <tspan x="338.6604" y="515.63702" id="tspan4336-9-8-5" fill="#04446a" text-anchor="start">1000 EUR per User or More</tspan>
+   </text>
+   <rect id="rect4151" width="81.70449" height="45.22927" x="601.11163" y="-150.69475" fill="#04446a"/>=
+   <text xml:space="preserve" x="302.02347" y="488.12549" id="text4155" transform="translate(0,-308.2677001953125) scale(0.9860706329345703,1.0141260623931885) " stroke-width="1px" fill="#04446a" font-family="sans-serif" font-size="80.74789px" font-weight="normal" font-style="normal">
+    <tspan id="tspan4157" x="302.02347" y="488.12549">+</tspan>
+   </text></g>
+ </g>
 </svg>

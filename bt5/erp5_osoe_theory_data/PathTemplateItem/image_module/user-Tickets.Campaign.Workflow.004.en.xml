@@ -295,13 +295,11 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>supertristan</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>touched for reconversion</string> </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -309,7 +307,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.49565.35561.13755</string> </value>
+                <value> <string>953.49679.23358.8455</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -327,7 +325,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473251523.69</float>
+                        <float>1473260729.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -1,80 +1,17 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="1052.3622" height="744.09449" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <metadata id="metadata4183">image/svg+xml</metadata>
 
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1052.3622"
-   height="744.09448"
-   viewBox="0 0 1052.3622 744.09449"
-   id="svg4178"
-   version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="osoe-erp-101.cover.002.en.svg">
-  <defs
-     id="defs4180" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="-472.14286"
-     inkscape:cy="520"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     units="px"
-     inkscape:window-width="1366"
-     inkscape:window-height="705"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
-  <metadata
-     id="metadata4183">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-308.26769)">
-    <image
-       sodipodi:absref="C:\Users\Cecilia\Desktop\FH-SWF CCEC\ERP LAB\O6XL1B0.jpg"
-       xlink:href="http://img.erp5.cn/osoe-erp-101.cover-png?format=png"
-       width="1036.5715"
-       height="732"
-       preserveAspectRatio="none"
-       id="image4734"
-       x="8.571456"
-       y="313.79074" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:38.81417465px;line-height:125%;font-family:'MV Boli';-inkscape-font-specification:'MV Boli';letter-spacing:0px;word-spacing:0px;fill:#04446a;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="53.840279"
-       y="567.03827"
-       id="text4737"
-       sodipodi:linespacing="125%"
-       transform="scale(0.97035442,1.0305513)"><tspan
-         sodipodi:role="line"
-         id="tspan4739"
-         x="53.840279"
-         y="567.03827">Enterprise Resource Planning</tspan></text>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="1054.3622" height="746.09449" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <image xlink:href="http://img.erp5.cn/osoe-erp-101.cover.background?format=png" width="1036.5715" height="732" id="image4734" x="8.57146" y="5.52304"/>
+   <text xml:space="preserve" x="53.84028" y="567.03827" id="text4737" transform="translate(0,-308.2677001953125) scale(0.970354437828064,1.0305513143539429) " stroke-width="1px" fill="#04446a" font-family="'MV Boli'" font-size="38.81417px" font-weight="normal" font-style="normal">
+    <tspan id="tspan4739" x="53.84028" y="567.03827">Enterprise Resource Planning</tspan>
+   </text>
   </g>
+ </g>
 </svg>

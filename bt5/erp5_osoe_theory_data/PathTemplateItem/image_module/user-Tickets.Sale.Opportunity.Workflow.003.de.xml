@@ -10,11 +10,9 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -24,7 +22,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +40,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -53,11 +48,9 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -237,11 +230,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>archive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>klaus.woelfel</string> </value>
+                <value> <string>superklaus</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -263,8 +256,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1372742617.62</float>
-                        <string>GMT</string>
+                        <float>1473259842.8</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -272,7 +265,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>archived</string> </value>
             </item>
           </dictionary>
         </list>
@@ -306,7 +299,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.32900.30183.9228</string> </value>
+                <value> <string>953.49722.46785.13449</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -324,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468329679.45</float>
+                        <float>1473260801.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
