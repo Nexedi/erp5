@@ -10,11 +10,6 @@ uid = context.getUid()
 
 history_list = []
 
-simulation_state = portal.getPortalCurrentInventoryStateList() \
-                                  + portal.getPortalTransitInventoryStateList() \
-                                  + portal.getPortalReservedInventoryStateList()
-
-kw['item.simulation_state'] = simulation_state
 for res in method(aggregate_uid=uid, **kw):
   history = newTempBase(context, str(len(history_list)))
   explanation = catalog(uid=res.delivery_uid)
