@@ -34,17 +34,20 @@
       case "spreadsheet":
         sdk_name = "cell";
         erp5_query.push("ooffice/apps/" + name + "editor/main/%");
+        erp5_query.push("ooffice/sdkjs/cell/%");
         erp5_query.push("ooffice/sdkjs/word/%");
         break;
       case "text":
         sdk_name = "word";
         erp5_query.push("ooffice/apps/documenteditor/main/%");
+        erp5_query.push("ooffice/sdkjs/word/%");
         erp5_query.push("ooffice/sdkjs/cell/model/%");
         erp5_query.push("ooffice/sdkjs/cell/utils/%");
         break;
       case "presentation":
         sdk_name = "slide";
         erp5_query.push("ooffice/apps/" + name + "editor/main/%");
+        erp5_query.push("ooffice/sdkjs/slide/%");
         erp5_query.push("ooffice/sdkjs/word/%");
         erp5_query.push("ooffice/sdkjs/cell/%");
         break;
