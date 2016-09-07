@@ -69,7 +69,7 @@
         return 'url_string: ="' + currentValue + '"';
       }).join(' OR ');
     erp5_query = erp5_query + ' OR ' + [
-        "gadget_officejs_spreadsheet_router.html",
+        "gadget_officejs_" + name + "_router.html",
         "gadget_officejs_router.js",
         "gadget_officejs_page_document_list.html",
         "gadget_officejs_page_document_list.js",
@@ -96,7 +96,7 @@
         "rsvp.js",
         "gadget_officejs_header.html",
         "gadget_officejs_jio.html",
-        "gadget_officejs_page_add_text_document.html",
+        "gadget_officejs_page_add_document.html",
         "gadget_officejs_page_jio_configurator.html",
         "gadget_officejs_page_jio_dav_configurator.html",
         "gadget_officejs_page_login.html",
@@ -108,7 +108,7 @@
         "gadget_officejs_widget_listbox.html",
         "gadget_officejs_header.js",
         "gadget_officejs_jio.js",
-        "gadget_officejs_page_add_text_document.js",
+        "gadget_officejs_page_add_document.js",
         "gadget_officejs_page_jio_configurator.js",
         "gadget_officejs_page_jio_dav_configurator.js",
         "gadget_officejs_page_login.js",
