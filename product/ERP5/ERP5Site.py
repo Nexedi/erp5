@@ -2078,10 +2078,8 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
-    # Add ERP5 SQL Catalog Tool
-    addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
-    if not p.hasObject('portal_catalog'):
-      addTool('ERP5 Catalog', None)
+    # Add erp5 catalog tool
+    addERP5Tool(p, 'portal_catalog', 'Catalog Tool')
 
     # Add Default SQL connection
     if p.erp5_sql_connection_type == 'Z MySQL Database Connection':

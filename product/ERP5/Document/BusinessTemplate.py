@@ -1311,14 +1311,14 @@ class ObjectTemplateItem(BaseTemplateItem):
             # The id match, but better double check with the meta type
             # while avoiding the impact of systematic check
             container_container = portal.unrestrictedTraverse(container_path[:-1])
-            if container_container.meta_type == 'ERP5 Catalog':
-              container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
-              # We will have more than 1 objects in portal_catalog as we are
-              # adding both ERP5Catalog as well as SQLCatalog object here.
-              # Later on, this should be changed to use only ERP5Catalog object
+            if container_container.meta_type == 'Catalog Tool':
+              container_container.newContent(portal_type='Catalog', id=container_path[-1], title='')
               if len(container_container.objectIds()) >= 1:
-                container_container.default_sql_catalog_id = container_path[-1]
-              container = portal.unrestrictedTraverse(container_path)
+                container_container.setDefaultErp5CatalogId(container_path[-1])
+            elif container_container.meta_type == 'ERP5 Catalog':
+              container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
+              container_container.default_sql_catalog_id == container_path[-1]
+            container = portal.unrestrictedTraverse(container_path)
           else:
             raise
         saved_uid_dict = {}
