@@ -24,6 +24,19 @@ def changeObjectClass(self, object_id, new_class):
   new_obj.__dict__.update(old_obj.__dict__)
   if new_class.__module__ == 'erp5.portal_type':
     new_obj.portal_type = new_class.__name__
+  # Workaround for new object which inherit from Folder or XMLobject
+  # For the CMF objects, the sub-objects acts as attributes, but for the objects
+  # inside they should be inside the HBTree to be called subobject.
+  # This patch adds the objects as sub-objects for those erp5 objects
+  if new_obj._getOb.__module__ == 'Products.ERP5Type.Core.Folder':
+    for obj in old_obj.objectValues():
+      # We don't want to keep the sub-objects as attributes for any objects
+      # specifically for objects which we are shifting to dynamic portal_type
+      # classes, cause if we edit or delete object, it would only delete the
+      # object and not remove the attribute, which leads to error if we try
+      # adding object with same id.
+      delattr(new_obj, obj.id)
+      new_obj._setOb(obj.id, obj)
   self._setOb(object_id, new_obj)
   if self._delOb.__module__ == 'OFS.ObjectManager':
     # Workaround OFS updating '_objects' in _[ds]etObject instead of _[ds]etOb
