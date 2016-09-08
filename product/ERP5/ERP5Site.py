@@ -1742,8 +1742,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             tool = tool.activate()
           tool.migrateToPortalTypeClass(tool_id not in (
             'portal_activities', 'portal_simulation', 'portal_templates',
-            'portal_trash'))
-          if tool_id in ('portal_trash',):
+            'portal_trash', 'portal_catalog'))
+          if tool_id in ('portal_trash', 'portal_catalog'):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
