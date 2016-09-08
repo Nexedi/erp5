@@ -361,6 +361,79 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 , 'manage_schema')
     manage_schema = DTMLFile('dtml/manageSchema', globals())
 
+    def _isBootstrapRequired(self):
+      return True
+
+    def _bootstrap(self):
+      # Get erp5 site
+      parent = self.aq_parent
+      portal_types = parent.portal_types
+      portal_property_sheets = parent.portal_property_sheets
+      from Products.ERP5.ERP5Site import ERP5Generator
+      ERP5Generator.bootstrap(portal_types, 'erp5_core', 'PortalTypeTemplateItem', (
+        'Catalog',
+        'Catalog Tool',
+        'SQL Method',
+        'Python Script'
+      ))
+      ERP5Generator.bootstrap(portal_property_sheets, 'erp5_core', 'PropertySheetTemplateItem', (
+        'Catalog',
+        'CatalogTool',
+        'SQLMethod',
+        'PythonScript',
+        'CatalogFilter'
+      ))
+      # We need ERP5 Form portal_type to exist during migration we would be
+      # indexing some ERP5 Form objects.
+      ERP5Generator.bootstrap(portal_types, 'erp5_hal_json_style', 'PortalTypeTemplateItem', (
+        'ERP5 Form',
+      ))
+
+      import erp5
+      from Products.ERP5.Extensions.CheckPortalTypes import changeObjectClass
+
+      # Get all dynamic classes from portal_type
+      catalog_tool_class = getattr(erp5.portal_type, 'Catalog Tool')
+      catalog_class = getattr(erp5.portal_type, 'Catalog')
+      sql_class = getattr(erp5.portal_type, 'SQL Method')
+      script_class = getattr(erp5.portal_type, 'Python Script')
+
+      if not catalog_tool_class:
+        LOG('OldCatalogTool', WARNING, "Portal Type Catalog Tool doesn't exist")
+        return
+
+      # Change classes for all object inside catalog and catalog_tool
+      for obj in self.objectValues():
+        filter_dict = obj.filter_dict
+        for method in obj.objectValues():
+          if method.meta_type == 'Z SQL Method':
+            new_method = changeObjectClass(obj, method.id, sql_class)
+          elif method.meta_type == 'Script (Python)':
+            new_method = changeObjectClass(obj, method.id, script_class)
+          else:
+            LOG('Catalog Migration', WARNING, '''Subobject %s is not of meta_type \
+                                          Z SQL Method or Script(Python)'''%method.id)
+            return
+
+          # Migrate filter_dict and keep them as properties for the methods
+          new_method_id = new_method.id
+          if new_method_id in filter_dict:
+            filter_ = filter_dict[new_method_id]
+            new_method.setFiltered(filter_['filtered'])
+            new_method.setTypeList(filter_['type'])
+            new_method.setExpressionCacheKeyList(filter_['expression_cache_key'])
+            new_method.setExpression(filter_['expression'])
+            new_method.setExpressionInstance(filter_['expression_instance'])
+        # Delete filter_dict before migration of catalog object(s)
+        del obj.filter_dict
+
+        changeObjectClass(self, obj.id, catalog_class)
+      changeObjectClass(parent, self.id, catalog_tool_class)
+
+      # Update some required attributes to the portal_catalog object
+      parent.portal_catalog.default_erp5_catalog_id = self.default_sql_catalog_id
+      del parent.portal_catalog.default_sql_catalog_id
+
     security.declarePublic('getPreferredSQLCatalogId')
     def getPreferredSQLCatalogId(self, id=None):
       """
