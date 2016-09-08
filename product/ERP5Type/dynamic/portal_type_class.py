@@ -327,13 +327,29 @@ def synchronizeDynamicModules(context, force=False):
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
       from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+      from Products.ERP5Catalog.Tool.ERP5CatalogTool import ERP5CatalogTool
       try:
-        for tool_class in TypesTool, PropertySheetTool, ComponentTool:
+        for tool_class in TypesTool, PropertySheetTool, ComponentTool, ERP5CatalogTool:
           # if the instance has no property sheet tool, or incomplete
           # property sheets, we need to import some data to bootstrap
           # (only likely to happen on the first run ever)
+
+          # XXX:  While installing ERP5CatalogTool, we are dependent on
+          #(TODO) PropertySheetTool for some property sheets regarding
+          #       portal_catalog, so make it sure that ERP5CatalogTool should
+          #       be installed only after installing PropertySheetTool.
+
           tool_id = tool_class.id
           tool = getattr(portal, tool_id, None)
+          if tool_class == ERP5CatalogTool and tool is None:
+            # Wait till we find that SQL Catalog Tool is installed
+            # Simpy said, we don't want  ERP5 Catalog Tool to be installed
+            # from here. So, we come to 2 cases:
+            # 1. Running ERP5Site with sql catalog_tool : In that case, we end up
+            # running _bootstrap from here, leading to migration.
+            # 2. New ERP5Site : In this case, we don't do anything here, cause
+            # the catalog_tool would be ERP5CatalogTool, so this would just pass.
+            continue
           if tool is None:
             tool = tool_class()
             portal._setObject(tool_id, tool, set_owner=False,
