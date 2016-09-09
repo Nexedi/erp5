@@ -78,7 +78,7 @@
             "search_href": all_result[4],
             "worklist_href": all_result[5]
           });
-          return tmp;
+          return g.translateHtml(tmp);
         })
         .push(function (my_translated_or_plain_html) {
           g.props.element.querySelector("div").innerHTML = my_translated_or_plain_html;

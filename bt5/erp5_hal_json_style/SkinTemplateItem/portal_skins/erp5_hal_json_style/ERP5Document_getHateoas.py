@@ -6,6 +6,7 @@ from ZODB.POSException import ConflictError
 import datetime
 import time
 from email.Utils import formatdate
+import re
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -107,7 +108,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "required": field.get_value("required"),
       # XXX Message can not be converted to json as is
       "items": field.get_value("items"),
@@ -121,7 +122,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "required": field.get_value("required"),
       "items": field.get_value("items"),
       "select_first_item": field.get_value("first_item"),
@@ -136,7 +137,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "required": field.get_value("required"),
       # XXX Message can not be converted to json as is
       "items": field.get_value("items"),
@@ -154,7 +155,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "required": field.get_value("required"),
     }
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
@@ -181,7 +182,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "required": field.get_value("required"),
       "date_only": field.get_value("date_only"),
       "ampm_time_style": field.get_value("ampm_time_style"),
@@ -206,7 +207,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     portal_type_list = field.get_value('portal_type')
     jump_reference_list = []
     if portal_type_list:
-      portal_type_list = [x[0] for x in portal_type_list]
+      portal_type_list = [context.Base_translateString(x[0]) for x in portal_type_list]
 
       # ported from Base_jumpToRelatedDocument\n
       base_category = field.get_value('base_category')
@@ -253,11 +254,13 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
           }
           result.pop("list_method_template", None)
           result["list_method"] = "portal_catalog"
-          result["title"] = title
+          result["title"] = context.Base_translateString(title[0])
           #set default listbox's column list to relation's column list
           if tmp[0] == 'Base_viewRelatedObjectListBase' and len(column_list) > 0:
-            result["column_list"] = column_list
-          listbox[grain[1]] = result
+            result["column_list"] = []
+            for tmp_column in column_list:
+              result["column_list"].append((tmp_column[0], context.Base_translateString(tmp_column[1])))
+          listbox[context.Base_translateString(grain[1])] = result
           break
 
 
@@ -274,7 +277,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": title,
+      "title": context.Base_translateString(title[0]),
       "required": field.get_value("required"),
       "proxy_listbox_ids_len": len(proxy_listbox_ids),
       "listbox": listbox
@@ -304,7 +307,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title")
+      "title": context.Base_translateString(field.get_value("title")),
     }
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
   elif meta_type == "MultiCheckBoxField":
@@ -315,7 +318,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "required": field.get_value("required"),
       # XXX Message can not be converted to json as is
       "items": field.get_value("items"),
@@ -329,18 +332,29 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "css_class": field.get_value("css_class"),
       "hidden": field.get_value("hidden"),
       "description": field.get_value("description"),
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "url": field.get_value("gadget_url"),
       "sandbox": field.get_value("js_sandbox"),
     }
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
   elif meta_type == "ListBox":
     # XXX Not implemented
-    column_list = field.get_value("columns")
-    editable_column_list = field.get_value('editable_columns')
+    column_list = []
+    for tmp in field.get_value("columns"):
+      column_list.append((tmp[0], context.Base_translateString(tmp[1])))
+    editable_column_list = []
+    for tmp in field.get_value('editable_columns'):
+      editable_column_list.append((tmp[0], context.Base_translateString(tmp[1])))
 
-    sort_column_list_tmp = field.get_value('sort_columns')
-    search_column_list_tmp = field.get_value('search_columns')
+    sort_column_list_tmp = []
+    
+    for tmp in field.get_value('sort_columns'):
+      sort_column_list_tmp.append((tmp[0], context.Base_translateString(tmp[1])))
+
+    search_column_list_tmp = []
+    for tmp in field.get_value('search_columns'):
+      search_column_list_tmp.append((tmp[0], context.Base_translateString(tmp[1])))
+
     sort_column_list = []
     search_column_list = []
     
@@ -434,7 +448,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "editable_column_list": editable_column_list,
       "show_anchor": field.get_value("anchor"),
 #       "line_list": line_list,
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "key": key,
       "portal_type": portal_types,
       "lines": lines,
@@ -454,7 +468,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     result = {
       "type": meta_type,
       "_debug": "Unsupported field type",
-      "title": field.get_value("title"),
+      "title": context.Base_translateString(field.get_value("title")),
       "key": key,
     }
   return result
@@ -626,7 +640,7 @@ def renderFormDefinition(form, response_dict):
 
       group_list.append((group['gid'], field_list))
   response_dict["group_list"] = group_list
-  response_dict["title"] = form.getTitle()
+  response_dict["title"] = context.Base_translateString(form.getTitle())
   response_dict["pt"] = form.pt
   response_dict["action"] = form.action
 
@@ -731,7 +745,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     # Default properties shared by all ERP5 Document and Site
     action_dict = {}
   #   result_dict['_relative_url'] = traversed_document.getRelativeUrl()
-    result_dict['title'] = traversed_document.getTitle()
+    result_dict['title'] = context.Base_translateString(traversed_document.getTitle())
   
     # Add a link to the portal type if possible
     if not is_portal:
@@ -742,7 +756,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                             .getRelativeUrl(), 
           "script_id": script.id
         },
-        "name": traversed_document.getPortalType(),
+        "name": context.Base_translateString(traversed_document.getPortalType()),
       }
       
     # Return info about container
@@ -756,7 +770,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             "relative_url": container.getRelativeUrl(), 
             "script_id": script.id
           },
-          "name": container.getTitle(),
+          "name": context.Base_translateString(container.getTitle()),
         }
   
     # XXX Loop on form rendering
@@ -772,7 +786,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         erp5_action_list.append({
           'href': '%s' % view_action['url'],
           'name': view_action['id'],
-          'title': view_action['title']
+          'title': context.Base_translateString(view_action['title'])
         })
         # Try to embed the form in the result
         if (view == view_action['id']):
@@ -1213,7 +1227,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
             'href': url_template_dict["jio_search_template"] % {
                       "query": make_query({"query": query})
                     },
-            'name': action['name'],
+            'name': context.Base_translateString(re.sub(r' \(\d+\)$', '', action['name'])),
             'count': action['count'],
             'module': default_document_uri_template % {
                         "relative_url": worklist_module_id

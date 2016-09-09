@@ -51,6 +51,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -73,8 +74,10 @@
     })
     .declareMethod("render", function (options) {
       var gadget = this,
+        queue,
         select_template = options.select_template || "";
-      return gadget.getUrlFor({command: 'history_previous'})
+      queue = gadget.getUrlFor({command: 'history_previous'});
+      queue
         .push(function (back_url) {
           gadget.props.back_url = back_url;
           return RSVP.all([
@@ -101,7 +104,13 @@
               options: gadget.props.listbox_key,
               select_template: select_template
             });
-            gadget.props.element.querySelector(".left").innerHTML = html;
+            queue
+              .push(function () {
+                return gadget.translateHtml(html);
+              })
+              .push(function (html) {
+                gadget.props.element.querySelector(".left").innerHTML = html;
+              });
           } else {
             listbox_render = gadget.props.listbox[gadget.props.listbox_key[0]];
           }
@@ -122,6 +131,7 @@
             }
           });
         });
+      return queue;
     })
     .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;

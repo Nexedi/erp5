@@ -343,6 +343,9 @@
     .allowPublicAcquisition('reload', function () {
       return location.reload();
     })
+    .allowPublicAcquisition('replace', function (url) {
+      return location.replace(url);
+    })
     .allowPublicAcquisition("getUrlParameter", function (param_list) {
       return this.getDeclaredGadget('router')
         .push(function (router_gadget) {

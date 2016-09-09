@@ -218,7 +218,6 @@ gadget_translation.html\n
 gadget_translation.js\n
 gadget_translation_data.js\n
 handlebars.js\n
-i18next.js\n
 jiodev.js\n
 renderjs.js\n
 rsvp.js\n
@@ -354,7 +353,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.57579.5740.15394</string> </value>
+                <value> <string>953.6580.58198.13568</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -372,7 +371,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1469799631.33</float>
+                        <float>1473435991.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

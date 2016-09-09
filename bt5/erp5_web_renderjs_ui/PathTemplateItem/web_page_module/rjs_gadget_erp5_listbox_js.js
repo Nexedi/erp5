@@ -218,6 +218,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")
@@ -458,24 +459,26 @@
           }
           return RSVP.all([
             gadget.getUrlFor({command: 'change', options: prev_param}),
-            gadget.getUrlFor({command: 'change', options: next_param})
+            gadget.getUrlFor({command: 'change', options: next_param}),
+            gadget.translate('Records'),
+            gadget.translate('No records')
           ]);
 
-        }).push(function (url_list) {
+        }).push(function (result_list) {
           var foot = {};
           foot.colspan = field_json.column_list.length + field_json.show_anchor +
             (field_json.line_icon ? 1 : 0);
           foot.default_colspan = foot.colspan;
           foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
-          foot.previous_url = url_list[0];
+          foot.previous_url = result_list[0];
           foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
-          foot.next_url = url_list[1];
+          foot.next_url = result_list[1];
           if ((begin_from === 0) && (counter === 0)) {
-            foot.record = "No records";
+            foot.record = result_list[3];
           } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {
-            foot.record = counter + " Records";
+            foot.record = counter + " " + result_list[2];
           } else {
-            foot.record = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
+            foot.record = result_list[2] + " " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
           }
 
           if (begin_from === 0) {

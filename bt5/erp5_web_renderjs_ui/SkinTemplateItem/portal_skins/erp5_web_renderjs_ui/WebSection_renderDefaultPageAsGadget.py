@@ -1,3 +1,5 @@
+import json
+
 if REQUEST is None:
   REQUEST = context.REQUEST
 if response is None:
@@ -5,6 +7,21 @@ if response is None:
 
 default_web_page = context
 web_section = REQUEST.get("current_web_section")
+
+
+
+available_language_set = web_section.getLayoutProperty("available_language_set", default=['en'])
+default_language = web_section.getLayoutProperty("default_available_language", default='en')
+
+root_website_url = web_section.getOriginalDocument().absolute_url() + '/'
+
+
+website_url_set = {}
+for tmp in available_language_set:
+  if tmp == default_language:
+    website_url_set[tmp] = root_website_url
+  else:
+    website_url_set[tmp] = root_website_url + tmp + '/'
 
 
 return default_web_page.WebPage_viewAsWeb(mapping_dict={
@@ -18,5 +35,8 @@ return default_web_page.WebPage_viewAsWeb(mapping_dict={
   "header_gadget": web_section.getLayoutProperty("configuration_header_gadget_url", default="gadget_erp5_header.html"),
   "jio_gadget": web_section.getLayoutProperty("configuration_jio_gadget_url", default="gadget_jio.html"),
   "translation_gadget": web_section.getLayoutProperty("configuration_translation_gadget_url", default="gadget_translation.html"),
-  "manifest_url": web_section.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache")
+  "manifest_url": web_section.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache"),
+  "language_map": json.dumps({tmp['id']: context.Base_translateString(tmp['title'], lang = tmp['id']) for tmp in context.Localizer.get_languages_map() if tmp['id'] in available_language_set}),
+  "website_url_set": json.dumps(website_url_set),
+  "selected_language":  context.Localizer.get_selected_language()
 })

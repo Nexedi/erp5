@@ -3,9 +3,8 @@
 (function (document, window, rJS, translation_data) {
   "use strict";
 
-  function translate(string) {
-    // XXX i18n.t
-    return translation_data.en[string] || string;
+  function translate(string, gadget) {
+    return translation_data[gadget.property_dict.language][string] || string;
   }
 
   rJS(window)
@@ -14,12 +13,24 @@
     // ready
     /////////////////////////////////////////////////////////////////
     .ready(function (gadget) {
-      gadget.property_dict = {};
+      return gadget.getElement()
+        .push(function (element) {
+          gadget.property_dict = {};
+          gadget.property_dict.element = element;
+        });
     })
-
+    .declareAcquiredMethod("getSetting", "getSetting")
     .declareMethod('translate', function (string) {
       // XXX Allow to change the language
-      return translate(string);
+      var gadget = this;
+      if (!gadget.property_dict.language) {
+        return gadget.getSetting("selected_language")
+          .push(function (language) {
+            gadget.property_dict.language = language;
+            return gadget.translate(string);
+          });
+      }
+      return translate(string, this);
     })
 
     // translate a list of elements passed and returned as string
@@ -32,6 +43,13 @@
       // skip if no translations available
       if (gadget.property_dict.translation_disabled) {
         return my_string;
+      }
+      if (!gadget.property_dict.language) {
+        return gadget.getSetting("selected_language")
+          .push(function (language) {
+            gadget.property_dict.language = language;
+            return gadget.translateHtml(my_string);
+          });
       }
 
       // NOTE: <div> cannot be used for everything... (like table rows)
@@ -56,7 +74,7 @@
             case "[placeholder":
             case "[alt":
             case "[title":
-              element.setAttribute(target[0].substr(1), translate(target[1]));
+              element.setAttribute(target[0].substr(1), translate(target[1], gadget));
               break;
             case "[value":
               has_breaks = element.previousSibling.textContent.match(/\n/g);
@@ -72,37 +90,37 @@
                 }
               }
               if (route_text && (has_breaks || []).length === 0) {
-                element.previousSibling.textContent = translate(target[1]);
+                element.previousSibling.textContent = translate(target[1], gadget);
               }
-              element.value = translate(target[1]);
+              element.value = translate(target[1], gadget);
               break;
             case "[parent":
               element.parentNode.childNodes[0].textContent =
-                  translate(target[1]);
+                  translate(target[1], gadget);
               break;
             case "[node":
-              element.childNodes[0].textContent = translate(target[1]);
+              element.childNodes[0].textContent = translate(target[1], gadget);
               break;
             case "[last":
               // if null, append, if textnode replace, if span, appned
               if (element.lastChild && element.lastChild.nodeType === 3) {
-                element.lastChild.textContent = translate(target[1]);
+                element.lastChild.textContent = translate(target[1], gadget);
               } else {
-                element.appendChild(document.createTextNode(translate(target[1])));
+                element.appendChild(document.createTextNode(translate(target[1], gadget)));
               }
               break;
             case "[html":
-              element.innerHTML = translate(target[1]);
+              element.innerHTML = translate(target[1], gadget);
               break;
             default:
               if (element.hasChildNodes()) {
                 for (j = 0, j_len = element.childNodes.length; j < j_len; j += 1) {
                   if (element.childNodes[j].nodeType === 3) {
-                    element.childNodes[j].textContent = translate(translate_list[l]);
+                    element.childNodes[j].textContent = translate(translate_list[l], gadget);
                   }
                 }
               } else {
-                element.textContent = translate(translate_list[l]);
+                element.textContent = translate(translate_list[l], gadget);
               }
               break;
             }

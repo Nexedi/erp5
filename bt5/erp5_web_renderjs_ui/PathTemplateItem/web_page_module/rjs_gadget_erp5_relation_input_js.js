@@ -293,6 +293,9 @@
               type: type,
               value: my_value
             });
+            return gadget.translateHtml(html);
+          })
+          .push(function (html) {
             ul.innerHTML = html;
           });
       }
