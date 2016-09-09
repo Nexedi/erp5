@@ -1315,7 +1315,10 @@ class ObjectTemplateItem(BaseTemplateItem):
               container_container.newContent(portal_type='Catalog', id=container_path[-1], title='')
               if len(container_container.objectIds()) >= 1:
                 container_container.setDefaultErp5CatalogId(container_path[-1])
-              container = portal.unrestrictedTraverse(container_path)
+            elif container_container.meta_type == 'ERP5 Catalog':
+              container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
+              container_container.default_sql_catalog_id == container_path[-1]
+            container = portal.unrestrictedTraverse(container_path)
           else:
             raise
         saved_uid_dict = {}
@@ -1382,6 +1385,17 @@ class ObjectTemplateItem(BaseTemplateItem):
         __traceback_info__ = (container, object_id, obj)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
+        # Only run the conversion function incase we are creating an erp5 catalog
+        if container.meta_type == 'ERP5 Catalog':
+          if obj.meta_type == 'Z SQL Method':
+            self.convertSQLMethodToERP5SQLMethod(obj)
+          if obj.meta_type == 'Script (Python)':
+            self.convertPythonScriptToERP5PythonScript(obj)
+          # The functions convertPythonScriptToERP5PythonScript and ..
+          # convertSQLMethodToERP5SQLMethod only convert objects which are objects
+          # of erp5_mysql_innodb, so it is good not to expect scripts or methods
+          # mentioned elsewhere to be converted.
+          obj = self.unrestrictedResolveValue(portal, path)
 
         if not object_existed:
           # A new object was added, call the hook
