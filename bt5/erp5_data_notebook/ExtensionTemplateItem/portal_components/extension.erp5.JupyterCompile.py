@@ -449,7 +449,7 @@ def canSerialize(obj):
     return all(result_list)
   # if obj is an object and implements __getstate__, ZODB.serialize can check
   # if we can store it
-  elif isinstance(obj, object) and hasattr(obj, '__getstate__'):
+  elif isinstance(obj, object) and hasattr(obj, '__getstate__') and hasattr(obj, '_p_jar'):
     # Need to unwrap the variable, otherwise we get a TypeError, because
     # objects cannot be pickled while inside an acquisition wrapper.
     unwrapped_obj = Acquisition.aq_base(obj)
