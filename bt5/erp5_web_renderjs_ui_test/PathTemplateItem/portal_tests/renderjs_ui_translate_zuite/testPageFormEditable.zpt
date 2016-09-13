@@ -1,0 +1,125 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/create_translation_data" />
+
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/zh/#/foo_module</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Title 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>link=Title 1</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>link=Title 1</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n = 'Editable']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n = 'Editable']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n = 'Save']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[text() = 'baochun']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//button[text() = 'baochun']</td>
+  <td></td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'shitu']</td>
+  <td></td>
+</tr>
+ 
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'shangchu']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'caozhuo']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'jianque']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-role="header"]//a[text() = 'zhenjia']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//label[text()="biaoti"]</td>
+  <td></td>
+</tr>
+
+
+
+</tbody></table>
+</body>
+</html>

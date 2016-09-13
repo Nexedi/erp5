@@ -1,0 +1,107 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/create_translation_data" />
+
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/zh/#/foo_bar_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[text() = "guolv"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[text() = "guolv"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//select[@name='heard_about']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifySelectOptions</td>
+  <td>//select[@name='heard_about']</td>
+  <td>fuheshuoyou,zhishaoyige</td>
+</tr>
+
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//form[@class='plus']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//form[@class='plus']//button</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifySelectOptions</td>
+  <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
+  <td>ID,biaoti,soushuowenben</td>
+</tr>
+
+
+
+<tr>
+  <td>verifySelectOptions</td>
+  <td>//div[@class="filter_item_container"]/div[1]//select[2]</td>
+  <td>baohang</td>
+</tr>
+
+
+<tr>
+  <td>select</td>
+  <td>//div[@class="filter_item_container"]/div[1]//select[1]</td>
+  <td>index=1</td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//option[@data-i18n='Exact Match']</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifySelectOptions</td>
+  <td>//div[@class="filter_item_container"]/div[1]//select[2]</td>
+  <td>wangquanfuhe,guanjianchi</td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>

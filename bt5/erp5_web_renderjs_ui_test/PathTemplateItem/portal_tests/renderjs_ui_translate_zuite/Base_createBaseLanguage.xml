@@ -50,15 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>language_list = (\'wo\', \'xh\')</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_createUITestLanguages</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>Add Languages</string> </value>
+            <value> <string>Base_createBaseLanguage</string> </value>
         </item>
       </dictionary>
     </pickle>

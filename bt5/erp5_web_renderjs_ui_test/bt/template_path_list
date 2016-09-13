@@ -8,5 +8,7 @@ portal_tests/renderjs_ui_page_zuite
 portal_tests/renderjs_ui_page_zuite/**
 portal_tests/renderjs_ui_router_zuite
 portal_tests/renderjs_ui_router_zuite/**
+portal_tests/renderjs_ui_translate_zuite
+portal_tests/renderjs_ui_translate_zuite/**
 portal_tests/renderjs_ui_zuite
 portal_tests/renderjs_ui_zuite/**
