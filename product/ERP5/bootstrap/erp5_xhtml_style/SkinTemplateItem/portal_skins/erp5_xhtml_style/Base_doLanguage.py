@@ -16,15 +16,15 @@ if website is not None and website.isStaticLanguageSelection():
   referer_url = context.REQUEST.HTTP_REFERER
   if referer_url:
     if select_language == default_language:
-      redirect_url = re.sub(website_url_pattern, r'%s\1' % root_website_url, referer_url)
+      redirect_url = re.sub(website_url_pattern, root_website_url + r'\1', referer_url)
     else:
-      redirect_url = re.sub(website_url_pattern, r'%s/%s\1' % (root_website_url, select_language),
+      redirect_url = re.sub(website_url_pattern, root_website_url + '/' + select_language + r'\1',
                             referer_url)
   else:
     if select_language == default_language:
       redirect_url = root_website_url
     else:
-      redirect_url = '%s/%s' % (root_website_url, select_language)
+      redirect_url = root_website_url + '/' + select_language
   return context.REQUEST.RESPONSE.redirect(redirect_url)
 else:
   # ERP5 Mode
