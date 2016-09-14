@@ -2020,19 +2020,32 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getNextAlertInventoryDate')
     def getNextAlertInventoryDate(self, reference_quantity=0, src__=0,
-                       simulation_period='Future',from_date=None, **kw):
+                       simulation_period='Future', from_date=None,
+                       range='min', **kw):
       """
       Give the next date where the quantity is lower than the
       reference quantity.
+
+      range  - either 'min' (default) or 'nlt'. With 'nlt', returns
+               the next date where inventory is above reference_quantity
       """
       result = None
       # First look at current inventory, we might have already an inventory
       # lower than reference_quantity
+      def getCheckQuantityMethod():
+        if range == 'min':
+          return lambda x: x < reference_quantity
+        elif range == 'nlt':
+          return lambda x: x >= reference_quantity
+        else:
+          raise ValueError("Uknown range type : %s" % (range,))
+
+      checkQuantity = getCheckQuantityMethod()
       if from_date is None:
         from_date = DateTime()
       inventory_method = getattr(self, "get%sInventory" % simulation_period)
       current_inventory = inventory_method(at_date=from_date, **kw)
-      if current_inventory < reference_quantity:
+      if checkQuantity(current_inventory):
         result = from_date
       else:
         inventory_list_method = getattr(self,
@@ -2045,7 +2058,7 @@ class SimulationTool(BaseTool):
         for inventory in inventory_list:
           if inventory['inventory'] is not None:
             total_inventory += inventory['inventory']
-            if total_inventory < reference_quantity:
+            if checkQuantity(total_inventory):
               result = inventory['date']
               break
       return result
