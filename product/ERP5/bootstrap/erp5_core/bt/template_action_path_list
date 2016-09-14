@@ -120,6 +120,7 @@ Role Information | view
 Rule Tool | view
 SQL Method | advanced_view
 SQL Method | filter_view
+SQL Method | run
 SQL Method | view
 SQL Non Continuous Increasing Id Generator | view
 Script Constraint | predicate
