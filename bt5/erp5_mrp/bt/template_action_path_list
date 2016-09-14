@@ -32,5 +32,6 @@ Production Report Module | view
 Production Report | packing_list_print
 Production Report | view
 Production Report | view_stock
+System Preference | mrp_preference
 Transformation Simulation Rule | view
 Transformation Sourcing Simulation Rule | view
