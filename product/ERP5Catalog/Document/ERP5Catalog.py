@@ -63,6 +63,92 @@ def manage_addERP5Catalog(self, id, title,
     REQUEST['RESPONSE'].redirect( 'manage_main' )
   return c
 
+class Filter(object):
+  """
+  Class to act as filter object for filterable methods.
+  Added to keep consistency between how filter objects used to behave earlier
+  with old SQL Catalog and with the current ERP5 Catalog.
+
+  Generally, we do have 5 fixed keys, aka properties for catalog methods.
+  """
+
+  def __init__(self, method):
+     self._method = method
+
+  def __getitem__(self, key):
+    #XXX: Temporary hardcode for list_type objects
+    if key in ('type', 'expression_cache_key'):
+      return self._method.getPropertyList(key)
+    return self._method.getProperty(key)
+
+  def get(self, key, default=None):
+    try:
+      return self.__getitem__(key)
+    except KeyError: return default
+
+  def __setitem__(self, key, value):
+     self._method._setProperty(key, value)
+
+  def __iter__(self):
+    return iter(('type', 'expression_cache_key', 'expression', 'filtered', 'expression_instance'))
+
+class FilterDict(object):
+  """
+  Class to act as object everytime we need to use filter_dict as a
+  dictionary. It doesn't change the fact that the filter properties
+  are still the properties of catalog methods(SQL Method and Python Scripts).
+  One of important need of this class is it reduces a lot of copy and patch
+  which we might had to do to functions in ZSQLCatalog.SQLCatalog.Catalog
+  class.
+
+  Also, as in old SQLCatalog the filter_dict is used as an attribute
+  of Catalog, but now we have moved it to properties of method,
+  this class help in keeping the consistency between the old filter_dict
+  and new filter_dict.
+
+  For example:
+
+  Old SQL Catalog:
+  filter_dict = self._getFilterDict() == self.filter_dict == {Persistent Object}
+
+  ERP5 Catlaog:
+  filter_dict = self._getFilterDict() == FilterDict(class) == {Object of this class}
+
+  Now, both the filter_dict would have same behaviour without having any impact
+  on performance or so. The major use of this is in _catalogObjectList, where
+  we get Filter object, which is easily accessible via __getitem__ for this
+  class.
+  """
+
+  def __init__(self, catalog):
+     self._catalog = catalog
+
+  def __getitem__(self, key):
+     return Filter(self._catalog._getOb(key))
+
+  def keys(self):
+    return self._catalog.getFilterDict().keys()
+
+  def has_key(self, method_id):
+    return method_id in self.keys()
+
+  def __setitem__(self, key, item):
+    filter_ = self.__getitem__(key)
+    for k, v in item.items():
+      filter_.__setitem__(k, v)
+
+  def get(self, key, default=None):
+    if key in self:
+      return self.__getitem__(key)
+    else:
+      return default
+
+  def __iter__(self):
+    return iter(self.keys())
+
+  def __contains__(self, item):
+    return item in self.keys()
+
 class ERP5Catalog(Folder, Catalog):
   """
   Catalog Folder inside ERP5 to store indexes
@@ -207,327 +293,21 @@ class ERP5Catalog(Folder, Catalog):
                               + '?portal_status_message=Reserve%20UIDs%20Cleared'
       return REQUEST.RESPONSE.redirect(url)
 
-  def _catalogObjectList(self, object_list, method_id_list=None,
-                         disable_cache=0, check_uid=1, idxs=None):
-    """This is the real method to catalog objects.
+  def _getFilterDict(self):
+    return FilterDict(self)
 
-    This method overrides the method from SQLCatalog.Catalog, mainly because of
-    the changes being done in filter_dict, which now is dictionary of properties
-    of SQLMethod(s).
-    """
-    LOG('ERP5Catalog', TRACE, 'catalogging %d objects' % len(object_list))
-    if idxs not in (None, []):
-      LOG('ERP5Catalog.ERP5Catalog:catalogObjectList', WARNING,
-          'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexCatalogObject.')
+  def _getCatalogMethodArgumentList(self, method):
+    if method.meta_type == "LDIF Method":
+      # Build the dictionnary of values
+      return method.arguments_src.split()
+    elif method.meta_type == "ERP5 SQL Method":
+      return method.getArgumentsSrc().split()
+    elif method.meta_type == "ERP5 Python Script":
+      return method.func_code.co_varnames[:method.func_code.co_argcount]
+    return ()
 
-    if not self.isIndexable():
-      return
-
-    # Reminder about optimization: It might be possible to issue just one
-    # query to get enought results to check uid & path consistency.
-    path_uid_dict = {}
-    uid_path_dict = {}
-
-    if check_uid:
-      path_list = []
-      path_list_append = path_list.append
-      uid_list = []
-      uid_list_append = uid_list.append
-      for object in object_list:
-        path = object.getPath()
-        if path is not None:
-          path_list_append(path)
-        uid = object.uid
-        if uid is not None:
-          uid_list_append(uid)
-      path_uid_dict = self.getUidDictForPathList(path_list=path_list)
-      uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
-
-    # This dict will store uids and objects which are verified below.
-    # The purpose is to prevent multiple objects from having the same
-    # uid inside object_list.
-    assigned_uid_dict = {}
-
-    for object in object_list:
-      uid = getattr(aq_base(object), 'uid', None)
-      # Several Tool objects have uid=0 (not 0L) from the beginning, but
-      # we need an unique uid for each object.
-      if uid is None or isinstance(uid, int) and uid == 0:
-        try:
-          object.uid = self.newUid()
-        except ConflictError:
-          raise
-        except:
-          raise RuntimeError, 'could not set missing uid for %r' % (object,)
-      elif check_uid:
-        if uid in assigned_uid_dict:
-            error_message = 'uid of %r is %r and ' \
-                  'is already assigned to %s in catalog !!! This can be fatal.' % \
-                  (object, uid, assigned_uid_dict[uid])
-            if not self.sql_catalog_raise_error_on_uid_check:
-                LOG("ERP5Catalog.catalogObjectList", ERROR, error_message)
-            else:
-                raise ValueError(error_message)
-
-        path = object.getPath()
-        index = path_uid_dict.get(path)
-        if index is not None:
-          if index < 0:
-            raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
-          if uid != index or isinstance(uid, int):
-            # We want to make sure that uid becomes long if it is an int
-            error_message = 'uid of %r changed from %r (property) to %r '\
-	                    '(catalog, by path) !!! This can be fatal' % (object, uid, index)
-            if not self.sql_catalog_raise_error_on_uid_check:
-              LOG("ERP5Catalog.catalogObjectList", ERROR, error_message)
-            else:
-              raise ValueError(error_message)
-        else:
-          # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
-          # This can be very dangerous with relations stored in a category table (CMFCategory)
-          # This is why we recommend completely reindexing subobjects after any change of id
-          if uid in uid_path_dict:
-            catalog_path = uid_path_dict.get(uid)
-          else:
-            catalog_path = self.getPathForUid(uid)
-          #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
-          if catalog_path == "reserved":
-            # Reserved line in catalog table
-            lock = self.__class__._reserved_uid_lock
-            try:
-              lock.acquire()
-              uid_buffer = self.getUIDBuffer()
-              if uid_buffer is not None:
-                # This is the case where:
-                #   1. The object got an uid.
-                #   2. The catalog was cleared.
-                #   3. The catalog produced the same reserved uid.
-                #   4. The object was reindexed.
-                # In this case, the uid is not reserved any longer, but
-                # Catalog believes that it is still reserved. So it is
-                # necessary to remove the uid from the list explicitly.
-                try:
-                  uid_buffer.remove(uid)
-                except ValueError:
-                  pass
-            finally:
-              lock.release()
-          elif catalog_path == 'deleted':
-            # Two possible cases:
-            # - Reindexed object's path changed (ie, it or at least one of its
-            #   parents was renamed) but unindexObject was not called yet.
-            #   Reindexing is harmelss: unindexObject and then an
-            #   immediateReindexObject will be called.
-            # - Reindexed object was deleted by a concurrent transaction, which
-            #   committed after we got our ZODB snapshot of this object.
-            #   Reindexing is harmless: unindexObject will be called, and
-            #   cannot be executed in parallel thanks to activity's
-            #   serialisation_tag (so we cannot end up with a fantom object in
-            #   catalog).
-            # So we index object.
-            # We could also not index it to save the time needed to index, but
-            # this would slow down all regular case to slightly improve an
-            # exceptional case.
-            pass
-          elif catalog_path is not None:
-            # An uid conflict happened... Why?
-            # can be due to path length
-            if len(path) > MAX_PATH_LEN:
-              LOG('ERP5Catalog', ERROR, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
-
-            LOG('ERP5Catalog', ERROR,
-                'uid of %r changed from %r to %r as old one is assigned'
-                ' to %s in catalog !!! This can be fatal.' % (
-                object, uid, object.uid, catalog_path))
-
-            error_message = 'uid of %r is %r and ' \
-                            'is already assigned to %s in catalog !!! This can be fatal.' \
-                            % (object, uid, catalog_path)
-            if not self.sql_catalog_raise_error_on_uid_check:
-                LOG('ERP5Catalog', ERROR, error_message)
-            else:
-                raise ValueError(error_message)
-            uid = object.uid
-
-        assigned_uid_dict[uid] = object
-
-    if method_id_list is None:
-      method_id_list = self.sql_catalog_object_list
-    econtext = getEngine().getContext()
-    if disable_cache:
-      argument_cache = DummyDict()
-    else:
-      argument_cache = {}
-
-    with (noReadOnlyTransactionCache if disable_cache else
-          readOnlyTransactionCache)():
-      filter_dict = self.getFilterDict()
-      catalogged_object_list_cache = {}
-      for method_name in method_id_list:
-        # We will check if there is an filter on this
-        # method, if so we may not call this zsqlMethod
-        # for this object
-        expression = None
-        try:
-          filter = filter_dict[method_name]
-          method = getattr(self, method_name, None)
-          if filter['filtered']:
-            if filter.get('type'):
-              expression = Expression('python: context.getPortalType() in '
-                                      + repr(tuple(filter['type'])))
-              LOG('ERP5Catalog', WARNING,
-                  "Convert deprecated type filter for %r into %r expression"
-                  % (method_name, expression.text))
-              method.setType = ()
-              method.setExpression(expression.text)
-              method.setExpressionInstance(expression)
-            else:
-              expression = filter['expression_instance']
-        except KeyError:
-          pass
-        if expression is None:
-          catalogged_object_list = object_list
-        else:
-          text = expression.text
-          catalogged_object_list = catalogged_object_list_cache.get(text)
-          if catalogged_object_list is None:
-            catalogged_object_list_cache[text] = catalogged_object_list = []
-            append = catalogged_object_list.append
-            old_context = new_context_search(text) is None
-            if old_context:
-              warnings.warn("Filter expression for %r (%r): using variables"
-                            " other than 'context' is deprecated and slower."
-                            % (method_name, text), DeprecationWarning)
-            expression_cache_key_list = filter.get('expression_cache_key', ())
-            expression_result_cache = {}
-            for object in object_list:
-              if expression_cache_key_list:
-                # Expressions are slow to evaluate because they are executed
-                # in restricted environment. So we try to save results of
-                # expressions by portal_type or any other key.
-                # This cache is built each time we reindex
-                # objects but we could also use over multiple transactions
-                # if this can improve performance significantly
-                # ZZZ - we could find a way to compute this once only
-                cache_key = tuple(object.getProperty(key) for key
-                                  in expression_cache_key_list)
-                try:
-                  if expression_result_cache[cache_key]:
-                    append(object)
-                  continue
-                except KeyError:
-                  pass
-              if old_context:
-                result = expression(self.getExpressionContext(object))
-              else:
-                econtext.setLocal('context', object)
-                result = expression(econtext)
-              if expression_cache_key_list:
-                expression_result_cache[cache_key] = result
-              if result:
-                append(object)
-
-        if not catalogged_object_list:
-          continue
-
-        #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
-        method = getattr(self, method_name)
-        if method.meta_type == "LDIF Method":
-          # Build the dictionnary of values
-          arguments = method.arguments_src.split()
-        elif method.meta_type == "ERP5 SQL Method":
-          arguments = method.getArgumentsSrc().split()
-        elif method.meta_type == "ERP5 Python Script":
-          arguments = \
-            method.func_code.co_varnames[:method.func_code.co_argcount]
-        else:
-          arguments = []
-        kw = {x: LazyIndexationParameterList(catalogged_object_list,
-                                             x, argument_cache)
-          for x in arguments}
-
-        # Alter/Create row
-        try:
-          #start_time = DateTime()
-          #LOG('catalogObjectList', DEBUG, 'kw = %r, method_name = %r' % (kw, method_name))
-          method(**kw)
-          #end_time = DateTime()
-          #if method_name not in profile_dict:
-          #  profile_dict[method_name] = end_time.timeTime() - start_time.timeTime()
-          #else:
-          #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
-          #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
-
-        except ConflictError:
-          raise
-        except:
-          LOG('ERP5Catalog', WARNING, 'could not catalog objects %s with method %s' % (object_list, method_name),
-              error=sys.exc_info())
-          raise
-
-  if psyco is not None:
-    psyco.bind(_catalogObjectList)
-
-  def manage_exportProperties(self, REQUEST=None, RESPONSE=None):
-    """
-    Export properties to an XML file.
-    """
-    f = StringIO()
-    f.write('<?xml version="1.0"?>\n<CatalogData>\n')
-    property_id_list = self.propertyIds()
-    # Get properties and values
-    property_list = []
-    for property_id in property_id_list:
-      value = self.getProperty(property_id)
-      if value is not None:
-        property_list.append((property_id, value))
-    # Sort for easy diff
-    property_list.sort(key=lambda x: x[0])
-    for property in property_list:
-      property_id = property[0]
-      value       = property[1]
-      if isinstance(value, basestring):
-        f.write('  <property id=%s type="str">%s</property>\n' % (quoteattr(property_id), escape(value)))
-      elif isinstance(value, (tuple, list)):
-        f.write('  <property id=%s type="tuple">\n' % quoteattr(property_id))
-        # Sort for easy diff
-        item_list = []
-        for item in value:
-          if isinstance(item, basestring):
-            item_list.append(item)
-        item_list.sort()
-        for item in item_list:
-          f.write('    <item type="str">%s</item>\n' % escape(str(item)))
-        f.write('  </property>\n')
-    # filter_dict is now properties of SQL Methods now.
-    # Outputting them here, juts for the comaptibility of results with ...
-    # ... ERP5Catalog.ERP5Catalog.Catalog object
-    filter_dict = self.getFilterDict()
-    if filter_dict:
-      filter_list = []
-      for filter_id in self.filter_dict.keys():
-        filter_definition = self.filter_dict[filter_id]
-        filter_list.append((filter_id, filter_definition))
-      # Sort for easy diff
-      filter_list.sort(key=lambda x: x[0])
-      for filter_item in filter_list:
-        filter_id  = filter_item[0]
-        filter_def = filter_item[1]
-        if not filter_def['filtered']:
-          # If a filter is not activated, no need to output it.
-          continue
-        if not filter_def['expression']:
-          # If the expression is not specified, meaningless to specify it.
-          continue
-        f.write('  <filter id=%s expression=%s />\n' % (quoteattr(filter_id), quoteattr(filter_def['expression'])))
-        # For now, portal types are not exported, because portal types are too specific to each site.
-    f.write('</CatalogData>\n')
-
-    if RESPONSE is not None:
-      RESPONSE.setHeader('Content-type','application/data')
-      RESPONSE.setHeader('Content-Disposition',
-                          'inline;filename=properties.xml')
-    return f.getvalue()
+  def _getCatalogMethod(self, method_name):
+    return self._getOb(method_name)
 
   def manage_importProperties(self, file):
     """

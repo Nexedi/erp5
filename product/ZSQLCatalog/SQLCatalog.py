@@ -742,10 +742,11 @@ class Catalog(Folder,
         f.write('  </property>\n')
     # XXX Although filters are not properties, output filters here.
     # XXX Ideally, filters should be properties in Z SQL Methods, shouldn't they?
-    if hasattr(self, 'filter_dict'):
+    filter_dict = self._getFilterDict()
+    if filter_dict:
       filter_list = []
-      for filter_id in self.filter_dict.keys():
-        filter_definition = self.filter_dict[filter_id]
+      for filter_id in filter_dict.keys():
+        filter_definition = filter_dict[filter_id]
         filter_list.append((filter_id, filter_definition))
       # Sort for easy diff
       filter_list.sort(key=lambda x: x[0])
@@ -1607,7 +1608,7 @@ class Catalog(Folder,
 
     with (noReadOnlyTransactionCache if disable_cache else
           readOnlyTransactionCache)():
-      filter_dict = self.filter_dict
+      filter_dict = self._getFilterDict()
       catalogged_object_list_cache = {}
       for method_name in method_id_list:
         # We will check if there is an filter on this
@@ -1676,18 +1677,10 @@ class Catalog(Folder,
           continue
 
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
-        method = getattr(self, method_name)
-        if method.meta_type in ("Z SQL Method", "LDIF Method"):
-          # Build the dictionnary of values
-          arguments = method.arguments_src.split()
-        elif method.meta_type == "Script (Python)":
-          arguments = \
-            method.func_code.co_varnames[:method.func_code.co_argcount]
-        else:
-          arguments = []
+        method = self._getCatalogMethod(method_name)
         kw = {x: LazyIndexationParameterList(catalogged_object_list,
                                              x, argument_cache)
-          for x in arguments}
+          for x in self._getCatalogMethodArgumentList(method)}
 
         # Alter/Create row
         try:
@@ -1710,6 +1703,20 @@ class Catalog(Folder,
 
   if psyco is not None:
     psyco.bind(_catalogObjectList)
+
+  def _getFilterDict(self):
+    return self.filter_dict
+
+  def _getCatalogMethodArgumentList(self, method_name):
+    if method.meta_type in ("Z SQL Method", "LDIF Method"):
+      # Build the dictionnary of values
+      return method.arguments_src.split()
+    elif method.meta_type == "Script (Python)":
+      return method.func_code.co_varnames[:method.func_code.co_argcount]
+    return ()
+
+  def _getCatalogMethod(self, method_name):
+    return getattr(self, method_name)
 
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, path=None,uid=None):
