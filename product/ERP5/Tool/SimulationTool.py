@@ -789,7 +789,7 @@ class SimulationTool(BaseTool):
         new_kw['reserved_kw'] = {
           'omit_dict': {
             'input': reserved_kw.pop('omit_input', False),
-            'ouput': reserved_kw.pop('omit_output', False),
+            'output': reserved_kw.pop('omit_output', False),
           },
           'simulation_dict': self._getSimulationStateDict(**reserved_kw),
         }
