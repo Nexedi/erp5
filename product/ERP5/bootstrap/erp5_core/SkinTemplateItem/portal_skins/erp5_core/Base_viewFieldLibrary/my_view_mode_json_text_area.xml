@@ -10,15 +10,22 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
+                <string>external_validator</string>
                 <string>height</string>
-                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
+              <list>
+                <string>external_validator_failed</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_cluster_configuration</string> </value>
+            <value> <string>my_view_mode_json_text_area</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -26,7 +33,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>Please use correct JSON syntax.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -66,23 +73,14 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Slapos parameters.\n
-\n
-Configuration structure has to look like a python dict, ex:\n
-\n
-{\n
-"x": "xxx",\n
-"y":{\n
-"q": "qqq",\n
-"r": "rrr"\n
-},\n
-"z", "zzz"\n
-}</string> </value>
+                    <key> <string>external_validator</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_json_text_area</string> </value>
+                    <value> <string>my_text_area_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -92,12 +90,21 @@ Configuration structure has to look like a python dict, ex:\n
                     <key> <string>height</string> </key>
                     <value> <int>10</int> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Slapos Parameters</string> </value>
-                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Base_validateJSON</string> </value>
         </item>
       </dictionary>
     </pickle>
