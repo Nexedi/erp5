@@ -2021,13 +2021,23 @@ class SimulationTool(BaseTool):
                               'getNextAlertInventoryDate')
     def getNextAlertInventoryDate(self, reference_quantity=0, src__=0,
                        simulation_period='Future', from_date=None,
-                       range='min', **kw):
+                       range='min',
+                       initial_inventory_kw=None,
+                       inventory_list_kw=None,
+                       **kw):
       """
       Give the next date where the quantity is lower than the
-      reference quantity.
+      reference quantity. This is calculated by first looking if inventory
+      right now is good or not. If not, then look at inventory list until
+      a movement makes the inventory like expected.
 
       range  - either 'min' (default) or 'nlt'. With 'nlt', returns
                the next date where inventory is above reference_quantity
+
+      initial_inventory_kw - additional parameters for the initial inventory
+
+      inventory_list_kw - additional parameters for looking at next movements
+                          (exemple: use omit_output)
       """
       result = None
       # First look at current inventory, we might have already an inventory
@@ -2043,18 +2053,26 @@ class SimulationTool(BaseTool):
       checkQuantity = getCheckQuantityMethod()
       if from_date is None:
         from_date = DateTime()
+      def getAugmentedInventoryKeyword(additional_kw):
+        inventory_kw = kw
+        if additional_kw:
+          inventory_kw = kw.copy()
+          inventory_kw.update(additional_kw)
+        return inventory_kw
       inventory_method = getattr(self, "get%sInventory" % simulation_period)
-      current_inventory = inventory_method(at_date=from_date, **kw)
-      if checkQuantity(current_inventory):
+      initial_inventory = inventory_method(at_date=from_date,
+                           **getAugmentedInventoryKeyword(initial_inventory_kw))
+      if checkQuantity(initial_inventory):
         result = from_date
       else:
         inventory_list_method = getattr(self,
           "get%sInventoryList" % simulation_period)
         inventory_list = inventory_list_method(src__=src__, from_date=from_date,
-            sort_on = (('date', 'ascending'),), group_by_movement=1, **kw)
+            sort_on = (('date', 'ascending'),), group_by_movement=1,
+            **getAugmentedInventoryKeyword(inventory_list_kw))
         if src__ :
           return inventory_list
-        total_inventory = 0.
+        total_inventory = initial_inventory
         for inventory in inventory_list:
           if inventory['inventory'] is not None:
             total_inventory += inventory['inventory']
