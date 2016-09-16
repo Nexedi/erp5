@@ -2942,9 +2942,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       method_id = obj.id
       self._method_properties[method_id] = self._extractMethodProperties(
                                                           catalog, method_id)
-      filter_dict = catalog.filter_dict
-      if catalog.meta_type == 'ERP5 Catalog':
-        filter_dict = catalog.getFilterDict()
+      filter_dict = catalog._getFilterDict()
       filter = filter_dict.get(method_id, {})
       self._is_filtered_archive[method_id] = filter.get('filtered', 0)
       for method in catalog_method_filter_list:
@@ -3050,44 +3048,28 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
               new_value.sort()
               setattr(catalog, key, tuple(new_value))
 
-      # Restore filter
       if catalog.meta_type == 'ERP5 Catalog':
-        method = catalog._getOb(method_id)
-        if self._is_filtered_archive.get(method_id, 0):
-          expression = self._filter_expression_archive[method_id]
-          if expression and expression.strip():
-            # only compile non-empty expressions
-            expr_instance = Expression(expression)
-          else:
-            expr_instance = None
-          method.setFiltered(1)
-          method.setExpression(expression)
-          method.setExpressionInstance(expr_instance)
-          method.setTypeList( \
-            self._filter_type_archive.get(method_id, ()))
-          method.setExpressionCacheKeyList( \
-            self._filter_expression_cache_key_archive.get(method_id, ()))
-        elif method_id in catalog.getFilterDict().keys():
-          method.setFiltered(0)
+          catalog.filter_dict = catalog._getFilterDict()
 
-      elif catalog.meta_type == 'SQLCatalog':
-        if self._is_filtered_archive.get(method_id, 0):
-          expression = self._filter_expression_archive[method_id]
-          if expression and expression.strip():
-            # only compile non-empty expressions
-            expr_instance = Expression(expression)
-          else:
-            expr_instance = None
+      # Restore filter
+      if self._is_filtered_archive.get(method_id, 0):
+        expression = self._filter_expression_archive[method_id]
+        if expression and expression.strip():
+          # only compile non-empty expressions
+          expr_instance = Expression(expression)
+        else:
+          expr_instance = None
+        if catalog.meta_type == 'SQLCatalog':
           catalog.filter_dict[method_id] = PersistentMapping()
-          catalog.filter_dict[method_id]['filtered'] = 1
-          catalog.filter_dict[method_id]['expression'] = expression
-          catalog.filter_dict[method_id]['expression_instance'] = expr_instance
-          catalog.filter_dict[method_id]['expression_cache_key'] = \
-            self._filter_expression_cache_key_archive.get(method_id, ())
-          catalog.filter_dict[method_id]['type'] = \
-            self._filter_type_archive.get(method_id, ())
-        elif method_id in catalog.filter_dict.keys():
-          catalog.filter_dict[method_id]['filtered'] = 0
+        catalog.filter_dict[method_id]['filtered'] = 1
+        catalog.filter_dict[method_id]['expression'] = expression
+        catalog.filter_dict[method_id]['expression_instance'] = expr_instance
+        catalog.filter_dict[method_id]['expression_cache_key'] = \
+          self._filter_expression_cache_key_archive.get(method_id, ())
+        catalog.filter_dict[method_id]['type'] = \
+          self._filter_type_archive.get(method_id, ())
+      elif method_id in catalog.filter_dict.keys():
+        catalog.filter_dict[method_id]['filtered'] = 0
 
       # backward compatibility
       if hasattr(self, '_is_catalog_list_method_archive'):
