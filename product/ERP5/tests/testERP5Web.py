@@ -979,6 +979,8 @@ Hé Hé Hé!""", page.asText().strip())
                      websection_fr.absolute_url())
     self.assertEqual(self.publish(webpage_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
                      webpage_fr.absolute_url())
+    self.assertEqual(self.publish(website_bg_en_fr.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
+                     website_fr.absolute_url()+'?a=b&c=d')
 
     # /bg/en/xxx should be redirected to /xxx where en is the default language
     website_bg_en = self.portal.restrictedTraverse(
@@ -993,6 +995,8 @@ Hé Hé Hé!""", page.asText().strip())
                      websection.absolute_url())
     self.assertEqual(self.publish(webpage_bg_en.absolute_url(relative=1)).getHeader('location'),
                      webpage.absolute_url())
+    self.assertEqual(self.publish(websection_bg_en.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
+                     websection.absolute_url()+'?a=b&c=d')
 
     # /en/xxx should be redirected to /xxx where en is the default language
     website_en = self.portal.restrictedTraverse(
@@ -1007,6 +1011,8 @@ Hé Hé Hé!""", page.asText().strip())
                      websection.absolute_url())
     self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)).getHeader('location'),
                      webpage.absolute_url())
+    self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
+                     webpage.absolute_url()+'?a=b&c=d')
 
   def test_13_DocumentCache(self):
     """

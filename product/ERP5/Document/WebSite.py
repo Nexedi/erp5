@@ -182,6 +182,9 @@ class WebSite(WebSection):
               redirect_path_list.append(name)
             redirect_path_list.extend(reversed(request['TraversalRequestNameStack']))
             request['minimum_language_redirect_url'] = '/'.join(redirect_path_list)
+            query_string = request.get('QUERY_STRING')
+            if query_string:
+              request['minimum_language_redirect_url'] += '?' + query_string
           return self.getOriginalDocument().asContext(id=name)
       return WebSection.getExtensibleContent(self, request, name)
 
