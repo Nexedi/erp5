@@ -113,14 +113,7 @@ DO_TEST = 1
 # set 1 to get profiler's result (unit_test/tests/<func_name>)
 PROFILE=0
 
-class TestPerformance(ERP5TypeTestCase, LogInterceptor):
-
-    # Some helper methods
-    quiet = 0
-    run_all_test = 1
-
-    def getTitle(self):
-      return "Performance"
+class TestPerformanceMixin(ERP5TypeTestCase, LogInterceptor):
 
     def getBusinessTemplateList(self):
       """
@@ -128,12 +121,6 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       return ('erp5_base',
               'erp5_ui_test',)
-
-    def getBarModule(self):
-      """
-      Return the bar module
-      """
-      return self.portal['bar_module']
 
     def afterSetUp(self):
       """
@@ -154,10 +141,35 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       self.bar_module = self.getBarModule()
       self.foo_module = self.portal.foo_module
 
+    def getBarModule(self):
+      """
+      Return the bar module
+      """
+      return self.portal['bar_module']
+
+    def profile(self, func, suffix=''):
+        from cProfile import Profile
+        prof_file = '%s%s' % (func.__name__, suffix)
+        try:
+            os.unlink(prof_file)
+        except OSError:
+            pass
+        prof = Profile()
+        prof.runcall(func)
+        prof.dump_stats(prof_file)
+
     def beforeTearDown(self):
       # Re-enable gc at teardown.
       gc.enable()
       self.abort()
+
+class TestPerformance(TestPerformanceMixin):
+
+    def getTitle(self):
+      return "Performance"
+
+    def beforeTearDown(self):
+      super(TestPerformance, self).beforeTearDown()
       self.bar_module.manage_delObjects(list(self.bar_module.objectIds()))
       self.foo_module.manage_delObjects(list(self.foo_module.objectIds()))
       gender = self.portal.portal_categories['gender']
@@ -165,7 +177,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       gender = self.portal.portal_caches.clearAllCache()
       self.tic()
 
-    def checkViewBarObject(self, min, max, quiet=quiet, prefix=None):
+    def checkViewBarObject(self, min, max, prefix=None):
       # Some init to display form with some value
       if prefix is None:
         prefix = ''
@@ -193,8 +205,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
         bar.Bar_viewPerformance()
       after_view = time()
       req_time = (after_view - before_view)/100.
-      if not quiet:
-          print "%s time to view object form %.4f < %.4f < %.4f\n" % \
+      print "%s time to view object form %.4f < %.4f < %.4f\n" % \
               (prefix, min, req_time, max)
       if PROFILE:
           self.profile(bar.Bar_viewPerformance)
@@ -202,48 +213,21 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           self.assertTrue(min < req_time < max,
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
 
-    def profile(self, func, suffix=''):
-        from cProfile import Profile
-        prof_file = '%s%s' % (func.__name__, suffix)
-        try:
-            os.unlink(prof_file)
-        except OSError:
-            pass
-        prof = Profile()
-        prof.runcall(func)
-        prof.dump_stats(prof_file)
-
-    def test_00_viewBarObject(self, quiet=quiet, run=run_all_test,
-                              min=None, max=None):
+    def test_00_viewBarObject(self, min=None, max=None):
       """
       Estimate average time to render object view
       """
-      if not run : return
-      if not quiet:
-        message = 'Test form to view Bar object'
-        LOG('Testing... ', 0, message)
+      message = 'Test form to view Bar object'
+      LOG('Testing... ', 0, message)
       self.checkViewBarObject(MIN_OBJECT_VIEW, MAX_OBJECT_VIEW,
                               prefix='objective')
 
-#    def test_00b_currentViewBarObject(self, quiet=quiet, run=run_all_test):
-#      """
-#      Estimate average time to render object view and check with current values
-#      """
-#      if not run : return
-#      if not quiet:
-#        message = 'Test form to view Bar object with current values'
-#        LOG('Testing... ', 0, message)
-#      self.checkViewBarObject(CURRENT_MIN_OBJECT_VIEW, CURRENT_MAX_OBJECT_VIEW,
-#                              prefix='current')
-
-    def test_01_viewBarModule(self, quiet=quiet, run=run_all_test):
+    def test_01_viewBarModule(self):
       """
       Estimate average time to render module view
       """
-      if not run : return
-      if not quiet:
-        message = 'Test form to view Bar module'
-        LOG('Testing... ', 0, message)
+      message = 'Test form to view Bar module'
+      LOG('Testing... ', 0, message)
       self.tic()
       view_result = {}
       tic_result = {}
@@ -293,11 +277,10 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
         add_value = add_result[key]
         min_view = MIN_MODULE_VIEW + LISTBOX_COEF * i
         max_view = MAX_MODULE_VIEW + LISTBOX_COEF * i
-        if not quiet:
-            print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
-            print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
-            print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
-            print
+        print "nb objects = %s\n\tadd = %.4f < %.4f < %.4f" %(key, MIN_OBJECT_CREATION, add_value, MAX_OBJECT_CREATION)
+        print "\ttic = %.4f < %.4f < %.4f" %(MIN_TIC, tic_value, MAX_TIC)
+        print "\tview = %.4f < %.4f < %.4f" %(min_view, module_value, max_view)
+        print
         i += 1
       # then check results
       if DO_TEST:
@@ -321,7 +304,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
             i += 1
 
 
-    def test_viewProxyField(self, quiet=quiet):
+    def test_viewProxyField(self):
       # render a form with proxy fields: Foo_viewProxyField
       foo = self.foo_module.newContent(
                            portal_type='Foo',
@@ -341,8 +324,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       after_view = time()
       req_time = (after_view - before_view)/100.
 
-      if not quiet:
-        print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
+      print "time to view proxyfield form %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_PROXYFIELD_VIEW,
                 req_time,
                 MAX_OBJECT_PROXYFIELD_VIEW )
@@ -356,7 +338,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               req_time,
               MAX_OBJECT_PROXYFIELD_VIEW))
 
-    def test_02_viewFooObjectWithManyLines(self, quiet=quiet):
+    def test_02_viewFooObjectWithManyLines(self):
       """
       Estimate average time to render object view with many lines
       """
@@ -373,8 +355,7 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
       after_view = time()
       req_time = (after_view - before_view)/100.
 
-      if not quiet:
-        print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
+      print "time to view object form with many lines %.4f < %.4f < %.4f\n" % \
               ( MIN_OBJECT_MANY_LINES_VIEW,
                 req_time,
                 MAX_OBJECT_MANY_LINES_VIEW )
@@ -387,8 +368,3 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               MIN_OBJECT_MANY_LINES_VIEW,
               req_time,
               MAX_OBJECT_MANY_LINES_VIEW))
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestPerformance))
-  return suite
