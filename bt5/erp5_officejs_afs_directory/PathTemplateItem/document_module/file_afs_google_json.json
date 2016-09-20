@@ -1,0 +1,39 @@
+{
+	"title": "Google",
+	"logo": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
+	"country": "us",
+	"presence": ["worldwide"],
+	"website": "https://www.google.fr/intl/en/about/",
+	"founded_year": "1998",
+	"free_software_list": [{
+		"title": "Chromium",
+		"logo": "https://upload.wikimedia.org/wikipedia/commons/2/24/Chromium_Material_Icon-256x256.png",
+		"category_list": ["Browser"],
+		"source_code_download": "git clone https://chromium.googlesource.com/chromium/src",
+		"commercial_support": "N/A",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Chromium_(web_browser)",
+		"success_case_list": [{
+			"title": "",
+			"image": "",
+			"customer": "",
+			"country": "",
+			"language": "",
+			"url": ""
+		}]
+	}, {
+		"title": "Chromium OS",
+		"logo": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Chromium_11_Wordmark_Logo.svg",
+		"category_list": ["Operating system"],
+		"source_code_download": "git clone https://chromium.googlesource.com/chromiumos",
+		"commercial_support": "N/A",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Chromium_OS",
+		"success_case_list": [{
+			"title": "",
+			"image": "",
+			"customer": "",
+			"country": "",
+			"language": "",
+			"url": ""
+		}]
+	}]
+}

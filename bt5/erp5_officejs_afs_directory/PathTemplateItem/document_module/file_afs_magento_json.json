@@ -1,0 +1,24 @@
+{
+	"title": "Magento",
+	"logo": "https://upload.wikimedia.org/wikipedia/en/c/c2/Magento_logo.png",
+	"country": "us",
+	"presence": ["us", "de", "gb", "es", "ie"],
+	"website": "https://magento.com",
+	"founded_year": "2010",
+	"free_software_list": [{
+		"title": "Magento Community Edition",
+		"logo": "N/A",
+		"category_list": ["E-commerce"],
+		"source_code_download": "https://github.com/magento/magento2-community-edition/archive/master.zip",
+		"commercial_support": "N/A",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Magento",
+		"success_case_list": [{
+			"title": "N/A",
+			"image": "N/A",
+			"customer": "N/A",
+			"country": "N/A",
+			"language": "N/A",
+			"url": "N/A"
+		}]
+	}]
+}

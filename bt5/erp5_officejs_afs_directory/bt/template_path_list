@@ -1,0 +1,5 @@
+document_module/file_afs*
+web_page_module/gadget_erp5_afs*
+web_page_module/gadget_erp5_page_afs*
+web_site_module/afs
+web_site_module/afs/**

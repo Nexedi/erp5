@@ -1,0 +1,24 @@
+{
+	"title": "Apple",
+	"logo": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg",
+	"country": "us",
+	"presence": ["worldwide"],
+	"website": "http://www.apple.com/",
+	"founded_year": "1976",
+	"free_software_list": [{
+		"title": "Swift",
+		"logo": "https://upload.wikimedia.org/wikipedia/commons/2/20/Swift_logo_with_text.svg",
+		"category_list": ["Programming language"],
+		"source_code_download": "https://github.com/apple/swift/archive/master.zip",
+		"commercial_support": "Community",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Swift_(programming_language)",
+		"success_case_list": [{
+			"title": "N/A",
+			"image": "N/A",
+			"customer": "N/A",
+			"country": "N/A",
+			"language": "N/A",
+			"url": "N/A"
+		}]
+	}]
+}

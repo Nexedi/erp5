@@ -1,0 +1,24 @@
+{
+	"title": "Pentaho",
+	"logo": "http://www.pentaho.com/sites/default/files/uploads/resources/thumbnails/pentaho-hgc-logo.png",
+	"country": "us",
+	"presence": ["us", "gb", "be", "es", "de", "fr"],
+	"website": "http://www.pentaho.com/",
+	"founded_year": "2004",
+	"free_software_list": [{
+		"title": "Mondrian",
+		"logo": "https://upload.wikimedia.org/wikipedia/en/3/36/Modrian_logo.png",
+		"category_list": ["OLAP", "Server"],
+		"source_code_download": "https://github.com/pentaho/mondrian/archive/master.zip",
+		"commercial_support": "N/A",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Mondrian_OLAP_server",
+		"success_case_list": [{
+			"title": "Pentaho Business Analytics",
+			"image": "http://www.pentaho.com/sites/default/files/uploads/images/b-a.png",
+			"customer": "Pentaho",
+			"country": "us",
+			"language": "en",
+			"url": "http://www.pentaho.com/product/business-visualization-analytics#visual-analysis"
+		}]
+	}]
+}
