@@ -43,9 +43,9 @@ html .ci-presentation img {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
-  max-width: 100%;
+  width: auto;
   max-height: 80%;
-  width: 100%;
+  min-width: 80%;
 }
 
 /* margin on no-image-slides */
@@ -93,8 +93,15 @@ html .ci-presentation details {
 html .ci-presentation details ul {
   margin-top: 5%;
 }
-html .ci-presentation details ul li {
-  font-size: 100%;
+html .ci-presentation details p + ul {
+  margin-top: 0;
+}
+html .ci-presentation details ul li,
+html .ci-presentation details p {
+  font-size: 75%;
+}
+html .ci-presentation summary::-webkit-details-marker {
+    display: none;
 }
 
 /* footer */
@@ -118,6 +125,7 @@ html .ci-presentation .ci-presentation-footer > div {
 html .ci-presentation .ci-presentation-header > div img,
 html .ci-presentation .ci-presentation-footer > div img {
   max-width: 8em;
+  min-width: initial;
 }
 
 /* move side elements to edges */
@@ -171,6 +179,85 @@ html .ci-presentation .ci-presentation-intro.present + .ci-presentation-header {
 }
 
 /* ===============================   Themes   =============================== */
+
+/* ------------------------- OSOE THEME (Default) ------------------------- */
+/* colors: #b2cd39, #03446a, #ffffff, #969696 */
+/* presentation themed css */
+
+/* grey header/footer/intro font color */
+.ci-osoe .ci-presentation-header h2,
+.ci-osoe .ci-presentation-footer, 
+.ci-osoe .ci-presentation-intro.present > h2,
+.ci-osoe .ci-presentation-intro.present:before,
+.ci-osoe h1,
+.ci-osoe ul li,
+.ci-osoe p,
+.ci-osoe div {
+  color: #969696;
+}
+
+/* background logo size */
+.ci-osoe .ci-presentation-intro.present:before {
+  background-size: 90%;
+}
+
+/* intro slide background */
+.ci-osoe .ci-presentation-intro.present {
+  /* background: linear-gradient(180deg, #b2cd39 80%, white 0px); */
+  background: #b2cd39;
+  color: #fff;
+}
+.ci-osoe .ci-presentation-intro.present > h2 {
+  background: #fff;
+}
+
+/* override reveal.js colors */
+.ci-osoe .slide-number {
+  background-color: #b2cd39;
+}
+.ci-osoe .slide-number span {
+  color: #fff;
+}
+.ci-osoe .reveal .controls .navigate-left,
+.ci-osoe .reveal .controls .navigate-left.enabled {
+  border-right-color: #b2cd39;
+}
+.ci-osoe .reveal .controls .navigate-right,
+.ci-osoe .reveal .controls .navigate-right.enabled {
+  border-left-color: #b2cd39;
+}
+.ci-osoe .reveal .controls .navigate-up,
+.ci-osoe .reveal .controls .navigate-up.enabled {
+  border-bottom-color: #b2cd39;
+}
+.ci-osoe .reveal .controls .navigate-down,
+.ci-osoe .reveal .controls .navigate-down.enabled {
+  border-top-color: #b2cd39;
+}
+.ci-osoe .reveal .controls .navigate-left.enabled:hover {
+  border-right-color: #03446a;
+}
+.ci-osoe .reveal .controls .navigate-right.enabled:hover {
+  border-left-color: #03446a;
+}
+.ci-osoe .reveal .controls .navigate-up.enabled:hover {
+  border-bottom-color: #03446a;
+}
+.ci-osoe .reveal .controls .navigate-down.enabled:hover {
+  border-top-color: #03446a;
+}
+
+/* progress bar */
+.ci-osoe .reveal .progress {
+  background: rgba(0, 0, 0, 0.2); }
+
+.ci-osoe .reveal .progress span {
+  background: #b2cd39;
+  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
+  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
+
+
 
 /* ------------------------- NEXEDI THEME (Default) ------------------------- */
 /* colors: #2B2B5D, #1C76BB, #ffffff, #969696 */

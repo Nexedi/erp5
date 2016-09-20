@@ -32,7 +32,11 @@ def removeSlidesWithoutDetailsFromNotes(content):
 def removeEmptyDetails(content):
   return content.replace('<details open="open"></details>', '')
 
-def getThemeFromFirstFollowUpProduct():
+def getThemeFromFirstFollowUpProduct(reference):
+  theme = None
+  osoe_match_string = "osoe"
+
+  # first try to theme to Software
   follow_up_list = context.getFollowUpValueList(
     portal_type="Product",
     checked_permission='View'
@@ -40,7 +44,22 @@ def getThemeFromFirstFollowUpProduct():
 
   if len(follow_up_list) > 0:
     full_title = follow_up_list[0].getTitle()
-    return full_title.split(" Software")[0].lower()
+    theme = full_title.split(" Software")[0].lower()
+
+  # then to OSOE extra for Klaus
+  # XXX this should be relative to the website the presentation is being
+  # viewed from. from OSOE => osoe theme, from ERP5 => erp5 theme
+
+  category_list = context.getCategoryList()
+
+  if len(category_list) > 0:
+    for category in category_list:
+      if category.find(osoe_match_string) > 1:
+        theme = osoe_match_string
+
+  #3 fallback to Nexedi
+  if theme is not None:
+    return theme
   return "nexedi"
 
 document = context
@@ -48,8 +67,9 @@ document = context
 # wkhtmltopdf
 document_output_type = document.REQUEST.form.get("output", default=None)
 
+document_reference = document.getReference()
 document_content = removeEmptyDetails(document.getTextContent())
-document_theme = getThemeFromFirstFollowUpProduct()
+document_theme = getThemeFromFirstFollowUpProduct(document_reference)
 document_title = document.getTitle()
 document_description = document.getDescription()
 document_creation_year = document.getCreationDate().strftime('%Y')
@@ -110,7 +130,7 @@ if document_output_type == "footer":
     	<body class="ci-presentation" onload="setPlaceholdersWithUrlParameters()">
         <div class="ci-presentation-footer">
   		    <div class="ci-presentation-container-left">
-  		      <img src="NXD-Media.Logo.Nexedi?format=png" alt="Nexedi Logo" />
+  		      <img src="NXD-Media.Logo.Nexedi?format=png&display=xsmall" alt="Nexedi Logo" />
   		    </div>
   		    <div class="ci-presentation-container-center">%s</div>
   		    <div class="ci-presentation-container-right">
@@ -150,8 +170,7 @@ if document_output_type == "cover":
       <style type="text/css">
         html .ci-presentation-intro.present:before {
           content: "%s";
-          background: #FFF url("%s?format=png") center no-repeat;
-          background-size: 300px;
+          background: #FFF url("%s?format=png&display=small") center no-repeat;
         }
       </style>
     </head>
