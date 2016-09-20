@@ -294,7 +294,7 @@ return """
       html .ci-presentation .slides .ci-presentation-intro.present:before {
         content: "%s";
         background: #FFF url("%s?format=png") center no-repeat;
-        background-size: 300px;
+        background-size: auto 120px;
       }
     </style>
 
