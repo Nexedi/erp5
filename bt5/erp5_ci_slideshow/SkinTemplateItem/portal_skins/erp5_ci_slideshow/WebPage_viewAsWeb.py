@@ -35,33 +35,46 @@ def removeEmptyDetails(content):
 def getThemeFromFirstFollowUpProduct(reference):
   theme = None
   osoe_match_string = "osoe"
-
-  # first try to theme to Software
+  product_match_string = "product"
+  software_match_string = " Software"
+  
+  portal = context.getPortalObject()
+  
+  # theme: try via followUpValue (most likely restricted)
   follow_up_list = context.getFollowUpValueList(
     portal_type="Product",
     checked_permission='View'
   )
-
+  
   if len(follow_up_list) > 0:
-    full_title = follow_up_list[0].getTitle()
-    theme = full_title.split(" Software")[0].lower()
-
-  # then to OSOE extra for Klaus
-  # XXX this should be relative to the website the presentation is being
-  # viewed from. from OSOE => osoe theme, from ERP5 => erp5 theme
-
+    for follow_up in follow_up_list:
+      follow_up_title = follow_up.getTitle()
+      if follow_up_title.find(software_match_string) > 1:
+        theme = follow_up_title.split(software_match_string)[0].lower()
+  
+  # theme: then try via category
   category_list = context.getCategoryList()
-
+  
   if len(category_list) > 0:
     for category in category_list:
+      if category.find(product_match_string) > 1:
+        relative_url = category.split("follow_up/")[1]
+        category_object = portal.portal_catalog(relative_url=relative_url,limit=1)
+        category_title = category_object[0].getTitle()
+        theme = category_title.split(software_match_string)[0].lower()
+  
+      # OSOE extra handle
+      # XXX this should be relative to the website the presentation is being
+      # viewed from. from OSOE => osoe theme, from ERP5 => erp5 theme
       if category.find(osoe_match_string) > 1:
         theme = osoe_match_string
+  
+  # theme: fallback to Nexedi
+  if theme is None:
+    theme = "nexedi"
 
-  #3 fallback to Nexedi
-  if theme is not None:
-    return theme
-  return "nexedi"
-
+  return theme
+  
 document = context
 
 # wkhtmltopdf
@@ -293,7 +306,7 @@ return """
     <style type="text/css">
       html .ci-presentation .slides .ci-presentation-intro.present:before {
         content: "%s";
-        background: #FFF url("%s?format=png") center no-repeat;
+        background: #FFF url("%s?format=png&amp;display=small") center no-repeat;
         background-size: auto 120px;
       }
     </style>
