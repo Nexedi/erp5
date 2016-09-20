@@ -19,40 +19,15 @@
       S4() + S4() + S4();
   }
 
-  function declareSubGadget(gadget, url) {
-    var container_element = gadget.state_parameter_dict.element.querySelector("." + url.split(".")[0]),
-      element = document.createElement("div");
-
-    container_element.innerHTML = "";
-    container_element.appendChild(element);
-    return gadget.declareGadget(url, {
-      element: element,
-      scope: url,
-      sandbox: "public"
-    });
-  }
-
-  function dropSubGadget(gadget, scope) {
-    return gadget.getDeclaredGadget(scope)
-      .push(function (result) {
-        return result.getElement();
-      })
-      .push(function (element) {
-        if (element.parentElement) {
-          element.parentElement.removeChild(element);
-        }
-        delete gadget.state_parameter_dict.scope_ip[scope];
-        return gadget.dropGadget(scope);
-      });
-  }
-
   function getWebRTCScopeList(gadget) {
     var result_list = [],
-      element_list = gadget.state_parameter_dict.element.querySelector(".gadget_webrtc_jio_bridge")
+      element_list = gadget.state_parameter_dict.element.querySelector(".gadget_webrtc")
                                                         .childNodes,
       i;
     for (i = 0; i < element_list.length; i += 1) {
-      result_list.push(element_list[i].getAttribute("data-gadget-scope"));
+      if (element_list[i].getAttribute) {
+        result_list.push(element_list[i].getAttribute("data-gadget-scope"));
+      }
     }
     return result_list;
   }
@@ -90,7 +65,7 @@
     .ready(function (gadget) {
       // Initialize the gadget local parameters
       gadget.state_parameter_dict = {
-        counter: 0,
+        counter: 1,
         connecting: false,
         scope_ip: {}
       };
@@ -102,151 +77,114 @@
           return updateInfo(gadget);
         });
     })
-    .allowPublicAcquisition('notifyDataChannelClosed', function (argument_list, scope) {
-      /*jslint unparam:true*/
-      var gadget = this;
-      return dropSubGadget(this, scope)
-        .push(function () {
-          return updateInfo(gadget);
-        });
-    })
 
-    .declareMethod('connect', function(room_id, offer, parent_scope, config) {
-      var gadget = this,
-        scope,
-        rtc_gadget;
+    .declareMethod('onOffer', function(options, offer) {
+      var gadget = this;
 
       return new RSVP.Queue()
       .push(function(response) {
-        gadget.state_parameter_dict.connecting = true;
-        gadget.state_parameter_dict.counter += 1;
+        gadget.connecting = true;
 
-        var new_element = document.createElement("div");
-        gadget.state_parameter_dict.element.querySelector(".gadget_webrtc_jio_bridge").appendChild(new_element);
-        scope = "webrtc" + gadget.state_parameter_dict.counter;
-
-        return gadget.declareGadget("gadget_webrtc_jio_bridge.html", {
-          scope: scope,
-          element: new_element
-        })
-        .push(function(gg){
-          rtc_gadget = gg;
-          return rtc_gadget.register(room_id, 'master', config);
-        })
-        .push(function(){
-          // https://github.com/diafygi/webrtc-ips
-          var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/,
-            ip_list = [],
-            ip_dict = {},
-            ip_addr,
-            line_list = JSON.parse(offer.data).sdp.split('\n'),
-            i;
-          
-          for (i = 0; i < line_list.length; i += 1) {
-            if (line_list[i].indexOf('a=candidate:') === 0) {
-              ip_addr = ip_regex.exec(line_list[i])[1];
-              if (!ip_addr.match(/^[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}$/)) {
-                // Hide ipv6
-                if (!ip_dict[ip_addr]) {
-                  ip_list.push(ip_addr);
-                  ip_dict[ip_addr] = true;
-                }
+        // https://github.com/diafygi/webrtc-ips
+        var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/,
+          ip_list = [],
+          ip_dict = {},
+          ip_addr,
+          line_list = JSON.parse(offer.data).sdp.split('\n'),
+          i;
+        
+        for (i = 0; i < line_list.length; i += 1) {
+          if (line_list[i].indexOf('a=candidate:') === 0) {
+            ip_addr = ip_regex.exec(line_list[i])[1];
+            if (!ip_addr.match(/^[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}$/)) {
+              // Hide ipv6
+              if (!ip_dict[ip_addr]) {
+                ip_list.push(ip_addr);
+                ip_dict[ip_addr] = true;
               }
             }
           }
-          gadget.state_parameter_dict.scope_ip[scope] = ip_list;
-          return rtc_gadget.connect({ 
-                                      roomid: room_id, 
-                                      peerid: 'master', 
-                                      to: offer.from, 
-                                      offer: JSON.stringify(offer.data) 
-                                    });
-        })         
-        .push(function () {
-          return RSVP.any([
-            RSVP.Queue()
-              .push(function () {
-                return RSVP.delay(20000);
-              })
-              .push(function () {
-                console.info('-- webrtc client disappears...');
-                return dropSubGadget(gadget, scope);
-              }),
-              rtc_gadget.waitForConnection()
-          ]);
-        })
-        .push(function () {
-          gadget.state_parameter_dict.connecting = false;
-          var ckeditor = window.frames[0].CKEDITOR;
-          
-          var data = {'content': ckeditor.instances.editor1.getData()};
-          
-          // Get all the extra properties and send it with data
-          var extraprops = parent_scope.props.element.querySelector('.ui-collapsible').outerHTML;
-          data['extra_props'] = extraprops;
-          
-          // Get title
-          var title = parent_scope.props.element.querySelector('.ui-field-contain').childNodes[3].firstChild.value;
-          data['title'] = title;
+        }
 
-          rtc_gadget.send(JSON.stringify(data));
-          ckeditor.instances.editor1.on('key',function(e){
-            rtc_gadget.send(JSON.stringify({'content':ckeditor.instances.editor1.getData()}));
-          });
-          return updateInfo(gadget);
-        });
-      })
+        gadget.state_parameter_dict.scope_ip["webrtc"+gadget.state_parameter_dict.counter] = ip_list
+        options.to = offer.from; 
+        return;
+      });
     })
-    .declareMethod('initiate', function (roomid, scope, config) {
+
+    .declareMethod('postConnection', function(options, offer) {
       var gadget = this,
-        rtc_gadget,
-        blob;
+        counter;
+      return new RSVP.Queue()
+      .push(function () {
+        gadget.connecting = false;
+        var ckeditor = window.frames[0].CKEDITOR;
         
-        return gadget.declareGadget("gadget_webrtc_jio_bridge.html")
-        .push(function (rg) {
-          // register peer
-          rtc_gadget = rg;
-          roomid = "/"+roomid+"/";
-          return rtc_gadget.register(roomid, 'master', config);
-        })
-        .push(function (r) {
-          var peerid = 'master';
-          return rtc_gadget.wait_until_available(roomid, peerid+'_', function (offers) {
-            var connections = [];
-            for (var offer in offers) {
-              connections.push(gadget.connect(roomid, JSON.parse(offers[offer].target.result), scope, config));
-            }
-            return RSVP.all(connections);
-          });
+        var data = {'content': ckeditor.instances.editor1.getData()};
+        
+        // Get all the extra properties and send it with data
+        var extraprops = options.parent_scope.props.element.querySelector('.ui-collapsible').outerHTML;
+        data['extra_props'] = extraprops;
+        
+        // Get title
+        var title = options.parent_scope.props.element.querySelector(".view-web-page-form").title.value;
+        data['title'] = title;
+        
+        counter = gadget.state_parameter_dict.counter;
+        options.rtc_gadget.send(JSON.stringify(data), "webrtc"+counter);
+        ckeditor.instances.editor1.on('key',function(e){
+          options.rtc_gadget.send(JSON.stringify({'content':ckeditor.instances.editor1.getData()}), "webrtc"+counter);
+        });
+        gadget.state_parameter_dict.counter += 1;
+        return updateInfo(gadget);
+      });
+    })
+
+    .declareMethod('initiate', function (roomid, scope, type, config) {
+      var gadget = this,
+        options = {
+          peerid: "master",
+          type: type,
+          config: config,
+          roomid: "/"+roomid+"/",
+          listner: true, // optional
+          preConnection: gadget.onOffer.bind(gadget), // optional
+          postConnection: gadget.postConnection.bind(gadget), // optional
+          parent_scope: scope, // custom 
+        },
+        rtc_gadget;
+        
+        return gadget.getDeclaredGadget("gadget_webrtc_jio_bridge.html")
+        .push(function (rtc_gadget) {
+          options.rtc_gadget = rtc_gadget;
+          return rtc_gadget.connect(options);
         });
     })
-    .declareMethod('slaveInitiate', function(roomid, g, config) {
+    .declareMethod('slaveInitiate', function(roomid, g, type, config) {
        var context = this,
-        rtc_gadget, gadget;
-       
-       roomid = "/"+roomid+"/";
+        rtc_gadget,
+        options = {
+          type: type,
+          roomid: "/"+roomid+"/",
+          initiator: true,
+          to: 'master'
+        };
  
        return g.notifySubmitting()
         .push(function() {
-          return declareSubGadget(context, "gadget_webrtc_jio_bridge.html")
+          return context.getDeclaredGadget("gadget_webrtc_jio_bridge.html")
         })
         .push(function (gadget) {
-          context.state_parameter_dict.uuid = UUID();
+          options.peerid = UUID();
           context.state_parameter_dict.message_count = 0;
           context.state_parameter_dict.message_dict = {};
           rtc_gadget = gadget;
 
-          // register peer
           if (config) {
             config = JSON.parse(config)
+            options.config = config;
           }
-          return rtc_gadget.register(roomid, context.state_parameter_dict.uuid, config);
-        })
-        .push(function(peers){
-          var options = { roomid: roomid, 
-                          peerid: context.state_parameter_dict.uuid,
-                          initiator: true,
-                          to: 'master' }
+
           return rtc_gadget.connect(options);
         })
         .push(null, function(error){

@@ -4,7 +4,7 @@
   "use strict";
 
   var timeout = 60000,
-    websocket_timeout = 5000;
+    websocket_timeout = 500000;
 
   function S4() {
     return ('0000' + Math.floor(
@@ -24,7 +24,7 @@
     if (!gadget.state_parameter_dict.jio_created) {
       return gadget.redirect({page: 'setting'});
     }
-    return gadget.getDeclaredGadget('gadget_webrtc_datachannel.html')
+    return gadget.getDeclaredGadget("gadget_webrtc_jio_bridge.html")
       .push(function (rtc_gadget) {
         gadget.state_parameter_dict.message_count += 1;
         gadget.state_parameter_dict.message_dict[gadget.state_parameter_dict.message_count] = RSVP.defer();
@@ -34,7 +34,7 @@
             type: "jio_query",
             method_name: method_name,
             argument_list: Array.prototype.slice.call(argument_list)
-          })),
+          }), 'webrtc0'),
           RSVP.any([
             RSVP.timeout(timeout),
             gadget.state_parameter_dict.message_dict[gadget.state_parameter_dict.message_count].promise
@@ -44,7 +44,6 @@
       .push(function (result_list) {
         return result_list[1];
       });
-
   }
 
   function declareSubGadget(gadget, url) {
@@ -105,58 +104,41 @@
 
     .declareMethod('createJio', function (options) {
       var context = this,
-        socket_gadget,
-        rtc_gadget;
+        rtc_gadget,
+        rtc_options = {
+          type: "websocket",
+          roomid: "/ok/",
+          config: {url : options.socket_url},
+          initiator: true,
+          to: 'master'
+        };
 
-      if ((options === undefined) || (options.socket_url === undefined)) {
-        return context.redirect({page: 'setting'});
-      }
+      //if ((options === undefined) || (options.socket_url === undefined)) {
+      //  return context.redirect({page: 'setting'});
+      //}
+
       context.state_parameter_dict.jio_created = true;
-      return declareSubGadget(context, 'gadget_websocket.html')
-        .push(function (gadget) {
-          socket_gadget = gadget;
-
-          context.state_parameter_dict.uuid = UUID();
-          context.state_parameter_dict.answer_defer = RSVP.defer();
-          context.state_parameter_dict.message_count = 0;
-          context.state_parameter_dict.message_dict = {};
-          // Send offer and expect answer in less than XXXms (arbitrary value...)
-          return RSVP.any([
-            RSVP.Queue()
-              .push(function () {
-                return RSVP.timeout(websocket_timeout);
-              })
-              .push(undefined, function () {
-                return context.redirect({page: 'setting'});
-                // throw new Error("No remote WebRTC connection available");
-              }),
-            declareSubGadget(context, 'gadget_websocket.html')
-              .push(function (gadget) {
-                socket_gadget = gadget;
-                // XXX Drop hardcoded URL
-                return socket_gadget.createSocket(options.socket_url);
-              })
-              .push(function () {
-                return declareSubGadget(context, 'gadget_webrtc_datachannel.html');
-              })
-              .push(function (gadget) {
-                rtc_gadget = gadget;
-                return rtc_gadget.createOffer(context.state_parameter_dict.uuid);
-              })
-              .push(function (description) {
-                return RSVP.all([
-                  socket_gadget.send(JSON.stringify({from: context.state_parameter_dict.uuid, action: "offer", data: description})),
-                  context.state_parameter_dict.answer_defer.promise
-                ]);
-              })
-              .push(function (response_list) {
-                return rtc_gadget.registerAnswer(response_list[1]);
-              })
-              .push(function () {
-                return socket_gadget.close();
-              })
-            ]);
-        });
+      context.state_parameter_dict.uuid = UUID();
+      context.state_parameter_dict.answer_defer = RSVP.defer();
+      context.state_parameter_dict.message_count = 0;
+      context.state_parameter_dict.message_dict = {};
+      // Send offer and expect answer in less than XXXms (arbitrary value...)
+      return RSVP.any([
+        RSVP.Queue()
+          .push(function () {
+            return RSVP.timeout(websocket_timeout);
+          })
+          .push(undefined, function () {
+            //return context.redirect({page: 'setting'});
+            // throw new Error("No remote WebRTC connection available");
+          }),
+        context.getDeclaredGadget("gadget_webrtc_jio_bridge.html")
+        .push(function (rtc_gadget) {
+          rtc_options.peerid = context.state_parameter_dict.uuid;
+          
+          return rtc_gadget.connect(rtc_options);
+        })
+      ]);
     })
     .declareMethod('allDocs', function () {
       return wrapJioAccess(this, 'allDocs', arguments);

@@ -28,6 +28,60 @@
         return gadget.put(gadget.options.jio_key, doc);
       });
   }
+  
+  function shareDoc (gadget, type) {
+    if(window.location.hash) {
+      var index = window.location.hash.indexOf('room=');
+      if (index === -1) {
+        var S4 = function() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+        };
+        var room = (S4()+S4()+"-"+S4()+S4());
+        return new RSVP.Queue()
+        .push(function () {
+          return gadget.declareGadget(
+            "gadget_officejs_page_share_text.html",
+            {
+              scope: "share_text_via_webrtc",
+              element: gadget.props.element.querySelector(".webrtc-gadget")
+            }
+          );
+        })
+        .push(function(g){
+          var config;
+          if (type === "jio") {
+            config = {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  "type": "dav",
+                  "url": "https://softinst67513.host.vifib.net/share/",
+                  "basic_login": btoa("admin:vowhkida")
+                }
+              }
+            };
+          } else {
+            config = {url: "ws://192.168.242.146:9999/"};
+          }
+
+          var sharelink = window.location.origin + window.location.pathname + '#page=webrtc_viewer&room='+room+'&type='+type+'&config='+encodeURIComponent(JSON.stringify(config));
+
+          gadget.props.element.querySelector('#sharelink').value = sharelink;
+          gadget.props.element.querySelector('#sharelink').style.display = 'block';
+          gadget.props.element.querySelector('#generatelink').remove();
+          gadget.props.element.querySelector('#generatelink1').remove();
+
+          if(config) {
+            return g.initiate(room, gadget, type, config);
+          } else {
+            throw new Error("Share config is missing");
+          }
+        })
+      }
+    }
+  }
+
 
   function maximize(gadget) {
     var iframe = gadget.props.element.querySelector('iframe'),
@@ -110,55 +164,6 @@
           return gadget.props.deferred.resolve();
         });
     })
-    
-    .declareMethod("shareDoc", function () {
-      var gadget = this;
-      if(window.location.hash) {
-        var index = window.location.hash.indexOf('room=');
-        if (index === -1) {
-          var S4 = function() {
-             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-          };
-          var room = (S4()+S4()+"-"+S4()+S4());
-          return new RSVP.Queue()
-          .push(function () {
-            return gadget.declareGadget(
-              "gadget_officejs_page_share_text.html",
-              {
-                scope: "share_text_via_webrtc",
-                element: gadget.props.element.querySelector(".webrtc-gadget")
-              }
-            );
-          })
-          .push(function(g){
-            var config = {
-              type: "query",
-              sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  //type: "indexeddb",
-                  //"database": "handshake"
-                  "type": "dav",
-                  "url": "https://softinst67513.host.vifib.net/share/",
-                  "basic_login": btoa("admin:vowhkida")
-                }
-              }
-            }
-
-            var sharelink = window.location.origin + window.location.pathname + '#page=webrtc_viewer&room='+room+'&config='+encodeURIComponent(JSON.stringify(config));
-            gadget.props.element.querySelector('#sharelink').value = sharelink;
-            gadget.props.element.querySelector('#sharelink').style.display = 'block';
-            gadget.props.element.querySelector('#generatelink').remove();
-            
-            if(config) {
-              return g.initiate(room, gadget, config);
-            } else {
-              return g.initiate(room, gadget);
-            }
-          })
-        }
-      }
-    })
 
     /////////////////////////////////////////
     // Render text content gadget
@@ -208,19 +213,29 @@
         .push(function () {
           return gadget.props.deferred.promise;
         })
-        .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('form'),
-            'submit',
-            true,
-            function (event) {
-              if (document.activeElement.name === "generatelink") {
-                return gadget.shareDoc();
-              } else {
+                .push(function () {
+          return RSVP.all([
+            loopEventListener(
+              gadget.props.element.querySelector('form.select-share-type'),
+              'submit',
+              true,
+              function (event) {
+                if (document.activeElement.name === "generatelink") {
+                  return shareDoc(gadget, "jio");
+                } else if (document.activeElement.name === "generatelink1") {
+                  return shareDoc(gadget, "websocket");
+                }
+              }
+            ),
+            loopEventListener(
+              gadget.props.element.querySelector('form.view-web-page-form'),
+              'submit',
+              true,
+              function (event) {
                 return saveContent(gadget, event);
               }
-            }
-          );
+            )
+          ]);
         });
     });
 

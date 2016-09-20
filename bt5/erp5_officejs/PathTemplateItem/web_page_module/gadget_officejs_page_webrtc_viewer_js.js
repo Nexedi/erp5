@@ -88,7 +88,7 @@
         })
         .push(function(g){
           if(gadget.props.options['config']) {
-            return g.slaveInitiate(room, gadget, gadget.props.options['config']);
+            return g.slaveInitiate(room, gadget, gadget.props.options['type'], gadget.props.options['config']);
           } else {
             return g.slaveInitiate(room, gadget)
             .push(null, function(error){

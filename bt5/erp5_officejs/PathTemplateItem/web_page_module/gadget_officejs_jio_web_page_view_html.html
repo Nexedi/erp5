@@ -11,18 +11,21 @@
     <script src="handlebars.js"></script>
 
     <script class="view-web-page-template" type="text/x-handlebars-template">
-
+        <form class="select-share-type">
+            <div class="center">
+                <div class="ui-field-contain">
+                  <label data-i18n="Public Link:"> Public Link: </label>
+                  <button type="submit" id="generatelink" name="generatelink" data-i18n="Jio Link" style="display: inline-block; width: 34%;"> Jio Link </button>
+                  <button type="submit" id="generatelink1" name="generatelink1" data-i18n="Websocket Link" style="display: inline-block; width: 34%;"> Websocket Link </button>
+                  <input type="text" id="sharelink" name="share" style="display:none" value=""/>
+                </div>
+            </div>
+        </form>
         <form class="view-web-page-form">
-
             <div class="center">
                 <div class="ui-field-contain">
                   <label data-i18n="Title:">Title:</label>
                   <input type="text" name="title" value="{{title}}">
-                </div>
-                <div class="ui-field-contain">
-                  <label data-i18n="Public Link:"> Public Link: </label>
-                  <button type="submit" id="generatelink" name="generatelink" data-i18n="Generate Link" style="display:block;"> Generate Link </button>
-                  <input type="text" id="sharelink" name="share" style="display:none" value=""/>
                 </div>
                 <button type="submit" data-i18n="Save" style="display:none;">Save</button>
             </div>
