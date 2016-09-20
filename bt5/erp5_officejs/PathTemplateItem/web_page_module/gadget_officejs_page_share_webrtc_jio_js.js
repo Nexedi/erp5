@@ -17,13 +17,28 @@
       });
   }
 
+  function declareSubGadget(gadget, url) {
+    var container_element = gadget.state_parameter_dict.element.querySelector("." + url.split(".")[0]),
+      element = document.createElement("div");
+
+    container_element.innerHTML = "";
+    container_element.appendChild(element);
+    return gadget.declareGadget(url, {
+      element: element,
+      scope: url,
+      sandbox: "public"
+    });
+  }
+
   function getWebRTCScopeList(gadget) {
     var result_list = [],
-      element_list = gadget.state_parameter_dict.element.querySelector(".gadget_webrtc_datachannel")
+      element_list = gadget.state_parameter_dict.element.querySelector(".gadget_webrtc")
                                                         .childNodes,
       i;
     for (i = 0; i < element_list.length; i += 1) {
-      result_list.push(element_list[i].getAttribute("data-gadget-scope"));
+      if (element_list[i].getAttribute) {
+        result_list.push(element_list[i].getAttribute("data-gadget-scope"));
+      }
     }
     return result_list;
   }
@@ -40,7 +55,7 @@
   }
 
   function sendWebRTC(gadget, rtc_gadget, scope, message) {
-    return rtc_gadget.send(message)
+    return rtc_gadget.send(message, "webrtc"+gadget.state_parameter_dict.counter)
       .push(undefined, function (error) {
         if ((error instanceof DOMException) && (error.name === 'InvalidStateError')) {
           return dropSubGadget(gadget, scope)
@@ -114,96 +129,70 @@
           }));
         });
     })
-/*
-    .allowPublicAcquisition("notifyWebSocketClosed", function () {
-      if (this.state_parameter_dict.user_type !== "user") {
-        throw new Error("Unexpected Web Socket connection close");
-      }
-    })
-*/
-    .allowPublicAcquisition("notifyWebSocketMessage", function (argument_list) {
-      var json = JSON.parse(argument_list[0]),
-        scope,
-        rtc_gadget,
-        socket_gadget,
-        gadget = this;
 
-      if (json.action === "offer") {
-        // XXX https://github.com/diafygi/webrtc-ips
-        return gadget.getDeclaredGadget("gadget_websocket.html")
-          .push(function (gg) {
-            gadget.state_parameter_dict.connecting = true;
-            gadget.state_parameter_dict.counter += 1;
-            socket_gadget = gg;
-            var new_element = document.createElement("div");
-            gadget.state_parameter_dict.element.querySelector(".gadget_webrtc_datachannel").appendChild(new_element);
-            scope = "webrtc" + gadget.state_parameter_dict.counter;
-            return gadget.declareGadget("gadget_webrtc_datachannel.html", {
-              scope: scope,
-              element: new_element
-            });
-          })
-          .push(function (gg) {
-            rtc_gadget = gg;
-            // https://github.com/diafygi/webrtc-ips
-            var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/,
-              ip_list = [],
-              ip_dict = {},
-              ip_addr,
-              line_list = JSON.parse(json.data).sdp.split('\n'),
-              i;
-            for (i = 0; i < line_list.length; i += 1) {
-              if (line_list[i].indexOf('a=candidate:') === 0) {
-                ip_addr = ip_regex.exec(line_list[i])[1];
-                if (!ip_addr.match(/^[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}$/)) {
-                  // Hide ipv6
-                  if (!ip_dict[ip_addr]) {
-                    ip_list.push(ip_addr);
-                    ip_dict[ip_addr] = true;
-                  }
-                }
+    .declareMethod("onOffer", function (options, offer) {
+      var gadget = this;
+      gadget.state_parameter_dict.counter += 1;
+      return new RSVP.Queue()
+      .push(function(response) {
+        gadget.connecting = true;
+
+        // https://github.com/diafygi/webrtc-ips
+        var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/,
+          ip_list = [],
+          ip_dict = {},
+          ip_addr,
+          line_list = JSON.parse(offer.data).sdp.split('\n'),
+          i;
+        
+        for (i = 0; i < line_list.length; i += 1) {
+          if (line_list[i].indexOf('a=candidate:') === 0) {
+            ip_addr = ip_regex.exec(line_list[i])[1];
+            if (!ip_addr.match(/^[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7}$/)) {
+              // Hide ipv6
+              if (!ip_dict[ip_addr]) {
+                ip_list.push(ip_addr);
+                ip_dict[ip_addr] = true;
               }
             }
-            gadget.state_parameter_dict.scope_ip[scope] = ip_list;
-            return rtc_gadget.createAnswer(json.from, json.data);
-          })
-          .push(function (local_connection) {
-            return socket_gadget.send(JSON.stringify({to: json.from, action: "answer", data: local_connection}));
-          })
-          .push(function () {
-            return RSVP.any([
-              RSVP.Queue()
-                .push(function () {
-                  return RSVP.delay(10000);
-                })
-                .push(function () {
-                  console.info('-- webrtc client disappears...');
-                  return dropSubGadget(gadget, scope);
-                }),
-              rtc_gadget.waitForConnection()
-            ]);
-          })
-          .push(function () {
-            gadget.state_parameter_dict.connecting = false;
-            return updateInfo(gadget);
-          });
-      }
+          }
+        }
+
+        gadget.state_parameter_dict.scope_ip["webrtc"+gadget.state_parameter_dict.counter] = ip_list
+        options.to = offer.from; 
+        return;
+      })
+    })
+      
+    .declareMethod('postConnection', function(options, offer) {
+      var gadget = this;
+
+      return new RSVP.Queue()
+      .push(function () {
+        gadget.state_parameter_dict.connecting = false;
+        return updateInfo(gadget);
+      });
     })
 
-    .declareService(function () {
-      var sgadget,
-        gadget = this;
-      return this.getDeclaredGadget('gadget_websocket.html')
-        .push(function (socket_gadget) {
-          sgadget = socket_gadget;
-          return socket_gadget.createSocket("ws://127.0.0.1:9999/");
-        })
-        .push(function () {
-          // Wait for the gadget to be dropped from the page
-          // and close the socket/rtc connections
-          return RSVP.defer().promise;
-        })
-        .push(undefined, function (error) {
+    .declareMethod('initiate', function (roomid) {
+      var gadget = this,
+        options = {
+          peerid: "master",
+          roomid: "/"+roomid+"/",
+          type: "websocket",
+          config: {'url': "ws://127.0.0.1:9999/"},
+          listner: true,
+          preConnection: gadget.onOffer.bind(gadget),
+          postConnection: gadget.postConnection.bind(gadget),
+        };
+        
+      return gadget.getDeclaredGadget("gadget_webrtc_jio_bridge.html")
+        .push(function (rtc_gadget) {
+          options.rtc_gadget = rtc_gadget;
+          return rtc_gadget.connect(options);
+        });
+
+        /*.push(undefined, function (error) {
           if (sgadget === undefined) {
             return;
           }
@@ -228,7 +217,7 @@
             .push(function () {
               throw error;
             });
-        });
+        }); */
     });
 
 }(window, rJS, document, RSVP, console, DOMException));
