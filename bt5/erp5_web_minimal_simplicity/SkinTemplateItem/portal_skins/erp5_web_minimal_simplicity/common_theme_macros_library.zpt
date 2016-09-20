@@ -1,0 +1,402 @@
+<!-- Common for all themes HTML code -->
+
+<!-- TITLE -->
+<tal:block metal:define-macro="header_title">
+  <h1 tal:content="here/getTitle"></h1>
+</tal:block>
+
+<!-- BREADCRUMBS -->
+<tal:block metal:define-macro="breadcrumb">
+  <div class="breadcrumb" 
+       tal:define="current_web_section python:request.get('current_web_section', here);
+                       current_web_document python:request.get('current_web_document', here);
+                       portal_path python:request.get('current_web_section_url', current_web_section.absolute_url());
+                       is_web_section_default_document python:request.get('is_web_section_default_document',False);
+                       breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">
+    <ul>
+
+      <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">
+        <tal:block tal:define="is_last repeat/breadcrumb/end;
+                               is_first repeat/breadcrumb/start;">
+          <a href="#"
+            tal:attributes="href python:current_web_section.getPermanentURL(breadcrumb[1]);
+                            title python: breadcrumb[2];
+                            class python: test(is_last, 'last-breadcrumb', 'breadcrumb')"
+            tal:content="python: test(is_first, breadcrumb[0], breadcrumb[1].getShortTitle() or breadcrumb[0])">Title</a>
+        </tal:block>
+      </li>
+
+    </ul>
+  </div>
+</tal:block>
+
+<!-- ??? -->
+<tal:block metal:define-macro="profile_document">
+  <span tal:replace="here/getDescription"/>
+  <div class="teaserInfo">
+    <ul>
+      <li><strong>Last Update:</strong><span tal:replace="python: context.getModificationDate().strftime('%Y-%m-%d')"/></li>
+      <li><strong>Version:</strong><span tal:replace="python: getattr(context, 'getVersion', str)()"/></li>
+      <li><strong>Language:</strong><span tal:replace="python: getattr(context, 'getLanguage', str)()"/></li>
+      <li class="social facebook">
+        <tal:block metal:use-macro="here/common_theme_macros_library/macros/facebook"/>
+      </li>
+      <li class="social twitter">
+        <tal:block metal:use-macro="here/common_theme_macros_library/macros/twitter"/>
+      </li>
+      <li class="social google">
+        <tal:block metal:use-macro="here/common_theme_macros_library/macros/gplus"/>
+      </li>
+    </ul>
+  </div>
+</tal:block>
+
+
+
+
+<tal:block metal:define-macro="discussions">
+  <div class="bottomPosts Discussions"
+       tal:define="web_site here/getWebSiteValue;
+                   absolute_url here/getAbsoluteUrl;
+                   relative_url here/getRelativeUrl;
+                   forum_web_section here/WebSite_getDefaultForumWebSectionValue;
+                   discussion_thread_list python:here.WebSection_getLatestDiscussionThreadList(forum_web_section)[:2]">
+    <h2>
+    <!--
+      <a title="Show more"
+         tal:attributes="href python: forum_web_section.absolute_url()">Discussions</a>
+      
+       
+      <a class="txtButn" title="Show more"
+         tal:attributes="href string:${forum_web_section/absolute_url}/WebSection_viewCreateNewDiscussionThreadDialog?cancel_url=${absolute_url}&amp;predecessor_url=${relative_url}">New</a>
+      -->
+    </h2>
+
+    <div class="row" tal:repeat="discussion_thread discussion_thread_list">
+      <tal:block tal:define="discussion_post discussion_thread/DiscussionThread_getLastPost;
+                             author_dict discussion_post/DiscussionPost_getAuthorDict;
+                             is_author_link_available python:author_dict['author_url'] is not None;
+                             base_url python: '%s/%s/%s' %(web_site.absolute_url(), forum_web_section.getId(), discussion_thread.getReference())">
+        <div class="date">
+          <span tal:replace="python: discussion_post.getModificationDate().strftime('%d-%m')"/>
+          <span tal:content="python: discussion_post.getModificationDate().strftime('%Y')"/>
+        </div>
+        <div class="text">
+          <h3>
+            <a title="Show post"
+              tal:attributes="href python: '%s/view?list_start=%s&amp;reset=1#%s' %(base_url, discussion_post.getId(), discussion_post.getUid())"
+              tal:content="discussion_post/getTitle"/> 
+            <em>by <spam tal:replace="author_dict/author_title"/></em>
+          </h3>
+          <span tal:replace="structure python: here.Base_asStrippedHTML(discussion_post.getTextContent(''))"/>
+          <!-- expand/reply/like removed -->
+        </div>
+      </tal:block>
+    </div>
+    <!--
+    <a class="txtButn" title="Show more" tal:attributes="href string:${forum_web_section/absolute_url}">More</a>-->
+    <div class="clear"></div>
+  </div>
+</tal:block>
+
+<!--
+<ul class="postsocial">
+  <li class="facebook">
+    <tal:block tal:define="like_url python: here.Base_quote(base_url);
+                           application_id python: '1442843545949100'">
+      <iframe tal:attributes="src string://www.facebook.com/plugins/like.php?href=${like_url}&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=${application_id}"
+              scrolling="no" 
+              frameborder="0" 
+              style="border:none; overflow:hidden; height:21px;" 
+              allowTransparency="true"></iframe>
+    </tal:block> 
+
+  </li>
+  <li>
+    <a tal:attributes="href base_url"
+       title="Show more" class="expand"></a>
+  </li>
+  <li><a 
+         tal:attributes="href string:${base_url}/DiscussionThread_redirectCreateNewDiscussionPost?discussion_post_uid=${discussion_post/getId}"
+         title="Reply" class="reply"></a></li>
+</ul>
+-->
+
+<tal:block metal:define-macro="discussions_2">
+</tal:block>
+
+<tal:block metal:define-macro="related_documents">
+  <tal:block tal:condition="python: context.getPortalType() in context.getPortalDocumentTypeList()">
+  <tal:block tal:define="related_document_list python: context.Document_getRelatedDocumentList(relation_id='related_predecessor') +
+                                                       context.Document_getRelatedDocumentList(relation_id='related_similar') +
+                                                       context.Document_getRelatedDocumentList(relation_id='related_successor')">
+  <div class="bottomPosts relatedDocs" tal:condition="python: len(related_document_list)">
+    <h2>
+      <a href="Document_viewRelatedDocumentList" 
+         title="Show more">Related Documents</a>
+      <!--       <a href="#" class="txtButn" title="Show more">Suggest</a> -->
+    </h2>
+
+    <div class="row" tal:repeat="related_document python: related_document_list[:2]">
+      <tal:block tal:define="related_document_url python: here.getWebSiteValue().getPermanentURL(related_document);">
+        <div class="date">
+          <span tal:replace="python: related_document.getModificationDate().strftime('%d-%m')"/>
+          <span tal:content="python: related_document.getModificationDate().strftime('%Y')"/>
+        </div>
+
+        <div class="text">
+          <h3><a title="Show document" 
+                 tal:attributes="href related_document_url"
+                 tal:content="related_document/getTitle"/></h3>
+          <span tal:replace="related_document/getDescription"/>
+        </div>
+        <a class="icon" 
+           title="Show post"
+           tal:attributes="href related_document_url"><img src="img/posticon-doc.png" alt="" /></a>
+     </tal:block>
+   </div>
+   <a class="txtButn" title="Show more" href="Document_viewRelatedDocumentList">More</a>
+  </div>
+  </tal:block>
+  </tal:block>
+</tal:block>
+
+<tal:block metal:define-macro="latest_documents">
+  <tal:block tal:define="latest_document_list python: [x for x in here.WebSection_getLatestRelevantDocumentList()]">
+    <div class="bottomPosts latestDocuments" tal:condition="python: len(latest_document_list)">
+      <h2 style="display:inline-block;"><a href="/latest">Latest Documents</a></h2>
+      <a style="margin-left:2em;top:-2px;" href="/latest/WebSection_viewContentListAsRSS" alt="Latest Documents as RSS" class="share-button rss-feed">
+        <img src="img/rss.png" alt="RSS Feed">
+      </a>
+      <div class="row" tal:repeat="latest_document latest_document_list">
+        <tal:block tal:define="latest_document_url python: here.getWebSiteValue().getPermanentURL(latest_document);">
+          <div class="date">
+            <span tal:replace="python: latest_document.getModificationDate().strftime('%d-%m')"/>
+            <span tal:content="python: latest_document.getModificationDate().strftime('%Y')"/>
+          </div>
+  
+          <div class="text">
+            <h3><a title="Show press release" 
+                   tal:attributes="href latest_document_url"
+                   tal:content="latest_document/getTitle"/></h3>
+            <span tal:replace="latest_document/getDescription"/>
+          </div>
+          <a class="icon" 
+             title="Show post"
+             tal:attributes="href latest_document_url"><img src="img/posticon-doc.png" alt="" /></a>
+       </tal:block>
+      </div>
+    </div>
+  </tal:block>
+</tal:block>
+
+
+<tal:block metal:define-macro="press_releases">
+
+  <tal:block tal:define="press_release_list python: [x for x in here.WebSection_getPressReleaseList()]">
+    <div class="bottomPosts pressReleases" tal:condition="python: len(press_release_list)">
+      <h2 style="display:inline-block;"><a href="/news" title="Show more">Latest News</a></h2>
+      <a style="margin-left:2em;top:-2px;" href="/news/WebSection_viewContentListAsRSS" alt="Latest News as RSS" class="share-button rss-feed">
+        <img src="img/rss.png" alt="RSS Feed">
+      </a>
+      <div class="row" tal:repeat="press_release press_release_list">
+        <tal:block tal:define="press_release_url python: here.getWebSiteValue().getPermanentURL(press_release);">
+          <div class="date">
+            <span tal:replace="python: press_release.getCreationDate().strftime('%d-%m')"/>
+            <span tal:content="python: press_release.getCreationDate().strftime('%Y')"/>
+          </div>
+  
+          <div class="text">
+            <h3><a title="Show press release" 
+                   tal:attributes="href press_release_url"
+                   tal:content="press_release/getTitle"/></h3>
+            <span tal:replace="press_release/getDescription"/>
+          </div>
+          <a class="icon" 
+             title="Show post"
+             tal:attributes="href press_release_url"><img src="img/posticon-doc.png" alt="" /></a>
+       </tal:block>
+      </div>
+    </div>
+  </tal:block>
+
+</tal:block>
+
+<tal:block metal:define-macro="teaser">
+  <tal:block tal:repeat="teaser_document here/WebSection_getTeaserDocumentList">
+    <tal:block tal:define="permanent_url python: here.getPermanentURL(teaser_document);">
+      <h2><a tal:attributes="href permanent_url;
+                            title teaser_document/getTitle"
+            tal:content="teaser_document/getTitle"/></h2>
+      <p>
+        <span tal:replace="teaser_document/getDescription"/>
+        <a href="#" title="Read more"
+          tal:attributes="href permanent_url"> Read more...</a>
+      </p>
+    </tal:block>
+  </tal:block>
+</tal:block>
+
+
+<tal:block metal:define-macro="documentation">
+  <div class="bottomPosts">
+
+    <div class="row" tal:repeat="howto_document python: here.WebSection_getHowToDocumentList()[:2]">
+      <tal:block tal:define="permanent_url python: here.getPermanentURL(howto_document);">
+        <div class="date">
+          <span tal:replace="python: howto_document.getModificationDate().strftime('%d-%m')"/>
+          <span tal:content="python: howto_document.getModificationDate().strftime('%Y')"/>
+        </div>
+
+        <div class="text">
+          <h3><a title="Show document" 
+                tal:attributes="href permanent_url"
+                tal:content="howto_document/getTitle"/></h3>
+          <span tal:replace="howto_document/getDescription"/>
+        </div>
+        <a class="icon" 
+          title="Show post"
+          tal:attributes="href permanent_url"><img src="img/posticon-doc.png" alt="" /></a>
+      </tal:block>
+    </div>
+
+  </div>
+</tal:block>
+
+<!-- remove author, because this requires manager proxy-role
+  <ul tal:define="contributor_list python: here.getContributorTitleList()">
+      <li><strong>Author:</strong><span tal:replace="python: contributor_list and contributor_list[0] or ''"/></li>
+  
+  and this shows user name
+  <li><strong>Autor:</strong><span tal:replace="python: here.WebSite_getPersonTitleByUsername(here.Base_getOwnerId())"/></li>
+-->
+
+
+
+<tal:comment tal:replace="nothing"><!--
+
+For social network share buttons, I copied the button on YouTube.
+
+On YouTube, when watching a video, click on the share tab below the video and
+you'll see a lot of social network buttons. If you inspect the html tags,
+you'll notice it uses javascript only to show a popup, you can read the url.
+Potentially, share button can just be links. That's what we do on the lines
+below.
+
+--></tal:comment>
+
+<tal:block metal:define-macro="facebook"
+     tal:define="share_url python: context.absolute_url().replace('\x26', '%26').replace('#', '%23');
+                 application_id python: '1442843545949100'">
+  <tal:comment tal:replace="nothing"><!--
+
+  url parameters taken from a youtube video :
+    app_id : ${application_id}
+    href : ${share_url}
+    display : popup
+    redirect_uri : https://www.youtube.com/facebook_redirect
+
+  - should we use display ? redirect_url ?
+
+  --></tal:comment>
+  <a target="_blank" tal:attributes="href string:http://www.facebook.com/dialog/share?app_id=${application_id}&href=${share_url}"><img src="web_images/facebook-button.png" style="width:2em;height:2em;" alt="[Share on Facebook]" /></a>
+  <tal:comment tal:replace="nothing"><!--
+  <iframe tal:attributes="src string://www.facebook.com/plugins/like.php?href=${share_url}&amp;width&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21&amp;appId=${application_id}"
+          scrolling="no" 
+          frameborder="0" 
+          style="border:none; overflow:hidden; height:21px;" 
+          allowTransparency="true"></iframe>
+  --></tal:comment>
+</tal:block>
+
+<tal:block metal:define-macro="gplus"
+     tal:define="share_url python: context.absolute_url().replace('\x26', '%26').replace('#', '%23')">
+  <tal:comment tal:replace="nothing"><!--
+
+  url parameters taken from a youtube video :
+    url : ${share_url}
+    source : yt
+    hl : en-GB
+    soc-platform : 1
+    soc-app : 130
+
+  - use source ? hl ? soc-platform ? soc-app ?
+  - it lacks gplus-button image !
+
+  <a target="_blank" tal:attributes="href string:https://plus.google.com/share?url=${share_url}"><img src="web_images/gplus-button.png" style="width:2em;height:2em;" alt="[Share on Google+]" /></a>
+  <tal:comment tal:replace="nothing"><!--
+  <!-- Place this tag where you want the +1 button to render. -- >
+  <div class="g-plusone" data-annotation="none" data-width="300"></div>
+
+  <!-- Place this tag after the last +1 button tag. -- >
+  <script type="text/javascript">
+    (function() {
+      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+      po.src = 'https://apis.google.com/js/platform.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    })();
+  </script>
+  --></tal:comment>
+</tal:block>
+
+<tal:block metal:define-macro="twitter"
+     tal:define="share_url python: context.absolute_url().replace('\x26', '%26').replace('#', '%23')">
+  <tal:comment tal:replace="nothing"><!--
+
+  url parameters taken from a youtube video :
+    url : ${share_url}
+    via : YouTube
+    related : YouTube,YouTubeTrends,YTCreators
+
+  --></tal:comment>
+  <a target="_blank" tal:attributes="href string:http://twitter.com/intent/tweet?url=${share_url}&via=erp5&related=ERP5"><img src="web_images/twitter-button.png" style="width:2em;height:2em;" alt="[Share on Twitter]" /></a>
+  <tal:comment tal:replace="nothing"><!--
+  <tal:block metal:define-macro="twitter">
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  --></tal:comment>
+</tal:block>
+
+<tal:block metal:define-macro="toolbar">
+  <div id="action-bar"
+       tal:define="current_web_section python:request.get('current_web_section', here)" 
+       tal:condition="python: not here.portal_membership.isAnonymousUser()">
+    <div id="browse-bar"
+         class="toolbar-block"
+         tal:content="structure here/WebSite_viewBrowseNavigationMenuWidget"/>
+    <div id="tool-bar"
+         class="toolbar-block"
+         tal:content="structure here/WebSection_viewToolbarWidget"/>
+    <div id="document-bar"
+         class="toolbar-block">
+      <ul>
+        <li><a href="WebSite_viewLatestAdditionList?reset:int=1">Lates Additions</a></li>
+        <li><a href="Base_viewAdvancedSearchDialog">Search</a></li>
+        <li><a href="Base_viewContributeFileDialog">New Document</a></li>
+      </ul>
+    </div>
+
+    <a  class="toolbar-menu" 
+        href="#"
+        onclick="javascript: $('#browse-bar').toggle(); $('#tool-bar').hide(); $('#document-bar').hide(); return false;"> Browse</a>
+    <a  class="toolbar-menu" 
+        href="#"
+        onclick="javascript: $('#tool-bar').toggle(); $('#browse-bar').hide(); $('#document-bar').hide(); return false;"> Modify</a>
+    <a  class="toolbar-menu" 
+        href="#"
+        onclick="javascript: $('#document-bar').toggle(); $('#browse-bar').hide(); $('#tool-bar').hide(); return false;"> Document</a>
+    <a  class="toolbar-menu"
+        tal:condition="python: current_web_section.getPortalType()=='Web Section'"
+        tal:attributes="href string: ${current_web_section/absolute_url}/WebSection_viewContent">Content</a>
+
+  </div>
+</tal:block>
+
+<tal:block metal:define-macro="facebook_box">
+<!--
+  <div id="fbplikebox" style="display:none;">
+    <div class="fbplbadge"></div>
+    <iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2Fpages%2FERP5%2F367814456689621&amp;width=250&amp;height=258&amp;colorscheme=light&amp;show_faces=true&amp;header=false&amp;stream=false&amp;show_border=true&amp;appId=1442843545949100" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:250px; height:258px;" allowTransparency="true"></iframe>  
+  </div>
+-->
+</tal:block>

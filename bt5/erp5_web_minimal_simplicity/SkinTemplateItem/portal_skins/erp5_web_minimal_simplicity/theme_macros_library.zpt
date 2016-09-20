@@ -1,0 +1,227 @@
+<!-- ALL PAGES HEADER (LANGUAGES, LOGIN, TITLE, LOGO, SEARCHBAR) -->
+<tal:block metal:define-macro="header"
+           tal:define="portal              here/getWebSiteValue;
+                       portal_path         portal_path | portal/absolute_url;
+                       language_list portal/Localizer/get_languages_map;
+                       dummy python: language_list.sort(key=lambda x: x['selected'], reverse=True);
+                       available_language_list portal/getAvailableLanguageList;">
+
+  <header class="wrapper clearfix">
+    <ul class="langmenue">
+      <tal:block tal:repeat="language language_list">
+        <li tal:define="language_id language/id;
+                        pretty_language_id python:test(language_id=='pt-BR', 'PT', language_id);
+                        class_id python:test(language_id=='pt-BR', 'pt', language_id)"
+          tal:attributes="class class_id"
+          tal:condition="python:language_id in available_language_list">
+
+          <a tal:attributes="href python:'Base_doLanguage?select_language=%s' %language_id;
+                             class python:int(language['selected']) * 'selected' or 'not_selected';"
+             tal:content="pretty_language_id"/>
+
+        </li>
+      </tal:block>
+    </ul>
+
+    <h1 class="title logo">
+      <a tal:attributes="href portal_path" title="Home"></a>
+      <span class="claim">Most Powerful Open Source ERP</span>
+    </h1>
+    <nav>
+      <ul>
+        <li><a tal:attributes="href string:${portal_path}/contact" title="Contact us" data-role="button" data-theme="a">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="custom-menu-search" tal:condition="python: context is portal or context is context.getWebSectionValue()">
+      <input class="quick_search_field" type="text" onkeypress="submitFormOnEnter(event, this.form, 'WebSite_viewQuickSearchResultList');"
+        placeholder="Search"
+        class="input-text" name="field_your_search_text" size="40" accesskey="4"/>
+      <input class="quick_search_button" type="submit" value="Search" name="WebSite_viewQuickSearchResultList:method" />
+    </div>
+
+    <ul class="custom-menu-login">
+      <li tal:condition="python: here.portal_membership.isAnonymousUser() is 0" ><a class="toolbar-menu" tal:attributes="href python: portal_path + '/WebSite_logout'">Logout</a></li>
+      <li tal:condition="python: here.portal_membership.isAnonymousUser()  is not 0" ><a class="toolbar-menu toolbar-menu-contrast" tal:attributes="href python: portal_path + '/login_form'">Login</a></li>
+    </ul>
+  </header>
+</tal:block>
+
+<!-- FRONT PAGE TOP HIGHLIGHT CONTENT -->
+<tal:block metal:define-macro="application"
+            tal:define="website here/getWebSiteValue;
+                       request python: context.REQUEST;
+                       dynamic_path_url python: request['PATH_INFO'];
+                       is_not_login python: dynamic_path_url.find('login_form') == -1;
+                       is_not_credential_request python: dynamic_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                       application_document_reference python: website.getProperty('application_document_reference');
+                       application_web_page python: here.WebSection_getCachedDocumentValue(application_document_reference)">
+
+  <span tal:condition="python: application_web_page is not None and is_not_login and is_not_credential_request"
+        tal:replace="structure application_web_page/asEntireHTML"/>
+
+</tal:block>
+
+<!-- ALL PAGES FOOTER -->
+<tal:block metal:define-macro="footer"
+           tal:define="website here/getWebSiteValue;
+                       footer_document_reference python: website.getProperty('footer_document_reference');
+                       footer_web_page python: here.WebSection_getCachedDocumentValue(footer_document_reference)">
+
+  <span tal:condition="python: footer_web_page is not None"
+        tal:replace="structure footer_web_page/asEntireHTML"/>
+
+</tal:block>
+
+
+
+<!-- getTitle() -->
+<tal:block metal:define-macro="header_title">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/header_title" />
+</tal:block>
+
+<!-- get Breadcrumbs -->
+<tal:block metal:define-macro="breadcrumb">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/breadcrumb" />
+</tal:block>
+
+<tal:block metal:define-macro="profile_document">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/profile_document" />
+</tal:block>
+
+<tal:block metal:define-macro="footer_blog">
+  <!-- empty -->
+</tal:block>
+
+<tal:block metal:define-macro="multilanguage">
+  <!-- empty -->
+</tal:block>
+
+<tal:block metal:define-macro="opengraph">
+  <!-- empty -->
+</tal:block>
+
+<tal:block metal:define-macro="schema">
+  <!-- empty -->
+</tal:block>
+
+<tal:block metal:define-macro="front_page_content"
+           tal:define="website here/getWebSiteValue;
+                       request python: context.REQUEST;
+                       dynamic_path_url python: request['PATH_INFO'];
+                       is_not_login python: dynamic_path_url.find('login_form') == -1;
+                       is_not_credential_request python: dynamic_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                       root_url python: website.absolute_url();
+                       current_url python: context.absolute_url();
+                       layout_introduction_reference python: website.getProperty('layout_introduction_reference');
+                       language python: website.Localizer.get_selected_language();
+                       introduction_web_page python: here.WebSection_getCachedDocumentValue(layout_introduction_reference, language=language)">
+
+  <tal:block tal:condition="python: root_url == current_url and is_not_login and is_not_credential_request">
+    <tal:block metal:use-macro="here/common_theme_macros_library/macros/press_releases" />
+    <tal:block metal:use-macro="here/theme_macros_library/macros/discussions" />
+    <tal:block metal:use-macro="here/theme_macros_library/macros/latest_documents" />
+  </tal:block>
+
+</tal:block>
+
+<tal:block metal:define-macro="try"
+           tal:define="website here/getWebSiteValue;
+                       request python: context.REQUEST;
+                       dynamic_path_url python: request['PATH_INFO'];
+                       is_not_login python: dynamic_path_url.find('login_form') == -1;
+                       is_not_credential_request python: dynamic_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                       try_document_reference python: website.getProperty('try_document_reference');
+                       try_web_page python: here.WebSection_getCachedDocumentValue(try_document_reference)">
+
+  <span tal:condition="python: try_web_page is not None and is_not_login and is_not_credential_request"
+        tal:replace="structure try_web_page/asEntireHTML"/>
+
+</tal:block>
+
+<tal:block metal:define-macro="learn"
+           tal:define="website here/getWebSiteValue;
+                       request python: context.REQUEST;
+                       dynamic_path_url python: request['PATH_INFO'];
+                       is_not_login python: dynamic_path_url.find('login_form') == -1;
+                       is_not_credential_request python: dynamic_path_url.find('ERP5Site_viewCredentialRecoveryLoginDialog') == -1;
+                       learn_document_reference python: website.getProperty('learn_document_reference');
+                       learn_web_page python: here.WebSection_getCachedDocumentValue(learn_document_reference)">
+
+  <span tal:condition="python: learn_web_page is not None and is_not_login and is_not_credential_request"
+        tal:replace="structure learn_web_page/asEntireHTML"/>
+
+</tal:block>
+
+<tal:block metal:define-macro="documentation">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/documentation" />
+</tal:block>
+
+<tal:block metal:define-macro="teaser">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/teaser" />
+</tal:block>
+
+<tal:block metal:define-macro="related_documents">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/related_documents" />
+</tal:block>
+
+<tal:block metal:define-macro="discussions_2">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/discussions_2" />
+</tal:block>
+
+<tal:block metal:define-macro="discussions">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/discussions" />
+</tal:block>
+
+<tal:block metal:define-macro="latest_documents">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/latest_documents" />
+</tal:block>
+
+<tal:block metal:define-macro="deferred_javascript">
+  <!--jquery mobile//-->
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.1.min.js"><\/script>')</script>
+  <!--<script src="js/vendor/jquery.mobile-1.3.2.min.js"></script>-->
+  <script src="js/plugins.js"></script>
+  <script src="js/main.js"></script>
+  <script src="erp5.js"></script>
+  <script src="erp5_discussion.js"></script>
+</tal:block>
+
+<tal:block metal:define-macro="site_verification">
+  <meta name="google-site-verification" content="OQlP94UFkYlRpSxU1q3enuhFocywLETdl5_sqks51Ro" />
+</tal:block>
+
+<tal:block metal:define-macro="analytics_javascript">
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+    ga('create', 'UA-63757042-3', 'auto');
+    ga('send', 'pageview');
+  
+  </script>
+</tal:block>
+
+<tal:block metal:define-macro="page_specific_javascript"></tal:block>
+
+<tal:block metal:define-macro="facebook_box">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/facebook_box" />
+</tal:block>
+
+<tal:block metal:define-macro="facebook">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/facebook" />
+</tal:block>
+
+<tal:block metal:define-macro="gplus">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/gplus" />
+</tal:block>
+
+<tal:block metal:define-macro="twitter">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/twitter" />
+</tal:block>
+
+<tal:block metal:define-macro="toolbar">
+  <tal:block metal:use-macro="here/common_theme_macros_library/macros/toolbar" />
+</tal:block>

@@ -1,0 +1,187 @@
+<tal:block metal:define-macro="master">
+      <tal:block tal:define="website here/getWebSiteValue;
+                             portal_path python:website.absolute_url();
+                             section here/getWebSectionValue;
+                             section_url section/absolute_url;
+                             current_url request/URL;
+                             current_main_section here/WebSite_getMainSection;
+                             editable request/editable_mode | python: 0;
+                             portal_status_message request/portal_status_message | python: None;
+                             list_mode list_mode | nothing;
+                             dialog_mode dialog_mode | nothing;
+                             ignore_layout          request/ignore_layout | nothing;
+                             layout_form_id         request/layout_form_id | here/getApplicableLayout | nothing;
+                             layout_form    python: layout_form_id and getattr(here, layout_form_id, None) or None;
+                             has_no_layout python: layout_form is None;
+                             dummy python: request.set('dialog_mode', dialog_mode);
+                             dummy python: request.set('list_mode', list_mode);
+                             aggregate python: has_no_layout or layout_form.Form_getGroupList(
+                                               ['site_header', 'site_footer', 'header_title', 'breadcrumb', 'profile_document', 'application', 'try', 'documentation',
+                                                'teaser', 'related_documents', 'discussions', 'flex_slider_control']);
+                             aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};
+                             site_header_area python:aggregate.get('site_header',  []);
+                             site_footer_area python:aggregate.get('site_footer',  []);
+                             header_title_area python:aggregate.get('header_title',  []);
+                             breadcrumb_area python:aggregate.get('breadcrumb',  []);
+                             profile_document_area python:aggregate.get('profile_document',  []);
+                             flex_slider_control_area python:aggregate.get('flex_slider_control',  []);
+                             application_area python:aggregate.get('application',  []);
+                             try_area python:aggregate.get('try',  []);
+                             documentation_area python:aggregate.get('documentation',  []);
+                             teaser_area python:aggregate.get('teaser',  []);
+                             related_documents_area python:aggregate.get('related_documents',  []);
+                             discussions_area python:aggregate.get('discussions',  []);
+                             global is_web_mode python: 1;
+                             global js_list python: [];
+                             global css_list_template python:[];
+                             is_list_mode here/Base_isListMode;
+                             is_dialog_mode here/Base_isDialogMode;
+                             is_web_section_mode here/Base_isWebSectionMode;
+                             content_class python: '%s-content' %here.getPortalType().replace(' ', '-');
+                             mode_class python: test(is_list_mode, 'list-mode-content', 
+                                                  test(is_dialog_mode, 'dialog-mode-content', 
+                                                    test(is_web_section_mode, 'web-section-mode-content', '')))">
+
+        <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">
+  
+        <tal:block metal:fill-slot="seo">
+          <!-- SEO -->
+          <tal:block metal:use-macro="here/theme_macros_library/macros/multilanguage"/>
+          <tal:block metal:use-macro="here/theme_macros_library/macros/opengraph"/>
+        </tal:block>
+
+        <tal:block metal:fill-slot="head">
+          <!-- site verification -->
+          <tal:block metal:use-macro="here/theme_macros_library/macros/site_verification"/>
+        </tal:block>
+        
+        <tal:block metal:fill-slot="layout">
+
+          <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>
+
+          <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+          <![endif]-->
+
+          <tal:block metal:use-macro="here/theme_macros_library/macros/deferred_javascript"/>
+
+          <div class="header-container">
+              <tal:block tal:condition="python: layout_form is not None">
+                <tal:block tal:repeat="aggregate python: [('site_header', site_header_area)]">
+                  <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                </tal:block>
+              </tal:block>
+          </div>
+
+          <div class="main-container" 
+               tal:attributes="id string:${mode_class}_id;
+                               class string:main-container ${content_class}">
+
+                <div class="main clearfix">
+                    <div class="headteaser index">
+                      <div class="teaserin">
+                        <div class="wrappin">
+
+                          <!-- <tal:block tal:condition="python: layout_form is not None"> -->
+
+                            <tal:block tal:repeat="aggregate python: [('header_title', header_title_area)]">
+                              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                            </tal:block>
+
+                            <span class="portal_status_message" tal:content="portal_status_message" 
+                                  tal:condition="portal_status_message"/>
+
+                            <tal:block tal:repeat="aggregate python: [('breadcrumb', breadcrumb_area)]">
+                              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                            </tal:block>
+
+                            <tal:block tal:repeat="aggregate python: [('profile_document', profile_document_area)]">
+                              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                            </tal:block>
+
+                            <tal:block tal:repeat="aggregate python: [('application', application_area)]">
+                              <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                            </tal:block>
+
+                         <!-- </tal:block> -->
+
+                        </div>
+
+                        <tal:block tal:condition="python: layout_form is not None">
+
+                          <tal:block tal:repeat="aggregate python: [('flex_slider_control', flex_slider_control_area)]">
+                            <div class="sliderDirectNav"></div>
+                          </tal:block>
+
+                        </tal:block>
+
+                      </div>
+                    </div>
+
+                    <div tal:attributes="class string:content wrappin ${mode_class} ${content_class}"
+                         class="content wrappin">
+
+                      <!-- Form is rendered here -->
+                      <tal:block metal:define-slot="main" />
+
+                      
+                      <!-- Blog -->
+                      <tal:block metal:use-macro="here/theme_macros_library/macros/footer_blog"/>
+
+                      <tal:block tal:condition="python: layout_form is not None">
+
+                        <tal:block tal:repeat="aggregate python: [('try', try_area)]">
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+
+                        <tal:block tal:repeat="aggregate python: [('documentation', documentation_area)]">
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+
+                        <tal:block tal:repeat="aggregate python: [('teaser', teaser_area)]">
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+
+                        <tal:block tal:repeat="aggregate python: [('related_documents', related_documents_area)]">
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+
+                        <tal:block tal:repeat="aggregate python: [('discussions', discussions_area)]">
+                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+                        </tal:block>
+
+                        <!-- handler for front page only -->
+                        <tal:block metal:use-macro="here/theme_macros_library/macros/front_page_content" />
+                        
+                      </tal:block>
+                      
+                      <div class="clear"></div>
+                    </div>
+
+                </div> <!-- #main -->
+
+                <!-- XXX: move to layout_form -->
+                <tal:block metal:use-macro="here/theme_macros_library/macros/toolbar"/>
+
+          </div> <!-- #main-container -->
+
+          <div class="footer-container">
+            <tal:block tal:condition="python: layout_form is not None">
+              <tal:block tal:repeat="aggregate python: [('site_footer', site_footer_area)]">
+                <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>
+              </tal:block>
+            </tal:block>
+          </div>
+
+          <tal:comment tal:replace="nothing">
+            <!--<tal:block metal:use-macro="here/theme_macros_library/macros/analytics_javascript"/>-->
+          </tal:comment>
+
+          <tal:block metal:use-macro="here/theme_macros_library/macros/page_specific_javascript"/>
+
+
+          </tal:block>
+        </tal:block>
+      </tal:block>
+
+</tal:block>

@@ -1,0 +1,134 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <tal:block tal:replace="nothing">
+  <!--
+  IDEAS:
+  - Add callbacks to ERP5Form object (selection ?) to gather needed fields -> put them in http_parameter_list.
+  - Pages should have their unique dependencies declared (like in renderjs) - so page specific things like requires_map_dependencies aren't needed here
+  - Have a property that defines whether open-graph metadata or SEO will be applied and optionally insert prefix
+  - Associate organizations with website
+  - Be fancy and implement schema.org via JSON based on available meta info and actions
+  - Organizations should have social media handles definable (@nexedi...)
+  - Once organizations are retrieveable, could we add contact numbers, like for customer service?
+  -->
+  </tal:block>
+  <tal:block metal:define-macro="master">
+    <tal:block tal:define="global_definitions_macros  here/global_definitions/macros;
+                           subject_list subject_list | python:here.getProperty('subject_list', []) or [];
+                           meta_reference             python: here.getProperty('reference') or '';
+                           meta_description           python: here.getProperty('description') or '';
+                           meta_title                 python: here.getProperty('title') or here.getPortalObject().title_or_id();
+                           global portal              here/portal_url/getPortalObject;
+                           global portal_path         portal_path | portal/absolute_url;
+                           request                    python: context.REQUEST;
+                           dynamic_path_url           python: request['PATH_INFO'];
+                           requires_map_dependencies  python: dynamic_path_url.find('about') > -1;">
+      <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
+
+      <!DOCTYPE html>
+      <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+      <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+      <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+      <!--[if gt IE 8]><!--> <html class="no-js" prefix="og: http://ogp.me/ns#"> <!--<![endif]-->
+
+        <head>
+          <base tal:attributes="href python: '%s/' % (url, )" />
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+          <meta name="generator" content="Nexedi SA - Copyright (C) 2001 - 2015. All rights reserved." />
+          <meta name="description" content="" tal:attributes="content python: meta_description" />
+          <meta name="keywords" content="" tal:attributes="content python:', '.join(subject_list)" />
+          <meta name="robots" content="index, follow" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <title tal:content="python: meta_title" />
+          <link rel="shortcut icon" href="favicon.ico" />
+
+          <tal:block metal:define-slot="seo">
+            <!-- placeholder for seo specific extensions to <head> which could be required by web themes -->
+          </tal:block>
+
+          
+          
+          <tal:block tal:repeat="css css_list">
+            <link tal:attributes="href css" type="text/css" rel="stylesheet" />
+          </tal:block>
+          <tal:block tal:condition="python: requires_map_dependencies">
+            <link type="text/css" rel="stylesheet" href="css/leaflet.css" />
+          </tal:block>
+
+          <tal:block tal:condition="python: form is not None">
+            <tal:block tal:repeat="group python: [x for x in form.get_groups(include_empty=0) if x != 'hidden']">
+              <tal:block tal:repeat="field python: form.get_fields_in_group(group)">
+                <tal:block tal:define="css python: field.render_css(REQUEST=request)">
+                  <style tal:condition="python: css is not None" tal:content="css" tal:attributes="type python:'text/css'"></style>
+                </tal:block>
+                <tal:block tal:define="dummy python: js_list.extend(field.get_javascript_list(REQUEST=request))" />
+              </tal:block>
+            </tal:block>
+          </tal:block>
+          <tal:block tal:repeat="js js_list">
+            <script tal:attributes="src js" type="text/javascript"></script>
+          </tal:block>
+
+          <tal:block metal:define-slot="head">
+            <!-- placeholder for site specific extensions to <head> which could be required by web themes -->
+          </tal:block>
+        </head>
+        <body tal:attributes="class body_css_class|nothing">
+          <form id="main_form"
+                class="main_form"
+                onsubmit="changed=false; return true"
+                tal:attributes="enctype enctype | form/Form_getEnctype | nothing;
+                action url;
+                method python:str(path('form/method | string:post')).lower()">
+            <fieldset id="hidden_fieldset" class="hidden_fieldset">
+              <input tal:condition="form_action | nothing"
+                     id="hidden_button" class="hidden_button" type="submit" value="dummy"
+                     tal:attributes="name string:${form_action}:method" />
+              <tal:block metal:use-macro="global_definitions_macros/http_definitions" />
+            </fieldset>
+            <tal:block metal:define-slot="layout">
+              <div id="bars" class="bars">
+                <div id="main_bar" class="main_bar"
+                     tal:content="structure portal/ERP5Site_renderCachedNavigationBox">
+                </div>
+                <div id="context_bar" class="context_bar">
+                  <tal:block metal:define-slot="context_bar" />
+                </div>
+              </div>
+              <div id="status" class="status">
+                <div id="breadcrumb" class="breadcrumb">
+                  <tal:block metal:use-macro="here/breadcrumb_render/macros/breadcrumb" />
+                </div>
+                <div id="logged_in_as" class="logged_in_as">
+                  <tal:block tal:condition="not: portal/portal_membership/isAnonymousUser">
+                    <span class="logged_txt" i18n:translate="" i18n:domain="ui">Logged In as :</span>
+                    <tal:block tal:replace="python:portal.portal_membership.getAuthenticatedMember().getUserName()" />
+                  </tal:block>
+                </div>
+                <p class="clear"></p>
+                <tal:block tal:condition="preferred_html_style_acknowledgeable_message | nothing">
+                  <div id="acknowledgeable_message_render" class="acknowledgeable_message_render">
+                    <div tal:content="structure here/acknowledgeable_message_render"/>
+                  </div>
+                </tal:block>
+                <div tal:content="request/portal_status_message | nothing" id="transition_message"
+                     class="transition_message"/>
+                <tal:block tal:condition="request/field_errors | nothing">
+                  <div id="information_area" class="information_area" i18n:translate="" i18n:domain="ui">
+                    Input data has errors. Please look at the error messages below.
+                  </div>
+                  <script type="text/javascript">changed = true;</script>
+                </tal:block>
+              </div>
+              <div id="master" class="master">
+                <tal:block metal:define-slot="main" />
+              </div>
+            </tal:block>
+          </form>
+        </body>
+      </html>
+    </tal:block>
+  </tal:block>
+</tal:block>
