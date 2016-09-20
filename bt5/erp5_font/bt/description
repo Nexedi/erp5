@@ -1,8 +1,1 @@
-Collection of open source fonts and icon fonts to use across other bt5s. Please ensure proper mime-types:
-svg - "image/svg+xml"
-ttf - "application/x-font-ttf" or "application/x-font-truetype"
-otf - "application/x-font-opentype"
-woff - "application/font-woff"
-woff2 - "application/font-woff2" (proposed by W3C)
-eot - "application/vnd.ms-fontobject"
-sfnt - "application/font-sfnt"
+Collection of open source fonts and icon fonts to use across other bt5s
