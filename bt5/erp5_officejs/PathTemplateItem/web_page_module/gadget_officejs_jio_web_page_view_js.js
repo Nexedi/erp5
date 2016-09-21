@@ -38,13 +38,13 @@
       iframe_class_string += ' ' + class_name;
       iframe.setAttribute('style', '');
       iframe.setAttribute('class', iframe_class_string);
-      return;
+      return true;
     }
     iframe_class_string = iframe_class_string.substring(0, class_index)
       + iframe_class_string.substring(class_index + class_name.length);
     iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
     iframe.setAttribute('class', iframe_class_string);
-    return;
+    return false;
   }
 
   var gadget_klass = rJS(window),
@@ -83,6 +83,17 @@
         });
     })
 
+    .declareMethod('triggerMaximize', function () {
+      var gadget = this;
+      return RSVP.Queue()
+        .push(function () {
+          return maximize(gadget);
+        })
+        .fail(function (e) {
+          console.log(e);
+        });
+    })
+
     .allowPublicAcquisition('triggerSubmit', function () {
       return this.props.element.querySelector('button').click();
     })
@@ -103,7 +114,9 @@
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
             title: options.doc.title + " | Web Page",
-            save_action: true
+            save_action: true,
+            maximize_action: true,
+            maximized: gadget.options.doc.title !== ""
           });
         })
         .push(function () {
@@ -145,6 +158,9 @@
           });
         })
         .push(function () {
+          if (gadget.options.doc.title !== "") {
+            gadget.triggerMaximize();
+          }
           return text_gadget.getElement();
         });
     })

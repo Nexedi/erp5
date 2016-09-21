@@ -82,6 +82,17 @@
         });
     })
 
+    .declareMethod('triggerMaximize', function () {
+      var gadget = this;
+      return RSVP.Queue()
+        .push(function () {
+          return maximize(gadget);
+        })
+        .fail(function (e) {
+          console.log(e);
+        });
+    })
+
     .allowPublicAcquisition('triggerSubmit', function () {
       return this.props.element.querySelector('button').click();
     })
@@ -102,7 +113,8 @@
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
             title: options.doc.title + " | Web Illustration",
-            save_action: true
+            save_action: true,
+            maximize_action: true
           });
         })
         .push(function () {
@@ -145,7 +157,7 @@
         })
         .push(function () {
           return text_gadget.getElement();
-        })
+        });
     })
 
     /////////////////////////////////////////
