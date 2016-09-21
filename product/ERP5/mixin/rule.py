@@ -47,7 +47,7 @@ def _compare(tester_list, prevision_movement, decision_movement):
       return False
   return True
 
-class MovementGeneratorMixin:
+class MovementGeneratorMixin(object):
   """
   This class provides a generic implementation of IMovementGenerator
   which can be used together the Rule mixin class bellow. It does not

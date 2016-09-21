@@ -63,7 +63,8 @@ class TransformationSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
     """
     Return the movement generator to use in the expand process
     """
-    return TransformationRuleMovementGenerator(applied_rule=context, rule=self)
+    return TransformationRuleMovementGenerator(applied_rule=context, rule=self,
+            produce_at_source=True)
 
   def _isProfitAndLossMovement(self, movement):
     # For a kind of trade rule, a profit and loss movement lacks source
@@ -98,6 +99,11 @@ class TransformationSimulationRule(RuleMixin, MovementCollectionUpdaterMixin):
 
 class TransformationRuleMovementGenerator(MovementGeneratorMixin):
 
+  def __init__(self, *args, **kw):
+    produce_at_source = kw.pop("produce_at_source", False)
+    super(TransformationRuleMovementGenerator, self).__init__(*args, **kw)
+    self.produce_at_source = produce_at_source
+
   def _getUpdatePropertyDict(self, input_movement):
     return {}
 
@@ -106,9 +112,13 @@ class TransformationRuleMovementGenerator(MovementGeneratorMixin):
     portal = self._applied_rule.getPortalObject()
     amount_list = parent_movement.getAggregatedAmountList(
       amount_generator_type_list=portal.getPortalAmountGeneratorAllTypeList(1))
-    arrow_list = ['destination' + x[6:]
-      for x in parent_movement.getCategoryMembershipList(
-        ('source', 'source_section'), base=True)]
+    if self.produce_at_source:
+      arrow_list = ['destination' + x[6:]
+        for x in parent_movement.getCategoryMembershipList(
+          ('source', 'source_section'), base=True)]
+    else:
+      arrow_list = parent_movement.getCategoryMembershipList(
+          ('destination', 'destination_section'), base=True)
     def newMovement(reference, kw={}):
       movement = aq_base(parent_movement.asContext(**kw)).__of__(
         self._applied_rule)
