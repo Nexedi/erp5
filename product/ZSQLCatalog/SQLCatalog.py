@@ -1189,6 +1189,10 @@ class Catalog(Folder,
   def getUIDBuffer(self, force_new_buffer=False):
     global global_uid_buffer_dict
     klass = self.__class__
+    if klass.__module__ == 'erp5.portal_type':
+      # For lazy_class object, take the class from mro, rather than relying
+      # on lazy_class object
+      klass = self.__class__.mro()[1]
     assert klass._reserved_uid_lock.locked()
     assert getattr(self, 'aq_base', None) is not None
     instance_key = self.getPhysicalPath()
@@ -1207,6 +1211,10 @@ class Catalog(Folder,
       Produces reserved uids in advance
     """
     klass = self.__class__
+    if klass.__module__ == 'erp5.portal_type':
+      # For lazy_class object, take the class from mro, rather than relying
+      # on lazy_class object
+      klass = self.__class__.mro()[1]
     assert klass._reserved_uid_lock.locked()
     # This checks if the list of local reserved uids was cleared after clearReserved
     # had been called.
@@ -1299,6 +1307,10 @@ class Catalog(Folder,
       return None
 
     klass = self.__class__
+    if klass.__module__ == 'erp5.portal_type':
+      # For lazy_class object, take the class from mro, rather than relying
+      # on lazy_class object
+      klass = self.__class__.mro()[1]
     try:
       klass._reserved_uid_lock.acquire()
       self.produceUid()
