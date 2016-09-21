@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>OfficeJS jIO DAV Configurator Page</title>
+    <title>OfficeJS jIO ERP5 Configurator Page</title>
 
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
 
-    <script src="gadget_officejs_page_jio_dav_configurator.js"></script>
+    <script src="gadget_officejs_page_jio_erp5_configurator.js"></script>
 
   </head>
 
@@ -18,26 +18,20 @@
       <section class="ui-content-header-plain">
         <h3 class="ui-content-title ui-body-c">
           <span class="ui-icon ui-icon-custom ui-icon-database">&nbsp;</span>
-          Your WebDAV Connection parameters
+          Your ERP5 Connection parameters
         </h3>
       </section>
+      <section class="ui-content-header-plain">
+        <p>You have to be logged in this ERP5 prior to synchronising</p>
+      </section>
       <section class="ui-body-c ui-content-section">
-        <form class="dav-configuration-form">
+        <form class="erp5-configuration-form">
 
           <div class="ui-form">
             <div class="ui-field-contain">
               <label data-i18n="Connection URL:">Connection URL:</label>
-              <input type="url" name="dav_url" required value=""/>
+              <input type="url" name="erp5_url" required disabled/>
             </div>
-            <div class="ui-field-contain">
-              <label data-i18n="Username:">Username:</label>
-              <input type="text" name="dav_username" value=""/>
-            </div>
-            <div class="ui-field-contain">
-              <label data-i18n="Password:">Password:</label>
-              <input type="password" name="dav_password" value=""/>
-            </div>
-          </div>
           <div class="select-storage ui-controlgroup ui-controlgroup-horizontal">
             <div class="ui-grid-b ui-responsive">
               <div class="ui-block-a"></div>
@@ -71,5 +65,7 @@
         </div>
       </section>
     </article>
+
+    <div class="global_setting_gadget" style="display: none;"></div>
   </body>
 </html>
