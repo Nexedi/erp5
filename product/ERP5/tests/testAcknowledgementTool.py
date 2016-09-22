@@ -60,13 +60,20 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
                title="foo",
                start_date = now-2,
                stop_date = now+2)
-    portal.portal_workflow.doActionFor(event, 'start_action')
-    self.assertEqual(event.getSimulationState(), 'started')
     self.tic()
 
     acknowledgement_tool_kw = {}
     acknowledgement_tool_kw['user_name'] = 'seb'
     acknowledgement_tool_kw['portal_type'] = event_type
+    # draft document must be not be part of acknowledgements
+    document_url_list = portal.portal_acknowledgements\
+                         .getUnreadDocumentUrlList(**acknowledgement_tool_kw)
+    self.assertFalse(event.getRelativeUrl() in document_url_list)
+
+    # validated document must be part of acknowledgements
+    portal.portal_workflow.doActionFor(event, 'start_action')
+    self.assertEqual(event.getSimulationState(), 'started')
+    self.tic()
     document_url_list = portal.portal_acknowledgements\
                          .getUnreadDocumentUrlList(**acknowledgement_tool_kw)
     self.assertTrue(event.getRelativeUrl() in document_url_list)
