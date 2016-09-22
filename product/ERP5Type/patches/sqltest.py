@@ -28,7 +28,7 @@ if 1: # For easy diff with original
                 v=md[expr]
             else:
                 v=expr(md)
-        except KeyError:
+        except (KeyError, NameError):
             if args.has_key('optional') and args['optional']:
                 return ''
             raise ValueError, 'Missing input variable, <em>%s</em>' % name
