@@ -70,6 +70,13 @@ class AcknowledgementTool(BaseTool):
     """
     return len(self.getUnreadAcknowledgementList(*args, **kw))
 
+  def _getAcknowledgementTypeList(self):
+    """
+    Return list of acknowledgement types, should use portal types group
+    when we see need of having several portal types for acknowledgements
+    """
+    return ('Acknowledgement',)
+
   security.declarePublic('getUnreadAcknowledgementList')
   def getUnreadAcknowledgementList(self, portal_type=None, user_name=None,
                                    url_list=None):
@@ -131,7 +138,7 @@ class AcknowledgementTool(BaseTool):
         # so not in a final state
         final_state_list = self.getPortalCurrentInventoryStateList()
         query = NegatedQuery(Query(simulation_state=final_state_list))
-        for x in self.portal_catalog(portal_type = portal_type,
+        for x in self.portal_catalog(portal_type = self._getAcknowledgementTypeList(),
                 query=query,
 #               start_date = {'query':now,'range':'max'},
 #               stop_date = {'query':now,'range':'min'},
