@@ -12,6 +12,7 @@
 ##############################################################################
 from Shared.DC.ZRDB.sqltest import *
 from Shared.DC.ZRDB import sqltest
+from DateTime import DateTime
 
 list_type_list = list, tuple, set, frozenset, dict
 
@@ -66,12 +67,9 @@ if 1: # For easy diff with original
                 # For subsecond precision, use 'datetime(N)' MySQL type,
                 # where N is the number of digits after the decimal point.
                 n = 0 if t == 'datetime' else int(t[9])
-                try:
-                    v = (v if isinstance(v, DateTime) else DateTime(v)).toZone('UTC')
-                    return "'%s%s'" % (v.ISO(),
-                        ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
-                except Exception:
-                    t = 'datetime'
+                v = (v if isinstance(v, DateTime) else DateTime(v)).toZone('UTC')
+                v = "'%s%s'" % (v.ISO(),
+                    ('.%06u' % (v.micros() % 1000000))[:1+n] if n else '')
 
             else:
                 if not isinstance(v, (str, unicode)):
