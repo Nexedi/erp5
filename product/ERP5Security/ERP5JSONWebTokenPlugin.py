@@ -99,7 +99,7 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
       LOG('ERP5JSONWebTokenPlugin', INFO,
           'No jwt module, install pyjwt package. '
             'Authentication disabled.')
-      return DumbHTTPExtractor().extractCredentials(request)
+      return None
 
     creds = {}
 
@@ -142,6 +142,7 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
       person_relative_url = data["sub"].encode()
       user = self.getPortalObject().unrestrictedTraverse(person_relative_url)
 
+      # Activate password to have the real tid
       user.password._p_activate()
       if data["ptid"] == u64(user.password._p_serial) \
           and (not origin or data and \
@@ -173,13 +174,9 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
               'Authentication disabled.')
         return authentication_result
 
-      if "person_relative_url" not in credentials:
-        user = self.getUserByLogin(authentication_result[0])[0]
-      else:
-        user = self.getPortalObject().unrestrictedTraverse(
-          credentials["person_relative_url"]
-        )
+      user = self.getUserByLogin(authentication_result[0])[0]
 
+      # Activate password to have the real tid
       user.password._p_activate()
       data = {
         "sub": user.getRelativeUrl(),
@@ -226,7 +223,7 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
 
       # Expire default cookie set by default
       # (even with plugin deactivated)
-      request.response.expireCookie('__ac')
+      # request.response.expireCookie('__ac')
 
     return authentication_result  
 
