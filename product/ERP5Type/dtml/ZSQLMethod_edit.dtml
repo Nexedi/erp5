@@ -56,7 +56,7 @@
     </div>
     </td>
     <td align="left" valign="top">
-    <textarea name="arguments" cols="40" rows="4">&dtml-arguments_src;</textarea>
+    <textarea name="arguments:text" cols="40" rows="4">&dtml-arguments_src;</textarea>
     </td>
   </tr>
   <tr>
