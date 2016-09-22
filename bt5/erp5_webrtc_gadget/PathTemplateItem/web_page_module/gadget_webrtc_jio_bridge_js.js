@@ -118,13 +118,13 @@
         .push(function(){
           return handler_gadget.wait_until_available(options.roomid, options.peerid+'_', 
             function(response){
-              return registerAnswer(gadget, JSON.parse(response).data);
-            })
-            .push(function () {
-              return handler_gadget.close(options.roomid, options.peerid, options.to);
-            })
-            .push(function () {
-              return false;
+              return registerAnswer(gadget, JSON.parse(response).data)
+              .push(function () {
+                return handler_gadget.close(options.roomid, options.peerid, options.to, options.listner);
+              })
+              .push(function () {
+                return false;
+              });
             });
         });
       } else {
@@ -138,7 +138,7 @@
           return handler_gadget.handle_answer(options.roomid, params);
         })
         .push(function () {
-          return handler_gadget.close(options.roomid, options.peerid, options.to);
+          return handler_gadget.close(options.roomid, options.peerid, options.to, options.listner);
         })
         .push(function(){
           return RSVP.any([
@@ -191,7 +191,7 @@
     })
   
     .declareMethod('send', function (args, to) {
-      //TODO: Add to functionality here
+      //TODO: Add sent-to by name, functionality here
       var webrtc = this.props.webrtc_connections[to];
       return webrtc.send.apply(
         webrtc,
@@ -199,66 +199,62 @@
       );
     })
 
-    .declareMethod('register', function(options){
-      var handler;
+    .declareMethod('connect', function(options){
+      var gadget = this,
+        jsonOffer,
+        handler,
+        roomid = options.roomid,
+        peerid = options.peerid;
+      
       if (options.type === "websocket")  {
         handler = "websocket_handshake_gadget";
       } else if (options.type === "jio") {
         handler = "handshake_gadget";
       }
 
-      // Todo:
-      // check if roomid is there
-      // check if peerid is there
-      // check if config is there
-      // check if type is there
-      // throw error if any of them is not defined
-    
-      this.props.handler_gadget = handler;
-
+      gadget.props.handler_gadget = handler;
+      
       return this.getDeclaredGadget(handler)
-      .push(function (handler_gadget){
-        return handler_gadget.register(options.roomid, options.peerid, options.config);
-      });
-    })
-    
-    .declareMethod('connect', function(options){
-      var gadget = this, 
-        handler_gadget,
-        roomid = options.roomid,
-        peerid = options.peerid;
-
-      // TODO: change the name of the function (I am out of name? @cedric any opinions?)
-      function conenct (offer, handler_gadget) {
-        return options.preConnection(options, offer)
-        .push(function() {
-          return handleConnection(gadget, handler_gadget, options, JSON.parse(offer));
+        .push(function (handler_gadget){
+          return handler_gadget.register(options.roomid, options.peerid, options.config);
         })
-        .push(function() {
-          return options.postConnection(options, offer);
-        });
-      }
-
-      if (gadget.props.handler_gadget)  {
-        return gadget.getDeclaredGadget(gadget.props.handler_gadget)
-        .push(function(handler_gadget) {
-          if (options.listner) {
-            // Do we need a check for postOffer function here ?
-            return handler_gadget.wait_until_available(roomid, peerid+'_', function(offers){
-              var connections = [];
-              gadget.props.channel_defer = RSVP.defer();
-              gadget.props.counter += 1;
-              for (var offer in offers) {
-                connections.push(conenct(offers[offer], handler_gadget));
-              }
-              return RSVP.all(connections)
+        .push(function (handler_gadget){
+          // TODO: change the name of the function (I am out of name? @cedric any opinions?)
+          function conenct (offer, handler_gadget) {
+            return options.preConnection(options, offer)
+            .push(function() {
+              return handleConnection(gadget, handler_gadget, options, offer);
+            })
+            .push(function() {
+              return options.postConnection(options, offer);
             });
-          } else {
-            return handleConnection(gadget, handler_gadget, options)
           }
-        })
-      } else {
-        throw new Error("Peer is not registered")
-      }
+    
+          if (gadget.props.handler_gadget)  {
+            return gadget.getDeclaredGadget(gadget.props.handler_gadget)
+            .push(function(handler_gadget) {
+              if (options.listner) {
+                // Do we need a check if postOffer function is present ?
+                return handler_gadget.wait_until_available(roomid, peerid+'_', function(offers){
+                  var connections = [];
+                  // TODO: have a array for channel_defer for concurency?
+                  gadget.props.channel_defer = RSVP.defer();
+                  for (var offer in offers) {
+                    jsonOffer = JSON.parse(offers[offer]); 
+                    if (jsonOffer.action === "offer") {
+                      gadget.props.counter += 1;
+                      connections.push(conenct(jsonOffer, handler_gadget));
+                    }
+                  }
+                  return RSVP.all(connections)
+                });
+              } else {
+                return handleConnection(gadget, handler_gadget, options)
+              }
+            })
+          } else {
+            throw new Error("Peer is not registered")
+          }
+        });
     });
 }(rJS, window, RSVP));

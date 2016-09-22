@@ -12,13 +12,12 @@
     })
     
     .allowPublicAcquisition("notifyWebSocketMessage", function (argument_list) {
-      if (JSON.parse(argument_list[0]).action === "offer" && JSON.parse(argument_list[0]).from !== this.props.peerid) {
+      if ( JSON.parse(argument_list[0]).from !== this.props.peerid) {
         return this.props.notify_websocket_message(argument_list);
       }
     })
     
     .allowPublicAcquisition("notifyWebSocketClosed", function () {
-
     })
 
     .declareMethod('init', function(url) {
@@ -36,10 +35,10 @@
       return RSVP.promise
     })
     
-    .declareMethod('register', function(roomid, peerid, options) {
+    .declareMethod('register', function(roomid, peerid, config) {
       var gadget = this;
       gadget.props.peerid = peerid;
-      return gadget.init(options.url);
+      return gadget.init(config.url);
     })
 
     .declareMethod('handle_answer', function (roomid, offer) {
@@ -67,20 +66,20 @@
 
     .declareMethod('wait_until_available', function (roomid, query, prom) {
       // execute given function on each websocket message 
-
       var gadget = this,
         response,
         offers;
-      
+
       gadget.props.notify_websocket_message = prom;
-      
     })
 
-    .declareMethod('close', function (roomid, peerid, to) {
-      var gadget = this;
-      return gadget.getDeclaredGadget("gadget_websocket")
-      .push(function (socket_gadget) {
-        return socket_gadget.close();
-      });
+    .declareMethod('close', function (roomid, peerid, to, listner) {
+      if (!listner) {
+        var gadget = this;
+        return gadget.getDeclaredGadget("gadget_websocket")
+        .push(function (socket_gadget) {
+          return socket_gadget.close();
+        });
+      }
     });
 })(window, rJS, RSVP);

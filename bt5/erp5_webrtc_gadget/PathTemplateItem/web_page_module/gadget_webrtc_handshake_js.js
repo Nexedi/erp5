@@ -5,23 +5,6 @@
   "use strict";
 
   function createJio(gadget, config) {
-    if (!config) {
-      config = {
-        type: "query",
-        sub_storage: {
-          type: "uuid",
-          sub_storage: {
-            //type: "indexeddb",
-            "type": "dav",
-            //"type": "erp5",
-            //"url": "https://softinst67525.host.vifib.net/erp5",
-            "url": "https://softinst67513.host.vifib.net/share/",
-            "basic_login": btoa("admin:vowhkida")
-            //"database": "handshake"
-          }
-        }
-      }
-    }
     return gadget.getDeclaredGadget("jio_gadget")
       .push(function (jio_gadget) {
         return jio_gadget.createJio(config);
@@ -98,8 +81,10 @@
         .push(function (jg) {
           jio_gadget = jg;
           return jio_gadget.putAttachment(roomid, peerid, '');
-        })
-        .push(function () {
+        });
+        
+        // TODO: create new function, show registered peers?
+        /*.push(function () {
           return jio_gadget.allAttachments(roomid);
         })
         .push(function (d) {
@@ -116,7 +101,7 @@
         .push(null, function(e){
           // if registered ignore
           //console.info(e);
-        })
+        })*/
     })
 
     .declareMethod('handle_answer', function (roomid, options) {
