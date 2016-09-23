@@ -294,7 +294,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getContentType() and not here.getContentType().startswith("application/yformat.")</string> </value>
+            <value> <string>python: here.getContentType() is not None and not here.getContentType().startswith("application/x-asc")</string> </value>
         </item>
       </dictionary>
     </pickle>
