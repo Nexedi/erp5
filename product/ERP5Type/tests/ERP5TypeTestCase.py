@@ -857,8 +857,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       update_business_templates = os.environ.get('update_business_templates') is not None
       erp5_load_data_fs = int(os.environ.get('erp5_load_data_fs', 0))
       if update_business_templates and erp5_load_data_fs:
-        template_list[:0] = (erp5_catalog_storage, 'erp5_property_sheets',
-                             'erp5_core', 'erp5_xhtml_style')
+        template_list[:0] = ('erp5_property_sheets', 'erp5_core',
+                             erp5_catalog_storage, 'erp5_xhtml_style')
 
       # keep a mapping type info name -> property sheet list, to remove them in
       # tear down.
