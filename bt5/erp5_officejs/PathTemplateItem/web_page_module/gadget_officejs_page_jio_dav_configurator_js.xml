@@ -101,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS jIO DAV Configurator Page JS</string> </value>
+            <value> <string>OfficeJS jiO DAV Configurator Page JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -234,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>947.53845.25131.55500</string> </value>
+                <value> <string>954.5849.14852.49954</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1450259852.52</float>
+                        <float>1474559647.83</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

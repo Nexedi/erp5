@@ -29,57 +29,57 @@
       });
   }
   
-  function shareDoc (gadget, type) {
-    if(window.location.hash) {
-      var index = window.location.hash.indexOf('room=');
-      if (index === -1) {
-        var S4 = function() {
-           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-        };
-        var room = (S4()+S4()+"-"+S4()+S4());
-        return new RSVP.Queue()
-        .push(function () {
-          return gadget.declareGadget(
-            "gadget_officejs_page_share_text.html",
-            {
-              scope: "share_text_via_webrtc",
-              element: gadget.props.element.querySelector(".webrtc-gadget")
-            }
-          );
-        })
-        .push(function(g){
-          var config;
-          if (type === "jio") {
-            config = {
-              type: "query",
-              sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  "type": "dav",
-                  "url": "https://softinst67513.host.vifib.net/share/",
-                  "basic_login": btoa("admin:vowhkida")
-                }
+  function shareDoc (gadget) {
+    return gadget.getSetting('webrtc_share_name')
+    .push(function(webrtc_share_name){
+      gadget.props.webrtc_share_name = webrtc_share_name;
+      return gadget.getSetting('webrtc_share_description')
+    })
+    .push(function(webrtc_share_description){
+      if(window.location.hash) {
+        var index = window.location.hash.indexOf('room='),
+         type;
+        if (index === -1) {
+          var S4 = function() {
+             return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+          };
+          var room = (S4()+S4()+"-"+S4()+S4());
+          return new RSVP.Queue()
+          .push(function () {
+            return gadget.declareGadget(
+              "gadget_officejs_page_share_text.html",
+              {
+                scope: "share_text_via_webrtc",
+                element: gadget.props.element.querySelector(".webrtc-gadget")
               }
-            };
-          } else {
-            config = {url: "ws://192.168.242.146:9999/"};
-          }
-
-          var sharelink = window.location.origin + window.location.pathname + '#page=webrtc_viewer&room='+room+'&type='+type+'&config='+encodeURIComponent(JSON.stringify(config));
-
-          gadget.props.element.querySelector('#sharelink').value = sharelink;
-          gadget.props.element.querySelector('#sharelink').style.display = 'block';
-          gadget.props.element.querySelector('#generatelink').remove();
-          gadget.props.element.querySelector('#generatelink1').remove();
-
-          if(config) {
-            return g.initiate(room, gadget, type, config);
-          } else {
-            throw new Error("Share config is missing");
-          }
-        })
+            );
+          })
+          .push(function(g){
+            var config;
+            if (gadget.props.webrtc_share_name === "DAV") {
+              type = "jio";
+              config = webrtc_share_description.remote_sub_storage;
+            } else {
+              type = gadget.props.webrtc_share_name.toLowerCase();
+              config = {url: webrtc_share_description.url};
+            }
+  
+            var sharelink = window.location.origin + window.location.pathname + 
+              '#page=webrtc_viewer&room='+room+'&type='+type+'&config='+encodeURIComponent(JSON.stringify(config));
+  
+            gadget.props.element.querySelector('#sharelink').value = sharelink;
+            gadget.props.element.querySelector('#sharelink').style.display = 'block';
+            gadget.props.element.querySelector('#generatelink').remove();
+  
+            if(config) {
+              return g.initiate(room, gadget, type, config);
+            } else {
+              throw new Error("Share config is missing");
+            }
+          })
+        }
       }
-    }
+    });
   }
 
 
@@ -125,6 +125,7 @@
     .declareAcquiredMethod("put", "jio_put")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getSetting", "getSetting")
 
     .allowPublicAcquisition('triggerMaximize', function () {
       var gadget = this;
@@ -142,7 +143,7 @@
     })
 
     .declareMethod('triggerSubmit', function () {
-      return this.props.element.querySelector('button').click();
+      return this.props.element.querySelector('form.view-web-page-form').getElementsByTagName('button')[0].click();
     })
 
     .declareMethod("render", function (options) {
@@ -213,7 +214,7 @@
         .push(function () {
           return gadget.props.deferred.promise;
         })
-                .push(function () {
+        .push(function () {
           return RSVP.all([
             loopEventListener(
               gadget.props.element.querySelector('form.select-share-type'),
@@ -221,9 +222,7 @@
               true,
               function (event) {
                 if (document.activeElement.name === "generatelink") {
-                  return shareDoc(gadget, "jio");
-                } else if (document.activeElement.name === "generatelink1") {
-                  return shareDoc(gadget, "websocket");
+                  return shareDoc(gadget);
                 }
               }
             ),

@@ -4,7 +4,7 @@
   "use strict";
 
   var timeout = 60000,
-    websocket_timeout = 500000;
+    websocket_timeout = 5000;
 
   function S4() {
     return ('0000' + Math.floor(
