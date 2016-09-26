@@ -33,7 +33,10 @@ request.set('precision', precision)
 
 grouping = dialog_selection_params.get('grouping', 'grouping')
 
-search_kw = dict(portal_type=portal.getPortalAccountingMovementTypeList())
+search_kw = dict(
+  portal_type=portal.getPortalAccountingMovementTypeList(),
+  node_uid=-1 # prevent a query for all nodes, it would retrieve too many rows.
+)
 node = node or request.get('node') or dialog_selection_params.get('node')
 if node:
   search_kw['node_uid'] = portal.restrictedTraverse(node).getUid()

@@ -61,10 +61,11 @@ Grouping from entity transaction view
   <td>field_your_node</td>
   <td></td>
 </tr>
+<!-- When no account is selected, we do not display anything. -->
 <tr>
   <td>assertText</td>
   <td>//span[@class="listbox-current-page-total-number"]</td>
-  <td>5 records</td>
+  <td>0 records</td>
 </tr>
 <tr>
   <td>select</td>
