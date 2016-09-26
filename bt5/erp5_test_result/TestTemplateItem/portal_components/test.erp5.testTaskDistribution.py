@@ -14,6 +14,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     if getattr(tool, "TestTaskDistribution", None) is None:
       tool.newContent(id="TestTaskDistribution",
            portal_type="ERP5 Project Unit Test Distributor")
+    tool.TestTaskDistribution.setMaxTestSuite(None)
     if getattr(tool, "TestPerformanceTaskDistribution", None) is None:
       tool.newContent(id="TestPerformanceTaskDistribution",
            portal_type="Cloud Performance Unit Test Distributor")
@@ -613,6 +614,26 @@ class TestTaskDistribution(ERP5TypeTestCase):
           [test_node_five, ["six", "seven", "height"]],
           [test_node_six, ["six", "seven"]],
           [test_node_seven, ["four", "six"]])
+
+  def test_11b_checkERP5ProjectDistributionWithCustomMaxQuantity(self):
+    """
+    Check that the property max_test_suite on the distributor could
+    be used to customize the quantity of test suite affected per test node
+    """
+    test_node, = self._createTestNode(quantity=1)
+    test_suite_list = self._createTestSuite(quantity=5)
+    self.tool.TestTaskDistribution.setMaxTestSuite(None)
+    self.tic()
+    self._callOptimizeAlarm()
+    self.assertEqual(4, len(set(test_node.getAggregateList())))
+    self.tool.TestTaskDistribution.setMaxTestSuite(1)
+    self._callOptimizeAlarm()
+    self.assertEqual(1, len(set(test_node.getAggregateList())))
+    self.tool.TestTaskDistribution.setMaxTestSuite(10)
+    self._callOptimizeAlarm()
+    self.assertEqual(5, len(set(test_node.getAggregateList())))
+    self.assertEqual(set(test_node.getAggregateList()), 
+                     set([x.getRelativeUrl() for x in test_suite_list]))
 
   def test_12_checkCloudPerformanceOptimizationIsStable(self):
     """

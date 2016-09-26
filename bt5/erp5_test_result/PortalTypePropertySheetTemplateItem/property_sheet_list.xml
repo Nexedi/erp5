@@ -7,6 +7,9 @@
  <portal_type id="Benchmark Result Line">
   <item>Task</item>
  </portal_type>
+ <portal_type id="ERP5 Project Unit Test Distributor">
+  <item>UnitTestDistributor</item>
+ </portal_type>
  <portal_type id="ERP5 Scalability Distributor">
   <item>ScalabilityDistributor</item>
  </portal_type>

@@ -7,3 +7,4 @@ ScalabilityTestSuite
 TestNode
 ScalabilityDistributor
 SlapOSSoftwareReleaseUnitTest
+UnitTestDistributor

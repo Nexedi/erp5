@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>colored_integer</string>
+                        <string>my_view_mode_max_test_suite</string>
                       </list>
                     </value>
                 </item>

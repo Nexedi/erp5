@@ -91,7 +91,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         else:
           break
 
-  def _checkCurrentConfiguration(self,test_node_list, test_suite_list_to_add):
+  def _checkCurrentConfiguration(self,test_node_list, test_suite_list_to_add, max_test_suite):
     """
     We look at what is already installed and then we remove from the list
     of test suite list to add what is already installed.
@@ -100,7 +100,10 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite_list_to_remove = []
     for test_node in test_node_list:
       test_suite_list = test_node.getAggregateList()
-      for test_suite in test_suite_list:
+      for index, test_suite in enumerate(test_suite_list, 1):
+        if index > max_test_suite:
+          test_suite_list_to_remove.append(test_suite)
+          continue
         try:
           test_suite_list_to_add.remove(test_suite)
         except ValueError:
@@ -123,9 +126,10 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         specialise_uid=self.getUid(), sort_on=[('title','ascending')])]
 
     test_node_list_len = len(test_node_list)
+    max_test_suite = self.getMaxTestSuite(TEST_SUITE_MAX)
     def _optimizeConfiguration(test_suite_list_to_add, level=0,
                                test_node_list_to_optimize=None,
-                               test_suite_max=TEST_SUITE_MAX):
+                               test_suite_max=max_test_suite):
       if test_node_list_to_optimize is None:
         test_node_list_to_optimize = [x for x in test_node_list]
       if test_suite_list_to_add:
@@ -154,7 +158,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_suite_score, test_suite_list_to_add = self._getSortedNodeTestSuiteList()
     average_quantity = float(len(test_suite_list_to_add)) / (test_node_list_len or 1)
     test_suite_list_to_remove = self._checkCurrentConfiguration(test_node_list,
-      test_suite_list_to_add)
+      test_suite_list_to_add, max_test_suite)
     self._cleanupTestNodeList(test_node_list, test_suite_list_to_remove)
     _optimizeConfiguration(test_suite_list_to_add)
     # once we removed useless test suite and added needed ones,
@@ -172,7 +176,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
         lazy_test_node_list.append(test_node)
     # check on most overloaded test nodes first if we can move some work to lazy
     # test nodes
-    for aggregate_quantity in range(TEST_SUITE_MAX, int_average_quantity, -1):
+    for aggregate_quantity in range(max_test_suite, int_average_quantity, -1):
       if len(lazy_test_node_list) == 0:
         break
       overloaded_test_node_list = [x for x in test_node_list if len(x.getAggregateList()) == aggregate_quantity]
