@@ -58,17 +58,33 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
+  <td>click</td>
+  <td>//form[@class='select-erp5-form']/button[@data-i18n='ERP5']</td>
   <td></td>
 </tr>
 <tr>
-  <td>clickAndWait</td>
-  <td>//form[@class='select-erp5-form']/button[@data-i18n='ERP5']</td>
+  <td>waitForElementPresent</td>
+  <td>//form[@class='erp5-configuration-form']//button</td>
   <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=erp5_url</td>
+  <td>${base_url}/web_site_module/officejs_text_editor/</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//form[@class='erp5-configuration-form']//button[@data-i18n='Connect']</td>
+  <td></td>
+</tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//form[@class='select-erp5-form']/button[@data-i18n='ERP5']</td>
+  <td>//a[@data-i18n='Go to document List']</td>
   <td></td>
 </tr>
 <tr>
