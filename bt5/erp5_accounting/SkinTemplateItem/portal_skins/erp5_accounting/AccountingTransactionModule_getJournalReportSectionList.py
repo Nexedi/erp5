@@ -68,7 +68,7 @@ selection_columns = (
     ('parent_reference', 'Document Reference'),)
 if len(portal_type) > 1:
   selection_columns += (
-    ('portal_type', 'Journal Type'), )
+    ('portal_type', 'Transaction Type'), )
 selection_columns += analytic_column_list + (
     ('node_title', 'Account'),
     ('mirror_section_title', 'Third Party'),
