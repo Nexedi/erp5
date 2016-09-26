@@ -52,6 +52,7 @@ from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
 from App.Extensions import getBrain
 from MySQLdb import ProgrammingError
+from MySQLdb.constants.ER import NO_SUCH_TABLE
 
 from hashlib import md5
 from warnings import warn
@@ -1404,7 +1405,9 @@ class SimulationTool(BaseTool):
         inventory_cache_kw['date'] = to_date
       try:
           cached_sql_result = Resource_zGetInventoryCacheResult(**inventory_cache_kw)
-      except ProgrammingError:
+      except ProgrammingError, (code, _):
+          if code != NO_SUCH_TABLE:
+            raise
           # First use of the optimisation, we need to create the table
           LOG("SimulationTool._getCachedInventoryList", INFO,
               "Creating inventory cache stock")
