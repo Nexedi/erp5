@@ -44,8 +44,8 @@
 @panelwidth: 17em;
 
 @smartphone: ~"only screen and (max-width: 28em)";
-@tablet: ~"only screen and (min-width: 28em) and (max-width: 62em)";
-@desktop: ~"only screen and (min-width: 62em)";
+@tablet: ~"only screen and (min-width: 28em) and (max-width: 100em)";
+@desktop: ~"only screen and (min-width: 100em)";
 
 
 /**********************************************
