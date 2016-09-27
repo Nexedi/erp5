@@ -1159,7 +1159,6 @@ class SimulationTool(BaseTool):
         group_by_section_category=0,
         group_by_section_category_strict_membership=0,
         group_by_resource=None,
-        movement_list_mode=0,
         group_by=None,
         **ignored):
       """
@@ -1170,12 +1169,7 @@ class SimulationTool(BaseTool):
       If any group-by is provided, automatically group by resource aswell
       unless group_by_resource is explicitely set to false.
       If no group by is provided, use the default group by: movement, node and
-      resource, unless movement_list_mode is true, in that case, group by
-      movement, node, resource and date (this is historically the default in
-      getMovementHistoryList), section, mirror_section and payment (this is to
-      make sure two lines will appear when we are, for instance both source and
-      destination, implementation might not be optimal, because it uses lots of
-      group by statements in SQL).
+      resource.
       """
       new_group_by_dict = {}
       if not ignore_group_by and group_by is None:
@@ -1192,12 +1186,6 @@ class SimulationTool(BaseTool):
           new_group_by_dict['group_by_movement'] = 1
           new_group_by_dict['group_by_node'] = 1
           new_group_by_dict['group_by_resource'] = 1
-          if movement_list_mode:
-            new_group_by_dict['group_by_date'] = 1
-            new_group_by_dict['group_by_mirror_node'] = 1
-            new_group_by_dict['group_by_section'] = 1
-            new_group_by_dict['group_by_mirror_section'] = 1
-            new_group_by_dict['group_by_payment'] = 1
       return new_group_by_dict
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1976,9 +1964,6 @@ class SimulationTool(BaseTool):
       brains. The initial values can be passed, in case you want to have an
       "initial summary line".
       """
-      kw['movement_list_mode'] = 1
-      kw.update(self._getDefaultGroupByParameters(**kw))
-
       # Extend select_dict by order_by_list columns.
       catalog = self.getPortalObject().portal_catalog.getSQLCatalog()
       kw = catalog.getCannonicalArgumentDict(kw)
