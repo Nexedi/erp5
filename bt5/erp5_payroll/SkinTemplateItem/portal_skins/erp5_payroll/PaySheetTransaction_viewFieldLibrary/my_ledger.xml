@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\',\'\')] + [(ledger.getTranslatedTitle(), ledger.getCategoryRelativeUrl(base=0)) for ledger in here.portal_types[here.getPortalType()].getLedgerValueList()]</string> </value>
+            <value> <string>context/Delivery_getLedgerItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
