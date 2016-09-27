@@ -241,6 +241,25 @@ class AccountingTestCase(ERP5TypeTestCase):
             'erp5_configurator_standard_invoicing_template',
             'erp5_simulation_test')
 
+  @UnrestrictedMethod
+  def setUpLedger(self):
+   # Create Ledger Categories
+    ledger_category = self.portal.portal_categories.ledger
+    ledger_accounting_category = ledger_category.get('accounting', None)
+    if ledger_accounting_category is None:
+      ledger_accounting_category = ledger_category.newContent(portal_type='Category', id='accounting')
+    if ledger_accounting_category.get('general', None) is None:
+      ledger_accounting_category.newContent(portal_type='Category', id='general')
+    if ledger_accounting_category.get('detailed', None) is None:
+      ledger_accounting_category.newContent(portal_type='Category', id='detailed')
+    if ledger_accounting_category.get('other', None) is None:
+      ledger_accounting_category.newContent(portal_type='Category', id='other')
+
+    # Allow some ledgers on the 'Sale Invoice Transaction' portal type
+    self.portal.portal_types['Sale Invoice Transaction'].edit(
+      ledger=['accounting/general', 'accounting/detailed'])
+
+
 
 class TestAccounts(AccountingTestCase):
   """Tests Accounts.
@@ -1168,24 +1187,6 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEqual(None, pl_movement.getDestinationTotalAssetPrice())
     self.assertEqual(None, pl_movement.getSourceTotalAssetPrice())
     self.assertEqual(200., pl_movement.getDestinationCredit())
-
-  @UnrestrictedMethod
-  def setUpLedger(self):
-   # Create Ledger Categories
-    ledger_category = self.portal.portal_categories.ledger
-    ledger_accounting_category = ledger_category.get('accounting', None)
-    if ledger_accounting_category is None:
-      ledger_accounting_category = ledger_category.newContent(portal_type='Category', id='accounting')
-    if ledger_accounting_category.get('general', None) is None:
-      ledger_accounting_category.newContent(portal_type='Category', id='general')
-    if ledger_accounting_category.get('detailed', None) is None:
-      ledger_accounting_category.newContent(portal_type='Category', id='detailed')
-    if ledger_accounting_category.get('other', None) is None:
-      ledger_accounting_category.newContent(portal_type='Category', id='other')
-
-    # Allow some ledgers on the 'Sale Invoice Transaction' portal type
-    self.portal.portal_types['Sale Invoice Transaction'].edit(
-      ledger=['accounting/general', 'accounting/detailed'])
 
   def test_createBalanceOnLedgerWithTransactionsWithNoLedger(self):
     self.setUpLedger()
@@ -3661,6 +3662,72 @@ class TestTransactions(AccountingTestCase):
     self.tic()
     for line in invoice.contentValues():
       self.assertTrue(line.getGroupingReference())
+
+  def test_automatically_setting_grouping_reference_when_same_ledger(self):
+    self.setUpLedger()
+    invoice = self._makeOne(
+               title='First Invoice',
+               ledger_value=self.portal.portal_categories.ledger.accounting.general,
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               causality_value=invoice,
+               ledger_value=self.portal.portal_categories.ledger.accounting.general,
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_for_grouping_reference',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_for_grouping_reference
+
+    invoice.stop()
+    self.assertTrue(invoice_line.getGroupingReference())
+    self.assertTrue(payment_line.getGroupingReference())
+
+  def test_not_automatically_setting_grouping_reference_when_different_ledger(self):
+    self.setUpLedger()
+    invoice = self._makeOne(
+               title='First Invoice',
+               ledger_value=self.portal.portal_categories.ledger.accounting.general,
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           id='line_for_grouping_reference',)))
+    invoice_line = invoice.line_for_grouping_reference
+
+    payment = self._makeOne(
+               title='First Invoice Payment',
+               portal_type='Payment Transaction',
+               simulation_state='delivered',
+               causality_value=invoice,
+               ledger_value=self.portal.portal_categories.ledger.accounting.detailed,
+               source_payment_value=self.section.newContent(
+                                            portal_type='Bank Account'),
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           id='line_for_grouping_reference',
+                           source_debit=100),
+                      dict(source_value=self.account_module.bank,
+                           source_credit=100,)))
+    payment_line = payment.line_for_grouping_reference
+
+    invoice.stop()
+    self.assertFalse(invoice_line.getGroupingReference())
+    self.assertFalse(payment_line.getGroupingReference())
 
   def test_roundDebitCredit_raises_if_big_difference(self):
     invoice = self._makeOne(
