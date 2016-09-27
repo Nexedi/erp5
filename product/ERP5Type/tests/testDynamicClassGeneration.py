@@ -1967,6 +1967,7 @@ def bar(*args, **kwargs):
     reference = 'ValidateComponentWithSameReferenceVersionAlreadyValidated'
 
     component = self._newComponent(reference, 'def foo():\n  print "ok"')
+    transaction.savepoint(optimistic=True)
     component.validate()
     self.tic()
 
