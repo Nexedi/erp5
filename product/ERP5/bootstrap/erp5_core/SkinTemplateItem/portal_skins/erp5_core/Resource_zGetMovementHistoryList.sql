@@ -59,7 +59,7 @@ FROM
   <dtml-if selection_report><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report, category_table_alias='report_category')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>
 
 WHERE
-  1 = 1
+  stock.uid = catalog.uid
 <dtml-if where_expression>
   AND <dtml-var where_expression>
 </dtml-if>
