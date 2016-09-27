@@ -14,9 +14,9 @@ business_process = portal.portal_catalog.getResultValue(
   portal_type='Business Process').getRelativeUrl()
 
 # if the previous test didn't change input data, no need to recreate content
-current_script_data_id = '%s_month_count_%s_draft_%s_state_%s_payment_%s' % (
+current_script_data_id = '%s_month_count_%s_draft_%s_state_%s_payment_%s_leger_%s' % (
      month_count, add_draft_transactions, transaction_state,
-     add_related_payments, script.getId())
+     add_related_payments, set_ledger, script.getId())
 
 if accounting_module.getProperty('current_content_script',
                                 '') == current_script_data_id:
@@ -33,6 +33,18 @@ if 1:
     if len(module) > 200:
       raise ValueError("Do not run this on production !!!")
     module.manage_delObjects(list(module.objectIds()))
+
+# if `set_ledger`is true, allow all test ledgers in accounting types.
+for accounting_type_id in portal.getPortalAccountingTransactionTypeList():
+  accounting_type = portal.portal_types[accounting_type_id]
+  accounting_type.edit(
+    ledger_value_list=list(portal.portal_categories.ledger.test_accounting.contentValues())
+    if set_ledger else ())
+
+test_ledger_1 = test_ledger_2 = None
+if set_ledger:
+  test_ledger_1 = portal.portal_categories.ledger.test_accounting.test_ledger_1
+  test_ledger_2 = portal.portal_categories.ledger.test_accounting.test_ledger_2
 
 def getAccountByTitle(title):
   account_list = [x.getObject().getRelativeUrl() for x in
@@ -97,6 +109,7 @@ for month in range(1, month_count + 1):
         portal_type='Accounting Transaction',
         source_section=section,
         created_by_builder=1,
+        ledger_value=test_ledger_1,
         start_date=default_date,
         stop_date=default_date,
         resource=euro_resource,
@@ -122,7 +135,7 @@ for month in range(1, month_count + 1):
   else:
     # other cases not supported for now
     assert transaction_state == 'draft'
-  
+
   vat_rate = .1
 
   for client_title, amount  in (('Client 1', 2000), ('Client 2', 3000)):
@@ -135,6 +148,7 @@ for month in range(1, month_count + 1):
           source=section,
           destination=getOrganisationByTitle(client_title),
           created_by_builder=1,
+          ledger_value=test_ledger_1,
           start_date=default_date,
           stop_date=default_date,
           specialise=business_process,
@@ -174,6 +188,7 @@ for month in range(1, month_count + 1):
             source_section=section,
             destination_section=getOrganisationByTitle(client_title),
             created_by_builder=1,
+            ledger_value=test_ledger_1,
             start_date=default_date + .1, # make sure this will be after the invoice
             stop_date=default_date + .1,
             resource=euro_resource,
@@ -213,6 +228,7 @@ for month in range(1, month_count + 1):
         destination_section=section,
         source_section=getOrganisationByTitle('Supplier'),
         created_by_builder=1,
+        ledger_value=test_ledger_1,
         start_date=default_date-5, # In purchase invoice transaction, stop_date is accounting operation date.
         stop_date=default_date,
         specialise=business_process,
@@ -248,6 +264,7 @@ if add_draft_transactions:
           source_section=section,
           destination_section=getOrganisationByTitle(client_title),
           created_by_builder=1,
+          ledger_value=test_ledger_1,
           start_date=default_date,
           stop_date=default_date,
           resource=euro_resource,
