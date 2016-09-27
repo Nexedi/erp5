@@ -44,6 +44,10 @@ mirror_section = mirror_section or request.get('mirror_section')
 if mirror_section:
   search_kw['mirror_section_uid'] = portal.restrictedTraverse(
                                           mirror_section).getUid()
+ledger = ledger or request.get('ledger')
+if ledger:
+  search_kw['ledger_uid'] = [
+    portal.portal_categories.restrictedTraverse(x).getUid() for x in ledger]
 
 if grouping == 'grouping':
   search_kw['grouping_reference'] = None

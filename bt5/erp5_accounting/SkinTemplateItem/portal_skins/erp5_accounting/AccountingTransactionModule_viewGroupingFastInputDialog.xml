@@ -75,6 +75,7 @@
                       <list>
                         <string>your_node</string>
                         <string>your_mirror_section</string>
+                        <string>your_ledger</string>
                       </list>
                     </value>
                 </item>
