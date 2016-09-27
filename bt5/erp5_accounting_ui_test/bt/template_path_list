@@ -33,6 +33,8 @@ portal_categories/group/demo_group
 portal_categories/group/demo_group/**
 portal_categories/group/vendor
 portal_categories/group/vendor/**
+portal_categories/ledger/test_accounting
+portal_categories/ledger/test_accounting/**
 portal_categories/payment_mode/cash
 portal_categories/payment_mode/check
 portal_categories/role/client

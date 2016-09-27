@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountingTransactionModule_getLedgerItemList</string> </value>
+            <value> <string>Delivery_getLedgerItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
