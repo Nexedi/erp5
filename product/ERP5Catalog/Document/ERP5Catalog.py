@@ -237,6 +237,57 @@ class ERP5Catalog(Folder, Catalog):
             return md.get('type', 'string')
     return None
 
+  ##### Overriding setters functions for multple_selection properties #######
+  #####   Required as after every edit we expect the values sorted    #######
+
+  def _setSqlClearCatalogList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlClearCatalogList(self, value, **kw)
+
+  def _setSqlCatalogFullTextSearchKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogFullTextSearchKeysList(self, value, **kw)
+
+  def _setSqlCatalogObjectListList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogObjectListList(self, value, **kw)
+
+  def _setSqlUncatalogObjectList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlUncatalogObjectList(self, value, **kw)
+
+  def _setSqlSearchTablesList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlSearchTablesList(self, value, **kw)
+
+  def _setSqlCatalogDatetimeSearchKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogDatetimeSearchKeysList(self, value, **kw)
+
+  def _setSqlCatalogKeywordSearchKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogKeywordSearchKeysList(self, value, **kw)
+
+  def _setSqlCatalogMultivalueKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogMultivalueKeysList(self, value, **kw)
+
+  def _setSqlCatalogRequestKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogRequestKeysList(self, value, **kw)
+
+  def _setSqlCatalogIndexOnOrderKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogIndexOnOrderKeysList(self, value, **kw)
+
+  def _setSqlCatalogTableVoteScriptsList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlCatalogTableVoteScriptsList(self, value, **kw)
+
+  def _setSqlSearchResultKeysList(self, value, **kw):
+    value = sorted(value)
+    self._baseSetSqlSearchResultKeysList(self, value, **kw)
+
   security.declarePublic('getCatalogMethodIds')
   def getCatalogMethodIds(self,
       valid_method_meta_type_list=valid_method_meta_type_list_new):
