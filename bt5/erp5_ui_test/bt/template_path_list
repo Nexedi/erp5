@@ -41,3 +41,10 @@ portal_tests/relation_field_zuite
 portal_tests/relation_field_zuite/**
 portal_tests/search_zuite
 portal_tests/search_zuite/**
+portal_tests/webrtc_ui_zuite
+portal_tests/webrtc_ui_zuite/**
+web_page_module/qunit-2.0.1_css
+web_page_module/qunit-2.0.1_js
+web_page_module/webrtc_unit_test_html
+web_page_module/webrtc_unit_test_js
+web_site_module/webrtc_unit_test
