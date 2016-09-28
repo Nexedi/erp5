@@ -1,0 +1,6 @@
+<allowed_content_type_list>
+ <portal_type id="Callable Tool">
+  <item>PyData Script</item>
+  <item>Python Script</item>
+ </portal_type>
+</allowed_content_type_list>
