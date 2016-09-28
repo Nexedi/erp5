@@ -142,7 +142,11 @@ def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=No
       if sf is not None:
         skinname = sf.getDefaultSkin()
   tid = get_ident()
-  SKINDATA[tid] = (None, skinname, {'portal_skins': None}, {})
+  SKINDATA[tid] = (
+    None,
+    skinname,
+    {'portal_skins': None, 'portal_callables': None},
+    {})
   if REQUEST is None:
     REQUEST = getattr(self, 'REQUEST', None)
   if REQUEST is not None:
