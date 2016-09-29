@@ -2147,18 +2147,17 @@ class ERP5Generator(PortalGenerator):
       erp5security_dispatcher.addERP5GroupManager('erp5_groups')
       erp5security_dispatcher.addERP5RoleManager('erp5_roles')
       erp5security_dispatcher.addERP5UserFactory('erp5_user_factory')
-      erp5security_dispatcher.addERP5DumbHTTPExtractionPlugin(
-                                        'erp5_dumb_http_extraction')
+      erp5security_dispatcher.addERP5JSONWebTokenPlugin('erp5_jwt_extraction')
       # Register ERP5UserManager Interface
       p.acl_users.erp5_users.manage_activateInterfaces(
-                                        ('IAuthenticationPlugin',
-                                        'IUserEnumerationPlugin',))
+                                        ('IUserEnumerationPlugin',))
       p.acl_users.erp5_groups.manage_activateInterfaces(('IGroupsPlugin',))
       p.acl_users.erp5_roles.manage_activateInterfaces(('IRolesPlugin',))
       p.acl_users.erp5_user_factory.manage_activateInterfaces(
                                         ('IUserFactoryPlugin',))
-      p.acl_users.erp5_dumb_http_extraction.manage_activateInterfaces(
-                                        ('IExtractionPlugin',))
+      p.acl_users.erp5_jwt_extraction.manage_activateInterfaces(
+                                        ('IExtractionPlugin',
+                                         'IAuthenticationPlugin'))
 
   def setupPermissions(self, p):
     permission_dict = {
