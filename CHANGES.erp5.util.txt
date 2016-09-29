@@ -1,6 +1,12 @@
 Changes
 =======
 
+0.4.46 (2016-09-29)
+
+ * erp5.util.testnode:
+
+   - Include js-logtail at the MANIFEST.in
+
 0.4.45 (2016-08-05)
 -------------------
 
