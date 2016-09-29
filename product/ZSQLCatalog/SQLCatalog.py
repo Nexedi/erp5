@@ -1513,7 +1513,7 @@ class Catalog(Folder,
       uid = getattr(aq_base(object), 'uid', None)
       # Several Tool objects have uid=0 (not 0L) from the beginning, but
       # we need an unique uid for each object.
-      if uid is None or isinstance(uid, int) and uid == 0:
+      if uid is None or uid == 0:
         try:
           object.uid = self.newUid()
         except ConflictError:
