@@ -115,10 +115,6 @@
                         </tuple>
                         <tuple>
                           <string>default_destination_project_title</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>Client Project</string>
                           <string>Client Project</string>
                         </tuple>
                         <tuple>
