@@ -3463,6 +3463,8 @@ class TestTransactions(AccountingTestCase):
     invoice.stop()
     self.assertTrue(invoice_line.getGroupingReference())
     self.assertTrue(payment_line.getGroupingReference())
+    self.assertEqual(invoice_line.getGroupingReference(),
+                     payment_line.getGroupingReference())
     # the grouping date is set to the latest date of all grouped lines
     self.assertEqual(DateTime(2012, 1, 3), invoice_line.getGroupingDate())
     self.assertEqual(DateTime(2012, 1, 3), payment_line.getGroupingDate())
@@ -3479,6 +3481,8 @@ class TestTransactions(AccountingTestCase):
     invoice.stop()
     self.assertTrue(invoice_line.getGroupingReference())
     self.assertTrue(payment_line.getGroupingReference())
+    self.assertEqual(invoice_line.getGroupingReference(),
+                     payment_line.getGroupingReference())
     self.assertEqual(DateTime(2012, 1, 3), invoice_line.getGroupingDate())
     self.assertEqual(DateTime(2012, 1, 3), payment_line.getGroupingDate())
 
@@ -3526,6 +3530,8 @@ class TestTransactions(AccountingTestCase):
     invoice.stop()
     self.assertTrue(invoice_line.getGroupingReference())
     self.assertTrue(payment_line.getGroupingReference())
+    self.assertEqual(invoice_line.getGroupingReference(),
+                     payment_line.getGroupingReference())
 
     # when restarting, grouping is removed
     invoice.restart()
@@ -3535,6 +3541,8 @@ class TestTransactions(AccountingTestCase):
     invoice.stop()
     self.assertTrue(invoice_line.getGroupingReference())
     self.assertTrue(payment_line.getGroupingReference())
+    self.assertEqual(invoice_line.getGroupingReference(),
+                     payment_line.getGroupingReference())
 
   def test_automatically_setting_grouping_reference_only_related(self):
     invoice = self._makeOne(
@@ -3695,6 +3703,8 @@ class TestTransactions(AccountingTestCase):
     invoice.stop()
     self.assertTrue(invoice_line.getGroupingReference())
     self.assertTrue(payment_line.getGroupingReference())
+    self.assertEqual(invoice_line.getGroupingReference(),
+                     payment_line.getGroupingReference())
 
   def test_not_automatically_setting_grouping_reference_when_different_ledger(self):
     self.setUpLedger()
