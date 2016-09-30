@@ -1180,4 +1180,4 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return src
 
 
-InitializeClass(CatalogTool)
+#InitializeClass(CatalogTool)
