@@ -1103,3 +1103,7 @@ div.pdf-preview-navigation img.last{
 fieldset > div.large-gadget {
   height: 85vh;
 }
+
+a.zocial {
+  margin-top: 10px;
+}
