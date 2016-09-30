@@ -108,13 +108,14 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Tue, 29 Jul 2016 13:00:00 GMT .\n
+# generated on Fri, 30 Sep 2016 13:00:00 GMT\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 font-awesome/font-awesome-webfont.eot?v=4.6.3\n
 font-awesome/font-awesome-webfont.eot?#iefix&v=4.6.3\n
 font-awesome/font-awesome-webfont.woff?v=4.6.3\n
+font-awesome/font-awesome-webfont.woff2?v=4.6.3\n
 font-awesome/font-awesome-webfont.ttf?v=4.6.3\n
 font-awesome/font-awesome-webfont.svg?v=4.6.3#fontawesomeregular\n
 URI.js\n
@@ -354,7 +355,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.57579.5740.15394</string> </value>
+                <value> <string>954.17206.22181.11161</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -372,7 +373,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1469799631.33</float>
+                        <float>1475244194.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

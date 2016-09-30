@@ -61,6 +61,7 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
               </list>
             </value>
         </item>
@@ -69,29 +70,37 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>left</string> </key>
+                    <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>my_configuration_default_view_action_reference</string>
-                        <string>my_configuration_view_action_category</string>
-                        <string>my_configuration_frontpage_gadget_url</string>
-                        <string>my_configuration_panel_gadget_url</string>
-                        <string>my_configuration_application_title</string>
-                        <string>my_configuration_hateoas_url</string>
-                        <string>my_configuration_manifest_url</string>
-                        <string>my_configuration_jio_gadget_url</string>
-                        <string>my_configuration_translation_gadget_url</string>
-                        <string>my_configuration_router_gadget_url</string>
-                        <string>my_configuration_header_gadget_url</string>
                         <string>my_configuration_content_security_policy</string>
                         <string>my_configuration_x_frame_options</string>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_configuration_default_view_action_reference</string>
+                        <string>my_configuration_view_action_category</string>
+                        <string>my_configuration_application_title</string>
+                        <string>my_configuration_hateoas_url</string>
+                        <string>my_configuration_frontpage_gadget_url</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_configuration_panel_gadget_url</string>
+                        <string>my_configuration_manifest_url</string>
+                        <string>my_configuration_jio_gadget_url</string>
+                        <string>my_configuration_translation_gadget_url</string>
+                        <string>my_configuration_router_gadget_url</string>
+                        <string>my_configuration_header_gadget_url</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
