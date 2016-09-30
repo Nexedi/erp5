@@ -65,7 +65,7 @@
                 "key": "field_listbox",
                 "lines": 1000,
                 "list_method": "portal_catalog",
-                "query": "urn:jio:allDocs?query=meta_type%3A%22ERP5%20Folder%22%20AND%20id%3A%22%25_module%22",
+                "query": "urn:jio:allDocs?query=parent_uid%3A%220%22%20AND%20meta_type%3A%22ERP5%20Folder%22%20AND%20id%3A%22%25_module%22",
                 "portal_type": [],
                 "search_column_list": column_list,
                 "sort_column_list": column_list,
