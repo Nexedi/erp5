@@ -255,10 +255,9 @@ class LazyIndexationParameterList(tuple):
     document = self._document_list[index]
     attribute = self._attribute
     global_cache_key = (document.uid, attribute)
-    global_cache = self._global_cache
-    if global_cache_key in global_cache:
-      value = global_cache[global_cache_key]
-    else:
+    try:
+      value = self._global_cache[global_cache_key]
+    except KeyError:
       value = getattr(document, attribute, None)
       if callable(value):
         try:
@@ -271,7 +270,7 @@ class LazyIndexationParameterList(tuple):
             error=True,
           )
           value = None
-      global_cache[global_cache_key] = value
+      self._global_cache[global_cache_key] = value
     return value
 
   def __iter__(self):
