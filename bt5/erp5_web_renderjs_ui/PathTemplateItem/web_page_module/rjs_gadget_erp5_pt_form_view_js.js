@@ -3,18 +3,7 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window);
-
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -25,11 +14,25 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
+      var state_dict = {
+        id: options.jio_key,
+        view: options.view,
+        editable: options.editable,
+        erp5_document: options.erp5_document,
+        form_definition: options.form_definition,
+        erp5_form: options.erp5_form || {}
+      };
+      return this.changeState(state_dict);
+    })
+
+    .declareMethod('updateDOM', function () {
       var gadget = this;
+
+      // render the erp5 form
       return this.getDeclaredGadget("erp5_form")
-        .push(function (form_gadget) {
-          var form_options = options.erp5_form || {},
-            rendered_form = options.erp5_document._embedded._view,
+        .push(function (erp5_form) {
+          var form_options = gadget.state.erp5_form,
+            rendered_form = gadget.state.erp5_document._embedded._view,
             rendered_field,
             key;
 
@@ -46,32 +49,35 @@
             }
           }
 
-          form_options.erp5_document = options.erp5_document;
-          form_options.form_definition = options.form_definition;
-          form_options.view = options.view;
+          form_options.erp5_document = gadget.state.erp5_document;
+          form_options.form_definition = gadget.state.form_definition;
+          form_options.view = gadget.state.view;
 
+          return erp5_form.render(form_options);
+        })
+
+        // render the header
+        .push(function () {
           return RSVP.all([
-            form_gadget.render(form_options),
             gadget.getUrlFor({command: 'change', options: {editable: true}}),
             gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             gadget.getUrlFor({command: 'history_previous'}),
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
             gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            calculatePageTitle(gadget, options.erp5_document)
+            calculatePageTitle(gadget, gadget.state.erp5_document)
           ]);
         })
         .push(function (all_result) {
-
           return gadget.updateHeader({
-            edit_url: all_result[1],
-            actions_url: all_result[2],
-            selection_url: all_result[3],
-            previous_url: all_result[4],
-            next_url: all_result[5],
-            tab_url: all_result[6],
+            edit_url: all_result[0],
+            actions_url: all_result[1],
+            selection_url: all_result[2],
+            previous_url: all_result[3],
+            next_url: all_result[4],
+            tab_url: all_result[5],
             export_url: "",
-            page_title: all_result[7]
+            page_title: all_result[6]
           });
         });
     });

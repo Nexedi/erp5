@@ -1,31 +1,12 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, URI, loopEventListener, document, calculatePageTitle */
-(function (window, rJS, RSVP, URI, loopEventListener, calculatePageTitle) {
+/*global window, rJS, RSVP, URI, calculatePageTitle */
+(function (window, rJS, RSVP, URI, calculatePageTitle) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window);
-
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
+  rJS(window)
+    .setState({
+      title: ""
     })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     /////////////////////////////////////////////////////////////////
     // acquisition
     /////////////////////////////////////////////////////////////////
@@ -35,7 +16,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("notifyChange", "notifyChange")
     .declareAcquiredMethod("displayFormulatorValidationError",
                            "displayFormulatorValidationError")
@@ -45,168 +26,165 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('triggerSubmit', function () {
-      this.props.element.querySelector('button').click();
+      this.element.querySelector('button').click();
     })
+
     .declareMethod('render', function (options) {
-      var erp5_document = options.erp5_document,
-        form_options = options.erp5_form || {},
-        form_gadget = this;
+      var state_dict = {
+        id: options.jio_key,
+        view: options.view,
+        editable: options.editable,
+        erp5_document: options.erp5_document,
+        form_definition: options.form_definition,
+        erp5_form: options.erp5_form || {}
+      };
 
-      form_gadget.props.id = options.jio_key;
-      form_gadget.props.view = options.view;
-      form_gadget.props.editable = options.editable;
-      form_gadget.props.action = erp5_document._embedded._view._actions.put;
-      form_gadget.props.form_id = erp5_document._embedded._view.form_id;
+      return this.changeState(state_dict);
+    })
 
-      return form_gadget.getDeclaredGadget("erp5_form")
+    .declareMethod('updateDOM', function () {
+      var form_gadget = this,
+        icon,
+        selector = form_gadget.element.querySelector("h3"),
+        title,
+        i,
+        view_list = this.state.erp5_document._links.action_workflow || [];
 
+      title = this.state.form_definition.title;
+      for (i = 0; i < view_list.length; i += 1) {
+        if (view_list[i].name === this.state.view) {
+          title = view_list[i].title;
+        }
+      }
+
+      // XXX hardcoded...
+      switch (form_gadget.state.title) {
+      case "Create User":
+        icon = " ui-icon-user";
+        break;
+      case "Create Document":
+        icon = " ui-icon-file-o";
+        break;
+      case "Change State":
+        icon = " ui-icon-share-alt";
+        break;
+      case "Submit":
+        icon = " ui-icon-check";
+        break;
+      default:
+        icon = " ui-icon-random";
+        break;
+      }
+
+      // Calculate the h3 properties
+      return form_gadget.translate(title)
+        .push(function (translated_title) {
+          selector.textContent = "\u00A0" + translated_title;
+          selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
+
+          // Render the erp5_from
+          return form_gadget.getDeclaredGadget("erp5_form");
+        })
         .push(function (erp5_form) {
-          var title = options.form_definition.title,
-            i,
-            icon,
-            span = document.createElement("span"),
-            section = form_gadget.__element.querySelector("section"),
-            selector = form_gadget.__element.querySelector("h3"),
-            view_list = erp5_document._links.action_workflow || [];
-
-          for (i = 0; i < view_list.length; i += 1) {
-            if (view_list[i].name === options.view) {
-              title = view_list[i].title;
-            }
-          }
-
-          // XXX hardcoded...
-          switch (title) {
-          case "Create User":
-            icon = " ui-icon-user";
-            break;
-          case "Create Document":
-            icon = " ui-icon-file-o";
-            break;
-          case "Change State":
-            icon = " ui-icon-share-alt";
-            break;
-          case "Submit":
-            icon = " ui-icon-check";
-            break;
-          default:
-            icon = " ui-icon-random";
-            break;
-          }
-          span.className = "ui-icon ui-icon-custom" + icon;
-          span.textContent = "\u00A0";
-          selector.appendChild(span);
-          selector.appendChild(document.createTextNode(title));
-          selector.setAttribute("data-i18n", "[last]" + title);
+          var form_options = form_gadget.state.erp5_form;
 
           // <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>
-          form_options.erp5_document = options.erp5_document;
-          form_options.form_definition = options.form_definition;
-          form_options.view = options.view;
-
-          return new RSVP.Queue()
-            .push(function () {
-              return form_gadget.translateHtml(section.innerHTML);
-            })
-            .push(function (my_translation_html) {
-              section.innerHTML = my_translation_html;
-              return RSVP.all([
-                erp5_form.render(form_options),
-                form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}}),
-                calculatePageTitle(form_gadget, options.erp5_document)
-              ]);
-            })
-            .push(function (all_result) {
-              return form_gadget.updateHeader({
-                cancel_url: all_result[1],
-                page_title: all_result[2],
-                submit_action: true
-              });
-            });
+          form_options.erp5_document = form_gadget.state.erp5_document;
+          form_options.form_definition = form_gadget.state.form_definition;
+          form_options.view = form_gadget.state.view;
+          return erp5_form.render(form_options);
+        })
+        .push(function () {
+          // Render the headers
+          return RSVP.all([
+            form_gadget.getUrlFor({command: 'change', options: {page: undefined, view: undefined}}),
+            calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
+          ]);
+        })
+        .push(function (all_result) {
+          return form_gadget.updateHeader({
+            cancel_url: all_result[0],
+            page_title: all_result[1],
+            submit_action: true
+          });
         });
     })
 
 
-    .declareService(function () {
-      var form_gadget = this;
+    .onEvent('submit', function () {
+      var form_gadget = this,
+        action = this.state.erp5_document._embedded._view._actions.put,
+        form_id = this.state.erp5_document._embedded._view.form_id,
+        redirect_to_parent;
 
-      function formSubmit() {
-        return form_gadget.notifySubmitting()
-          .push(function () {
-            return form_gadget.getDeclaredGadget("erp5_form");
-          })
-          .push(function (erp5_form) {
-            return erp5_form.getContent();
-          })
-          .push(function (content_dict) {
-            var data = {},
-              key;
+      return form_gadget.notifySubmitting()
+        .push(function () {
+          return form_gadget.getDeclaredGadget("erp5_form");
+        })
+        .push(function (erp5_form) {
+          return erp5_form.getContent();
+        })
+        .push(function (content_dict) {
+          var data = {},
+            key;
 
-            data[form_gadget.props.form_id.key] =
-                                    form_gadget.props.form_id['default'];
-            // XXX Hardcoded
-            data.dialog_id = form_gadget.props.form_id['default'];
-            data.dialog_method = form_gadget.props.action.action;
-            //XXX hack for redirect, difined in form
-            form_gadget.props.redirect_to_parent = content_dict.field_your_redirect_to_parent;
-            for (key in content_dict) {
-              if (content_dict.hasOwnProperty(key)) {
-                data[key] = content_dict[key];
-              }
+          data[form_id.key] = form_id['default'];
+          // XXX Hardcoded
+          data.dialog_id = form_id['default'];
+          data.dialog_method = action.action;
+          //XXX hack for redirect, difined in form
+          redirect_to_parent = content_dict.field_your_redirect_to_parent;
+          for (key in content_dict) {
+            if (content_dict.hasOwnProperty(key)) {
+              data[key] = content_dict[key];
             }
+          }
 
-            return form_gadget.jio_putAttachment(
-              form_gadget.props.id,
-              form_gadget.props.action.href,
-              data
-            );
+          return form_gadget.jio_putAttachment(
+            form_gadget.state.id,
+            action.href,
+            data
+          );
 
-          })
-          .push(function (evt) {
-            var location = evt.target.getResponseHeader("X-Location"),
-              jio_key,
-              list = [];
-            list.push(form_gadget.notifySubmitted());
+        })
+        .push(function (evt) {
+          var location = evt.target.getResponseHeader("X-Location"),
+            jio_key,
+            list = [];
+          list.push(form_gadget.notifySubmitted());
 
-            if (form_gadget.props.redirect_to_parent) {
-              list.push(form_gadget.redirect({command: 'history_previous'}));
+          if (redirect_to_parent) {
+            list.push(form_gadget.redirect({command: 'history_previous'}));
+          } else {
+            if (location === undefined || location === null) {
+              // No redirection, stay on the same document
+              list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined}}));
             } else {
-              if (location === undefined || location === null) {
-                // No redirection, stay on the same document
-                list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined}}));
+              jio_key = new URI(location).segment(2);
+              if (form_gadget.state.id === jio_key) {
+                // Do not update navigation history if dialog redirect to the same document
+                list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, editable: form_gadget.state.editable}}));
               } else {
-                jio_key = new URI(location).segment(2);
-                if (form_gadget.props.id === jio_key) {
-                  // Do not update navigation history if dialog redirect to the same document
-                  list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, editable: form_gadget.props.editable}}));
-                } else {
-                  list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: jio_key, editable: form_gadget.props.editable}}));
-                }
+                list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: jio_key, editable: form_gadget.state.editable}}));
               }
             }
-            return RSVP.all(list);
-          })
-          .push(undefined, function (error) {
-            if ((error.target !== undefined) && (error.target.status === 400)) {
-              return form_gadget.notifySubmitted()
-                .push(function () {
-                  return form_gadget.notifyChange();
-                })
-                .push(function () {
-                  return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
-                });
-            }
-            throw error;
-          });
-      }
+          }
+          return RSVP.all(list);
+        })
+        .push(undefined, function (error) {
+          if ((error.target !== undefined) && (error.target.status === 400)) {
+            return form_gadget.notifySubmitted()
+              .push(function () {
+                return form_gadget.notifyChange();
+              })
+              .push(function () {
+                return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
+              });
+          }
+          throw error;
+        });
 
-      // Listen to form submit
-      return loopEventListener(
-        form_gadget.props.element.querySelector('form'),
-        'submit',
-        false,
-        formSubmit
-      );
-    });
+    }, false, true);
 
-}(window, rJS, RSVP, URI, loopEventListener, calculatePageTitle));
+
+}(window, rJS, RSVP, URI, calculatePageTitle));
