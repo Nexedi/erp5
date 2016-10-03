@@ -27,7 +27,6 @@
     COMMAND_SELECTION_NEXT = "selection_next",
     COMMAND_HISTORY_PREVIOUS = "history_previous",
     COMMAND_PUSH_HISTORY = "push_history",
-    REDIRECT_TIMEOUT = 5055,
     VALID_URL_COMMAND_DICT = {};
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
@@ -55,26 +54,8 @@
     return window.location.replace(hash);
   }
 
-  function timeoutUrlChange(from_hash, to_hash) {
-    // prevent returning unexpected response
-    // wait for the hash change to occur
-    // fail if nothing happens
-    return new RSVP.Queue()
-      .push(function () {
-        return RSVP.timeout(REDIRECT_TIMEOUT);
-      })
-      .push(undefined, function (error) {
-        if (error === 'Timed out after ' + REDIRECT_TIMEOUT + ' ms') {
-          throw new Error('URL handling timeout. From: "' + from_hash + '" to: "' + to_hash + '" and current: "' + window.location.hash + '"');
-        }
-        throw error;
-      });
-  }
-
   function synchronousChangeState(hash) {
-    var from_hash = window.location.hash;
-    changeState(hash);
-    return timeoutUrlChange(from_hash, hash);
+    return changeState(hash);
   }
 
   //////////////////////////////////////////////////////////////////
@@ -308,7 +289,6 @@
     } else {
       queue = new RSVP.Queue();
     }
-
 
     return queue
       .push(function () {
@@ -732,15 +712,25 @@
         }
       }
 
-      return gadget.renderApplication({
+      return gadget.route({
         method: command[0],
         path: command.substr(1),
         args: args
       });
-
     }
+
+    function catchError(evt) {
+      return new RSVP.Queue()
+        .push(function () {
+          return extractHashAndDispatch(evt);
+        })
+        .push(undefined, function (error) {
+          return gadget.renderError(error);
+        });
+    }
+
     var result = loopEventListener(window, 'hashchange', false,
-                                   extractHashAndDispatch),
+                                   catchError),
       event = document.createEvent("Event");
     event.initEvent('hashchange', true, true);
     event.newURL = window.location.toString();
@@ -839,9 +829,7 @@
       delete options.form_content;
       return this.getCommandUrlFor(options)
         .push(function (hash) {
-          var from_hash = window.location.hash;
-          window.location.replace(hash);
-          return timeoutUrlChange(from_hash, hash);
+          return synchronousChangeState(hash);
         });
     })
 
@@ -850,18 +838,28 @@
     })
 
     .declareMethod('route', function (command_options) {
-      var gadget = this;
+      var gadget = this,
+        result;
 
       if (command_options.method === PREFIX_DISPLAY) {
-        return routeDisplay(gadget, command_options);
+        result = routeDisplay(gadget, command_options);
+      } else if (command_options.method === PREFIX_COMMAND) {
+        result = routeCommand(gadget, command_options);
+      } else {
+        if (command_options.method) {
+          throw new Error('Unsupported hash method: ' + command_options.method);
+        }
+        result = routeMethodLess(gadget);
       }
-      if (command_options.method === PREFIX_COMMAND) {
-        return routeCommand(gadget, command_options);
-      }
-      if (command_options.method) {
-        throw new Error('Unsupported hash method: ' + command_options.method);
-      }
-      return routeMethodLess(gadget);
+      return new RSVP.Queue()
+        .push(function () {
+          return result;
+        })
+        .push(function (route_result) {
+          if ((route_result !== undefined) && (route_result.url !== undefined)) {
+            return gadget.renderApplication(route_result);
+          }
+        });
     })
 
     .declareMethod('start', function () {
@@ -873,6 +871,7 @@
     .declareAcquiredMethod('jio_getAttachment', 'jio_getAttachment')
     .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('renderError', 'reportServiceError')
 
     .declareService(function () {
       var gadget = this;
@@ -881,7 +880,6 @@
           return gadget.props.start_deferred.promise;
         })
         .push(function () {
-          // console.info('router service: listen to hash change');
           return listenHashChange(gadget);
         });
     });

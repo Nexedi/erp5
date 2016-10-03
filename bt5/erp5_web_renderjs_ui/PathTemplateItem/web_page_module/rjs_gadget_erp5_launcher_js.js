@@ -1,7 +1,7 @@
 /*globals window, document, RSVP, rJS,
-          loopEventListener, URI, location, XMLHttpRequest, console*/
+          URI, location, XMLHttpRequest, console*/
 /*jslint indent: 2, maxlen: 80*/
-(function (window, document, RSVP, rJS, loopEventListener,
+(function (window, document, RSVP, rJS,
            XMLHttpRequest, location, console) {
   "use strict";
 
@@ -131,9 +131,6 @@
     // Display it to the user for now,
     // and allow user to go back to the frontpage
     var error_text = "";
-    if (error instanceof RSVP.CancellationError) {
-      return;
-    }
 
     if (error.target instanceof XMLHttpRequest) {
       error_text = error.target.toString() + " " +
@@ -159,17 +156,15 @@
   }
 
   function displayError(gadget, error) {
-    return new RSVP.Queue()
-      .push(function () {
-        return displayErrorContent(gadget, error);
-      })
-      .push(function () {
-        return gadget.dropGadget(MAIN_SCOPE)
-          .push(undefined, function () {
-            // Do not crash the app if the pg gadget in not defined
-            // ie, keep the original error on screen
-            return;
-          });
+    if (error instanceof RSVP.CancellationError) {
+      return;
+    }
+    displayErrorContent(gadget, error);
+    return gadget.dropGadget(MAIN_SCOPE)
+      .push(undefined, function () {
+        // Do not crash the app if the pg gadget in not defined
+        // ie, keep the original error on screen
+        return;
       });
   }
 
@@ -449,13 +444,63 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition("renderApplication", function (param_list) {
-      return this.renderXXX.apply(this, param_list);
+      return this.render.apply(this, param_list);
+    })
+    .declareMethod('updateDOM', function (modification_dict) {
+      var gadget = this,
+        route_result = gadget.state;
+      if (modification_dict.hasOwnProperty('url')) {
+        return new RSVP.Queue()
+          .push(function () {
+            return renderMainGadget(
+              gadget,
+              route_result.url,
+              route_result.options
+            );
+          })
+          .push(function (main_gadget) {
+            // Append loaded gadget in the page
+            if (main_gadget !== undefined) {
+              return main_gadget.getElement()
+                .push(function (fragment) {
+                  var element = gadget.props.content_element,
+                    content_container = document.createElement("div");
+                  content_container.className = "ui-content " +
+                    (gadget.props.sub_header_class || "");
+                  // reset subheader indicator
+                  delete gadget.props.sub_header_class;
+
+                  // go to the top of the page
+                  window.scrollTo(0, 0);
+
+                  // Clear first to DOM, append after to reduce flickering/manip
+                  while (element.firstChild) {
+                    element.removeChild(element.firstChild);
+                  }
+                  content_container.appendChild(fragment);
+                  element.appendChild(content_container);
+
+                  return updateHeader(gadget);
+                  // XXX Drop notification
+                  // return header_gadget.notifyLoaded();
+                });
+            }
+          });
+      }
+
+      // Same subgadget
+      return gadget.getDeclaredGadget(MAIN_SCOPE)
+        .push(function (page_gadget) {
+          return page_gadget.render(gadget.state.options);
+        })
+        .push(function () {
+          return updateHeader(gadget);
+        });
     })
     // Render the page
-    .declareMethod('renderXXX', function (options) {
+    .declareMethod('render', function (route_result) {
       var gadget = this;
 
-      gadget.props.options = options;
       // Reinitialize the loading counter
       gadget.props.loading_counter = 0;
       // By default, init the header options to be empty
@@ -478,45 +523,8 @@
           return editor_panel.close();
         })
         .push(function () {
-          return gadget.getDeclaredGadget('router');
-        })
-        .push(function (router_gadget) {
-          return router_gadget.route(options);
-        })
-        .push(function (route_result) {
-          return renderMainGadget(
-            gadget,
-            route_result.url,
-            route_result.options
-          );
-        })
-        .push(function (main_gadget) {
-          // Append loaded gadget in the page
-          if (main_gadget !== undefined) {
-            return main_gadget.getElement()
-              .push(function (fragment) {
-                var element = gadget.props.content_element,
-                  content_container = document.createElement("div");
-                content_container.className = "ui-content " +
-                  (gadget.props.sub_header_class || "");
-                // reset subheader indicator
-                delete gadget.props.sub_header_class;
-
-                // go to the top of the page
-                window.scrollTo(0, 0);
-
-                // Clear first to DOM, append after to reduce flickering/manip
-                while (element.firstChild) {
-                  element.removeChild(element.firstChild);
-                }
-                content_container.appendChild(fragment);
-                element.appendChild(content_container);
-
-                return updateHeader(gadget);
-                // XXX Drop notification
-                // return header_gadget.notifyLoaded();
-              });
-          }
+          return gadget.changeState({url: route_result.url,
+                                     options: route_result.options});
         })
         .push(function () {
           return decreaseLoadingCounter(gadget);
@@ -525,9 +533,6 @@
             .push(function () {
               throw error;
             });
-        })
-        .push(undefined, function (error) {
-          return displayError(gadget, error);
         });
     })
 
@@ -540,28 +545,13 @@
         // don't fail in case of dropped subgadget (like previous page)
         return;
       }
+
       return displayError(this, param_list[0]);
     })
 
-    .declareService(function () {
-      ////////////////////////////////////
-      // Form submit listening. Prevent browser to automatically
-      // handle the form submit in case of a bug
-      ////////////////////////////////////
-      var gadget = this;
-
-      function catchFormSubmit() {
-        return displayError(gadget, new Error("Unexpected form submit"));
-      }
-
-      // Listen to form submit
-      return loopEventListener(
-        gadget.props.element,
-        'submit',
-        false,
-        catchFormSubmit
-      );
+    .onEvent('submit', function () {
+      return displayError(this, new Error("Unexpected form submit"));
     });
 
-}(window, document, RSVP, rJS, loopEventListener,
+}(window, document, RSVP, rJS,
   XMLHttpRequest, location, console));
