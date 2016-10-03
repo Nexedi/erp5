@@ -125,12 +125,12 @@ class TaskDistributionTool(BaseTool):
     else:
       # backward compatibility
       int_index, reference = revision
-    result_list = portal.test_result_module.searchFolder(
-                         portal_type="Test Result",
-                         title=SimpleQuery(comparison_operator='=', title=test_title),
-                         sort_on=(("creation_date","descending"),),
-                         query=NegatedQuery(SimpleQuery(simulation_state="cancelled")),
-                         limit=1)
+    catalog_kw = {'portal_type': 'Test Result',
+                  'title': SimpleQuery(comparison_operator='=', title=test_title),
+                  'sort_on': (("creation_date","descending"),),
+                  'query': NegatedQuery(SimpleQuery(simulation_state="cancelled")),
+                  'limit': 1}
+    result_list = portal.test_result_module.searchFolder(**catalog_kw)
     if result_list:
       test_result = result_list[0].getObject()
       if test_result is not None:
@@ -154,12 +154,16 @@ class TaskDistributionTool(BaseTool):
               return
           return test_result.getRelativeUrl(), last_revision
         if last_state in ('stopped', 'public_stopped'):
-          if reference_list_string is not None:
-            if reference_list_string == test_result.getReference() \
-                and not allow_restart:
+          if not allow_restart:
+            if reference_list_string is not None:
+              if reference_list_string == test_result.getReference():
+                return
+              if portal.test_result_module.searchFolder(
+                   reference=SimpleQuery(comparison_operator='=', reference=reference_list_string),
+                   **catalog_kw):
+                return
+            if last_revision == int_index:
               return
-          elif last_revision == int_index and not allow_restart:
-            return
     test_result = portal.test_result_module.newContent(
       portal_type='Test Result',
       title=test_title,

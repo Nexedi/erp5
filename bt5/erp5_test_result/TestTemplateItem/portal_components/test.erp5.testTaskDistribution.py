@@ -333,6 +333,38 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual((test_result_path, revision), result)
     next_line_url, next_test = self.tool.startUnitTest(test_result_path)
 
+  def test_05b_createTestResultDoesNotReexecuteRevision(self):
+    """
+    Make sure to no retest former revision. This scenario must work
+    - testnode call createTestResult with revision r0=b. Test is executed
+    - By hand is created test with revision r0=a (to make testnode checking old
+      revision). Test is executed
+    - if testnode ask again for r0=b, no test must be created
+    - if testnode ask for r0=c, then usual test is created/executed
+    """
+    # launch test r0=b
+    test_result_path, revision = self._createTestResult(revision="r0=b", test_list=["testFoo"])
+    line_url, test = self.tool.startUnitTest(test_result_path)
+    status_dict = {}
+    self.tool.stopUnitTest(line_url, status_dict)
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.assertEqual("stopped", test_result.getSimulationState())
+    # launch test r0=a
+    test_result_path, revision = self._createTestResult(revision="r0=a", test_list=["testFoo"])
+    line_url, test = self.tool.startUnitTest(test_result_path)
+    self.tool.stopUnitTest(line_url, status_dict)
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.assertEqual("stopped", test_result.getSimulationState())
+    # Make sure we do not relaunch test with revision r0=b
+    result = self._createTestResult(revision="r0=b", test_list=["testFoo"])
+    self.assertEqual(None, result)
+    # launch test r0=c
+    test_result_path, revision = self._createTestResult(revision="r0=c", test_list=["testFoo"])
+    line_url, test = self.tool.startUnitTest(test_result_path)
+    self.tool.stopUnitTest(line_url, status_dict)
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.assertEqual("stopped", test_result.getSimulationState())
+
   def test_06_startStopUnitTest(self):
     """
     We will check methods startUnitTest/stopUnitTest of task distribution tool
