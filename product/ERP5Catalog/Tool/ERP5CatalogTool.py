@@ -112,23 +112,18 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
     def _bootstrap(self):
       pass
 
-    def _setDefaultErp5CatalogId(self, value):
-      """
-      Override this setter function so as to keep default_sql_catalog_id
-      and default_erp5_catalog_id same for portal_catalog after everyhting has
-      been migrated to erp5 portal_catalog
-      """
-      self._baseSetDefaultErp5CatalogId(value)
-      self._baseSetDefaultSqlCatalogId(value)
+    def getDefaultSqlCatalogId(self):
+      return self.default_erp5_catalog_id
 
-    def _edit(self, **kw):
+    def _setDefaultSqlCatalogId(self, value):
       """
-      Override to update both default_sql_catalog_id and default_erp5_catalog_id
-      in same edit
+      Function to maintain compatibility between ZSQLCatalog and ERP5CatalogTool
+
+      Notice that we update the attribute `default_erp5_catalog_id` here and not
+      the property. This is because there maybe cases(migration) whern we don't
+      have accessors defined and there we'll need the attribute.
       """
-      BaseTool._edit(self, **kw)
-      value = self.getDefaultErp5CatalogId()
-      self._setDefaultErp5CatalogId(value)
+      self.default_erp5_catalog_id = value
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
@@ -171,6 +166,9 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
         id = self.default_erp5_catalog_id
 
       return self._getOb(id, default_value)
+
+    security.declarePublic('getSQLCatalog')
+    getSQLCatalog = getERP5Catalog # For compatibilty
 
     security.declarePrivate('reindexCatalogObject')
     def reindexCatalogObject(self, object, idxs=None, sql_catalog_id=None,**kw):
