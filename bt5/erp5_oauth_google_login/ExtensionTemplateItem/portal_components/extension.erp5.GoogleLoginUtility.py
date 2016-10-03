@@ -5,6 +5,7 @@ import httplib2
 import apiclient.discovery
 import oauth2client.client
 import socket
+from zLOG import LOG, ERROR
 
 def getAccessTokenFromCode(self, code, redirect_uri):
   connection_kw = {'host': 'accounts.google.com', 'timeout': 30}
@@ -29,8 +30,8 @@ def getAccessTokenFromCode(self, code, redirect_uri):
 
   try:
     body = json.loads(response.read())
-  except Exception:
-    return status, None
+  except Exception, error_str:
+    return status, {"error": error_str}
 
   try:
     return status, body
@@ -45,8 +46,9 @@ def getUserId(access_token):
       ).authorize(httplib2.Http())
     service = apiclient.discovery.build("oauth2", "v1", http=http)
     google_entry = service.userinfo().get().execute()
-  except Exception:
+  except Exception, error_str:
     google_entry = None
+    LOG("GoogleLoginUtility", ERROR, error_str)
   finally:
     socket.setdefaulttimeout(timeout)
 
