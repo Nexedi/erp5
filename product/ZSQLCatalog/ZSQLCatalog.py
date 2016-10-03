@@ -197,19 +197,22 @@ class ZCatalog(Folder, Persistent, Implicit):
   def getSQLCatalogIdList(self):
     return self.objectIds(spec=('SQLCatalog',))
 
+  def getDefaultSqlCatalogId(self):
+    return self.default_sql_catalog_id
+
   security.declarePublic('getSQLCatalog')
   def getSQLCatalog(self, id=None, default_value=None):
     """
       Get the default SQL Catalog.
     """
     if id is None:
-      if not self.default_sql_catalog_id:
+      if not self.getDefaultSqlCatalogId():
         id_list = self.getSQLCatalogIdList()
         if len(id_list) > 0:
           self.default_sql_catalog_id = id_list[0]
         else:
           return default_value
-      id = self.default_sql_catalog_id
+      id = self.getDefaultSqlCatalogId()
 
     return self._getOb(id, default_value)
 
@@ -256,7 +259,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     #LOG("_setHotReindexingState call", 300, state)
     if source_sql_catalog_id is None:
-      source_sql_catalog_id = self.default_sql_catalog_id
+      source_sql_catalog_id = self.getDefaultSqlCatalogId()
 
     if state == HOT_REINDEXING_FINISHED_STATE:
       self.hot_reindexing_state = None
@@ -283,7 +286,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       current_archive = self.portal_archives.getCurrentArchive()
     else:
       current_archive = None
-    default_catalog_id = self.default_sql_catalog_id
+    default_catalog_id = self.getDefaultSqlCatalogId()
     self._exchangeDatabases(source_sql_catalog_id=source_sql_catalog_id,
                            destination_sql_catalog_id=destination_sql_catalog_id,
                            skin_selection_dict=skin_selection_dict,
@@ -453,7 +456,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                           ' you want to do is a "clear catalog" and an '\
                           '"ERP5Site_reindexAll".'
 
-    if source_sql_catalog_id != self.default_sql_catalog_id:
+    if source_sql_catalog_id != self.getDefaultSqlCatalogId():
       LOG('ZSQLCatalog', 0, 'Warning : Hot reindexing is started with a '\
                             'source catalog which is not the default one.')
 
@@ -756,6 +759,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     if archive_enabled:
       default_catalog = self.getSQLCatalog()
 
+    url_append = url_list.append
     # Construct list of object to catalogged
     for obj in object_list:
       if hot_reindexing:
@@ -767,7 +771,7 @@ class ZCatalog(Folder, Persistent, Implicit):
             "method if no unique id is provided when cataloging"
             )
         url = '/'.join(url())
-        url_list.append(url)
+        url_append(url)
 
       # either we are doing archiving, either we have used archive without a catalog specified
       if archive_enabled:
