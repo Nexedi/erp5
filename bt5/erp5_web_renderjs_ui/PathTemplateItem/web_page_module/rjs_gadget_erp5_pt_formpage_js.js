@@ -3,16 +3,13 @@
 (function (window, rJS, URI) {
   "use strict";
 
-  var gadget_klass = rJS(window);
-  // DEFAULT_VIEW_REFERENCE = "view";
-
   function loadFormContent(gadget, result) {
     var key;
-    if (gadget.props.options.form_content) {
+    if (gadget.state.options.form_content) {
       for (key in result) {
         if (result.hasOwnProperty(key)) {
-          if (gadget.props.options.form_content[result[key].key]) {
-            result[key].default = gadget.props.options.form_content[result[key].key];
+          if (gadget.state.options.form_content[result[key].key]) {
+            result[key].default = gadget.state.options.form_content[result[key].key];
           }
         }
       }
@@ -20,22 +17,7 @@
   }
 
 
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
+  rJS(window)
 
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -60,6 +42,9 @@
           return result;
         });
     })
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
     .declareMethod('triggerSubmit', function () {
       return this.getDeclaredGadget('fg')
         .push(function (g) {
@@ -67,42 +52,24 @@
         });
     })
     .declareMethod("render", function (options) {
-      var gadget = this,
-        element = gadget.props.element,
-        erp5_document,
-        erp5_form,
-        queue,
-        form_gadget;
-
-      gadget.props.jio_key = options.jio_key;
-      gadget.props.options = options;
-
-      queue = gadget.jio_getAttachment(options.jio_key, options.view);
-      queue
+      var gadget = this;
+      return gadget.jio_getAttachment(options.jio_key, options.view)
         .push(function (result) {
           var uri;
           if (!result._embedded) {
             return gadget.jio_getAttachment(options.jio_key, "links")
-              .push(function (result) {
+              .push(function (result2) {
                 return gadget.redirect({command: 'change', options: {
-                  view: result._links.view[0].href,
+                  view: result2._links.view[0].href,
                   editable: undefined,
                   page: undefined
                 }});
               });
           }
-          if (options.hasOwnProperty("form_validation_error")) {
-            result._embedded._view = options.form_validation_error;
-          }
+
           uri = new URI(result._embedded._view._links.form_definition.href);
-          erp5_document = result;
-          queue
-            .push(function () {
-              return gadget.jio_getAttachment(uri.segment(2), "view");
-            })
-            .push(function (result) {
-              erp5_form = result;
-              loadFormContent(gadget, erp5_document._embedded._view);
+          return gadget.jio_getAttachment(uri.segment(2), "view")
+            .push(function (erp5_form) {
               var url = "gadget_erp5_pt_" + erp5_form.pt;
               // XXX Hardcoded specific behaviour for form_view
               if ((options.editable !== undefined) && (erp5_form.pt === "form_view")) {
@@ -110,40 +77,69 @@
               }
               url += ".html";
 
-              return gadget.declareGadget(url, {
-                scope: "fg"
+              return gadget.changeState({
+                jio_key: options.jio_key,
+                options: options,
+                view: options.view,
+                url: url,
+                erp5_document: result,
+                erp5_form: erp5_form
               });
-            })
-            .push(function (result) {
-              var sub_options = options.fg || {};
-              sub_options.erp5_document = erp5_document;
-              sub_options.form_definition = erp5_form;
-              sub_options.view = options.view;
-              sub_options.action_view = options.action_view;
-              sub_options.jio_key = options.jio_key;
-              sub_options.editable = options.editable;
-
-              form_gadget = result;
-              return form_gadget.render(sub_options);
-            })
-            .push(function () {
-              return form_gadget.getElement();
-            })
-            .push(function (fragment) {
-              // Clear first to DOM, append after to reduce flickering/manip
-              while (element.firstChild) {
-                element.removeChild(element.firstChild);
-              }
-              element.appendChild(fragment);
             });
         });
-      return queue;
     })
+    .declareMethod('updateDOM', function (modification_dict) {
+      var queue,
+        gadget = this,
+        options = this.state.options,
+        page_template_gadget,
+        clean_dom = modification_dict.hasOwnProperty('url');
+      if (clean_dom) {
+        queue = gadget.declareGadget(gadget.state.url, {scope: "fg"});
+      } else {
+        queue = gadget.getDeclaredGadget("fg");
+      }
+      return queue
+        .push(function (result) {
+          page_template_gadget = result;
 
+          var sub_options = options.fg || {},
+            erp5_document = gadget.state.erp5_document,
+            erp5_form = gadget.state.erp5_form;
+
+          // Render the page template form
+          if (options.hasOwnProperty("form_validation_error")) {
+            erp5_document._embedded._view = options.form_validation_error;
+          }
+
+          loadFormContent(gadget, erp5_document._embedded._view);
+
+          sub_options.erp5_document = erp5_document;
+          sub_options.form_definition = erp5_form;
+          sub_options.view = options.view;
+          sub_options.action_view = options.action_view;
+          sub_options.jio_key = options.jio_key;
+          sub_options.editable = options.editable;
+
+          return page_template_gadget.render(sub_options);
+
+        })
+        .push(function () {
+          if (clean_dom) {
+            return page_template_gadget.getElement()
+              .push(function (fragment) {
+                var element = gadget.element;
+                // Clear first to DOM, append after to reduce flickering/manip
+                while (element.firstChild) {
+                  element.removeChild(element.firstChild);
+                }
+                element.appendChild(fragment);
+              });
+          }
+        });
+    })
     .allowPublicAcquisition("displayFormulatorValidationError", function (param_list) {
-      var options = this.props.options;
-      options.form_validation_error = param_list[0];
-      return this.render(options);
+      return this.changeState({form_validation_error: param_list[0]});
     });
 
 }(window, rJS, URI));
