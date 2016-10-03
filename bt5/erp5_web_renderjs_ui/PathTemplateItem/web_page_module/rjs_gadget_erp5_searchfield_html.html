@@ -8,20 +8,17 @@
     <!-- renderjs -->
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
-    <script src="handlebars.js"></script>
 
     <!-- custom script -->
     <script src="gadget_erp5_searchfield.js"></script>
 
-   <script id="panel-template" type="text/x-handlebars-template">
-     <div class="ui-input-text ui-body-{{theme}} ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear">
-       <input type="search" data-enhanced="true" value="{{widget_value}}" name="search" {{widget_status_attribute}}>
-       <button class="search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-{{theme}} ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn" data-role="button" data-enhanced="true" type="submit" />
-     </div>
-   </script>
-
   </head>
   <body>
-    <div class="save_form document_form"></div>
+     <div class="ui-input-text ui-input-has-icon ui-corner-all ui-shadow-inset ui-input-has-clear">
+       <div data-gadget-url="gadget_html5_input.html"
+              data-gadget-scope="input"
+              data-gadget-sandbox="public"></div>
+       <button class="search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn" data-role="button" data-enhanced="true" type="submit" />
+     </div>
   </body>
 </html>

@@ -1,82 +1,52 @@
-/*global window, rJS, RSVP, Handlebars */
+/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("panel-template")
-                         .innerHTML,
-    panel_template = Handlebars.compile(source);
-
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
-    //////////////////////////////////////////////
-    // acquired method
-    //////////////////////////////////////////////
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (option_dict) {
-      var append_class,
-        append_attribute,
-        placeholder = "",
-        is_disabled = option_dict.disabled,
-        search_gadget = this;
+    .declareMethod('render', function (options) {
+      var state_dict = {
+        extended_search: options.extended_search || ""
+      };
 
-      if (is_disabled) {
-        append_class = " ui-disabled";
-        append_attribute = ' disabled="disabled';
-      }
-      search_gadget.props.extended_search = option_dict.extended_search;
-      return new RSVP.Queue()
-        .push(function () {
-          return search_gadget.translateHtml(panel_template({
-            widget_value: option_dict.extended_search || placeholder,
-            widget_theme: option_dict.theme || "c",
-            widget_status_attribute: append_attribute || placeholder,
-            widget_status_class: append_class || placeholder
-          }));
-        })
-        .push(function (my_translated_html) {
-          search_gadget.props.element.querySelector("div").innerHTML =
-            my_translated_html;
-          return search_gadget;
+      return this.changeState(state_dict);
+    })
+
+    .declareMethod('updateDOM', function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget('input')
+        .push(function (input_gadget) {
+          var focus = false;
+          if (!gadget.state.extended_search) {
+            focus = true;
+          }
+          return input_gadget.render({
+            type: "search",
+            value: gadget.state.extended_search,
+            focus: focus,
+            name: "search",
+            editable: true
+          });
         });
     })
 
+    .allowPublicAcquisition("notifyValid", function () {return; })
+
     .declareMethod('getContent', function () {
-      var input = this.props.element.querySelector('input'),
-        value = input.value,
-        result = {};
-
-      if (value) {
-        value = value.trim();
-      }
-
-      result[input.getAttribute('name')] = value;
-      return result;
+      return this.getDeclaredGadget('input')
+        .push(function (input_gadget) {
+          return input_gadget.getContent();
+        })
+        .push(function (result) {
+          if (result.search) {
+            // XXX trim from input gadget?
+            result.search = result.search.trim();
+          }
+          return result;
+        });
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS));

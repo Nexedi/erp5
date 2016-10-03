@@ -1203,6 +1203,9 @@ div[data-gadget-scope='header'] .ui-header {
 div[data-gadget-scope='erp5_searchfield'] {
   .ui-input-text {
     display: flex;
+    div[data-gadget-scope='input'] {
+      width: 100%;
+    }
   }
   button {
     margin-left: 0.5em;
