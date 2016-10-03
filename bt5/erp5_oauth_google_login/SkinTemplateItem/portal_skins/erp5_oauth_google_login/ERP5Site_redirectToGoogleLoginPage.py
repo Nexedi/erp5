@@ -8,4 +8,4 @@ query = make_query({
     'scope': 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email'
 })
 
-context.REQUEST.RESPONSE.redirect('''https://accounts.google.com/o/oauth2/auth?''' + query)
+context.REQUEST.RESPONSE.redirect("https://accounts.google.com/o/oauth2/auth?" + query)
