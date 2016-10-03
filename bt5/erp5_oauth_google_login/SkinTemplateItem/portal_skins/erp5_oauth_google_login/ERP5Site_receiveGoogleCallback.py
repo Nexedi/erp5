@@ -14,7 +14,7 @@ elif code is not None:
   status, response_dict = context.ERP5Site_getAccessTokenFromCode(
     code,
     "{0}/ERP5Site_receiveGoogleCallback".format(portal.absolute_url()))
-  if status != 200:
+  if status != 200 and response_dict is not None:
     return handleError(
       " ".join(["%s : %s" % (k,v) for k,v in response_dict.iteritems()]))
   if response_dict is not None:
