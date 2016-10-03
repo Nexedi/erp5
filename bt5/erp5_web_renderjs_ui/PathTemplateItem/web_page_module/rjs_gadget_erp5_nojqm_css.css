@@ -174,7 +174,7 @@ select {
   font-weight: 400;
   line-height: 1.3;
 }
-@media only screen and (min-width: 100em), only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (min-width: 62em), only screen and (min-width: 28em) and (max-width: 62em) {
   body,
   button,
   input,
@@ -266,7 +266,7 @@ a:focus {
   outline-offset: -2px;
   outline: 2px solid #3388cc;
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   a[accesskey]:after {
     content: " [" attr(accesskey) "] ";
   }
@@ -454,12 +454,12 @@ div[data-gadget-scope='panel'] {
   display: block;
   z-index: 2000;
 }
-@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 62em) {
   div[data-gadget-scope='panel'] {
     box-shadow: 5px 0 5px rgba(0, 0, 0, 0.15);
   }
 }
-@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 62em) {
   div[data-gadget-scope='panel'] {
     left: -18em;
     transition: transform 200ms ease-out;
@@ -495,7 +495,7 @@ div[data-gadget-scope='panel'] div[data-role="header"] a::before {
   text-indent: 0;
   margin-left: 1em;
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
   div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
     display: none;
@@ -537,7 +537,7 @@ div[data-gadget-scope='editor_panel'] {
   display: block;
   z-index: 3000;
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='editor_panel'] {
     left: -18em;
     transition: transform 200ms ease-out;
@@ -548,7 +548,7 @@ div[data-gadget-scope='editor_panel'] {
     transform: translate3d(18em, 0, 0);
   }
 }
-@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 62em) {
   div[data-gadget-scope='editor_panel'] {
     right: -18em;
     transition: transform 200ms ease-out;
@@ -637,13 +637,13 @@ div[data-gadget-scope='header'] .ui-header {
   width: 100%;
   color: #FFFFFF;
 }
-@media only screen and (min-width: 28em) and (max-width: 100em), only screen and (max-width: 28em) {
+@media only screen and (min-width: 28em) and (max-width: 62em), only screen and (max-width: 28em) {
   div[data-gadget-scope='header'] .ui-header {
     display: flex;
     flex-flow: row wrap;
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header {
     display: table;
     margin-left: 17em;
@@ -691,7 +691,7 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a::before {
     margin-left: 1em;
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button[name="panel"],
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a[name="panel"] {
     display: none;
@@ -701,13 +701,13 @@ div[data-gadget-scope='header'] .ui-header > .ui-btn-right button,
 div[data-gadget-scope='header'] .ui-header > .ui-btn-right a {
   background-color: #F60;
 }
-@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (max-width: 28em), only screen and (min-width: 28em) and (max-width: 62em) {
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right button,
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right a {
     border-left: 1px solid rgba(255, 255, 255, 0.55);
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right {
     display: table-footer-group;
   }
@@ -734,7 +734,7 @@ div[data-gadget-scope='header'] .ui-header h1 > span {
     padding-left: 2em;
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header h1 > span {
     padding-left: 2em;
   }
@@ -749,12 +749,12 @@ div[data-gadget-scope='header'] .ui-header h1 a::before {
   display: inline-block;
   width: 4em;
 }
-@media only screen and (min-width: 28em) and (max-width: 100em), only screen and (max-width: 28em) {
+@media only screen and (min-width: 28em) and (max-width: 62em), only screen and (max-width: 28em) {
   div[data-gadget-scope='header'] .ui-header h1 a::before {
     text-align: center;
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header h1 a::before {
     padding-left: 2em;
   }
@@ -764,7 +764,7 @@ div[data-gadget-scope='header'] .ui-header h1 a::before {
     width: 2em;
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header .ui-subheader {
     text-align: left;
   }
@@ -778,7 +778,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 div[data-gadget-scope='header'] .ui-header ul a {
   background-color: #0E81C2;
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   div[data-gadget-scope='header'] .ui-header ul {
     height: 100%;
   }
@@ -800,7 +800,7 @@ div[data-gadget-scope='header'] .ui-header ul a {
     display: none;
   }
 }
-@media only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (min-width: 28em) and (max-width: 62em) {
   div[data-gadget-scope='header'] .ui-header ul li {
     display: table-cell;
     border-left: 1px solid rgba(0, 0, 0, 0.55);
@@ -872,7 +872,7 @@ div[data-gadget-scope='header'] .ui-header ul a {
 .gadget-content input[type='submit']:active {
   background-color: #777777;
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   .gadget-content {
     margin-left: 17em;
   }
@@ -944,7 +944,7 @@ div[data-gadget-scope='header'] .ui-header ul a {
   position: absolute;
   right: .5em;
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   .gadget-content .left,
   .gadget-content .right {
     vertical-align: top;
@@ -955,7 +955,7 @@ div[data-gadget-scope='header'] .ui-header ul a {
     padding-left: 2%;
   }
 }
-@media only screen and (min-width: 28em) and (max-width: 100em), only screen and (min-width: 100em) {
+@media only screen and (min-width: 28em) and (max-width: 62em), only screen and (min-width: 62em) {
   .gadget-content .ui-field-contain {
     display: flex;
   }
@@ -966,7 +966,7 @@ div[data-gadget-scope='header'] .ui-header ul a {
     flex: 3;
   }
 }
-@media only screen and (min-width: 100em) {
+@media only screen and (min-width: 62em) {
   .gadget-content .center .ui-field-contain label + div {
     flex: 7;
   }
@@ -1107,7 +1107,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table table tbody tr:active {
   background-color: #e0e0e0;
 }
-@media only screen and (min-width: 100em), only screen and (min-width: 28em) and (max-width: 100em) {
+@media only screen and (min-width: 62em), only screen and (min-width: 28em) and (max-width: 62em) {
   .document_table table tbody a {
     display: block;
     padding: 0.4em 0.25em;
