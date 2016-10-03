@@ -368,7 +368,6 @@ select:-moz-focusring {
   color: transparent;
 }
 textarea {
-  height: 15em;
   width: 100%;
   margin: 0;
 }
