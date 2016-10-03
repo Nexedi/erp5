@@ -431,6 +431,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       # Update some required attributes to the portal_catalog object
       parent.portal_catalog.default_erp5_catalog_id = self.default_sql_catalog_id
+      del parent.portal_catalog.default_sql_catalog_id
 
     security.declarePublic('getPreferredSQLCatalogId')
     def getPreferredSQLCatalogId(self, id=None):
@@ -440,7 +441,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       if id is None:
         # Check if we want to use an archive
         #if getattr(aq_base(self.portal_preferences), 'uid', None) is not None:
-        archive_path = self.portal_preferences.getPreferredArchive(sql_catalog_id=self.default_sql_catalog_id)
+        archive_path = self.portal_preferences.getPreferredArchive(sql_catalog_id=self.getDefaultSqlCatalogId())
         if archive_path not in ('', None):
           try:
             archive = self.restrictedTraverse(archive_path)
