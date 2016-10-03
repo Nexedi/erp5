@@ -197,19 +197,22 @@ class ZCatalog(Folder, Persistent, Implicit):
   def getSQLCatalogIdList(self):
     return self.objectIds(spec=('SQLCatalog',))
 
+  def getDefaultSqlCatalogId(self):
+    return self.default_sql_catalog_id
+
   security.declarePublic('getSQLCatalog')
   def getSQLCatalog(self, id=None, default_value=None):
     """
       Get the default SQL Catalog.
     """
     if id is None:
-      if not self.default_sql_catalog_id:
+      if not self.getDefaultSqlCatalogId():
         id_list = self.getSQLCatalogIdList()
         if len(id_list) > 0:
           self.default_sql_catalog_id = id_list[0]
         else:
           return default_value
-      id = self.default_sql_catalog_id
+      id = self.getDefaultSqlCatalogId()
 
     return self._getOb(id, default_value)
 
@@ -256,7 +259,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     #LOG("_setHotReindexingState call", 300, state)
     if source_sql_catalog_id is None:
-      source_sql_catalog_id = self.default_sql_catalog_id
+      source_sql_catalog_id = self.getDefaultSqlCatalogId()
 
     if state == HOT_REINDEXING_FINISHED_STATE:
       self.hot_reindexing_state = None
@@ -283,7 +286,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       current_archive = self.portal_archives.getCurrentArchive()
     else:
       current_archive = None
-    default_catalog_id = self.default_sql_catalog_id
+    default_catalog_id = self.getDefaultSqlCatalogId()
     self._exchangeDatabases(source_sql_catalog_id=source_sql_catalog_id,
                            destination_sql_catalog_id=destination_sql_catalog_id,
                            skin_selection_dict=skin_selection_dict,
@@ -381,8 +384,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
       Exchange two databases.
     """
-    if self.default_sql_catalog_id == source_sql_catalog_id:
-      self.default_sql_catalog_id = destination_sql_catalog_id
+    if self.getDefaultSqlCatalogId() == source_sql_catalog_id:
+      self._setDefaultSqlCatalogId(destination_sql_catalog_id)
       id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
       if id_tool is None:
         # Insert the latest generated uid.
@@ -401,6 +404,12 @@ class ZCatalog(Folder, Persistent, Implicit):
     LOG('_exchangeDatabases sql_connection_id_dict :',0,sql_connection_id_dict)
     if sql_connection_id_dict is not None:
       self.changeSQLConnectionIds(self.portal_skins, sql_connection_id_dict)
+
+  def _setDefaultSqlCatalogId(self, value):
+    '''
+    Separate this part for compatibilty between CatalogTool and ERP5CatalogTool
+    '''
+    self.default_sql_catalog_id = value
 
   security.declareProtected(manage_zcatalog_entries, 'manage_hotReindexAll')
   def manage_hotReindexAll(self, source_sql_catalog_id,
@@ -453,7 +462,7 @@ class ZCatalog(Folder, Persistent, Implicit):
                           ' you want to do is a "clear catalog" and an '\
                           '"ERP5Site_reindexAll".'
 
-    if source_sql_catalog_id != self.default_sql_catalog_id:
+    if source_sql_catalog_id != self.getDefaultSqlCatalogId():
       LOG('ZSQLCatalog', 0, 'Warning : Hot reindexing is started with a '\
                             'source catalog which is not the default one.')
 

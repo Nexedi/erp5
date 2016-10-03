@@ -78,7 +78,7 @@ class ArchiveTool(BaseTool):
     """
     Return the archive used for the current catalog
     """
-    current_catalog = self.portal_catalog.default_sql_catalog_id
+    current_catalog = self.portal_catalog.getDefaultSqlCatalogId()
     current_archive_list = [x.getObject() for x in self.searchFolder(validation_state="validated") \
                             if x.getCatalogId() == current_catalog]
     if len(current_archive_list) == 0:
