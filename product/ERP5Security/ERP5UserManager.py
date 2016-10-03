@@ -257,7 +257,7 @@ class ERP5UserManager(BasePlugin):
 
     if login and '_person_cache' not in self.REQUEST:
       self.REQUEST.set('_person_cache', {})
-      self.REQUEST['_person_cache'][user_reference] = login.getParent()
+      self.REQUEST['_person_cache'][user_reference] = login.getParentValue().getRelativeUrl()
 
     if user_reference is None:
       # file a failed authentication attempt
