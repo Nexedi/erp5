@@ -588,7 +588,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}&proxy_field_selection_name=${field/selection_name}
+string:Base_viewListMode?proxy_form_id=${form/getId}&proxy_field_id=${field/getId}&proxy_field_selection_name=${field/selection_name}&reset=1
 
 ]]></string> </value>
         </item>
