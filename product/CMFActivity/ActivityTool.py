@@ -1352,10 +1352,11 @@ class ActivityTool (Folder, UniqueObject):
         # Note there can be partial failures.
         for m, expanded_object_list in message_dict.iteritems():
           result_list = []
+          append = result_list.append
           for result in expanded_object_list:
             try:
               if result.result is not None:
-                result_list.append(result)
+                append(result)
             except AttributeError:
               exc_info = getattr(result, "exc_info", (SkippedMessage,))
               break # failed or skipped message
