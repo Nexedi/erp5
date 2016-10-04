@@ -72,11 +72,6 @@ try:
 except ImportError:
   withCMF = 0
 
-try:
-  import psyco
-except ImportError:
-  psyco = None
-
 @contextmanager
 def noReadOnlyTransactionCache():
   yield
@@ -1521,6 +1516,7 @@ class Catalog(Folder,
     path_uid_dict = {}
     uid_path_dict = {}
 
+    portal = self.getPortalObject()
     if check_uid:
       path_list = []
       path_list_append = path_list.append
@@ -1659,6 +1655,7 @@ class Catalog(Folder,
           readOnlyTransactionCache)():
       filter_dict = self._getFilterDict()
       catalogged_object_list_cache = {}
+      connector_sql_dict = {}
       for method_name in method_id_list:
         # We will check if there is an filter on this
         # method, if so we may not call this zsqlMethod
@@ -1730,19 +1727,12 @@ class Catalog(Folder,
         kw = {x: LazyIndexationParameterList(catalogged_object_list,
                                              x, argument_cache)
           for x in self._getCatalogMethodArgumentList(method)}
-
-        # Alter/Create row
         try:
-          #start_time = DateTime()
-          #LOG('catalogObjectList', DEBUG, 'kw = %r, method_name = %r' % (kw, method_name))
+          connector_sql_dict.setdefault(method.connection_id, []).append(method(src__=1,**kw))
+        except (AttributeError, TypeError) as e:
+          # For Python Scripts, there is no connection_id, so we exectute
+          # them independently
           method(**kw)
-          #end_time = DateTime()
-          #if method_name not in profile_dict:
-          #  profile_dict[method_name] = end_time.timeTime() - start_time.timeTime()
-          #else:
-          #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
-          #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
-
         except ConflictError:
           raise
         except:
@@ -1750,8 +1740,10 @@ class Catalog(Folder,
               error=sys.exc_info())
           raise
 
-  if psyco is not None:
-    psyco.bind(_catalogObjectList)
+      # Join all the queries into one string using delimiter and execute
+      # all at once.
+      for connector_id, sql_list in connector_sql_dict.iteritems():
+        portal[connector_id].manage_test("\x00".join(sql_list))
 
   def _getFilterDict(self):
     return self.filter_dict
