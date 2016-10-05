@@ -337,7 +337,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' * data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' * data:; media-src \'self\' blob:; connect-src \'self\' https://raw.githubusercontent.com https://api.github.com data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -614,7 +614,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.59466.37233.9915</string> </value>
+                <value> <string>954.25873.23492.36983</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -632,7 +632,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473847779.13</float>
+                        <float>1475681337.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

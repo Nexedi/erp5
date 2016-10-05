@@ -1,52 +1,40 @@
-/*
- * Copyright 2016, Nexedi SA
- * Released under the LGPL license.
- * http://www.gnu.org/licenses/lgpl.html
- */
-
 /*jslint nomen: true*/
-/*global jIO, RSVP, DOMParser, Blob */
-
-(function (jIO, RSVP, JSON, UriTemplate) {
+/*global jIO, RSVP, JSON */
+(function (jIO, RSVP, JSON) {
   "use strict";
-  
-  var DOCUMENT_URL = "{document_id}",
-    document_url_template = UriTemplate.parse(DOCUMENT_URL);
-
-  function ajax(storage, options) {
-    if (options === undefined) {
-      options = {};
-    }
-
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax(options);
-      });
-  }
 
   function PublisherStorage(spec) {
+    
+    // NOTE: requires Website Layout Configuration CSP modification
+    // => connect-src 'self' https://raw.githubusercontent.com https://api.github.com data:;
+
+    //https://api.github.com/repos/Nexedi/awesome-free-software
+    //https://api.github.com/repos/Nexedi/awesome-free-software/contents/?ref=master
+    //https://api.github.com/repos/Nexedi/awesome-free-software/contents/alfresco.json
+    //https://raw.githubusercontent.com/Nexedi/awesome-free-software/master/alfresco.json
+    
+    this._href = spec.href || 'https://api.github.com/repos/';
+    this._user = spec.user || 'Nexedi';
+    this._repo = spec.repo || 'awesome-free-software';
   }
 
   PublisherStorage.prototype.get = function (id) {
-    var context = this;
-
     return new RSVP.Queue()
       .push(function () {
-        return ajax(context, {
-          type: "GET",
-          url: document_url_template.expand({document_id: id}),
-          dataType: "text",
-        });
+        return jIO.util.ajax({type: "GET", url: id, dataType: "text"});
       })
-      .push(function (response) {
-        return JSON.parse(response.target.response || response.target.responseText);
-      }, function (error) {
-        if ((error.target !== undefined) &&
-            (error.target.status === 404)) {
-          throw new jIO.util.jIOError("Cannot find document", 404);
+      .push(
+        function (response) {
+          return JSON.parse(response.target.response || response.target.responseText);
+        },
+        function (error) {
+          if ((error.target !== undefined) &&
+              (error.target.status === 404)) {
+            throw new jIO.util.jIOError("Cannot find document", 404);
+          }
+          throw error;
         }
-        throw error;
-      });
+      );
   };
 
   PublisherStorage.prototype.hasCapacity = function (name) {
@@ -54,32 +42,32 @@
   };
 
   PublisherStorage.prototype.buildQuery = function (options) {
-    var context = this,
-      rows = [];
+    var url = this._href + this._user + '/' + this._repo + '/contents/?ref=master';
 
     return new RSVP.Queue()
-    .push(function () {
-      return ajax(context, {
-        type: "GET",
-        url: document_url_template.expand({document_id: 'publisher_list.txt'})
-      });
-    })
-    .push(function (response) {
-      var response_list = (response.target.response || response.target.responseText).split('\n');
-
-      for (var entry in response_list) {
-        if (response_list[entry] !== "") {
-          rows.push({
-            id: response_list[entry],
-            value: {}
-          });
+      .push(function () {
+        return jIO.util.ajax({"type": "GET", "url": url});
+      })
+      .push(function (data) {
+        var data_list = JSON.parse(data.target.response || data.target.responseText),
+          result_list = [],
+          data_entry,
+          len,
+          i;
+        
+        for (i = 0, len = data_list.length; i < len; i += 1) {
+          data_entry = data_list[i];
+          if (data_entry.path !== "README.md") {
+            result_list.push({
+              id: data_entry.download_url,
+              value: {}
+            });
+          }
         }
-      }
-      
-      return rows;
-    });
+        return  result_list;
+      });
   };
 
   jIO.addStorage('publisher_storage', PublisherStorage);
 
-}(jIO, RSVP, JSON, UriTemplate));
+}(jIO, RSVP, JSON));
