@@ -494,7 +494,11 @@
         return gadget.props.jio_gadget.get(history.options_id);
       })
       .push(function (result) {
-        return [result, previous_id];
+        var result_list = [result, previous_id];
+        var options = result_list[0].data,
+          next_jio_key = options.jio_key;
+        delete options.jio_key;
+        return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);
       }, function (error) {
         // XXX Check if 404
         if ((error instanceof jIO.util.jIOError) &&
@@ -503,12 +507,6 @@
           // return [{data: {}}, undefined];
         }
         throw error;
-      })
-      .push(function (result_list) {
-        var options = result_list[0].data,
-          next_jio_key = options.jio_key;
-        delete options.jio_key;
-        return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);
       });
     return queue;
   }
