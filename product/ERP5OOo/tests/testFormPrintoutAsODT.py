@@ -1249,7 +1249,7 @@ return []
         self.assertEqual(node.get('{%s}value' % nsmap['office']), str(value))
       elif klass == 'DateTimeField':
         self.assertEqual(node.get('{%s}value-type' % nsmap['office']), 'date')
-        self.assertEqual(node.text, value.strftime('%d/%m/%Y %H:%M:%S'))
+        self.assertEqual(node.text, '06/12/2010 23:24:15')
       elif klass == 'CheckBoxField':
         self.assertEqual(node.get('{%s}value-type' % nsmap['office']),
                           'boolean')
