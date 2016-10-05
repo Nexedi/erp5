@@ -3,7 +3,8 @@
 (function (window, document, rJS, RSVP, URI) {
   "use strict";
 
-  function createSectionGadget(gadget, queue, report_section) {
+  function createSectionGadget(gadget, queue, report_section,
+                               section_list_element) {
     var uri = new URI(report_section._links.form_definition.href),
       form_definition;
     queue
@@ -12,9 +13,7 @@
       })
       .push(function (result) {
         form_definition = result;
-        var section_list_element = gadget.props
-            .element.querySelector('.report_section_list'),
-          section_element = document.createElement('div');
+        var section_element = document.createElement('div');
         section_list_element.appendChild(section_element);
         return gadget.declareGadget('gadget_erp5_pt_form_view.html', {
           element: section_element
@@ -37,24 +36,7 @@
       });
   }
 
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window);
-
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
+  rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -67,43 +49,84 @@
     .allowPublicAcquisition('updateHeader', function (argument_list, scope) {
       // Fetch menu configuration from main form
       if (scope === 'form_view') {
-        return this.updateHeader.apply(this, argument_list);
+        // report are not supposed to be editable
+        var options = argument_list[0];
+        delete options.save_action;
+        return this.updateHeader(options);
       }
       return;
     })
     .declareMethod('render', function (options) {
-      var erp5_document = options.erp5_document,
-        form_definition = options.form_definition,
-        rendered_form = erp5_document._embedded._view,
-        gadget = this,
-        report_section_list = rendered_form.report_section_list,
-        form_gadget_url;
-
-      delete options.erp5_document;
-      delete options.form_definition;
+      var form_gadget_url;
       if (options.editable) {
         form_gadget_url = 'gadget_erp5_pt_form_view_editable.html';
       } else {
         form_gadget_url = 'gadget_erp5_pt_form_view.html';
       }
+      return this.changeState({
+        erp5_document: options.erp5_document,
+        form_definition: options.form_definition,
+        form_gadget_url: form_gadget_url
+      });
+    })
+    .declareMethod('updateDOM', function (modification_dict) {
+      var gadget = this,
+        form_gadget,
+        section_container_element = document.createElement('div'),
+        report_section_list =
+          gadget.state.erp5_document._embedded._view.report_section_list;
+      return new RSVP.Queue()
 
-      return gadget.declareGadget(form_gadget_url, {
-        element: gadget.props.element.querySelector('.form_view'),
-        scope: 'form_view'
-      })
-        .push(function (view_gadget) {
-          return view_gadget.render({erp5_document: erp5_document,
-                                     form_definition: form_definition});
+        // Render the erp5 form
+        .push(function () {
+          if (modification_dict.hasOwnProperty('form_gadget_url')) {
+            return gadget.declareGadget(gadget.state.form_gadget_url, {
+              scope: 'form_view'
+            });
+          }
+          return gadget.getDeclaredGadget('form_view');
         })
+        .push(function (result) {
+          form_gadget = result;
+          return form_gadget.render({
+            erp5_document: gadget.state.erp5_document,
+            form_definition: gadget.state.form_definition
+          });
+        })
+
         // Render the report sections
         .push(function () {
           var i,
             queue = new RSVP.Queue();
           for (i = 0; i < report_section_list.length; i += 1) {
-            createSectionGadget(gadget, queue, report_section_list[i]);
+            createSectionGadget(gadget, queue, report_section_list[i],
+                                section_container_element);
           }
           return queue;
+        })
+
+        // Modify the DOM if needed
+        .push(function () {
+          var form_view_element = gadget.element.querySelector('.form_view'),
+            section_element =
+              gadget.element.querySelector('.report_section_list');
+          if (modification_dict.hasOwnProperty('form_gadget_url')) {
+            // Clear first to DOM, append after to reduce flickering/manip
+            while (form_view_element.firstChild) {
+              form_view_element.removeChild(form_view_element.firstChild);
+            }
+            form_view_element.appendChild(form_gadget.element);
+          }
+
+          // Always replace the report section
+          // XXX It could certainly be improved
+          // Clear first to DOM, append after to reduce flickering/manip
+          while (section_element.firstChild) {
+            section_element.removeChild(section_element.firstChild);
+          }
+          section_element.appendChild(section_container_element);
         });
+
     });
 
 }(window, document, rJS, RSVP, URI));
