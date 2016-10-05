@@ -533,6 +533,7 @@ class ListBoxRenderer:
 
   # Here, define many getters which cache the results for better performance.
 
+  @lazyMethod
   def getContext(self):
     """Return the context of rendering this ListBox.
     """
@@ -541,37 +542,32 @@ class ListBoxRenderer:
       value = self.getForm().aq_parent
     return value
 
-  getContext = lazyMethod(getContext)
-
+  @lazyMethod
   def getForm(self):
     """Return the form which contains the ListBox.
     """
     return self.field.aq_parent
 
-  getForm = lazyMethod(getForm)
-
+  @lazyMethod
   def getEncoding(self):
     """Retutn the encoding of strings in the fields. Default to UTF-8.
     """
     return self.getPortalObject().getProperty('management_page_charset', 'utf-8')
 
-  getEncoding = lazyMethod(getEncoding)
-
+  @lazyMethod
   def isReset(self):
     """Determine if the ListBox should be reset.
     """
     reset = self.request.get('reset', 0)
     return (reset not in (0, '0'))
 
-  isReset = lazyMethod(isReset)
-
+  @lazyMethod
   def getFieldErrorDict(self):
     """Return a dictionary of errors.
     """
     return self.request.get('field_errors', {})
 
-  getFieldErrorDict = lazyMethod(getFieldErrorDict)
-
+  @lazyMethod
   def getUrl(self):
     """
       Return a requested URL.
@@ -582,8 +578,7 @@ class ListBoxRenderer:
     return '%s/%s' % (self.getContext().absolute_url(),
                       self.request.other.get('current_form_id', 'view'))
 
-  getUrl = lazyMethod(getUrl)
-
+  @lazyMethod
   def getRequestedSelectionName(self):
     """Return a selection name which may be passed by a request.
     If not present, return "default". This selection can be different from the selection
@@ -598,63 +593,53 @@ class ListBoxRenderer:
 
     return selection_name
 
-  getRequestedSelectionName = lazyMethod(getRequestedSelectionName)
-
+  @lazyMethod
   def getSelectionIndex(self):
     """Return the index of a requested selection, or None if not specified.
     """
     return self.request.get('selection_index', None)
 
-  getSelectionIndex = lazyMethod(getSelectionIndex)
-
+  @lazyMethod
   def getReportDepth(self):
     """Return the depth of reports, or None if not specified.
     """
     return self.request.get('report_depth', None)
 
-  getReportDepth = lazyMethod(getReportDepth)
-
+  @lazyMethod
   def getPortalObject(self):
     """Return the portal object.
     """
     return self.getContext().getPortalObject()
 
-  getPortalObject = lazyMethod(getPortalObject)
-
+  @lazyMethod
   def getPortalUrlString(self):
     """Return the URL of the portal as a string.
     """
     return self.getPortalObject().portal_url()
 
-  getPortalUrlString = lazyMethod(getPortalUrlString)
-
+  @lazyMethod
   def getCategoryTool(self):
     """Return the Category Tool.
     """
     return self.getPortalObject().portal_categories
 
-  getCategoryTool = lazyMethod(getCategoryTool)
-
+  @lazyMethod
   def getDomainTool(self):
     """Return the Domain Tool.
     """
     return self.getPortalObject().portal_domains
 
-  getDomainTool = lazyMethod(getDomainTool)
-
+  @lazyMethod
   def getCatalogTool(self):
     """Return the Catalog Tool.
     """
     return self.getPortalObject().portal_catalog
 
-  getCatalogTool = lazyMethod(getCatalogTool)
-
+  @lazyMethod
   def getSelectionTool(self):
     """Return the Selection Tool.
     """
     return self.getPortalObject().portal_selections
-
-  getSelectionTool = lazyMethod(getSelectionTool)
 
   def getPrefixedString(self, string):
     prefix = self.render_prefix
@@ -664,27 +649,24 @@ class ListBoxRenderer:
       result = '%s_%s' % (prefix, string)
     return result
 
+  @lazyMethod
   def getId(self):
     """Return the id of the field. Usually, "listbox".
        The prefix will automatically be added
     """
     return self.getPrefixedString(self.field.id)
 
-  getId = lazyMethod(getId)
-
+  @lazyMethod
   def getUnprefixedId(self):
     """Return the id of the field. Usually, "listbox".
     """
     return self.field.id
 
-  getUnprefixedId = lazyMethod(getUnprefixedId)
-
+  @lazyMethod
   def getTitle(self):
     """Return the title. Make sure that it is in unicode.
     """
     return unicode(self.field.get_value('title'), self.getEncoding())
-
-  getTitle = lazyMethod(getTitle)
 
   def getMaxLineNumber(self):
     """Return the maximum number of lines shown in a page.
@@ -692,27 +674,25 @@ class ListBoxRenderer:
     """
     raise NotImplementedError, "getMaxLineNumber must be overridden in a subclass"
 
+  @lazyMethod
   def showSearchLine(self):
     """Return a boolean that represents whether a search line is displayed or not.
     """
     return self.field.get_value('search')
 
-  showSearchLine = lazyMethod(showSearchLine)
-
+  @lazyMethod
   def showSelectColumn(self):
     """Return a boolean that represents whether a select column is displayed or not.
     """
     return self.field.get_value('select')
 
-  showSelectColumn = lazyMethod(showSelectColumn)
-
+  @lazyMethod
   def showAnchorColumn(self):
     """Return a boolean that represents whether a anchor column is displayed or not.
     """
     return self.field.get_value('anchor')
 
-  showAnchorColumn = lazyMethod(showAnchorColumn)
-
+  @lazyMethod
   def isHideRowsOnNoSearchCriterion(self, REQUEST=None):
     """
       Return a boolean that represents whether search rows are shown or not.
@@ -767,8 +747,7 @@ class ListBoxRenderer:
         return 0
     return 1
 
-  isHideRowsOnNoSearchCriterion = lazyMethod(isHideRowsOnNoSearchCriterion)
-
+  @lazyMethod
   def showStat(self):
     """Return a boolean that represents whether a stat line is displayed or not.
 
@@ -777,43 +756,37 @@ class ListBoxRenderer:
     """
     return (self.getStatMethod() is not None) and (len(self.getStatColumnList()) > 0)
 
-  showStat = lazyMethod(showStat)
-
+  @lazyMethod
   def isDomainTreeSupported(self):
     """Return a boolean that represents whether a domain tree is supported or not.
     """
     return (self.field.get_value('domain_tree') and len(self.getDomainRootList()) > 0)
 
-  isDomainTreeSupported = lazyMethod(isDomainTreeSupported)
-
+  @lazyMethod
   def isReportTreeSupported(self):
     """Return a boolean that represents whether a report tree is supported or not.
     """
     return (self.field.get_value('report_tree') and len(self.getReportRootList()) > 0)
 
-  isReportTreeSupported = lazyMethod(isReportTreeSupported)
-
+  @lazyMethod
   def isDomainTreeMode(self):
     """Return whether the current mode is domain tree mode or not.
     """
     return self.isDomainTreeSupported() and self.getSelection().domain_tree_mode
 
-  isDomainTreeMode = lazyMethod(isDomainTreeMode)
-
+  @lazyMethod
   def isReportTreeMode(self):
     """Return whether the current mode is report tree mode or not.
     """
     return self.isReportTreeSupported() and self.getSelection().report_tree_mode
 
-  isReportTreeMode = lazyMethod(isReportTreeMode)
-
+  @lazyMethod
   def getDefaultParamList(self):
     """Return the list of default parameters.
     """
     return self.field.get_value('default_params')
 
-  getDefaultParamList = lazyMethod(getDefaultParamList)
-
+  @lazyMethod
   def getListMethodName(self):
     """Return the name of the list method. If not defined, return None.
     """
@@ -824,8 +797,7 @@ class ListBoxRenderer:
       name = list_method
     return name or None
 
-  getListMethodName = lazyMethod(getListMethodName)
-
+  @lazyMethod
   def getCountMethodName(self):
     """Return the name of the count method. If not defined, return None.
     """
@@ -836,8 +808,7 @@ class ListBoxRenderer:
       name = count_method
     return name or None
 
-  getCountMethodName = lazyMethod(getCountMethodName)
-
+  @lazyMethod
   def getStatMethodName(self):
     """Return the name of the stat method. If not defined, return None.
     """
@@ -848,8 +819,7 @@ class ListBoxRenderer:
       name = stat_method
     return name or None
 
-  getStatMethodName = lazyMethod(getStatMethodName)
-
+  @lazyMethod
   def getRowCSSMethodName(self):
     """Return the name of the row CSS method. If not defined, return None.
     """
@@ -860,39 +830,34 @@ class ListBoxRenderer:
       name = row_css_method
     return name or None
 
-  getRowCSSMethodName = lazyMethod(getRowCSSMethodName)
-
+  @lazyMethod
   def getSelectionName(self):
     """Return the selection name.
     """
     return self.getPrefixedString(self.field.get_value('selection_name'))
 
-  getSelectionName = lazyMethod(getSelectionName)
-
+  @lazyMethod
   def getMetaTypeList(self):
     """Return the list of meta types for filtering. Return None when empty.
     """
     meta_types = [c[0] for c in self.field.get_value('meta_types')]
     return meta_types or None
 
-  getMetaTypeList = lazyMethod(getMetaTypeList)
-
+  @lazyMethod
   def getPortalTypeList(self):
     """Return the list of portal types for filtering. Return None when empty.
     """
     portal_types = [c[0] for c in self.field.get_value('portal_types')]
     return portal_types or None
 
-  getPortalTypeList = lazyMethod(getPortalTypeList)
-
+  @lazyMethod
   def getColumnList(self):
     """Return the columns. Make sure that the titles are in unicode.
     """
     columns = self.field.get_value('columns')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in columns]
 
-  getColumnList = lazyMethod(getColumnList)
-
+  @lazyMethod
   def getAllColumnList(self):
     """Return the all columns. Make sure that the titles are in unicode.
        Make sure there is no duplicates.
@@ -904,15 +869,13 @@ class ListBoxRenderer:
                            if c[0] not in all_column_id_set)
     return all_column_list
 
-  getAllColumnList = lazyMethod(getAllColumnList)
-
+  @lazyMethod
   def getStyleColumnList(self):
     """Return the style columns columns.
     """
     return self.field.get_value('style_columns')
 
-  getStyleColumnList = lazyMethod(getStyleColumnList)
-
+  @lazyMethod
   def getStatColumnList(self):
     """Return the stat columns. Fall back to all the columns if empty.
     """
@@ -923,8 +886,7 @@ class ListBoxRenderer:
       stat_column_list = [(c[0], c[0]) for c in self.getAllColumnList()]
     return stat_column_list
 
-  getStatColumnList = lazyMethod(getStatColumnList)
-
+  @lazyMethod
   def getUrlColumnList(self):
     """Return the url columns. Make sure that it is an empty list, when not defined.
     """
@@ -938,31 +900,27 @@ class ListBoxRenderer:
     untranslatable_columns = self.field.get_value('untranslatable_columns')
     return untranslatable_columns or []
 
-  getUrlColumnList = lazyMethod(getUrlColumnList)
-
+  @lazyMethod
   def getDefaultSortColumnList(self):
     """Return the default sort columns.
     """
     return self.field.get_value('sort')
 
-  getDefaultSortColumnList = lazyMethod(getDefaultSortColumnList)
-
+  @lazyMethod
   def getDomainRootList(self):
     """Return the domain root list. Make sure that the titles are in unicode.
     """
     domain_root_list = self.field.get_value('domain_root_list')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in domain_root_list]
 
-  getDomainRootList = lazyMethod(getDomainRootList)
-
+  @lazyMethod
   def getReportRootList(self):
     """Return the report root list. Make sure that the titles are in unicode.
     """
     report_root_list = self.field.get_value('report_root_list')
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
 
-  getReportRootList = lazyMethod(getReportRootList)
-
+  @lazyMethod
   def getDisplayStyleList(self):
     """Return the list of avaible display style. Make sure that the
     titles are in unicode"""
@@ -970,19 +928,15 @@ class ListBoxRenderer:
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
                                                       display_style_list]
 
-  getDisplayStyleList = lazyMethod(getDisplayStyleList)
-
+  @lazyMethod
   def getDefaultDisplayStyle(self):
     """Return the default display list style."""
     return self.field.get_value('default_display_style')
 
-  getDefaultDisplayStyle = lazyMethod(getDefaultDisplayStyle)
-
+  @lazyMethod
   def getGlobalSearchColumn(self):
     """Return the full text search key."""
     return self.field.get_value('global_search_column')
-
-  getGlobalSearchColumn = lazyMethod(getGlobalSearchColumn)
 
   # backwards compatability
   def getGlobalSearchColumnScript(self):
@@ -993,14 +947,15 @@ class ListBoxRenderer:
   getFullTextSearchKey=getGlobalSearchColumn
   getFullTextSearchKeyScript=getGlobalSearchColumnScript
 
+  @lazyMethod
   def getPageNavigationTemplate(self):
     """Return the list box page navigation template."""
     return self.field.get_value('page_navigation_template')
 
-  getPageNavigationTemplate = lazyMethod(getPageNavigationTemplate)
   # backwards compatability
   getPageNavigationMode = getPageNavigationTemplate
 
+  @lazyMethod
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
     """
@@ -1010,8 +965,7 @@ class ListBoxRenderer:
     isValidColumn = self.getCatalogTool().getSQLCatalog().isValidColumn
     return {id for id, title in self.getAllColumnList() if isValidColumn(id)}
 
-  getSearchColumnIdSet = lazyMethod(getSearchColumnIdSet)
-
+  @lazyMethod
   def getSortColumnIdSet(self):
     """Return the set of the ids of the sort columns. Fall back to search column ids, if not defined.
     """
@@ -1020,16 +974,14 @@ class ListBoxRenderer:
       return {c[0] for c in sort_columns}
     return self.getSearchColumnIdSet()
 
-  getSortColumnIdSet = lazyMethod(getSortColumnIdSet)
-
+  @lazyMethod
   def getEditableColumnIdSet(self):
     """Return the set of the ids of the editable columns.
     """
     editable_columns = self.field.get_value('editable_columns')
     return {c[0] for c in editable_columns}
 
-  getEditableColumnIdSet = lazyMethod(getEditableColumnIdSet)
-
+  @lazyMethod
   def getListActionUrl(self):
     """Return the URL of the list action.
     """
@@ -1048,11 +1000,10 @@ class ListBoxRenderer:
       list_action_part_list.append('&ignore_layout:int=1')
     return ''.join(list_action_part_list)
 
-  getListActionUrl = lazyMethod(getListActionUrl)
-
   # Whether the selection object is initialized.
   is_selection_initialized = False
 
+  @lazyMethod
   def getSelection(self):
     """FIXME: Tweak a selection and return the selection object.
     This code depends on the implementation of Selection too much.
@@ -1100,21 +1051,17 @@ class ListBoxRenderer:
 
     return selection
 
-  getSelection = lazyMethod(getSelection)
-
+  @lazyMethod
   def getCheckedUidList(self):
     """Return the list of checked uids.
     """
     return self.getSelection().getCheckedUids()
 
-  getCheckedUidList = lazyMethod(getCheckedUidList)
-
+  @lazyMethod
   def getCheckedUidSet(self):
     """Return the set of checked uids.
     """
     return set(self.getCheckedUidList())
-
-  getCheckedUidSet = lazyMethod(getCheckedUidSet)
 
   def setDisplayedColumnIdList(self, displayed_column_id_list):
     """Set the column to be displayed.
@@ -1137,6 +1084,7 @@ class ListBoxRenderer:
     return request.get('list_style', \
                         selection.getParams().get('list_style', self.getDefaultDisplayStyle()))
 
+  @lazyMethod
   def getSelectedColumnList(self):
     """Return the list of selected columns.
     """
@@ -1168,8 +1116,7 @@ class ListBoxRenderer:
                                                        REQUEST = self.request)
     return column_list
 
-  getSelectedColumnList = lazyMethod(getSelectedColumnList)
-
+  @lazyMethod
   def getColumnAliasList(self):
     """Return the list of column aliases for SQL, because SQL does not allow a symbol to contain dots.
     """
@@ -1178,8 +1125,7 @@ class ListBoxRenderer:
       alias_list.append(sql.replace('.', '_'))
     return alias_list
 
-  getColumnAliasList = lazyMethod(getColumnAliasList)
-
+  @lazyMethod
   def getParamDict(self):
     """Return a dictionary of parameters.
     """
@@ -1291,8 +1237,6 @@ class ListBoxRenderer:
     self.getSelection().edit(params=params)
     return params
 
-  getParamDict = lazyMethod(getParamDict)
-
   def getEditableField(self, alias):
     """Get an editable field for column, using column alias.
     Return None if a field for this column does not exist.
@@ -1311,6 +1255,7 @@ class ListBoxRenderer:
       # by the template field listbox id or by the proxy field listbox id.
       field = aq_inner(field.getTemplateField())
 
+  @lazyMethod
   def getListMethod(self):
     """Return the list method object.
     """
@@ -1327,8 +1272,7 @@ class ListBoxRenderer:
 
     return list_method
 
-  getListMethod = lazyMethod(getListMethod)
-
+  @lazyMethod
   def getCountMethod(self):
     """Return the count method object.
     """
@@ -1348,8 +1292,7 @@ class ListBoxRenderer:
 
     return count_method
 
-  getCountMethod = lazyMethod(getCountMethod)
-
+  @lazyMethod
   def getStatMethod(self):
     """Return the stat method object.
     """
@@ -1369,8 +1312,7 @@ class ListBoxRenderer:
 
     return stat_method
 
-  getStatMethod = lazyMethod(getStatMethod)
-
+  @lazyMethod
   def getRowCSSMethod(self):
     """Return the row css method object.
     """
@@ -1380,8 +1322,7 @@ class ListBoxRenderer:
       row_css_method = getattr(self.getContext(), row_css_method_name, None)
     return row_css_method
 
-  getRowCSSMethod = lazyMethod(getRowCSSMethod)
-
+  @lazyMethod
   def getDomainSelection(self):
     """Return a DomainSelection object wrapped with the context.
     """
@@ -1419,8 +1360,7 @@ class ListBoxRenderer:
 
       return DomainSelection(domain_dict = root_dict).__of__(self.getContext())
 
-  getDomainSelection = lazyMethod(getDomainSelection)
-
+  @lazyMethod
   def getStatSelectExpression(self):
     """Return a string which expresses the information retrieved by SELECT for
     the statistics.
@@ -1447,8 +1387,6 @@ class ListBoxRenderer:
             select_expression_list.append("'' AS %s" % alias)
 
     return ', '.join(select_expression_list)
-
-  getStatSelectExpression = lazyMethod(getStatSelectExpression)
 
   def makeReportTreeList(self, root_dict = None, report_path = None, base_category = None, depth = 0,
                          unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),),
@@ -1584,6 +1522,7 @@ class ListBoxRenderer:
     """
     raise NotImplementedError, "getLineStart must be overridden in a subclass"
 
+  @lazyMethod
   def getSelectedDomainPath(self):
     """Return a selected domain path.
     """
@@ -1596,8 +1535,7 @@ class ListBoxRenderer:
         domain_path = None
     return domain_path
 
-  getSelectedDomainPath = lazyMethod(getSelectedDomainPath)
-
+  @lazyMethod
   def getSelectedReportPath(self):
     """Return a selected report path.
     """
@@ -1612,8 +1550,6 @@ class ListBoxRenderer:
       default_selection_report_path = report_root_list[0][0]
 
     return selection.getReportPath(default = default_selection_report_path)
-
-  getSelectedReportPath = lazyMethod(getSelectedReportPath)
 
   def getLabelValueList(self):
     """Return a list of values, where each value is a tuple consisting of an property id, a title and a string which
@@ -2130,6 +2066,7 @@ class ListBoxRendererLine:
     """
     return self.obj
 
+  @lazyMethod
   def getObject(self):
     """Return a real object.
     """
@@ -2138,21 +2075,17 @@ class ListBoxRendererLine:
     except AttributeError:
       return self.obj
 
-  getObject = lazyMethod(getObject)
-
+  @lazyMethod
   def getUid(self):
     """Return the uid of the object.
     """
     return getattr(aq_base(self.obj), 'uid', None)
 
-  getUid = lazyMethod(getUid)
-
+  @lazyMethod
   def getUrl(self):
     """Return the absolute URL path of the object
     """
     return self.getBrain().getUrl()
-
-  getUrl = lazyMethod(getUrl)
 
   def isSummary(self):
     """Return whether this line is a summary or not.
@@ -2562,19 +2495,17 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     """
     return ListBoxHTMLRendererLine
 
+  @lazyMethod
   def getLineStart(self):
     """Return a requested start number.
     """
     return int(self.getParamDict().get('list_start', 0))
 
-  getLineStart = lazyMethod(getLineStart)
-
+  @lazyMethod
   def getMaxLineNumber(self):
     """Return the maximum number of lines shown in a page.
     """
     return self.field.get_value('lines')
-
-  getMaxLineNumber = lazyMethod(getMaxLineNumber)
 
   def getMD5Checksum(self):
     """Generate a MD5 checksum against checked uids. This is used to confirm

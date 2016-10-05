@@ -1222,28 +1222,25 @@ class BasicStructure:
 
     return object_list
 
+  @lazyMethod
   def getPortalObject(self):
     """Return the portal object.
     """
     return self.context.getPortalObject()
 
-  getPortalObject = lazyMethod(getPortalObject)
-
+  @lazyMethod
   def getSelectionTool(self):
     """Return the Selection Tool.
     """
     return self.getPortalObject().portal_selections
 
-  getSelectionTool = lazyMethod(getSelectionTool)
-
+  @lazyMethod
   def getPortalTypeList(self):
     """
     Return the list of portal types for filtering. Return None when empty.
     """
     portal_types = [c[0] for c in self.field.get_value('portal_types')]
     return portal_types or None
-
-  getPortalTypeList = lazyMethod(getPortalTypeList)
 
   def getReportGroupList(self, report_tree_list=[], \
                   sec_layer_method_name=None,show_stat=0):
