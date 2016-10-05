@@ -609,18 +609,21 @@
                 thead_template = listbox_hidden_thead_template;
                 tbody_template = listbox_hidden_tbody_template;
               }
-              return RSVP.all([
-                renderListboxThead(gadget, thead_template),
-                renderListboxTbody(gadget, tbody_template),
-                renderListboxTfoot(gadget, listbox_tfoot_template),
-                gadget.translate(hide_button_html)
-              ]);
-            })
-            .push(function (all_innerHTML) {
-              //change hide button's text
-              hide_button.innerHTML = all_innerHTML[3];
-              gadget.props.element.querySelector(".thead").innerHTML = all_innerHTML[0];
-              gadget.props.element.querySelector(".tfoot").innerHTML = all_innerHTML[2];
+              return new RSVP.Queue()
+                .push(function () {
+                  return RSVP.all([
+                    renderListboxThead(gadget, thead_template),
+                    renderListboxTbody(gadget, tbody_template),
+                    renderListboxTfoot(gadget, listbox_tfoot_template),
+                    gadget.translate(hide_button_html)
+                  ]);
+                })
+                .push(function (all_innerHTML) {
+                  //change hide button's text
+                  hide_button.innerHTML = all_innerHTML[3];
+                  gadget.props.element.querySelector(".thead").innerHTML = all_innerHTML[0];
+                  gadget.props.element.querySelector(".tfoot").innerHTML = all_innerHTML[2];
+                });
             });
         }
       );
