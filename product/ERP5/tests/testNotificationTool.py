@@ -369,7 +369,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     """
     Check that notification fails when the destination hasn't a email adress
     """
-    with self.assertRaises(ValueError):
+    with self.assertRaisesRegexp(ValueError, "email must be set"):
       self.portal.portal_notifications.sendMessage(
           recipient='userWithoutEmail', subject='Subject', message='Message')
 
@@ -528,6 +528,24 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     self.assertNotEquals(None, event.getStartDate())
     self.assertEqual(person, event.getDestinationValue())
     self.assertEqual('started', event.getSimulationState())
+
+  def test_check_consistency(self):
+    # This test only applies when erp5_crm is installed and we have
+    # a constraint on mail message
+    person_without_email = self.portal.person_module.newContent(
+      portal_type="Person",)
+    self.tic()
+    with self.assertRaises(ValueError) as exception_context:
+      self.portal.portal_notifications.sendMessage(
+        check_consistency=True,
+        recipient=person,
+        subject='Subject',
+        message='Message')
+    consistency_message_list, = exception_context.exception.args
+    consistency_message, = consistency_message_list
+    from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
+    self.assertIsInstance(consistency_message, ConsistencyMessage)
+    self.assertEqual('Recipients email must be defined', consistency_message.getTranslatedMessage())
 
 
 def test_suite():

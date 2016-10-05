@@ -233,7 +233,7 @@ class NotificationTool(BaseTool):
                   attachment_list=None, attachment_document_list=None,
                   notifier_list=None, priority_level=None,
                   store_as_event=False,
-                  check_consistency=True,
+                  check_consistency=False,
                   message_text_format='text/plain',
                   event_keyword_argument_dict=None,
                   portal_type_list=None):
