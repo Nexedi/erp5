@@ -146,8 +146,7 @@
         })
         .push(function () {
           return text_gadget.getElement();
-        })
-        .fail(function (error) {
+        }, function (error) {
           var display_error_element;
           if (error === "Timed out after 5000 ms") {
             display_error_element =
