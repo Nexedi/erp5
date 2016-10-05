@@ -649,7 +649,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                        '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
                        (self.username, self.username))
     self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
-                     ["--> ['F1_G1_S1']"])
+                     ["--> ['F1_G1_S1']"], res.body)
     assignment = self.person.newContent( portal_type='Assignment',
                                   group='subcat',
                                   site='subcat',
@@ -659,13 +659,13 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                        '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
                        (self.username, self.username))
     self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
-                     ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"])
+                     ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"], res.body)
     assignment.setGroup('another_subcat')
     res = self.publish(self.portal.absolute_url_path() + \
                        '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
                        (self.username, self.username))
     self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
-                     ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"])
+                     ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"], res.body)
     self.abort()
 
   def testLocalRolesGroupId(self):
