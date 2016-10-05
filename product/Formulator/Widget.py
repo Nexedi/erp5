@@ -1629,8 +1629,7 @@ class DateTimeWidget(Widget):
       # default offset is 30/12/1899
       number_of_second_in_day = 86400 #24 * 60 * 60
       timestamp = float(value)
-      # XXX Works only if the timezone is the same in OpenOffice
-      ooo_offset_timestamp = float(DateTime(1899, 12, 30))
+      ooo_offset_timestamp = float(DateTime(1899, 12, 30, 0, 0, 0, value.timezone()))
       days_value = (timestamp - ooo_offset_timestamp) / number_of_second_in_day
       attr_dict['{%s}formula' % TEXT_URI] = 'ooow:%f' % days_value
       text_node.attrib.update(attr_dict)
