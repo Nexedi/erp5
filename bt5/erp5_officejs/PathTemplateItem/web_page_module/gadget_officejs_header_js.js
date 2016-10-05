@@ -152,6 +152,7 @@
         left_button,
         right_link,
         right_button,
+        maximize_button,
         default_right_text,
         default_right_icon = "",
         title_link = {},
@@ -257,6 +258,26 @@
         promise_list.push(gadget.translateHtml(""));
       }
 
+      // handle maximize button
+      if (options.hasOwnProperty('maximize_action')) {
+        if (!options.maximized) {
+          maximize_button = {
+            title: "Maximize",
+            icon: "expand",
+            name: "maximize"
+          };
+        } else {
+          maximize_button = {
+            title: "Minimize",
+            icon: "compress",
+            name: "maximize"
+          };
+        }
+        promise_list.push(gadget.translateHtml(header_button_template(maximize_button)));
+      } else {
+        promise_list.push(gadget.translateHtml(""));
+      }
+
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all(promise_list);
@@ -264,7 +285,8 @@
         .push(function (my_translated_html_list) {
           gadget.props.title_element.innerHTML = my_translated_html_list[0];
           gadget.props.left_link.innerHTML = my_translated_html_list[1];
-          gadget.props.right_link.innerHTML = my_translated_html_list[2];
+          gadget.props.right_link.innerHTML = my_translated_html_list[3]
+            + my_translated_html_list[2];
         });
     })
 
@@ -282,6 +304,14 @@
         }
         if (name === "submit") {
           return form_gadget.triggerSubmit();
+        }
+        if (name === "maximize") {
+          form_gadget.stats.options.maximized =
+            !form_gadget.stats.options.maximized;
+          return form_gadget.triggerSubmit("maximize")
+            .push(function () {
+              return form_gadget.render(form_gadget.stats.options);
+            });
         }
         throw new Error("Unsupported button " + name);
       }
