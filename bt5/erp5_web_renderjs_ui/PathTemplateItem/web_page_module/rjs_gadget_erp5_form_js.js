@@ -3,12 +3,6 @@
 (function (window, document, rJS, RSVP) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window);
-
   function getFieldTypeGadgetUrl(type) {
     var field_url = 'gadget_erp5_field_readonly.html';
     if (type === 'ListField') {
@@ -56,43 +50,9 @@
     return field_url;
   }
 
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
+  rJS(window)
     .ready(function (g) {
       g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .allowPublicAcquisition("notifyInvalid", function (param_list, scope) {
-      return this.getDeclaredGadget(scope)
-        .push(function (gadget) {
-          return gadget.getElement();
-        })
-        .push(function (gadget_element) {
-          gadget_element.previousElementSibling.querySelector("span").textContent = " (" + param_list[0] + ")";
-        });
-    })
-
-    .allowPublicAcquisition("notifyValid", function (param_list, scope) {
-      /*jslint unparam:true*/
-      return this.getDeclaredGadget(scope)
-        .push(function (gadget) {
-          return gadget.getElement();
-        })
-        .push(function (gadget_element) {
-          gadget_element.previousElementSibling.querySelector("span").textContent = "";
-        });
     })
 
     .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
@@ -105,6 +65,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+
     .declareMethod('render', function (options) {
       var i,
         erp5_document = options.erp5_document,
@@ -116,10 +77,6 @@
         suboption_dict = {},
         parent_element = document.createElement("div");
 
-      delete options.erp5_document;
-      delete options.form_definition;
-
-//       options = options.form_gadget || {};
       form_gadget.state_parameter_dict = options.form_gadget || {};
       // XXX Hardcoded for searchfield - remove later!
       if (form_definition.extended_search) {
@@ -129,7 +86,6 @@
       suboption_dict.hide_enabled = form_definition.hide_enabled;
 
       form_gadget.props.gadget_list = [];
-      form_gadget.props.id = options.jio_key;
 
       function addGroup(group) {
         queue
@@ -140,67 +96,44 @@
               group_queue = new RSVP.Queue();
 
             function addField(field) {
+
               group_queue.push(function () {
                 if (rendered_form.hasOwnProperty(field[0])) {
                   // Field is enabled in this context
                   var field_queue = new RSVP.Queue(),
                     sandbox = "public",
-                    field_url,
-                    // Don't change the structure without changing notifyValid and notifyInvalid
                     field_element = document.createElement("div"),
-                    gadget_element = document.createElement("div"),
-                    label_element = document.createElement("label"),
-                    error_element = document.createElement("span"),
-                    renderered_field = rendered_form[field[0]];
+                    renderered_field = rendered_form[field[0]],
+                    suboptions = options[renderered_field.key] || suboption_dict;
+                  suboptions.field_url = getFieldTypeGadgetUrl(renderered_field.type);
+                  suboptions.label = false;
+                  suboptions.field_json = renderered_field;
+                  suboptions.field_json.view = options.view;
 
-                  field_element.className = "ui-field-contain";
-                  if (renderered_field.hidden === 1) {
-                    // Hide field
-                    field_element.className = field_element.className + " ui-screen-hidden";
-                  }
-//                   field_element.setAttribute('data-role', 'fieldcontain');
-                  label_element.setAttribute('for', renderered_field.key);
-                  label_element.textContent = renderered_field.title;
-                  label_element.setAttribute('data-i18n', renderered_field.title);
-                  if (renderered_field.hasOwnProperty('error_text')) {
-                    error_element.textContent = " (" + renderered_field.error_text + ")";
-                  }
-                  // error_element.setAttribute('class', 'ui-state-error ui-corner-all');
-                  label_element.appendChild(error_element);
                   if (group[0] !== "bottom") {
-                    field_element.appendChild(label_element);
+                    suboptions.label = true;
                   }
-
-                  field_url = getFieldTypeGadgetUrl(renderered_field.type);
 
                   return field_queue
                     .push(function () {
-                      return form_gadget.translateHtml(field_element.innerHTML);
-                    })
-                    .push(function (my_translate_html) {
-                      field_element.innerHTML = my_translate_html;
-                      field_element.appendChild(gadget_element);
-                      fieldset_element.appendChild(field_element);
-                    })
-                    .push(function () {
-                      return form_gadget.declareGadget(field_url, {
+                      return form_gadget.declareGadget('gadget_erp5_label_field.html', {
                         scope: renderered_field.key,
-                        element: gadget_element,
+                        element: field_element,
                         sandbox: sandbox
                       });
                     })
-                    .push(function (field_gadget) {
+                    .push(function (label_gadget) {
                       //XXXXX Hardcoded to get one listbox gadget
                       //pt form list gadget will get this listbox's info
                       //then pass to search field gadget
-                      if (field_url === "gadget_erp5_field_listbox.html") {
-                        form_gadget.props.listbox_gadget = field_gadget;
+                      if (suboptions.field_url === "gadget_erp5_field_listbox.html") {
+                        form_gadget.props.listbox_gadget = label_gadget;
                       }
-                      form_gadget.props.gadget_list.push(field_gadget);
-                      var suboptions = options[renderered_field.key] || suboption_dict;
-                      suboptions.field_json = renderered_field;
-                      suboptions.field_json.view = options.view;
-                      return field_gadget.render(suboptions);
+                      form_gadget.props.gadget_list.push(label_gadget);
+                      return label_gadget.render(suboptions);
+                    })
+                    .push(function () {
+                      fieldset_element.appendChild(field_element);
                     });
                 }
               });
@@ -222,7 +155,7 @@
 
       return queue
         .push(function () {
-          var dom_element = form_gadget.props.element
+          var dom_element = form_gadget.element
             .querySelector(".field_container");
           while (dom_element.firstChild) {
             dom_element.removeChild(dom_element.firstChild);
@@ -232,6 +165,8 @@
 
         });
     })
+
+
 
     .declareMethod("getListboxInfo", function () {
       //XXXXX get listbox gadget's info
