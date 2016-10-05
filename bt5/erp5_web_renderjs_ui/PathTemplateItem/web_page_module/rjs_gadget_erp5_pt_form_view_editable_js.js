@@ -83,16 +83,19 @@
           ]);
         })
         .push(function (all_result) {
-          return form_gadget.updateHeader({
+          var header_dict = {
             tab_url: all_result[0],
             actions_url: all_result[1],
             add_url: all_result[2],
             selection_url: all_result[3],
             delete_url: all_result[4],
             cut_url: "",
-            page_title: all_result[6],
-            save_action: all_result[5]
-          });
+            page_title: all_result[6]
+          };
+          if (all_result[5] === true) {
+            header_dict.save_action = true;
+          }
+          return form_gadget.updateHeader(header_dict);
         });
     })
 
