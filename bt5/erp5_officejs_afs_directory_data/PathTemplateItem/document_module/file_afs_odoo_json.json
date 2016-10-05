@@ -1,0 +1,31 @@
+{
+	"title": "Odoo",
+	"logo": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Odoo_Official_Logo.png",
+	"country": "be",
+	"presence": ["be", "us", "lu", "hk", "in"],
+	"website": "https://www.odoo.com/",
+	"founded_year": "2005 Tiny ERP - 2009 Open ERP - 2014 Odoo",
+	"free_software_list": [{
+		"title": "Odoo Apps",
+		"logo": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Odoo_Official_Logo.png",
+		"category_list": ["ERP", "CRM", "CMS", "E-commerce"],
+		"source_code_download": "https://github.com/odoo/odoo/archive/9.0.zip",
+		"commercial_support": "https://www.odoo.com/pricing",
+		"wikipedia_url": "https://fr.wikipedia.org/wiki/Odoo",
+		"success_case_list": [{
+			"title": "Odoo POS, perfect for running a wine bar",
+			"image": "https://www.odoo.com/web/image/1327676",
+			"customer": "Chez Félix",
+			"country": "be",
+			"language": "en",
+			"url": "https://www.odoo.com/blog/customer-reviews-6/post/odoo-pos-perfect-for-running-a-wine-bar-325"
+		}, {
+			"title": "Scratch DJ Academy",
+			"image": "https://www.odoo.com/web/image/1232758",
+			"customer": "Scratch Academy",
+			"country": "us",
+			"language": "en",
+			"url": "https://www.odoo.com/blog/customer-reviews-6/post/scratch-dj-academy-324"
+		}]
+	}]
+}
