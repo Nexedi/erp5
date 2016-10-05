@@ -29,8 +29,17 @@
         editable: options.editable,
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
-        erp5_form: options.erp5_form || {}
+        erp5_form: options.erp5_form || {},
+        new_content_action: false,
+        delete_action: false,
+        save_action: false
       };
+
+      if (options.erp5_document._embedded._view._actions !== undefined) {
+        if (options.erp5_document._embedded._view._actions.put !== undefined) {
+          state_dict.save_action = true;
+        }
+      }
       return this.changeState(state_dict);
     })
 
@@ -52,14 +61,7 @@
         // render the header
         .push(function () {
           var new_content_action = form_gadget.state.erp5_document._links.action_object_new_content_action,
-            delete_action = form_gadget.state.erp5_document._links.action_object_delete_action,
-            save_action = false;
-
-          if (form_gadget.state.erp5_document._embedded._view._actions !== undefined) {
-            if (form_gadget.state.erp5_document._embedded._view._actions.put !== undefined) {
-              save_action = true;
-            }
-          }
+            delete_action = form_gadget.state.erp5_document._links.action_object_delete_action;
 
           if (new_content_action !== undefined) {
             new_content_action = form_gadget.getUrlFor({command: 'change', options: {view: new_content_action.href, editable: true}});
@@ -78,7 +80,6 @@
             new_content_action,
             form_gadget.getUrlFor({command: 'history_previous'}),
             delete_action,
-            save_action,
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })
@@ -90,9 +91,9 @@
             selection_url: all_result[3],
             delete_url: all_result[4],
             cut_url: "",
-            page_title: all_result[6]
+            page_title: all_result[5]
           };
-          if (all_result[5] === true) {
+          if (form_gadget.state.save_action === true) {
             header_dict.save_action = true;
           }
           return form_gadget.updateHeader(header_dict);
@@ -100,6 +101,12 @@
     })
 
     .onEvent('submit', function () {
+
+      if (this.state.save_action !== true) {
+        // If not action is defined on form, do nothing
+        return;
+      }
+
       var form_gadget = this,
         erp5_form,
         form_id = this.state.erp5_document._embedded._view.form_id,
