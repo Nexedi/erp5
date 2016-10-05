@@ -15,7 +15,9 @@
           g.props.ckeditor = CKEDITOR.replace(
             textarea,
             {
-              removeButtons: 'NewPage,Preview',
+              removeButtons: 'NewPage,Preview,Cut,Paste,Copy,PasteText,' +
+                'PasteFromWord,Flash,Iframe,Form,Checkbox,Radio,TextField,' +
+                'Textarea,Select,Button,ImageButton,HiddenField,Maximize',
               removePlugins: '',
               disableNativeSpellChecker: false,
               extraAllowedContent: "details section article"
@@ -32,13 +34,12 @@
             command: 'saveRJS',
             toolbar: 'document,1'
           });
-          g.props.ckeditor.on('maximize', function () {
-            return g.maximize();
+          g.props.ckeditor.on('instanceReady', function (event) {
+            event.editor.execCommand('maximize');
           });
         });
     })
     .declareAcquiredMethod("submitContent", "triggerSubmit")
-    .declareAcquiredMethod("maximize", "triggerMaximize")
     .declareMethod('render', function (options) {
       this.props.key = options.key || "text_content";
       this.props.ckeditor.setData(options.value || "");

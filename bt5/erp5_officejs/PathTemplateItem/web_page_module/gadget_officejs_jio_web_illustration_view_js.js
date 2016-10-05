@@ -71,22 +71,25 @@
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
     .declareAcquiredMethod("redirect", "redirect")
 
-    .allowPublicAcquisition('triggerMaximize', function () {
-      var gadget = this;
-      return RSVP.Queue()
-        .push(function () {
-          return maximize(gadget);
-        })
-        .fail(function (e) {
-          console.log(e);
-        });
-    })
-
-    .allowPublicAcquisition('triggerSubmit', function () {
+    .allowPublicAcquisition('triggerSubmit', function (option) {
+      if (option[0] === "maximize" || option === "maximize") {
+        var gadget = this;
+        return RSVP.Queue()
+          .push(function () {
+            return maximize(gadget);
+          });
+      }
       return this.props.element.querySelector('button').click();
     })
 
-    .declareMethod('triggerSubmit', function () {
+    .declareMethod('triggerSubmit', function (option) {
+      if (option[0] === "maximize" || option === "maximize") {
+        var gadget = this;
+        return RSVP.Queue()
+          .push(function () {
+            return maximize(gadget);
+          });
+      }
       return this.props.element.querySelector('button').click();
     })
 
@@ -102,7 +105,9 @@
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
             title: options.doc.title + " | Web Illustration",
-            save_action: true
+            save_action: true,
+            maximize_action: true,
+            maximized: options.doc.title !== ""
           });
         })
         .push(function () {
@@ -114,8 +119,7 @@
     // Render text content gadget
     /////////////////////////////////////////
     .declareService(function () {
-      var gadget = this,
-        text_gadget = null;
+      var gadget = this;
 
       return new RSVP.Queue()
         .push(function () {
@@ -137,15 +141,17 @@
             'style',
             'width:100%; border: 0 none; height: 600px'
           );
-          text_gadget = text_content_gadget;
           return text_content_gadget.render({
             "key": 'text_content',
             "value": gadget.options.doc.text_content
           });
         })
         .push(function () {
-          return text_gadget.getElement();
-        }, function (error) {
+          if (gadget.options.doc.title !== "") {
+            return gadget.triggerSubmit("maximize");
+          }
+        })
+        .push(undefined, function (error) {
           var display_error_element;
           if (error === "Timed out after 5000 ms") {
             display_error_element =
