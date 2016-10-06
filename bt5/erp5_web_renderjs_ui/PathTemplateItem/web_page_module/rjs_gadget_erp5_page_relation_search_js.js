@@ -1,7 +1,6 @@
-/*global window, rJS */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, Handlebars, loopEventListener*/
-(function (window, rJS, RSVP, Handlebars, loopEventListener) {
+/*global window, rJS, RSVP, Handlebars*/
+(function (window, rJS, RSVP, Handlebars) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -130,25 +129,18 @@
           return gadget.triggerSubmit.apply(gadget, argument_list);
         });
     })
-    .declareService(function () {
-      var gadget = this,
-        select = gadget.props.element.querySelector("select");
-      if (select) {
-        return loopEventListener(
-          select,
-          'change',
-          false,
-          function (event) {
-            var target = event.target,
-              value = target.options[target.selectedIndex].value;
-            return gadget.redirect({
-              command: 'change',
-              options: {
-                select_template: value
-              }
-            });
+    .onEvent('change', function (evt) {
+      var target = evt.target,
+        value;
+      if (target.nodeName === 'SELECT') {
+        value = target.options[target.selectedIndex].value;
+        return this.redirect({
+          command: 'change',
+          options: {
+            select_template: value
           }
-        );
+        });
       }
     });
-}(window, rJS, RSVP, Handlebars, loopEventListener));
+
+}(window, rJS, RSVP, Handlebars));
