@@ -34,18 +34,9 @@ if doAction0 in ('object', 'workflow', 'folder'):
     kw['dialog_category'] = 'object_action'
 # Otherwise, check if this is an automatic menu (add)
 elif doAction0 == 'add':
-  type_name = ' '.join(Base_doAction[1:])
-  new_content = context.newContent(portal_type=type_name,
-                                   container=context)
-  preserved_parameter_dict['portal_status_message'] = Base_translateString("Object created.")
-  preserved_parameter_dict['editable_mode'] = 1
-  try:
-    tmp_kw = new_content.getRedirectParameterDictAfterAdd(context, **kw)
-  except AttributeError:
-    # Maybe the Product is not upgraded yet.
-    tmp_kw = new_content.Base_getRedirectParameterDictAfterAdd(context, **kw)
-  redirect_url = tmp_kw.pop('redirect_url', new_content.absolute_url())
-  kw.update(tmp_kw)
+  return context.Folder_create(' '.join(Base_doAction[1:]),
+                               preserved_parameter_dict,
+                               **kw)
 # Otherwise, check if this is an automatic menu (template)
 elif doAction0 == 'template':
   template_relative_url = ' '.join(Base_doAction[1:])
