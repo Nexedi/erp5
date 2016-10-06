@@ -49,7 +49,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_my_id' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_string.html']</td>
+  <td>//div[@data-gadget-scope='field_my_id']//div[@data-gadget-scope='field' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_string.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -60,7 +60,7 @@
 
 <tr>
   <td>verifyText</td>
-  <td>//div[@data-gadget-scope='field_my_id']</td>
+  <td>//div[@data-gadget-scope='field_my_id']//div[@data-gadget-scope='field']</td>
   <td>1</td>
 </tr>
 
@@ -73,7 +73,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='field_listbox' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_listbox.html']</td>
+  <td>//div[@data-gadget-scope='field_listbox']//div[@data-gadget-scope='field' and @data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_field_listbox.html']</td>
   <td></td>
 </tr>
 
