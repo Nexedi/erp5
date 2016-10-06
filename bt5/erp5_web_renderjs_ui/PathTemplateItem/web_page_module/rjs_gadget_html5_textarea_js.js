@@ -33,6 +33,7 @@
 
     .declareMethod('updateDOM', function () {
       var textarea = this.element.querySelector('textarea');
+      // textarea.setAttribute('value', this.state.value);
       textarea.value = this.state.value;
       textarea.setAttribute('name', this.state.name);
       textarea.setAttribute('title', this.state.title);
