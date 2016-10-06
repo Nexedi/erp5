@@ -2930,14 +2930,8 @@ class Base( CopyContainer,
   def getRedirectParameterDictAfterAdd(self, container, **kw):
     """Return a dict of parameters to specify where the user is redirected
     to after a new object is added in the UI."""
-    method = self._getTypeBasedMethod('getRedirectParameterDictAfterAdd',
-                                      'Base_getRedirectParameterDictAfterAdd')
-    if method is not None:
-      return method(container, **kw)
-
-    # XXX this should not happen, unless the Business Template is broken.
-    return dict(redirect_url=container.absolute_url(),
-                selection_index=None, selection_name=None)
+    method = self._getTypeBasedMethod('getRedirectParameterDictAfterAdd')
+    return method(container, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setGuid')
   def setGuid(self):
