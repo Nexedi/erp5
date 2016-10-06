@@ -2406,6 +2406,8 @@ class Catalog(Folder,
           if len(item) > 2:
             if item[2] == 'int':
               item[2] = 'SIGNED'
+            elif item[2] == 'float':
+              item[2] = 'DECIMAL'
         append(item)
     elif order_by_expression is not None:
       if not isinstance(order_by_expression, basestring):
