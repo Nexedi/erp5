@@ -69,7 +69,7 @@
 </tr>
 <tr>
   <td>pause</td>
-  <td>2000</td>
+  <td>3000</td>
   <td></td>
 </tr>
 <tr>
@@ -85,6 +85,11 @@
 <tr>
   <td>waitForElementPresent</td>
   <td>//a[@data-i18n='Go to document List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <tr>
