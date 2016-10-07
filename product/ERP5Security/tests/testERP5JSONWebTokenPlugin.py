@@ -28,10 +28,12 @@
 ##############################################################################
 
 import base64
+import jwt
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import random
 import StringIO
 import transaction
+import time
 import unittest
 from ZPublisher.HTTPRequest import HTTPRequest
 from ZPublisher.HTTPResponse import HTTPResponse
@@ -368,6 +370,94 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
       }
     )
 
+  def test_expiration_delay(self):
+    """
+    Test an expiration delay.
+    """
+    password = "%s" % random.random()
+    person = self.person = self._createPerson(
+      self.new_id,
+      password=password,
+      )
+    self.tic()
+    request = self.do_fake_request(
+      "GET",
+      {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
+        person.getReference(), password))})
+    self.portal.acl_users[self.test_id].manage_setERP5JSONWebTokenPluginExtpirationDelay(2)
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    response_cookie_dict = self.REQUEST.response.cookies
+    erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
+    request = self.do_fake_request("GET")
+    request.cookies['erp5_jwt'] = erp5_jwt_cookie['value']
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    self.assertEquals(ret,
+      {
+        'person_relative_url': person.getRelativeUrl(),
+        'remote_host': 'bobo.remote.host',
+        'remote_address': '204.183.226.81 '
+      }
+    )
+    time.sleep(3)
+    request = self.do_fake_request("GET")
+    request.cookies['erp5_jwt'] = erp5_jwt_cookie['value']
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    self.assertIsNone(ret)
+
+  def test_expiration_delay_deactivated_by_default(self):
+    """
+    Test an expiration delay is deactivated by default
+    """
+    password = "%s" % random.random()
+    person = self.person = self._createPerson(
+      self.new_id,
+      password=password,
+      )
+    self.tic()
+    request = self.do_fake_request(
+      "GET",
+      {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
+        person.getReference(), password))})
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    response_cookie_dict = self.REQUEST.response.cookies
+    erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
+    decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
+    self.assertTrue("exp" not in decoded_value)
+
+  def test_expiration_delay_deactivated_when_set_to_0(self):
+    """
+    Test an expiration delay is deactivated by default
+    """
+    password = "%s" % random.random()
+    person = self.person = self._createPerson(
+      self.new_id,
+      password=password,
+      )
+    self.tic()
+    self.portal.acl_users[self.test_id].manage_setERP5JSONWebTokenPluginExtpirationDelay(2)
+    request = self.do_fake_request(
+      "GET",
+      {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
+        person.getReference(), password))})
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    response_cookie_dict = self.REQUEST.response.cookies
+    erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
+    decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
+    self.assertTrue("exp" in decoded_value)
+    self.portal.acl_users[self.test_id].manage_setERP5JSONWebTokenPluginExtpirationDelay(0)
+    request = self.do_fake_request(
+      "GET",
+      {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
+        person.getReference(), password))})
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    response_cookie_dict = self.REQUEST.response.cookies
+    erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
+    decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
+    self.assertTrue("exp" not in decoded_value)
 
 def test_suite():
   suite = unittest.TestSuite()

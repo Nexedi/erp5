@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from urlparse import urlparse
 from os import urandom
 from zLOG import LOG, INFO, ERROR
@@ -80,6 +80,8 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
   manage_options = ( ( { 'label': 'Update Secret',
                           'action': 'manage_updateERP5JSONWebTokenPluginForm', }
                         ,
+                        { 'label': 'Set Expiration Time',
+                          'action': 'manage_setERP5JSONWebTokenPluginExtpirationDelayForm', }
                       )
                       + BasePlugin.manage_options
                     )
@@ -88,6 +90,7 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
   def __init__(self, *args, **kw):
     super(ERP5JSONWebTokenPlugin, self).__init__(*args, **kw)
     self.manage_updateERP5JSONWebTokenPlugin()
+    self.manage_setERP5JSONWebTokenPluginExtpirationDelay(0)
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#
@@ -189,6 +192,9 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
         "http_only": True,
       }
 
+      if self.expiration_delay:
+        data["exp"] = datetime.utcnow() + timedelta(seconds=self.expiration_delay)
+
       request = self.REQUEST
 
       new_cors_origin = request.form.get('new_cors_origin')
@@ -247,6 +253,28 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
     if RESPONSE is not None:
       message = "Secret Updated"
       RESPONSE.redirect('%s/manage_updateERP5JSONWebTokenPluginForm'
+                        '?manage_tabs_message=%s'
+                        % (self.absolute_url(), message)
+                        )
+
+  manage_setERP5JSONWebTokenPluginExtpirationDelayForm = PageTemplateFile(
+      'www/ERP5Security_setERP5JSONWebTokenPluginExtpirationDelay',
+      globals(),
+      __name__='manage_setERP5JSONWebTokenPluginExtpirationDelayForm')
+
+  security.declareProtected(ManageUsers, 'manage_setERP5JSONWebTokenPluginExtpirationDelay')
+  def manage_setERP5JSONWebTokenPluginExtpirationDelay(
+      self,
+      expiration_delay,
+      RESPONSE=None):
+    """Edit the object"""
+
+    self.expiration_delay = int(float(expiration_delay))
+
+    #Redirect
+    if RESPONSE is not None:
+      message = "Expiration Delay Set"
+      RESPONSE.redirect('%s/manage_setERP5JSONWebTokenPluginExtpirationDelayForm'
                         '?manage_tabs_message=%s'
                         % (self.absolute_url(), message)
                         )

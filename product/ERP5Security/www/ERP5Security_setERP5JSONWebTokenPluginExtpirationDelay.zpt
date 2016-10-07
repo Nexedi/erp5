@@ -1,0 +1,30 @@
+<h1 tal:replace="structure context/manage_page_header">PAGE HEADER</h1>
+<h2 tal:replace="structure here/manage_tabs"> TABS </h2>
+<h2 tal:define="form_title string:Set ERP5 JSON Web Token Plugin Expiration Delay"
+    tal:replace="structure context/manage_form_title">FORM TITLE</h2>
+
+<p class="form-help">Please input the expiration delay in seconds of the token.
+ The value 0 will deactivate it.</p>
+
+<form action="manage_setERP5JSONWebTokenPluginExtpirationDelay" method="POST">
+
+<table tal:define="expiration_delay request/expiration_delay|context/expiration_delay|python: 0;">
+
+<tr>
+   <td>Expiration delay in seconds of the Token. Deactivated if set to 0</td>
+   <td>
+     <input type="number" name="expiration_delay" value="0"
+            tal:attributes="value expiration_delay;" />
+   </td>
+</tr>
+<tr>
+   <td colspan="2">
+    <input type="submit" value="save"/>
+   </td>
+</tr>
+
+</table>
+
+</form>
+
+<h1 tal:replace="structure context/manage_page_footer">PAGE FOOTER</h1>
