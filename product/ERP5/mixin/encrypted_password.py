@@ -128,4 +128,10 @@ class EncryptedPasswordMixin:
           password = default_password
     return password
 
+  security.declarePublic('serializePassword')
+  def serializePassword(self):
+    """
+    """
+    self.password._p_changed = 1
+
 InitializeClass(EncryptedPasswordMixin)
