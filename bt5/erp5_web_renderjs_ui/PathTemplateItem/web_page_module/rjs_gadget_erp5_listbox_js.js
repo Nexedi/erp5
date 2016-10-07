@@ -1,7 +1,7 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, URI, RSVP, loopEventListener,
+/*global window, document, rJS, URI, RSVP,
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory*/
-(function (window, document, rJS, URI, RSVP, loopEventListener,
+(function (window, document, rJS, URI, RSVP,
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
   "use strict";
   var gadget_klass = rJS(window),
@@ -311,6 +311,7 @@
         })
         .push(function (my_html) {
           gadget.props.element.querySelector(".thead").innerHTML = my_html;
+          gadget.renderContent();
         });
     })
     .declareMethod('getListboxInfo', function () {
@@ -324,7 +325,7 @@
     //////////////////////////////////////////////
     // render the listbox in an asynchronous way
     //////////////////////////////////////////////
-    .declareService(function () {
+    .declareJob('renderContent', function () {
       var gadget = this,
         props = gadget.props,
         field_json = props.field_json,
@@ -525,109 +526,96 @@
           return data;
         });
     })
-    .declareService(function () {
+    .onEvent('click', function (evt) {
       var gadget = this,
+        sort_button = gadget.props.element.querySelector('button[name="Sort"]'),
+        hide_button = gadget.props.element.querySelector('button[name="Hide"]'),
         url,
-        options = {},
-        sort_button = gadget.props.element.querySelector('button[name="Sort"]');
-      return loopEventListener(
-        sort_button,
-        "click",
-        false,
-        function () {
-          url = "gadget_erp5_sort_editor.html";
-          options.sort_column_list = gadget.props.field_json.sort_column_list;
-          options.sort_list = gadget.props.sort_list;
-          options.key = gadget.props.field_json.key + "_sort_list:json";
-          return gadget.renderEditorPanel(url, options);
-        }
-      );
-    })
-    .declareService(function () {
-      var gadget = this,
-        hide_button = gadget.props.element.querySelector('button[name="Hide"]');
-      return loopEventListener(
-        hide_button,
-        "click",
-        false,
-        function () {
-          return new RSVP.Queue()
-            .push(function () {
-              var i,
-                all_hide_elements,
-                query_list = [],
-                search_query,
-                thead_template,
-                tbody_template,
-                hide_button_html,
-                hide_elements = [];
-              if (gadget.props.foot.colspan === gadget.props.foot.default_colspan) {
-                thead_template = listbox_show_thead_template;
-                tbody_template = listbox_show_tbody_template;
-                hide_button_html = "Submit";
-                gadget.props.foot.colspan += 1;
-              } else {
-                //hide closed
-                //maybe submit
-                all_hide_elements = gadget.props.element.querySelectorAll(".hide_element");
-                for (i = 0; i < all_hide_elements.length; i += 1) {
-                  if (!all_hide_elements[i].checked) {
-                    hide_elements.push(all_hide_elements[i]);
-                  }
+        options = {};
+      if (evt.target === sort_button) {
+        url = "gadget_erp5_sort_editor.html";
+        options.sort_column_list = gadget.props.field_json.sort_column_list;
+        options.sort_list = gadget.props.sort_list;
+        options.key = gadget.props.field_json.key + "_sort_list:json";
+        return gadget.renderEditorPanel(url, options);
+      }
+      if (evt.target === hide_button) {
+        return new RSVP.Queue()
+          .push(function () {
+            var i,
+              all_hide_elements,
+              query_list = [],
+              search_query,
+              thead_template,
+              tbody_template,
+              hide_button_html,
+              hide_elements = [];
+            if (gadget.props.foot.colspan === gadget.props.foot.default_colspan) {
+              thead_template = listbox_show_thead_template;
+              tbody_template = listbox_show_tbody_template;
+              hide_button_html = "Submit";
+              gadget.props.foot.colspan += 1;
+            } else {
+              //hide closed
+              //maybe submit
+              all_hide_elements = gadget.props.element.querySelectorAll(".hide_element");
+              for (i = 0; i < all_hide_elements.length; i += 1) {
+                if (!all_hide_elements[i].checked) {
+                  hide_elements.push(all_hide_elements[i]);
                 }
-                if (hide_elements.length) {
-                  for (i = 0; i < hide_elements.length; i += 1) {
-                    query_list.push(new SimpleQuery({
-                      key: "catalog.uid",
-                      type: "simple",
-                      operator: "!=",
-                      value: hide_elements[i].getAttribute("value")
-                    }));
-                  }
-                  if (gadget.props.extended_search) {
-                    search_query = QueryFactory.create(gadget.props.extended_search);
-                  }
-                  if (search_query) {
-                    query_list.push(search_query);
-                  }
-                  search_query = new ComplexQuery({
-                    operator: "AND",
-                    query_list: query_list,
-                    type: "complex"
-                  });
-
-                  return gadget.redirect({
-                    command: 'store_and_change',
-                    options: {
-                      "extended_search": Query.objectToSearchText(search_query)
-                    }
-                  });
-                }
-
-                gadget.props.foot.colspan -= 1;
-                hide_button_html = "Hide Rows";
-                thead_template = listbox_hidden_thead_template;
-                tbody_template = listbox_hidden_tbody_template;
               }
-              return new RSVP.Queue()
-                .push(function () {
-                  return RSVP.all([
-                    renderListboxThead(gadget, thead_template),
-                    renderListboxTbody(gadget, tbody_template),
-                    renderListboxTfoot(gadget, listbox_tfoot_template),
-                    gadget.translate(hide_button_html)
-                  ]);
-                })
-                .push(function (all_innerHTML) {
-                  //change hide button's text
-                  hide_button.innerHTML = all_innerHTML[3];
-                  gadget.props.element.querySelector(".thead").innerHTML = all_innerHTML[0];
-                  gadget.props.element.querySelector(".tfoot").innerHTML = all_innerHTML[2];
+              if (hide_elements.length) {
+                for (i = 0; i < hide_elements.length; i += 1) {
+                  query_list.push(new SimpleQuery({
+                    key: "catalog.uid",
+                    type: "simple",
+                    operator: "!=",
+                    value: hide_elements[i].getAttribute("value")
+                  }));
+                }
+                if (gadget.props.extended_search) {
+                  search_query = QueryFactory.create(gadget.props.extended_search);
+                }
+                if (search_query) {
+                  query_list.push(search_query);
+                }
+                search_query = new ComplexQuery({
+                  operator: "AND",
+                  query_list: query_list,
+                  type: "complex"
                 });
-            });
-        }
-      );
-    })
+
+                return gadget.redirect({
+                  command: 'store_and_change',
+                  options: {
+                    "extended_search": Query.objectToSearchText(search_query)
+                  }
+                });
+              }
+
+              gadget.props.foot.colspan -= 1;
+              hide_button_html = "Hide Rows";
+              thead_template = listbox_hidden_thead_template;
+              tbody_template = listbox_hidden_tbody_template;
+            }
+            return new RSVP.Queue()
+              .push(function () {
+                return RSVP.all([
+                  renderListboxThead(gadget, thead_template),
+                  renderListboxTbody(gadget, tbody_template),
+                  renderListboxTfoot(gadget, listbox_tfoot_template),
+                  gadget.translate(hide_button_html)
+                ]);
+              })
+              .push(function (all_innerHTML) {
+                //change hide button's text
+                hide_button.innerHTML = all_innerHTML[3];
+                gadget.props.element.querySelector(".thead").innerHTML = all_innerHTML[0];
+                gadget.props.element.querySelector(".tfoot").innerHTML = all_innerHTML[2];
+              });
+          });
+      }
+    }, false, false)
 
     .allowPublicAcquisition("notifyInvalid", function () {
       return;
@@ -637,5 +625,5 @@
       return;
     });
 
-}(window, document, rJS, URI, RSVP, loopEventListener,
+}(window, document, rJS, URI, RSVP,
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory));
