@@ -459,6 +459,48 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
     decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
     self.assertTrue("exp" not in decoded_value)
 
+  def test_update_password_tid_invalidate_token(self):
+    """
+    Test update Password TID invalide JWT
+    """
+    password = "%s" % random.random()
+    person = self.person = self._createPerson(
+      self.new_id,
+      password=password,
+      )
+    self.tic()
+    self.portal.acl_users[self.test_id].manage_setERP5JSONWebTokenPluginExtpirationDelay(2)
+    request = self.do_fake_request(
+      "GET",
+      {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
+        person.getReference(), password))})
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    response_cookie_dict = self.REQUEST.response.cookies
+    erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
+    request = self.do_fake_request("GET")
+    request.cookies['erp5_jwt'] = erp5_jwt_cookie['value']
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    self.assertEquals(ret,
+      {
+        'person_relative_url': person.getRelativeUrl(),
+        'remote_host': 'bobo.remote.host',
+        'remote_address': '204.183.226.81 '
+      }
+    )
+    person.serializePassword()
+    self.commit()
+    request = self.do_fake_request("GET")
+    request.cookies['erp5_jwt'] = erp5_jwt_cookie['value']
+    ret = self.portal.acl_users[self.test_id].extractCredentials(request)
+    self.assertEquals(ret,
+      {
+        'remote_host': 'bobo.remote.host',
+        'remote_address': '204.183.226.81 '
+      }
+    )
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5JSONWebTokenPlugin))
