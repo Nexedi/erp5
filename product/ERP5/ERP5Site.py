@@ -1748,8 +1748,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
             tool = tool.activate()
           tool.migrateToPortalTypeClass(tool_id not in (
             'portal_activities', 'portal_simulation', 'portal_templates',
-            'portal_trash'))
-          if tool_id in ('portal_trash',):
+            'portal_trash', 'portal_catalog'))
+          if tool_id in ('portal_trash', 'portal_catalog'):
             for obj in tool.objectValues():
               obj.migrateToPortalTypeClass()
 
@@ -1971,6 +1971,14 @@ class ERP5Generator(PortalGenerator):
         load(os.path.join(root, file + '.xml'),
              verify=False, set_owner=False, suppress_events=True)
 
+  @staticmethod
+  def bootstrap_allow_type(types_tool, portal_type):
+    from xml.etree.cElementTree import parse
+    bt_path = getBootstrapBusinessTemplateUrl('erp5_core')
+    types_tool[portal_type].allowed_content_types = [x.text for x in parse(
+      os.path.join(bt_path, 'PortalTypeAllowedContentTypeTemplateItem', 'allowed_content_types.xml')
+      ).iterfind("portal_type[@id='%s']/*" % portal_type)]
+
   def setupLastTools(self, p, **kw):
     """
     Set up finals tools
@@ -2035,10 +2043,8 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_caches', 'Cache Tool')
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
-    # Add ERP5 SQL Catalog Tool
-    addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
-    if not p.hasObject('portal_catalog'):
-      addTool('ERP5 Catalog', None)
+    # Add erp5 catalog tool
+    addERP5Tool(p, 'portal_catalog', 'Catalog Tool')
 
     sql_reset = kw.get('sql_reset', 0)
     def addSQLConnection(id, title, **kw):

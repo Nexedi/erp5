@@ -193,7 +193,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     self.id=id
     self.title=title
 
-  security.declarePrivate('getSQLCatalogIdList')
+  security.declarePublic('getSQLCatalogIdList')
   def getSQLCatalogIdList(self):
     return self.objectIds(spec=('SQLCatalog',))
 
@@ -366,7 +366,7 @@ class ZCatalog(Folder, Persistent, Implicit):
   security.declarePrivate('changeSQLConnectionIds')
   def changeSQLConnectionIds(self, folder, sql_connection_id_dict):
     if sql_connection_id_dict is not None:
-      if folder.meta_type == 'Z SQL Method':
+      if folder.meta_type in ('Z SQL Method', 'ERP5 SQL Method',):
         connection_id = folder.connection_id
         if connection_id in sql_connection_id_dict:
           folder.connection_id = sql_connection_id_dict[connection_id]
@@ -530,7 +530,14 @@ class ZCatalog(Folder, Persistent, Implicit):
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       skin_selection_dict=skin_selection_dict,
                       sql_connection_id_dict=sql_connection_id_dict)
-    if RESPONSE is not None:
+    self._redirectHotReindexAll(REQUEST, RESPONSE)
+
+  def _redirectHotReindexAll(self, REQUEST, RESPONSE):
+    '''
+    We need to separate the final redirection from manage_reindexAll to
+    remove the need of copy and patch for the ERP5CatalogTool.
+    '''
+    if RESPONE is not None:
       URL1 = REQUEST.get('URL1')
       RESPONSE.redirect(URL1 + '/manage_catalogHotReindexing?manage_tabs_message=HotReindexing%20Started')
 

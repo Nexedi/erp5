@@ -53,9 +53,10 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  ConversionTool, RoundingTool, UrlRegistryTool, InterfaceTool,\
                  CertificateAuthorityTool, InotifyTool, TaskDistributionTool
 import ERP5Site
-from Document import PythonScript
+from Document import PythonScript, SQLMethod
 object_classes = ( ERP5Site.ERP5Site,
                    PythonScript.PythonScriptThroughZMI,
+                   SQLMethod.SQLMethod,
                  )
 portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,
