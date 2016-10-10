@@ -113,7 +113,6 @@ gadget_jio.js\n
 gadget_translate.html\n
 gadget_translate.js\n
 handlebars.js\n
-i18next.js\n
 jiodev.js\n
 jquery.js\n
 jquerymobile.css\n
@@ -265,7 +264,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.46348.9104.1143</string> </value>
+                <value> <string>953.52766.8191.15001</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -283,7 +282,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446024817.39</float>
+                        <float>1476100685.39</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
