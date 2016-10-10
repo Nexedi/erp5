@@ -42,13 +42,6 @@
     })
 
 
-    .ready(function (g) {
-      return g.translateHtml(panel_template_header() + panel_template_body())
-        .push(function (my_translated_or_plain_html) {
-          g.props.jelement.html(my_translated_or_plain_html);
-          g.props.jelement.trigger("create");
-        });
-    })
 
 
     .declareAcquiredMethod('getSetting', 'getSetting')
@@ -72,8 +65,13 @@
         key,
         value,
         i,
-        queue = new RSVP.Queue();
+        queue = gadget.translateHtml(panel_template_header() + panel_template_body());
 
+      queue
+        .push(function (my_translated_or_plain_html) {
+          gadget.props.jelement.html(my_translated_or_plain_html);
+          gadget.props.jelement.trigger("create");
+        });
       function push(a, b) {
         queue.push(function () {
           return gadget.setSetting(a, b);
