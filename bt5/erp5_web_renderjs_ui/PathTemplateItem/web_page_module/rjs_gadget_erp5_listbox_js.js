@@ -533,6 +533,7 @@
         url,
         options = {};
       if (evt.target === sort_button) {
+        evt.preventDefault();
         url = "gadget_erp5_sort_editor.html";
         options.sort_column_list = gadget.props.field_json.sort_column_list;
         options.sort_list = gadget.props.sort_list;
@@ -540,6 +541,7 @@
         return gadget.renderEditorPanel(url, options);
       }
       if (evt.target === hide_button) {
+        evt.preventDefault();
         return new RSVP.Queue()
           .push(function () {
             var i,
