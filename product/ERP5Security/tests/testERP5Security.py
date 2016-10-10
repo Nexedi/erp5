@@ -610,7 +610,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
+    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms', 'erp5_administration')
 
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
