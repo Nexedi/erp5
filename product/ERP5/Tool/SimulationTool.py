@@ -510,7 +510,6 @@ class SimulationTool(BaseTool):
         # Remove some internal parameters that does not have any meaning for
         # catalog
         new_kw.pop('ignore_group_by', None)
-        new_kw.pop('movement_list_mode', None)
 
         sql_kw.update(ctool.buildSQLQuery(**new_kw))
         return sql_kw
