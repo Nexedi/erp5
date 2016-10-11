@@ -31,7 +31,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function () {
+    .onStateChange(function () {
       var textarea = this.element.querySelector('textarea');
       // textarea.setAttribute('value', this.state.value);
       textarea.value = this.state.value;

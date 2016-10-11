@@ -69,7 +69,7 @@
         form_gadget_url: form_gadget_url
       });
     })
-    .declareMethod('updateDOM', function (modification_dict) {
+    .onStateChange(function (modification_dict) {
       var gadget = this,
         form_gadget,
         section_container_element = document.createElement('div'),

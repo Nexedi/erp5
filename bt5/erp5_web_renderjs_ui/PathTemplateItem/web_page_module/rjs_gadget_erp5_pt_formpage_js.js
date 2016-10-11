@@ -88,7 +88,7 @@
             });
         });
     })
-    .declareMethod('updateDOM', function (modification_dict) {
+    .onStateChange(function (modification_dict) {
       var queue,
         gadget = this,
         options = this.state.options,

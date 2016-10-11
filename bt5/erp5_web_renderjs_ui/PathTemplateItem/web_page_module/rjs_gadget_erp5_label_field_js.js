@@ -32,7 +32,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function (modification_dict) {
+    .onStateChange(function (modification_dict) {
       var gadget = this;
       if (modification_dict.hasOwnProperty('label_text')) {
         this.state.label_text_element.textContent = this.state.label_text;

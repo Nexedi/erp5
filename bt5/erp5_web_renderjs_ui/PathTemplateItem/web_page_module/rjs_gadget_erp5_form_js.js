@@ -93,7 +93,7 @@
       });
     })
 
-    .declareMethod('updateDOM', function (modification_dict) {
+    .onStateChange(function (modification_dict) {
       var i,
         erp5_document = this.state.erp5_document,
         form_definition = this.state.form_definition,

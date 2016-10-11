@@ -19,7 +19,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function (modification_dict) {
+    .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
         url,

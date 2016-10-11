@@ -42,7 +42,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function () {
+    .onStateChange(function () {
       var form_gadget = this,
         icon,
         selector = form_gadget.element.querySelector("h3"),

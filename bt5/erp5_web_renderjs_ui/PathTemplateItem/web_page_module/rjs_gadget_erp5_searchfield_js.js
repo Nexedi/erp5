@@ -15,7 +15,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function () {
+    .onStateChange(function () {
       var gadget = this;
       return gadget.getDeclaredGadget('input')
         .push(function (input_gadget) {

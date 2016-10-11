@@ -17,7 +17,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function () {
+    .onStateChange(function () {
       var element = this.element,
         new_element = document.createElement(this.state.tag);
       new_element.textContent = this.state.text_content;

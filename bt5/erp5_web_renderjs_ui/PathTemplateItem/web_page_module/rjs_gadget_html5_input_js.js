@@ -25,7 +25,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function () {
+    .onStateChange(function () {
       var textarea = this.element.querySelector('input');
       textarea.setAttribute('value', this.state.value);
       textarea.value = this.state.value;
@@ -99,6 +99,6 @@
     .onEvent('invalid', function (evt) {
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
-    }, true, true);
+    }, true, false);
 
 }(window, rJS, RSVP));

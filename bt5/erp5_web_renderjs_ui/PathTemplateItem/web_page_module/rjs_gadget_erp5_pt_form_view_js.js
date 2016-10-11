@@ -25,7 +25,7 @@
       return this.changeState(state_dict);
     })
 
-    .declareMethod('updateDOM', function () {
+    .onStateChange(function () {
       var gadget = this;
 
       // render the erp5 form

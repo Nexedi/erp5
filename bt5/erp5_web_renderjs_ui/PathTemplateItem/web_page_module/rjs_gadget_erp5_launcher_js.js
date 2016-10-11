@@ -446,7 +446,7 @@
     .allowPublicAcquisition("renderApplication", function (param_list) {
       return this.render.apply(this, param_list);
     })
-    .declareMethod('updateDOM', function (modification_dict) {
+    .onStateChange(function (modification_dict) {
       var gadget = this,
         route_result = gadget.state;
       if (modification_dict.hasOwnProperty('url')) {
