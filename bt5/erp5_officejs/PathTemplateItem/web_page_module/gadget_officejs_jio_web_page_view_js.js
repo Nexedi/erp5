@@ -35,7 +35,7 @@
       gadget.props.webrtc_share_name = webrtc_share_name;
       return gadget.getSetting('webrtc_share_description')
     })
-    .push(function(webrtc_share_description){
+    .push(function(webrtc_share_description) {
       if(window.location.hash) {
         var index = window.location.hash.indexOf('room='),
          type;
@@ -54,9 +54,9 @@
               }
             );
           })
-          .push(function(g){
+          .push(function(g) {
             var config;
-            if (gadget.props.webrtc_share_name === "DAV") {
+            if (gadget.props.webrtc_share_name === "DAV" || gadget.props.webrtc_share_name === "ERP5" ) {
               type = "jio";
               config = webrtc_share_description.remote_sub_storage;
             } else {

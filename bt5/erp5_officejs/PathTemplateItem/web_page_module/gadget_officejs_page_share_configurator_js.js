@@ -5,31 +5,19 @@
   "use strict";
 
   function setERP5Configuration(gadget) {
-    return gadget.getSetting("portal_type")
-      .push(function (portal_type) {
-        var configuration = {
-          local_sub_storage: {
-            type: "query",
-            sub_storage: {
-              type: "uuid",
-              sub_storage: {
-                type: "indexeddb",
-                database: "officejs-erp5"
-              }
-            }
-          },
-          remote_sub_storage: {
-            type: "erp5",
-            url: (new URI("hateoas"))
-              .absoluteTo(location.href)
-              .toString(),
-            default_view_reference: "jio_view"
-          }
-        };
-        return gadget.setSetting('jio_storage_description', configuration);
-      })
+    var configuration = {
+      remote_sub_storage: {
+        type: "erp5",
+        url: (new URI("hateoas"))
+          .absoluteTo(location.href)
+          .toString(),
+        default_view_reference: "view"
+      }
+    };
+    
+    return gadget.setSetting('webrtc_share_description', configuration)
       .push(function () {
-        return gadget.setSetting('jio_storage_name', "ERP5");
+        return gadget.setSetting('webrtc_share_name', "ERP5");
       })
       .push(function () {
         return gadget.reload();

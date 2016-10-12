@@ -77,6 +77,23 @@
         return gadget.reload();
       });
   }
+  
+  function setWebrtcShareConfiguration(gadget) {
+    var configuration = {
+      remote_sub_storage: {
+        type: "erp5",
+        url: (new URI("hateoas"))
+          .absoluteTo(location.href)
+          .toString(),
+        default_view_reference: "view"
+      }
+    };
+    
+    return gadget.setSetting('webrtc_share_description', configuration)
+      .push(function () {
+        return gadget.setSetting('webrtc_share_name', "ERP5");
+      })
+  }
 
   function setDAVConfiguration(gadget) {
     return gadget.redirect({page: 'jio_dav_configurator'});
@@ -104,9 +121,15 @@
       return gadget.updateHeader({
         title: "Storage Configuration"
       }).push(function () {
+        return gadget.getSetting("webrtc_share_name")
+      }).push(function (setting) {
+        if (!setting) {
+          return setWebrtcShareConfiguration(gadget);
+        }
+      }).push(function (setting) {
         return RSVP.all([
           gadget.getSetting('jio_storage_name'),
-          gadget.getSetting('application_title')
+          gadget.getSetting('application_title'),
         ]);
       }).push(function (setting_list) {
         switch (setting_list[0]) {
