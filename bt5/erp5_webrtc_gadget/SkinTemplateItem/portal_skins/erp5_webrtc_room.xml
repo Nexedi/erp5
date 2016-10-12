@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Folder" module="OFS.Folder"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_Transient_Objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Access_arbitrary_user_session_data_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_events_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_folders_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_member_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_topics_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_webrtc_room</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

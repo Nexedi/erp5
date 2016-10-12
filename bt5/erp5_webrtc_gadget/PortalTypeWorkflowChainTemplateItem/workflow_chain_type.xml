@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Webrtc Room</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
