@@ -1,65 +1,51 @@
-/*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, rJS, RSVP */
-(function (window, rJS, RSVP) {
+/*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
+/*global window, rJS */
+(function (window, rJS) {
   "use strict";
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.container = element.querySelector(".jqm-navmenu-panel");
-        });
-    })
 
-    .allowPublicAcquisition('trigger', function () {
-      this.props.element.classList.toggle('visible');
-      // return this.props.jelement.panel("toggle");
-    })
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    //local method
+    .allowPublicAcquisition('trigger', function () {
+      this.element.classList.toggle('visible');
+    })
+
     .declareMethod('close', function () {
-      var container = this.props.container;
-      while (container.firstChild) {
-        container.removeChild(container.firstChild);
+      var element = this.element;
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
       }
-      if (this.props.element.classList.contains('visible')) {
-        this.props.element.classList.remove('visible');
+      if (element.classList.contains('visible')) {
+        element.classList.remove('visible');
       }
     })
+
     .declareMethod('render', function (url, options) {
+      this.element.classList.toggle('visible');
+      return this.changeState({
+        url: url,
+        options: JSON.stringify(options)
+      });
+    })
+
+    .onStateChange(function (modification_dict) {
       var gadget = this,
         declared_gadget;
-      if (url && JSON.stringify(gadget.props.options) !== JSON.stringify(options)) {
-        gadget.props.options = options;
-        return new RSVP.Queue()
-          .push(function () {
-            return gadget.declareGadget(url, {scope: "declared_gadget"});
-          })
+      if (gadget.state.url && modification_dict.hasOwnProperty('options')) {
+        return gadget.declareGadget(gadget.state.url,
+                                    {scope: "declared_gadget"})
           .push(function (result) {
             declared_gadget = result;
-            return declared_gadget.render(options);
+            return declared_gadget.render(JSON.parse(gadget.state.options));
           })
           .push(function () {
-            return RSVP.all([
-              gadget.close(),
-              declared_gadget.getElement()
-            ]);
+            return gadget.close();
           })
-          .push(function (result) {
-            var fragment = result[1];
-            gadget.props.container.appendChild(fragment);
-            gadget.props.element.classList.toggle('visible');
+          .push(function () {
+            gadget.element.appendChild(declared_gadget.element);
+            gadget.element.classList.toggle('visible');
           });
       }
-      gadget.props.element.classList.toggle('visible');
     });
-}(window, rJS, RSVP));
+}(window, rJS));
