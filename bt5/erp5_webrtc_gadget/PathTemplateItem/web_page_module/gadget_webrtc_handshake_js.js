@@ -45,14 +45,22 @@
       g.props = {};
     })
 
-    .declareMethod('create_room', function(roomid) {
+    .declareMethod('create_room', function(roomid, type) {
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
           return gadget.getDeclaredGadget("jio_gadget");
         })
         .push(function (jio_gadget) {
-          return jio_gadget.put(roomid, {});
+          if (type === "erp5") {
+            return jio_gadget.post({ 
+              title: roomid,
+              portal_type: "Webrtc Room",
+              parent_relative_url: "webrtc_rooms_module"
+            });
+          } else {
+            return jio_gadget.put(roomid, {});
+          }
         })
         .push(null, function(e){
           console.log(e);
@@ -60,19 +68,29 @@
     })
     
     .declareMethod('register', function(roomid, peerid, config) {
-      var gadget = this;
-
+      var gadget = this,
+        id;
+      gadget.props.config = config;
       return new RSVP.Queue()
         .push(function() {
           return createJio(gadget, config);
         })
         .push(function() {
-          return gadget.create_room(roomid);
+          return gadget.create_room(roomid, config.type);
         })
-        .push(function () {
+        .push(function (id) {
+          gadget.erp5_roomid = id;
           return gadget.getDeclaredGadget("jio_gadget");
         })
         .push(function (jio_gadget) {
+          if (config.type === "erp5") {
+            var url = config.url + "/" + gadget.erp5_roomid + "/WebrtcRoom_storeOfferAnswer";
+            return jio_gadget.putAttachment(gadget.erp5_roomid,
+                                            url,
+                                            new Blob([JSON.stringify({roomid:roomid, 
+                                                                      peerid: peerid, 
+                                                                      data:'1'})]));
+          }
           return jio_gadget.putAttachment(roomid, peerid, '');
         });
         // TODO: create new function, show registered peers?
@@ -86,8 +104,27 @@
           return gadget.getDeclaredGadget("jio_gadget");
         })
         .push(function (jio_gadget) {
+          if (gadget.props.config.type === "erp5") {
+            var url = gadget.props.config.url + "/" + gadget.erp5_roomid + 
+                      "/WebrtcRoom_storeOfferAnswer";
+            return new RSVP.Queue()
+                    .push(function () {
+                      if (options.data instanceof Blob) {
+                        return jIO.util.readBlobAsText(options.data);
+                      } else {
+                        return {target:{result:options.data}};
+                      }
+                    })
+                    .push(function (evt) {
+                      return jio_gadget.putAttachment(gadget.erp5_roomid,
+                                            url,
+                                            new Blob([JSON.stringify({roomid:roomid,
+                                                                      peerid: options.name,
+                                                                      data: evt.target.result})]));
+                    });
+          }
           return jio_gadget.putAttachment(roomid, options.name, options.data);
-        })
+        });
     })
 
     .declareMethod('get_answer', function (roomid, attachment) {
@@ -98,6 +135,11 @@
           return gadget.getDeclaredGadget("jio_gadget");
         })
         .push(function (jio_gadget) {
+          if (gadget.props.config.type === "erp5") {
+            var url = gadget.props.config.url + "/" + gadget.erp5_roomid + 
+                    "/WebrtcRoom_getOfferAnswer?roomid=" + roomid+"&name="+attachment;
+            return jio_gadget.getAttachment(gadget.erp5_roomid, url);
+          }
           return jio_gadget.getAttachment(roomid, attachment);
         });
     })
@@ -110,6 +152,23 @@
           return gadget.getDeclaredGadget("jio_gadget");
         })
         .push(function (jio_gadget) {
+          if (gadget.props.config.type === "erp5") {
+            var url = gadget.props.config.url + "/" + gadget.erp5_roomid + 
+                    "/WebrtcRoom_getAllOfferAnswer?roomid="+roomid;
+            return jio_gadget.getAttachment(gadget.erp5_roomid, url)
+                  .push(function(res) {
+                    return jIO.util.readBlobAsText(res);
+                  })
+                  .push(function(evt) {
+                    var res = evt.target.result.replace(/'/g, '"');
+                    res = JSON.parse(res);
+                    var offers = {}
+                    for (var i in res) {
+                      offers[res[i]] = '';
+                    }
+                    return offers;
+                  });
+          }
           return jio_gadget.allAttachments(roomid);
         });
     })
@@ -168,7 +227,7 @@
             } else {
               offers = a;
               return false;
-            } 
+            }
           });
         });
       };
@@ -184,6 +243,11 @@
           return gadget.getDeclaredGadget("jio_gadget");
         })
         .push(function (jio_gadget) {
+          if (gadget.props.config.type === "erp5") {
+            var url = gadget.props.config.url + "/" + gadget.erp5_roomid + 
+                    "/WebrtcRoom_deleteOfferAnswer?roomid="+roomid+"&name="+peerid+"_"+to;
+            return jio_gadget.getAttachment(gadget.erp5_roomid, url);
+          }
           return jio_gadget.removeAttachment(roomid, peerid+"_"+to);
         });
     });

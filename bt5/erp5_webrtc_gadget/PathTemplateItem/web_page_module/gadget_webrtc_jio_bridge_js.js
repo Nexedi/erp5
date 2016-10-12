@@ -258,7 +258,7 @@
                   // TODO: have a array for channel_defer for concurency?
                   gadget.props.channel_defer = RSVP.defer();
                   for (var offer in offers) {
-                    jsonOffer = JSON.parse(offers[offer]); 
+                    jsonOffer = JSON.parse(offers[offer]);
                     if (jsonOffer.action === "offer") {
                       gadget.props.counter += 1;
                       connections.push(connectCallback(jsonOffer, handler_gadget));
