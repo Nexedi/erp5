@@ -26,7 +26,6 @@ Delivery Causality Assignment Movement Group | view
 Delivery Tool | view
 Delivery Type | action_view
 Delivery Type | copy_roles
-Delivery Type | delivery_view
 Delivery Type | jump_property_sheets
 Delivery Type | role_view
 Delivery Type | translation_view
@@ -83,6 +82,7 @@ Person | assignment
 Person | details
 Person | document_view
 Person | financial_view
+Person | invalidate_token
 Person | person_detailed_report
 Person | terminate_career
 Person | view
