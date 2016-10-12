@@ -37,6 +37,7 @@ from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
+from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.Globals import get_request
 from Products.ERP5Type.tests.ERP5TypeTestCase import \
   ERP5TypeTestCaseMixin, ERP5TypeTestCase
@@ -223,9 +224,9 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
 
     def loadTestsFromTestCase(self, testCaseClass):
         testModule = sys.modules[testCaseClass.__module__]
-        # Do not reload ERP5TypeTestCase because we patch it nor ZODB Test
+        # Do not reload ERP5TypeTestCase and SecurityTestCase because we patch it nor ZODB Test
         # Component as it is reset upon modification anyway
-        if (testCaseClass is not ERP5TypeTestCase and
+        if (testCaseClass not in (ERP5TypeTestCase, SecurityTestCase) and
             not isinstance(getattr(testModule, '__loader__', None),
                            ComponentDynamicPackage)):
           testModule = reload(testModule)
