@@ -7,6 +7,7 @@
     .setState({
       tag: 'p'
     })
+
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
@@ -19,6 +20,7 @@
       state_dict.text_content = state_dict.value;
       return this.changeState(state_dict);
     })
+
     .onStateChange(function (modification_dict) {
       var element = this.element,
         gadget = this,
@@ -46,7 +48,6 @@
         .push(function (input) {
           return input.render(gadget.state);
         });
-
     })
 
     .declareMethod('getContent', function () {
@@ -57,6 +58,13 @@
           });
       }
       return {};
+    })
+
+    .declareMethod('getTextContent', function () {
+      return this.getDeclaredGadget('sub')
+        .push(function (gadget) {
+          return gadget.getTextContent();
+        });
     })
 
     .declareMethod('checkValidity', function () {
