@@ -71,10 +71,10 @@
         input;
       if (this.state.editable) {
         input = this.element.querySelector('input');
-        if (input.value !== undefined) {
-          result[input.getAttribute('name')] = input.value;
-        } else if (input.checked !== undefined) {
+        if (this.state.type === 'checkbox') {
           result[input.getAttribute('name')] = (input.checked ? 1 : 0);
+        } else {
+          result[input.getAttribute('name')] = input.value;
         }
       }
       return result;
