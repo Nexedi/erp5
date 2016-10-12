@@ -6,7 +6,8 @@
   rJS(window)
     .setState({
       editable: false,
-      value: '',
+      value: undefined,
+      checked: undefined,
       title: '',
       type: 'text',
       required: false
@@ -15,6 +16,7 @@
     .declareMethod('render', function (options) {
       var state_dict = {
           value: options.value || "",
+          checked: options.checked,
           editable: options.editable,
           required: options.required,
           name: options.name,
@@ -27,8 +29,13 @@
 
     .onStateChange(function () {
       var textarea = this.element.querySelector('input');
-      textarea.setAttribute('value', this.state.value);
-      textarea.value = this.state.value;
+      if (this.state.value !== undefined) {
+        textarea.setAttribute('value', this.state.value);
+        textarea.value = this.state.value;
+      }
+      if (this.state.checked !== undefined) {
+        textarea.checked = this.state.checked;
+      }
       textarea.setAttribute('name', this.state.name);
       textarea.setAttribute('type', this.state.type);
       if (this.state.title) {
@@ -64,7 +71,11 @@
         input;
       if (this.state.editable) {
         input = this.element.querySelector('input');
-        result[input.getAttribute('name')] = input.value;
+        if (input.value !== undefined) {
+          result[input.getAttribute('name')] = input.value;
+        } else if (input.checked !== undefined) {
+          result[input.getAttribute('name')] = (input.checked ? 1 : 0);
+        }
       }
       return result;
     })
