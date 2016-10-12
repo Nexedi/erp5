@@ -5,7 +5,8 @@
 
   rJS(window)
     .setState({
-      type: 'checkbox'
+      type: 'checkbox',
+      tag: 'p'
     })
 
     .declareMethod('render', function (options) {
@@ -16,12 +17,34 @@
           name: field_json.key,
           title: field_json.title
         };
+      state_dict.text_content = state_dict.checked ? '✓' : '';
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
-      var gadget = this;
-      return this.getDeclaredGadget('sub')
+    .onStateChange(function (modification_dict) {
+      var element = this.element,
+        gadget = this,
+        url,
+        result;
+      if (modification_dict.hasOwnProperty('editable')) {
+        if (gadget.state.editable) {
+          url = 'gadget_html5_input.html';
+        } else {
+          url = 'gadget_html5_element.html';
+        }
+        result = this.declareGadget(url, {scope: 'sub'})
+          .push(function (input) {
+            // Clear first to DOM, append after to reduce flickering/manip
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.appendChild(input.element);
+            return input;
+          });
+      } else {
+        result = this.getDeclaredGadget('sub');
+      }
+      return result
         .push(function (input) {
           return input.render(gadget.state);
         });

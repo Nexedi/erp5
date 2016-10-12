@@ -26,6 +26,10 @@
         element.removeChild(element.firstChild);
       }
       element.appendChild(new_element);
+    })
+
+    .declareMethod('getTextContent', function (options) {
+      return this.state.text_content;
     });
 
 }(window, document, rJS));

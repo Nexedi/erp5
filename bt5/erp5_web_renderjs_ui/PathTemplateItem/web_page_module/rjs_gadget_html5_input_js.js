@@ -29,12 +29,11 @@
 
     .onStateChange(function () {
       var textarea = this.element.querySelector('input');
-      if (this.state.value !== undefined) {
+      if (this.state.type === 'checkbox') {
+        textarea.checked = this.state.checked;
+      } else {
         textarea.setAttribute('value', this.state.value);
         textarea.value = this.state.value;
-      }
-      if (this.state.checked !== undefined) {
-        textarea.checked = this.state.checked;
       }
       textarea.setAttribute('name', this.state.name);
       textarea.setAttribute('type', this.state.type);
