@@ -1,5 +1,5 @@
 /*global window, rJS, RSVP */
-/*jslint indent: 2, maxerr: 3 */
+/*jslint indent: 2, maxerr: 3, maxlen: 80 */
 (function (window, rJS, RSVP) {
   "use strict";
 
@@ -76,6 +76,17 @@
         } else {
           result[input.getAttribute('name')] = input.value;
         }
+      }
+      return result;
+    })
+
+    .declareMethod('getTextContent', function () {
+      var result,
+        input = this.element.querySelector('input');
+      if (this.state.type === 'checkbox') {
+        result = (input.checked ? '✓' : '');
+      } else {
+        result = input.value;
       }
       return result;
     })

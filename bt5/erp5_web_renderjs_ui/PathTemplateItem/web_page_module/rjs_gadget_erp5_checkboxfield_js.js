@@ -37,6 +37,13 @@
       return {};
     })
 
+    .declareMethod('getTextContent', function () {
+      return this.getDeclaredGadget('sub')
+        .push(function (gadget) {
+          return gadget.getTextContent();
+        });
+    })
+
     .declareMethod('checkValidity', function () {
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')
