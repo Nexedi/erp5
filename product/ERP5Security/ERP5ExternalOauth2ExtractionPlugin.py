@@ -196,6 +196,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
           self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
           #if user_entry is None:
           user_entry = self.getUserEntry(user_dict)
+          user_entry["login_portal_type"] = creds["login_portal_type"]
           user_entry["erp5_username"] = user_dict.get("erp5_username")
           try:
             Base_createOauth2User(tag, **user_entry)
@@ -249,8 +250,7 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
       try:
         for k in ('first_name', 'last_name', 'id', 'email'):
           if k == 'id':
-            user_entry['reference'] = self.prefix + facebook_entry[k].encode(
-              'utf-8')
+            user_entry['reference'] = facebook_entry[k].encode('utf-8')
           else:
             user_entry[k] = facebook_entry[k].encode('utf-8')
       except KeyError:
