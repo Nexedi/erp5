@@ -75,10 +75,10 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_source_sql_catalog_id</string>
-                        <string>my_destination_sql_catalog_id</string>
                         <string>my_hot_reindexing_state</string>
                         <string>my_archive_path</string>
+                        <string>my_destination_sql_catalog_id</string>
+                        <string>my_source_sql_catalog_id</string>
                       </list>
                     </value>
                 </item>

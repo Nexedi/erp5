@@ -541,7 +541,14 @@ class ZCatalog(Folder, Persistent, Implicit):
                       destination_sql_catalog_id=destination_sql_catalog_id,
                       skin_selection_dict=skin_selection_dict,
                       sql_connection_id_dict=sql_connection_id_dict)
-    if RESPONSE is not None:
+    self._redirectHotReindexAll(REQUEST, RESPONSE)
+
+  def _redirectHotReindexAll(self, REQUEST, RESPONSE):
+    '''
+    We need to separate the final redirection from manage_reindexAll to
+    remove the need of copy and patch for the ERP5CatalogTool.
+    '''
+    if RESPONE is not None:
       URL1 = REQUEST.get('URL1')
       RESPONSE.redirect(URL1 + '/manage_catalogHotReindexing?manage_tabs_message=HotReindexing%20Started')
 
