@@ -43,6 +43,7 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
+Catalog Tool | hot_reindex
 Catalog Tool | view
 Catalog | catalog_filter_view
 Catalog | clear_catalog

@@ -184,4 +184,19 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
     def getCatalogUrl(self, object):
       return self.__url(object)
 
+    def _redirectHotReindexAll(self, REQUEST, RESPONSE):
+      '''
+      Override this function from ZSQLCatalog as here we want to redirect to
+      the view for ERP5CatalogTool.
+      '''
+      if not RESPONSE:
+        try:
+          RESPONSE = REQUEST.RESPONSE
+        except AttributeError:
+          return
+      if RESPONSE is not None:
+        url = self.absolute_url() + '/view' \
+                                  + '?portal_status_message=HotReindexing%20Started'
+        return RESPONSE.redirect(url)
+
 InitializeClass(ERP5CatalogTool)
