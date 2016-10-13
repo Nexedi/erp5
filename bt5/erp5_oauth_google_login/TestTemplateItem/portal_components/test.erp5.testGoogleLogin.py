@@ -110,20 +110,22 @@ class TestGoogleLogin(ERP5TypeTestCase):
 
   def test_create_user_with_google_id(self):
     self.login()
-    user_id = "go_" + getUserId(None)
+    user_id = getUserId(None)
     person = self.portal.portal_catalog.getResultValue(portal_type="Person",
                                                        reference=user_id,
                                                        validation_state="validated")
     if person:
       person.invalidate()
       self.tic()
-    self.portal.Base_createOauth2User(
-      '123_user_creation_in_progress',
-      'User',
-      'Last Name',
-      user_id,
-      'example@email.com',
-      'Anonymous User')
+    user_entry = {"tag": '123_user_creation_in_progress',
+                  "first_name": "User",
+                  "last_name": "Last Name",
+                  "reference": user_id,
+                  "email": 'example@email.com',
+                  "login_portal_type": "Google Login",
+                  "erp5_username": 'Anonymous User'
+                 }
+    self.portal.Base_createOauth2User(**user_entry)
     self.tic()
     google_login = self.portal.portal_catalog(portal_type="Google Login",
                                               reference=user_id,
@@ -132,3 +134,5 @@ class TestGoogleLogin(ERP5TypeTestCase):
     self.login(user_id)
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
     self.assertEqual(user_id, person.getReference())
+    self.assertEqual(user_entry["first_name"], person.getFirstName())
+    self.assertEqual(user_entry["last_name"], person.getLastName())
