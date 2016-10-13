@@ -18,8 +18,6 @@ activate_kw = {'tag': tag}
 # to support Facebook login
 if reference.startswith("go_"):
   portal_type = "Google Login"
-elif reference.startswith("fb_"):
-  portal_type = "Facebook Login"
 else:
   raise RuntimeError("Impossible to select a portal type")
 
