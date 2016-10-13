@@ -19,7 +19,7 @@ elif code is not None:
       " ".join(["%s : %s" % (k,v) for k,v in response_dict.iteritems()]))
   if response_dict is not None:
     access_token = response_dict['access_token'].encode('utf-8')
-    response_dict['login'] = 'go_' + context.ERP5Site_getGoogleUserId(access_token)
+    response_dict['login'] = context.ERP5Site_getGoogleUserId(access_token)
     response_dict['erp5_username'] = portal.portal_membership.getAuthenticatedMember().getUserName()
     hash_str = context.Base_getHMAC(access_token, access_token)
     context.REQUEST.RESPONSE.setCookie('__ac_google_hash', hash_str, path='/')

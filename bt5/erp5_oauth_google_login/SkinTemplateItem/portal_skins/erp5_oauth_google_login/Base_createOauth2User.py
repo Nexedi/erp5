@@ -16,10 +16,7 @@ if person is not None:
 activate_kw = {'tag': tag}
 # In future we can move this script to another, because this script is generic enough
 # to support Facebook login
-if reference.startswith("go_"):
-  portal_type = "Google Login"
-else:
-  raise RuntimeError("Impossible to select a portal type")
+assert login_portal_type in ("Google Login",), "Impossible to select a portal type"
 
 if erp5_username in ("Anonymous User", None):
   person = portal.person_module.newContent(portal_type='Person',
@@ -53,7 +50,7 @@ if erp5_username in ("Anonymous User", None):
 else:
   person = portal.ERP5Site_getAuthenticatedMemberPersonValue(erp5_username)
 
-login = person.newContent(portal_type=portal_type,
+login = person.newContent(portal_type=login_portal_type,
                           reference=reference)
 login.validate(activate_kw=activate_kw)
 
