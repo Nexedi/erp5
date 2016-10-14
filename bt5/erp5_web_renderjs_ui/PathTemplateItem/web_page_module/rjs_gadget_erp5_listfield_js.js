@@ -1,148 +1,103 @@
-/*global window, rJS, Handlebars, document, RSVP, loopEventListener*/
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, Handlebars, document, RSVP) {
+/*global window, rJS, loopEventListener*/
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
+(function (window, rJS) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    option_source = gadget_klass.__template_element
-                      .getElementById("option-template")
-                      .innerHTML,
-    option_template = Handlebars.compile(option_source),
-    selected_option_source = gadget_klass.__template_element
-                               .getElementById("selected-option-template")
-                               .innerHTML,
-    selected_option_template = Handlebars.compile(selected_option_source);
-
-  gadget_klass
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.element = element;
-        });
+  rJS(window)
+    .setState({
+      tag: 'p'
     })
 
-    //////////////////////////////////////////////
-    // acquired method
-    //////////////////////////////////////////////
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .declareAcquiredMethod("notifyChange", "notifyChange")
-    .declareMethod('getTextContent', function () {
-      var select = this.element.querySelector('select');
-      return select.options[select.selectedIndex || 0].text;
-    })
     .declareMethod('render', function (options) {
-      var i,
-        template,
-        gadget = this,
-        select = this.element.querySelector('select'),
-        field_json = options.field_json,
-        tmp = "",
-        wrap = document.createElement("select");
+      var field_json = options.field_json || {},
+        state_dict = {
+          value: field_json.value || field_json.default || "",
+          item_list: JSON.stringify(field_json.items),
+          editable: field_json.editable,
+          required: field_json.required,
+          name: field_json.key,
+          title: field_json.title
+        };
+      return this.changeState(state_dict);
+    })
 
-      select.setAttribute('name', field_json.key);
-      for (i = 0; i < field_json.items.length; i += 1) {
-        if (field_json.items[i][1] === field_json.default) {
-          template = selected_option_template;
-        } else {
-          template = option_template;
+    .onStateChange(function (modification_dict) {
+      var element = this.element,
+        url,
+        result,
+        i,
+        text_content,
+        item_list,
+        state = {};
+
+      for (i in this.state) {
+        if (this.state.hasOwnProperty(i)) {
+          state[i] = this.state[i];
         }
-        tmp += template({
-          value: field_json.items[i][1],
-          text: field_json.items[i][0]
-        });
       }
+      state.item_list = JSON.parse(this.state.item_list);
 
-      // need a <select> for transport
-      wrap.innerHTML = tmp;
+      if (modification_dict.hasOwnProperty('editable')) {
+        if (this.state.editable) {
+          url = 'gadget_html5_select.html';
+        } else {
+          url = 'gadget_html5_element.html';
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.translateHtml(wrap.outerHTML);
-        })
-        .push(function (my_translated_html) {
-          // XXX: no fan...
-          var select_div,
-            div = document.createElement("div");
-
-          div.innerHTML = my_translated_html;
-
-          select_div = div.querySelector("select");
-          select.innerHTML = select_div.innerHTML;
-
-          if (field_json.required === 1) {
-            select.setAttribute('required', 'required');
+          item_list = state.item_list;
+          for (i = 0; i < item_list.length; i += 1) {
+            if (item_list[i][1] === this.state.value) {
+              text_content = item_list[i][0];
+            }
           }
-          if (field_json.editable !== 1) {
-            select.setAttribute('readonly', 'readonly');
-            select.setAttribute('data-wrapper-class', 'ui-state-readonly');
-            // select.setAttribute('disabled', 'disabled');
-
+          if (text_content === undefined) {
+            text_content = '??? (' + this.state.value + ')';
           }
+          state.text_content = text_content;
+
+        }
+        result = this.declareGadget(url, {scope: 'sub'})
+          .push(function (input) {
+            // Clear first to DOM, append after to reduce flickering/manip
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.appendChild(input.element);
+            return input;
+          });
+      } else {
+        result = this.getDeclaredGadget('sub');
+      }
+      return result
+        .push(function (input) {
+          return input.render(state);
         });
     })
-    .declareMethod('checkValidity', function () {
-      var result;
-      result = this.element.querySelector('select').checkValidity();
-      if (result) {
-        return this.notifyValid()
-          .push(function () {
-            return result;
+
+    .declareMethod('getContent', function () {
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.getContent();
           });
       }
-      return result;
-    })
-    .declareMethod('getContent', function () {
-      var input = this.element.querySelector('select'),
-        result = {};
-      result[input.getAttribute('name')] = input.options[input.selectedIndex].value;
-      return result;
+      return {};
     })
 
-    .declareService(function () {
-      ////////////////////////////////////
-      // Check field validity when the value changes
-      ////////////////////////////////////
-      var field_gadget = this;
+    .declareMethod('getTextContent', function () {
+      return this.getDeclaredGadget('sub')
+        .push(function (gadget) {
+          return gadget.getTextContent();
+        });
+    })
 
-      function notifyChange() {
-        return RSVP.all([
-          field_gadget.checkValidity(),
-          field_gadget.notifyChange()
-        ]);
+    .declareMethod('checkValidity', function () {
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.checkValidity();
+          });
       }
-
-      // Listen to input change
-      return loopEventListener(
-        field_gadget.element.querySelector('select'),
-        'change',
-        false,
-        notifyChange
-      );
-    })
-
-    .declareService(function () {
-      ////////////////////////////////////
-      // Inform when the field input is invalid
-      ////////////////////////////////////
-      var field_gadget = this;
-
-      function notifyInvalid(evt) {
-        return field_gadget.notifyInvalid(evt.target.validationMessage);
-      }
-
-      // Listen to input change
-      return loopEventListener(
-        field_gadget.element.querySelector('select'),
-        'invalid',
-        false,
-        notifyInvalid
-      );
+      return true;
     });
 
-}(window, rJS, Handlebars, document, RSVP));
+}(window, rJS));

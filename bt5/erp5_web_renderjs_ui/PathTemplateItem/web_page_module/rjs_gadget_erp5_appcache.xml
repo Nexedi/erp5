@@ -220,6 +220,8 @@ gadget_html5_input.html\n
 gadget_html5_input.js\n
 gadget_html5_textarea.html\n
 gadget_html5_textarea.js\n
+gadget_html5_select.html\n
+gadget_html5_select.js\n
 gadget_erp5_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
@@ -363,7 +365,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.27350.45081.38075</string> </value>
+                <value> <string>954.38476.56174.42734</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -381,7 +383,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1475763290.3</float>
+                        <float>1476437355.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

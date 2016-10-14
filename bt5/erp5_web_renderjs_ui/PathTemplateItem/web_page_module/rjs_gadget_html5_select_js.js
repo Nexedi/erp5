@@ -1,0 +1,142 @@
+/*global window, rJS, RSVP, Handlebars */
+/*jslint indent: 2, maxerr: 3, maxlen: 80, nomen: true */
+(function (window, rJS, RSVP, Handlebars) {
+  "use strict";
+
+  // How to change html selected option using JavaScript?
+  // http://stackoverflow.com/a/20662180
+
+  /////////////////////////////////////////////////////////////////
+  // Handlebars
+  /////////////////////////////////////////////////////////////////
+  // Precompile the templates while loading the first gadget instance
+  var gadget_klass = rJS(window),
+    option_source = gadget_klass.__template_element
+                      .getElementById("option-template")
+                      .innerHTML,
+    option_template = Handlebars.compile(option_source),
+    selected_option_source = gadget_klass.__template_element
+                               .getElementById("selected-option-template")
+                               .innerHTML,
+    selected_option_template = Handlebars.compile(selected_option_source);
+
+  gadget_klass
+    .setState({
+      editable: false,
+      value: undefined,
+      checked: undefined,
+      title: '',
+      item_list: [],
+      required: false
+    })
+
+    .declareMethod('render', function (options) {
+      var state_dict = {
+          value: options.value || "",
+          item_list: JSON.stringify(options.item_list),
+          editable: options.editable,
+          required: options.required,
+          name: options.name,
+          title: options.title
+        };
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function (modification_dict) {
+      var i,
+        found = false,
+        template,
+        select = this.element.querySelector('select'),
+        item_list = JSON.parse(this.state.item_list),
+        tmp = "";
+
+      select.setAttribute('name', this.state.name);
+      if (this.state.title) {
+        select.setAttribute('title', this.state.title);
+      }
+
+      if (this.state.required) {
+        select.required = true;
+      } else {
+        select.required = false;
+      }
+
+      if (this.state.editable) {
+        select.readonly = true;
+      } else {
+        select.readonly = false;
+      }
+
+      if (modification_dict.hasOwnProperty('value') ||
+          modification_dict.hasOwnProperty('item_list')) {
+        for (i = 0; i < item_list.length; i += 1) {
+          if (item_list[i][1] === this.state.value) {
+            template = selected_option_template;
+            found = true;
+          } else {
+            template = option_template;
+          }
+          tmp += template({
+            value: item_list[i][1],
+            text: item_list[i][0]
+          });
+        }
+
+        if (!found) {
+          tmp += selected_option_template({
+            value: this.state.value,
+            text: '??? (' + this.state.value + ')'
+          });
+        }
+        select.innerHTML = tmp;
+      }
+    })
+
+    .declareMethod('getContent', function () {
+      var result = {},
+        select = this.element.querySelector('select');
+      if (this.state.editable) {
+        result[select.getAttribute('name')] =
+          select.options[select.selectedIndex].value;
+      }
+      return result;
+    })
+
+    .declareMethod('getTextContent', function () {
+      var select = this.element.querySelector('select');
+      return select.options[select.selectedIndex].text;
+    })
+
+    .declareAcquiredMethod("notifyValid", "notifyValid")
+    .declareMethod('checkValidity', function () {
+      var result = this.element.querySelector('select').checkValidity();
+      if (result) {
+        return this.notifyValid()
+          .push(function () {
+            return result;
+          });
+      }
+      return result;
+    })
+
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .onEvent('change', function () {
+      return RSVP.all([
+        this.checkValidity(),
+        this.notifyChange()
+      ]);
+    }, false, false)
+    .onEvent('input', function () {
+      return RSVP.all([
+        this.checkValidity(),
+        this.notifyChange()
+      ]);
+    }, false, false)
+
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
+    .onEvent('invalid', function (evt) {
+      // invalid event does not bubble
+      return this.notifyInvalid(evt.target.validationMessage);
+    }, true, false);
+
+}(window, rJS, RSVP, Handlebars));
