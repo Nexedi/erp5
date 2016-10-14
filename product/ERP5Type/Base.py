@@ -2424,7 +2424,7 @@ class Base( CopyContainer,
       r = self.getShortTitle()
       if r: return r
     return (getattr(self, '_baseGetTitle', str)() or
-            self.getProperty('reference') or
+            self.getProperty('reference', checked_permission=Permissions.AccessContentsInformation) or
             self.getId())
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -2457,7 +2457,7 @@ class Base( CopyContainer,
     return (# No need to test existence since all Base instances have this method
             # Also useful whenever title is calculated
             self._baseGetTranslatedTitle() or
-            self.getProperty('reference') or
+            self.getProperty('reference', checked_permission=Permissions.AccessContentsInformation) or
             self.getId())
 
   # This method allows to sort objects in list is a more reasonable way
