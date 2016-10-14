@@ -68,7 +68,7 @@ class TestGUISecurity(ERP5TypeTestCase):
 
   def stepCreateTestFoo(self, sequence = None, sequence_list = None, **kw):
     foo_module = self.portal.foo_module
-    foo_module.newContent(portal_type='Foo', id='foo', foo_category='a')
+    foo_module.newContent(portal_type='Foo', id='foo', foo_category='a', reference='Foo Reference')
     # allow Member to view foo_module in a hard coded way as it is not required to setup complex
     # security for this test (by default only 5A roles + Manager can view default modules)
     args = (('Manager', 'Member', 'Assignor', 'Assignee', 'Auditor', 'Associate' ), 0)
@@ -91,6 +91,28 @@ class TestGUISecurity(ERP5TypeTestCase):
     self.assertIn(
       # this really depends on the generated markup
       '<input name="field_my_foo_category_title" value="a" type="text"',
+      self.portal.foo_module.foo.Foo_view())
+    self.login()
+
+  def stepAccessFooDoesNotDisplayReference(self, sequence = None, sequence_list = None, **kw):
+    """
+      Try to view the Foo_view form, make sure our reference is not displayed
+    """
+    self.loginAs()
+    self.assertNotIn(
+      # this really depends on the generated markup
+      '<input name="field_my_reference" value="Foo Reference" type="text"',
+      self.portal.foo_module.foo.Foo_view())
+    self.login()
+
+  def stepAccessFooDisplaysReference(self, sequence = None, sequence_list = None, **kw):
+    """
+      Try to view the Foo_view form, make sure our reference is displayed
+    """
+    self.loginAs()
+    self.assertIn(
+      # this really depends on the generated markup
+      '<input name="field_my_reference" value="Foo Reference" type="text"',
       self.portal.foo_module.foo.Foo_view())
     self.login()
 
@@ -124,6 +146,20 @@ class TestGUISecurity(ERP5TypeTestCase):
     category.manage_permission('Access contents information', *args)
     category.manage_permission('View', *args)
 
+  def stepChangePropertySecurity(self, sequence = None, sequence_list = None, **kw):
+    """
+      here we change security of a `reference` property
+    """
+    self.portal.portal_property_sheets.Reference.reference_property.setReadPermission(
+      'Manage contents',)
+
+  def stepResetPropertySecurity(self, sequence = None, sequence_list = None, **kw):
+    """
+      reset it back
+    """
+    self.portal.portal_property_sheets.Reference.reference_property.setReadPermission(
+      'Access contents information')
+
   def test_01_relationFieldToInaccessibleObject(self):
     """
       This test checks if a form can be viewed when it contains a RelationStringField which
@@ -153,6 +189,33 @@ class TestGUISecurity(ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def test_read_permission_property(self):
+    """
+      This test checks that property defined with a `read_property` that the
+      logged in user does not have cannot be displayed.
+
+      Foo_view has a my_reference field, so in this test we will make this
+      property protected and make sure user cannot access it.
+    """
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateObjects \
+                       CreateTestFoo \
+                       Tic \
+                       AccessFooDoesNotRaise \
+                       AccessFooDisplaysReference \
+                       ChangePropertySecurity \
+                       Tic \
+                       AccessFooDoesNotRaise \
+                       AccessFooDoesNotDisplayReference \
+                       ResetPropertySecurity \
+                       Tic \
+                       AccessFooDoesNotRaise \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()
