@@ -12,21 +12,35 @@
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
         if ((error.target !== undefined) && (error.target.status === 401)) {
+          var regexp,
+            site,
+            auth_page;
           if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
-            return gadget.redirect({ page: "login" });
-          }
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
-            var regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/,
-              auth_page = error.target.getResponseHeader('WWW-Authenticate'),
-              site;
+            regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
+            auth_page = error.target.getResponseHeader('WWW-Authenticate');
             if (regexp.test(auth_page)) {
               site = UriTemplate.parse(
                 regexp.exec(auth_page)[1]
-              ).expand({back_url: window.location.href,
-                        origin: window.location.protocol + '//' +
-                                window.location.host});
-              return gadget.redirect({ toExternal: true, url: site});
+              ).expand({
+                came_from: window.location.href,
+                cors_origin: window.location.origin,
+                });
             }
+          }
+          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
+            regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
+            auth_page = error.target.getResponseHeader('WWW-Authenticate');
+            if (regexp.test(auth_page)) {
+              site = UriTemplate.parse(
+                regexp.exec(auth_page)[1]
+              ).expand({
+                back_url: window.location.href,
+                origin: window.location.origin,
+                });
+            }
+          }
+          if (site) {
+            return gadget.redirect({ toExternal: true, url: site});
           }
         }
         throw error;
