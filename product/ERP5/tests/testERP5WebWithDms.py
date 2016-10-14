@@ -1163,6 +1163,75 @@ return True
     self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
     self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), html_data)
 
+  def test_WebPageAsEmbeddedHtml_pageWithLink(self):
+    """Test convert one html page with links to embedded html file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(text_content="".join([
+      "<p>Hello</p>",
+      '<a href="//a.a/">aa</a>',
+      '<a href="/b">bb</a>',
+      '<a href="c">cc</a>',
+    ]))
+    # Test part
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html")
+    self.assertEqual(ehtml_data, "".join([
+      "<p>Hello</p>",
+      '<a href="%s//a.a/">aa</a>' % self.portal.absolute_url().split("/", 1)[0],
+      '<a href="%s/b">bb</a>' % self.portal.absolute_url(),
+      '<a href="%s/c">cc</a>' % page.absolute_url(),
+    ]))
+    ehtml_data = page.WebPage_exportAsSingleFile(format="embedded_html", base_url="https://hel.lo/world/dummy")
+    self.assertEqual(ehtml_data, "".join([
+      "<p>Hello</p>",
+      '<a href="https://a.a/">aa</a>',
+      '<a href="https://hel.lo/b">bb</a>',
+      '<a href="https://hel.lo/world/c">cc</a>',
+    ]))
+
+  def test_WebPageAsMhtml_pageWithLink(self):
+    """Test convert one html page with links to mhtml file"""
+    # Test init part
+    web_page_module = self.portal.getDefaultModule(portal_type="Web Page")
+    title = "Hello"
+    page = web_page_module.newContent(portal_type="Web Page")
+    page.edit(title=title, text_content="".join([
+      "<p>Hello</p>",
+      '<a href="//a.a/">aa</a>',
+      '<a href="/b">bb</a>',
+      '<a href="c">cc</a>',
+    ]))
+    # Test part
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
+    message = EmailParser().parsestr(mhtml_data)
+    htmlmessage, = message.get_payload()
+    self.assertEqual(  # should have only one content transfer encoding header
+      len([h for h in htmlmessage.keys() if h == "Content-Transfer-Encoding"]),
+      1,
+    )
+    self.assertEqual(
+      htmlmessage.get("Content-Transfer-Encoding"),
+      "quoted-printable",
+    )
+    self.assertEqual(htmlmessage.get("Content-Location"), page.absolute_url())
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "".join([
+      "<p>Hello</p>",
+      '<a href="%s//a.a/">aa</a>' % self.portal.absolute_url().split("/", 1)[0],
+      '<a href="%s/b">bb</a>' % self.portal.absolute_url(),
+      '<a href="%s/c">cc</a>' % page.absolute_url(),
+    ]))
+    mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml", base_url="https://hel.lo/world/dummy")
+    message = EmailParser().parsestr(mhtml_data)
+    htmlmessage, = message.get_payload()
+    self.assertEqual(htmlmessage.get("Content-Location"), "https://hel.lo/world")
+    self.assertEqual(quopri.decodestring(htmlmessage.get_payload()), "".join([
+      "<p>Hello</p>",
+      '<a href="https://a.a/">aa</a>',
+      '<a href="https://hel.lo/b">bb</a>',
+      '<a href="https://hel.lo/world/c">cc</a>',
+    ]))
+
   def test_WebPageAsEmbeddedHtml_pageWithScript(self):
     """Test convert one html page with script to embedded html file"""
     # Test init part

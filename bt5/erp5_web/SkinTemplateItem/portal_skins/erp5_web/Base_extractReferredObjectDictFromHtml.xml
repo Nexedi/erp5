@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>data, allow_tag_list=None, deny_tag_list=None, base_url=None, site_object_dict=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_extractReferredObjectDict</string> </value>
+            <value> <string>Base_extractReferredObjectDictFromHtml</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, allow_script=False, format="embedded_html"</string> </value>
+            <value> <string>REQUEST=None, allow_script=False, format="embedded_html", base_url=None, site_object_dict=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

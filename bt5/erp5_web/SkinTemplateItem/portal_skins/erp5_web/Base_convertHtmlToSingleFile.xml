@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>data, allow_script=False, format="embedded_html", base_url=None, site_object_dict=None, title=\'Untitled\'</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebPage_extractReferredObjectDict</string> </value>
+            <value> <string>Base_convertHtmlToSingleFile</string> </value>
         </item>
       </dictionary>
     </pickle>
