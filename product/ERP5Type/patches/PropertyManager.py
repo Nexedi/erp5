@@ -57,7 +57,7 @@ def PropertyManager_hasProperty(self, id, local_properties=False):
     return 0
 
 def PropertyManager_getProperty(self, id, d=None, evaluate=1,
-                                local_properties=False):
+                                local_properties=False, checked_permission=None):
     """Get the property 'id', returning the optional second
         argument or None if no such property is found."""
     property_type = self.getPropertyType(id,
