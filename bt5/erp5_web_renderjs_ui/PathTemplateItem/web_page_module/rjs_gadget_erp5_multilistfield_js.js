@@ -1,110 +1,185 @@
-/*global window, rJS, Handlebars, document, RSVP, loopEventListener*/
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, Handlebars, document, RSVP) {
+/*global window, rJS, document, RSVP*/
+/*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80, unparam: true */
+(function (window, rJS, document, RSVP) {
   'use strict';
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    option_source = gadget_klass.__template_element
-                      .getElementById("option-template")
-                      .innerHTML,
-    option_template = Handlebars.compile(option_source),
-    selected_option_source = gadget_klass.__template_element
-                               .getElementById("selected-option-template")
-                               .innerHTML,
-    selected_option_template = Handlebars.compile(selected_option_source);
-  gadget_klass
-    .ready(function (g) {
-      g.props = {};
-    })
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareMethod('render', function (options) {
-      var gadget = this,
-        selects = [],
-        tmp,
-        template,
-        container,
-        field_json = options.field_json,
-        i,
-        j;
-      gadget.props.field_json = field_json;
-      container = gadget.props.element.querySelector(".ui-controlgroup-controls");
-      field_json.default[field_json.default.length] = "";
-      for (i = 0; i < field_json.default.length; i += 1) {
-        tmp = "";
-        selects[i] = document.createElement("select");
-        container.appendChild(selects[i]);
-        for (j = 0; j < field_json.items.length; j += 1) {
-          if (field_json.items[j][1] === field_json.default[i]) {
-            template = selected_option_template;
-          } else {
-            template = option_template;
-          }
-          tmp += template({
-            value: field_json.items[j][1],
-            text: field_json.items[j][0]
-          });
-        }
-        selects[i].innerHTML = tmp;
-      }
-      return new RSVP.Queue()
-        .push(function () {
-          var list = [];
-          for (i = 0; i < selects.length; i += 1) {
-            list.push(gadget.translateHtml(selects[i].outerHTML));
-          }
-          return RSVP.all(list);
-        })
-        .push(function (translated_htmls) {
-          var select_div,
-            wrapper_class_string,
-            div = document.createElement("div");
-          for (i = 0; i < translated_htmls.length; i += 1) {
-            div.innerHTML = translated_htmls[i];
-            select_div = div.querySelector("select");
-            selects[i].innerHTML = select_div.innerHTML;
-            if (field_json.editable !== 1) {
-              selects[i].setAttribute('readonly', 'readonly');
-              wrapper_class_string = wrapper_class_string || "";
-              wrapper_class_string += 'ui-state-readonly ';
-            }
-            // XXX add first + last class, needs to be improved
-            if (i === 0) {
-              wrapper_class_string = wrapper_class_string || "";
-              wrapper_class_string += 'ui-first-child';
-            }
-            if (i === translated_htmls.length - 1) {
-              wrapper_class_string = wrapper_class_string || "";
-              wrapper_class_string += 'ui-last-child';
-            }
-            if (wrapper_class_string) {
-              selects[i].setAttribute('data-wrapper-class', wrapper_class_string);
-              wrapper_class_string = undefined;
-            }
-          }
-        });
-    })
-    .declareMethod('getContent', function () {
-      var gadget = this,
-        result = {},
-        tmp = [],
-        selects = this.props.element.querySelectorAll('select'),
-        i;
 
-      for (i = 0; i < selects.length; i += 1) {
-        tmp.push(selects[i].options[selects[i].selectedIndex].value);
+  function appendListField(gadget, value, item_list) {
+    var div = document.createElement('div');
+    gadget.element.appendChild(div);
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.declareGadget('gadget_erp5_field_list.html',
+                                    {element: div});
+      })
+      .push(function (result) {
+        var state = {
+            value: value,
+            items: item_list,
+            editable: gadget.state.editable,
+            // Single listfield is never mandatory.
+            // Check requirement globally instead
+            required: 0,
+            key: 'sub',
+            title: gadget.state.title
+          };
+        return result.render({field_json: state});
+      });
+  }
+
+  rJS(window)
+    .declareMethod('render', function (options) {
+      var field_json = options.field_json || {},
+        state_dict = {
+          value_list: JSON.stringify(field_json.value ||
+                                     field_json.default || []),
+          item_list: JSON.stringify(field_json.items),
+          editable: field_json.editable,
+          required: field_json.required,
+          name: field_json.key,
+          title: field_json.title,
+          sub_select_key: field_json.sub_select_key,
+          sub_input_key: field_json.sub_input_key
+        };
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function () {
+      var i,
+        value_list = JSON.parse(this.state.value_list),
+        item_list = JSON.parse(this.state.item_list),
+        queue = new RSVP.Queue(),
+        element = this.element,
+        gadget = this;
+
+      // Always display an empty value at the end
+      value_list.push("");
+
+      // Clear first to DOM, append after to reduce flickering/manip
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
       }
-      result[gadget.props.field_json.sub_select_key] = tmp;
-      result[gadget.props.field_json.sub_input_key] = 0;
-      return result;
+
+      function enQueue() {
+        var argument_list = arguments;
+        queue
+          .push(function () {
+            return appendListField.apply(this, argument_list);
+          });
+      }
+
+      for (i = 0; i < value_list.length; i += 1) {
+        enQueue(gadget, value_list[i], item_list);
+      }
+      return queue;
+    })
+
+    .declareMethod('getContent', function () {
+      var i,
+        element = this.element,
+        queue = new RSVP.Queue(),
+        final_result = {},
+        result_list = [],
+        gadget = this;
+
+      function calculateSubContent(node) {
+        queue
+          .push(function () {
+            var scope = node.getAttribute('data-gadget-scope');
+            if (scope !== null) {
+              return gadget.getDeclaredGadget(
+                node.getAttribute('data-gadget-scope')
+              )
+                .push(function (result) {
+                  return result.getContent();
+                })
+                .push(function (result) {
+                  result_list.push(result.sub);
+                });
+            }
+          });
+      }
+
+      if (this.state.editable) {
+        for (i = 0; i < element.childNodes.length; i += 1) {
+          calculateSubContent(element.childNodes[i]);
+        }
+        return queue
+          .push(function () {
+            final_result[gadget.state.sub_select_key] = result_list;
+            final_result[gadget.state.sub_input_key] = 0;
+            return final_result;
+          });
+      }
+      return final_result;
+    })
+
+    /*
+    .declareMethod('getTextContent', function () {
+      // I don't know if a multilistfield was ever used in a listbox
+      // Skip for now
+      throw new Error('not implemented');
+    })
+    */
+
+    .allowPublicAcquisition('notifyValid', function () {
+      return;
+    })
+
+    .declareAcquiredMethod("notifyValid", "notifyValid")
+    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
+      // An empty listfield should be created when the last one is modified
+      // An empty listfield should be removed
+
+      var gadget = this,
+        sub_gadget;
+      return gadget.getDeclaredGadget(scope)
+        .push(function (result) {
+          sub_gadget = result;
+          return sub_gadget.getContent();
+        })
+        .push(function (result) {
+          var value = result.sub;
+          if (sub_gadget.element === gadget.element.lastChild) {
+            if (value) {
+              return appendListField(gadget, "",
+                                     JSON.parse(gadget.state.item_list));
+            }
+          } else {
+            if (!value) {
+              gadget.element.removeChild(sub_gadget.element);
+            }
+          }
+        })
+        .push(function () {
+          return gadget.notifyChange();
+        });
+    })
+
+    .declareMethod('checkValidity', function () {
+      var gadget = this,
+        empty = true;
+      if (this.state.editable && this.state.required) {
+        return this.getContent()
+          .push(function (result) {
+            var value_list = result[gadget.state.sub_select_key],
+              i;
+            for (i = 0; i < value_list.length; i += 1) {
+              if (value_list[i]) {
+                empty = false;
+              }
+            }
+            if (empty) {
+              return gadget.notifyInvalid("Please fill out this field.");
+            }
+            return gadget.notifyValid();
+          })
+          .push(function () {
+            return !empty;
+          });
+      }
+      return true;
     });
-}(window, rJS, Handlebars, document, RSVP));
+
+}(window, rJS, document, RSVP));
