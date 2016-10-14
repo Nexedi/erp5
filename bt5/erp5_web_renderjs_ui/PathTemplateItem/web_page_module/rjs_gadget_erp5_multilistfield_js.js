@@ -29,10 +29,10 @@
   rJS(window)
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
+        item_list = field_json.items,
         state_dict = {
           value_list: JSON.stringify(field_json.value ||
                                      field_json.default || []),
-          item_list: JSON.stringify(field_json.items),
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
@@ -40,6 +40,10 @@
           sub_select_key: field_json.sub_select_key,
           sub_input_key: field_json.sub_input_key
         };
+      if ((item_list.length === 0) || (item_list[0][0] !== "")) {
+        item_list.unshift(["", ""]);
+      }
+      state_dict.item_list = JSON.stringify(item_list);
       return this.changeState(state_dict);
     })
 
