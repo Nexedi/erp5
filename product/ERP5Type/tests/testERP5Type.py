@@ -2691,6 +2691,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       obj.manage_permission('Set own password', [], 0)
       self.assertFalse(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
+      self.assertRaises(Unauthorized, obj.setProperty, 'foo_bar', 'foo')
 
       obj.manage_permission('Set own password', ['Manager'], 1)
       obj.manage_permission('Manage users', [], 0)
