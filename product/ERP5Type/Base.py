@@ -1220,7 +1220,12 @@ class Base( CopyContainer,
     accessor_name = 'get' + UpperCase(key)
     aq_self = aq_base(self)
     if getattr(aq_self, accessor_name, None) is not None:
-      method = getattr(self, accessor_name)
+      try:
+        method = guarded_getattr(self, accessor_name)
+      except Unauthorized:
+        if not kw.get('checked_permission'):
+          raise
+        return None if d is _MARKER else d
       if d is not _MARKER:
         try:
           # here method is a method defined on the class, we don't know if the
@@ -1234,16 +1239,21 @@ class Base( CopyContainer,
     # and return it as a list
     if accessor_name.endswith('List'):
       mono_valued_accessor_name = accessor_name[:-4]
-      method = getattr(self.__class__, mono_valued_accessor_name, None)
-      if method is not None:
+      if getattr(self.__class__, mono_valued_accessor_name, None) is not None:
+        try:
+          method = guarded_getattr(self, mono_valued_accessor_name)
+        except Unauthorized:
+          if not kw.get('checked_permission'):
+            raise
+          return [] if d is _MARKER else d
         # We have a monovalued property
         if d is _MARKER:
-          result = method(self, **kw)
+          result = method(**kw)
         else:
           try:
-            result = method(self, d, **kw)
+            result = method(d, **kw)
           except TypeError:
-            result = method(self, **kw)
+            result = method(**kw)
         if not isinstance(result, (list, tuple)):
           result = [result]
         return result
