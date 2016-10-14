@@ -2684,7 +2684,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           write_permission='Set own password',
           read_permission='Manage users',
           portal_type='Standard Property')
-      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj = self.getPersonModule().newContent(portal_type='Person', foo_bar='value')
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
 
@@ -2696,6 +2696,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       obj.manage_permission('Manage users', [], 0)
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
+      # getProperty also raises
+      self.assertRaises(Unauthorized, obj.getProperty, 'foo_bar')
+      # ... unless called with checked_permission=
+      self.assertEqual(None,
+        obj.getProperty('foo_bar', checked_permission='Access content information'))
 
     def test_edit(self):
       self._addProperty('Person',
