@@ -1216,11 +1216,21 @@ class Base( CopyContainer,
     If an accessor exists for this property, the accessor will be called,
     default value will be passed to the accessor as first positional argument.
     """
+    kw['restricted'] = True
+    return self._getProperty(key, d=d, **kw)
+
+  def _getProperty(self, key, d=_MARKER, restricted=False, **kw):
     __traceback_info__ = (key,)
     accessor_name = 'get' + UpperCase(key)
+    _getattr = guarded_getattr if restricted else getattr
     aq_self = aq_base(self)
     if getattr(aq_self, accessor_name, None) is not None:
-      method = getattr(self, accessor_name)
+      try:
+        method = _getattr(self, accessor_name)
+      except Unauthorized:
+        if not kw.get('checked_permission'):
+          raise
+        return None if d is _MARKER else d
       if d is not _MARKER:
         try:
           # here method is a method defined on the class, we don't know if the
@@ -1234,16 +1244,21 @@ class Base( CopyContainer,
     # and return it as a list
     if accessor_name.endswith('List'):
       mono_valued_accessor_name = accessor_name[:-4]
-      method = getattr(self.__class__, mono_valued_accessor_name, None)
-      if method is not None:
+      if hasattr(self.__class__, mono_valued_accessor_name):
+        try:
+          method = _getattr(self, mono_valued_accessor_name)
+        except Unauthorized:
+          if not kw.get('checked_permission'):
+            raise
+          return [] if d is _MARKER else d
         # We have a monovalued property
         if d is _MARKER:
-          result = method(self, **kw)
+          result = method(**kw)
         else:
           try:
-            result = method(self, d, **kw)
+            result = method(d, **kw)
           except TypeError:
-            result = method(self, **kw)
+            result = method(**kw)
         if not isinstance(result, (list, tuple)):
           result = [result]
         return result
