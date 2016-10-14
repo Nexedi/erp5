@@ -45,7 +45,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     parent_delivery = self._getParentDelivery(movement)
     if parent_delivery is not None:
       for prop in self.getTestedPropertyList():
-        property_dict['_%s' % prop] = self._getProperty(parent_delivery, prop)
+        property_dict['_%s' % prop] = self._getPropertyFromDocument(parent_delivery, prop)
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -64,7 +64,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
         return False, {}
       document = self._getParentDelivery(movement)
     for prop in target_property_list:
-      if property_dict['_%s' % prop] != self._getProperty(document, prop):
+      if property_dict['_%s' % prop] != self._getPropertyFromDocument(document, prop):
         return False, {}
     return True, {}
 
@@ -78,7 +78,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
       delivery = movement.getDeliveryValue()
     return delivery
 
-  def _getProperty(self, document, property_id):
+  def _getPropertyFromDocument(self, document, property_id):
     if document is None:
       return None
     # XXX here we don't use Base.getProperty() but try to call accessor
