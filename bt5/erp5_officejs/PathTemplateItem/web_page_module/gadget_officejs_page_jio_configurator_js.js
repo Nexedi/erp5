@@ -25,6 +25,9 @@
       })
       .push(function () {
         return gadget.reload();
+      })
+      .push(function () {
+        return gadget.redirect({page: 'sync', auto_repair: 'true'});
       });
   }
 

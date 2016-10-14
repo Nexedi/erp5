@@ -59,6 +59,9 @@
       })
       .push(function () {
         return gadget.reload();
+      })
+      .push(function () {
+        return gadget.redirect({page: 'sync', auto_repair: 'true'});
       });
   }
 
@@ -163,6 +166,7 @@
           erp5_url_input.value = erp5_url || "https://www.example.org";
           erp5_url_input.removeAttribute("disabled");
           erp5_url_input.parentNode.classList.remove('ui-state-disabled');
+          erp5_url_input.focus();
         });
     });
 
