@@ -31,6 +31,7 @@ from time import time
 import gc
 import subprocess
 
+from zExceptions import Unauthorized
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
@@ -110,8 +111,13 @@ LISTBOX_COEF=0.00173                # 0.02472
 #   LISTBOX_COEF : 0.02472 -> 0.001725
 DO_TEST = 1
 
+# Profiler support.
 # set 1 to get profiler's result (unit_test/tests/<func_name>)
-PROFILE=0
+PROFILE = 0
+# set this to 'pprofile' to profile with pprofile ( https://github.com/vpelletier/pprofile )
+# instad of python's standard library profiler ( https://docs.python.org/2/library/profile.html )
+PROFILER = 'pprofile'
+
 
 class TestPerformanceMixin(ERP5TypeTestCase, LogInterceptor):
 
@@ -147,21 +153,33 @@ class TestPerformanceMixin(ERP5TypeTestCase, LogInterceptor):
       """
       return self.portal['bar_module']
 
-    def profile(self, func, suffix=''):
+    def profile(self, func, suffix='', args=(), kw=None):
+      """Profile `func(*args, **kw)` with selected profiler,
+      and dump output in a file called `func.__name__ + suffix`
+      """
+      if not kw:
+        kw = {}
+
+      if PROFILER == 'pprofile':
+        import pprofile
+        prof = pprofile.Profile()
+      else:
         from cProfile import Profile
-        prof_file = '%s%s' % (func.__name__, suffix)
-        try:
-            os.unlink(prof_file)
-        except OSError:
-            pass
         prof = Profile()
-        prof.runcall(func)
-        prof.dump_stats(prof_file)
+
+      prof_file = '%s%s' % (func.__name__, suffix)
+      try:
+        os.unlink(prof_file)
+      except OSError:
+        pass
+      prof.runcall(func, *args, **kw)
+      prof.dump_stats(prof_file)
 
     def beforeTearDown(self):
       # Re-enable gc at teardown.
       gc.enable()
       self.abort()
+
 
 class TestPerformance(TestPerformanceMixin):
 
@@ -368,3 +386,75 @@ class TestPerformance(TestPerformanceMixin):
               MIN_OBJECT_MANY_LINES_VIEW,
               req_time,
               MAX_OBJECT_MANY_LINES_VIEW))
+
+
+class TestPropertyPerformance(TestPerformanceMixin):
+  def afterSetUp(self):
+    super(TestPerformanceMixin, self).afterSetUp()
+    self.foo = self.portal.foo_module.newContent(
+        portal_type='Foo',
+        title='Foo Test',
+        protected_property='Restricted Property',
+    )
+
+    # we will run the test as anonymous user. Setup permissions so that anymous can
+    # get and set all properties, except `protected_property` (unless test change to another user)
+    for permission in ('View', 'Access contents information', 'Modify portal content'):
+      self.foo.manage_permission(permission, ['Anonymous'], 1)
+
+    self.tic()
+    self.logout()
+
+  def _benchmark(self, nb_iterations, min_time, max_time):
+    def decorated(f):
+      before = time()
+      for i in xrange(nb_iterations):
+        f(i)
+      after = time()
+      total_time = (after - before) / 100.
+
+      print ("time %s.%s %.4f < %.4f < %.4f\n" % \
+              ( self.id(),
+                f.__doc__ or f.__name__,
+                min_time,
+                total_time,
+                max_time ))
+      if PROFILE:
+        self.profile(f, args=(i, ))
+      if DO_TEST:
+        self.assertTrue(
+            min_time < total_time < max_time,
+            '%.4f < %.4f < %.4f' %
+            (min_time, total_time, max_time))
+    return decorated
+
+  def test_getProperty_protected_property_refused(self):
+    getProperty = self.foo.getProperty
+    self.assertRaises(Unauthorized, getProperty, 'protected_property')
+
+    @self._benchmark(100000, 0.0001, 1)
+    def getPropertyWithRestrictedPropertyRefused(_):
+      getProperty('protected_property', checked_permission='Access contents information')
+
+  def test_getProperty_protected_property_allowed(self):
+    getProperty = self.foo.getProperty
+    self.login()
+    @self._benchmark(100000, 0.0001, 1)
+    def getPropertyWithRestrictedPropertyAllowed(_):
+      getProperty('protected_property', checked_permission='Access contents information')
+
+  def test_getProperty_simple_property(self):
+    getProperty = self.foo.getProperty
+    @self._benchmark(100000, 0.0001, 1)
+    def getPropertyWithSimpleProperty(_):
+      getProperty('title', checked_permission='Access contents information')
+
+  def test_edit_restricted_properties(self):
+    _edit = self.foo.edit
+    self.login()
+    @self._benchmark(10000, 0.0001, 1)
+    def edit(i):
+      _edit(
+          title=str(i),
+          protected_property=str(i)
+      )

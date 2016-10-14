@@ -565,6 +565,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     return self._v_version_priority_name_list
 
+  # Make sure ERP5Site follow same API as Products.ERP5Type.Base
+
+  # _getProperty is missing, but since there are no protected properties
+  # on an ERP5 Site, we can just use getProperty instead.
+  _getProperty = CMFSite.getProperty
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
   def getUid(self):
     """

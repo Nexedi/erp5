@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Standard Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/string</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>A protected property for UI test. This is a property that only managers should be able to see and modify</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>protected_property_property</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>read_permission</string> </key>
+            <value> <string>Manage portal</string> </value>
+        </item>
+        <item>
+            <key> <string>write_permission</string> </key>
+            <value> <string>Manage portal</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

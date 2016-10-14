@@ -2676,8 +2676,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertFalse(guarded_hasattr(obj, 'getRegionValueList'))
       self.assertFalse(guarded_hasattr(obj, 'getRegionRelatedValueList'))
 
-    # Permission definition on Accessor is buggy. TO BE FIXED!
-    @expectedFailure
     def test_PropertySheetSecurityOnAccessors(self):
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
@@ -2688,7 +2686,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           write_permission='Set own password',
           read_permission='Manage users',
           portal_type='Standard Property')
-      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj = self.getPersonModule().newContent(portal_type='Person', foo_bar='value')
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
 
@@ -2700,9 +2698,35 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       obj.manage_permission('Manage users', [], 0)
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertFalse(guarded_hasattr(obj, 'getFooBar'))
+      # getProperty also raises
+      self.assertRaises(Unauthorized, obj.getProperty, 'foo_bar')
+      # ... unless called with checked_permission=
+      self.assertEqual(None,
+        obj.getProperty('foo_bar', checked_permission='Access content information'))
 
-      # Make sure that we can use 'Access contents information' as
-      # write permission and 'Modify portal content' as read permission.
+      # When a document has protected properties, PropertyManager API does not
+      # "leak" protected properties when user cannot access.
+      self.assertRaises(Unauthorized, obj.propertyItems)
+      self.assertRaises(Unauthorized, obj.propertyValues)
+      # Other ERP5 APIs do not allow accessing private properties either.
+      self.assertRaises(Unauthorized, obj.asXML)
+
+    @expectedFailure
+    def test_PropertySheetSecurityOnAccessors_nonstandard_permissions(self):
+      """Make sure that we can use 'Access contents information' as
+      write permission and 'Modify portal content' as read permission.
+
+      note about the expectedFailure:
+      `Access contents information` and `Modify portal content` are
+      special cased and currently cannot be applied for other cases as
+      getter use access and setter use modify.
+
+      This is done in AccessorHolderType._skip_permission_set from
+      product/ERP5Type/dynamic/accessor_holder.py . Maybe we could be more
+      specific and define the skip permission on the accessor class, so that
+      we can define separatly the skipped permission for setter and getter.
+      For now I (Jerome) feel it's not important.
+      """
       self._addProperty('Person',
           'test_PropertySheetSecurityOnAccessors',
           'hoge_hoge',
@@ -2725,7 +2749,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Make sure that getProperty and setProperty respect accessor's
       # security protection.
-      createZODBPythonScript(portal.portal_skins.custom,
+      createZODBPythonScript(self.portal.portal_skins.custom,
                              'Base_callAccessorHogeHoge',
                              'mode',
                              '''\
@@ -2736,7 +2760,7 @@ elif mode == 'getProperty':
 elif mode == 'setter':
   context.setHogeHoge('waa')
 elif mode == 'setProperty':
-  context.setProperty('waa')
+  context.setProperty('hoge_hoge', 'waa')
 return True''')
       # test accessors
       obj.manage_permission('Access contents information', ['Manager'], 1)

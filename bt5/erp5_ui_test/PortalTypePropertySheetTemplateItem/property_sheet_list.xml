@@ -5,5 +5,6 @@
  <portal_type id="Foo">
   <item>Amount</item>
   <item>DublinCore</item>
+  <item>Foo</item>
  </portal_type>
 </property_sheet_list>

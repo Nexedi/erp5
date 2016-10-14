@@ -322,6 +322,21 @@ def generatePortalTypeClass(site, portal_type_name):
   if portal_type_name in core_portal_type_class_dict:
     core_portal_type_class_dict[portal_type_name]['generating'] = False
 
+  attribute_dict['_restricted_setter_set'] = {method
+        for ancestor in base_class_list
+        for permissions in getattr(ancestor, '__ac_permissions__', ())
+        if permissions[0] not in ('Access contents information',
+                                  'Modify portal content')
+        for method in permissions[1]
+        if method.startswith('set')}
+
+  attribute_dict['_restricted_getter_set'] = {method
+        for ancestor in base_class_list
+        for permissions in getattr(ancestor, '__ac_permissions__', ())
+        if permissions[0] not in ('Access contents information', )
+        for method in permissions[1]
+        if method.startswith('get')}
+
   #LOG("ERP5Type.dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
   #        % (portal_type_name, repr(base_class_list)))

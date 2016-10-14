@@ -30,12 +30,11 @@ from Products.ERP5Type.Globals import InitializeClass, PersistentMapping
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5Type.Utils import cartesianProduct, INFINITE_SET
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
 
-INFINITE_SET = type('', (object,), {'__contains__': lambda *args: True})()
 
 class Matrix(object):
   """A mix-in class which provides a matrix like access to objects.

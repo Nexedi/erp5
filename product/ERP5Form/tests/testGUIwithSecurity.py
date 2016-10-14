@@ -28,36 +28,20 @@
 ##############################################################################
 
 
-import unittest
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Testing import ZopeTestCase
-from DateTime import DateTime
 
 
 class TestGUISecurity(ERP5TypeTestCase):
   """
   """
-  quiet = 0
-  run_all_test = 1
 
   def getBusinessTemplateList(self):
     return ('erp5_ui_test', 'erp5_base')
 
   def getTitle(self):
     return "Security Issues in GUI"
-
-  def afterSetUp(self):
-    self.login()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def loginAs(self, id='user'):
     uf = self.getPortal().acl_users
@@ -66,35 +50,51 @@ class TestGUISecurity(ERP5TypeTestCase):
 
   def stepCreateObjects(self, sequence = None, sequence_list = None, **kw):
     # Make sure that the status is clean.
-    portal = self.getPortal()
-    portal.ListBoxZuite_reset()
-    message = portal.foo_module.FooModule_createObjects()
+    self.portal.ListBoxZuite_reset()
+    message = self.portal.foo_module.FooModule_createObjects()
     self.assertTrue('Created Successfully' in message)
-    if not hasattr(portal.person_module, 'user'):
-      user = portal.person_module.newContent(portal_type='Person', id='user', reference='user')
+    if not hasattr(self.portal.person_module, 'user'):
+      user = self.portal.person_module.newContent(portal_type='Person', id='user', reference='user')
       user.newContent(portal_type='ERP5 Login', reference='user').validate()
-      asg = user.newContent(portal_type='Assignment')
-      asg.setStartDate(DateTime() - 100)
-      asg.setStopDate(DateTime() + 100)
-      asg.open()
-    self.commit()
+      user.newContent(portal_type='Assignment').open()
 
   def stepCreateTestFoo(self, sequence = None, sequence_list = None, **kw):
-    foo_module = self.getPortal().foo_module
-    foo_module.newContent(portal_type='Foo', id='foo', foo_category='a')
+    foo_module = self.portal.foo_module
+    foo_module.newContent(portal_type='Foo', id='foo', foo_category='a', protected_property='Protected Property')
     # allow Member to view foo_module in a hard coded way as it is not required to setup complex
     # security for this test (by default only 5A roles + Manager can view default modules)
-    args = (('Manager', 'Member', 'Assignor', 'Assignee', 'Auditor', 'Associate' ), 0)
-    foo_module.manage_permission('Access contents information', *args)
-    foo_module.manage_permission('View', *args)
-    self.commit()
+    for permission in ('Access contents information', 'View'):
+      foo_module.manage_permission(
+          permission,
+          ('Manager', 'Member', 'Assignor', 'Assignee', 'Auditor', 'Associate' ),
+          0)
 
-  def stepAccessFoo(self, sequence = None, sequence_list = None, **kw):
+  def stepAccessFooDoesNotRaise(self, sequence = None, sequence_list = None, **kw):
     """
       Try to view the Foo_view form, make sure Unauthorized is not raised.
     """
     self.loginAs()
-    self.getPortal().foo_module.foo.Foo_view()
+    self.portal.foo_module.foo.Foo_view()
+    self.login()
+
+  def stepAccessFooDisplaysCategoryName(self, sequence = None, sequence_list = None, **kw):
+    """
+      Try to view the Foo_view form, make sure our category name is displayed
+    """
+    self.loginAs()
+    self.assertIn(
+        self.category_field_markup,
+        self.portal.foo_module.foo.Foo_view())
+    self.login()
+
+  def stepAccessFooDoesNotDisplayCategoryName(self, sequence = None, sequence_list = None, **kw):
+    """
+      Try to view the Foo_view form, make sure our category name is not displayed
+    """
+    self.loginAs()
+    self.assertNotIn(
+        self.category_field_markup,
+        self.portal.foo_module.foo.Foo_view())
     self.login()
 
   def stepChangeCategorySecurity(self, sequence = None, sequence_list = None, **kw):
@@ -102,29 +102,22 @@ class TestGUISecurity(ERP5TypeTestCase):
       here we change security of a category to which the "Foo" is related
       and which is displayed in the Foo's RelationStringField
     """
-    category = self.getPortal().portal_categories.foo_category.a
-    args = (('Manager',), 0)
-    category.manage_permission('Access contents information', *args)
-    category.manage_permission('View', *args)
-    self.tic()
+    category = self.portal.portal_categories.foo_category.a
+    for permission in ('Access contents information', 'View'):
+      category.manage_permission(permission, ('Manager',), 0 )
 
   def stepResetCategorySecurity(self, sequence = None, sequence_list = None, **kw):
     """
       reset it back
     """
-    category = self.getPortal().portal_categories.foo_category.a
-    args = ((), 1)
-    category.manage_permission('Access contents information', *args)
-    category.manage_permission('View', *args)
-    self.tic()
+    category = self.portal.portal_categories.foo_category.a
+    for permission in ('Access contents information', 'View'):
+      category.manage_permission(permission, ('Manager',), 1)
 
-  def test_01_relationFieldToInaccessibleObject(self, quiet=quiet, run=run_all_test):
+  def test_01_relationFieldToInaccessibleObject(self):
     """
       This test checks if a form can be viewed when it contains a RelationStringField which
       links to an object the user is not authorized to view.
-
-      This fails for now. A proposed patch solving this problem is here:
-      http://svn.erp5.org/experimental/FSPatch/Products/ERP5Form/ERP5Form_safeRelationField.diff?view=markup
 
       This problem can happen for example in the following situation:
       - a user is a member of a project P team, so he can view P
@@ -133,29 +126,39 @@ class TestGUISecurity(ERP5TypeTestCase):
       Then the user can not view the project, but still can view his document as he is the owner.
       An attempt to view the document form would raise Unauthorized.
     """
-    self.login()
-    if not run: return
-    if not quiet:
-      message = 'test_01_relationFieldToInaccessibleObject'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+    # this really depends on the generated markup
+    self.category_field_markup = '<input name="field_my_foo_category_title" value="a" type="text"'
+
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateObjects \
                        CreateTestFoo \
                        Tic \
-                       AccessFoo \
+                       AccessFooDoesNotRaise \
+                       AccessFooDisplaysCategoryName \
                        ChangeCategorySecurity \
-                       AccessFoo \
+                       Tic \
+                       AccessFooDoesNotRaise \
+                       AccessFooDoesNotDisplayCategoryName \
                        ResetCategorySecurity \
-                       AccessFoo \
+                       Tic \
+                       AccessFooDoesNotRaise \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
+  def test_read_permission_property(self):
+    """
+      This test checks that property defined with a `read_property` that the
+      logged in user does not have are not displayed.
+    """
+    self.login() # as manager
+    self.stepCreateObjects()
+    self.stepCreateTestFoo()
 
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestGUISecurity))
-  return suite
+    protected_property_markup = '<input name="field_my_protected_property" value="Protected Property" type="text"'
+    self.assertIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
+
+    self.loginAs() # user without permission to access protected property
+    self.assertNotIn(protected_property_markup, self.portal.foo_module.foo.Foo_viewSecurity())
 
