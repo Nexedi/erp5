@@ -146,6 +146,10 @@ class TestGUISecurity(ERP5TypeTestCase):
     """
     self.portal.portal_property_sheets.Reference.reference_property.setReadPermission(
       'Manage contents',)
+    # XXX setReadPermission has an interaction that will call
+    # portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
+    # but this is not enough we need to:
+    self.portal.portal_components.resetOnceAtTransactionBoundary()
 
   def stepResetPropertySecurity(self, sequence = None, sequence_list = None, **kw):
     """
@@ -153,6 +157,10 @@ class TestGUISecurity(ERP5TypeTestCase):
     """
     self.portal.portal_property_sheets.Reference.reference_property.setReadPermission(
       'Access contents information')
+    # XXX setReadPermission has an interaction that will call
+    # portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
+    # but this is not enough we need to:
+    self.portal.portal_components.resetOnceAtTransactionBoundary()
 
   def test_01_relationFieldToInaccessibleObject(self):
     """
