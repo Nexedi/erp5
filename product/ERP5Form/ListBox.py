@@ -2300,7 +2300,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     request.set('cell', brain)
     html_list = []
 
-    # Generate page selection methods based on the Listbox id
+    # Deprecated: Generate page selection methods based on the Listbox id
     createFolderMixInPageSelectionMethod(field_id)
 
     for (original_value, processed_value), (sql, title), alias \

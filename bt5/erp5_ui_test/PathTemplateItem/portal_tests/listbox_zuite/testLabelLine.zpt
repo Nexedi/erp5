@@ -16,12 +16,12 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />
 <tr>
   <td>verifyElementPresent</td>
-  <td>//input[@class="listbox-check-all"]</td>
+  <td>//button[@class="listbox-check-all"]</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyElementPresent</td>
-  <td>//input[@class="listbox-uncheck-all"]</td>
+  <td>//button[@class="listbox-uncheck-all"]</td>
   <td></td>
 </tr>
 <tr>
@@ -66,12 +66,12 @@
 </tr>
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//input[@class="listbox-check-all"]</td>
+  <td>//button[@class="listbox-check-all"]</td>
   <td></td>
 </tr>
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//input[@class="listbox-uncheck-all"]</td>
+  <td>//button[@class="listbox-uncheck-all"]</td>
   <td></td>
 </tr>
 <tr>

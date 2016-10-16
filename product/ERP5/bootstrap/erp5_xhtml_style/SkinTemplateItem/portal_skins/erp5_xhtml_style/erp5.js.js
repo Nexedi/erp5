@@ -16,9 +16,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-function submitAction(form, act) {
-  form.action = act;
-  form.submit();
+function submitAction(form_or_submit, act) {
+  if ($(form_or_submit).is('form')) {
+    form = form_or_submit;
+    form.action = act;
+    form.submit();
+  } else {
+    form_or_submit.click();
+  }
 }
 
 // This function will be called when the user click the save button. As 
@@ -144,18 +149,22 @@ function fixLeftRightHeightAndFocus(fix_height) {
 // and modify respective main form action
 // if clear_changed_flag is set to true, changed will be set to false, so no
 // warning message about unsaved changes will be displayed
-function submitFormOnEnter(event, form, method_name, clear_changed_flag, element){
+function submitFormOnEnter(event, form_or_submit, method_name, clear_changed_flag, element){
   if (clear_changed_flag === null){ clear_changed_flag = false; }
   if(event.keyCode == 13){
-    if (form == "main_form") {
-      form = document.forms[form]; // backward compatibility
-    }
-    $('<input />').attr('type', 'hidden').attr('name', method_name + ':method').appendTo(form);
-    $('#hidden_button').prop('disabled', true);
     if (clear_changed_flag === true) {
       changed = false;
     }
-    form.submit();
+    if ($(form_or_submit).is('form')) {
+      form = form_or_submit;
+      if (form == "main_form") {
+        form = document.forms[form]; // backward compatibility
+      }
+      form.action = method_name;
+      form.submit();
+    } else {
+      form_or_submit.click();
+    }
     event.preventDefault();
     return false;
   }

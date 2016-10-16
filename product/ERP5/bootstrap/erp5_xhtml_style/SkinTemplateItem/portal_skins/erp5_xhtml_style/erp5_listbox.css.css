@@ -393,10 +393,12 @@ table.listbox input{
   float:none;
 }
 
-table.listbox input.listbox-check-all,
-table.listbox input.listbox-uncheck-all,
+table.listbox button.listbox-check-all,
+table.listbox button.listbox-uncheck-all,
 table.listbox input.listbox-select-action{
   width:auto;
+  padding:0;
+  float:none;
 }
 
 .listbox-table-data-cell > .figure{

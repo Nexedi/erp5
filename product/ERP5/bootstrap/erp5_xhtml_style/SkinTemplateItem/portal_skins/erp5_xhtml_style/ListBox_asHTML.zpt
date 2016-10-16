@@ -226,22 +226,26 @@
             <th tal:condition="python: show_select_column"
                 class="listbox-table-select-cell">
            
-              <input class="listbox-check-all"
-                     type="image"
-                     name="checkAll:method" value="1"
+              <button class="listbox-check-all" title="Check All"
+                      type="submit" name="listbox_checkAll:method" value="listbox"
+                      tal:attributes="value string:${field_id}"
+                      i18n:domain="ui" i18n:attributes="title">
+                <img class="listbox-check-all" src="images/checkall.png"
                      alt="Check All" title="Check All"
-                     tal:attributes="name string:${field_id}_checkAll:method;
-                                     src string:${portal_url_string}/images/checkall.png"
-                     i18n:domain="ui" i18n:attributes="title" />
+                     tal:attributes="src string:${portal_url_string}/images/checkall.png"
+                     i18n:domain="ui" i18n:attributes="title;alt" />
+              </button>
               &nbsp;
-              <input class="listbox-uncheck-all"
-                     type="image" 
-                     name="uncheckAll:method" value="1"
+              <button class="listbox-uncheck-all" title="Uncheck All"
+                      type="submit" name="listbox_uncheckAll:method" value="listbox"
+                      tal:attributes="value string:${field_id}"
+                      i18n:domain="ui" i18n:attributes="title">
+                <img class="listbox-uncheck-all" src="images/decheckall.png"
                      alt="Uncheck All" title="Uncheck All"
-                     tal:attributes="src string:${portal_url_string}/images/decheckall.png;
-                                     name string:${field_id}_uncheckAll:method;"
-                     i18n:domain="ui" i18n:attributes="title" />         
-                  
+                     tal:attributes="src string:${portal_url_string}/images/decheckall.png;"
+                     i18n:domain="ui" i18n:attributes="title;alt" />
+              </button>
+
               </th>
 
               <!-- Label column row -->

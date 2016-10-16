@@ -174,7 +174,7 @@ Accounting Transaction Module Displays empty Transactions
 </tr>
 <tr>
   <td>clickAndWait</td>
-  <td>//input[@class="listbox-check-all"]</td>
+  <td>//button[@class="listbox-check-all"]</td>
   <td></td>
 </tr>
 <tr>
