@@ -1,98 +1,90 @@
-/*global window, rJS, RSVP, loopEventListener */
+/*global window, rJS */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, loopEventListener) {
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
-    .ready(function (gadget) {
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.element = element;
+    .setState({
+      tag: 'p'
+    })
+
+    .declareMethod('render', function (options) {
+      var field_json = options.field_json || {},
+        state_dict = {
+          value: field_json.value || field_json.default || "",
+          editable: field_json.editable,
+          required: field_json.required,
+          name: field_json.key,
+          title: field_json.title,
+          type: 'password'
+        };
+      state_dict.text_content = state_dict.value;
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function (modification_dict) {
+      var element = this.element,
+        gadget = this,
+        url,
+        result;
+      if (modification_dict.hasOwnProperty('editable')) {
+        if (gadget.state.editable) {
+          url = 'gadget_html5_input.html';
+        } else {
+          url = 'gadget_html5_element.html';
+        }
+        result = this.declareGadget(url, {scope: 'sub'})
+          .push(function (input) {
+            // Clear first to DOM, append after to reduce flickering/manip
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.appendChild(input.element);
+            return input;
+          });
+      } else {
+        result = this.getDeclaredGadget('sub');
+      }
+      return result
+        .push(function (input) {
+          var state;
+          if (gadget.state.editable) {
+            state = gadget.state;
+          } else {
+            state = {
+              tag: gadget.state.tag,
+              text_content: '*****'
+            };
+          }
+          return input.render(state);
         });
     })
 
-    .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .declareAcquiredMethod("notifyChange", "notifyChange")
-
-    .declareMethod('render', function (options) {
-      var input = this.element.querySelector('input'),
-        field_json = options.field_json || {};
-      input.setAttribute(
-        'value',
-        field_json.value || field_json.default || ""
-      );
-      input.setAttribute('name', field_json.key);
-      input.setAttribute('title', field_json.title);
-      if (field_json.required === 1) {
-        input.setAttribute('required', 'required');
+    .declareMethod('getContent', function () {
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.getContent();
+          });
       }
-      if (field_json.editable !== 1) {
-        input.setAttribute('readonly', 'readonly');
-        input.setAttribute('data-wrapper-class', 'ui-state-readonly');
-        // input.setAttribute('disabled', 'disabled');
-
-      }
+      return {};
     })
 
-    .declareMethod('getContent', function () {
-      var input = this.element.querySelector('input'),
-        result = {};
-      result[input.getAttribute('name')] = input.value;
-      return result;
+    .declareMethod('getTextContent', function () {
+      return this.getDeclaredGadget('sub')
+        .push(function (gadget) {
+          return gadget.getTextContent();
+        });
     })
 
     .declareMethod('checkValidity', function () {
-      var result;
-      result = this.element.querySelector('input').checkValidity();
-      if (result) {
-        return this.notifyValid()
-          .push(function () {
-            return result;
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.checkValidity();
           });
       }
-      return result;
-    })
-
-    .declareService(function () {
-      ////////////////////////////////////
-      // Check field validity when the value changes
-      ////////////////////////////////////
-      var field_gadget = this;
-
-      function notifyChange() {
-        return RSVP.all([
-          field_gadget.checkValidity(),
-          field_gadget.notifyChange()
-        ]);
-      }
-
-      // Listen to input change
-      return loopEventListener(
-        field_gadget.element.querySelector('input'),
-        'change',
-        false,
-        notifyChange
-      );
-    })
-
-    .declareService(function () {
-      ////////////////////////////////////
-      // Inform when the field input is invalid
-      ////////////////////////////////////
-      var field_gadget = this;
-
-      function notifyInvalid(evt) {
-        return field_gadget.notifyInvalid(evt.target.validationMessage);
-      }
-
-      // Listen to input change
-      return loopEventListener(
-        field_gadget.element.querySelector('input'),
-        'invalid',
-        false,
-        notifyInvalid
-      );
+      return true;
     });
 
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS));
