@@ -1,23 +1,27 @@
-/*global window, rJS */
+/*global window, rJS*/
 /*jslint indent: 2, maxerr: 3 */
 (function (window, rJS) {
   "use strict";
 
   rJS(window)
-    .ready(function (gadget) {
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.element = element;
-        });
-    })
-    .declareMethod('render', function (options) {
-      var input = this.element.querySelector('p'),
-        field_json = options.field_json || {};
-      input.textContent = field_json.value || field_json.default || "";
+    .setState({
+      tag: 'p'
     })
 
-    .declareMethod('getContent', function () {
-      return {};
+    .declareMethod('render', function (options) {
+      var field_json = options.field_json || {},
+        state_dict = {
+          text_content: field_json.value || field_json.default || ""
+        };
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function (modification_dict) {
+      var gadget = this;
+      return this.getDeclaredGadget('p')
+        .push(function (input) {
+          return input.render(gadget.state);
+        });
     });
 
 }(window, rJS));
