@@ -12,7 +12,9 @@
     .declareMethod('render', function (options) {
       var state_dict = {
           text_content: options.text_content || "",
-          tag: options.tag || 'div'
+          tag: options.tag || 'div',
+          src: options.src,
+          alt: options.alt
         };
       return this.changeState(state_dict);
     })
@@ -21,6 +23,12 @@
       var element = this.element,
         new_element = document.createElement(this.state.tag);
       new_element.textContent = this.state.text_content;
+      if (this.state.src) {
+        new_element.setAttribute('src', this.state.src);
+      }
+      if (this.state.alt) {
+        new_element.setAttribute('alt', this.state.alt);
+      }
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
         element.removeChild(element.firstChild);

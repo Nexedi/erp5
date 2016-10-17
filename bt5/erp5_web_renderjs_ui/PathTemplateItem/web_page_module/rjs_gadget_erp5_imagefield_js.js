@@ -4,16 +4,25 @@
   "use strict";
 
   rJS(window)
-    .ready(function (gadget) {
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.props = {};
-          gadget.props.element = element;
-        });
+    .setState({
+      tag: 'img'
     })
+
     .declareMethod('render', function (options) {
-      var image = this.props.element.querySelector(".image");
-      image.src = options.field_json.default;
-      image.alt = options.field_json.description || options.field_json.title;
+      var field_json = options.field_json || {},
+        state_dict = {
+          src: field_json.default,
+          alt: field_json.description || field_json.title
+        };
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function (modification_dict) {
+      var gadget = this;
+      return this.getDeclaredGadget('image')
+        .push(function (input) {
+          return input.render(gadget.state);
+        });
     });
+
 }(window, rJS));
