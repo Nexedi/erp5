@@ -22,7 +22,8 @@
           name: options.name,
           type: options.type || 'text',
           title: options.title,
-          focus: options.focus
+          focus: options.focus,
+          step: options.step
         };
       return this.changeState(state_dict);
     })
@@ -39,6 +40,9 @@
       textarea.setAttribute('type', this.state.type);
       if (this.state.title) {
         textarea.setAttribute('title', this.state.title);
+      }
+      if (this.state.step) {
+        textarea.setAttribute('step', this.state.step);
       }
 
       if (this.state.required) {
