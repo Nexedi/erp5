@@ -16,8 +16,13 @@
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
-          title: field_json.title
+          title: field_json.title,
+          first_item: field_json.first_item
         };
+
+      if ((!state_dict.value) && (state_dict.first_item)) {
+        state_dict.value = field_json.items[0][1];
+      }
       return this.changeState(state_dict);
     })
 
