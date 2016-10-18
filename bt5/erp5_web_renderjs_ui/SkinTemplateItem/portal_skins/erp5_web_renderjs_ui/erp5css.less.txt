@@ -1198,6 +1198,19 @@ div[data-gadget-scope='header'] .ui-header {
 }
 
 /**********************************************
+* Gadget: datetime field
+**********************************************/
+.datetimefield {
+  display: flex;
+  div[data-gadget-scope=INPUT] {
+    flex: 2;
+  }
+  div[data-gadget-scope=SELECT] {
+    flex: 1;
+  }
+}
+
+/**********************************************
 * Listbox
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] {

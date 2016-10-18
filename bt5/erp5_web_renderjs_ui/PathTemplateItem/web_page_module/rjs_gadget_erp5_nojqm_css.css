@@ -1025,6 +1025,18 @@ div[data-gadget-scope='header'] .ui-header ul a {
   background-color: #2b2b2b;
 }
 /**********************************************
+* Gadget: datetime field
+**********************************************/
+.datetimefield {
+  display: flex;
+}
+.datetimefield div[data-gadget-scope=INPUT] {
+  flex: 2;
+}
+.datetimefield div[data-gadget-scope=SELECT] {
+  flex: 1;
+}
+/**********************************************
 * Listbox
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] .ui-input-text {
