@@ -82,8 +82,8 @@
                 options: options,
                 view: options.view,
                 url: url,
-                erp5_document: result,
-                erp5_form: erp5_form
+                erp5_document: JSON.stringify(result),
+                erp5_form: JSON.stringify(erp5_form)
               });
             });
         });
@@ -104,13 +104,8 @@
           page_template_gadget = result;
 
           var sub_options = options.fg || {},
-            erp5_document = gadget.state.erp5_document,
-            erp5_form = gadget.state.erp5_form;
-
-          // Render the page template form
-          if (options.hasOwnProperty("form_validation_error")) {
-            erp5_document._embedded._view = options.form_validation_error;
-          }
+            erp5_document = JSON.parse(gadget.state.erp5_document),
+            erp5_form = JSON.parse(gadget.state.erp5_form);
 
           loadFormContent(gadget, erp5_document._embedded._view);
 
@@ -139,7 +134,12 @@
         });
     })
     .allowPublicAcquisition("displayFormulatorValidationError", function (param_list) {
-      return this.changeState({form_validation_error: param_list[0]});
+      var erp5_document = JSON.parse(this.state.erp5_document);
+      erp5_document._embedded._view = param_list[0];
+      // Force refresh
+      erp5_document._now = Date.now();
+
+      return this.changeState({erp5_document: JSON.stringify(erp5_document)});
     });
 
 }(window, rJS, URI));
