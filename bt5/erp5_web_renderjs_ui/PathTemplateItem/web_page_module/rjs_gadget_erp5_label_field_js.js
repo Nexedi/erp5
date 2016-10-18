@@ -94,7 +94,10 @@
       var argument_list = arguments;
       return this.getDeclaredGadget(SCOPE)
         .push(function (gadget) {
-          return gadget.getContent.apply(gadget, argument_list);
+          if (gadget.getContent !== undefined) {
+            return gadget.getContent.apply(gadget, argument_list);
+          }
+          return {};
         });
     })
 
