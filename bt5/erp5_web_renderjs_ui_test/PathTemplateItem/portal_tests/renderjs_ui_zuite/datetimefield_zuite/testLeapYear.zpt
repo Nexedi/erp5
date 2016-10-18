@@ -79,20 +79,20 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_stop_date']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>type</td>
-  <td>//input[@name='field_my_stop_date']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
   <td>2004-02-29T23:10</td>
 </tr>
 
 <tr>
   <td>select</td>
-  <td>//select[@class='gmt_select']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//select</td>
   <td>GMT-10</td>
 </tr>
 
@@ -118,21 +118,21 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_stop_date']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='field_my_stop_date']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//input</td>
   <td>2004-02-29T23:10:00</td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//select[@class='gmt_select']</td>
-  <td>GMT-10</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//select</td>
+  <td>-1000</td>
 </tr>
 </tbody></table>
 </body>

@@ -87,7 +87,7 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//input[@name="field_last_check"]</td>
+  <td>//div[@data-gadget-scope="field_last_check"]//p</td>
   <td></td>
 </tr>
 

@@ -79,13 +79,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//select[@class='gmt_select']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>select</td>
-  <td>//select[@class='gmt_select']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//select</td>
   <td>GMT+5</td>
 </tr>
 
@@ -111,14 +111,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//select[@class='gmt_select']</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//select</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyValue</td>
-  <td>//select[@class='gmt_select']</td>
-  <td>GMT</td>
+  <td>//div[@data-gadget-scope='field_my_stop_date']//select</td>
+  <td>+0000</td>
 </tr>
 </tbody></table>
 </body>

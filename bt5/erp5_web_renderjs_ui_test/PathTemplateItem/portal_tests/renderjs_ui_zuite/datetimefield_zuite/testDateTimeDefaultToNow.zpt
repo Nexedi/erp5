@@ -177,14 +177,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='field_my_start_date']</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@name='field_my_start_date']</td>
+  <td>//div[@data-gadget-scope='field_my_start_date']//input</td>
   <td>glob:${now}*</td>
 </tr>
 
