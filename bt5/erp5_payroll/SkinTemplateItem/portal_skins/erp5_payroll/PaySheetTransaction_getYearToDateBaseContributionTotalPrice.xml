@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>paysheet=None, base_contribution_list=None</string> </value>
+            <value> <string>paysheet=None, base_contribution_list=None, src__=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

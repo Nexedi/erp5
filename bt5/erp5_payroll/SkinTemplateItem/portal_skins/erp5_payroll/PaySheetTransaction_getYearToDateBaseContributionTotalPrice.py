@@ -40,7 +40,7 @@ params = {
     'simulation_state'    : ['stopped', 'delivered'],
     'precision' : paysheet.getPriceCurrencyValue().getQuantityPrecision(),
     'parent_base_contribution_uid' : base_contribution_uid_list,
-    #'src__' : 1
+    'src__' : src__,
   }
 
 return portal_simulation.getInventoryAssetPrice(**params)
