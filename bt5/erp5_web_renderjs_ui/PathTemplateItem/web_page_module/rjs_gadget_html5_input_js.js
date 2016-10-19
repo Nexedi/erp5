@@ -96,10 +96,29 @@
 
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
-      var result = this.element.querySelector('input').checkValidity();
+      var result = this.element.querySelector('input').checkValidity(),
+        gadget = this;
       if (result) {
         return this.notifyValid()
           .push(function () {
+            var date,
+              value;
+            if (!result) {
+              return result;
+            }
+            if ((gadget.state.type === 'date') ||
+                (gadget.state.type === 'datetime-local')) {
+              value = gadget.element.querySelector('input').value;
+              if (value) {
+                date = Date.parse(value);
+                if (isNaN(date)) {
+                  return gadget.notifyInvalid("Invalid DateTime")
+                    .push(function () {
+                      return false;
+                    });
+                }
+              }
+            }
             return result;
           });
       }
