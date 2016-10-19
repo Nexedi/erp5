@@ -76,16 +76,24 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       assignment = person.newContent(portal_type = 'Assignment')
       assignment.open()
 
-      # Setup auth policy
-      preference = portal.portal_preferences.newContent(
-                                              portal_type = 'System Preference',
-                                              title = 'Authentication',
-                                              preferred_max_authentication_failure = 3,
-                                              preferred_authentication_failure_check_duration = 600,
-                                              preferred_authentication_failure_block_duration = 600,
-                                              preferred_authentication_policy_enabled = True)
-      preference.enable()
-      self.tic()
+
+    # Reset and Setup auth policy
+    old_preference = portal.portal_catalog.getResultValue(
+      portal_type='System Preference',
+      title='Authentication')
+    if old_preference is not None:
+      old_preference.setTitle('disabled authentication preference')
+      old_preference.disable()
+
+    preference = portal.portal_preferences.newContent(
+                                            portal_type = 'System Preference',
+                                            title = 'Authentication',
+                                            preferred_max_authentication_failure = 3,
+                                            preferred_authentication_failure_check_duration = 600,
+                                            preferred_authentication_failure_block_duration = 600,
+                                            preferred_authentication_policy_enabled = True)
+    preference.enable()
+    self.tic()
 
   def _clearCache(self):
     self.portal.portal_caches.clearCache(
@@ -120,7 +128,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     login.validate()
     return person
 
-  def test_01_BlockLogin(self):
+  def test_BlockLogin(self):
     """
       Test that a recataloging works for Web Site documents
     """
@@ -199,7 +207,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertFalse(login.isLoginBlocked())
 
 
-  def test_02_PasswordHistory(self):
+  def test_PasswordHistory(self):
     """
       Test password history.
     """
@@ -263,7 +271,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                      [x.getPassword() for x in self._getPasswordEventList(login)])
 
 
-  def test_03_PasswordValidity(self):
+  def test_PasswordValidity(self):
     """
       Test validity of a password.
     """
@@ -498,7 +506,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertEqual(1, login.Login_isPasswordValid('abAB#12_', request))
     self.assertEqual(1, login.Login_isPasswordValid('not_used_ALREADY_1234', request))
 
-  def test_04_PasswordExpire(self):
+  def test_PasswordExpire(self):
     """
       Test password expire.
     """
@@ -506,19 +514,24 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     request = self.app.REQUEST
 
     self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
+    preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
+                                                      title = 'Authentication',)
+    preference.setPreferredMaxPasswordLifetimeDuration(24)
+    self.tic()
+    self._clearCache()
 
     person = self.createUser('test-04',
                              password='used_ALREADY_1234')
     login = person.objectValues(portal_type='ERP5 Login')[0]
-    preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
-                                                      title = 'Authentication',)
 
-    preference.setPreferredMaxPasswordLifetimeDuration(24)
-    self.tic()
-    self._clearCache()
     self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired'])
 
+    # Check password expired
+    preference.setPreferredMaxPasswordLifetimeDuration(0) # password expire immediatly (just to check isExpired)
+    self.tic()
+    self._clearCache()
+    self.assertTrue(login.isPasswordExpired())
 
     # set longer password validity interval
     preference.setPreferredMaxPasswordLifetimeDuration(4*24) # password expire in 4 days
@@ -541,18 +554,23 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired_expire_date'])
 
-  def test_05_HttpRequest(self):
+  def test_HttpRequest(self):
     """
       Check HTTP responses
     """
     portal = self.getPortal()
     request = self.app.REQUEST
+
+    preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
+                                                      title = 'Authentication',)
+    preference.setPreferredMaxPasswordLifetimeDuration(24)
+    self._clearCache()
+    self.tic()
+
     person = self.createUser('test-05')
     assignment = person.newContent(portal_type = 'Assignment')
     assignment.open()
     login = person.objectValues(portal_type='ERP5 Login')[0]
-    preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
-                                                      title = 'Authentication',)
     login.setPassword('used_ALREADY_1234')
     self.tic()
 
@@ -612,7 +630,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     response = self.publish(path)
     self.assertTrue('Welcome to ERP5' in response.getBody())
 
-  def test_06_ExpireOldAuthenticationEventList(self):
+  def test_ExpireOldAuthenticationEventList(self):
     """
       Check that expiring old Authentication Event list works.
     """
