@@ -60,8 +60,9 @@ def getThemeFromFirstFollowUpProduct(reference):
       if category.find(product_match_string) > 1:
         relative_url = category.split("follow_up/")[1]
         category_object = portal.portal_catalog(relative_url=relative_url,limit=1)
-        category_title = category_object[0].getTitle()
-        theme = category_title.split(software_match_string)[0].lower()
+        if len(category_object) > 0:
+          category_title = category_object[0].getTitle()
+          theme = category_title.split(software_match_string)[0].lower()
   
       # OSOE extra handle
       # XXX this should be relative to the website the presentation is being
