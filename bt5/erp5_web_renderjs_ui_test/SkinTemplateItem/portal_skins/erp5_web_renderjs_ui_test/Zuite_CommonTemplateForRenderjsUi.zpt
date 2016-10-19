@@ -50,21 +50,27 @@
     </tr>
 
     <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+
+    <tr>
      <td>click</td>
      <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
      <td></td>
     </tr>
     
     <tr>
-     <td>waitForElementNotPresent</td>
-     <td>//a[@data-i18n='Previous']</td>
-     <td></td>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
     </tr>
-    
+
     <tr>
-     <td>waitForElementPresent</td>
-     <td>//a[@data-i18n='Previous']</td>
-     <td></td>
+      <td>waitForElementNotPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
     </tr>
     
  
