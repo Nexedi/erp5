@@ -113,14 +113,20 @@
 </tr>
 
 <tr>
+  <td>waitForElementNotPresent</td>
+  <td>//div[@data-gadget-scope="INPUT"]</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title="listbox_start_date"]</td>
+  <td>//div[@data-gadget-scope="INPUT"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>type</td>
-  <td>//input[@title="listbox_start_date"]</td>
+  <td>//div[@data-gadget-scope="INPUT"]//input</td>
   <td>2022-12-21</td>
 </tr>
 
