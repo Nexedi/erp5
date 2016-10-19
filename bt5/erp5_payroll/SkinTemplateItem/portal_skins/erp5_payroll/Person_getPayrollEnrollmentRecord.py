@@ -16,9 +16,9 @@ if isinstance(organisation, str):
   organisation = getObjectOrRaise(organisation_module, organisation)
 
 # If no id, let's expect that the parameters are objects
-career_step_list = context.objectValues(portal_type="Career",
-                                        subordination_uid=organisation.getUid(),
-                                        validation_state='open')
+career_step_list = context.objectValues(portal_type="Career")
+career_step_list = [career for career in career_step_list if career.getValidationState() == 'open']
+
 if len(career_step_list) <= 0:
   raise ValueError("No open Career for employee %s" % context.getRelativeUrl())
 else:
