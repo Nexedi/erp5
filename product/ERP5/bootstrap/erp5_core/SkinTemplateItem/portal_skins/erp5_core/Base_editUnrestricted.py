@@ -54,7 +54,7 @@ def parseField(f):
     if k.startswith(field_prefix):
       # We only take into account
       # the object attributes
-      k = k[field_prefix_len:]
+      k = k[len(field_prefix):]
       # Form: '' -> ERP5: None
       if v == '':
         v = None
