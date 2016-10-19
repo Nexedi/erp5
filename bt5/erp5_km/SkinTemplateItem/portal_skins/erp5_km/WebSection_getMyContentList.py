@@ -7,7 +7,7 @@
 """
 if context.getPortalType() == 'Person':
   # If context is a person, get the user
-  user = context.getReference()
+  user = context.Person_getUserId()
   if user is None:
     # no way to determine documents if we have no reference
     return []

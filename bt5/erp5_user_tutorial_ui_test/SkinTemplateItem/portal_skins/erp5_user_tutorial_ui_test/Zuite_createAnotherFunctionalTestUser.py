@@ -12,7 +12,6 @@ if person is None:
                                            title=functional_test_username)
 
   person.edit(reference=functional_test_username,
-              password=howto_dict['functional_test_user_password'],
               default_email_text=howto_dict['functional_test_user_email'])
 
   person.validate()
@@ -23,8 +22,15 @@ if person is None:
                                  function='company/manager')
   assignment.open()
 
+  login = person.newContent(
+    portal_type='ERP5 Login',
+    reference=functional_test_username,
+    password=howto_dict['functional_test_user_password'],
+  )
+  login.validate()
+
   # XXX (lucas): These tests must be able to run on an instance without security.
   for role in ('Assignee', 'Assignor', 'Associate', 'Auditor', 'Owner'):
-    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, functional_test_username)
+    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, person.Person_getUserId())
 
 return 'Done.'

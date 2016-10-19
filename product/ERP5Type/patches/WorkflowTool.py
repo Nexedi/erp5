@@ -597,7 +597,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
         )
       return action_list
-    user = str(_getAuthenticatedUser(self))
+    user = _getAuthenticatedUser(self).getIdOrUserName()
     if src__:
       actions = _getWorklistActionList()
     else:

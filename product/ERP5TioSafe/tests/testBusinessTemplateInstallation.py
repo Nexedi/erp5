@@ -43,7 +43,7 @@ class TestPackaging(testTioSafeMixin):
     zodb_roles = self.portal.acl_users.zodb_roles
     for role in user_roles:
       if role != 'Member':
-        zodb_roles.assignRoleToPrincipal(role, user_name)
+        zodb_roles.assignRoleToPrincipal(role, person.Person_getUserId())
 
   def loginAsUser(self, user_id):
     """Login with a given user_id """

@@ -37,15 +37,16 @@ credential_request = module.newContent(
                 date_of_birth=date_of_birth)
 
 credential_request.setCategoryList(category_list)
-# Same tag is used as in Document.Person._setReference, in order to protect against
+# Same tag is used as in ERP5 Login._setReference, in order to protect against
 # concurrency between Credential Request and Person object too
-credential_request.reindexObject(activate_kw=dict(tag='Person_setReference_%s' % reference.encode('hex')))
+credential_request.reindexObject(activate_kw=dict(tag='set_login_%s' % reference.encode('hex')))
 
 #We attach the current user to the credential request if not anonymous
 if not context.portal_membership.isAnonymousUser():
   person = context.ERP5Site_getAuthenticatedMemberPersonValue()
   destination_decision = []
-  if person.getReference() == reference:
+  if reference in [x.getReference() for x in person.objectValues(portal_type='ERP5 Login')
+                   if x.getValidationState() == 'validated']:
     destination_decision.append(person.getRelativeUrl())
   if person.getDefaultCareerSubordinationTitle() == corporate_name:
     destination_decision.append(person.getDefaultCareerSubordination())

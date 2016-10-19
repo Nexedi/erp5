@@ -1425,7 +1425,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       user_id = tv.get('_user_id', None)
       if user_id is not None:
         return user_id
-      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      user_id = self.portal_membership.getAuthenticatedMember().getId()
       tv['_user_id'] = user_id
       return user_id
 

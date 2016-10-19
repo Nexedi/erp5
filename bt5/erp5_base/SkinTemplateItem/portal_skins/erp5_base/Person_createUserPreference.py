@@ -9,7 +9,7 @@ if not portal.Base_checkPermission('portal_preferences', 'Add portal content'):
 
 try:
   preference = portal.portal_preferences.createPreferenceForUser(
-    context.getReference(),
+    context.Person_getUserId(),
     enable=True,
   )
 except ValueError:

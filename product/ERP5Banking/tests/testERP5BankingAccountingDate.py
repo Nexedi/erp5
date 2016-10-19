@@ -69,7 +69,7 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin):
       }
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.accounting_date_site = self.testsite.paris
     self.now = DateTime(DateTime().Date())
     self.past_day = self.now - 1

@@ -248,7 +248,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [[\'owner\',str(context.portal_membership.getAuthenticatedMember())]]</string> </value>
+            <value> <string>python: [[\'owner\', context.portal_membership.getAuthenticatedMember().getId()]]</string> </value>
         </item>
       </dictionary>
     </pickle>

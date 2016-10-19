@@ -445,7 +445,7 @@ class TestXHTML(TestXHTMLMixin):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
 
-    self.login('seb')
+    self.loginByUserName('seb')
     self.enableDefaultSitePreference()
 
   def enableDefaultSitePreference(self):

@@ -14095,9 +14095,6 @@ msgstr "L'utilisateur ${user} n'existe pas."
 msgid "User Account Workflow"
 msgstr "Workflow du compte utilisateur"
 
-msgid "User ID is not specified."
-msgstr "L'identifiant de l'utilisateur n'es pas spécifié."
-
 msgid "User Interface"
 msgstr "Interface utilisateur"
 
@@ -14106,6 +14103,9 @@ msgstr "Langues de l'interface utilisateur"
 
 msgid "User Login"
 msgstr "Nom d'utilisateur"
+
+msgid "User Login is not specified."
+msgstr "Le nom d'utilisateur n'est pas spécifié."
 
 msgid "User Name"
 msgstr "Nom d'utilisateur"

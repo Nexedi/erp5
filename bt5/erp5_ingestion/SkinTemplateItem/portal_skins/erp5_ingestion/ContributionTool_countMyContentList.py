@@ -7,7 +7,7 @@
   that owner is being indexed.
 """
 if user is None:
-  user = context.portal_membership.getAuthenticatedMember()
+  user = context.portal_membership.getAuthenticatedMember().getId()
 
 kw['owner'] = user
 kw['portal_type'] = context.getPortalMyDocumentTypeList()

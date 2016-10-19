@@ -1206,7 +1206,7 @@ class TestWorkflow(SecurityTestCase):
     self.assertEqual(sale_invoice.getSimulationState(), 'auto_planned')
 
     # other as anonymous
-    username = self.other.getReference()
+    username = self.other.Person_getUserId()
     self.failIfUserCanAccessDocument(username, sale_invoice)
     self.failIfUserCanAddDocument(username, sale_invoice)
     self.failIfUserCanDeleteDocument(username, sale_invoice)
@@ -1214,7 +1214,7 @@ class TestWorkflow(SecurityTestCase):
     self.failIfUserCanViewDocument(username, sale_invoice)
 
     # assignee
-    username = self.assignee.getReference()
+    username = self.assignee.Person_getUserId()
     self.assertUserCanAccessDocument(username, sale_invoice)
     self.assertUserCanAddDocument(username, sale_invoice)
     self.assertUserCanDeleteDocument(username, sale_invoice)
@@ -1222,7 +1222,7 @@ class TestWorkflow(SecurityTestCase):
     self.assertUserCanViewDocument(username, sale_invoice)
 
     # assignor
-    username = self.assignor.getReference()
+    username = self.assignor.Person_getUserId()
     self.assertUserCanAccessDocument(username, sale_invoice)
     self.assertUserCanAddDocument(username, sale_invoice)
     self.assertUserCanDeleteDocument(username, sale_invoice)
@@ -1230,7 +1230,7 @@ class TestWorkflow(SecurityTestCase):
     self.assertUserCanViewDocument(username, sale_invoice)
 
     # associate
-    username = self.associate.getReference()
+    username = self.associate.Person_getUserId()
     self.assertUserCanAccessDocument(username, sale_invoice)
     self.assertUserCanAddDocument(username, sale_invoice)
     self.assertUserCanDeleteDocument(username, sale_invoice)
@@ -1238,7 +1238,7 @@ class TestWorkflow(SecurityTestCase):
     self.assertUserCanViewDocument(username, sale_invoice)
 
     # auditor
-    username = self.auditor.getReference()
+    username = self.auditor.Person_getUserId()
     self.assertUserCanAccessDocument(username, sale_invoice)
     self.failIfUserCanAddDocument(username, sale_invoice)
     self.failIfUserCanDeleteDocument(username, sale_invoice)
@@ -1246,7 +1246,7 @@ class TestWorkflow(SecurityTestCase):
     self.assertUserCanViewDocument(username, sale_invoice)
 
     # author
-    username = self.author.getReference()
+    username = self.author.Person_getUserId()
     self.failIfUserCanAccessDocument(username, sale_invoice)
     self.failIfUserCanAddDocument(username, sale_invoice)
     self.failIfUserCanDeleteDocument(username, sale_invoice)
@@ -1254,7 +1254,7 @@ class TestWorkflow(SecurityTestCase):
     self.failIfUserCanViewDocument(username, sale_invoice)
 
     # manager
-    username = self.manager.getReference()
+    username = self.manager.Person_getUserId()
     self.assertUserCanAccessDocument(username, sale_invoice)
     self.assertUserCanAddDocument(username, sale_invoice)
     self.assertUserCanDeleteDocument(username, sale_invoice)

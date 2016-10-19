@@ -244,12 +244,32 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
       Most of the time, we need to login before doing anything
+
+      ATTENTION: user_name argument in this method is user's ID in
+      reality. If you want to login by user_name, use loginByUserName()
+      instead.
       """
       try:
         PortalTestCase.login(self, user_name)
       except AttributeError:
         self.addERP5TypeTestCaseUser()
         return PortalTestCase.login(self, user_name)
+
+    def loginByUserName(self, user_name='ERP5TypeTestCase', quiet=0):
+      """
+      Most of the time, we need to login before doing anything
+      """
+      uf = self.portal.acl_users
+      for i in range(2):
+        try:
+          user = uf.getUser(user_name)
+          if not hasattr(user, 'aq_base'):
+            user = user.__of__(uf)
+          newSecurityManager(None, user)
+          return
+        except AttributeError:
+          uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
+                        'Assignor', 'Author', 'Auditor', 'Associate'], [])
 
     def changeSkin(self, skin_name):
       """
@@ -451,8 +471,11 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
       person = self.portal.person_module.newContent(portal_type='Person',
                                                     reference=reference,
-                                                    password=password,
                                                     **person_kw)
+      login = person.newContent(portal_type='ERP5 Login',
+                                reference=reference,
+                                password=password)
+      login.validate()
       return person
 
     def createUserAssignment(self, user, assignment_kw):

@@ -150,7 +150,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     """
     web_section = self.setupWebSection()
     self.logout()
-    self.login('robby')
+    self.loginByUserName('robby')
     form_kw = {'source_organisation_title': 'John Doe Industries',
                'source_person_first_name': 'John',
                'source_person_last_name': 'Doe',

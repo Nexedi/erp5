@@ -109,7 +109,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
 
-    self.login(self.username)
+    self.loginByUserName(self.username)
     # make sure there is no message any more
     self.tic()
 
@@ -1084,7 +1084,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
     uf._doAddUser('bob', '', ['Member'], [])
     # create restricted object
-    self.login('alice')
+    self.loginByUserName('alice')
     folder = self.getOrganisationModule()
     ob = folder.newContent()
     # make sure permissions are correctly set
@@ -1096,33 +1096,33 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # check access
     self.assertEqual(1, getSecurityManager().checkPermission(perm, folder))
     self.assertEqual(1, getSecurityManager().checkPermission(perm, ob))
-    self.login('bob')
+    self.loginByUserName('bob')
     self.assertEqual(1, getSecurityManager().checkPermission(perm, folder))
     self.assertEqual(None, getSecurityManager().checkPermission(perm, ob))
     # add a script that calls a catalog method
-    self.login('alice')
+    self.loginByUserName('alice')
     script = createZODBPythonScript(self.getPortal().portal_skins.custom,
         'catalog_test_script', '', "return len(context.searchFolder())")
 
     # test without proxy role
     self.assertEqual(1, folder.catalog_test_script())
-    self.login('bob')
+    self.loginByUserName('bob')
     self.assertEqual(0, folder.catalog_test_script())
 
     # test with proxy role and correct role
-    self.login('alice')
+    self.loginByUserName('alice')
     script.manage_proxy(['Manager'])
     self.assertEqual(1, folder.catalog_test_script())
-    self.login('bob')
+    self.loginByUserName('bob')
     self.assertEqual(1, folder.catalog_test_script())
 
     # test with proxy role and wrong role
-    self.login('alice')
+    self.loginByUserName('alice')
     script.manage_proxy(['Assignor'])
     # proxy roles must overwrite the user's roles, even if he is the owner
     # of the script
     self.assertEqual(0, folder.catalog_test_script())
-    self.login('bob')
+    self.loginByUserName('bob')
     self.assertEqual(0, folder.catalog_test_script())
 
   def test_42_SearchableText(self):
@@ -1549,14 +1549,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uf._doAddUser('bob', '', ['Member'], [])
 
     # create a document that only alice can view
-    self.login('alice')
+    self.loginByUserName('alice')
     folder = self.getOrganisationModule()
     ob = folder.newContent(title='Object Title')
     ob.manage_permission('View', ['Manager'], 0)
     self.tic()
 
     # bob cannot see the document
-    self.login('bob')
+    self.loginByUserName('bob')
     ctool = self.getCatalogTool()
     self.assertEqual(0, len(ctool.searchResults(title='Object Title')))
     self.assertEqual(0, ctool.countResults(title='Object Title')[0][0])
@@ -1622,7 +1622,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
     # by default bob can see those 2 documents
-    self.login('bob')
+    self.loginByUserName('bob')
     ctool = self.getCatalogTool()
     self.assertEqual(2, len(ctool.searchResults(title='Object Title')))
     self.assertEqual(2, ctool.countResults(title='Object Title')[0][0])
@@ -1869,7 +1869,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj2.manage_addLocalRoles('bob', ['Auditor'])
     self.tic()
 
-    self.login('bob')
+    self.loginByUserName('bob')
     self.assertEqual([obj2], [x.getObject() for x in
                                obj.searchFolder(portal_type='Bank Account')])
     # now if we pass the bank account in deleted state, it's no longer returned
@@ -1879,7 +1879,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login()
     obj2.delete()
     self.tic()
-    self.login('bob')
+    self.loginByUserName('bob')
     self.assertEqual([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
 
@@ -1919,7 +1919,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
     logout()
-    self.login(user1)
+    self.loginByUserName(user1)
     result = obj.portal_catalog(portal_type=object_portal_type)
     self.assertSameSet([obj, ], [x.getObject() for x in result])
     result = obj.portal_catalog(portal_type=object_portal_type,
@@ -1933,7 +1933,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertSameSet([obj], [x.getObject() for x in result])
 
     logout()
-    self.login(user2)
+    self.loginByUserName(user2)
     result = obj.portal_catalog(portal_type=object_portal_type)
     self.assertSameSet([obj, ], [x.getObject() for x in result])
     result = obj.portal_catalog(portal_type=object_portal_type,
@@ -1961,7 +1961,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql_connection = self.getSQLConnection()
     sql = 'select viewable_owner as owner from catalog where uid=%s'
 
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
 
     # Check that Owner is not catalogued if he can't view the object
     obj = folder.newContent(portal_type='Organisation')
@@ -1990,11 +1990,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type.acquire_local_roles = False
     self.portal.portal_caches.clearAllCache()
     logout()
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     logout()
-    self.login('little_owner')
+    self.loginByUserName('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 0)
     self.tic()
@@ -2006,11 +2006,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type.acquire_local_roles = False
     self.portal.portal_caches.clearAllCache()
     logout()
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     logout()
-    self.login('little_owner')
+    self.loginByUserName('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, ['Owner'], 0)
     self.tic()
@@ -2023,11 +2023,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type.acquire_local_roles = False
     self.portal.portal_caches.clearAllCache()
     logout()
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     logout()
-    self.login('little_owner')
+    self.loginByUserName('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 1)
     self.tic()
@@ -2039,11 +2039,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type.acquire_local_roles = True
     self.portal.portal_caches.clearAllCache()
     logout()
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     logout()
-    self.login('little_owner')
+    self.loginByUserName('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 0)
     self.tic()
@@ -2055,11 +2055,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type.acquire_local_roles = True
     self.portal.portal_caches.clearAllCache()
     logout()
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     logout()
-    self.login('little_owner')
+    self.loginByUserName('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, ['Owner'], 0)
     self.tic()
@@ -2072,11 +2072,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sub_portal_type.acquire_local_roles = True
     self.portal.portal_caches.clearAllCache()
     logout()
-    self.login('super_owner')
+    self.loginByUserName('super_owner')
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
     logout()
-    self.login('little_owner')
+    self.loginByUserName('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 1)
     self.tic()
@@ -2344,12 +2344,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     sql_connection = self.getSQLConnection()
 
-    self.login(user2)
+    self.loginByUserName(user2)
     obj2 = folder.newContent(portal_type=portal_type)
     obj2.manage_setLocalRoles(user1, ['Auditor'])
     obj2.manage_permission(perm, ['Owner', 'Auditor'], 0)
 
-    self.login(user1)
+    self.loginByUserName(user1)
 
     obj = folder.newContent(portal_type=portal_type)
     obj.manage_setLocalRoles(user1, ['Owner', 'Auditor'])
@@ -2526,12 +2526,12 @@ VALUES
 
     sql_connection = self.getSQLConnection()
 
-    self.login(user2)
+    self.loginByUserName(user2)
     obj2 = folder.newContent(portal_type=portal_type)
     obj2.manage_setLocalRoles(user1, ['Auditor'])
     obj2.manage_permission(perm, ['Assignee', 'Auditor'], 0)
 
-    self.login(user1)
+    self.loginByUserName(user1)
 
     obj = folder.newContent(portal_type=portal_type)
     obj.manage_setLocalRoles(user1, ['Assignee', 'Auditor'])
@@ -2725,7 +2725,7 @@ VALUES
       result = sql_connection.manage_test(sql)
       return result.dictionaries()
 
-    self.login(user1)
+    self.loginByUserName(user1)
 
     # Add a new table to the catalog
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
@@ -2979,7 +2979,7 @@ VALUES
       result = sql_connection.manage_test(sql)
       return result.dictionaries()
 
-    self.login(user1)
+    self.loginByUserName(user1)
 
     # Add a new table to the catalog
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()

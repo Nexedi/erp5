@@ -22,7 +22,7 @@ context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFi
   at_date,
   simulation_state,
   ledger,
-  user_name=person_value.getReference(),
+  user_name=person_value.Person_getUserId(),
   tag=tag,
   aggregate_tag=aggregate_tag)
 

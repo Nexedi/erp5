@@ -88,7 +88,15 @@ def Base_asXML(object, root=None):
   # We have to find every property
   for prop_id in set(self.propertyIds()):
     # In most case, we should not synchronize acquired properties
-    if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type',):
+    if prop_id not in ('uid', 'workflow_history', 'id', 'portal_type') and (prop_id != 'user_id' or 'ERP5User' not in getattr(
+      getattr(
+        self.getPortalObject().portal_types,
+        self.getPortalType(),
+        None,
+      ),
+      'getTypePropertySheetList',
+      lambda: (),
+    )()):
       value = self.getProperty(prop_id)
       if value is None:
         prop_type = 'None'

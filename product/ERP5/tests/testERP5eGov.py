@@ -128,7 +128,7 @@ class TestEgov(ERP5TypeTestCase):
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager', 'Assignor','Assignee'], [])
-    self.login('seb')
+    self.loginByUserName('seb')
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
     self.portal = self.getPortalObject()
@@ -282,7 +282,7 @@ class TestEgov(ERP5TypeTestCase):
     procedure.validate()
     self.createCitizenUser()
     self.logout()
-    self.login('citizen')
+    self.loginByUserName('citizen')
     #Allow citizen to have Agent role to create application
     vat_module = self.portal.getDefaultModule('Vat Declaration')
     vat_declaration = vat_module.newContent(portal_type='Vat Declaration')
@@ -307,7 +307,7 @@ class TestEgov(ERP5TypeTestCase):
     procedure.validate()
     self.createCitizenUser()
     self.logout()
-    self.login('citizen')
+    self.loginByUserName('citizen')
     #Allow citizen to have Agent role to create application
     vat_module = self.portal.getDefaultModule('Vat Declaration')
     vat_declaration = vat_module.newContent(portal_type='Vat Declaration')
@@ -339,7 +339,7 @@ class TestEgov(ERP5TypeTestCase):
     procedure.validate()
     self.createCitizenUser()
     self.logout()
-    self.login('citizen')
+    self.loginByUserName('citizen')
     #Allow citizen to have Agent role to create application
     vat_module = self.portal.getDefaultModule('Vat Declaration')
     vat_declaration = vat_module.newContent(portal_type='Vat Declaration')
@@ -350,7 +350,7 @@ class TestEgov(ERP5TypeTestCase):
     self.assertEqual('submitted', vat_declaration.getValidationState())
     self.createAgentUser()
     self.logout()
-    self.login('agent')
+    self.loginByUserName('agent')
     vat_declaration.view()
     vat_declaration.PDFDocument_getApplicationIncomeDict()
     vat_declaration.PDFDocument_getReportSectionList()
@@ -366,7 +366,7 @@ class TestEgov(ERP5TypeTestCase):
       self.assertEqual('assigned', vat_declaration.getValidationState())
       self.createValidatorUser()
       self.logout()
-      self.login('major')
+      self.loginByUserName('major')
       self.portal.portal_workflow.doActionFor(vat_declaration, 'complete_action')
       self.assertEqual('completed', vat_declaration.getValidationState())
     """

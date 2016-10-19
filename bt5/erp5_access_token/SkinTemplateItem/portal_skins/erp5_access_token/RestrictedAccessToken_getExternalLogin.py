@@ -22,6 +22,6 @@ if access_token_document.getValidationState() == 'validated':
     
     agent_document = access_token_document.getAgentValue()
     if agent_document is not None:
-      result = agent_document.getReference(None)
+      result = agent_document.Person_getUserId()
 
 return result

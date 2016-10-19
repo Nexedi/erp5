@@ -95,7 +95,7 @@
                           <string>Section</string>
                         </tuple>
                         <tuple>
-                          <string>owner</string>
+                          <string>Base_getOwnerTitle</string>
                           <string>Owner</string>
                         </tuple>
                         <tuple>

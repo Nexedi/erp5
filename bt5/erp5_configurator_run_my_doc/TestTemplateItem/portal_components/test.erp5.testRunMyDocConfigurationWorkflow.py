@@ -207,7 +207,7 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Check if Knowledge Pad is configured correctly """
     self.portal.ERP5Site_createDefaultKnowledgePadListForUser()
     self.tic()
-    current_user = self.portal.portal_membership.getAuthenticatedMember().getUserName()
+    current_user = self.portal.portal_membership.getAuthenticatedMember().getIdOrUserName()
     pad = self.portal.portal_catalog.getResultValue(portal_type="Knowledge Pad", 
                                              owner=current_user)
     gadget_uid = self.portal.portal_gadgets.test_wizard_gadget.getUid()
@@ -263,7 +263,7 @@ class TestRunMyDocsConfiguratorWorkflowFranceLanguage(TestRunMyDocsConfiguratorW
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
-    self.login("french_creator")
+    self.loginByUserName("french_creator")
     self._stepCheckKnowledgePadRole()
 
 
@@ -312,5 +312,5 @@ class TestRunMyDocsConfiguratorWorkflowBrazilLanguage(TestRunMyDocsConfiguratorW
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
-    self.login("person_creator")
+    self.loginByUserName("person_creator")
     self._stepCheckKnowledgePadRole()

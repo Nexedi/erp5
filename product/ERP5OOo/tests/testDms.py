@@ -1130,11 +1130,11 @@ class TestDocument(TestDocumentMixin):
     # create test Person objects and add pseudo local security
     person1 =  self.createUser(reference='user1')
     person1.setTitle('Another Contributor')
-    portal.document_module.manage_setLocalRoles('user1', ['Assignor',])
+    portal.document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
     self.tic()
 
     # login as another user
-    super(TestDocument, self).login('user1')
+    super(TestDocument, self).loginByUserName('user1')
     document_4 = portal.document_module.newContent(
                    portal_type = 'Presentation',
                    description = 'owner different user contributing document',
@@ -1217,7 +1217,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
 
     # only my docs
-    super(TestDocument, self).login('user1')
+    super(TestDocument, self).loginByUserName('user1')
     kw = {'searchabletext_any': 'owner'}
     # should return all documents matching a word no matter if we're owner or not
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
@@ -1663,13 +1663,13 @@ class TestDocument(TestDocumentMixin):
 
     # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='contributor1')
-    document_module.manage_setLocalRoles('contributor1', ['Assignor',])
+    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
     person2 =  self.createUser(reference='contributor2')
-    document_module.manage_setLocalRoles('contributor2', ['Assignor',])
+    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     self.tic()
 
     # login as first one
-    super(TestDocument, self).login('contributor1')
+    super(TestDocument, self).loginByUserName('contributor1')
     doc = document_module.newContent(portal_type='File',
                                      title='Test1')
     self.tic()
@@ -1678,7 +1678,7 @@ class TestDocument(TestDocumentMixin):
                        doc.getContributorValueList())
 
     # login as second one
-    super(TestDocument, self).login('contributor2')
+    super(TestDocument, self).loginByUserName('contributor2')
     doc.edit(title='Test2')
     self.tic()
     self.login()
@@ -2478,7 +2478,7 @@ return 1
     document.publish()
     document.reject()
     document.share()
-    logged_in_user = str(self.portal.portal_membership.getAuthenticatedMember())
+    logged_in_user = self.portal.portal_membership.getAuthenticatedMember().getId()
     event_list = document.Base_getWorkflowEventInfoList()
     event_list.reverse()
     # all actions by logged in user

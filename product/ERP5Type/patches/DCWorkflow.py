@@ -363,6 +363,11 @@ DCWorkflow.ValidationFailed = ValidationFailed
 
 ModuleSecurityInfo('Products.DCWorkflow.DCWorkflow').declarePublic('ValidationFailed')
 
+from Products.CMFCore.Expression import getEngine
+
+userGetIdOrUserNameExpression = Expression('user/getIdOrUserName')
+userGetIdOrUserNameExpression._v_compiled = getEngine().compile(
+  userGetIdOrUserNameExpression.text)
 
 # Patch excecuteTransition from DCWorkflowDefinition, to put ValidationFailed
 # error messages in workflow history.
@@ -432,7 +437,13 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
             value = former_status[id]
         else:
             if vdef.default_expr is not None:
-                expr = vdef.default_expr
+                # PATCH : if Default expression for 'actor' is 'user/getUserName',
+                # we use 'user/getIdOrUserName' instead to store user ID for ERP5
+                # user.
+                if id == 'actor' and vdef.default_expr.text == 'user/getUserName':
+                  expr = userGetIdOrUserNameExpression
+                else:
+                  expr = vdef.default_expr
             else:
                 value = vdef.default_value
         if expr is not None:

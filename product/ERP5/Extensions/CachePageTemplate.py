@@ -14,7 +14,7 @@ def getCachedPageTemplate(self, id=None, REQUEST=None):
     # Get the user id and request
     if not REQUEST:
       REQUEST = get_request()
-    user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+    user_id = self.portal_membership.getAuthenticatedMember().getIdOrUserName()
     key = (user_id, id)
     # lookup the cache for time
     now = time.time()

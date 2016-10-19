@@ -114,7 +114,7 @@ class TestERP5Workflow(ERP5TypeTestCase):
 
     v1 = workflow.newContent(portal_type='Variable',
                              title='actor',
-                             initial_value='member/getUserName')
+                             initial_value='member/getIdOrUserName')
 
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
     workflow.initializeDocument(doc)

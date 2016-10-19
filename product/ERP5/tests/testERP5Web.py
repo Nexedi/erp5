@@ -153,7 +153,7 @@ class TestERP5Web(ERP5TypeTestCase):
     uf._doAddUser(self.manager_username,
                   self.manager_password,
                   ['Manager'], [])
-    self.login(self.manager_username)
+    self.loginByUserName(self.manager_username)
 
     self.web_page_module = self.portal.getDefaultModule('Web Page Module')
     self.web_site_module = self.portal.getDefaultModule('Web Site Module')
@@ -321,11 +321,11 @@ Hé Hé Hé!""", page.asText().strip())
     # check if user account is 'loggable'
     uf = portal.acl_users
     user = uf.getUserById(kw['reference'])
-    self.assertEqual(str(user), kw['reference'])
+    self.assertEqual(user.getIdOrUserName(), kw['reference'])
     self.assertEqual(1, user.has_role(('Member', 'Authenticated',)))
-    self.login(kw['reference'])
+    self.loginByUserName(kw['reference'])
     self.assertEqual(kw['reference'],
-                      str(portal.portal_membership.getAuthenticatedMember()))
+                     portal.portal_membership.getAuthenticatedMember().getIdOrUserName())
 
     # test redirection to person oobject
     path = website.absolute_url_path() + '/WebSite_redirectToUserView'
@@ -1203,7 +1203,7 @@ Hé Hé Hé!""", page.asText().strip())
                                                  portal_type='Preference',
                                                  owner='administrator')
     if administrator_preference is None:
-      self.login('administrator')
+      self.loginByUserName('administrator')
       administrator_preference = preference_tool.newContent(
                                               portal_type='Preference')
     if isTransitionPossible(administrator_preference, 'enable_action'):
@@ -1217,7 +1217,7 @@ Hé Hé Hé!""", page.asText().strip())
                                                   portal_type='Preference',
                                                   owner='webeditor')
     if webeditor_preference is None:
-      self.login('webeditor')
+      self.loginByUserName('webeditor')
       webeditor_preference = preference_tool.newContent(
                                               portal_type='Preference')
     if isTransitionPossible(webeditor_preference, 'enable_action'):
@@ -1613,7 +1613,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.clearModule(self.portal.web_page_module)
 
   def test_01_AccessWebPageByReference(self):
-    self.login('admin')
+    self.loginByUserName('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                   id='site')
     section = site.newContent(portal_type='Web Section', id='section')
@@ -1625,7 +1625,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     self.tic()
 
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     page_en = self.portal.web_page_module.newContent(portal_type='Web Page')
     page_en.edit(reference='my-first-web-page',
                  language='en',
@@ -1674,6 +1674,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section = site.newContent(portal_type='Web Section', id='section')
     person = portal.person_module.newContent(portal_type = 'Person',
                                              reference = person_reference)
+    person_user_id = person.Person_getUserId()
     # add Role Definition for site and section
     site_role_definition = site.newContent(portal_type = 'Role Definition',
                                            role_name = 'Assignee',
@@ -1684,9 +1685,9 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
     # check if Role Definition have create local roles
     self.assertSameSet(('Assignee',),
-                          site.get_local_roles_for_userid(person_reference))
+                          site.get_local_roles_for_userid(person_user_id))
     self.assertSameSet(('Associate',),
-                          section.get_local_roles_for_userid(person_reference))
+                          section.get_local_roles_for_userid(person_user_id))
     self.assertRaises(Unauthorized, site_role_definition.edit,
                       role_name='Manager')
 
@@ -1695,13 +1696,13 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section.manage_delObjects(section_role_definition.getId())
     self.tic()
     self.assertSameSet((),
-                       site.get_local_roles_for_userid(person_reference))
+                       site.get_local_roles_for_userid(person_user_id))
     self.assertSameSet((),
-                       section.get_local_roles_for_userid(person_reference))
+                       section.get_local_roles_for_userid(person_user_id))
 
   def test_03_WebSection_getDocumentValueListSecurity(self):
     """ Test WebSection_getDocumentValueList behaviour and security"""
-    self.login('admin')
+    self.loginByUserName('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                       id='site')
     site.publish()
@@ -1717,7 +1718,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     self.tic()
 
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     page_en_0 = self.portal.web_page_module.newContent(portal_type='Web Page')
     page_en_0.edit(reference='my-first-web-page',
                  language='en',
@@ -1747,13 +1748,13 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                  text_content='Hello, World!')
 
     self.commit()
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     self.tic()
     self.portal.Localizer.changeLanguage('en')
 
     self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     page_en_0.publish()
     self.tic()
 
@@ -1775,7 +1776,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # Second Object
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     page_en_1.publish()
     self.tic()
 
@@ -1794,7 +1795,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                       section.WebSection_getDocumentValueList()[0].getUid())
 
     # Trird Object
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     page_en_2.publish()
     self.tic()
 
@@ -1811,7 +1812,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
 
     # First Japanese Object
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
     page_jp_0.publish()
     self.tic()
 
@@ -1831,7 +1832,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_04_ExpireUserAction(self):
     """ Test the expire user action"""
-    self.login('admin')
+    self.loginByUserName('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site', id='site')
 
     # create websections in a site and in anothers web sections
@@ -1851,7 +1852,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to expire a Web Section.")
 
     # test if a user (ASSIGNOR) can expire them
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     try:
       section_2.expire()
       section_6.expire()
@@ -1860,7 +1861,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_05_createWebSite(self):
     """ Test to create or clone web sites with many users """
-    self.login('admin')
+    self.loginByUserName('admin')
     web_site_module = self.portal.web_site_module
 
     # test for admin
@@ -1870,7 +1871,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to create a Web Site.")
 
     # test as a web user (assignor)
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     try:
       site_2 = web_site_module.newContent(portal_type='Web Site', id='site_2')
     except Unauthorized:
@@ -1883,7 +1884,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_06_createWebSection(self):
     """ Test to create or clone web sections with many users """
-    self.login('admin')
+    self.loginByUserName('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site', id='site')
 
     # test for admin
@@ -1894,7 +1895,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       self.fail("Admin should be able to create a Web Section.")
 
     # test as a webmaster (assignor)
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     try:
       section_2 = site.newContent(portal_type='Web Section', id='section_2')
       section_3 = section_2.newContent(portal_type='Web Section', id='section_3')
@@ -1911,7 +1912,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_07_createCategory(self):
     """ Test to create or clone categories with many users """
-    self.login('admin')
+    self.loginByUserName('admin')
     portal_categories = self.portal.portal_categories
     publication_section = portal_categories.publication_section
 
@@ -1935,7 +1936,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEqual(category_2_clone.getPortalType(), 'Category')
 
     # test as a web user (assignor)
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     try:
       base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
       self.fail("A webmaster should not be able to create a Base Category.")
@@ -1965,7 +1966,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_08_createAndrenameCategory(self):
     """ Test to create or rename categories with many users """
-    self.login('admin')
+    self.loginByUserName('admin')
     portal_categories = self.portal.portal_categories
     publication_section = portal_categories.publication_section
 
@@ -1987,7 +1988,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("Admin should be able to rename a Category.")
     # test as a web user (assignor)
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     try:
       base_category_2 = portal_categories.newContent(portal_type='Base Category', id='base_category_2')
       self.fail("A webmaster should not be able to create a Base Category.")

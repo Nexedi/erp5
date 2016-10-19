@@ -1,14 +1,19 @@
 """Create a credential update in relation with the person object of current user"""
 portal = context.getPortalObject()
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+user = portal.portal_membership.getAuthenticatedMember()
+person = user.getUserValue()
+login = user.getLoginValue()
 
 if person is None:
   portal_status_message = "Can't find corresponding person, it's not possible to update your credentials."
+elif login is None:
+  portal_status_message = "Can't find corresponding login, it's not possible to update your credentials."
 else:
   # create the credential update
   module = portal.getDefaultModule(portal_type='Credential Update')
   credential_update = module.newContent(
     portal_type="Credential Update",
+    reference=login.getReference(),
     first_name=first_name,
     last_name=last_name,
     gender=gender,
@@ -42,10 +47,14 @@ else:
 
   # if we are changing password for current logged in user then do it
   # within same transaction and update client side credentials cookie 
-  username = person.getReference()
-  if password and username == str(portal.portal_membership.getAuthenticatedMember()):
-    credential_update.accept()
-    portal.cookie_authentication.credentialsChanged(username, username, password)
+  if password:
+    # The password is updated synchronously and the the rest of the credential Update is done later
+    login_reference = credential_update.Credential_updatePersonPassword()
+    portal.cookie_authentication.credentialsChanged(
+      person.Person_getUserId(),
+      login_reference,
+      password,
+    )
     portal_status_message = "Password changed."
 
 portal_status_message = context.Base_translateString(portal_status_message)

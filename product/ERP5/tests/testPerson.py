@@ -76,8 +76,8 @@ class TestPerson(ERP5TypeTestCase):
     person_copy_id = person_module.manage_pasteObjects(person_copy)[0]['new_id']
     person_copy_obj = person_module[person_copy_id]
     ## because we copy/paste Person object in the same ERP5
-    ## instance its reference must be resetted
-    self.assertEqual(person_copy_obj.getReference(), None)
+    ## instance its user_id must be reset
+    self.assertNotEqual(person_copy_obj.getUserId(), person.getUserId())
 
     ## set object as if installed from bt5 (simulate it)
     request = self.app.REQUEST
@@ -88,6 +88,8 @@ class TestPerson(ERP5TypeTestCase):
     ## because we setup Person object from business template
     ## its reference must NOT be resetted
     self.assertEqual(person_copy_obj.getReference(), person.getReference())
+    # User id must still be different
+    self.assertNotEqual(person_copy_obj.getUserId(), person.getUserId())
 
   def test_PersonGetTitleDefined(self):
     p = self._makeOne(title="title")
@@ -95,20 +97,20 @@ class TestPerson(ERP5TypeTestCase):
 
   # title & first_name, last_name
   def testEmptyTitleFallbackOnId(self):
-    p = self._makeOne(id=self.id())
-    self.assertEqual(self.id(), p.getTitle())
+    p = self._makeOne()
+    self.assertEqual(p.getUserId(), p.getTitle())
 
   def testEmptyTranslatedTitleFallbackOnId(self):
-    p = self._makeOne(id=self.id())
-    self.assertEqual(self.id(), p.getTranslatedTitle())
+    p = self._makeOne()
+    self.assertEqual(p.getUserId(), p.getTranslatedTitle())
 
   def testEmptyCompactTitleFallbackOnId(self):
-    p = self._makeOne(id=self.id())
-    self.assertEqual(self.id(), p.getCompactTitle())
+    p = self._makeOne()
+    self.assertEqual(p.getUserId(), p.getCompactTitle())
 
   def testEmptyCompactTranslatedTitleFallbackOnId(self):
-    p = self._makeOne(id=self.id())
-    self.assertEqual(self.id(), p.getCompactTranslatedTitle())
+    p = self._makeOne()
+    self.assertEqual(p.getUserId(), p.getCompactTranslatedTitle())
 
   def testEmptyTitleFallbackOnReference(self):
     p = self._makeOne(reference='reference')
@@ -183,9 +185,13 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEqual('first middle last', p.getTitle())
 
   def testGetTitleOrId(self):
-    p = self._makeOne(id='person')
-    self.assertEqual('person', p.getTitleOrId())
-    self.assertEqual('person', p.title_or_id())
+    p = self._makeOne()
+    self.assertEqual(p.getUserId(), p.getTitleOrId())
+    self.assertEqual(p.getUserId(), p.title_or_id())
+
+    p.edit(reference='reference')
+    self.assertEqual('reference', p.getTitleOrId())
+    self.assertEqual('reference', p.title_or_id())
 
     p.edit( first_name='first',
             last_name='last', )

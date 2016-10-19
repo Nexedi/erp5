@@ -67,7 +67,7 @@
     <ul>
       <li><a href="#" i18n:translate="" i18n:domain="ui"
              tal:condition="not:is_anonymous"
-             tal:attributes="href python:'%s/person_module/view?reset:int=1&owner=%s' % (portal_path, here.portal_membership.getAuthenticatedMember().getUserName())">My Contacts</a></li>
+             tal:attributes="href python:'%s/person_module/view?reset:int=1&owner=%s' % (portal_path, here.portal_membership.getAuthenticatedMember().getId())">My Contacts</a></li>
       <li><a href="#" i18n:translate="" i18n:domain="ui"
              tal:attributes="href string:${portal_path}/person_module/view?reset:int=1">Everybody</a></li>
     </ul>

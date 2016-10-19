@@ -73,7 +73,7 @@ class TestERP5BankingCounterDate(TestERP5BankingMixin):
       self.madrid = site.madrid
       self.workflow_tool = portal.portal_workflow
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     counter_date_module = self.getPortal().counter_date_module
     counter_date_module.manage_delObjects(ids=[x for x in counter_date_module.objectIds()])
     self.tic()

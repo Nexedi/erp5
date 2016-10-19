@@ -48,7 +48,7 @@ group_by = ['DATE_FORMAT(creation_date, "%s")' % sql_format,]
 # count number of object created by the user for each type of document
 result_list = context.portal_catalog.countResults(select_expression=select_expression,
                                                   portal_type=portal_type_list,limit=None,
-                                                  owner=context.getReference(),query=query,
+                                                  owner=context.Person_getUserId(),query=query,
                                                   group_by_expression=group_by)
 
 # build result dict per portal_type then period

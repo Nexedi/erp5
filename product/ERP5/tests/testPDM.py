@@ -62,7 +62,7 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     """
     Make sure that validated product can contain measure.
     """
-    self.login('author')
+    self.loginByUserName('author')
     product = self.portal.product_module.newContent(portal_type='Product',
                                                     title='Chair')
 
@@ -75,7 +75,7 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
 
     self.assertEqual(len(product.contentValues(portal_type='Measure')), 1)
 
-    self.login('assignor')
+    self.loginByUserName('assignor')
     self.portal.portal_workflow.doActionFor(product, 'validate_action')
 
     self.tic()
@@ -83,12 +83,12 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     self.assertEqual(product.getValidationState(), 'validated')
 
     # Change to author and try to add a measure to validated product and fail.
-    self.login('author')
+    self.loginByUserName('author')
     self.assertRaises(AccessControl_Unauthorized,
                       product.newContent, portal_type='Measure')
 
     # Change to assignee and try to add a measure to validated product and succeed.
-    self.login('assignee')
+    self.loginByUserName('assignee')
     product.newContent(portal_type='Measure')
 
     self.tic()

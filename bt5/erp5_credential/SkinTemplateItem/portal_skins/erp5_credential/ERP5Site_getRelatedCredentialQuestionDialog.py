@@ -3,29 +3,29 @@
   Proxy : this required a manager proxy role to be able to search in all persons
 '''
 portal = context.getPortalObject()
-person_module = portal.getDefaultModule('Person')
 request  = context.REQUEST
 web_site = context.getWebSiteValue()
 if web_site:
   request.set("came_from", web_site.absolute_url())
 if choice == "password":
   request.set('reference', reference)
-  portal_preferences = context.portal_preferences
-  result = person_module.searchFolder(reference={'query': reference, 'key': 'ExactMatch'})
-  if len(result) != 1:
+  user_id = portal.Base_getUserIdByUserName(reference)
+  if user_id is None:
+    person = None
+  else:
+    person = portal.Base_getUserValueByUserId(user_id)
+  if person is None:
     portal_status_message = context.Base_translateString("Could not find your user account.")
     if web_site:
       return web_site.Base_redirect('login_form', keep_items = dict(portal_status_message=portal_status_message ))
     return portal.Base_redirect('login_form', keep_items = dict(portal_status_message=portal_status_message ))
-
-  person = result[0]
 
   #If any question, we can create directly the credential recovery
   question_free_text = person.getDefaultCredentialQuestionQuestionFreeText()
   question_title = person.getDefaultCredentialQuestionQuestionTitle()
 
   if not (question_free_text or question_title) or \
-    not portal_preferences.isPreferredAskCredentialQuestion():
+    not portal.portal_preferences.isPreferredAskCredentialQuestion():
     return context.ERP5Site_newCredentialRecovery(reference=reference)
 
   web_section = context.getWebSectionValue()

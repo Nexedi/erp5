@@ -68,7 +68,7 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     token, expiration_time = self.person.Person_getBearerToken()
     self.portal.REQUEST._auth = 'Bearer %s' % token
     reference = self.getTokenCredential(self.portal.REQUEST)
-    self.assertEqual(reference, self.person.getReference())
+    self.assertEqual(reference, self.person.Person_getUserId())
 
   def test_different_user_agent(self):
     token, expiration_time = self.person.Person_getBearerToken()
@@ -103,7 +103,7 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     # they are not allowing to pass arguments, so lets hack in test
     token = {
       'expiration_timestamp': DateTime()-1,
-      'reference': self.person.getReference(),
+      'reference': self.person.Person_getUserId(),
       'user-agent': self.portal.REQUEST.getHeader('User-Agent'),
       'remote-addr': self.portal.REQUEST.get('REMOTE_ADDR')
     }

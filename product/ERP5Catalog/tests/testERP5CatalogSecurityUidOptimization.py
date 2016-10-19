@@ -126,24 +126,28 @@ CREATE TABLE alternate_roles_and_users (
       # create two persons and users
       user1 = self.portal.person_module.newContent(portal_type='Person',
         reference='user1')
+      user1_id = user1.Person_getUserId()
       user1.newContent(portal_type='Assignment', group='g1').open()
+      user1.newContent(portal_type='ERP5 Login', reference='user1').validate()
       user1.updateLocalRolesOnSecurityGroups()
-      self.assertEqual(user1.__ac_local_roles__.get('user1'), ['Auditor'])
+      self.assertEqual(user1.__ac_local_roles__.get(user1_id), ['Auditor'])
       self.assertEqual(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
 
       user2 = self.portal.person_module.newContent(portal_type='Person',
         reference='user2')
+      user2_id = user2.Person_getUserId()
       user2.newContent(portal_type='Assignment', group='g1').open()
+      user2.newContent(portal_type='ERP5 Login', reference='user2').validate()
       user2.updateLocalRolesOnSecurityGroups()
-      self.assertEqual(user2.__ac_local_roles__.get('user2'), ['Auditor'])
+      self.assertEqual(user2.__ac_local_roles__.get(user2_id), ['Auditor'])
       self.assertEqual(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
       self.tic()
 
       # security_uid_dict in catalog contains entries for user1 and user2:
       user1_alternate_security_uid = sql_catalog.security_uid_dict[
-        ('Alternate', ('user:user1', 'user:user1:Auditor'))]
+        ('Alternate', ('user:' + user1_id, 'user:' + user1_id + ':Auditor'))]
       user2_alternate_security_uid = sql_catalog.security_uid_dict[
-        ('Alternate', ('user:user2', 'user:user2:Auditor'))]
+        ('Alternate', ('user:' + user2_id, 'user:' + user2_id + ':Auditor'))]
 
       # those entries are in alternate security table
       alternate_roles_and_users = sql_connection.manage_test(
@@ -156,7 +160,7 @@ CREATE TABLE alternate_roles_and_users (
                       alternate_roles_and_users)
 
       # low level check of the security query of a logged in user
-      self.login('user1')
+      self.loginByUserName('user1')
       security_query = self.portal.portal_catalog.getSecurityQuery()
       # This query is a complex query wrapping another complex query with a
       # criterion on altenate_security_uid. This check is quite low level and
@@ -177,7 +181,7 @@ CREATE TABLE alternate_roles_and_users (
           local_roles='Auditor')])
 
       # searches still work for other users
-      self.login('user2')
+      self.loginByUserName('user2')
       self.assertEqual([user2],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
 
@@ -197,10 +201,10 @@ CREATE TABLE alternate_roles_and_users (
       self.assertTrue(dict(uid=career.getUid(),
                            alternate_security_uid=user1_alternate_security_uid) in
                       alternate_roles_and_users)
-      self.login('user1')
+      self.loginByUserName('user1')
       self.assertEqual([career],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
-      self.login('user2')
+      self.loginByUserName('user2')
       self.assertEqual([],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
 

@@ -78,7 +78,7 @@ for gadget in context.portal_gadgets.objectValues():
 # Add a tab and a gadget for everyone
 portal = context.getPortalObject()
 for person in context.person_module.objectValues():
-  user_name = person.getReference()
+  user_name = person.Person_getUserId()
   tag = '%s_%s_%s' %(user_name,
                    'erp5_front',
                    None)
@@ -92,7 +92,7 @@ for person in context.person_module.objectValues():
   knowledge_pad.visible()
   current_user = context.portal_membership.getAuthenticatedMember()
   knowledge_pad.manage_setLocalRoles(userid=user_name, roles=['Owner'])
-  knowledge_pad.manage_delLocalRoles([str(current_user)])
+  knowledge_pad.manage_delLocalRoles([current_user.getIdOrUserName()])
   knowledge_pad.reindexObject()
 
   knowledge_box = knowledge_pad.newContent(portal_type='Knowledge Box',

@@ -3,7 +3,7 @@
   <a tal:condition="python: context.getModificationDate() is not None">
     <a tal:content="python: 'Updated %s by' % context.getModificationDate().ISO()"/>
   </a>
-  <a tal:content="here/portal_membership/getAuthenticatedMember"/>
+  <a tal:content="python: here.Base_getUserCaption()"/>
   <button onclick="javascript:clickSaveButton('Base_edit')"
           name="Base_edit:method" 
           class="save" type="submit"

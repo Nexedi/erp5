@@ -4903,7 +4903,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=700.0),
                      ))
     self.tic()
-    self.login(self.username)
+    self.loginByUserName(self.username)
 
   def beforeTearDown(self):
     AccountingTestCase.beforeTearDown(self)

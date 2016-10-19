@@ -9,4 +9,4 @@ if password != password_confirm:
 
 reference = kwargs['reference']
 if not reference:
-  raise ValidationFailed(translateString('User ID is not specified.'))
+  raise ValidationFailed(translateString('User Login is not specified.'))

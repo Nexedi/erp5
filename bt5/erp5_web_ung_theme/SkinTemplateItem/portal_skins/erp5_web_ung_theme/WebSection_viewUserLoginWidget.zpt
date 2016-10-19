@@ -6,7 +6,7 @@
    <a id="login" href="#" i18n:translate="" i18n:domain="ui">Sign in</a>
  </tal:block>
  <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">
-   | <a tal:content="here/portal_membership/getAuthenticatedMember"/>
+   | <a tal:content="python: here.Base_getUserCaption()"/>
  </tal:block>
  <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser()">
    | <a id="settings" href="#" i18n:translate="" i18n:domain="ui">Settings</a> 

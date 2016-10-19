@@ -4,10 +4,9 @@ value -- field value (string)
 REQUEST -- standard REQUEST variable"""
 
 if value:
-  # Same tag is used as in Document.Person._setReference, in order to protect against
-  # concurrency between Credential Request and Person object too
-  tag = 'Person_setReference_%s' % value.encode('hex')
-  if context.getPortalObject().portal_activities.countMessageWithTag(tag):
+  # Same tag is used as in ERP5 Login _setReference, in order to protect against
+  # concurrency between Credential Request and ERP5 Login object too
+  if context.getPortalObject().portal_activities.countMessageWithTag('set_login_' + value.encode('hex')):
     return False
 
 def getRealContext():
@@ -29,6 +28,12 @@ context = getRealContext()
 if context.getPortalType() == "Credential Request":
   related_person = context.getDestinationDecisionValue(portal_type="Person")
   if related_person is not None:
+    for erp5_login_value in related_person.objectValues(
+      portal_type=self.getPortalObject().getPortalLoginTypeList(),
+    ):
+      if erp5_login_value.getValidationState() == 'validated' and erp5_login_value.getReference() == value:
+        return True
+    # BBB: for Persons who still use their reference as login
     if related_person.getReference() == value:
       return True
 

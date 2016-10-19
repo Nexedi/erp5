@@ -40,9 +40,9 @@ if (
       source_person.getDefaultEmailText() and # XXX Add unit test: check if task confirmation works if assignee has no mail
       destination_decision_person is not None and
       destination_decision_person.getDefaultEmailText() and
-      destination_decision_person.getReference()
+      destination_decision_person.Person_getUserId()
     ):
-  if portal.acl_users.searchUsers(id=source_person.getReference(), exact_match=True):
+  if portal.acl_users.searchUsers(id=source_person.Person_getUserId(), exact_match=True):
     message = """A new task has been assigned to you by %(assignor)s.
 
 This task is named: %(title)s

@@ -22,24 +22,12 @@ NOTE: for now, this script requires proxy manager
 
 category_list = []
 
-# Get the Person module
-person_module = context.portal_url.getPortalObject().getDefaultModule('Person')
-
-# It is better to keep getObject(), in this script this
-# prevent a very strange bug, sometimes without getObject the
-# assignment is not found
-person_object_list = [x.getObject() for x in person_module.searchFolder(portal_type='Person', reference=user_name)]
-
-if len(person_object_list) != 1:
-  if len(person_object_list) > 1:
-    raise ConsistencyError, "Error: There is more than one Person with reference '%s'" % user_name
-  else:
-    # if a person_object was not found in the module, we do nothing more
-    # this happens for example when a manager with no associated person object
-    # creates a person_object for a new user
-    return []
-person_object = person_object_list[0]
-
+person_object = context.Base_getUserValueByUserId(user_name)
+if person_object is None:
+  # if a person_object was not found in the module, we do nothing more
+  # this happens for example when a manager with no associated person object
+  # creates a person_object for a new user
+  return []
 # We look for every valid assignments of this user
 for assignment in person_object.contentValues(filter={'portal_type': 'Assignment'}):
   if assignment.getValidationState() == 'open':
