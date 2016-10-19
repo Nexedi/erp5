@@ -54,7 +54,6 @@ for item in task_items:
                                      , resource = item['resource']
                                      , task_line_quantity = item['quantity']
                                      , task_line_quantity_unit = item['quantity_unit']
-                                     , source_section = item['source_section']
                                      , destination_decision = item['destination_decision']
                                      , destination_section = item['destination_section']
                                      , destination = item['destination']
