@@ -69,12 +69,6 @@
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n="Add"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>click</td>
   <td>link=Add</td>
   <td></td>
 </tr>
@@ -111,7 +105,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title="listbox_start_date"]</td>
+  <td>//div[@data-gadget-scope="INPUT"]</td>
   <td></td>
 </tr>
 
@@ -169,7 +163,7 @@
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//input[@title="listbox_start_date"]</td>
+  <td>//div[@data-gadget-scope="INPUT"]</td>
   <td></td>
 </tr>
 
