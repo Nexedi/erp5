@@ -1,12 +1,70 @@
-/*global window, rJS */
+/*global window, rJS, jIO, URI, location, console, document, RSVP, loopEventListener, navigator */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS) {
   "use strict";
 
   var gadget_klass = rJS(window),
+    NAME,
     MAIN_PAGE_PREFIX = "gadget_officejs_",
     DEFAULT_PAGE = "document_list",
     REDIRECT_TIMEOUT = 5000;
+
+  function get_jio_cache_storage(name) {
+    return {
+      type: "query",
+      sub_storage: {
+        type: "uuid",
+        sub_storage: {
+          type: "indexeddb",
+          database: 'officejs_' + name + '_cache_erp5'
+        }
+      }
+    };
+  }
+
+  function get_jio_replicate_storage(name, modification_date) {
+    var erp5_query,
+      sdk_name;
+
+
+    if (modification_date) {
+      modification_date = ' AND modification_date:>="'
+        + modification_date + '" ';
+    } else {
+      modification_date = "";
+    }
+
+    return jIO.createJIO({
+      type: "replicate",
+      query: {
+        query: '(portal_type: ("Web Style", "Web Page", "Web Script"))' + modification_date,
+        limit: [0, 1234567890]
+      },
+      use_remote_post: true,
+      conflict_handling: 2,
+      check_local_modification: false,
+      check_local_creation: false,
+      check_local_deletion: false,
+      check_remote_modification: true,
+      check_remote_creation: true,
+      check_remote_deletion: true,
+      use_bulk: false,
+      local_sub_storage: get_jio_cache_storage(name),
+      remote_sub_storage: {
+        type: "mapping",
+        sub_storage: {
+          type: "erp5",
+          url: (new URI("hateoasnoauth"))
+            .absoluteTo(location.href)
+            .toString(),
+          default_view_reference: "jio_view"
+        },
+        query: {"query": 'version: OSP-5-dev'},
+        mapping_dict: {"id": {"equal": "reference"}},
+        map_all_property: true
+      }
+    });
+  }
 
   function listenHashChange(gadget) {
     function extractHashAndDispatch(evt) {
@@ -38,7 +96,7 @@
     }
 
     var result = loopEventListener(window, 'hashchange', false,
-                                   extractHashAndDispatch),
+      extractHashAndDispatch),
       event = document.createEvent("Event");
     event.initEvent('hashchange', true, true);
     event.newURL = window.location.toString();
@@ -58,7 +116,9 @@
         });
     })
 
-    .declareMethod("getCommandUrlFor", function(options) {
+    .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('setSetting', 'setSetting')
+    .declareMethod("getCommandUrlFor", function (options) {
       var prefix = '',
         result,
         key;
@@ -121,13 +181,13 @@
           }
           return {
             url: MAIN_PAGE_PREFIX + "jio_"
-              + base_portal_type
-              + "_" + args.page + ".html",
+            + base_portal_type
+            + "_" + args.page + ".html",
             options: sub_options
           };
         });
     })
-    
+
     .declareAcquiredMethod('jio_get', 'jio_get')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareMethod('start', function () {
@@ -142,6 +202,9 @@
 
       function push(a, b) {
         queue.push(function () {
+          if (a == "portal_type") {
+            NAME = b.toLowerCase();
+          }
           return gadget.setSetting(a, b);
         });
       }
@@ -158,6 +221,63 @@
       return new RSVP.Queue()
         .push(function () {
           return gadget.props.start_deferred.promise;
+        })
+        .push(function () {
+          if (('serviceWorker' in navigator) && (NAME != "web page")) {
+            return jIO.createJIO(get_jio_cache_storage(NAME)).allDocs({
+                query: '',
+                sort_on: [
+                  ['modification_date', 'descending']
+                ],
+                limit: [0, 1],
+                select_list: ['modification_date']
+              })
+              .push(function (data) {
+                var modification_date,
+                  jio_store;
+                if (data.data.total_rows == 1) {
+                  modification_date = data.data.rows[0].value.modification_date;
+                }
+                jio_store = get_jio_replicate_storage(NAME);
+                return gadget.getSetting('jio_' + NAME + '_cache_description')
+                  .push(function (query) {
+                    if (jio_store.__storage._query_options.query == query) {
+                      return get_jio_replicate_storage(NAME, modification_date).repair();
+                    } else {
+                      return gadget.setSetting(
+                          'jio_' + NAME + '_cache_description', jio_store.__storage._query_options.query
+                        )
+                        .push(function () {
+                          return jio_store.repair();
+                        });
+                    }
+                  })
+                  .push(undefined, function (error) {
+                    // fix offline mode bypass network errors
+                    if (error instanceof ProgressEvent &&
+                        error.srcElement instanceof XMLHttpRequest &&
+                        error.type === "error") {
+                      return {};
+                    } else {
+                      throw error;
+                    }
+                  })
+                  .push(function () {
+                    navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
+                      .then(function (reg) {
+                        // registration worked
+                        console.log('Registration succeeded. Scope is ' + reg.scope);
+                      })
+                      .then(undefined, function (error) {
+                        // registration failed
+                        console.log('Registration failed with ' + error);
+                      });
+                    return {}
+                  });
+              });
+          } else {
+            return {};
+          }
         })
         .push(function () {
           return listenHashChange(gadget);
