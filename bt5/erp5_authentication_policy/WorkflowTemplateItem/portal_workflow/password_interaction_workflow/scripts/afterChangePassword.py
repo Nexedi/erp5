@@ -2,9 +2,9 @@ login = state_change['object']
 portal = login.getPortalObject()
 
 # check preferences and save only if set
-number_of_last_password_to_check = portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck()
 
-if number_of_last_password_to_check is not None and number_of_last_password_to_check:
+if portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck() or \
+    portal.portal_preferences.getPreferredMaxPasswordLifetimeDuration() is not None:
   # save password and modification date
   current_password = login.getPassword()
   if current_password is not None:
