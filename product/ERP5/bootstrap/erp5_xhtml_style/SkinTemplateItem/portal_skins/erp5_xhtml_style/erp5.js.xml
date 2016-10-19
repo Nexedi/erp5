@@ -48,9 +48,14 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
 \n
-function submitAction(form, act) {\n
-  form.action = act;\n
-  form.submit();\n
+function submitAction(form_or_submit, act) {\n
+  if ($(form_or_submit).is(\'form\')) {\n
+    form = form_or_submit;\n
+    form.action = act;\n
+    form.submit();\n
+  } else {\n
+    form_or_submit.click();\n
+  }\n
 }\n
 \n
 // This function will be called when the user click the save button. As \n
@@ -176,17 +181,22 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
 // and modify respective main form action\n
 // if clear_changed_flag is set to true, changed will be set to false, so no\n
 // warning message about unsaved changes will be displayed\n
-function submitFormOnEnter(event, form, method_name, clear_changed_flag, element){\n
+function submitFormOnEnter(event, form_or_submit, method_name, clear_changed_flag, element){\n
   if (clear_changed_flag === null){ clear_changed_flag = false; }\n
   if(event.keyCode == 13){\n
-    if (form == "main_form") {\n
-      form = document.forms[form]; // backward compatibility\n
-    }\n
-    form.action = method_name;\n
     if (clear_changed_flag === true) {\n
       changed = false;\n
     }\n
-    form.submit();\n
+    if ($(form_or_submit).is(\'form\')) {\n
+      form = form_or_submit;\n
+      if (form == "main_form") {\n
+        form = document.forms[form]; // backward compatibility\n
+      }\n
+      form.action = method_name;\n
+      form.submit();\n
+    } else {\n
+      form_or_submit.click();\n
+    }\n
     event.preventDefault();\n
     return false;\n
   }\n

@@ -199,17 +199,17 @@
 \n
     <tal:block tal:condition="python: here.current_page > 0">\n
       <button type="submit"\n
-              title="First Page" name="firstPage:method"\n
+              title="First Page" name="listbox_firstPage:method" value="listbox"\n
               class="listbox_first_page"\n
-              tal:attributes="name string:${field_id}_firstPage:method;\n
+              tal:attributes="value string:${field_id};\n
                               class python: test(is_default_listbox_field, \'listbox_first_page\', \'listbox_first_page %s_first_page\' %field_id)"\n
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
       <button type="submit"\n
-              title="Previous Page" name="previousPage:method"\n
+              title="Previous Page" name="listbox_previousPage:method" value="listbox"\n
               class="listbox_previous_page"\n
-              tal:attributes="name string:${field_id}_previousPage:method;\n
+              tal:attributes="value string:${field_id};\n
                               class python: test(is_default_listbox_field, \'listbox_previous_page\', \'listbox_previous_page %s_previous_page\' %field_id)"\n
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
@@ -224,15 +224,15 @@
 \n
     <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
       <button type="submit"\n
-              title="Next Page" name="nextPage:method" class="listbox_next_page"\n
-              tal:attributes="name string:${field_id}_nextPage:method;\n
+              title="Next Page" name="listbox_nextPage:method" value="listbox" class="listbox_next_page"\n
+              tal:attributes="value string:${field_id};\n
                               class python: test(is_default_listbox_field, \'listbox_next_page\', \'listbox_next_page %s_next_page\' %field_id)"\n
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
       <button type="submit"\n
-              title="Last Page" name="lastPage:method" class="listbox_last_page"\n
-              tal:attributes="name string:${field_id}_lastPage:method;\n
+              title="Last Page" name="listbox_lastPage:method" value="listbox" class="listbox_last_page"\n
+              tal:attributes="value string:${field_id};\n
                               class python: test(is_default_listbox_field, \'listbox_last_page\', \'listbox_last_page %s_last_page\' %field_id)"\n
               i18n:domain="ui" i18n:attributes="title" >\n
         <span class="image"/>\n
@@ -303,13 +303,19 @@
 \n
   <!-- Type in listbox navigation --> \n
   <tal:block metal:define-macro="type_in_page_navigation">\n
+    <input type="submit"\n
+           id="listbox_setPage"\n
+           class="hidden_button"\n
+           name="listbox_setPage:method" value="listbox"\n
+           tal:attributes="value string:${field_id};\n
+                           id string:${field_id}_setPage" />\n
     <input class="listbox_set_page" \n
            name="page_start" onblur="this.value=this.defaultValue"\n
            tal:attributes="name string:${field_id}_page_start;\n
                            class python: test(is_default_listbox_field, \'listbox_set_page\', \'listbox_set_page %s_set_page\' %field_id);\n
                            value python:here.current_page + 1;\n
                            size python:len(str(here.total_pages));\n
-                           onkeypress string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
+                           onkeypress string:submitFormOnEnter(event, $$(\'#${field_id}_setPage\'))" />\n
     / <tal:block content="here/total_pages" />\n
   </tal:block>\n
 \n
