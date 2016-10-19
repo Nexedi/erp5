@@ -268,6 +268,8 @@
       }
       field_json.search_column_list.push(["searchable_text", "Searchable Text"]);
 
+      // Cancel previous line rendering to not conflict with the asynchronous render for now
+      gadget.renderContent(true);
       return new RSVP.Queue()
         .push(function () {
           return renderListbox(gadget);
@@ -325,7 +327,7 @@
     //////////////////////////////////////////////
     // render the listbox in an asynchronous way
     //////////////////////////////////////////////
-    .declareJob('renderContent', function () {
+    .declareJob('renderContent', function (only_cancel) {
       var gadget = this,
         props = gadget.props,
         field_json = props.field_json,
@@ -339,6 +341,10 @@
         limit_options,
         queue,
         i;
+
+      if (only_cancel) {
+        return;
+      }
 
       if (field_json.query === undefined) {
         gadget.props.element.querySelector('tfoot').textContent = "Unsupported list method: '" + field_json.list_method + "'";
