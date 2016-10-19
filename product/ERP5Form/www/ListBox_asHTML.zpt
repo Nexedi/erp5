@@ -143,20 +143,31 @@
                     i18n:translate="" i18n:domain="ui"> - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> item(s) selected</span>
               </td>
 	      <td style="white-space: nowrap; vertical-align: middle; text-align: center;">
-                <input tal:condition="python: here.current_page > 0"
-                  id="listbox_previous_page" type="image" src="1leftarrowv.png"
-                  title="Previous Page" name="previousPage:method"
+                <button tal:condition="python: here.current_page > 0"
+                  id="listbox_previous_page" type="submit"
+                  title="Previous Page" name="listbox_previousPage:method" value="listbox"
                   tal:attributes="id string:${field_id}_previous_page;
-                                  name string:${field_id}_previousPage:method;
-                                  src string:${portal_url_string}/images/1leftarrowv.png"
-                  i18n:domain="ui" i18n:attributes="title" />
+                                  value string:${field_id}"
+                  i18n:domain="ui" i18n:attributes="title">
+                  <img src="1leftarrowv.png"
+                    alt="Previous Page"
+                    title="Previous Page"
+                    tal:attributes="src string:${portal_url_string}/images/1leftarrowv.png"
+                    i18n:domain="ui" i18n:attributes="title;alt" />
+                </button>
               </td>
 	      <td style="white-space: nowrap; vertical-align: middle; text-align: center">
+                <input type="submit"
+                  id="listbox_setPage"
+                  class="hidden_button"
+                  name="listbox_setPage:method" value="listbox"
+                  tal:attributes="value string:${field_id};
+                                  id string:${field_id}_setPage" />
                 <select id="listbox_page_selection" name="list_start" title="Change Page" size="1"
                   tal:define="lines here/getMaxLineNumber"
                   tal:attributes="id string:${field_id}_page_selection;
                                   name string:${field_id}_list_start;
-                                  onChange string:submitAction(this.form, '${context_url}/${field_id}_setPage')"
+                                  onchange string:submitAction($$('#${field_id}_setPage'))"
                   i18n:domain="ui" i18n:attributes="title">
                   <option value="0"
                     tal:repeat="p python: range(0, here.total_pages)"
@@ -166,13 +177,18 @@
                 </select>
               </td>
 	      <td style="white-space: nowrap; vertical-align: middle; text-align: center">
-                <input tal:condition="python: here.current_page < here.total_pages - 1"
-                  id="listbox_next_page" type="image" src="1rightarrowv.png"
-                  title="Next Page" name="nextPage:method"
+                <button tal:condition="python: here.current_page < here.total_pages - 1"
+                  id="listbox_next_page" type="submit"
+                  title="Next Page" name="listbox_nextPage:method" value="listbox"
                   tal:attributes="id string:${field_id}_next_page;
-                                  name string:${field_id}_nextPage:method;
-                                  src string:${portal_url_string}/images/1rightarrowv.png"
-                  i18n:domain="ui" i18n:attributes="title" />
+                                  value string:${field_id}"
+                  i18n:domain="ui" i18n:attributes="title">
+                  <img src="1rightarrowv.png"
+                    alt="Next Page"
+                    title="Next Page"
+                    tal:attributes="src string:${portal_url_string}/images/1rightarrowv.png"
+                    i18n:domain="ui" i18n:attributes="title;alt" />
+                </button>
               </td>
             </tr>
           </table>
@@ -194,18 +210,33 @@
               </td>
               <td tal:condition="show_select_column"
                 class="Data" style="width: 50px; text-align: center; vertical-align: middle">
-                <input id="listbox_check_all" type="image"
-                  name="checkAll:method" value="1"
-                  src="checkall.png" alt="Check All" title="Check All"
+                <button id="listbox_check_all" type="submit"
+                  name="listbox_checkAll:method" value="listbox"
+                  title="Check All"
                   tal:attributes="id string:${field_id}_check_all;
-                                  name string:${field_id}_checkAll:method;
-                                  src string:${portal_url_string}/images/checkall.png"
-                  i18n:domain="ui" i18n:attributes="title" />&nbsp;<input id="listbox_uncheck_all" type="image" name="uncheckAll:method" value="1"
-                  src="%(portal_url_string)s/images/decheckall.png" style="border: 0" alt="Uncheck All" title="Uncheck All"
+                                  value string:${field_id}"
+                  i18n:domain="ui" i18n:attributes="title">
+                  <img class="listbox-check-all"
+                     src="images/checkall.png"
+                     alt="Check All"
+                     title="Check All"
+                     tal:attributes="src string:${portal_url_string}/images/checkall.png"
+                     i18n:domain="ui" i18n:attributes="title;alt" />
+                </button>
+                &nbsp;
+                <button id="listbox_uncheck_all" type="submit"
+                  name="listbox_uncheckAll:method" value="listbox"
+                  title="Uncheck All"
                   tal:attributes="id string:${field_id}_uncheck_all;
-                                  name string:${field_id}_uncheckAll:method;
-                                  src string:${portal_url_string}/images/decheckall.png"
-                  i18n:domain="ui" i18n:attributes="title" />
+                                  value string:${field_id}"
+                  i18n:domain="ui" i18n:attributes="title">
+                  <img class="listbox-uncheck-all"
+                    src="images/decheckall.png"
+                    alt="Uncheck All"
+                    title="Uncheck All"
+                    tal:attributes="src string:${portal_url_string}/images/decheckall.png;"
+                    i18n:domain="ui" i18n:attributes="title;alt" />
+                </button>
               </td>
               <tal:block tal:repeat="value here/getLabelValueList">
                 <tal:block tal:define="sql python: value[0];

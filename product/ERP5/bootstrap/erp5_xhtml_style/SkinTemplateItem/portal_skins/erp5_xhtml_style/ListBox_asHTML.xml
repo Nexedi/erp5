@@ -263,22 +263,33 @@
             <th tal:condition="python: show_select_column"\n
                 class="listbox-table-select-cell">\n
            \n
-              <input class="listbox-check-all"\n
-                     type="image"\n
-                     name="checkAll:method" value="1"\n
-                     alt="Check All" title="Check All"\n
-                     tal:attributes="name string:${field_id}_checkAll:method;\n
-                                     src string:${portal_url_string}/images/checkall.png"\n
-                     i18n:domain="ui" i18n:attributes="title" />\n
+              <button class="listbox-check-all"\n
+                      type="submit"\n
+                      title="Check All"\n
+                      name="listbox_checkAll:method" value="listbox"\n
+                      tal:attributes="value string:${field_id}"\n
+                      i18n:domain="ui" i18n:attributes="title">\n
+                <img class="listbox-check-all"\n
+                     src="images/checkall.png"\n
+                     alt="Check All"\n
+                     title="Check All"\n
+                     tal:attributes="src string:${portal_url_string}/images/checkall.png"\n
+                     i18n:domain="ui" i18n:attributes="title;alt" />\n
+              </button>\n
               &nbsp;\n
-              <input class="listbox-uncheck-all"\n
-                     type="image" \n
-                     name="uncheckAll:method" value="1"\n
-                     alt="Uncheck All" title="Uncheck All"\n
-                     tal:attributes="src string:${portal_url_string}/images/decheckall.png;\n
-                                     name string:${field_id}_uncheckAll:method;"\n
-                     i18n:domain="ui" i18n:attributes="title" />         \n
-                  \n
+              <button class="listbox-uncheck-all"\n
+                      type="submit"\n
+                      title="Uncheck All"\n
+                      name="listbox_uncheckAll:method" value="listbox"\n
+                      tal:attributes="value string:${field_id}"\n
+                      i18n:domain="ui" i18n:attributes="title">\n
+                <img class="listbox-uncheck-all"\n
+                     src="images/decheckall.png"\n
+                     alt="Uncheck All"\n
+                     title="Uncheck All"\n
+                     tal:attributes="src string:${portal_url_string}/images/decheckall.png;"\n
+                     i18n:domain="ui" i18n:attributes="title;alt" />\n
+              </button>\n
               </th>\n
 \n
               <!-- Label column row -->\n
