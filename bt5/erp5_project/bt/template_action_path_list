@@ -2,6 +2,7 @@ Person | jump_to_task
 Person | jump_to_task_report
 Project Cell | view
 Project Line | add_task_related
+Project Line | bug_list
 Project Line | constraint
 Project Line | contents
 Project Line | create_new_file
