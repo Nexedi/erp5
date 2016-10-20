@@ -1,4 +1,4 @@
-/*global window, rJS, loopEventListener*/
+/*global window, rJS*/
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80 */
 (function (window, rJS) {
   "use strict";
