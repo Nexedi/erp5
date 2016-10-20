@@ -4,13 +4,14 @@ send the username mail
 portal = context.getPortalObject()
 
 person_list = context.getDestinationDecisionValueList(portal_type="Person")
-usernames = []
+login_list = []
 for person in person_list:
-  usernames.append("%s" %person.getReference())
+  for login in person.objectValues(portal_type='ERP5 Login'):
+    if login.getValidationState() == 'validated':
+      login_list.append(login)
 
-usernames = " ".join(usernames)
+usernames = ' '.join(login.getReference() for login in login_list)
 
-reference_list = [x.getReference() for x in person_list]
 if context.hasDocumentReference():
   message_reference = context.getDocumentReference()
 else:

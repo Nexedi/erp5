@@ -4,7 +4,7 @@ send the password reset link by mail
 portal = context.getPortalObject()
 
 person = context.getDestinationDecisionValue(portal_type="Person")
-reference = person.getReference()
+reference = context.getReference()
 if context.hasDocumentReference():
   message_reference = context.getDocumentReference()
 else:
@@ -14,7 +14,7 @@ if message_reference is None:
 notification_message = portal.NotificationTool_getDocumentValue(message_reference,
                                                                 context.getLanguage())
 
-context.REQUEST.set('came_from', context.getUrlString())
+context.REQUEST.set('came_from', portal.absolute_url())
 
 if context.hasStopDate():
   kw = {'expiration_date':context.getStopDate()}
