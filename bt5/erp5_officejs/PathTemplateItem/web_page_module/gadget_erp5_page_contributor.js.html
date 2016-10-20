@@ -1,0 +1,286 @@
+/*globals window, RSVP, rJS, RSVP, loopEventListener*/
+/*jslint indent: 2, nomen: true, maxlen: 80*/
+(function (window, rJS, RSVP, loopEventListener, jIO) {
+  "use strict";
+
+  function synchronisationErp5(gadget, submit_event) {
+    var query = "", url_list, i, param = {};
+
+    for (i = 0; i < submit_event.target.length; i += 1) {
+      if (submit_event.target[i].name) {
+        param[submit_event.target[i].name] = submit_event.target[i].value;
+      }
+    }
+
+    url_list = param.url_list.split('\n');
+    for (i = 0; i < url_list.length; i += 1) {
+      if (i > 0) {
+        query += " AND ";
+      }
+      query += 'id: "' + url_list[i] + '"';
+    }
+
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.notifySubmitting();
+      })
+      .push(function () {
+        return gadget.props.storage.createJio({
+          type: "replicate",
+          remote_sub_storage: {
+            type: "mapping",
+            mapping_dict: {
+              "id": {"equal": "reference"},
+              "text_content": {"equal": "text_content"},
+              "parent_relative_url": {"equal": "parent_relative_url"},
+              "portal_type": {"equal": "portal_type"},
+              "title": {"equal": "title"},
+              "description": {"equal": "description"}
+            },
+            sub_storage: {
+              type: "erp5",
+              url: param.url_a + "/erp5/web_site_module/hateoas",
+              default_view_reference: "jio_view"
+            }
+          },
+          local_sub_storage: {
+            type: "mapping",
+            query: {
+              "query": 'validation_state: "Draft" AND version:"'
+                + param.version_b + '"'
+            },
+            mapping_dict: {
+              "id": {"equal": "reference"},
+              "parent_relative_url": {"equal": "parent_relative_url"},
+              "portal_type": {"equal": "portal_type"},
+              "text_content": {"equal": "text_content"},
+              "title": {"equal": "title"},
+              "description": {"equal": "description"},
+              "version": {"default_value": param.version_b}
+            },
+            sub_storage: {
+              type: "erp5",
+              url: param.url_b + "/erp5/web_site_module/hateoas",
+              default_view_reference: "jio_view"
+            }
+          },
+          conflict_handling: param.reverse ? 1 : 2,
+          query: {query: query},
+          signature_storage: {
+            type: "uuid",
+            sub_storage: {
+              type: "indexeddb",
+              database: "contributor-hash"
+            }
+          }
+        });
+      })
+      .push(function () {
+        return RSVP.all([
+          gadget.props.storage.repair(),
+          gadget.props.storage.allDocs()
+        ]);
+      })
+      .push(function (result) {
+        gadget.props.element.querySelector(".result").innerHTML =
+          result[1].data.total_rows + " documents loaded";
+        return gadget.notifySubmitted();
+      });
+  }
+
+  function actualiseParam(gadget, event) {
+    var suffixe = "#/?page=contributor", key;
+    gadget.props.param[event.target.name] = event.target.value;
+    for (key in gadget.props.param) {
+      if (gadget.props.param.hasOwnProperty(key)) {
+        if (gadget.props.param[key] !== "") {
+          suffixe += "&" + key + "="
+            + gadget.props.param[key];
+        }
+      }
+    }
+    window.history.replaceState(
+      window.history.state,
+      "parameters changement",
+      encodeURI(suffixe)
+    );
+  }
+
+  rJS(window)
+    .ready(function (g) {
+      g.props = {};
+      return g.getElement()
+        .push(function (element) {
+          g.props.element = element;
+          g.props.param = {};
+        });
+    })
+
+    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("reload", "reload")
+    .declareAcquiredMethod("jio_repair", "jio_repair")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
+
+    .declareMethod("triggerSubmit", function () {
+      this.props.element.querySelector("button").click();
+    })
+
+    .declareMethod("render", function (option) {
+      var g = this;
+      g.props.param.url_list = option.url_list || "";
+      g.props.param.url_a = option.url_a || "";
+      g.props.param.url_b = option.url_b || "";
+      g.props.param.version_b = option.version_b || "";
+      return g.declareGadget("gadget_jio.html", {scope: "storage_local"})
+        .push(function (storage_gadget) {
+          g.props.storage = storage_gadget;
+        })
+        .push(function () {
+          return g.updateHeader({
+            submit_action: true,
+            panel_action: false,
+            page_title: "Contributor"
+          });
+        })
+        .push(function () {
+          return g.getDeclaredGadget("form");
+        })
+        .push(function (form_gadget) {
+          g.props.form_gadget = form_gadget;
+          return form_gadget.render({
+            "erp5_document": {"_embedded": {"_view": {
+              "erp_a": {
+                "description": "",
+                "title": "",
+                "default": "Erp5 Source",
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "erp_a",
+                "hidden": 0,
+                "type": "ReadOnlyField"
+              },
+              "url_a": {
+                "description": "",
+                "title": "Url source",
+                "default": g.props.param.url_a,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "url_a",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              "url_list": {
+                "description": "",
+                "title": "References",
+                "default": g.props.param.url_list,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "url_list",
+                "hidden": 0,
+                "type": "TextAreaField"
+              },
+              "erp_b": {
+                "description": "",
+                "title": "",
+                "default": "Erp5 destination",
+                "css_class": "",
+                "required": 1,
+                "editable": 0,
+                "key": "erp_b",
+                "hidden": 0,
+                "type": "ReadOnlyField"
+              },
+              "url_b": {
+                "description": "",
+                "title": "Url destination",
+                "default": g.props.param.url_b,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "url_b",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              "version_b": {
+                "description": "",
+                "title": "Version",
+                "default": g.props.param.version_b,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "version_b",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              "reverse": {
+                "description": "",
+                "title": "Reverse",
+                "editable": 1,
+                "required": 1,
+                "key": "reverse",
+                "type": "CheckBoxField"
+              }
+            }}},
+            "form_definition": {
+              "group_list": [
+                [
+                  "left",
+                  [["erp_a"], ["url_a"]]
+                ],
+                [
+                  "right",
+                  [["erp_b"], ["url_b"], ["version_b"]]
+                ],
+                [
+                  "center",
+                  [["reverse"], ["url_list"]]
+                ]
+              ]
+            }
+          });
+        });
+    })
+    /////////////////////////////////////////
+    // Form submit
+    /////////////////////////////////////////
+    .declareService(function () {
+      var gadget = this, key, promise_list = [];
+
+      promise_list.push(loopEventListener(
+        gadget.props.element.querySelector('form'),
+        'submit',
+        true,
+        function (event) {
+          return synchronisationErp5(gadget, event);
+        }
+      ));
+
+      function linkActualiseParam(event) {
+        return actualiseParam(gadget, event);
+      }
+      
+      function saveParameter(event) {
+        return gadget.setSetting("contributor_parameter", gadget.param); 
+      }
+
+      for (key in gadget.props.param) {
+        if (gadget.props.param.hasOwnProperty(key)) {
+          promise_list.push(loopEventListener(
+            gadget.props.element.querySelector('form [name=' + key + ']'),
+            "keyup",
+            true,
+            linkActualiseParam
+          ));
+        }
+      }
+      
+      return RSVP.all(promise_list);
+    });
+
+}(window, rJS, RSVP, loopEventListener, jIO));
