@@ -430,6 +430,9 @@ msgstr "承兑"
 msgid "Accept Translation"
 msgstr "采纳翻译"
 
+msgid "Accept new value"
+msgstr "接受新的值"
+
 msgid "Accept the new value defined on the invoice and update the prevision accordingly"
 msgstr "接受发票的新定价值并更新相应的预估文件"
 
@@ -441,6 +444,9 @@ msgstr "接受和预期装箱单的差异。在装箱单不匹配的情况下可
 
 msgid "Account"
 msgstr "会计科目"
+
+msgid "Account Balance"
+msgstr "账户系统余额"
 
 msgid "Account Code"
 msgstr "会计科目代码"
@@ -730,6 +736,9 @@ msgstr "代理人特权"
 msgid "Agents"
 msgstr "人员"
 
+msgid "Aggregation Level"
+msgstr "集合层级"
+
 msgid "Alarm"
 msgstr "警报"
 
@@ -925,8 +934,26 @@ msgstr "银行"
 msgid "Bank Account"
 msgstr "银行账户"
 
+msgid "Bank Account Number"
+msgstr "银行帐号"
+
 msgid "Bank Accounts"
 msgstr "银行账户"
+
+msgid "Bank Reconciliation"
+msgstr "银行对账"
+
+msgid "Bank Reconciliations"
+msgstr "银行对账"
+
+msgid "Bank Reconciliations to Close"
+msgstr "结束银行对账"
+
+msgid "Bank Statement Balance"
+msgstr "银行结单余额"
+
+msgid "Bank Statement Date"
+msgstr "银行结单日期"
 
 msgid "Base"
 msgstr "基础"
@@ -1011,6 +1038,9 @@ msgstr "支行代码"
 
 msgid "Browse"
 msgstr "浏览"
+
+msgid "Budget Section"
+msgstr "预算科"
 
 msgid "Budget Start Date"
 msgstr "预算开始日期"
@@ -1155,6 +1185,9 @@ msgstr "取消库存"
 msgid "Cancel Order"
 msgstr "取消订单"
 
+msgid "Cancel Order and Return"
+msgstr "取消销售单并返回"
+
 msgid "Cancel Packing List"
 msgstr "取消装箱单"
 
@@ -1217,6 +1250,9 @@ msgstr "事业验证流程"
 
 msgid "Careers"
 msgstr "事业"
+
+msgid "Cash (if not only Credit Card)"
+msgstr "现金支付金额（不只用银行卡和信用卡支付）"
 
 msgid "Cash Register"
 msgstr "收款机"
@@ -1290,6 +1326,9 @@ msgstr "勾选表示使用URL来选择语言"
 msgid "Checkbox field used to determine if the metric type of the resource is the default measure"
 msgstr "复选框用于确定一项资源的公制类型是默认设定"
 
+msgid "Cheque (if not only Credit Card)"
+msgstr "支票支付金额（不只用银行卡和信用卡支付）"
+
 msgid "Chinese"
 msgstr "中文"
 
@@ -1308,6 +1347,9 @@ msgstr "客户"
 msgid "Client Account"
 msgstr "客户账户"
 
+msgid "Client Address"
+msgstr "客户地址"
+
 msgid "Client Administrator"
 msgstr "客户行政文书"
 
@@ -1320,8 +1362,17 @@ msgstr "客户方项目"
 msgid "Client Reference"
 msgstr "客户代码"
 
+msgid "Client Region"
+msgstr "客户区域"
+
+msgid "Client Telephone"
+msgstr "客户电话"
+
 msgid "Client Transaction Reference"
 msgstr "客户交易代码"
+
+msgid "Clients"
+msgstr "客户"
 
 msgid "Clients Roles"
 msgstr "客户角色"
@@ -1343,6 +1394,9 @@ msgstr "关闭会计期间操作"
 
 msgid "Close Accounting Transaction"
 msgstr "终止会计交易"
+
+msgid "Close Bank Reconciliation"
+msgstr "结束银行对账"
 
 msgid "Close Bug"
 msgstr "终止错误"
@@ -1469,6 +1523,9 @@ msgstr "确认"
 
 msgid "Confirm Order"
 msgstr "确认订单"
+
+msgid "Confirm Order and Return"
+msgstr "确认销售单并返回"
 
 msgid "Confirm Packing List"
 msgstr "确认装箱单"
@@ -1776,8 +1833,20 @@ msgstr "当前站点"
 msgid "Customer"
 msgstr "客户"
 
+msgid "Customer Name"
+msgstr "收件人"
+
+msgid "Customer Phone"
+msgstr "收件人电话"
+
 msgid "Customer Reference"
 msgstr "客户编号"
+
+msgid "Customer Region"
+msgstr "收件人地区"
+
+msgid "Customer Street Address"
+msgstr "收件人地址"
 
 msgid "DMS"
 msgstr "文件管理系统"
@@ -1785,11 +1854,17 @@ msgstr "文件管理系统"
 msgid "DMS Preferences"
 msgstr "文件管理系统偏好设置"
 
+msgid "Data updated."
+msgstr "数据已更新"
+
 msgid "Date"
 msgstr "日期"
 
 msgid "Date Format"
 msgstr "日期格式"
+
+msgid "Date Order"
+msgstr "订单日期"
 
 msgid "Date at which the bank account has been closed"
 msgstr "银行账户闭户日期"
@@ -1805,6 +1880,9 @@ msgstr "发票寄出的日期"
 
 msgid "DateTime Keys"
 msgstr "日期和时间密钥"
+
+msgid "Day"
+msgstr "天"
 
 msgid "Days Of Month"
 msgstr "月份天"
@@ -1887,11 +1965,17 @@ msgstr "默认价格"
 msgid "Default Print of Each Document"
 msgstr "每个文件的默认打印"
 
+msgid "Default Purchase Price"
+msgstr "默认采购价"
+
 msgid "Default Quantity of a resource in ERP5. It can be a product or it can be time quantity like hours or minutes for example. Quantity can be found in almost every business field of ERP5 and will always have this meaning, unless the term is different or precise, such as Priced Quantity for example."
 msgstr "ERP5一个对象的默认量。它可以是产品的数量，也可以是例如小时或分钟的时间量。量几乎可以ERP5的任何应用领域中看到，含义一致，除非某个术语不同于“量”，或更精确，例如“定价数量”。"
 
 msgid "Default Resource of Derivated Event"
 msgstr "推导事件的默认资源"
+
+msgid "Default Sale Price"
+msgstr "默认销售价"
 
 msgid "Default Style used for reports."
 msgstr "默认的报告类型"
@@ -2121,6 +2205,9 @@ msgstr "终点状态"
 msgid "Destination client of the invoice"
 msgstr "发票的最终客户"
 
+msgid "Detailed Mode"
+msgstr "详细模式"
+
 msgid "Details"
 msgstr "详细信息"
 
@@ -2179,6 +2266,15 @@ msgstr "显示默认页面"
 
 msgid "Diverged"
 msgstr "互异"
+
+msgid "Divergence Description"
+msgstr "分歧描述"
+
+msgid "Divergence Resolution"
+msgstr "分歧解决办法"
+
+msgid "Divergence solvers started in background."
+msgstr "后台分歧处理开始。"
 
 msgid "Divergent"
 msgstr "不匹配"
@@ -2302,6 +2398,9 @@ msgstr "待处理草拟事件"
 
 msgid "Draft Meetings"
 msgstr "草拟会议"
+
+msgid "Draft Order"
+msgstr "待确认订单"
 
 msgid "Draft Support Requests"
 msgstr "草拟支持请求"
@@ -2531,6 +2630,9 @@ msgstr "说明"
 msgid "Export Format"
 msgstr "输出格式"
 
+msgid "Export Mode"
+msgstr "输出模式"
+
 msgid "Export to Spreadsheet"
 msgstr "输出到电子表格"
 
@@ -2545,6 +2647,9 @@ msgstr "外部资源"
 
 msgid "Fallback Base Categories"
 msgstr "备用基本类别"
+
+msgid "Fast Input"
+msgstr "快捷输入"
 
 msgid "Fax"
 msgstr "传真"
@@ -2915,6 +3020,9 @@ msgstr "指示事件每几个周会发生"
 msgid "Indicate if an alarm is enabled or not (working or not)"
 msgstr "指示警报是否已启用（是否在运作）"
 
+msgid "Indicate if we display useful link for developer in interface or not"
+msgstr "开发员模式"
+
 msgid "Indicate when the periodic event will stop"
 msgstr "指示何时周期性事件将停止"
 
@@ -2962,6 +3070,9 @@ msgstr "初始值"
 
 msgid "Initialised by Delivery Builder."
 msgstr "通过交付生成器初始化。"
+
+msgid "Input Loyalty Number if exist."
+msgstr "输入会员号"
 
 msgid "Install Business Template"
 msgstr "安装业务模板"
@@ -3113,6 +3224,9 @@ msgstr "已废止"
 msgid "Inventories"
 msgstr "库存"
 
+msgid "Inventories to validate"
+msgstr "待验证库存"
+
 msgid "Inventory"
 msgstr "库存"
 
@@ -3133,6 +3247,9 @@ msgstr "库存流程"
 
 msgid "Invisible"
 msgstr "不可见"
+
+msgid "Invoice"
+msgstr "发票"
 
 msgid "Invoice Cell"
 msgstr "发票单元"
@@ -3239,6 +3356,9 @@ msgstr "日记账"
 msgid "Journalise"
 msgstr "入账"
 
+msgid "Journalise Transaction"
+msgstr "记账"
+
 msgid "Journalise Transaction Action"
 msgstr "交易入账操作"
 
@@ -3270,6 +3390,9 @@ msgstr "关键词密钥"
 
 msgid "Keywords"
 msgstr "关键词"
+
+msgid "Kind of report"
+msgstr "报告种类"
 
 msgid "Knowledge Pad"
 msgstr "知识板"
@@ -3324,6 +3447,9 @@ msgstr "信件"
 
 msgid "License"
 msgstr "许可证"
+
+msgid "Line"
+msgstr "明细"
 
 msgid "Lines Report"
 msgstr "明细报表"
@@ -3384,6 +3510,9 @@ msgstr "长标题"
 
 msgid "Lost Sale Opportunity, as it has been rejected by the customer"
 msgstr "已失去的销售机会，已经被客户拒绝"
+
+msgid "Loyalty Number or Email"
+msgstr "会员号或邮箱"
 
 msgid "Mail Message"
 msgstr "邮件信息"
@@ -3554,6 +3683,9 @@ msgstr "缺失"
 msgid "Mobile Telephone"
 msgstr "手机号码"
 
+msgid "Mode"
+msgstr "模式"
+
 msgid "Model"
 msgstr "模式"
 
@@ -3586,6 +3718,9 @@ msgstr "模块"
 
 msgid "Money Amounts Fields Width"
 msgstr "金额字段宽度"
+
+msgid "Month"
+msgstr "月"
 
 msgid "Months"
 msgstr "月份"
@@ -3653,6 +3788,9 @@ msgstr "无相关文件。"
 msgid "No result."
 msgstr "无记录。"
 
+msgid "No trade condition."
+msgstr "无贸易条款"
+
 msgid "Non Discountable Additional Price"
 msgstr "无折扣的附加价"
 
@@ -3667,6 +3805,9 @@ msgstr "未安装"
 
 msgid "Note"
 msgstr "笔记"
+
+msgid "Notes"
+msgstr "备注"
 
 msgid "Notification"
 msgstr "提示"
@@ -3761,6 +3902,9 @@ msgstr "待发送发盘"
 msgid "Office Document"
 msgstr "Office文件"
 
+msgid "Online Shop Sales"
+msgstr "网店销售"
+
 msgid "Open"
 msgstr "已开启"
 
@@ -3827,6 +3971,9 @@ msgstr "订单日期"
 msgid "Order Index"
 msgstr "订单索引"
 
+msgid "Order Information"
+msgstr "销售信息"
+
 msgid "Order Interaction Workflow"
 msgstr "订单交互流程"
 
@@ -3847,6 +3994,9 @@ msgstr "订单运作集"
 
 msgid "Order Movement Interaction Workflow"
 msgstr "订单运作交互流程"
+
+msgid "Order Number"
+msgstr "收据号"
 
 msgid "Order Placed"
 msgstr "订单已下"
@@ -3929,6 +4079,9 @@ msgstr "原供应商或工人"
 msgid "Others"
 msgstr "其他"
 
+msgid "Our Item No."
+msgstr "我方产品编号"
+
 msgid "Outcome"
 msgstr "成果"
 
@@ -3961,6 +4114,9 @@ msgstr "装柜"
 
 msgid "Packed"
 msgstr "已包装"
+
+msgid "Packing List"
+msgstr "装箱单"
 
 msgid "Packing List Causality Workflow"
 msgstr "装箱单因果整合流程"
@@ -4003,6 +4159,9 @@ msgstr "板组用于指定默认板"
 
 msgid "Page Content"
 msgstr "页面内容"
+
+msgid "Parameters"
+msgstr "参数"
 
 msgid "Password"
 msgstr "密码"
@@ -4079,6 +4238,9 @@ msgstr "周期开始日期"
 msgid "Periodicity Stop Date"
 msgstr "周期停止日期"
 
+msgid "Periods (in Days)"
+msgstr "周期(按天计算)"
+
 msgid "Person"
 msgstr "人"
 
@@ -4126,6 +4288,12 @@ msgstr "“计划”指令使文件状态变为“已计划”"
 
 msgid "Planned"
 msgstr "已计划"
+
+msgid "Planned Events to Confirm"
+msgstr "待确定计划事件"
+
+msgid "Please Update Preview to show the Receipt"
+msgstr "预览小票请点更新"
 
 msgid "Please click \"Update\" first and confirm that all parameters are fine before clicking \"Solve Divergences\"."
 msgstr "单击“解决分歧”之前，请先单击“更新”并确认所有参数都填写正确。"
@@ -4298,6 +4466,12 @@ msgstr "演示文档"
 msgid "Preview"
 msgstr "预览"
 
+msgid "Previous Bank Statement Balance"
+msgstr "上一次银行结单余额"
+
+msgid "Previous Bank Statement Date"
+msgstr "上一次银行结单日期"
+
 msgid "Price"
 msgstr "单价"
 
@@ -4313,14 +4487,23 @@ msgstr "价格变量轴"
 msgid "Price for one unit."
 msgstr "单位产品的价格"
 
+msgid "Price of items without label"
+msgstr "没有标签产品的单价"
+
 msgid "Priced Quantity"
 msgstr "定价数量"
+
+msgid "Print Invoice"
+msgstr "打印发票"
 
 msgid "Print Order"
 msgstr "打印订单"
 
 msgid "Print Packing List"
 msgstr "打印装箱单"
+
+msgid "Print Receipt"
+msgstr "打印收据"
 
 msgid "Printing Format"
 msgstr "打印格式"
@@ -4370,8 +4553,14 @@ msgstr "产品变量"
 msgid "Product or Service"
 msgstr "产品或服务"
 
+msgid "Product or Service Reference"
+msgstr "产品或服务编码"
+
 msgid "Products"
 msgstr "产品"
+
+msgid "Products details"
+msgstr "产品明细"
 
 msgid "Products the person is interested in."
 msgstr "该人感兴趣的产品"
@@ -4447,6 +4636,9 @@ msgstr "项目:"
 
 msgid "Projects"
 msgstr "项目"
+
+msgid "Promotional Code"
+msgstr "优惠折扣"
 
 msgid "Properties"
 msgstr "属性"
@@ -4712,11 +4904,17 @@ msgstr "快速查询"
 msgid "RSS Feed"
 msgstr "RSS 提要源"
 
+msgid "Rate"
+msgstr "税率"
+
 msgid "Ratio"
 msgstr "比率"
 
 msgid "Ready"
 msgstr "已就绪"
+
+msgid "Receipt"
+msgstr "收据"
 
 msgid "Receive"
 msgstr "接收"
@@ -4741,6 +4939,15 @@ msgstr "货物的接收人"
 
 msgid "Recipients"
 msgstr "接收人"
+
+msgid "Reconcile Transactions"
+msgstr "核对交易"
+
+msgid "Reconciled Balance"
+msgstr "已对账额"
+
+msgid "Reconciled Transactions"
+msgstr "对账交易"
 
 msgid "Recorded Properties"
 msgstr "已记录属性"
@@ -4888,6 +5095,9 @@ msgstr "相关采购装箱单"
 
 msgid "Related Purchase Trade Condition"
 msgstr "相关采购贸易条款"
+
+msgid "Related Returned Sale Packing List"
+msgstr "相关销售退货装箱单"
 
 msgid "Related Sale Invoice"
 msgstr "相关销售发票"
@@ -5080,6 +5290,15 @@ msgstr ""
 msgid "Results"
 msgstr "结果"
 
+msgid "Returned Goods"
+msgstr "退还货物"
+
+msgid "Returned Items"
+msgstr "退还货品"
+
+msgid "Returned Purchase Orders"
+msgstr "进货退货单"
+
 msgid "Returned Purchase Packing List"
 msgstr "采购退货装箱单"
 
@@ -5104,6 +5323,12 @@ msgstr "采购退货装箱单运作"
 msgid "Returned Purchase Packing Lists"
 msgstr "采购退货装箱单明细"
 
+msgid "Returned Sale Order"
+msgstr "销售退单"
+
+msgid "Returned Sale Orders"
+msgstr "销售退单"
+
 msgid "Returned Sale Packing List"
 msgstr "销售退货装箱单"
 
@@ -5124,6 +5349,9 @@ msgstr "销售退货装箱单模块"
 
 msgid "Returned Sale Packing List Movements"
 msgstr "销售退货装箱单运作"
+
+msgid "Returned Sale Packing List to Prepare"
+msgstr "待准备销售退货装箱单"
 
 msgid "Returned Sale Packing List to Process"
 msgstr "待处理销售退货装箱单"
@@ -5377,6 +5605,9 @@ msgstr "销售价格"
 msgid "Sales Uses"
 msgstr "销售用途"
 
+msgid "Schedule delivery of the remaining at later time"
+msgstr "计划稍后交付缺少产品的日程"
+
 msgid "Scriptable Keys"
 msgstr "可编写脚本密钥"
 
@@ -5398,6 +5629,9 @@ msgstr "可检索的文本属性ID"
 msgid "Section"
 msgstr "版块"
 
+msgid "Section Bank Account"
+msgstr "银行账户"
+
 msgid "Section Category"
 msgstr "部门类别"
 
@@ -5413,8 +5647,29 @@ msgstr "安全Uid列"
 msgid "Select Actions"
 msgstr "选择操作"
 
+msgid "Select Exchange"
+msgstr "选择交互形式"
+
+msgid "Select Fast Input"
+msgstr "选择快速输入"
+
+msgid "Select Non Reconciled Transactions"
+msgstr "选择尚未核对交易"
+
+msgid "Select Report"
+msgstr "选择报表"
+
 msgid "Sell"
 msgstr "销售"
+
+msgid "Sell Items"
+msgstr "销售"
+
+msgid "Sell Items by Reference"
+msgstr "销售单"
+
+msgid "Sell Itens"
+msgstr "销售产品"
 
 msgid "Seller"
 msgstr "销售人"
@@ -5482,8 +5737,14 @@ msgstr "服务"
 msgid "Services to Validate"
 msgstr "待验证服务"
 
+msgid "Set List Setting"
+msgstr "设置列表"
+
 msgid "Set Packing List Ready"
 msgstr "装箱单设为已就绪"
+
+msgid "Set Relation"
+msgstr "设置关联"
 
 msgid "Set ready"
 msgstr "设为就绪"
@@ -5518,8 +5779,14 @@ msgstr "已共享（可修改）"
 msgid "Ship"
 msgstr "发货"
 
+msgid "Ship From"
+msgstr "送出地"
+
 msgid "Ship Packing List"
 msgstr "运输装箱单"
+
+msgid "Ship To"
+msgstr "送达地"
 
 msgid "Ship the packing list and declares a packing list as shipped"
 msgstr "将装箱单发出并标明“已发货”"
@@ -5529,6 +5796,9 @@ msgstr "已出货"
 
 msgid "Shipping Date"
 msgstr "发送日期"
+
+msgid "Shop Sales"
+msgstr "门店销售"
 
 msgid "Short Message"
 msgstr "短信息"
@@ -5541,6 +5811,9 @@ msgstr "短标题是ERP5标题的精简形式。"
 
 msgid "Show Accounts Without Transactions"
 msgstr "显示无交易账户"
+
+msgid "Show All"
+msgstr "显示全部"
 
 msgid "Similar Documents"
 msgstr "类似文件"
@@ -5602,11 +5875,20 @@ msgstr "社会保险号码"
 msgid "Sold"
 msgstr "已销售"
 
+msgid "Sold Items or Products"
+msgstr "销售产品编码或条码"
+
 msgid "Solve Alarm"
 msgstr "解除警报"
 
 msgid "Solve Automatically"
 msgstr "自动解决"
+
+msgid "Solve Divergence"
+msgstr "解决分歧"
+
+msgid "Solve Divergences"
+msgstr "解决分歧"
 
 msgid "Solve Divergences [transition in delivery_causality_workflow]"
 msgstr "解决分歧 [transition in delivery_causality_workflow]"
@@ -6022,6 +6304,9 @@ msgstr "待验证任务"
 msgid "Tax"
 msgstr "税收"
 
+msgid "Tax Code"
+msgstr "税务代码"
+
 msgid "Tax Line"
 msgstr "税收明细"
 
@@ -6030,6 +6315,9 @@ msgstr "税收模式明细"
 
 msgid "Tax Model Lines"
 msgstr "税收模式明细"
+
+msgid "Tax Price"
+msgstr "税"
 
 msgid "Tax Rule"
 msgstr "税收规则"
@@ -6048,6 +6336,9 @@ msgstr "由员工支付的税收"
 
 msgid "Taxes paid by the employer"
 msgstr "有雇主支付的税收"
+
+msgid "Tel"
+msgstr "电话号码"
 
 msgid "Telephone"
 msgstr "电话号码"
@@ -6800,11 +7091,17 @@ msgstr "第三方"
 msgid "Third Party"
 msgstr "第三方"
 
+msgid "Third Party / Product"
+msgstr "第三方 / 产品"
+
 msgid "Third Party Account"
 msgstr "第三方账户"
 
 msgid "Third Party Reference"
 msgstr "第三方代码"
+
+msgid "Third Party/Product"
+msgstr "第三方/产品"
 
 msgid "Third party associated to the payment transaction"
 msgstr "支付交易中第三方"
@@ -6820,6 +7117,9 @@ msgstr "该项指令将一项交易记录提交至总帐。它可以通过“重
 
 msgid "This action will post the transaction to the General Ledger. It can be journalized again thanks to the restart action"
 msgstr "该项操作将一项交易记录提交至总帐。它可以通过“重启”指令回到“已入账”状态。"
+
+msgid "This dialog has already been submitted. Do you want to submit again ?"
+msgstr "该请求已提交，确定重复提交该请求吗？"
 
 msgid "This field contains layout of contained boxes. It should not (generally) be altered manually but by the system itself"
 msgstr "该区域包含所含板块的版面布局。通常，除了系统自身，它不可被手动更改。"
@@ -6874,6 +7174,9 @@ msgstr "缩略图图像宽度"
 
 msgid "Ticket"
 msgstr "集合"
+
+msgid "Ticket Preview"
+msgstr "票据预览"
 
 msgid "Ticket Type"
 msgstr "集合类型"
@@ -6950,11 +7253,26 @@ msgstr "主题密钥"
 msgid "Total"
 msgstr "总和"
 
+msgid "Total Excluding Tax"
+msgstr "税前总计"
+
+msgid "Total Excluding VAT"
+msgstr "不含税总价"
+
+msgid "Total Including Tax"
+msgstr "含税总价"
+
+msgid "Total Including VAT"
+msgstr "含税总价"
+
 msgid "Total Price"
 msgstr "总价"
 
 msgid "Total Quantity"
 msgstr "总量"
+
+msgid "Total With Discount"
+msgstr "折后总价"
 
 msgid "Trade"
 msgstr "贸易"
@@ -7015,6 +7333,12 @@ msgstr "该银行账户相关交易"
 
 msgid "Transactions Related to This Entity"
 msgstr "相关交易事项"
+
+msgid "Transactions Related to this Bank Account"
+msgstr "与该银行账户相关的交易"
+
+msgid "Transactions to Reconcile"
+msgstr "待核对交易"
 
 msgid "Transformation"
 msgstr "物料转化"
@@ -7090,6 +7414,9 @@ msgstr "全部反选"
 
 msgid "Undo"
 msgstr "还原"
+
+msgid "Undo Reconciliation"
+msgstr "取消核对交易"
 
 msgid "Unit"
 msgstr "单位"
@@ -7216,6 +7543,12 @@ msgstr "文件的Url"
 
 msgid "Use"
 msgstr "使用"
+
+msgid "Use Current Selection"
+msgstr "仅使用检索出的对象"
+
+msgid "Use Loyalty Reward"
+msgstr "会员积分返惠"
 
 msgid "Use Project Line to build project architecture."
 msgstr "运用项目明细来建立项目构架"
@@ -7490,6 +7823,9 @@ msgstr "网站"
 msgid "Web View"
 msgstr "网页概览"
 
+msgid "Week"
+msgstr "周"
+
 msgid "Weeks"
 msgstr "周"
 
@@ -7582,6 +7918,9 @@ msgstr "超小图像高度"
 
 msgid "Xsmall Image Width"
 msgstr "超小图像宽度"
+
+msgid "Your Item No."
+msgstr "对方产品编号"
 
 msgid "Your name"
 msgstr "姓名"
