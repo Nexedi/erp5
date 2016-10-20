@@ -1,0 +1,515 @@
+/*jslint indent: 2*/
+/*global self, caches, importScripts, fetch, Promise, Request, Response, jIO, console, Headers, URI, location, RSVP*/
+var global = self,
+  window = self;
+(function (self, fetch) {
+  "use strict";
+
+  self.DOMParser = {};
+  self.sessionStorage = {};
+  self.localStorage = {};
+  self.openDatabase = {};
+  importScripts('rsvp.js', 'jiodev.js');
+
+  Response.prototype.metadata = function () {
+    var headers = {};
+    Array.from(this.headers.entries()).forEach(function (data) {
+      headers[data[0]] = data[1];
+    });
+    return {
+      //'ok': this.ok
+      url: this.url,
+      headers: headers
+    };
+  };
+
+  Response.prototype.metadata_w_blob = function () {
+    var metadata = this.metadata();
+    return this.blob().then(function (blob) {
+      return Promise.resolve({
+        'blob': blob,
+        'metadata': metadata
+      });
+    });
+  };
+
+  // 3 levels cache are used:
+
+  // 1. cache for web developper saved all files
+  // from web_page_module
+  // allow offline developing and offline view result
+  self.jio_dev_storage = jIO.createJIO({
+    type: "query",
+    sub_storage: {
+      type: "uuid",
+      sub_storage: {
+        "type": "indexeddb",
+        "database": "webdevtool"
+      }
+    }
+  });
+
+  // 2. readonly cache for end user
+  self.jio_erp5_cache_storage = {
+    type: "query",
+    sub_storage: {
+      type: "uuid",
+      sub_storage: {
+        type: "indexeddb",
+        database: self.jio_cache.name + '_erp5'
+      }
+    }
+  };
+  // sync in service worker not work.
+  // erp5storage not support fetch.
+  if (self.jio_cache.erp5_query) {
+    self.jio_erp5_cache_storage = jIO.createJIO({
+      type: "replicate",
+      // XXX This drop the signature lists...
+      query: {
+        query: self.jio_cache.erp5_query,
+        limit: [0, 1234567890]
+      },
+      use_remote_post: true,
+      conflict_handling: 2,
+      check_local_modification: false,
+      check_local_creation: false,
+      check_local_deletion: false,
+      check_remote_modification: true,
+      check_remote_creation: true,
+      check_remote_deletion: true,
+      use_bulk: false,
+      local_sub_storage: self.jio_erp5_cache_storage,
+      remote_sub_storage: {
+        type: "mapping",
+        sub_storage: {
+          type: "erp5",
+          url: (new URI("hateoasnoauth"))
+            .absoluteTo(location.href)
+            .toString(),
+          default_view_reference: "jio_view"
+        },
+        mapping_dict: {"id": {"equal": "url_string"}},
+        query: {
+          "query_limit": '(portal_type: ("Web Style", "Web Page", "Web Script"))'
+            + 'AND (version: "OSP-5-dev")'
+        },
+        map_all_property: true
+      }
+    });
+  } else {
+    self.jio_erp5_cache_storage = jIO.createJIO(self.jio_erp5_cache_storage);
+  }
+  // 3. save static list urls
+  // site root files
+  // external urls
+  // binary files (images, fonts)
+  self.jio_cache_storage = jIO.createJIO({
+    type: "query",
+    sub_storage: {
+      type: "uuid",
+      sub_storage: {
+        "type": "indexeddb",
+        "database": "officejs_cache" + '_static'
+      }
+    }
+  });
+
+  // TODO: if map_portal_type2content_type changed we can repair jio storage
+  var map_portal_type2content_type = {
+      'Web Script': 'application/javascript',
+      'Web Page': 'text/html',
+      //'Image': 'image/',
+      'Web Style': 'text/css'
+    },
+    map_url2id_prefix = {},
+    map_url2url = {},
+    exclude_urls = [],
+    map_content_type2portal_type = {},
+    websections_url = [],
+    query_portal_types = "",
+    site_url = ((new URI(self.location.href)).filename('')).toString(),
+    portal_type2attach_name = function (portal_type) {
+      // TODO: generate from erp5
+      var map_portal_type2attach_name = {
+          'Image': 'data'
+        },
+        attach_name;
+
+      attach_name = map_portal_type2attach_name[portal_type];
+      if (attach_name !== undefined) {
+        return attach_name;
+      }
+      return 'text_content';
+    },
+    is_excluded_url = function (url) {
+      var prefix, i;
+      for (i = 0; i < exclude_urls.length; i += 1) {
+        prefix = exclude_urls[i];
+        if (url === prefix) {
+          return true;
+        }
+        if (url.startsWith(prefix + '/')) {
+          return true;
+        }
+      }
+      return false;
+    },
+    get_from_cache_storage = function (url, storage) {
+      var jio_key = url;
+      if (!storage) {
+        storage = self.jio_cache_storage;
+      }
+      return new Promise(function (resolve, reject) {
+        storage.getAttachment(jio_key, "body")
+          .push(function (body) {
+            resolve(new Response(body, {
+              'headers': {
+                'content-type': body.type
+              }
+            }));
+          })
+          .push(undefined, function (error) {
+            reject(error);
+          });
+      });
+    },
+    get_from_storage = function (url, storage) {
+      if (!storage) {
+        storage = self.jio_dev_storage;
+      }
+      return new Promise(function (resolve, reject) {
+        if (!url) {
+          reject({status_code: 404});
+          return;
+        }
+        storage.get(url)
+          .push(function (body) {
+            resolve(new Response(body.text_content, {
+              'headers': {
+                'content-type': body.content_type
+              }
+            }));
+          })
+          .push(undefined, function (error) {
+            reject(error);
+          });
+      });
+    },
+    content_type2portal_type = function (content_type) {
+      //var portal_type;
+
+      return map_content_type2portal_type[content_type];
+      //for (prefix in map_content_type2portal_type) {
+      //  if (content_type.startsWith(prefix)) {
+      //    return map_content_type2portal_type[prefix];
+      //  }
+      //}
+    },
+    save_in_dev_storage = function (url, response) {
+      // save in developer storage
+      //if (url)
+      var jio_key,
+        url_string,
+        reference,
+        prefix,
+        prefix_id,
+        erp5_id;
+      for (prefix in map_url2id_prefix) {
+        if (map_url2id_prefix.hasOwnProperty(prefix)) {
+          if (url.startsWith(prefix)) {
+            prefix_id = map_url2id_prefix[prefix];
+            reference = (new URI(url)).filename();
+            if (prefix_id === "") {
+              if (url.replace(prefix, '') !== reference) {
+                continue;
+              }
+            }
+            if (prefix_id !== "") {
+              url_string = url.replace(prefix, prefix_id + '/');
+              erp5_id = url_string.replace(/\//g, '_').replace(/\./g, '_');
+            } else {
+              url_string = "";
+              erp5_id = reference.replace(/\./g, '_');
+            }
+            if (erp5_id) {
+              jio_key = "web_page_module/" + erp5_id;
+            }
+            break;
+          }
+        }
+      }
+      if (jio_key) {
+        return response.metadata_w_blob()
+          .then(function (response) {
+            return new Promise(function (resolve, reject) {
+              var content_type = response.metadata.headers['content-type'],
+                portal_type,
+                metadata;
+              content_type = content_type.split(';')[0].trim();
+              portal_type = content_type2portal_type(content_type);
+              metadata = {
+                'id': erp5_id,
+                'portal_type': portal_type,
+                'reference': reference,
+                'url_string': url_string,
+                'parent_relative_url': 'web_page_module'
+              };
+              /*if (!portal_type) {
+               if (content_type.startsWith('image/')) {
+               metadata.content_type = content_type;
+               portal_type = 'Image';
+               }
+               metadata.portal_type = portal_type;
+               }*/
+              if (!portal_type) {
+                console.log('content_type ' + content_type + ' not supported: ' + url);
+                return resolve();
+              }
+              self.jio_dev_storage.put(jio_key, metadata)
+                .push(function () {
+                  return self.jio_dev_storage.putAttachment(
+                    jio_key,
+                    portal_type2attach_name(portal_type),
+                    response.blob
+                  );
+                })
+                .push(function () {
+                  console.log('jio_save: ' + jio_key);
+                  resolve();
+                })
+                .push(undefined, function (error) {
+                  console.log(error);
+                  reject(error);
+                });
+            });
+          });
+      }
+      return Promise.resolve();
+    };
+
+  (function () {
+    var portal_type;
+    for (portal_type in map_portal_type2content_type) {
+      if (map_portal_type2content_type.hasOwnProperty(portal_type)) {
+        map_content_type2portal_type[map_portal_type2content_type[portal_type]] = portal_type;
+      }
+    }
+  }());
+
+  (function () {
+    var portal_type;
+    for (portal_type in map_portal_type2content_type) {
+      if (map_portal_type2content_type.hasOwnProperty(portal_type)) {
+        query_portal_types = query_portal_types + '"' + portal_type + '",';
+      }
+    }
+    query_portal_types = '(portal_type: (' + query_portal_types + '))';
+  }());
+
+  // TODO: generate from special websections current website
+  map_url2id_prefix[site_url + 'rjsunsafe/ooffice_fonts/'] = 'ooffice_fonts';
+  map_url2id_prefix[site_url + 'rjsunsafe/ooffice/'] = 'ooffice';
+  map_url2id_prefix[site_url + 'rjsunsafe/'] = '';
+  map_url2id_prefix[site_url] = '';
+  map_url2id_prefix['https:'] = '';
+
+  exclude_urls.push(site_url + 'hateoas');
+  exclude_urls.push(site_url + 'hateoasnoauth');
+
+  map_url2url[site_url + 'rjsunsafe/ooffice/apps/'] = 'https://localhost/OfficeWebDeploy/apps/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/sdkjs/'] = 'https://localhost/OfficeWebDeploy/sdkjs/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/vendor/'] = 'https://localhost/OfficeWebDeploy/vendor/';
+
+  (function () {
+    var url;
+    for (url in map_url2id_prefix) {
+      if (map_url2id_prefix.hasOwnProperty(url)) {
+        websections_url.push(url);
+      }
+    }
+    websections_url.sort(function (a, b) {
+      return a.length < b.length;
+    });
+  }());
+
+  self.jio_cache_install = function (event) {
+    // Perform install step:  loading each required file into cache
+    // sync jio
+    // TODO:
+    //    delete from cache not existing in self.jio_cache.cached_urls files.
+    var queue,
+      result_fetch = Promise.resolve(), // queue for fetching files
+      result_jio_save = Promise.resolve(); // queue for save files
+
+    if (self.jio_erp5_cache_storage.type === "replicate") {
+      queue = new Promise(function (resolve, reject) {
+        self.jio_erp5_cache_storage.repair()
+          .push(resolve, reject);
+      });
+    } else {
+      queue = Promise.resolve();
+    }
+    queue.then(function () {
+      new Promise(function (resolve, reject) {
+        //return resolve();
+        self.jio_cache.cached_urls.map(function (url, i) {
+          var request = new Request(url),
+            requests_len = self.jio_cache.cached_urls.length - 1,
+            jio_key = url;
+          if (jio_key === "./") {
+            jio_key = request.url;
+          }
+          // files download one by one
+          result_fetch = result_fetch
+            .then(function () {
+              return new Promise(function (resolve) {
+                self.jio_cache_storage.get(jio_key)
+                  .push(function (metadata) {
+                    resolve(metadata);
+                  })
+                  .push(undefined, resolve);
+              });
+            })
+            .then(function (metadata) {
+              if (metadata.url !== undefined) {
+                var modification_mark_exist = false;
+                if (metadata.headers.ETag !== undefined) {
+                  modification_mark_exist = true;
+                  request.headers.append('If-None-Match', metadata.headers.Etag);
+                } else if (metadata.headers['last-modified'] !== undefined) {
+                  modification_mark_exist = true;
+                  request.headers.append('If-Modified-Since', metadata.headers['last-modified']);
+                }
+                if (modification_mark_exist) {
+                  return fetch(request)
+                    .then(undefined, function () {
+                      // We say 'file not changed' if downloading is not possible with additional header
+                      return new Response(null, {status: 304});
+                    });
+                }
+              }
+              return fetch(request);
+            })
+            .then(function (response) {
+              if (response.status === 304) {
+                if (i === requests_len) {
+                  // latest file saved
+                  result_jio_save = result_jio_save.then(resolve);
+                }
+                return Promise.resolve();
+              }
+              return response.metadata_w_blob()
+                .then(function (response) {
+                  // files save one by one
+                  result_jio_save = result_jio_save.then(function () {
+                    return new Promise(function (resolve) {
+                      self.jio_cache_storage.put(jio_key, response.metadata)
+                        .push(function () {
+                          return self.jio_cache_storage.putAttachment(
+                            jio_key,
+                            "body",
+                            response.blob
+                          )
+                            .push(function () {
+                              console.log('jio_save: ' + jio_key);
+                              resolve();
+                            });
+                        })
+                        .push(undefined, function (error) {
+                          console.log(error);
+                          reject();
+                        });
+                    });
+                  });
+
+
+                  if (i === requests_len) {
+                    // latest file saved
+                    result_jio_save = result_jio_save.then(resolve);
+                  }
+                  return Promise.resolve();
+                });
+            });
+        });
+      })
+        .then(function () {
+          console.log('cache loaded');
+          return self.skipWaiting();
+        })
+        .then(undefined, console.log);
+    });
+
+    event.waitUntil(queue);
+  };
+
+  self.jio_cache_fetch = function (event) {
+    var url = event.request.url,
+      url_string = url.replace(site_url, "").replace("https:", ""),
+      not_found_in_dev_storage = false;
+
+    if (is_excluded_url(url) || url === site_url) {
+      event.respondWith(fetch(event.request));
+    } else {
+      event.respondWith(new RSVP.Queue()
+        .push(function () {
+          if (self.jio_cache.development_mode) {
+            // 1 level storage development
+            return get_from_storage(url_string, self.jio_dev_storage);
+          }
+          throw {status_code: 404};
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            if (self.jio_cache.development_mode) {
+              console.log(url + ' not found in dev storage');
+              not_found_in_dev_storage = true;
+            }
+            // 2 level storage from erp5
+            return get_from_storage(url_string, self.jio_erp5_cache_storage);
+          }
+          throw error;
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            console.log(url + ' not found in erp5 cache storage');
+            // 3 level cache urls one for all aplications
+            return get_from_cache_storage(url_string);
+          }
+          throw error;
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            console.log(url + ' not found in cache storage');
+            // fetch
+            return fetch(event.request);
+          }
+          throw error;
+        })
+        .push(function (response) {
+          if (response.ok) {
+            if (not_found_in_dev_storage) {
+              save_in_dev_storage(url_string, response.clone());
+            }
+            //console.log('returned: ' + url);
+          }
+          return response;
+        })
+        .push(undefined, function (error) {
+          console.log(error);
+        }));
+    }
+  };
+
+  self.jio_cache_activate = function (event) {
+    /* Just like with the install event, event.waitUntil blocks activate on a promise.
+     Activation will fail unless the promise is fulfilled.
+     */
+    event.waitUntil(self.clients.claim());
+  };
+
+  self.addEventListener('install', self.jio_cache_install);
+  self.addEventListener('fetch', self.jio_cache_fetch);
+  self.addEventListener("activate", self.jio_cache_activate);
+
+}(self, fetch));

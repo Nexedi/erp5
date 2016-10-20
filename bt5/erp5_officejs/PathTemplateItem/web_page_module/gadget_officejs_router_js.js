@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*global window, rJS, jIO, URI, location, console, document, RSVP, loopEventListener, navigator */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
 (function (window, rJS) {
@@ -25,116 +26,11 @@
   function get_jio_replicate_storage(name, modification_date) {
     var erp5_query,
       sdk_name;
-    erp5_query = [
-      "ooffice/apps/common/%",
-      "ooffice/vendor/%",
-      "ooffice/sdkjs/common/%"
-    ];
-    switch (name) {
-      case "spreadsheet":
-        sdk_name = "cell";
-        erp5_query.push("ooffice/apps/" + name + "editor/main/%");
-        erp5_query.push("ooffice/sdkjs/cell/%");
-        erp5_query.push("ooffice/sdkjs/word/%");
-        break;
-      case "text":
-        sdk_name = "word";
-        erp5_query.push("ooffice/apps/documenteditor/main/%");
-        erp5_query.push("ooffice/sdkjs/word/%");
-        erp5_query.push("ooffice/sdkjs/cell/model/%");
-        erp5_query.push("ooffice/sdkjs/cell/utils/%");
-        break;
-      case "presentation":
-        sdk_name = "slide";
-        erp5_query.push("ooffice/apps/" + name + "editor/main/%");
-        erp5_query.push("ooffice/sdkjs/slide/%");
-        erp5_query.push("ooffice/sdkjs/word/%");
-        erp5_query.push("ooffice/sdkjs/cell/%");
-        break;
-    }
-    erp5_query.push("ooffice/sdkjs/" + sdk_name + "/%");
 
-    erp5_query = erp5_query.map(function (currentValue) {
-      return 'url_string: "' + currentValue + '"';
-    }).join(' OR ');
-    erp5_query = erp5_query + ' OR ' + [
-        "ooffice/gadget_ooffice.js",
-        "ooffice/gadget_ooffice.html",
-        "ooffice/apps/require.js",
-        "ooffice/apps/css.js",
-        "ooffice/apps/underscore.js",
-        "ooffice/apps/backbone.js",
-        "ooffice/apps/bootstrap.js",
-        "ooffice/apps/text.js",
-        "ooffice/apps/xregexp-all-min.js",
-        "ooffice/apps/jquery.mousewheel.js"
-      ].map(function (currentValue) {
-        return 'url_string: ="' + currentValue + '"';
-      }).join(' OR ');
-    erp5_query = erp5_query + ' OR ' + [
-        "gadget_officejs_" + name + "_router.html",
-        "gadget_officejs_router.js",
-        "gadget_officejs_page_document_list.html",
-        "gadget_officejs_page_document_list.js",
-        "gadget_officejs_jio_" + name + "_view.html",
-        "gadget_officejs_jio_spreadsheet_view.js",
-        "gadget_officejs_page_add_document.html",
-        "gadget_officejs_page_add_document.js",
-        "gadget_erp5_editor_panel.html",
-        "gadget_erp5_editor_panel.js",
-        "URI.js",
-        "dygraph.js",
-        "gadget_erp5.css",
-        "gadget_global.js",
-        "gadget_jio.html",
-        "gadget_jio.js",
-        "gadget_translate.html",
-        "gadget_translate.js",
-        "i18next.js",
-        "jiodev.js",
-        "jquery.js",
-        "jquerymobile.css",
-        "jquerymobile.js",
-        "renderjs.js",
-        "rsvp.js",
-        "gadget_officejs_header.html",
-        "gadget_officejs_jio.html",
-        "gadget_officejs_page_add_document.html",
-        "gadget_officejs_page_jio_configurator.html",
-        "gadget_officejs_page_jio_dav_configurator.html",
-        "gadget_officejs_page_login.html",
-        "gadget_officejs_page_logout.html",
-        "gadget_officejs_page_share_webrtc_jio.html",
-        "gadget_officejs_page_sync.html",
-        "gadget_translation.html",
-        "gadget_officejs_webrtc_jio.html",
-        "gadget_officejs_widget_listbox.html",
-        "gadget_officejs_header.js",
-        "gadget_officejs_jio.js",
-        "gadget_officejs_page_add_document.js",
-        "gadget_officejs_page_jio_configurator.js",
-        "gadget_officejs_page_jio_dav_configurator.js",
-        "gadget_officejs_page_login.js",
-        "gadget_officejs_page_logout.js",
-        "gadget_officejs_page_share_webrtc_jio.js",
-        "gadget_officejs_page_sync.js",
-        "gadget_officejs_application_panel.html",
-        "gadget_officejs_application_panel.js",
-        "gadget_translation.js",
-        "gadget_translation_data.js",
-        "gadget_officejs_webrtc_jio.js",
-        "gadget_officejs_widget_listbox.js",
-        "erp5_launcher.js",
-        "erp5_launcher.html"
-      ].map(function (currentValue) {
-        return '(reference: ="' + currentValue + '")';
-      }).join(' OR ');
-
-    erp5_query = "(" + erp5_query + ")";
 
     if (modification_date) {
       modification_date = ' AND modification_date:>="'
-        + modification_date + '" '
+        + modification_date + '" ';
     } else {
       modification_date = "";
     }
@@ -142,8 +38,7 @@
     return jIO.createJIO({
       type: "replicate",
       query: {
-        query: '(portal_type: ("Web Style", "Web Page", "Web Script")) AND ' +
-        erp5_query + modification_date,
+        query: '(portal_type: ("Web Style", "Web Page", "Web Script"))' + modification_date,
         limit: [0, 1234567890]
       },
       use_remote_post: true,
@@ -154,26 +49,20 @@
       check_remote_modification: true,
       check_remote_creation: true,
       check_remote_deletion: true,
-      local_sub_storage: {
-        type: "attachasproperty",
-        map: {
-          text_content: {
-            body_name: "text_content",
-            content_type_name: "content_type"
-          },
-          data: {
-            body_name: "data",
-            content_type_name: "content_type"
-          }
-        },
-        sub_storage: get_jio_cache_storage(name)
-      },
+      use_bulk: false,
+      local_sub_storage: get_jio_cache_storage(name),
       remote_sub_storage: {
-        type: "erp5",
-        url: (new URI("hateoasnoauth"))
-          .absoluteTo(location.href)
-          .toString(),
-        default_view_reference: "jio_view"
+        type: "mapping",
+        sub_storage: {
+          type: "erp5",
+          url: (new URI("hateoasnoauth"))
+            .absoluteTo(location.href)
+            .toString(),
+          default_view_reference: "jio_view"
+        },
+        query: {"query": 'version: OSP-5-dev'},
+        mapping_dict: {"id": {"equal": "reference"}},
+        map_all_property: true
       }
     });
   }
@@ -348,7 +237,7 @@
                 var modification_date,
                   jio_store;
                 if (data.data.total_rows == 1) {
-                  modification_date = data.data.rows[0].value.modification_date
+                  modification_date = data.data.rows[0].value.modification_date;
                 }
                 jio_store = get_jio_replicate_storage(NAME);
                 return gadget.getSetting('jio_' + NAME + '_cache_description')
