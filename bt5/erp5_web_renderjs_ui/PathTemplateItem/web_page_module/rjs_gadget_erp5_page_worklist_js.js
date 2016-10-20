@@ -15,25 +15,8 @@
 
   gadget_klass
     /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
-    /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -101,7 +84,7 @@
         })
 
         .push(function (my_translated_html) {
-          gadget.props.element.querySelector('.document_list').innerHTML =
+          gadget.element.querySelector('.document_list').innerHTML =
             my_translated_html;
         });
     });
