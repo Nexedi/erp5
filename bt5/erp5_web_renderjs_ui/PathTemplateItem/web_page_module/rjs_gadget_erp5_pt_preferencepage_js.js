@@ -1,25 +1,9 @@
-/*global window, document, rJS, RSVP, promiseEventListener */
+/*global window, rJS */
 /*jslint indent: 2, maxerr: 3 */
 (function (window, rJS) {
   "use strict";
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     /////////////////////////////////////////////////////////////////
     // handle acquisition
     /////////////////////////////////////////////////////////////////
@@ -49,16 +33,16 @@
               select_list: ['title']
             })
               .push(function (result) {
-                gadget.props.element.textContent = result.data.rows[0].value.title;
+                gadget.element.textContent = result.data.rows[0].value.title;
               });
           }
           // gadget.props.element.textContent = me;
         })
         .push(function () {
-          return gadget.translateHtml(gadget.props.element.innerHTML);
+          return gadget.translateHtml(gadget.element.innerHTML);
         })
         .push(function (my_translated_html) {
-          gadget.props.element.innerHTML = my_translated_html;
+          gadget.element.innerHTML = my_translated_html;
         });
 
     });
