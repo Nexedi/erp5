@@ -49,13 +49,10 @@
   //////////////////////////////////////////////////////////////////
   // Change URL functions
   //////////////////////////////////////////////////////////////////
-  function changeState(hash) {
-    // window.location = hash;
-    return window.location.replace(hash);
-  }
-
   function synchronousChangeState(hash) {
-    return changeState(hash);
+    window.location.replace(hash);
+    // Prevent execution of all next asynchronous code
+    throw new RSVP.CancellationError('Redirecting to ' + hash);
   }
 
   //////////////////////////////////////////////////////////////////
