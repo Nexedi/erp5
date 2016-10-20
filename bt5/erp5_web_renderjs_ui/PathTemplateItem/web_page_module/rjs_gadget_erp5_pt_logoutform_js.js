@@ -1,24 +1,9 @@
-/*global window, rJS, RSVP, promiseEventListener, UriTemplate */
+/*global window, rJS, UriTemplate */
 /*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, promiseEventListener, UriTemplate) {
+(function (window, rJS, UriTemplate) {
   "use strict";
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
     /////////////////////////////////////////////////////////////////
     // handle acquisition
     /////////////////////////////////////////////////////////////////
@@ -33,35 +18,20 @@
     /////////////////////////////////////////////////////////////////
      .declareMethod("render", function () {
       var gadget = this;
-      return new RSVP.Queue()
+      return gadget.updateHeader({page_title: 'Logout'})
         .push(function () {
-          return gadget.updateHeader({page_title: 'Logout'});
-        })
-        .push(function () {
-          return gadget.translateHtml(gadget.props.element.innerHTML);
+          return gadget.translateHtml(gadget.element.innerHTML);
         })
         .push(function (my_translated_html) {
-          gadget.props.element.innerHTML = my_translated_html;
+          gadget.element.innerHTML = my_translated_html;
         });
     })
-    .declareService(function () {
+
+    .onEvent('submit', function () {
       var gadget = this,
         logout_url_template;
-      // Listen to form submit
-      return new RSVP.Queue()
-        .push(function () {
-          return promiseEventListener(
-            gadget.props.element.querySelector('form'),
-            'submit',
-            false
-          );
-        })
-        .push(function () {
-          return gadget.jio_getAttachment(
-            'acl_users',
-            'links'
-          );
-        })
+
+      return gadget.jio_getAttachment('acl_users', 'links')
         .push(function (links) {
           logout_url_template = links._links.logout.href;
           return gadget.getUrlFor({
@@ -79,4 +49,4 @@
           });
         });
     });
-}(window, rJS, RSVP, promiseEventListener, UriTemplate));
+}(window, rJS, UriTemplate));
