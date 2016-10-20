@@ -70,7 +70,7 @@ def getUserByLogin(portal, login, exact_match=True):
   if not (portal.portal_catalog.hasColumn('portal_type') and portal.portal_catalog.hasColumn('reference')):
     raise RuntimeError('Catalog does not have column information. Make sure RDB is working and disk is not full.')
   result = portal.portal_catalog.unrestrictedSearchResults(
-    select_expression='reference, portal_type',
+    select_list=('reference, portal_type'),
     portal_type=("ERP5 Login"),
     reference=dict(query=login, key=reference_key))
   # XXX: Here, we filter catalog result list ALTHOUGH we did pass
@@ -94,7 +94,7 @@ def getUserByLogin(portal, login, exact_match=True):
   if result_list:
     return result_list
   result = portal.portal_catalog.unrestrictedSearchResults(
-    select_expression='reference, portal_type',
+    select_list=('reference, portal_type'),
     portal_type=("Person"),
     reference=dict(query=login, key=reference_key))
   return  [x.getObject() for x in result if not exact_match
@@ -337,7 +337,7 @@ class ERP5UserManager(BasePlugin):
       if not login:
         return
       catalog_result = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
-        select_expression=('portal_type', 'reference', 'validation_state'),
+        select_list=('portal_type', 'reference', 'validation_state'),
         portal_type=(portal_type, 'Person'),
         reference=dict(query=login, key='ExactMatch'),
         sort_on=(('portal_type',),),
