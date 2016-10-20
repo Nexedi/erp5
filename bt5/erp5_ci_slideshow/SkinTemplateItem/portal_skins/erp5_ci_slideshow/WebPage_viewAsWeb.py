@@ -61,7 +61,8 @@ def getThemeFromFirstFollowUpProduct(reference):
         relative_url = category.split("follow_up/")[1]
         category_object = portal.portal_catalog(relative_url=relative_url,limit=1)
         if len(category_object) > 0:
-          category_title = category_object[0].getTitle()
+          category_title = category_object[0]
+          category_title = category_title.getTitle()
           theme = category_title.split(software_match_string)[0].lower()
   
       # OSOE extra handle
@@ -109,14 +110,14 @@ if has_details is True:
       updated = slide.replace(cleaned, wrapped)
       document_content = document_content.replace(slide, updated)
 
-# wkhtmltopdf
+# wkhtmltopdf 
 if document_output_type == "footer":
   return """
   <!Doctype html>
-  <html class="ci-%s">
+  <html class="ci-%(document_theme)s">
     <head>
       <meta charset="utf-8">
-      <title>%s</title>
+      <title>%(document_title)s</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
       <!-- fonts -->
@@ -146,29 +147,29 @@ if document_output_type == "footer":
   		    <div class="ci-presentation-container-left">
   		      <img src="NXD-Media.Logo.Nexedi?format=png&display=xsmall" alt="Nexedi Logo" />
   		    </div>
-  		    <div class="ci-presentation-container-center">%s</div>
+  		    <div class="ci-presentation-container-center">%(document_description)s</div>
   		    <div class="ci-presentation-container-right">
-  		      %s &copy; Nexedi SA<br/>
-  		      %s<span class="page"></span> | <span class="topage"></span>
+  		      %(document_creation_year)s &copy; Nexedi SA<br/>
+  		      %(document_contributor_list)s<span class="page"></span> | <span class="topage"></span>
   		    </div>
   		  </div>
       </body>
 	 </html>
-  """ % (
-    document_theme,
-    document_title,
-    document_description,
-    document_creation_year,
-    document_contributor_list
-  )
+  """ % {
+    'document_theme': document_theme,
+    'document_title': document_title,
+    'document_description': document_description,
+    'document_creation_year': document_creation_year,
+    'document_contributor_list': document_contributor_list
+  }
 
 if document_output_type == "cover":
   return """
   <!Doctype html>
-  <html class="ci-pdf ci-%s">
+  <html class="ci-pdf ci-%(document_theme)s">
     <head>
       <meta charset="utf-8">
-      <title>%s</title>
+      <title>%(document_title)s</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
       <!-- fonts -->
@@ -183,8 +184,8 @@ if document_output_type == "cover":
       <!-- logo-box and slogan -->
       <style type="text/css">
         html .ci-presentation-intro.present:before {
-          content: "%s";
-          background: #FFF url("%s?format=png&display=small") center no-repeat;
+          content: "%(document_claim)s";
+          background: #FFF url("%(document_theme_logo_url)s?format=png&display=small") center no-repeat;
         }
       </style>
     </head>
@@ -192,19 +193,18 @@ if document_output_type == "cover":
       <div class="reveal">
         <div class="slides">
           <section class="ci-presentation-intro present">
-    		    <h2>%s</h2>
+    		    <h2>%(document_title)s</h2>
     		  </section>
   		  </div>
 		  </div>
     </body>
   </html>
-  """ % (
-    document_theme,
-    document_title,
-    document_claim,
-    document_theme_logo_url,
-    document_title
-  )
+  """ % {
+    'document_theme': document_theme,
+    'document_title': document_title,
+    'document_claim': document_claim,
+    'document_theme_logo_url': document_theme_logo_url
+  }
 
 # outputting just the content requires to drop wrapping <divs> (reveal/slides)
 # and add extra css to recreate the same layout. so a separate output=content
@@ -212,10 +212,10 @@ if document_output_type == "cover":
 if document_output_type == "content":
   return """
   <!Doctype html>
-  <html class="ci-%s">
+  <html class="ci-%(document_theme)s">
     <head>
   		<meta charset="utf-8">
-      <title>%s</title>
+      <title>%(document_title)s</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
       <!-- fonts -->
@@ -232,25 +232,25 @@ if document_output_type == "content":
   	<body class="ci-presentation">
   		<!-- <div class="reveal">
   			<div class="slides"> -->
-  			  %s
+  			  %(document_content)s
   			<!-- </div>
   		</div> -->
   	</body>
   </html>
-  """ % (
-    document_theme,
-    document_title,
-    document_content
-  )
+  """ % {
+    'document_theme': document_theme,
+    'document_title': document_title,
+    'document_content': document_content
+  }
 
 # handouts
 if document_output_type == "details":
   return """
   <!Doctype html>
-  <html class="ci-%s">
+  <html class="ci-%(document_theme)s">
     <head>
   		<meta charset="utf-8">
-      <title>%s</title>
+      <title>%(document_title)s</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
       <!-- fonts -->
@@ -271,27 +271,26 @@ if document_output_type == "details":
   			<section>
           <h1>Notes</h1>
         </section>
-  			  %s
+  			  %(document_content)s
   			<!-- </div>
   		</div> -->
   	</body>
   </html>
-  """ % (
-    document_theme,
-    document_title,
-    #document_content
-    removeSlidesWithoutDetailsFromNotes(document_content)
-  )
+  """ % {
+    'document_theme': document_theme,
+    'document_title': document_title,
+    'document_content': removeSlidesWithoutDetailsFromNotes(document_content)
+  }
 
 
 # DEFAULT WebPage_viewAsWeb
 
 return """
 <!Doctype html>
-<html class="ci-%s">
+<html class="ci-%(document_theme)s">
   <head>
 		<meta charset="utf-8">
-    <title>%s</title>
+    <title>%(document_title)s</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
     <!-- fonts -->
@@ -306,8 +305,8 @@ return """
     <!-- logo-box and slogan -->
     <style type="text/css">
       html .ci-presentation .slides .ci-presentation-intro.present:before {
-        content: "%s";
-        background: #FFF url("%s?format=png&amp;display=small") center no-repeat;
+        content: "%(document_claim)s";
+        background: #FFF url("%(document_theme_logo_url)s?format=png&amp;display=small") center no-repeat;
         background-size: auto 120px;
       }
     </style>
@@ -333,21 +332,21 @@ return """
 			  
 			  <!-- intro slide -->
 			  <section class="ci-presentation-intro">
-			    <h2>%s</h2>
+			    <h2>%(document_title)s</h2>
 			  </section>
 
 			  <div class="ci-presentation-header">
-			    <h2>%s</h2>
+			    <h2>%(document_title)s</h2>
 			  </div>
-			  %s
+			  %(document_content)s
 			  <div class="ci-presentation-footer">
 			    <div class="ci-presentation-container-left">
 			      <img src="NXD-Media.Logo.Nexedi?format=png" alt="Nexedi Logo" />
 			    </div>
-			    <div class="ci-presentation-container-center">%s</div>
+			    <div class="ci-presentation-container-center">%(document_description)s</div>
 			    <div class="ci-presentation-container-right">
-			      %s &copy; Nexedi SA<br/>
-			      %s
+			      %(document_creation_year)s &copy; Nexedi SA<br/>
+			      %(document_contributor_list)s
 			    </div>
 			  </div>
 			</div>
@@ -373,15 +372,13 @@ return """
 			Reveal.configure({ slideNumber: 'c / t' });
 		</script>
 	</body>
-</html>""" % (
-  document_theme,
-  document_title,
-  document_claim,
-  document_theme_logo_url,
-  document_title,
-  document_title,
-  document_content,
-  document_description,
-  document_creation_year,
-  document_contributor_list
-)
+</html>""" % {
+  'document_theme': document_theme,
+  'document_title': document_title,
+  'document_claim': document_claim,
+  'document_theme_logo_url': document_theme_logo_url,
+  'document_content': document_content,
+  'document_description': document_description,
+  'document_creation_year': document_creation_year,
+  'document_contributor_list': document_contributor_list 
+}
