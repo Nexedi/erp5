@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, rJS, RSVP, jIO */
 /*jslint indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, jIO) {
   "use strict";
 
   rJS(window)
@@ -74,7 +74,21 @@
         input;
       if (this.state.editable) {
         input = this.element.querySelector('input');
-        if (this.state.type === 'checkbox') {
+        if (this.state.type === 'file') {
+          if (input.files[0] !== undefined) {
+            return new RSVP.Queue()
+              .push(function () {
+                return jIO.util.readBlobAsDataURL(input.files[0]);
+              })
+              .push(function (evt) {
+                result[input.getAttribute('name')] = {
+                  url: evt.target.result,
+                  file_name: input.files[0].name
+                };
+                return result;
+              });
+          }
+        } else if (this.state.type === 'checkbox') {
           result[input.getAttribute('name')] = (input.checked ? 1 : 0);
         } else {
           result[input.getAttribute('name')] = input.value;
@@ -145,4 +159,4 @@
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, jIO));

@@ -1,56 +1,76 @@
-/*global window, rJS, RSVP, jIO*/
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, jIO) {
+/*global window, rJS */
+/*jslint indent: 2, maxerr: 3 */
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
-    .ready(function (gadget) {
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.element = element;
-        });
+    .setState({
+      tag: 'p',
+      type: 'file'
     })
 
-    .declareAcquiredMethod("notifyValid", "notifyValid")
-    .declareAcquiredMethod("notifyInvalid", "notifyInvalid")
-    .declareAcquiredMethod("notifyChange", "notifyChange")
-
     .declareMethod('render', function (options) {
-      var input = this.element.querySelector('input'),
-        field_json = options.field_json || {};
+      var field_json = options.field_json || {},
+        state_dict = {
+          editable: field_json.editable,
+          required: field_json.required,
+          name: field_json.key,
+          title: field_json.title
+        };
+      return this.changeState(state_dict);
+    })
 
-      input.setAttribute('name', field_json.key);
-      input.setAttribute('title', field_json.title);
-      if (field_json.required === 1) {
-        input.setAttribute('required', 'required');
+    .onStateChange(function (modification_dict) {
+      var element = this.element,
+        gadget = this,
+        url,
+        result;
+      if (modification_dict.hasOwnProperty('editable')) {
+        if (gadget.state.editable) {
+          url = 'gadget_html5_input.html';
+        } else {
+          url = 'gadget_html5_element.html';
+        }
+        result = this.declareGadget(url, {scope: 'sub'})
+          .push(function (input) {
+            // Clear first to DOM, append after to reduce flickering/manip
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            element.appendChild(input.element);
+            return input;
+          });
+      } else {
+        result = this.getDeclaredGadget('sub');
       }
-      if (field_json.editable !== 1) {
-        input.setAttribute('readonly', 'readonly');
-        input.setAttribute('data-wrapper-class', 'ui-state-readonly');
-        // input.setAttribute('disabled', 'disabled');
-
-      }
+      return result
+        .push(function (input) {
+          return input.render(gadget.state);
+        });
     })
 
     .declareMethod('getContent', function () {
-      var gadget = this,
-        input = gadget.element.querySelector('input'),
-        file = input.files[0];
-      if (file === undefined) {
-        return {};
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.getContent();
+          });
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return jIO.util.readBlobAsDataURL(file);
-        })
-        .push(function (evt) {
-          var result = {};
-          result[input.getAttribute('name')] = {
-            url: evt.target.result,
-            file_name: file.name
-          };
-          return result;
-        });
+      return {};
+    })
+
+    .declareMethod('getTextContent', function () {
+      return "";
+    })
+
+    .declareMethod('checkValidity', function () {
+      if (this.state.editable) {
+        return this.getDeclaredGadget('sub')
+          .push(function (gadget) {
+            return gadget.checkValidity();
+          });
+      }
+      return true;
     });
 
-}(window, rJS, RSVP, jIO));
+}(window, rJS));
