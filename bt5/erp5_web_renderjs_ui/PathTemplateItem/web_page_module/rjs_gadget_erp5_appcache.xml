@@ -118,7 +118,6 @@ font-awesome/font-awesome-webfont.woff?v=4.6.3\n
 font-awesome/font-awesome-webfont.woff2?v=4.6.3\n
 font-awesome/font-awesome-webfont.ttf?v=4.6.3\n
 font-awesome/font-awesome-webfont.svg?v=4.6.3#fontawesomeregular\n
-URI.js\n
 erp5_launcher_nojqm.js\n
 gadget_erp5_nojqm.css\n
 gadget_erp5_editor_panel.html\n
@@ -365,7 +364,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.38476.56174.42734</string> </value>
+                <value> <string>954.47221.8211.8652</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -383,7 +382,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476437355.22</float>
+                        <float>1476956013.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
