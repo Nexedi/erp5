@@ -63,8 +63,11 @@ class ILoginAccountProvider(Interface):
   def analyzePassword(password, **kw):
     """
     Analyze password validity.
-    Return status code indicating if password is acceptable and if not status code
-    for reason for not being a valid one (i.e. too short, not complex, etc ...)
+
+    Returns a list of Products.ERP5Type.Message.Message instances describing
+    the reason for this password not to be valid (too short, not complex).
+
+    If password is valid, the returned list is empty.
     """
 
   def isPasswordAlreadyUsed(password):

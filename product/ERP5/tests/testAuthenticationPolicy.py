@@ -307,8 +307,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
     self._clearCache()
 
-    self.assertEqual([-1], login.analyzePassword(''))
-    self.assertEqual([-1], login.analyzePassword('1234567'))
+    self.assertEqual(['Too short.'], [str(msg) for msg in login.analyzePassword('')])
+    self.assertEqual(['Too short.'], [str(msg) for msg in login.analyzePassword('1234567')])
     self.assertTrue(login.isPasswordValid('12345678'))
 
     # not changed in last x days
@@ -323,8 +323,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.tic()
 
     # if we try to change now we should fail with any password
-    self.assertSameSet([-3], login.analyzePassword('87654321'))
-    self.assertSameSet([-1, -3], login.analyzePassword('short')) # multiple failures
+    self.assertEqual(
+      ['You have changed your password too recently.'],
+      [str(msg) for msg in login.analyzePassword('87654321')])
+    self.assertSameSet(
+      ['Too short.', 'You have changed your password too recently.'],
+      [str(msg) for msg in login.analyzePassword('short')]) # multiple failures
     self.assertFalse(login.isPasswordValid('short')) # multiple failures
     self.assertRaises(ValueError, login.setPassword, '87654321')
 
@@ -342,7 +346,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     login.setPassword('12345678-new')
     self.tic()
 
-    self.assertSameSet([-4], login.analyzePassword('12345678-new')) # if we try to change now we should fail with this EXACT password
+    # if we try to change now we should fail with this EXACT password
+    self.assertEqual(
+      ['You have already used this password.'],
+      [str(msg) for msg in login.analyzePassword('12345678-new')])
     self.assertRaises(ValueError, login.setPassword, '12345678-new')
     self.assertTrue(login.isPasswordValid('12345678_')) # it's OK with another one not used yet
     for password in ['a','b','c','d', 'e', 'f']:
@@ -361,9 +368,15 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertTrue(login.isPasswordValid('b'))
     self.assertTrue(login.isPasswordValid('c'))
     # only last 3 (including current one are invalid)
-    self.assertSameSet([-4], login.analyzePassword('d'))
-    self.assertSameSet([-4], login.analyzePassword('e'))
-    self.assertSameSet([-4], login.analyzePassword('f'))
+    self.assertEqual(
+      ['You have already used this password.'],
+      [str(msg) for msg in login.analyzePassword('d')])
+    self.assertEqual(
+      ['You have already used this password.'],
+      [str(msg) for msg in login.analyzePassword('e')])
+    self.assertEqual(
+      ['You have already used this password.'],
+      [str(msg) for msg in login.analyzePassword('f')])
 
     # if we remove restricted then all password are usable
     preference.setPreferredNumberOfLastPasswordToCheck(None)
@@ -381,7 +394,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertTrue(login.isPasswordValid('c'))
     self.assertTrue(login.isPasswordValid('d'))
     self.assertTrue(login.isPasswordValid('e'))
-    self.assertSameSet([-4], login.analyzePassword('f'))
+    self.assertEqual(
+      ['You have already used this password.'],
+      [str(msg) for msg in login.analyzePassword('f')])
 
     preference.setPreferredRegularExpressionGroupList(regular_expression_list)
     preference.setPreferredMinPasswordLength(7)
@@ -402,7 +417,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list:
       self.assertTrue(login.isPasswordValid(password))
     for password in three_group_password_list+two_group_password_list + one_group_password_list:
-      self.assertSameSet([-2], login.analyzePassword(password))
+      self.assertEqual(
+        ['Not complex enough.'],
+        [str(msg) for msg in login.analyzePassword(password)])
 
     # min 3 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(3)
@@ -412,7 +429,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list + three_group_password_list:
       self.assertTrue(login.isPasswordValid(password))
     for password in two_group_password_list + one_group_password_list:
-      self.assertSameSet([-2], login.analyzePassword(password))
+      self.assertEqual(
+        ['Not complex enough.'],
+        [str(msg) for msg in login.analyzePassword(password)])
 
     # min 2 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(2)
@@ -421,7 +440,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list + three_group_password_list + two_group_password_list:
       self.assertTrue(login.isPasswordValid(password))
     for password in one_group_password_list:
-      self.assertSameSet([-2], login.analyzePassword(password))
+      self.assertEqual(
+        ['Not complex enough.'],
+        [str(msg) for msg in login.analyzePassword(password)])
 
     # min 1 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(1)
@@ -434,8 +455,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
     self.tic()
-    self.assertSameSet([-5], login.analyzePassword('abAB#12_%s' %person.getFirstName()))
-    self.assertSameSet([-5], login.analyzePassword('abAB#12_%s' %person.getLastName()))
+    self.assertEqual(
+      ['You can not use any parts of your first and last name in password.'],
+      [str(msg) for msg in person.Login_analyzePassword('abAB#12_%s' %person.getFirstName())])
+    self.assertEqual(
+      ['You can not use any parts of your first and last name in password.'],
+      [str(msg) for msg in person.Login_analyzePassword('abAB#12_%s' %person.getLastName())])
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
     self.tic()
@@ -455,8 +480,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
     # in this case which is basically used in new account creation only length of password matters
-    self.assertSameSet([-1], temp_person.Login_analyzePassword('onlyNine1'))
-    self.assertSameSet([], temp_person.Login_analyzePassword('longEnough1'))
+    self.assertEqual(
+      ['Too short.'],
+      [str(msg) for msg in temp_person.Login_analyzePassword('onlyNine1')])
+    self.assertEqual([], temp_person.Login_analyzePassword('longEnough1'))
 
     # make sure re check works on temp as well ( i.e. min 3 out of all groups)
     preference.setPreferredRegularExpressionGroupList(regular_expression_list)
@@ -467,20 +494,26 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list + three_group_password_list:
       self.assertSameSet([], temp_person.Login_analyzePassword(password))
     for password in two_group_password_list + one_group_password_list:
-      self.assertSameSet([-2], temp_person.Login_analyzePassword(password))
+      self.assertEqual(
+        ['Not complex enough.'],
+        [str(msg) for msg in temp_person.Login_analyzePassword(password)])
 
     # make sure peron's check on username works on temp as well (i.e. not contain the full name of the user)
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
     self.tic()
-    self.assertSameSet([-5], temp_person.Login_analyzePassword('abAB#12_%s' %first_name))
-    self.assertSameSet([-5], temp_person.Login_analyzePassword('abAB#12_%s' %last_name))
+    self.assertEqual(
+      ['You can not use any parts of your first and last name in password.'],
+      [str(msg) for msg in temp_person.Login_analyzePassword('abAB#12_%s' %first_name)])
+    self.assertEqual(
+      ['You can not use any parts of your first and last name in password.'],
+      [str(msg) for msg in temp_person.Login_analyzePassword('abAB#12_%s' %last_name)])
 
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
     self.tic()
-    self.assertSameSet([], temp_person.Login_analyzePassword('abAB#12_%s' %first_name))
-    self.assertSameSet([], temp_person.Login_analyzePassword('abAB#12_%s' %last_name))
+    self.assertEqual([], temp_person.Login_analyzePassword('abAB#12_%s' %first_name))
+    self.assertEqual([], temp_person.Login_analyzePassword('abAB#12_%s' %last_name))
 
     # check Base_isPasswordValid is able to work in Anonymous User fashion
     # but with already create Person object (i.e. recover password case)
