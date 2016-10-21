@@ -67,7 +67,7 @@ class ILoginAccountProvider(Interface):
     for reason for not being a valid one (i.e. too short, not complex, etc ...)
     """
 
-  def isPasswordAlreadyUsed(self, password):
+  def isPasswordAlreadyUsed(password):
     """
       Return if password has already been used.
     """
