@@ -1,17 +1,19 @@
 """
-  Returns if password is valid or not. 
-  If not valid return a negative code to indicate failure.
+Returns the list of messages in case a password does not comply with the policy
 """
-from Products.Formulator.Errors import ValidationError
+from Products.ERP5Type.Message import translateString
 from DateTime import DateTime
 import re
 
 MARKER = ['', None]
 
+result_code_list = []
+def addError(error_message):
+  result_code_list.append(translateString(error_message))
+
 portal = context.getPortalObject()
 request = context.REQUEST
 is_temp_object = context.isTempObject()
-result_code_list = []
 min_password_length = portal.portal_preferences.getPreferredMinPasswordLength()
 
 if password is None:
@@ -22,7 +24,7 @@ if password is None:
 # not long enough
 if min_password_length is not None:
   if len(password) < min_password_length:
-    result_code_list.append(-1)
+    addError('Too short.')
 
 # password contain X out of following Y regular expression groups ?
 regular_expression_list = portal.portal_preferences.getPreferredRegularExpressionGroupList()
@@ -36,7 +38,7 @@ if regular_expression_list:
   #context.log('%s %s %s %s' %(password, group_counter, min_regular_expression_group_number, regular_expression_list))
   if group_counter < min_regular_expression_group_number:
     # not enough groups match
-    result_code_list.append(-2)
+    addError('Not complex enough.')
 
 if not is_temp_object:
   # not changed in last period ?
@@ -57,13 +59,13 @@ if not is_temp_object:
     min_password_lifetime_duration is not None and \
     (last_password_modification_date + min_password_lifetime_duration*one_hour) > now:
     # too early to change password
-    result_code_list.append(-3)
+    addError('You have changed your password too recently.')
 
   # not already used before ?
   preferred_number_of_last_password_to_check = portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck()
   if preferred_number_of_last_password_to_check not in [None, 0]:
     if context.isPasswordAlreadyUsed(password):
-      result_code_list.append(-4)
+      addError('You have already used this password.')
 
 # not contain the full name of the user in password or any parts of it (i.e. last and / or first name)
 if portal.portal_preferences.isPrefferedForceUsernameCheckInPassword():
@@ -85,6 +87,6 @@ if portal.portal_preferences.isPrefferedForceUsernameCheckInPassword():
   if (first_name not in MARKER and first_name in lower_password) or \
     (last_name not in MARKER  and last_name in lower_password):
     # user's name must not be contained in password
-    result_code_list.append(-5)
+    addError('You can not use any parts of your first and last name in password.')
 
 return result_code_list
