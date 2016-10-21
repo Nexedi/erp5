@@ -28,6 +28,7 @@
 ##############################################################################
 
 import socket
+import uuid
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
@@ -80,7 +81,7 @@ class PasswordTool(BaseTool):
       expiration_date = DateTime() + self._expiration_day
 
     # generate a random string
-    key = self._generateUUID()
+    key = uuid.uuid4().hex
     if isinstance(self._password_request_dict, PersistentMapping):
       LOG('ERP5.PasswordTool', INFO, 'Migrating password_request_dict to'
                                      ' OOBTree')
@@ -216,24 +217,6 @@ class PasswordTool(BaseTool):
     if not batch:
       return redirect(REQUEST, site_url,
                       translateString("An email has been sent to you."))
-
-  def _generateUUID(self, args=""):
-    """
-    Generate a unique id that will be used as url for password
-    """
-    # this code is based on
-    # http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/213761
-    # by Carl Free Jr
-    # as uuid module is only available in pyhton 2.5
-    t = long( time.time() * 1000 )
-    r = long( random.random()*100000000000000000L )
-    try:
-      a = socket.gethostbyname( socket.gethostname() )
-    except:
-      # if we can't get a network address, just imagine one
-      a = random.random()*100000000000000000L
-    data = ' '.join((str(t), str(r), str(a), str(args)))
-    return md5(data).hexdigest()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'removeExpiredRequests')
   def removeExpiredRequests(self):
