@@ -29,3 +29,17 @@ for f in MailBase.__dict__.itervalues():
     except ValueError:
       continue
     f.func_defaults = defaults[:i] + (True,) + defaults[i+1 or len(args):]
+
+from App.special_dtml import DTMLFile
+MailBase.manage = MailBase.manage_main = DTMLFile('dtml/manageMailHost', globals())
+MailBase.smtp_socket_timeout = 16.
+
+from functools import partial
+MailBase__makeMailer = MailBase._makeMailer
+def _makeMailer(self):
+  """ Create a SMTPMailer """
+  smtp_mailer = MailBase__makeMailer(self)
+  smtp_mailer.SMTP = partial(smtp_mailer.smtp, timeout=self.smtp_socket_timeout)
+  return smtp_mailer
+
+MailBase._makeMailer = _makeMailer
