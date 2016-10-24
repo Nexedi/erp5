@@ -132,7 +132,6 @@ class TestNode(object):
                                     node_test_suite.reference)
           software_config_path = os.path.relpath(software_config_path, from_path)
 
-
         profile_content_list.append("""
 [buildout]
 extends = %(software_config_path)s
