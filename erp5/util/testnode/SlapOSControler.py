@@ -280,7 +280,7 @@ class SlapOSControler(object):
     process_manager.process_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
-    time.sleep(10)
+    time.sleep(20)
     try:
       slap = slapos.slap.slap()
       self.slap = slap
