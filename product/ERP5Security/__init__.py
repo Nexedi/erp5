@@ -22,6 +22,7 @@ from Products.PluggableAuthService.PluggableAuthService import registerMultiPlug
 from Products.PluggableAuthService.permissions import ManageGroups
 
 import ERP5UserManager
+import ERP5LoginUserManager
 import ERP5GroupManager
 import ERP5RoleManager
 import ERP5UserFactory
@@ -61,6 +62,7 @@ def mergedLocalRoles(object):
   return deepcopy(merged)
 
 registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
+registerMultiPlugin(ERP5LoginUserManager.ERP5LoginUserManager.meta_type)
 registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
 registerMultiPlugin(ERP5RoleManager.ERP5RoleManager.meta_type)
 registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
@@ -79,6 +81,15 @@ def initialize(context):
                        , constructors=(
                           ERP5UserManager.manage_addERP5UserManagerForm,
                           ERP5UserManager.addERP5UserManager, )
+                       , visibility=None
+                       , icon='www/portal.gif'
+                       )
+
+  context.registerClass( ERP5LoginUserManager.ERP5LoginUserManager
+                       , permission=ManageUsers
+                       , constructors=(
+                          ERP5LoginUserManager.manage_addERP5LoginUserManagerForm,
+                          ERP5LoginUserManager.addERP5LoginUserManager, )
                        , visibility=None
                        , icon='www/portal.gif'
                        )
