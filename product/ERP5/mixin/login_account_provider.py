@@ -83,10 +83,7 @@ class LoginAccountProviderMixin:
     """
     Is password valid?
     """
-    result_code_list = self.analyzePassword(password, **kw)
-    if not len(result_code_list):
-      return True
-    return False
+    return not len(self.analyzePassword(password, **kw))
     
   security.declareProtected(Permissions.SetOwnPassword, 'analyzePassword')
   def analyzePassword(self, password, **kw):
