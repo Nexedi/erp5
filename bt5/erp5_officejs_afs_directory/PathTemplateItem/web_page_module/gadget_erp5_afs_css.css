@@ -20,6 +20,10 @@
   width: 100%;
   float: none;
 }
+.ui-masonry-container > ul ul li {
+  border-bottom: 1px solid #ededed;
+  padding: 2px 0;
+}
 .ui-masonry-container > ul li .ui-content-section {
   padding: 0;
   padding-bottom: .5em;
