@@ -57,17 +57,20 @@ class EncryptedPasswordMixin:
 
   security.declareProtected(Permissions.SetOwnPassword, 'checkPasswordValueAcceptable')
   def checkPasswordValueAcceptable(self, value):
-    """
-    Check the password. This method is defined explicitly, because:
+    """Check the password.
 
-     - we want to apply an authentication policy which itself may contain explicit password rules
+    This method is defined explicitly, because we want to apply an
+    authentication policy which itself may contain explicit password rules.
+
+    Invalid passwords are supposed to be catched earlier in the user interface
+    and reported properly to the user, this method is just to prevent wrong API
+    usage.
     """
     if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
       # not a policy so basically all passwords are accceptable
       return True
-    result = self.isPasswordValid(value)
-    if result <= 0:
-      raise ValueError, "Bad password (%s)." %result
+    if not self.isPasswordValid(value):
+      raise ValueError("Password value doest not comply with password policy")
 
   def checkUserCanChangePassword(self):
     if not _checkPermission(Permissions.SetOwnPassword, self):
