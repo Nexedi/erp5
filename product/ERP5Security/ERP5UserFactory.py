@@ -49,6 +49,8 @@ class ERP5User(PropertiedUser):
   """ User class that checks the object allows acquisition of local roles the
   ERP5Type way.
   """
+  _user_value = None
+  _login_value = None
 
   def getRolesInContext( self, object ):
     """ Return the list of roles assigned to the user.
@@ -194,6 +196,62 @@ class ERP5User(PropertiedUser):
       break
 
     return None
+
+  def getUserValue(self):
+    """ -> user document
+
+    Return the document (ex: Person) corresponding to current user.
+    """
+    result = self._user_value
+    if result is not None:
+      return result
+    user_list = [x for x in self.aq_parent.searchUsers(
+      exact_match=True,
+      id=self.getId(),
+    ) if 'path' in x]
+    if user_list:
+      user, = user_list
+      self._user_value = self.getPortalObject().restrictedTraverse(
+        user['path'],
+      )
+      return self._user_value
+
+  def getLoginValue(self):
+    """ -> login document
+
+    Return the document (ex: ERP5 Login) corresponding to current user's login.
+    """
+    result = self._login_value
+    if result is not None:
+      return result
+    user_list = [x for x in self.aq_parent.searchUsers(
+      exact_match=True,
+      login=self.getUserName(),
+    ) if 'login_list' in x]
+    if user_list:
+      user, = user_list
+      login, = user['login_list']
+      self._login_value = self.getPortalObject().restrictedTraverse(
+        login['path'],
+      )
+      return self._login_value
+
+  def getLoginValueList(self, portal_type=None, limit=None):
+    """ -> list of login documents
+
+    Return the list of login documents belonging to current user.
+    """
+    user_list = [x for x in self.aq_parent.searchUsers(
+      exact_match=True,
+      id=self.getId(),
+      login_portal_type=portal_type,
+      max_results=limit,
+    ) if 'login_list' in x]
+    if user_list:
+      user, = user_list
+      restrictedTraverse = self.getPortalObject().restrictedTraverse
+      return [restrictedTraverse(x['path']) for x in user['login_list']]
+    return []
 
 InitializeClass(ERP5User)
 
