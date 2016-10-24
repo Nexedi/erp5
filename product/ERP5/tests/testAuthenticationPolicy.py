@@ -29,7 +29,10 @@
 ##############################################################################
 
 import unittest
+import urllib
+from StringIO import StringIO
 import time
+import httplib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.Formulator.Errors import ValidationError
 from Products.ERP5Type.Document import newTempBase
@@ -739,6 +742,65 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                                                  default_destination_uid = login.getUid(),
                                                  validation_state = "expired")))
 
+  def test_PreferenceTool_changePassword_checks_policy(self):
+    person = self.createUser(self.id(), password='current')
+    person.newContent(portal_type = 'Assignment').open()
+    login = person.objectValues(portal_type='ERP5 Login')[0]
+    preference = self.portal.portal_catalog.getResultValue(
+      portal_type='System Preference',
+      title='Authentication',)
+    preference.setPreferredMinPasswordLength(10)
+    self._clearCache()
+    self.tic()
+
+    # too short password is refused
+    ret = self.publish(
+      '%s/portal_preferences' % self.portal.getPath(),
+      basic='%s:current' % self.id(),
+      stdin=StringIO(urllib.urlencode({
+        'Base_callDialogMethod:method': '',
+        'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
+        'dialog_method': 'PreferenceTool_setNewPassword',
+        'field_your_current_password': 'current',
+        'field_your_new_password': 'short',
+        'field_password_confirm': 'short',
+      })),
+      request_method="POST",
+      handle_errors=False)
+    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertIn(
+      '<span class="error">Too short.</span>',
+      ret.getBody())
+
+    # if for some reason, PreferenceTool_setNewPassword is called directly,
+    # the password policy is also checked, so this cause an unhandled exception.
+    self.login(person.getUserId())
+    self.assertRaises(
+      ValueError,
+      self.portal.PreferenceTool_setNewPassword,
+      current_password='current',
+      new_password='short')
+
+    # long enough password is accepted
+    ret = self.publish(
+      '%s/portal_preferences' % self.portal.getPath(),
+      basic='%s:current' % self.id(),
+      stdin=StringIO(urllib.urlencode({
+        'Base_callDialogMethod:method': '',
+        'dialog_id': 'PreferenceTool_viewChangePasswordDialog',
+        'dialog_method': 'PreferenceTool_setNewPassword',
+        'field_your_current_password': 'current',
+        'field_your_new_password': 'long_enough_password',
+        'field_password_confirm': 'long_enough_password',
+      })),
+      request_method="POST",
+      handle_errors=False)
+    # When password reset is succesful, user is logged out
+    self.assertEqual(httplib.FOUND, ret.getStatus())
+    self.assertTrue(ret.getHeader("Location").endswith("/logout"))
+
+    # password is changed on the login
+    self.assertTrue(login.checkPassword('long_enough_password'))
 
 
 def test_suite():
