@@ -34,20 +34,48 @@
       <section class="ui-content-header-plain ui-bar-c">
         <h3>Software Spec</h3>
       </section>
-      <ul class="grid-elements">
-        <li>Publisher: {{publisher}}</li>
-        <li>Website: <a href="{{website}}">{{website}}</a></li>
-        <li>Source Code: <a href="{{source_code_download}}">Download</a></li>
-        <li>Free software Commercial Support: 
-          {{#if commercial_support}}
-            <a href="{{commercial_support}}"> Yes</a>
-          {{else}}
-            No 
-          {{/if}}
-          <abbr title="{{commercial_support_description}}">(?)</abbr>
-        </li>
-      </ul>
-      
+      <table class="custom-link-table">
+        <tbody>
+          <tr>
+            <td>Publisher Site</td>
+            <td><a href="{{publisher_website}}">{{publisher}}</a></td>
+          </tr>
+          <tr>
+            <td>Product Site</td>
+            <td><a href="{{website}}">{{title}}</a></td>
+          </tr>
+          <tr>
+            <td>Source Code</td>
+            <td>
+              {{#if source_code_download}}
+                <a href="{{source_code_download}}">Download</a>
+              {{else}}
+                <a class="ui-disabled" href="">Download</a>
+              {{/if}}
+              /
+              {{#if source_code_profile}}
+                <a href="{{source_code_profile}}">Profile</a>
+              {{else}}
+                <a class="ui-disabled" href="">Profile</a>
+              {{/if}}
+            </td>
+          </tr>
+          <tr>
+            <td>Free Software Commercial Support</td>
+            <td>
+              {{#if commercial_support}}
+                <a href="{{commercial_support}}"> Yes</a>
+                {{#if commercial_support_description}}  
+                  <abbr title="{{commercial_support_description}}">(?)</abbr>
+                {{/if}}
+              {{else}}
+                No 
+              {{/if}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
       {{#if success_case_list}}
         <section class="ui-content-header-plain ui-bar-c">
           <h3>Success Stories</h3>
@@ -56,7 +84,7 @@
           {{#each success_case_list}}
             <li>
               {{#if image}}
-                <div class="custom-success-story-image-wrapper"><a href="{{url}}"><img src="{{image}}" alt></a></div>
+                <div class="custom-success-story-image-wrapper {{image_class}}"><a href="{{url}}"><img src="{{image}}" alt></a></div>
               {{else}}
                 <div>&nbsp;</div>
               {{/if}}
