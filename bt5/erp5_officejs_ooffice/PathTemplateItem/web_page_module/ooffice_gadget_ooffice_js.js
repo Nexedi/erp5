@@ -276,6 +276,7 @@ if (Common === undefined) {
             'backbone',
             'bootstrap',
             'core',
+            'analytics',
             'locale'
           ].concat(styles), function (Backbone) {
             Backbone.history.start();
