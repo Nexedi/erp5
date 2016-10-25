@@ -186,19 +186,6 @@ Asc['asc_docs_api'].prototype.asc_DownloadAs = function(typeFile, bIsDownloadEve
 	this.asc_Save(false, true);
 };
 
-Asc['asc_docs_api'].prototype.AddImageUrl = function(url, imgProp)
-{
-	var _url = window["AscDesktopEditor"]["LocalFileGetImageUrl"](url);
-	this.AddImageUrlAction(AscCommon.g_oDocumentUrls.getImageUrl(_url), imgProp);
-};
-Asc['asc_docs_api'].prototype.AddImage = function()
-{
-	window["AscDesktopEditor"]["LocalFileGetImageUrlFromOpenFileDialog"]();
-};
-Asc['asc_docs_api'].prototype.asc_addImage = function()
-{
-  window["AscDesktopEditor"]["LocalFileGetImageUrlFromOpenFileDialog"]();
-};
 Asc['asc_docs_api'].prototype.asc_isOffline = function()
 {
 	return true;

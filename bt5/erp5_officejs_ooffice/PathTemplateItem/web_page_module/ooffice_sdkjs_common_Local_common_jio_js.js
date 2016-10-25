@@ -96,63 +96,69 @@
 /////////////////////////////////////////////////////////
 //////////////       IMAGES      ////////////////////////
 /////////////////////////////////////////////////////////
-//var prot = AscCommon.DocumentUrls.prototype;
-//prot.mediaPrefix = 'media/';
-//prot.init = function(urls) {
-//};
-//prot.getUrls = function() {
-//	return this.urls;
-//};
-//prot.addUrls = function(urls){
-//};
-//prot.addImageUrl = function(strPath, url){
-//};
-//prot.getImageUrl = function(strPath){
-//	if (0 === strPath.indexOf('theme'))
-//		return null;
-//
-//	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl != "" && strPath.indexOf(window.editor.ThemeLoader.ThemesUrl) == 0)
-//		return null;
-//
-//	return this.documentUrl + "/media/" + strPath;
-//};
-//prot.getImageLocal = function(url){
-//	var _first = this.documentUrl + "/media/";
-//	if (0 == url.indexOf(_first))
-//		return url.substring(_first.length);
-//
-//	if (window.editor && window.editor.ThemeLoader && 0 == url.indexOf(editor.ThemeLoader.ThemesUrlAbs)) {
-//		return url.substring(editor.ThemeLoader.ThemesUrlAbs.length);
-//	}
-//
-//	return null;
-//};
-//prot.imagePath2Local = function(imageLocal){
-//	return this.getImageLocal(imageLocal);
-//};
-//prot.getUrl = function(strPath){
-//	if (0 === strPath.indexOf('theme'))
-//		return null;
-//
-//	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl != "" && strPath.indexOf(window.editor.ThemeLoader.ThemesUrl) == 0)
-//		return null;
-//
-//	return this.documentUrl + "/media/" + strPath;
-//};
-//prot.getLocal = function(url){
-//	return this.getImageLocal(url);
-//};
-//
-//AscCommon.sendImgUrls = function(api, images, callback)
-//{
-//	var _data = [];
-//	for (var i = 0; i < images.length; i++)
-//	{
-//		var _url = window["AscDesktopEditor"]["LocalFileGetImageUrl"](images[i]);
-//		_data[i] = { url: images[i], path : AscCommon.g_oDocumentUrls.getImageUrl(_url) };
-//	}
-//	callback(_data);
-//};
+var prot = AscCommon.DocumentUrls.prototype;
+prot.mediaPrefix = 'media/';
+prot.init = function(urls) {
+};
+prot.getUrls = function() {
+	return this.urls;
+};
+prot.addUrls = function(urls){
+};
+prot.addImageUrl = function(strPath, url){
+};
+prot.getImageUrl = function(url){
+	var _first = "jio:";
+	if (0 === url.indexOf(_first))
+		return url;
+
+	if (0 === url.indexOf('theme'))
+		return null;
+
+	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl !== "" && url.indexOf(window.editor.ThemeLoader.ThemesUrl) === 0)
+		return null;
+
+	return _first + url;
+	//return this.documentUrl + "/media/" + strPath;
+};
+prot.getImageLocal = function(url){
+	//var _first = this.documentUrl + "/media/";
+	var _first = "jio:";
+	if (0 === url.indexOf(_first))
+		return url.substring(_first.length);
+
+	if (window.editor && window.editor.ThemeLoader && 0 == url.indexOf(editor.ThemeLoader.ThemesUrlAbs)) {
+		return url.substring(editor.ThemeLoader.ThemesUrlAbs.length);
+	}
+
+	return null;
+};
+prot.imagePath2Local = function(imageLocal){
+	return this.getImageLocal(imageLocal);
+};
+prot.getUrl = function(strPath){
+	if (0 === strPath.indexOf('theme'))
+		return null;
+
+	if (window.editor && window.editor.ThemeLoader && window.editor.ThemeLoader.ThemesUrl != "" && strPath.indexOf(window.editor.ThemeLoader.ThemesUrl) == 0)
+		return null;
+
+	return this.documentUrl + "/media/" + strPath;
+};
+prot.getLocal = function(url){
+	return this.getImageLocal(url);
+};
+
+AscCommon.sendImgUrls = function(api, images, callback)
+{
+	var _data = [];
+	for (var i = 0; i < images.length; i++)
+	{
+		var _url = window["AscDesktopEditor"]["LocalFileGetImageUrl"](images[i]);
+		_data[i] = { url: images[i], path : AscCommon.g_oDocumentUrls.getImageUrl(_url) };
+	}
+	callback(_data);
+};
 
 /////////////////////////////////////////////////////////
 ////////////////        SAVE       //////////////////////

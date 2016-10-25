@@ -9222,32 +9222,32 @@ function InitDragAndDrop (oHtmlElement, callback) {
 	}
 }
 function UploadImageFiles (files, documentId, documentUserId, callback) {
-	if (files.length > 0) {
-		var file = files[0];
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', sUploadServiceLocalUrl + '/' + documentId + '/' + documentUserId + '/' + g_oDocumentUrls.getMaxIndex(), true);
-		xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-		xhr.onreadystatechange = function() {
-			if (4 == this.readyState) {
-				if((this.status == 200 || this.status == 1223)) {
-					var urls = JSON.parse(this.responseText);
-					g_oDocumentUrls.addUrls(urls);
-					var firstUrl;
-					for (var i in urls) {
-						if (urls.hasOwnProperty(i)) {
-							firstUrl = urls[i];
-							break;
-						}
-					}
-					callback(Asc.c_oAscError.ID.No, firstUrl);
-				} else
-					callback(Asc.c_oAscError.ID.Unknown);
-			}
-		};
-		xhr.send(file);
-	} else {
-		callback(Asc.c_oAscError.ID.Unknown);
-	}
+  if (files.length > 0) {
+    var file = files[0],
+      reader = new FileReader();
+    reader.addEventListener('load', function () {
+      Common.Gateway.jio_putAttachment(documentId, undefined, reader.result)
+        .push(function (image_url) {
+          callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+        })
+        .push(undefined, function (error) {
+          console.log(error);
+          callback(Asc.c_oAscError.ID.Unknown);
+        });
+    });
+    reader.readAsDataURL(file);
+    //// not worked. throw csp error
+    //Common.Gateway.jio_putAttachment(documentId, undefined, URL.createObjectURL(file))
+    //  .push(function (image_url) {
+    //    callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+    //  })
+    //  .push(undefined, function (error) {
+    //    callback(Asc.c_oAscError.ID.Unknown);
+    //    throw error;
+    //  });
+  } else {
+    callback(Asc.c_oAscError.ID.Unknown);
+  }
 }
 function ValidateUploadImage( files ) {
 	var nRes = c_oAscServerError.NoError;
@@ -11003,7 +11003,7 @@ CUserCacheColor.prototype.init = function(nColor) {
     if (window['AscNotLoadAllScript']) {
       callback();
     } else {
-      loadScript('./sdkjs/' + sdkName + '/sdk-all-dev.js', callback);
+      loadScript('./../../../../sdkjs/' + sdkName + '/sdk-all.js', callback);
     }
   }
 
@@ -14345,7 +14345,6 @@ window['AscCommon'].CollaborativeEditing = new CWordCollaborativeEditing();
 		}
 		else
 		{
-			this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
 			AscCommon.UploadImageFiles(files, this.documentId, this.documentUserId, function(error, url)
 			{
 				if (c_oAscError.ID.No !== error)
@@ -14356,7 +14355,6 @@ window['AscCommon'].CollaborativeEditing = new CWordCollaborativeEditing();
 				{
 					t._addImageUrl(url);
 				}
-				t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
 			});
 		}
 	};
@@ -14515,13 +14513,16 @@ window['AscCommon'].CollaborativeEditing = new CWordCollaborativeEditing();
 	baseEditorsApi.prototype.sendStandartTextures = function()
 	{
 		var _count = AscCommon.g_oUserTexturePresets.length;
-		var arr    = new Array(_count);
+		var arr    = new Array(_count),
+			b_LoadImage = this._editorNameById() === 'cell';
 		for (var i = 0; i < _count; ++i)
 		{
 			arr[i]       = new AscCommon.asc_CTexture();
 			arr[i].Id    = i;
 			arr[i].Image = AscCommon.g_oUserTexturePresets[i];
-			this.ImageLoader.LoadImage(AscCommon.g_oUserTexturePresets[i], 1);
+			if (b_LoadImage) {
+				this.ImageLoader.LoadImage(AscCommon.g_oUserTexturePresets[i], 1);
+			}
 		}
 
 		this.sendEvent('asc_onInitStandartTextures', arr);
@@ -19685,7 +19686,7 @@ background-repeat: no-repeat;\
 		// ToDo пока временная функция для стыковки.
 		this.AddImageUrl(url);
 	};
-	asc_docs_api.prototype.AddImageUrl       = function(url, imgProp)
+	asc_docs_api.prototype.AddImageUrl       = function(url, imgProp, callback)
 	{
 		if (g_oDocumentUrls.getLocal(url))
 		{
@@ -19693,60 +19694,30 @@ background-repeat: no-repeat;\
 		}
 		else
 		{
-			var rData = {
-				"id"        : this.documentId,
-				"userid"    : this.documentUserId,
-				"vkey"      : this.documentVKey,
-				"c"         : "imgurl",
-				"saveindex" : g_oDocumentUrls.getMaxIndex(),
-				"data"      : url
-			};
-
 			var t = this;
-			this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-			this.fCurCallback = function(input)
-			{
-				if (null != input && "imgurl" == input["type"])
-				{
-					if ("ok" == input["status"])
-					{
-						var data = input["data"];
-						var urls = {};
-						var firstUrl;
-						for (var i = 0; i < data.length; ++i)
-						{
-							var elem = data[i];
-							if (elem.url)
-							{
-								if (!firstUrl)
-								{
-									firstUrl = elem.url;
-								}
-								urls[elem.path] = elem.url;
-							}
-						}
-						g_oDocumentUrls.addUrls(urls);
-						if (firstUrl)
-						{
-							t.AddImageUrlAction(firstUrl, imgProp);
-						}
-						else
-						{
-							t.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-						}
-					}
-					else
-					{
-						t.asc_fireCallback("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-					}
-				}
-				else
-				{
-					t.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-				}
-				t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-			};
-			sendCommand(this, null, rData);
+			if (!callback) {
+				callback = function (url) {
+					//g_oDocumentUrls.addUrls(urls);
+					t.AddImageUrlAction('jio:' + url, imgProp);
+				};
+			}
+			//this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
+			return new RSVP.Queue()
+				.push(function () {
+					return url;
+				})
+				.push(AscCommon.downloadUrlAsBlob)
+				.push(AscCommon.readBlobAsDataURL)
+				.push(function (dataUrl) {
+					return Common.Gateway.jio_putAttachment(t.documentId, undefined, dataUrl);
+				})
+				.push(callback)
+				//.push(function () {t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);})
+				.push(undefined, function (error) {
+					console.log(error);
+					t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
+					//t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
+				});
 		}
 	};
 	asc_docs_api.prototype.AddImageUrlAction = function(url, imgProp)
@@ -20052,60 +20023,11 @@ background-repeat: no-repeat;\
 						return;
 					}
 
-					var rData = {
-						"id"        : this.documentId,
-						"userid"    : this.documentUserId,
-						"vkey"      : this.documentVKey,
-						"c"         : "imgurl",
-						"saveindex" : g_oDocumentUrls.getMaxIndex(),
-						"data"      : sImageToDownLoad
-					};
-
-					this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-					this.fCurCallback = function(input)
-					{
-						if (null != input && "imgurl" == input["type"])
-						{
-							if ("ok" == input["status"])
-							{
-								var data = input["data"];
-								var urls = {};
-								var firstUrl;
-								for (var i = 0; i < data.length; ++i)
-								{
-									var elem = data[i];
-									if (elem.url)
-									{
-										if (!firstUrl)
-										{
-											firstUrl = elem.url;
-										}
-										urls[elem.path] = elem.url;
-									}
-								}
-								g_oDocumentUrls.addUrls(urls);
-								if (firstUrl)
-								{
-									fReplaceCallback(firstUrl);
-									fApplyCallback();
-								}
-								else
-								{
-									oApi.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-								}
-							}
-							else
-							{
-								oApi.asc_fireCallback("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-							}
-						}
-						else
-						{
-							oApi.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-						}
-						oApi.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-					};
-					sendCommand(this, null, rData);
+					this.AddImageUrl(sImageToDownLoad, undefined, function (url) {
+						//g_oDocumentUrls.addUrls(urls);
+						fReplaceCallback('jio:' + url);
+						fApplyCallback();
+					});
 				}
 				else
 				{
@@ -23811,6 +23733,39 @@ AscCommon.baseEditorsApi.prototype._onEndPermissions = function()
 };
 "use strict";
 
+AscCommon.readBlobAsDataURL = function (blob) {
+  var fr = new FileReader();
+  return new RSVP.Promise(function (resolve, reject, notify) {
+    fr.addEventListener("load", function () {
+      resolve(fr.result);
+    });
+    fr.addEventListener("error", reject);
+    fr.addEventListener("progress", notify);
+    fr.readAsDataURL(blob);
+  }, function () {
+    fr.abort();
+  });
+};
+
+AscCommon.downloadUrlAsBlob = function (url) {
+  var xhr = new XMLHttpRequest();
+  return new RSVP.Promise(function (resolve, reject) {
+    xhr.open("GET", url);
+    xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+    xhr.onload = function () {
+      if (this.status === 200) {
+        resolve(xhr.response);
+      } else {
+        reject(this.status)
+      }
+    };
+    xhr.onerror = reject;
+    xhr.send();
+  }, function () {
+    xhr.abort();
+  });
+};
+
 AscCommon.baseEditorsApi.prototype.jio_open = function () {
   var t = this;
   Common.Gateway.jio_get(t.documentId)
@@ -24021,8 +23976,317 @@ AscCommon.loadSdk = function (sdkName, callback) {
         ];
         break;
       case 'cell':
+        list_files = [
+          "../common/downloaderfiles.js",
+          "../common/NumFormat.js",
+          "../common/SerializeChart.js",
+
+          "../common/FontsFreeType/font_engine.js",
+          "../common/FontsFreeType/FontFile.js",
+          "../common/FontsFreeType/font_map.js",
+          "../common/FontsFreeType/FontManager.js",
+
+          "../common/Drawings/Metafile.js",
+          "../common/FontsFreeType/TextMeasurer.js",
+          "../common/Drawings/WorkEvents.js",
+
+          "../cell/model/History.js",
+
+          "../common/Shapes/EditorSettings.js",
+          "../common/Shapes/Serialize.js",
+          "../common/Shapes/SerializeWriter.js",
+
+          "../common/Drawings/Hit.js",
+          "../common/Drawings/ArcTo.js",
+          "../common/Drawings/ColorArray.js",
+
+          "../common/Drawings/Format/Constants.js",
+          "../common/Drawings/CommonController.js",
+          "../common/Drawings/States.js",
+          "../common/Drawings/Format/CreateGeometry.js",
+          "../common/Drawings/Format/Geometry.js",
+          "../common/Drawings/Format/Format.js",
+          "../common/Drawings/Format/GraphicObjectBase.js",
+          "../common/Drawings/Format/Shape.js",
+          "../common/Drawings/Format/Path.js",
+          "../common/Drawings/Format/Image.js",
+          "../common/Drawings/Format/GroupShape.js",
+          "../common/Drawings/Format/ChartSpace.js",
+          "../common/Drawings/Format/ChartFormat.js",
+          "../common/Drawings/Format/TextBody.js",
+          "../common/Drawings/Format/GraphicFrame.js",
+          "../common/Charts/charts.js",
+          "../common/Charts/DrawingArea.js",
+          "../common/Charts/DrawingObjects.js",
+          "../common/Charts/3DTransformation.js",
+          "../common/Charts/ChartsDrawer.js",
+          "../common/Drawings/TrackObjects/AdjustmentTracks.js",
+          "../common/Drawings/TrackObjects/MoveTracks.js",
+          "../common/Drawings/TrackObjects/NewShapeTracks.js",
+          "../common/Drawings/TrackObjects/PolyLine.js",
+          "../common/Drawings/TrackObjects/ResizeTracks.js",
+          "../common/Drawings/TrackObjects/RotateTracks.js",
+          "../common/Drawings/TrackObjects/Spline.js",
+          "../common/Drawings/DrawingObjectsHandlers.js",
+          "../common/Drawings/TextDrawer.js",
+
+          "../common/Drawings/Externals.js",
+          "../common/GlobalLoaders.js",
+          "../common/CollaborativeEditingBase.js",
+          "../common/Controls.js",
+          "../common/Overlay.js",
+          "../common/Drawings/HatchPattern.js",
+
+          "../common/scroll.js",
+          "../cell/view/iscroll.js",
+
+          "../common/wordcopypaste.js",
+
+          "../cell/model/UndoRedo.js",
+          "../cell/model/clipboard.js",
+          "../cell/model/autofilters.js",
+          "../cell/graphics/DrawingContext.js",
+          "../cell/graphics/pdfprinter.js",
+          "../cell/model/ConditionalFormatting.js",
+          "../cell/model/FormulaObjects/parserFormula.js",
+          "../cell/model/FormulaObjects/_xlfnFunctions.js",
+          "../cell/model/FormulaObjects/dateandtimeFunctions.js",
+          "../cell/model/FormulaObjects/engineeringFunctions.js",
+          "../cell/model/FormulaObjects/cubeFunctions.js",
+          "../cell/model/FormulaObjects/databaseFunctions.js",
+          "../cell/model/FormulaObjects/textanddataFunctions.js",
+          "../cell/model/FormulaObjects/statisticalFunctions.js",
+          "../cell/model/FormulaObjects/financialFunctions.js",
+          "../cell/model/FormulaObjects/mathematicFunctions.js",
+          "../cell/model/FormulaObjects/lookupandreferenceFunctions.js",
+          "../cell/model/FormulaObjects/informationFunctions.js",
+          "../cell/model/FormulaObjects/logicalFunctions.js",
+          "../cell/model/CellComment.js",
+          "../cell/model/WorkbookElems.js",
+          "../cell/model/Workbook.js",
+          "../cell/model/Serialize.js",
+          "../cell/model/CellInfo.js",
+          "../cell/view/mobileTouch.js",
+          "../cell/view/StringRender.js",
+          "../cell/view/CellTextRender.js",
+          "../cell/view/CellEditorView.js",
+          "../cell/view/EventsController.js",
+          "../cell/view/WorkbookView.js",
+          "../cell/view/WorksheetView.js",
+          "../cell/view/DrawingObjectsController.js",
+          "../cell/model/DrawingObjects/Graphics.js",
+          "../cell/model/DrawingObjects/ShapeDrawer.js",
+          "../cell/model/DrawingObjects/DrawingDocument.js",
+          "../cell/model/DrawingObjects/GlobalCounters.js",
+          "../cell/model/DrawingObjects/Format/ShapePrototype.js",
+          "../cell/model/DrawingObjects/Format/ImagePrototype.js",
+          "../cell/model/DrawingObjects/Format/GroupPrototype.js",
+          "../cell/model/DrawingObjects/Format/ChartSpacePrototype.js",
+
+          "../word/Editor/Comments.js",
+          "../word/Editor/Styles.js",
+          "../word/Editor/FlowObjects.js",
+          "../word/Editor/ParagraphContent.js",
+          "../word/Editor/ParagraphContentBase.js",
+          "../word/Editor/Hyperlink.js",
+          "../word/Editor/Field.js",
+          "../word/Editor/Run.js",
+          "../word/Editor/Math.js",
+          "../word/Editor/Paragraph.js",
+          "../word/Editor/Paragraph_Recalculate.js",
+          "../word/Editor/Sections.js",
+          "../word/Editor/Numbering.js",
+          "../word/Editor/HeaderFooter.js",
+          "../word/Editor/DocumentContentBase.js",
+          "../word/Editor/Document.js",
+          "../word/Editor/DocumentContent.js",
+          "../word/Editor/DocumentControllerBase.js",
+          "../word/Editor/Table.js",
+          "../word/Editor/Table/TableRecalculate.js",
+          "../word/Editor/Table/TableDraw.js",
+          "../word/Editor/Table/TableRow.js",
+          "../word/Editor/Table/TableCell.js",
+          "../word/Editor/Serialize2.js",
+          "../word/Editor/FontClassification.js",
+          "../word/Editor/Spelling.js",
+          "../word/Editor/Footnotes.js",
+          "../word/Editor/FootEndNote.js",
+          "../word/Editor/GraphicObjects/WrapManager.js",
+          "../word/Editor/Common.js",
+          "../word/Math/mathTypes.js",
+          "../word/Math/mathText.js",
+          "../word/Math/mathContent.js",
+          "../word/Math/base.js",
+          "../word/Math/fraction.js",
+          "../word/Math/degree.js",
+          "../word/Math/matrix.js",
+          "../word/Math/limit.js",
+          "../word/Math/nary.js",
+          "../word/Math/radical.js",
+          "../word/Math/operators.js",
+          "../word/Math/accent.js",
+          "../word/Math/borderBox.js",
+          "../word/apiCommon.js",
+
+          "../cell/apiBuilder.js",
+
+          "../common/clipboard_base.js",
+          "../common/Drawings/Format/OleObject.js",
+          "../common/plugins.js",
+          "../common/Local/common_jio.js",
+          "../cell/Local/api_jio.js"
+        ];
         break;
       case 'slide':
+        list_files = [
+          "../common/downloaderfiles.js",
+          "../common/NumFormat.js",
+          "../common/SerializeChart.js",
+
+          "../common/FontsFreeType/font_engine.js",
+          "../common/FontsFreeType/FontFile.js",
+          "../common/FontsFreeType/font_map.js",
+          "../common/FontsFreeType/FontManager.js",
+
+          "../common/Drawings/Metafile.js",
+          "../common/FontsFreeType/TextMeasurer.js",
+          "../common/Drawings/WorkEvents.js",
+
+          "../word/Editor/History.js",
+
+          "../common/Shapes/EditorSettings.js",
+          "../common/Shapes/Serialize.js",
+          "../common/Shapes/SerializeWriter.js",
+
+          "../common/Drawings/Hit.js",
+          "../common/Drawings/ArcTo.js",
+          "../common/Drawings/ColorArray.js",
+
+          "../common/Drawings/Format/Constants.js",
+          "../common/Drawings/CommonController.js",
+          "../common/Drawings/States.js",
+          "../common/Drawings/Format/CreateGeometry.js",
+          "../common/Drawings/Format/Geometry.js",
+          "../common/Drawings/Format/Format.js",
+          "../common/Drawings/Format/GraphicObjectBase.js",
+          "../common/Drawings/Format/Shape.js",
+          "../slide/Editor/Format/ShapePrototype.js",
+          "../common/Drawings/Format/Path.js",
+          "../common/Drawings/Format/Image.js",
+          "../common/Drawings/Format/GroupShape.js",
+          "../common/Drawings/Format/ChartSpace.js",
+          "../common/Drawings/Format/ChartFormat.js",
+          "../common/Drawings/Format/TextBody.js",
+          "../slide/Editor/Format/TextBodyPrototype.js",
+          "../common/Drawings/Format/GraphicFrame.js",
+          "../common/Charts/charts.js",
+          "../common/Charts/DrawingArea.js",
+          "../common/Charts/DrawingObjects.js",
+          "../common/Charts/3DTransformation.js",
+          "../common/Charts/ChartsDrawer.js",
+          "../common/Drawings/TrackObjects/AdjustmentTracks.js",
+          "../common/Drawings/TrackObjects/MoveTracks.js",
+          "../common/Drawings/TrackObjects/NewShapeTracks.js",
+          "../common/Drawings/TrackObjects/PolyLine.js",
+          "../common/Drawings/TrackObjects/ResizeTracks.js",
+          "../common/Drawings/TrackObjects/RotateTracks.js",
+          "../common/Drawings/TrackObjects/Spline.js",
+          "../common/Drawings/DrawingObjectsHandlers.js",
+          "../common/Drawings/TextDrawer.js",
+
+          "../common/Drawings/Externals.js",
+          "../common/GlobalLoaders.js",
+          "../common/Controls.js",
+          "../common/Overlay.js",
+          "../common/Drawings/HatchPattern.js",
+
+          "../common/scroll.js",
+
+          "../common/wordcopypaste.js",
+
+          "../slide/themes/Themes.js",
+
+          "../cell/utils/utils.js",
+          "../cell/model/WorkbookElems.js",
+          "../cell/model/Workbook.js",
+          "../cell/model/Serialize.js",
+          "../cell/model/CellInfo.js",
+          "../cell/view/DrawingObjectsController.js",
+
+          "../slide/Drawing/ThemeLoader.js",
+          "../word/Editor/Serialize2.js",
+          "../word/Editor/Styles.js",
+          "../slide/Editor/Format/StylesPrototype.js",
+          "../word/Editor/Numbering.js",
+          "../word/Drawing/GraphicsEvents.js",
+          "../word/Drawing/Rulers.js",
+          "../word/Editor/Table.js",
+          "../word/Editor/Table/TableRecalculate.js",
+          "../word/Editor/Table/TableDraw.js",
+          "../word/Editor/Table/TableRow.js",
+          "../word/Editor/Table/TableCell.js",
+          "../word/Editor/Common.js",
+          "../word/Editor/Sections.js",
+
+          "../word/Drawing/Graphics.js",
+          "../word/Drawing/ShapeDrawer.js",
+
+          "../slide/Drawing/Transitions.js",
+          "../slide/Drawing/DrawingDocument.js",
+          "../slide/Drawing/HtmlPage.js",
+          "../slide/Editor/Format/Presentation.js",
+          "../slide/Editor/DrawingObjectsController.js",
+          "../slide/Editor/Format/Slide.js",
+          "../slide/Editor/Format/SlideMaster.js",
+          "../slide/Editor/Format/Layout.js",
+          "../slide/Editor/Format/Comments.js",
+          "../word/Editor/Styles.js",
+          "../word/Editor/Numbering.js",
+          "../word/Editor/ParagraphContent.js",
+          "../word/Editor/ParagraphContentBase.js",
+          "../word/Editor/Hyperlink.js",
+          "../word/Editor/Field.js",
+          "../word/Editor/Run.js",
+          "../word/Math/mathTypes.js",
+          "../word/Math/mathText.js",
+          "../word/Math/mathContent.js",
+          "../word/Math/base.js",
+          "../word/Math/fraction.js",
+          "../word/Math/degree.js",
+          "../word/Math/matrix.js",
+          "../word/Math/limit.js",
+          "../word/Math/nary.js",
+          "../word/Math/radical.js",
+          "../word/Math/operators.js",
+          "../word/Math/accent.js",
+          "../word/Math/borderBox.js",
+          "../word/Editor/FlowObjects.js",
+          "../word/Editor/Paragraph.js",
+          "../word/Editor/Paragraph_Recalculate.js",
+          "../word/Editor/DocumentContentBase.js",
+          "../word/Editor/Document.js",
+          "../word/Editor/DocumentContent.js",
+          "../word/Editor/DocumentControllerBase.js",
+          "../word/Editor/HeaderFooter.js",
+          "../word/Editor/Math.js",
+          "../word/Editor/Spelling.js",
+          "../word/Editor/Footnotes.js",
+          "../word/Editor/FootEndNote.js",
+          "../word/Editor/Search.js",
+          "../word/Editor/FontClassification.js",
+
+          "../slide/Editor/Format/ImagePrototype.js",
+          "../slide/Editor/Format/GroupPrototype.js",
+          "../slide/Editor/Format/ChartSpacePrototype.js",
+          "../slide/apiCommon.js",
+          "../word/apiCommon.js",
+
+          "../common/clipboard_base.js",
+          "../common/Drawings/Format/OleObject.js",
+          "../common/plugins.js",
+          "../common/Local/common_jio.js",
+          "../slide/Local/api_jio.js"
+        ];
         break;
     }
 

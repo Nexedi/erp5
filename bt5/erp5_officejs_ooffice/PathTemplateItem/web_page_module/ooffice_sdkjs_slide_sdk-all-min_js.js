@@ -8453,32 +8453,32 @@ function InitDragAndDrop (oHtmlElement, callback) {
 	}
 }
 function UploadImageFiles (files, documentId, documentUserId, callback) {
-	if (files.length > 0) {
-		var file = files[0];
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', sUploadServiceLocalUrl + '/' + documentId + '/' + documentUserId + '/' + g_oDocumentUrls.getMaxIndex(), true);
-		xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-		xhr.onreadystatechange = function() {
-			if (4 == this.readyState) {
-				if((this.status == 200 || this.status == 1223)) {
-					var urls = JSON.parse(this.responseText);
-					g_oDocumentUrls.addUrls(urls);
-					var firstUrl;
-					for (var i in urls) {
-						if (urls.hasOwnProperty(i)) {
-							firstUrl = urls[i];
-							break;
-						}
-					}
-					callback(Asc.c_oAscError.ID.No, firstUrl);
-				} else
-					callback(Asc.c_oAscError.ID.Unknown);
-			}
-		};
-		xhr.send(file);
-	} else {
-		callback(Asc.c_oAscError.ID.Unknown);
-	}
+  if (files.length > 0) {
+    var file = files[0],
+      reader = new FileReader();
+    reader.addEventListener('load', function () {
+      Common.Gateway.jio_putAttachment(documentId, undefined, reader.result)
+        .push(function (image_url) {
+          callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+        })
+        .push(undefined, function (error) {
+          console.log(error);
+          callback(Asc.c_oAscError.ID.Unknown);
+        });
+    });
+    reader.readAsDataURL(file);
+    //// not worked. throw csp error
+    //Common.Gateway.jio_putAttachment(documentId, undefined, URL.createObjectURL(file))
+    //  .push(function (image_url) {
+    //    callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+    //  })
+    //  .push(undefined, function (error) {
+    //    callback(Asc.c_oAscError.ID.Unknown);
+    //    throw error;
+    //  });
+  } else {
+    callback(Asc.c_oAscError.ID.Unknown);
+  }
 }
 function ValidateUploadImage( files ) {
 	var nRes = c_oAscServerError.NoError;
@@ -10234,7 +10234,7 @@ CUserCacheColor.prototype.init = function(nColor) {
     if (window['AscNotLoadAllScript']) {
       callback();
     } else {
-      loadScript('./sdkjs/' + sdkName + '/sdk-all-dev.js', callback);
+      loadScript('./../../../../sdkjs/' + sdkName + '/sdk-all.js', callback);
     }
   }
 
@@ -13070,7 +13070,6 @@ window['AscCommon'].CollaborativeEditing = new CCollaborativeEditing();
 		}
 		else
 		{
-			this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
 			AscCommon.UploadImageFiles(files, this.documentId, this.documentUserId, function(error, url)
 			{
 				if (c_oAscError.ID.No !== error)
@@ -13081,7 +13080,6 @@ window['AscCommon'].CollaborativeEditing = new CCollaborativeEditing();
 				{
 					t._addImageUrl(url);
 				}
-				t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
 			});
 		}
 	};
@@ -13240,13 +13238,16 @@ window['AscCommon'].CollaborativeEditing = new CCollaborativeEditing();
 	baseEditorsApi.prototype.sendStandartTextures = function()
 	{
 		var _count = AscCommon.g_oUserTexturePresets.length;
-		var arr    = new Array(_count);
+		var arr    = new Array(_count),
+			b_LoadImage = this._editorNameById() === 'cell';
 		for (var i = 0; i < _count; ++i)
 		{
 			arr[i]       = new AscCommon.asc_CTexture();
 			arr[i].Id    = i;
 			arr[i].Image = AscCommon.g_oUserTexturePresets[i];
-			this.ImageLoader.LoadImage(AscCommon.g_oUserTexturePresets[i], 1);
+			if (b_LoadImage) {
+				this.ImageLoader.LoadImage(AscCommon.g_oUserTexturePresets[i], 1);
+			}
 		}
 
 		this.sendEvent('asc_onInitStandartTextures', arr);
@@ -16082,59 +16083,11 @@ background-repeat: no-repeat;\
 					return;
 				}
 
-				this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-				this.fCurCallback = function(input)
-				{
-					if (null != input && "imgurl" == input["type"])
-					{
-						if ("ok" == input["status"])
-						{
-							var data = input["data"];
-							var urls = {};
-							var firstUrl;
-							for (var i = 0; i < data.length; ++i)
-							{
-								var elem = data[i];
-								if (elem.url)
-								{
-									if (!firstUrl)
-									{
-										firstUrl = elem.url;
-									}
-									urls[elem.path] = elem.url;
-								}
-							}
-							g_oDocumentUrls.addUrls(urls);
-							if (firstUrl)
-							{
-								image_url = firstUrl;
-								fApplyCallback();
-							}
-							else
-							{
-								oApi.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-							}
-						}
-						else
-						{
-							oApi.asc_fireCallback("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-						}
-					}
-					else
-					{
-						oApi.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-					}
-					oApi.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-				};
-				var rData         = {
-					"id"        : this.documentId,
-					"userid"    : this.documentUserId,
-					"vkey"      : this.documentVKey,
-					"c"         : "imgurl",
-					"saveindex" : g_oDocumentUrls.getMaxIndex(),
-					"data"      : sImageUrl
-				};
-				sendCommand(this, null, rData);
+				this.AddImageUrl(sImageUrl, function (url) {
+					//g_oDocumentUrls.addUrls(urls);
+					image_url = 'jio:' + url;
+					fApplyCallback();
+				});
 			}
 		}
 		else
@@ -17057,7 +17010,7 @@ background-repeat: no-repeat;\
 		// ToDo пока временная функция для стыковки.
 		this.AddImageUrl(url);
 	};
-	asc_docs_api.prototype.AddImageUrl  = function(url)
+	asc_docs_api.prototype.AddImageUrl  = function(url, callback)
 	{
 		if (g_oDocumentUrls.getLocal(url))
 		{
@@ -17065,60 +17018,34 @@ background-repeat: no-repeat;\
 		}
 		else
 		{
-			var rData = {
-				"id"        : this.documentId,
-				"userid"    : this.documentUserId,
-				"vkey"      : this.documentVKey,
-				"c"         : "imgurl",
-				"saveindex" : g_oDocumentUrls.getMaxIndex(),
-				"data"      : url
-			};
-
-			var t = this;
-			this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-			this.fCurCallback = function(input)
-			{
-				if (null != input && "imgurl" == input["type"])
-				{
-					if ("ok" == input["status"])
-					{
-						var data = input["data"];
-						var urls = {};
-						var firstUrl;
-						for (var i = 0; i < data.length; ++i)
-						{
-							var elem = data[i];
-							if (elem.url)
-							{
-								if (!firstUrl)
-								{
-									firstUrl = elem.url;
-								}
-								urls[elem.path] = elem.url;
-							}
-						}
-						g_oDocumentUrls.addUrls(urls);
-						if (firstUrl)
-						{
-							t.AddImageUrlAction(firstUrl);
-						}
-						else
-						{
-							t.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-						}
-					}
-					else
-					{
-						t.asc_fireCallback("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-					}
-				}
-				else
-				{
-					t.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-				}
-				t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-			};
-			sendCommand(this, null, rData);
+			var t = this,
+				start = url.slice(0, 6),
+				queue = new RSVP.Queue();
+			if (!callback) {
+				callback = function (url) {
+					//g_oDocumentUrls.addUrls(urls);
+					t.AddImageUrlAction('jio:' + url);
+				};
+			}
+			queue.push(function () {
+				return url;
+			});
+			//this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
+			if (0 !== start.indexOf('data:')) {
+				queue
+					.push(AscCommon.downloadUrlAsBlob)
+					.push(AscCommon.readBlobAsDataURL);
+			}
+			return queue.push(function (dataUrl) {
+					return Common.Gateway.jio_putAttachment(t.documentId, undefined, dataUrl);
+				})
+				.push(callback)
+				//.push(function () {t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);})
+				.push(undefined, function (error) {
+					console.log(error);
+					t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
+					//t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
+				});
 		}
 	};
 
@@ -17276,60 +17203,11 @@ background-repeat: no-repeat;\
 			}
 			else
 			{
-				this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-				this.fCurCallback = function(input)
-				{
-					if (null != input && "imgurl" == input["type"])
-					{
-						if ("ok" == input["status"])
-						{
-							var data = input["data"];
-							var urls = {};
-							var firstUrl;
-							for (var i = 0; i < data.length; ++i)
-							{
-								var elem = data[i];
-								if (elem.url)
-								{
-									if (!firstUrl)
-									{
-										firstUrl = elem.url;
-									}
-									urls[elem.path] = elem.url;
-								}
-							}
-							g_oDocumentUrls.addUrls(urls);
-							if (firstUrl)
-							{
-								ImagePr.ImageUrl = firstUrl;
-								fApplyCallback();
-							}
-							else
-							{
-								oApi.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-							}
-						}
-						else
-						{
-							oApi.asc_fireCallback("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-						}
-					}
-					else
-					{
-						oApi.asc_fireCallback("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-					}
-					oApi.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-				};
-
-				var rData = {
-					"id"        : this.documentId,
-					"userid"    : this.documentUserId,
-					"vkey"      : this.documentVKey,
-					"c"         : "imgurl",
-					"saveindex" : g_oDocumentUrls.getMaxIndex(),
-					"data"      : sImageUrl
-				};
-				sendCommand(this, null, rData);
+				this.AddImageUrl(sImageUrl, function (url) {
+					//g_oDocumentUrls.addUrls(urls);
+					ImagePr.ImageUrl = 'jio:' + url;
+					fApplyCallback();
+				});
 			}
 		}
 		else
@@ -20266,6 +20144,39 @@ AscCommon.baseEditorsApi.prototype.getEmpty = function() {
 };
 
 "use strict";
+
+AscCommon.readBlobAsDataURL = function (blob) {
+  var fr = new FileReader();
+  return new RSVP.Promise(function (resolve, reject, notify) {
+    fr.addEventListener("load", function () {
+      resolve(fr.result);
+    });
+    fr.addEventListener("error", reject);
+    fr.addEventListener("progress", notify);
+    fr.readAsDataURL(blob);
+  }, function () {
+    fr.abort();
+  });
+};
+
+AscCommon.downloadUrlAsBlob = function (url) {
+  var xhr = new XMLHttpRequest();
+  return new RSVP.Promise(function (resolve, reject) {
+    xhr.open("GET", url);
+    xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+    xhr.onload = function () {
+      if (this.status === 200) {
+        resolve(xhr.response);
+      } else {
+        reject(this.status)
+      }
+    };
+    xhr.onerror = reject;
+    xhr.send();
+  }, function () {
+    xhr.abort();
+  });
+};
 
 AscCommon.baseEditorsApi.prototype.jio_open = function () {
   var t = this;

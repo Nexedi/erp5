@@ -80,26 +80,6 @@ var c_oAscError = Asc.c_oAscError;
 		cp['encodings'] = AscCommon.getEncodingParams();
 		this.handlers.trigger("asc_onAdvancedOptions", new AscCommon.asc_CAdvancedOptions(Asc.c_oAscAdvancedOptionsID.CSV, cp), AscCommon.c_oAscAdvancedOptionsAction.Open);
 	};
-	
-	asc['spreadsheet_api'].prototype.asc_addImageDrawingObject = function(url)
-	{
-		var _url = window["AscDesktopEditor"]["LocalFileGetImageUrl"](url);
-		
-		var ws = this.wb.getWorksheet();
-		if (ws) 
-		{
-			var _url = window["AscDesktopEditor"]["LocalFileGetImageUrl"](url);
-			ws.objectRender.addImageDrawingObject(AscCommon.g_oDocumentUrls.getImageUrl(_url) , null);
-		}
-	};
-	asc['spreadsheet_api'].prototype.asc_showImageFileDialog = function()
-	{
-		window["AscDesktopEditor"]["LocalFileGetImageUrlFromOpenFileDialog"]();
-	};
-	asc['spreadsheet_api'].prototype.asc_addImage = function()
-	{
-	  window["AscDesktopEditor"]["LocalFileGetImageUrlFromOpenFileDialog"]();
-	};
 })(jQuery, window);
 
 window["Asc"]['spreadsheet_api'].prototype.asc_setAdvancedOptions = function(idOption, option) 

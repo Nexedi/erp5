@@ -160,7 +160,7 @@
         this.fonts_streams = [];
 
         // теперь вся информация о всех возможных шрифтах. Они во всех редакторах должны быть одни и те же
-        this.fontFilesPath = "../ooffice_fonts";
+        this.fontFilesPath = "../../../ooffice_fonts";
         this.fontFiles = AscFonts.g_font_files;
         this.fontInfos = AscFonts.g_font_infos;
         this.map_font_index = AscFonts.g_map_font_index;
@@ -189,7 +189,7 @@
             this.Api = _api;
             this.embedded_cut_manager.Api = _api;
         };
-                
+
         this.LoadEmbeddedFonts = function(url, _fonts)
         {
             this.embeddedFilesPath = url;
@@ -458,7 +458,7 @@
                     oThis.Api.OpenDocumentProgress.CurrentFont++;
                     oThis.Api.SendOpenProgress();
                 }
-                
+
                 oThis.fonts_loading_after_style[oThis.fonts_loading_after_style.length] = oThis.fonts_loading[0];
                 oThis.fonts_loading.shift();
                 oThis._LoadFonts();
@@ -533,7 +533,7 @@
 	{
 		this.embeddedFontFiles[font_index].SetStreamIndex(stream_index);
 	};
-	
+
     function CGlobalImageLoader()
     {
         this.map_image_index = {};
@@ -561,137 +561,105 @@
                 }
             }
         };
-        
-        this.LoadDocumentImages = function(_images, isUrl)
-        {
-            // сначала заполним массив
-            if (this.ThemeLoader == null)
+
+        this.LoadDocumentImages = function (_images, isUrl) {
+            var oThis = this,
+              images = [];
+            if (this.ThemeLoader === null)
                 this.Api.asyncImagesDocumentStartLoaded();
             else
                 this.ThemeLoader.asyncImagesStartLoaded();
+            if (!this.bIsAsyncLoadDocumentImages) {
+                for (var id in _images) {
+                    images.push(AscCommon.getFullImageSrc2(_images[id]));
+                }
+                return RSVP.all(images.map(function (image_id) {
+                      return oThis._LoadImage(image_id)
+                        .push(function () {
+                            if (oThis.bIsLoadDocumentFirst === true) {
+                                oThis.Api.OpenDocumentProgress.CurrentImage++;
+                                oThis.Api.SendOpenProgress();
+                            }
 
-            this.images_loading = [];
-
-            for (var id in _images)
-            {
-                this.images_loading[this.images_loading.length] = AscCommon.getFullImageSrc2(_images[id]);
-            }
-
-            if (!this.bIsAsyncLoadDocumentImages)
-            {
-                this._LoadImages();
-            }
-            else
-            {
-                var _len = this.images_loading.length;
-                for (var i = 0; i < _len; i++)
-                {
-                    this.LoadImageAsync(i);
+                        });
+                  }))
+                  .then(function () {
+                      if (oThis.ThemeLoader === null)
+                          oThis.Api.asyncImagesDocumentEndLoaded();
+                      else
+                          oThis.ThemeLoader.asyncImagesEndLoaded();
+                  });
+            } else {
+                for (var id in _images) {
+                    this._LoadImage(AscCommon.getFullImageSrc2(_images[id]))
+                      .push(function (oImage) {
+                          oThis.Api.asyncImageEndLoadedBackground(oImage);
+                      });
                 }
 
-                this.images_loading.splice(0, _len);
-
-                if (this.ThemeLoader == null)
+                if (this.ThemeLoader === null)
                     this.Api.asyncImagesDocumentEndLoaded();
                 else
                     this.ThemeLoader.asyncImagesEndLoaded();
             }
         };
 
-        var oThis = this;
-        this._LoadImages = function()
-        {
-            if (0 == this.images_loading.length)
-            {
-                if (this.ThemeLoader == null)
-                    this.Api.asyncImagesDocumentEndLoaded();
-                else
-                    this.ThemeLoader.asyncImagesEndLoaded();
-
-                return;
+        this._LoadImage = function (image_id, Type) {
+            var start = image_id.slice(0, 4),
+              queue,
+              oThis = this;
+            if (0 === start.indexOf('jio:')) {
+                queue = Common.Gateway.jio_getAttachment(this.Api.documentId, image_id.slice(4), 'asBlobURL')
+                  .push(undefined, function (error) {
+                      console.log(error);
+                      return "";
+                  });
+            } else {
+                queue = new RSVP.Queue().push(function () {
+                    return image_id;
+                });
             }
-
-            var _id = this.images_loading[0];
-            var oImage = new CImage(_id);
-            oImage.Status = ImageLoadStatus.Loading;
-            oImage.Image = new Image();
-            oThis.map_image_index[oImage.src] = oImage;
-            oImage.Image.onload = function(){
-                oImage.Status = ImageLoadStatus.Complete;
-
-                if (oThis.bIsLoadDocumentFirst === true)
-                {
-                    oThis.Api.OpenDocumentProgress.CurrentImage++;
-                    oThis.Api.SendOpenProgress();
+            queue.push(function (url) {
+                if (url === "") {
+                    url = image_id;
                 }
-
-                oThis.images_loading.shift();
-                oThis._LoadImages();
-            };
-            oImage.Image.onerror = function(){
-                oImage.Status = ImageLoadStatus.Complete;
-                oImage.Image = null;
-
-                if (oThis.bIsLoadDocumentFirst === true)
-                {
-                    oThis.Api.OpenDocumentProgress.CurrentImage++;
-                    oThis.Api.SendOpenProgress();
-                }
-
-                oThis.images_loading.shift();
-                oThis._LoadImages();
-            };
-            //oImage.Image.crossOrigin = 'anonymous';
-            oImage.Image.src = oImage.src;
+                return new RSVP.Promise(function (resolve, reject) {
+                    var oImage = new CImage(image_id);
+                    oImage.Type = Type;
+                    oImage.Status = ImageLoadStatus.Loading;
+                    oImage.Image = new Image();
+                    oThis.map_image_index[image_id] = oImage;
+                    oImage.Image.onload = function () {
+                        oImage.Status = ImageLoadStatus.Complete;
+                        resolve(oImage);
+                    };
+                    oImage.Image.onerror = function () {
+                        oImage.Image = null;
+                        oImage.Status = ImageLoadStatus.Complete;
+                        resolve(oImage);
+                    };
+                    //oImage.Image.crossOrigin = 'anonymous';
+                    oImage.Image.src = url;
+                });
+            });
+            return queue;
         };
 
-        this.LoadImage = function(src, Type)
-        {
-            var _image = this.map_image_index[src];
-            if (undefined != _image)
+        this.LoadImage = function(src, Type) {
+            var _image = this.map_image_index[src],
+              oThis = this;
+            if (undefined !== _image)
                 return _image;
 
             this.Api.asyncImageStartLoaded();
+            this._LoadImage(src, Type)
+              .push(function (oImage) {
+                      oThis.Api.asyncImageEndLoaded(oImage);
+              });
 
-            var oImage = new CImage(src);
-            oImage.Type = Type;
-            oImage.Image = new Image();
-            oImage.Status = ImageLoadStatus.Loading;
-            oThis.map_image_index[oImage.src] = oImage;
-
-            oImage.Image.onload = function(){
-                oImage.Status = ImageLoadStatus.Complete;
-                oThis.Api.asyncImageEndLoaded(oImage);
-            };
-            oImage.Image.onerror = function(){
-                oImage.Image = null;
-                oImage.Status = ImageLoadStatus.Complete;
-                oThis.Api.asyncImageEndLoaded(oImage);
-            };
-            //oImage.Image.crossOrigin = 'anonymous';
-            oImage.Image.src = oImage.src;
             return null;
         };
 
-        this.LoadImageAsync = function(i)
-        {
-            var _id = oThis.images_loading[i];
-            var oImage = new CImage(_id);
-            oImage.Status = ImageLoadStatus.Loading;
-            oImage.Image = new Image();
-            oThis.map_image_index[oImage.src] = oImage;
-            oImage.Image.onload = function(){
-                oImage.Status = ImageLoadStatus.Complete;
-                oThis.Api.asyncImageEndLoadedBackground(oImage);
-            };
-            oImage.Image.onerror = function(){
-                oImage.Status = ImageLoadStatus.Complete;
-                oImage.Image = null;
-                oThis.Api.asyncImageEndLoadedBackground(oImage);
-            };
-            //oImage.Image.crossOrigin = 'anonymous';
-            oImage.Image.src = oImage.src;
-        }
     }
 
     var g_flow_anchor = new Image();

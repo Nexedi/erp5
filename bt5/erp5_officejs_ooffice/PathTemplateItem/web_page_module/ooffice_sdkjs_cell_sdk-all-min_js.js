@@ -8453,32 +8453,32 @@ function InitDragAndDrop (oHtmlElement, callback) {
 	}
 }
 function UploadImageFiles (files, documentId, documentUserId, callback) {
-	if (files.length > 0) {
-		var file = files[0];
-		var xhr = new XMLHttpRequest();
-		xhr.open('POST', sUploadServiceLocalUrl + '/' + documentId + '/' + documentUserId + '/' + g_oDocumentUrls.getMaxIndex(), true);
-		xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-		xhr.onreadystatechange = function() {
-			if (4 == this.readyState) {
-				if((this.status == 200 || this.status == 1223)) {
-					var urls = JSON.parse(this.responseText);
-					g_oDocumentUrls.addUrls(urls);
-					var firstUrl;
-					for (var i in urls) {
-						if (urls.hasOwnProperty(i)) {
-							firstUrl = urls[i];
-							break;
-						}
-					}
-					callback(Asc.c_oAscError.ID.No, firstUrl);
-				} else
-					callback(Asc.c_oAscError.ID.Unknown);
-			}
-		};
-		xhr.send(file);
-	} else {
-		callback(Asc.c_oAscError.ID.Unknown);
-	}
+  if (files.length > 0) {
+    var file = files[0],
+      reader = new FileReader();
+    reader.addEventListener('load', function () {
+      Common.Gateway.jio_putAttachment(documentId, undefined, reader.result)
+        .push(function (image_url) {
+          callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+        })
+        .push(undefined, function (error) {
+          console.log(error);
+          callback(Asc.c_oAscError.ID.Unknown);
+        });
+    });
+    reader.readAsDataURL(file);
+    //// not worked. throw csp error
+    //Common.Gateway.jio_putAttachment(documentId, undefined, URL.createObjectURL(file))
+    //  .push(function (image_url) {
+    //    callback(Asc.c_oAscError.ID.No, 'jio:' + image_url);
+    //  })
+    //  .push(undefined, function (error) {
+    //    callback(Asc.c_oAscError.ID.Unknown);
+    //    throw error;
+    //  });
+  } else {
+    callback(Asc.c_oAscError.ID.Unknown);
+  }
 }
 function ValidateUploadImage( files ) {
 	var nRes = c_oAscServerError.NoError;
@@ -10234,7 +10234,7 @@ CUserCacheColor.prototype.init = function(nColor) {
     if (window['AscNotLoadAllScript']) {
       callback();
     } else {
-      loadScript('./sdkjs/' + sdkName + '/sdk-all-dev.js', callback);
+      loadScript('./../../../../sdkjs/' + sdkName + '/sdk-all.js', callback);
     }
   }
 
@@ -14766,7 +14766,6 @@ var c_oAscPopUpSelectorType = {
 		}
 		else
 		{
-			this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
 			AscCommon.UploadImageFiles(files, this.documentId, this.documentUserId, function(error, url)
 			{
 				if (c_oAscError.ID.No !== error)
@@ -14777,7 +14776,6 @@ var c_oAscPopUpSelectorType = {
 				{
 					t._addImageUrl(url);
 				}
-				t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
 			});
 		}
 	};
@@ -14936,13 +14934,16 @@ var c_oAscPopUpSelectorType = {
 	baseEditorsApi.prototype.sendStandartTextures = function()
 	{
 		var _count = AscCommon.g_oUserTexturePresets.length;
-		var arr    = new Array(_count);
+		var arr    = new Array(_count),
+			b_LoadImage = this._editorNameById() === 'cell';
 		for (var i = 0; i < _count; ++i)
 		{
 			arr[i]       = new AscCommon.asc_CTexture();
 			arr[i].Id    = i;
 			arr[i].Image = AscCommon.g_oUserTexturePresets[i];
-			this.ImageLoader.LoadImage(AscCommon.g_oUserTexturePresets[i], 1);
+			if (b_LoadImage) {
+				this.ImageLoader.LoadImage(AscCommon.g_oUserTexturePresets[i], 1);
+			}
 		}
 
 		this.sendEvent('asc_onInitStandartTextures', arr);
@@ -17301,48 +17302,32 @@ var editor;
     return ws.objectRender.editChartDrawingObject(chart);
   };
 
-  spreadsheet_api.prototype.asc_addImageDrawingObject = function(imageUrl) {
-    var rData = {
-      "id": this.documentId,
-      "userid": this.documentUserId,
-      "vkey": this.documentVKey,
-      "c": "imgurl",
-      "saveindex": g_oDocumentUrls.getMaxIndex(),
-      "data": imageUrl};
-
+  spreadsheet_api.prototype.asc_addImageDrawingObject = function(imageUrl, callback) {
     var t = this;
-    this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-    this.fCurCallback = function(input) {
-      if (null != input && "imgurl" == input["type"]) {
-        if ("ok" == input["status"]) {
-          var data = input["data"];
-          var urls = {};
-          var firstUrl;
-          for (var i = 0; i < data.length; ++i) {
-            var elem = data[i];
-            if (elem.url) {
-              if (!firstUrl) {
-                firstUrl = elem.url;
-              }
-              urls[elem.path] = elem.url;
-            }
-          }
-          g_oDocumentUrls.addUrls(urls);
-          if (firstUrl) {
-            var ws = t.wb.getWorksheet();
-            ws.objectRender.addImageDrawingObject(firstUrl, null);
-          } else {
-            t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-          }
-        } else {
-          t.handlers.trigger("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-        }
-      } else {
+    if (!callback) {
+      callback = function (url) {
+        //g_oDocumentUrls.addUrls(urls);
+        var ws = t.wb.getWorksheet();
+        ws.objectRender.addImageDrawingObject('jio:' + url, null);
+      };
+    }
+    //this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
+    return new RSVP.Queue()
+      .push(function () {
+        return  imageUrl;
+      })
+      .push(AscCommon.downloadUrlAsBlob)
+      .push(AscCommon.readBlobAsDataURL)
+      .push(function (dataUrl) {
+        return Common.Gateway.jio_putAttachment(t.documentId, undefined, dataUrl);
+      })
+      .push(callback)
+      //.push(function () {t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);})
+      .push(undefined, function (error) {
+        console.log(error);
         t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-      }
-      t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-    };
-    sendCommand(this, null, rData);
+        //t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
+      });
   };
 
   spreadsheet_api.prototype.asc_showImageFileDialog = function() {
@@ -17550,47 +17535,10 @@ var editor;
         return;
       }
 
-      var rData = {
-        "id": this.documentId,
-        "userid": this.documentUserId,
-        "vkey": this.documentVKey,
-        "c": "imgurl",
-        "saveindex": g_oDocumentUrls.getMaxIndex(),
-        "data": sImageUrl};
-
-      var t = this;
-      this.sync_StartAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-      this.fCurCallback = function(input) {
-        if (null != input && "imgurl" == input["type"]) {
-          if ("ok" == input["status"]) {
-            var data = input["data"];
-            var urls = {};
-            var firstUrl;
-            for (var i = 0; i < data.length; ++i) {
-              var elem = data[i];
-              if (elem.url) {
-                if (!firstUrl) {
-                  firstUrl = elem.url;
-                }
-                urls[elem.path] = elem.url;
-              }
-            }
-            g_oDocumentUrls.addUrls(urls);
-            if (firstUrl) {
-              fReplaceCallback(firstUrl);
-              ws.objectRender.setGraphicObjectProps(props);
-            } else {
-              t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-            }
-          } else {
-            t.handlers.trigger("asc_onError", mapAscServerErrorToAscError(parseInt(input["data"])), c_oAscError.Level.NoCritical);
-          }
-        } else {
-          t.handlers.trigger("asc_onError", c_oAscError.ID.Unknown, c_oAscError.Level.NoCritical);
-        }
-        t.sync_EndAction(c_oAscAsyncActionType.BlockInteraction, c_oAscAsyncAction.UploadImage);
-      };
-      sendCommand(this, null, rData);
+      this.asc_addImageDrawingObject(sImageUrl, function (url) {
+        fReplaceCallback('jio:' + url);
+        ws.objectRender.setGraphicObjectProps(props);
+      });
     }
     else{
       ws.objectRender.setGraphicObjectProps(props);
@@ -18692,6 +18640,39 @@ AscCommon.baseEditorsApi.prototype._onEndPermissions = function()
 	}
 };
 "use strict";
+
+AscCommon.readBlobAsDataURL = function (blob) {
+  var fr = new FileReader();
+  return new RSVP.Promise(function (resolve, reject, notify) {
+    fr.addEventListener("load", function () {
+      resolve(fr.result);
+    });
+    fr.addEventListener("error", reject);
+    fr.addEventListener("progress", notify);
+    fr.readAsDataURL(blob);
+  }, function () {
+    fr.abort();
+  });
+};
+
+AscCommon.downloadUrlAsBlob = function (url) {
+  var xhr = new XMLHttpRequest();
+  return new RSVP.Promise(function (resolve, reject) {
+    xhr.open("GET", url);
+    xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+    xhr.onload = function () {
+      if (this.status === 200) {
+        resolve(xhr.response);
+      } else {
+        reject(this.status)
+      }
+    };
+    xhr.onerror = reject;
+    xhr.send();
+  }, function () {
+    xhr.abort();
+  });
+};
 
 AscCommon.baseEditorsApi.prototype.jio_open = function () {
   var t = this;
