@@ -33,7 +33,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products.ERP5Type.UnrestrictedMethod import super_user
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
@@ -96,15 +96,10 @@ class ERP5BearerExtractionPlugin(BasePlugin):
       pass
 
     if token is not None:
-      sm = getSecurityManager()
-      if sm.getUser().getId() != SUPER_USER:
-        newSecurityManager(self, self.getUser(SUPER_USER))
-      try:
+      with super_user():
         reference = self.Base_extractBearerTokenInformation(token)
         if reference is not None:
           creds['external_login'] = reference
-      finally:
-        setSecurityManager(sm)
       if 'external_login' in  creds:
         creds['remote_host'] = request.get('REMOTE_HOST', '')
         try:
