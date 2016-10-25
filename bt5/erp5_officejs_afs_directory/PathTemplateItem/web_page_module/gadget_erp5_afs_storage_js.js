@@ -57,7 +57,7 @@
         
         for (i = 0, len = data_list.length; i < len; i += 1) {
           data_entry = data_list[i];
-          if (data_entry.path !== "README.md") {
+          if (data_entry.path.indexOf(".json") > -1) {
             result_list.push({
               id: data_entry.download_url,
               value: {}
