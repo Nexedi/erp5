@@ -215,37 +215,70 @@ class ERP5UserManager(BasePlugin):
              sort_by=None, max_results=None, **kw):
     """ See IUserEnumerationPlugin.
     """
+    # Note: this plugin totally ignores the distinction between login and id.
     if id is None:
       id = login
     if isinstance(id, str):
       id = (id,)
-    if isinstance(id, list):
-      id = tuple(id)
 
-    user_info = []
-    plugin_id = self.getId()
-
+    unrestrictedSearchResults = self.getPortalObject(
+      ).portal_catalog.unrestrictedSearchResults
+    searchUser = lambda **kw: unrestrictedSearchResults(
+      select_list=('reference', ),
+      portal_type='Person',
+      **kw
+    ).dictionaries()
+    # Only search by id if login is not given. Same logic as in
+    # PluggableAuthService.searchUsers.
+    if isinstance(id, str):
+      id = (id, )
     id_list = []
+    has_super_user = False
     for user_id in id:
-      if SUPER_USER == user_id:
-        info = { 'id' : SUPER_USER
-             , 'login' : SUPER_USER
-             , 'pluginid' : plugin_id
-        }
-        user_info.append(info)
-      else:
+      if user_id == SUPER_USER:
+        has_super_user = True
+      elif user_id:
         id_list.append(user_id)
-
     if id_list:
-      for user in self.getUserByLogin(tuple(id_list), exact_match=exact_match):
-        info = { 'id' : user.getReference()
-               , 'login' : user.getReference()
-               , 'pluginid' : plugin_id
-               }
+      if exact_match:
+        requested = set(id_list).__contains__
+      else:
+        requested = lambda x: True
+      user_list = [
+        x for x in searchUser(
+          reference={
+            'query': id_list,
+            'key': 'ExactMatch' if exact_match else 'Keyword',
+          },
+          limit=max_results,
+        )
+        if requested(x['reference'])
+      ]
+    else:
+      user_list = []
+    if has_super_user:
+      user_list.append({'uid': None, 'path': None, 'reference': SUPER_USER})
+    plugin_id = self.getId()
+    return tuple([
+      {
+        'id': user['reference'],
+        # Note: PAS forbids us from returning more than one entry per given id,
+        # so take any available login.
+        'login': user['reference'],
+        'pluginid': plugin_id,
 
-        user_info.append(info)
-
-    return tuple(user_info)
+        # Extra properties, specific to ERP5
+        'path': user['path'],
+        'login_list': [
+          {
+            'reference': user['reference'],
+            'path': user['path'],
+            'uid': user['uid'],
+          }
+        ],
+      }
+      for user in user_list
+    ])
 
   def getUserByLogin(self, login, exact_match=True):
     # Search the Catalog for login and return a list of person objects
