@@ -1,11 +1,11 @@
 from DateTime import DateTime
-from Products.ERP5Security.ERP5UserManager import getUserByLogin
 
-person_list = getUserByLogin(context, login)
+person_list = [x for x in context.acl_users.searchUsers(login=login, exact_match=True) if 'path' in x]
 if not person_list:
   return False, []
 
-person = person_list[0]
+person, = person_list
+person = context.getPortalObject().restrictedTraverse(person['path'])
 if person.getPassword(format='palo_md5') != password:
   return False, []
 

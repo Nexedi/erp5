@@ -76,7 +76,6 @@ for gadget in context.portal_gadgets.objectValues():
     gadget.public()
 
 # Add a tab and a gadget for everyone
-from Products.ERP5Security.ERP5UserManager import getUserByLogin
 portal = context.getPortalObject()
 for person in context.person_module.objectValues():
   user_name = person.getReference()

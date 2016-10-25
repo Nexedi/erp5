@@ -87,7 +87,7 @@ class ERP5GroupManager(BasePlugin):
       return ()
 
     @UnrestrictedMethod
-    def _getGroupsForPrincipal(user_name, path):
+    def _getGroupsForPrincipal(user_id, path):
       security_category_dict = {} # key is the base_category_list,
                                   # value is the list of fetched categories
       security_group_list = []
@@ -117,17 +117,15 @@ class ERP5GroupManager(BasePlugin):
         else:
           security_definition_list = mapping_method()
 
-        # get the person from its reference - no security check needed
-        catalog_result = self.portal_catalog.unrestrictedSearchResults(
-            portal_type="Person", query=SimpleQuery(reference=user_name))
-        if len(catalog_result) != 1: # we won't proceed with groups
-          if len(catalog_result) > 1: # configuration is screwed
-            raise ConsistencyError, 'There is more than one Person whose \
-                login is %s : %s' % (user_name,
-                repr([r.getObject() for r in catalog_result]))
-          else: # no person is linked to this user login
-            return ()
-        person_object = catalog_result[0].getObject()
+        # get the person from its login - no security check needed
+        user_list = [
+          x for x in self.searchUsers(id=user_id, exact_match=True)
+          if 'path' in x
+        ]
+        if not user_list:
+          return ()
+        user, = user_list
+        person_object = self.getPortalObject().unrestrictedTraverse(user['path'])
 
         # Fetch category values from defined scripts
         for (method_name, base_category_list) in security_definition_list:
@@ -141,7 +139,7 @@ class ERP5GroupManager(BasePlugin):
             # Currently, passing portal_type='' (instead of 'Person')
             # is the only way to make the difference.
             security_category_list.extend(
-              method(base_category_list, user_name, person_object, '')
+              method(base_category_list, user_id, person_object, '')
             )
           except ConflictError:
             raise
@@ -184,7 +182,7 @@ class ERP5GroupManager(BasePlugin):
                                              cache_factory='erp5_content_short')
 
     return _getGroupsForPrincipal(
-                user_name=principal.getId(),
+                user_id=principal.getId(),
                 path=self.getPhysicalPath())
 
 

@@ -42,7 +42,7 @@ if (
       destination_decision_person.getDefaultEmailText() and
       destination_decision_person.getReference()
     ):
-  if len(portal.acl_users.erp5_users.getUserByLogin(source_person.getReference())):
+  if portal.acl_users.searchUsers(id=source_person.getReference(), exact_match=True):
     message = """A new task has been assigned to you by %(assignor)s.
 
 This task is named: %(title)s

@@ -37,7 +37,7 @@ if 'password_confirm' in kw:
   del kw['password_confirm']
 
 #Check that user doesn't already exists
-person_list = portal.acl_users.erp5_users.getUserByLogin(kw['reference'])
+person_list = [x for x in portal.acl_users.searchUsers(login=kw['reference'], exact_match=True) if 'path' in x]
 if person_list:
   msg = translateString("This account already exists. Please provide another email address.")
   kw['portal_status_message'] = msg

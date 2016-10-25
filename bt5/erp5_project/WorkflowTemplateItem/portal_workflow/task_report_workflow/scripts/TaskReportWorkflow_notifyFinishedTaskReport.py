@@ -13,7 +13,7 @@ if source_person is not None \
      and destination_decision_person is not None \
      and destination_decision_person.getDefaultEmailText() \
      and destination_decision_person.getReference():
-  if len(portal.acl_users.erp5_users.getUserByLogin(source_person.getReference())):
+  if portal.acl_users.searchUsers(id=source_person.getReference(), exact_match=True):
     message = """
 %s has finished the task report titled with %s.
 Please look at this URL:

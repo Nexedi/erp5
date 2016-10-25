@@ -6,8 +6,8 @@ new_password = request.get("new_password")
 former_password = request.get("current_password")
 
 user = getSecurityManager().getUser()
-persons = context.acl_users.erp5_users.getUserByLogin(user)
-person = persons[0]
+person, = context.acl_users.searchUsers(id=user.getId(), exact_match=True)
+person = context.getPortalObject().restrictedTraverse(person['path'])
 
 if not person.checkPassword(former_password):
   msg = translateString("Current password is wrong.")

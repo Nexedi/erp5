@@ -39,7 +39,6 @@ from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 import socket
-from Products.ERP5Security.ERP5UserManager import getUserByLogin
 from zLOG import LOG, ERROR, INFO
 
 try:
@@ -181,8 +180,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
       self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
     else:
       # create the user if not found
-      person_list = getUserByLogin(self.getPortalObject(), user)
-      if len(person_list) == 0:
+      if not self.searchUsers(id=user, exact_match=True):
         sm = getSecurityManager()
         if sm.getUser().getId() != SUPER_USER:
           newSecurityManager(self, self.getUser(SUPER_USER))

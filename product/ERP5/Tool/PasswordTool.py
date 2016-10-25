@@ -142,17 +142,21 @@ class PasswordTool(BaseTool):
 
     msg = None
     # check user exists, and have an email
-    user_list = self.getPortalObject().acl_users.\
-                      erp5_users.getUserByLogin(user_login)
+    user_list = [x for x in self.getPortalObject().acl_users.searchUsers(
+      login=user_login,
+      exact_match=True,
+    ) if 'path' in x]
     if len(user_list) == 0:
       msg = translateString("User ${user} does not exist.",
                             mapping={'user':user_login})
     else:
       # We use checked_permission to prevent errors when trying to acquire
       # email from organisation
-      user = user_list[0]
-      email_value = user.getDefaultEmailValue(
-              checked_permission='Access content information')
+      user, = user_list
+      user_value = self.getPortalObject().unrestrictedTraverse(
+        user['path'])
+      email_value = user_value.getDefaultEmailValue(
+        checked_permission='Access content information')
       if email_value is None or not email_value.asText():
         msg = translateString(
             "User ${user} does not have an email address, please contact site "
@@ -200,7 +204,7 @@ class PasswordTool(BaseTool):
         'language':notification_message.getLanguage(),
       }
 
-    self.getPortalObject().portal_notifications.sendMessage(sender=sender, recipient=[user,],
+    self.getPortalObject().portal_notifications.sendMessage(sender=sender, recipient=[user_value,],
                                                             subject=subject, message=message,
                                                             store_as_event=store_as_event,
                                                             message_text_format=message_text_format,
@@ -272,11 +276,15 @@ class PasswordTool(BaseTool):
       # XXX: incorrect grammar
       return error("Date has expire.")
     del self._password_request_dict[password_key]
-    persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(
-      register_user_login)
-    person = persons[0]
-    person._forceSetPassword(password)
-    person.reindexObject()
+    portal = self.getPortalObject()
+    user_dict, = portal.acl_users.searchUsers(
+      login=register_user_login,
+      exact_match=True,
+    )
+    login_dict, = user_dict['login_list']
+    login = portal.unrestrictedTraverse(login_dict['path'])
+    login._forceSetPassword(password)
+    login.reindexObject()
     return redirect(REQUEST, site_url,
                     translateString("Password changed."))
 
