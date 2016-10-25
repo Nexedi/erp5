@@ -49,8 +49,8 @@ class ERP5User(PropertiedUser):
   """ User class that checks the object allows acquisition of local roles the
   ERP5Type way.
   """
-  _user_value = None
-  _login_value = None
+  _user_path = None
+  _login_path = None
 
   def getRolesInContext( self, object ):
     """ Return the list of roles assigned to the user.
@@ -202,28 +202,26 @@ class ERP5User(PropertiedUser):
 
     Return the document (ex: Person) corresponding to current user.
     """
-    result = self._user_value
+    result = self._user_path
     if result is not None:
-      return result
+      return self.getPortalObject().unrestrictedTraverse(result)
     user_list = [x for x in self.aq_parent.searchUsers(
       exact_match=True,
       id=self.getId(),
     ) if 'path' in x]
     if user_list:
       user, = user_list
-      self._user_value = self.getPortalObject().restrictedTraverse(
-        user['path'],
-      )
-      return self._user_value
+      result = self._user_path = user['path']
+      return self.getPortalObject().unrestrictedTraverse(result)
 
   def getLoginValue(self):
     """ -> login document
 
     Return the document (ex: ERP5 Login) corresponding to current user's login.
     """
-    result = self._login_value
+    result = self._login_path
     if result is not None:
-      return result
+      return self.getPortalObject().unrestrictedTraverse(result)
     user_list = [x for x in self.aq_parent.searchUsers(
       exact_match=True,
       login=self.getUserName(),
@@ -231,10 +229,8 @@ class ERP5User(PropertiedUser):
     if user_list:
       user, = user_list
       login, = user['login_list']
-      self._login_value = self.getPortalObject().restrictedTraverse(
-        login['path'],
-      )
-      return self._login_value
+      result = self._login_path = login['path']
+      return self.getPortalObject().unrestrictedTraverse(result)
 
   def getLoginValueList(self, portal_type=None, limit=None):
     """ -> list of login documents
@@ -249,8 +245,8 @@ class ERP5User(PropertiedUser):
     ) if 'login_list' in x]
     if user_list:
       user, = user_list
-      restrictedTraverse = self.getPortalObject().restrictedTraverse
-      return [restrictedTraverse(x['path']) for x in user['login_list']]
+      unrestrictedTraverse = self.getPortalObject().unrestrictedTraverse
+      return [unrestrictedTraverse(x['path']) for x in user['login_list']]
     return []
 
 InitializeClass(ERP5User)
