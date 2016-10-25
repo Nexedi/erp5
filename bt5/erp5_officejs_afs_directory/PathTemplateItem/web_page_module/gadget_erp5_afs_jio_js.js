@@ -91,7 +91,7 @@
           function saveSoftwareDocument (software) {
             software.portal_type = "software";
             software.publisher = publisher;
-            software.website = website;
+            software.publisher_website = website;
             software.uid = (uid++).toString();
 
             return gadget.jio_put(software.uid, software);
