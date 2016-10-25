@@ -108,7 +108,9 @@
    ---------------------------- SPECIFIC --------------------------------
    -------------------------------------------------------------------------
 */
-
+.custom-link-table td {
+  padding: .25em;
+}
 .custom-software-list > li {
   border: 1px solid #a1a1a1;
   padding: 1em;
@@ -178,9 +180,13 @@
 .custom-success-story-list > li:nth-child(even) {
     padding-right: 0;
 }
+.custom-success-story-list > li div {
+  text-align: center;
+}
 .custom-success-story-list > li {
   display: inline-block;
   max-width: 49%;
+  min-width: 49%;
   vertical-align: top;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -191,13 +197,13 @@
 @media (max-width: 40em) {
   .custom-success-story-list > li {
     display: block;
-    max-width: initial;
+    max-width: none;
     padding: 0;
   }
 }
 
 .custom-success-story-image-wrapper {
-  height: 20em;
+  height: 22em;
   overflow: hidden;
   margin: .25em 0 .25em;
   -moz-box-sizing: border-box;
@@ -205,9 +211,18 @@
   box-sizing: border-box;
   border: 1px solid #a1a1a1;
   padding: .25em;
+  width: 100%;
+}
+.custom-success-story-image-wrapper a {
+  vertical-align: middle;
+  display: table-cell;
+  height: inherit;
+  width: 1%; /* don't ask, this centers the link */
 }
 .custom-success-story-image-wrapper img {
-  width: 100%;
+  width: auto;
+  display: block;
+  margin: 0 auto;
 }
 @media (max-width: 40em) {
   .custom-success-story-image-wrapper {
@@ -221,6 +236,7 @@
   font-weight: bold;
   padding: .5em 0;
   text-align: center;
+  margin: 0;
 }
 .custom-success-story-description {
   text-align: justify;
