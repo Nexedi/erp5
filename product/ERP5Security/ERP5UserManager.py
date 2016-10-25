@@ -70,7 +70,7 @@ def getUserByLogin(portal, login, exact_match=True):
   if not (portal.portal_catalog.hasColumn('portal_type') and portal.portal_catalog.hasColumn('reference')):
     raise RuntimeError('Catalog does not have column information. Make sure RDB is working and disk is not full.')
   result = portal.portal_catalog.unrestrictedSearchResults(
-    select_expression='reference',
+    select_list=('reference', ),
     portal_type="Person",
     reference=dict(query=login, key=reference_key))
   # XXX: Here, we filter catalog result list ALTHOUGH we did pass
