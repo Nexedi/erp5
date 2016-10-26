@@ -151,7 +151,7 @@ def setupERP5Workflow(wf):
           }),
         ('actor', {
             'description': 'Name of the user who performed transition',
-            'default_expr': 'user/getUserName',
+            'default_expr': 'user/getIdOrUserName',
             'for_status': 1,
             'update_always': 1,
           }),
