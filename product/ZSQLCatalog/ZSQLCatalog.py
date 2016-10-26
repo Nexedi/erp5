@@ -901,7 +901,11 @@ class ZCatalog(Folder, Persistent, Implicit):
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
-    catalog_id_list = self.getERP5CatalogIdList()
+    try:
+      catalog_id_list = self.getERP5CatalogIdList()
+    except AttributeError:
+      catalog_id_list = []
+
     for sql_catalog_id in catalog_id_list:
       catalog = self.getSQLCatalog(sql_catalog_id)
       if catalog is not None:
