@@ -372,7 +372,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     new_base_category.newContent(reference='sub_category2',
                                  portal_type='Category')
 
-    if operation_type == 'change':
+    if operation_type == 'change_reference':
       self.portal.portal_categories.newContent(
         id=base_category_id + '_renamed',
         portal_type='Base Category')
@@ -564,7 +564,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self._newPropertyTypeValidityConstraint()
 
       # Create all the test Properties
-      for operation_type in ('change', 'delete', 'assign'):
+      for operation_type in ('change_reference', 'change', 'delete', 'assign'):
         self._newStandardProperty(operation_type)
         self._newAcquiredProperty(operation_type)
         self._newCategoryProperty(operation_type)
@@ -791,10 +791,10 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self._newDynamicCategoryProperty,
       'getTestDynamicCategoryPropertyAdd')
 
-  def _checkChangePropertyOfZodbPropertySheet(self,
-                                             change_setter_func,
-                                             new_value,
-                                             changed_accessor_name):
+  def _checkChangePropertyReferenceOfZodbPropertySheet(self,
+                                                       change_setter_func,
+                                                       new_value,
+                                                       changed_accessor_name):
     import erp5.accessor_holder.property_sheet
 
     self.failIfHasAttribute(erp5.accessor_holder.property_sheet,
@@ -809,47 +809,100 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.assertHasAttribute(erp5.accessor_holder.property_sheet.TestMigration,
                             changed_accessor_name)
 
-  def testChangeStandardPropertyOfZodbPropertySheet(self):
+  def testChangeStandardPropertyReferenceOfZodbPropertySheet(self):
     """
     Take the test Property Sheet, change the 'reference' field of a
     Standard Property and check that the accessor name has changed
-    """
-    self._checkChangePropertyOfZodbPropertySheet(
-      self.test_standard_property_change.setReference,
-      'test_standard_property_change_renamed',
-      'getTestStandardPropertyChangeRenamed')
 
-  def testChangeAcquiredPropertyOfZodbPropertySheet(self):
+    Interaction: PropertySheet_resetDynamicClasses (manage_renameObject)
+    """
+    self._checkChangePropertyReferenceOfZodbPropertySheet(
+      self.test_standard_property_change_reference.setReference,
+      'test_standard_property_change_reference_renamed',
+      'getTestStandardPropertyChangeReferenceRenamed')
+
+  def testChangeAcquiredPropertyReferenceOfZodbPropertySheet(self):
     """
     Take the test Property Sheet, change the 'reference' field of an
     Acquired Property and check that the accessor name has changed
-    """
-    self._checkChangePropertyOfZodbPropertySheet(
-      self.test_acquired_property_change.setReference,
-      'test_acquired_property_change_renamed',
-      'getDefaultTestAcquiredPropertyChangeRenamedStreetAddress')
 
-  def testChangeCategoryPropertyOfZodbPropertySheet(self):
+    Interaction: PropertySheet_resetDynamicClasses (manage_renameObject)
     """
-    Take the test Property Sheet, change the 'id' field of a Category
-    Property to another existing category and check that the accessor
-    name has changed
-    """
-    self._checkChangePropertyOfZodbPropertySheet(
-      self.test_category_property_change.setReference,
-      'test_category_property_change_renamed',
-      'getTestCategoryPropertyChangeRenamed')
+    self._checkChangePropertyReferenceOfZodbPropertySheet(
+      self.test_acquired_property_change_reference.setReference,
+      'test_acquired_property_change_reference_renamed',
+      'getDefaultTestAcquiredPropertyChangeReferenceRenamedStreetAddress')
 
-  def testChangeDynamicCategoryPropertyOfZodbPropertySheet(self):
+  def testChangeCategoryPropertyReferenceOfZodbPropertySheet(self):
+    """
+    Take the test Property Sheet, change the 'id' field of a Category Property
+    to another existing category and check that the accessor name has changed.
+
+    Interaction: PropertySheet_resetDynamicClasses (manage_renameObject)
+    """
+    self._checkChangePropertyReferenceOfZodbPropertySheet(
+      self.test_category_property_change_reference.setReference,
+      'test_category_property_change_reference_renamed',
+      'getTestCategoryPropertyChangeReferenceRenamed')
+
+  def testChangeDynamicCategoryPropertyReferenceOfZodbPropertySheet(self):
     """
     Take the test Property Sheet, change the 'category_expression'
     field of a Dynamic Category Property to another existing category
     and check that the accessor name has changed
+
+    Interaction: PropertySheet_resetDynamicClasses (manage_renameObject)
+    """
+    self._checkChangePropertyReferenceOfZodbPropertySheet(
+      self.test_dynamic_category_property_change_reference.setCategoryExpression,
+      "python: ('test_dynamic_category_property_change_reference_renamed',)",
+      'getTestDynamicCategoryPropertyChangeReferenceRenamed')
+
+  def _checkChangePropertyOfZodbPropertySheet(self,
+                                              property_obj,
+                                              accessor_name):
+    import erp5.accessor_holder.property_sheet
+
+    self.failIfHasAttribute(erp5.accessor_holder.property_sheet,
+                            'TestMigration')
+
+    property_obj.setReadPermission('Manage Portal')
+    self._forceTestAccessorHolderGeneration()
+
+    self.assertHasAttribute(erp5.accessor_holder.property_sheet,
+                            'TestMigration')
+
+    accessor_holder = erp5.accessor_holder.property_sheet.TestMigration
+    permission_accessor_tuple = dict(accessor_holder.__ac_permissions__).get(
+      'Manage Portal', ())
+
+    self.assertTrue(
+      accessor_name in permission_accessor_tuple,
+      msg="'%s' not found in 'Manage Portal' Permission tuple: %r" % (
+        accessor_name,
+        permission_accessor_tuple))
+
+  def testChangeStandardPropertyOfZodbPropertySheet(self):
+    """
+    Take the test Property Sheet, change the 'read_permission' field of a
+    Standard Property and check that the accessor Permission has been changed
+
+    Interaction: ChangeProperty_resetDynamicClasses
     """
     self._checkChangePropertyOfZodbPropertySheet(
-      self.test_dynamic_category_property_change.setCategoryExpression,
-      "python: ('test_dynamic_category_property_change_renamed',)",
-      'getTestDynamicCategoryPropertyChangeRenamed')
+      self.test_standard_property_change,
+      'getTestStandardPropertyChange')
+
+  def testChangeAcquiredPropertyOfZodbPropertySheet(self):
+    """
+    Take the test Property Sheet, change the 'read_permission' field of an
+    Acquired Property and check that the accessor Permission has been changed
+
+    Interaction: ChangeProperty_resetDynamicClasses
+    """
+    self._checkChangePropertyOfZodbPropertySheet(
+      self.test_acquired_property_change,
+      'getTestAcquiredPropertyChange')
 
   def _checkDeletePropertyFromZodbPropertySheet(self,
                                                property_id,

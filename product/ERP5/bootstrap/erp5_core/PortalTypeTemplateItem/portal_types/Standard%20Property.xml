@@ -46,6 +46,14 @@
             <value> <string>addStandardProperty</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>property</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Standard Property</string> </value>
         </item>
