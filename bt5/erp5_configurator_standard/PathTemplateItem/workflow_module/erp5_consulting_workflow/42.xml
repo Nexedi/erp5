@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>initial_value</string> </key>
-            <value> <string>python: member.getUserName()</string> </value>
+            <value> <string>python: member.getId()</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

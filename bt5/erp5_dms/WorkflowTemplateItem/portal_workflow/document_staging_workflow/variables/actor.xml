@@ -56,7 +56,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>user/getUserName</string> </value>
+            <value> <string>user/getIdOrUserName</string> </value>
         </item>
       </dictionary>
     </pickle>
