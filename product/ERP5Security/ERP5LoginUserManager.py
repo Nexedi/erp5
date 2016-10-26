@@ -140,8 +140,10 @@ class ERP5LoginUserManager(BasePlugin):
              sort_by=None, max_results=None, login_portal_type=None, **kw):
     """ See IUserEnumerationPlugin.
     """
-    unrestrictedSearchResults = self.getPortalObject(
-      ).portal_catalog.unrestrictedSearchResults
+    portal = self.getPortalObject()
+    if login_portal_type is None:
+      login_portal_type = portal.getPortalLoginTypeList()
+    unrestrictedSearchResults = portal.portal_catalog.unrestrictedSearchResults
     searchUser = lambda **kw: unrestrictedSearchResults(
       select_list=('reference', ),
       portal_type='Person',
