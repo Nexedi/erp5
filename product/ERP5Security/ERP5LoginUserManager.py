@@ -106,7 +106,7 @@ class ERP5LoginUserManager(BasePlugin):
       ):
         if is_authentication_policy_enabled:
           login_value.notifyLoginFailure()
-      return
+        return
     if is_authentication_policy_enabled:
       if login_value.isPasswordExpired():
         login_value.notifyPasswordExpire()
