@@ -66,6 +66,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>login_listbox</string>
                       </list>
                     </value>
                 </item>

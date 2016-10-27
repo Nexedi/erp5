@@ -2,6 +2,7 @@ Notification Message | ItemAggregation
 Notification Message | Reference
 Organisation | DefaultImage
 Person | DefaultImage
+Person | PersonUpgradeConstraint
 Preference | TelephonePreference
 Previous Causality Movement Group | PreviousCausalityMovementGroup
 Query | TextDocument

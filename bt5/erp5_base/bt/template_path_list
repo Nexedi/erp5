@@ -1,4 +1,5 @@
 portal_alarms/upgrader_migrate_to_embedded_file
+portal_alarms/check_duplicate_login_reference
 portal_caches/document_cache_factory
 portal_caches/document_cache_factory/**
 portal_categories/collect_order_group/cell
