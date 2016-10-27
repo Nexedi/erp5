@@ -29,7 +29,6 @@
 
 from Products.CMFCore.utils import getToolByName 
 from Products import PluggableAuthService
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager
 try:
   from Products.ERP5Wizard.PAS.ERP5RemoteUserManager import ERP5RemoteUserManager
 except  ImportError:
@@ -56,17 +55,7 @@ def isLocalLoginAvailable(self, login):
   acl_users = getToolByName(portal, 'acl_users')
 
   if isinstance(acl_users,PluggableAuthServiceTool):
-    #List plugin which make user enumeration user enumeration
-    plugin_list = acl_users.plugins.listPlugins(IUserEnumerationPlugin)
-    for plugin_name, plugin_value in plugin_list:
-      #we check with instance of ERP5UserManager and ZODBUserManager
-      if isinstance(plugin_value, (ERP5UserManager,ZODBUserManager,)):
-        user_list = plugin_value.enumerateUsers(id=login,
-            exact_match=True)
-        if len(user_list) > 0:
-          return False
-        
-    return True
+    return not acl_users.searchUsers(login=login, exact_match=True)
   return None
 
 def isSingleSignOnEnable(self):
