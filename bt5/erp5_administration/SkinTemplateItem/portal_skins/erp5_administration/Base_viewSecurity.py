@@ -4,7 +4,16 @@ from pprint import pformat
 
 u = getSecurityManager().getUser()
 
-print 'User:', u
+user_value = u.getUserValue()
+if user_value is None:
+  print 'User ID:', u.getId()
+else:
+  print 'User ID:', u.getId(), user_value.getPath()
+login_value = u.getLoginValue()
+if login_value is None:
+  print 'Login:', u.getUserName()
+else:
+  print 'Login:', u.getUserName(), login_value.getPath()
 print 'Is owner:', u.allowed(context,('Owner',))
 print 'User roles:', u.getRoles()
 print 'User roles in context:', u.getRolesInContext(context)
