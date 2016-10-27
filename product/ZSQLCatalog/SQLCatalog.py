@@ -84,7 +84,7 @@ try:
   from Products.ERP5Type.Cache import \
     readOnlyTransactionCache
 except ImportError:
-  LOG('SQLCatalog', WARNING, 'Count not import caching_instance_method, expect slowness.')
+  LOG('SQLCatalog', WARNING, 'Count not import readOnlyTransactionCache, expect slowness.')
   readOnlyTransactionCache = noReadOnlyTransactionCache
 
 try:
