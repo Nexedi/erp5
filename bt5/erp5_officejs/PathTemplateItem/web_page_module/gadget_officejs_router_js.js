@@ -332,24 +332,12 @@
         })
         .push(function () {
           if (('serviceWorker' in navigator) && (NAME !== "web page")) {
-            return jIO.createJIO(get_jio_cache_storage(NAME)).allDocs({
-              query: '',
-              sort_on: [
-                ['modification_date', 'descending']
-              ],
-              limit: [0, 1],
-              select_list: ['modification_date']
-            })
-              .push(function (data) {
-                var modification_date,
-                  jio_store;
-                if (data.data.total_rows === 1) {
-                  modification_date = data.data.rows[0].value.modification_date;
-                }
-                jio_store = get_jio_replicate_storage(NAME);
+            return gadget.getSetting('jio_' + NAME + '_modification_date')
+              .push(function (modification_date) {
                 return gadget.getSetting('jio_' + NAME + '_cache_description')
                   .push(function (query) {
-                    if (jio_store.__storage._query_options.query === query) {
+                    var jio_store = get_jio_replicate_storage(NAME);
+                    if (jio_store.__storage._query_options.query === query && modification_date) {
                       return get_jio_replicate_storage(NAME, modification_date).repair();
                     } else {
                       return gadget.setSetting(
@@ -372,6 +360,20 @@
                     }
                   })
                   .push(function () {
+                    jIO.createJIO(get_jio_cache_storage(NAME)).allDocs({
+                      query: '',
+                      sort_on: [
+                        ['modification_date', 'descending']
+                      ],
+                      limit: [0, 1],
+                      select_list: ['modification_date']
+                    })
+                      .push(function (data) {
+                        if (data.data.total_rows === 1) {
+                          return gadget.setSetting('jio_' + NAME + '_modification_date',
+                            data.data.rows[0].value.modification_date);
+                        }
+                      });
                     navigator.serviceWorker.register('gadget_officejs_' + NAME + '_serviceworker.js')
                       .then(function (reg) {
                         // registration worked
