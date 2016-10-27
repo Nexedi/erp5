@@ -2,7 +2,7 @@
 portal = context.getPortalObject()
 member = portal.portal_membership.getAuthenticatedMember()
 
-reference = member.getUserName()
+reference = member.getIdOrUserName()
 if reference == "Anonymous User":
   return context.WebSection_viewUploadFileDialog()
 else:

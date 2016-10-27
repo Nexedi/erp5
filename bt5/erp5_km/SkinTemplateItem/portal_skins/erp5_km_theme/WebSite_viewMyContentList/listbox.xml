@@ -165,7 +165,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:((\'owner\', here.portal_membership.getAuthenticatedMember().getUserName()), (\'validation_state\', ()), (\'all_versions\', 1))</string> </value>
+            <value> <string>python:((\'owner\', here.portal_membership.getAuthenticatedMember().getIdOrUserName()), (\'validation_state\', ()), (\'all_versions\', 1))</string> </value>
         </item>
       </dictionary>
     </pickle>
