@@ -4,7 +4,7 @@ send the password reset link by mail
 portal = context.getPortalObject()
 
 person = context.getDestinationDecisionValue(portal_type="Person")
-reference = person.getReference()
+reference = context.getReference()
 if context.hasDocumentReference():
   message_reference = context.getDocumentReference()
 else:
