@@ -1315,6 +1315,8 @@ class ObjectTemplateItem(BaseTemplateItem):
               container_container.newContent(portal_type='Catalog', id=container_path[-1], title='')
               if len(container_container.objectIds()) >= 1:
                 container_container.setDefaultErp5CatalogId(container_path[-1])
+                # Validate the default erp5 catalog
+                container_container.getSQLCatalog().validate()
             elif container_container.meta_type == 'ERP5 Catalog':
               container_container.manage_addProduct['ZSQLCatalog'].manage_addSQLCatalog(id=container_path[-1], title='')
               container_container.default_sql_catalog_id == container_path[-1]
