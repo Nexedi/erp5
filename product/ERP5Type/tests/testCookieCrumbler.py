@@ -81,7 +81,7 @@ class ERP5CookieCrumblerTests (CookieCrumblerTests):
     self.req.traverse('/')
 
     self.assert_(self.req.has_key('AUTHENTICATED_USER'))
-    self.assertEqual(self.req['AUTHENTICATED_USER'].getUserName(),
+    self.assertEqual(self.req['AUTHENTICATED_USER'].getId(),
                          'abrahammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm')
     resp = self.req.response
     self.assert_(resp.cookies.has_key('__ac'))
