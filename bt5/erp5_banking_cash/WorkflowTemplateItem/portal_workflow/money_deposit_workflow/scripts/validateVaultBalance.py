@@ -14,7 +14,7 @@ resource = transaction.CashDelivery_checkCounterInventory(source = destination, 
 #if len(vliste) != 0:
 #  raise ValidationFailed, (vliste[0].getMessage(),)
 
-user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()
+user_id = transaction.portal_membership.getAuthenticatedMember().getId()
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)
 # context.log('validateVaultBalance site_list',site_list)
 destination = transaction.getDestination()

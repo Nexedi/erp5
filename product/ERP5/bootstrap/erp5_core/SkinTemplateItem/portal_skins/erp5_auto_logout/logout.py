@@ -2,7 +2,7 @@ from AccessControl import getSecurityManager
 portal = context.getPortalObject()
 portal.portal_sessions.manage_delObjects(
   portal.Base_getAutoLogoutSessionKey(
-    username=getSecurityManager().getUser().getUserName(),
+    username=getSecurityManager().getUser().getId(),
   )
 )
 REQUEST = portal.REQUEST

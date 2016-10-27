@@ -6,7 +6,7 @@
     <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
       <span class="logged_txt"><tal:block i18n:translate=""
         i18n:domain="ui">User</tal:block> :</span><span class="login">
-        <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />
+        <tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getId()" />
       </span>
     </tal:block>
     <!--<tal:block tal:condition="here/portal_membership/isAnonymousUser">

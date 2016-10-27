@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             <!--
             <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
               <span class="link2" i18n:translate="" i18n:domain="ui">of</span>
-              <span class="link2" tal:content="python:here.portal_catalog(reference=here.portal_membership.getAuthenticatedMember().getUserName(), portal_type='Person')[0].getObject().getTitle()+' :'" />
+              <span class="link2" tal:content="python:here.portal_catalog(reference=here.portal_membership.getAuthenticatedMember().getId(), portal_type='Person')[0].getObject().getTitle()+' :'" />
             </tal:block>
             -->
           </div>
@@ -134,7 +134,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
             <span class="link2"></span>
             <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
               <span class="modu" i18n:translate="" i18n:domain="ui">Logged In as :</span>
-              <span class="link2" tal:content="python:here.portal_membership.getAuthenticatedMember().getUserName()" />
+              <span class="link2" tal:content="python:here.portal_membership.getAuthenticatedMember().getId()" />
             </tal:block>
             <span class="link2"></span>
           </div> -->
