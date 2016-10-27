@@ -215,27 +215,27 @@
                       <list>
                         <tuple>
                           <string>id</string>
-                          <string>ID</string>
+                          <string>float</string>
                         </tuple>
                         <tuple>
                           <string>title</string>
-                          <string>Name</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>version</string>
-                          <string>Version</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>description</string>
-                          <string>Description</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>revision</string>
-                          <string>Revision</string>
+                          <string></string>
                         </tuple>
                         <tuple>
                           <string>modification_date</string>
-                          <string>Modification Date</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
