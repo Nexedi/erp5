@@ -107,9 +107,8 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     acl_users = self.portal.acl_users
     addERP5RemoteUserManager(acl_users, self.erp5_remote_manager_id)
     self.erp5_remote_manager = getattr(acl_users, self.erp5_remote_manager_id)
-    erp5_users = getattr(acl_users, 'erp5_users')
-    erp5_users.manage_activateInterfaces(['IUserEnumerationPlugin'])
-    self.erp5_remote_manager.manage_activateInterfaces(['IAuthenticationPlugin'])
+    acl_users.erp5_login_users.manage_activateInterfaces([])
+    self.erp5_remote_manager.manage_activateInterfaces(['IAuthenticationPlugin', 'IUserEnumerationPlugin'])
     self.commit()
 
   def afterSetUp(self):
