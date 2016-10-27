@@ -5,7 +5,10 @@ category_tool = portal.portal_categories
 
 request = container.REQUEST
 from_date = request.get('from_date', None)
-to_date = request.get('at_date', None)
+at_date = request.get('at_date', None)
+if at_date:
+  at_date = at_date.latestTime()
+
 aggregation_level = request.get('aggregation_level', None)
 report_group_by = request.get('group_by', None)
 # get all category
@@ -51,19 +54,19 @@ elif aggregation_level == "week":
 elif aggregation_level == "day":
   date_format = "%Y-%m-%d"
 
-params = {"delivery.start_date":(from_date, to_date)}
+params = {"delivery.start_date":(from_date, at_date)}
 query=None
-if from_date is not None and to_date is not None:
-  params = {"delivery.start_date":(from_date, to_date)}
+if from_date is not None and at_date is not None:
+  params = {"delivery.start_date": (from_date, at_date)}
   query = Query(range="minngt", **params)
 elif from_date is not None:
-  params = {"delivery.start_date":from_date}
+  params = {"delivery.start_date": from_date}
   query = Query(range="min", **params)
-elif to_date is not None:
-  params = {"delivery.start_date":to_date}
+elif at_date is not None:
+  params = {"delivery.start_date": at_date}
   query = Query(range="ngt", **params)
 
-select_params = {"select_list" : ['source_section_title', 'destination_section_title', 
+select_params = {"select_list" : ['source_section_title', 'destination_section_title',
   'delivery.start_date']}
 
 # sort_on_list = [ ('delivery.destination_section_uid', 'ASC'), ('delivery.start_date','ASC')]
@@ -73,8 +76,8 @@ active_process_value = portal.portal_activities.newContent(
 catalog_params.update(select_params)
 portal.portal_catalog.activate(tag=tag).searchAndActivate(
   method_id="OrderModule_processOrderStat",
-  method_kw = {'active_process' : active_process_value.getPath(), 
-                'line_params' : line_params, 
+  method_kw = {'active_process' : active_process_value.getPath(),
+                'line_params' : line_params,
                 'date_format' : date_format,
                 'report_type' : report_type,
                 'report_group_by' : report_group_by},
@@ -89,5 +92,5 @@ portal.portal_catalog.activate(tag=tag).searchAndActivate(
   packet_size=1000,
   **catalog_params
   )
-  
+
 return active_process_value
