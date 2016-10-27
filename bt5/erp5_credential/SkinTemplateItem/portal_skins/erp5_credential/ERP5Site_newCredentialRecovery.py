@@ -40,18 +40,20 @@ if default_email_text is not None:
 else:
   # Case for recovery of password
   if person_list is None:
-    person_module = portal.getDefaultModule('Person')
-    result = person_module.searchFolder(reference={'query':reference, 'key':'ExactMatch'})
-    if len(result) != 1:
+    user_list = context.acl_users.searchUsers(
+      login=reference,
+      login_portal_type='ERP5 Login',
+      exact_match=True,
+    )
+    if len(user_list) != 1:
       portal_status_message = portal.Base_translateString("Can't find corresponding person, it's not possible to recover your credentials.")
       if web_site is not None:
         return web_site.Base_redirect('', keep_items = dict(portal_status_message=portal_status_message ))
       return portal.Base_redirect('', keep_items = dict(portal_status_message=portal_status_message ))
-
-    person_list = [result[0].getObject(),]
-
+    person = portal.restrictedTraverse(user_list[0]['path'])
+  else:
+    person = person_list[0]
   # Check the response
-  person = person_list[0]
   question_free_text = person.getDefaultCredentialQuestionQuestionFreeText()
   question_title = person.getDefaultCredentialQuestionQuestionTitle()
   question_answer = person.getDefaultCredentialQuestionAnswer()
@@ -64,13 +66,13 @@ else:
   if (question_title or question_free_text) and (answer == question_answer):
     createCredentialRecovery(reference=reference,
                   default_credential_question_answer=default_credential_question_answer,
-                  destination_decision_value_list=person_list,
+                  destination_decision_value=person,
                   document_reference=document_reference,
                   language=portal.Localizer.get_selected_language())
   elif (question_free_text is None and question_answer is None) or \
     not portal_preferences.isPreferredAskCredentialQuestion():
     createCredentialRecovery(reference=reference,
-                  destination_decision_value_list=person_list,
+                  destination_decision_value=person,
                   document_reference=document_reference,
                   language=portal.Localizer.get_selected_language())
   else:

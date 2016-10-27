@@ -45,7 +45,8 @@ credential_request.reindexObject(activate_kw=dict(tag='Person_setReference_%s' %
 if not context.portal_membership.isAnonymousUser():
   person = context.ERP5Site_getAuthenticatedMemberPersonValue()
   destination_decision = []
-  if person.getReference() == reference:
+  if reference in [x.getReference() for x in person.objectValues(portal_type='ERP5 Login')
+                   if x.getValidationState() == 'validated']:
     destination_decision.append(person.getRelativeUrl())
   if person.getDefaultCareerSubordinationTitle() == corporate_name:
     destination_decision.append(person.getDefaultCareerSubordination())
