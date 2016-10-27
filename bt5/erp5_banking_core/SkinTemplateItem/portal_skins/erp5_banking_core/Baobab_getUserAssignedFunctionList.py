@@ -3,7 +3,7 @@
 from Products.ERP5Type.Cache import CachingMethod
 
 if user_id is None:
-  user_id = context.portal_membership.getAuthenticatedMember().getUserName()
+  user_id = context.portal_membership.getAuthenticatedMember().getId()
 
 def getFunctionList(user_id=user_id):
 

@@ -1,7 +1,7 @@
 <tal:block tal:condition="python: options.get('current_state') is None">
   <div id="logged_in_as">
     Hello, <tal:block tal:condition="not: here/portal_membership/isAnonymousUser">
-             <span tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />
+             <span tal:replace="python:here.portal_membership.getAuthenticatedMember().getId()" />
            </tal:block>
   </div>
   <tal:block tal:replace="structure python: options.get('form_html')" /> 

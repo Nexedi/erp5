@@ -1,6 +1,6 @@
 from AccessControl import getSecurityManager
 portal = context.getPortalObject()
-username = getSecurityManager().getUser().getUserName()
+username = getSecurityManager().getUser().getId()
 if username is not None:
   portal.portal_sessions.manage_delObjects(
     portal.Base_getAutoLogoutSessionKey(

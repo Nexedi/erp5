@@ -6,7 +6,7 @@ return destination
 
 
 # OLD METHOD user logged in
-#user_id = context.portal_membership.getAuthenticatedMember().getUserName()
+#user_id = context.portal_membership.getAuthenticatedMember().getId()
 
 # NEW METHOD must use owner to know site letter
 old_group_list = context.get_local_roles()

@@ -84,7 +84,7 @@
      i18n:translate="" i18n:domain="ui">Login</a></span>
 
 <span id="tiologin"
-   tal:define="user_name python:here.portal_membership.getAuthenticatedMember().getUserName()"
+   tal:define="user_name python:here.portal_membership.getAuthenticatedMember().getId()"
    tal:condition="not:here/portal_membership/isAnonymousUser"><a href="#" id="link-login"  
      tal:attributes="href string:${context_url}/logout"
      i18n:translate="" i18n:domain="ui">Logout</a>
