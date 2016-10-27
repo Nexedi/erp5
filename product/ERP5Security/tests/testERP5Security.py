@@ -49,7 +49,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_administration',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -94,10 +94,11 @@ class TestUserManagement(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def _makePerson(self, open_assignment=1, assignment_start_date=None,
-                  assignment_stop_date=None, **kw):
+                  assignment_stop_date=None, tic=True, **kw):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
+    password = kw.pop('password', None)
     new_person = person_module.newContent(
                      portal_type='Person', **kw)
     assignment = new_person.newContent(portal_type = 'Assignment',
@@ -105,7 +106,14 @@ class TestUserManagement(ERP5TypeTestCase):
                                        stop_date=assignment_stop_date,)
     if open_assignment:
       assignment.open()
-    self.tic()
+    if new_person.hasReference():
+      login = new_person.newContent(
+        portal_type='ERP5 Login',
+        reference=new_person.getReference(),
+        password=password,)
+      login.validate()
+    if tic:
+      self.tic()
     return new_person
 
   def _assertUserExists(self, login, password):
@@ -303,9 +311,21 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self._assertUserExists('the_user', 'secret')
     self.loginAsUser('the_user')
-    self.portal.REQUEST.set('current_password', 'secret')
-    self.portal.REQUEST.set('new_password', 'new_secret')
-    self.portal.portal_preferences.PreferenceTool_setNewPassword()
+    login = [x for x in pers.objectValues(portal_type='ERP5 Login')][0]
+    result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
+      dialog_id='PreferenceTool_viewChangePasswordDialog',
+      reference=login.getReference(),
+      current_password='wrong_secret',
+      new_password='new_secret',
+    )
+    self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences/PreferenceTool_viewChangePasswordDialog?portal_status_message=Current%20password%20is%20wrong.')
+    result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
+      dialog_id='PreferenceTool_viewChangePasswordDialog',
+      reference=login.getReference(),
+      current_password='secret',
+      new_password='new_secret',
+    )
+    self.assertEqual(result, self.portal.absolute_url()+'/logout')
     self._assertUserExists('the_user', 'new_secret')
     self._assertUserDoesNotExists('the_user', 'secret')
 
@@ -327,8 +347,14 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserDoesNotExists('the_user', 'secret')
 
   def test_PersonNotIndexedNotCached(self):
-    pers = self._makePerson(password='secret',)
+    pers = self._makePerson()
     pers.setReference('the_user')
+    login = pers.newContent(
+      portal_type='ERP5 Login',
+      reference='the_user',
+      password='secret',
+    )
+    login.validate()
     # not indexed yet
     self._assertUserDoesNotExists('the_user', 'secret')
 
@@ -339,9 +365,27 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_PersonNotValidNotCached(self):
     pers = self._makePerson(reference='the_user', password='other',)
     self._assertUserDoesNotExists('the_user', 'secret')
-    pers.setPassword('secret')
+    login = pers.objectValues(portal_type='ERP5 Login')[0]
+    login.setPassword('secret')
     self._assertUserExists('the_user', 'secret')
 
+  def test_PersonLoginMigration(self):
+    pers = self._makePerson()
+    pers.setReference('the_user')
+    pers.setPassword('secret')
+    self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
+    self.tic()
+    self._assertUserExists('the_user', 'secret')
+    pers.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    self._assertUserExists('the_user', 'secret')
+    login = pers.objectValues(portal_type='ERP5 Login')[0]
+    login.setPassword('secret2')
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    self._assertUserDoesNotExists('the_user', 'secret')
+    self._assertUserExists('the_user', 'secret2')
 
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""
@@ -402,6 +446,32 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(None, person.getReference())
 
+  def test_duplicatePersonReference(self):
+    person1 = self._makePerson(reference='foo', password='secret',)
+    self.tic()
+    self.assertRaises(RuntimeError, self._makePerson,
+                      reference='foo', password='secret',)
+
+  def test_duplicateLoginReference(self):
+    person1 = self._makePerson(reference='foo', password='secret',)
+    self.tic()
+    person2 = self._makePerson(reference='bar', password='secret',)
+    login = person2.objectValues(portal_type='ERP5 Login')[0]
+    self.assertRaises(RuntimeError, login.setReference, 'foo')
+
+  def test_duplicateLoginReferenceInSameTransaction(self):
+    person1 = self._makePerson(reference='foo', password='secret', tic=False)
+    person2 = self._makePerson(reference='bar', password='secret', tic=False)
+    login = person2.newContent(portal_type='ERP5 Login')
+    self.assertRaises(RuntimeError, login.setReference, 'foo')
+
+  def test_duplicateLoginReferenceInAnotherTransaction(self):
+    person1 = self._makePerson(reference='foo', password='secret', tic=False)
+    person2 = self._makePerson(reference='bar', password='secret', tic=False)
+    self.commit()
+    login = person2.newContent(portal_type='ERP5 Login')
+    self.assertRaises(RuntimeError, login.setReference, 'foo')
+
 class TestUserManagementExternalAuthentication(TestUserManagement):
   def getTitle(self):
     """Title of the test."""
@@ -428,12 +498,8 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     """
 
     reference = 'external_auth_person'
-    loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference=reference,
-                                                         password='guest')
-    assignment = loginable_person.newContent(portal_type='Assignment')
-    assignment.open()
-    self.tic()
+    loginable_person = self._makePerson(reference=reference,
+                                        password='guest')
 
     base_url = self.portal.absolute_url(relative=1)
 
@@ -484,12 +550,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_cat.newContent(portal_type='Category',
                           id='subcat',
                           codification="%s1" % code)
-    # add another function subcategory.
-    function_category = category_tool['function']
-    if function_category.get('another_subcat', None) is None:
-      function_category.newContent(portal_type='Category',
-                                   id='another_subcat',
-                                   codification='F2')
+      base_cat.newContent(portal_type='Category',
+                          id='another_subcat',
+                          codification="%s2" % code)
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -500,13 +563,15 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
-                                             reference=self.username,
-                                             password=self.username)
+                                             reference=self.username)
     assignment = pers.newContent( portal_type='Assignment',
                                   group='subcat',
                                   site='subcat',
                                   function='subcat' )
     assignment.open()
+    pers.newContent(portal_type='ERP5 Login',
+                    reference=self.username,
+                    password=self.username).validate()
     self.person = pers
     self.tic()
 
@@ -543,7 +608,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
+    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms', 'erp5_administration')
 
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
@@ -575,6 +640,30 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
     self.assertFalse('Assignee' in user.getRolesInContext(obj))
+
+    # check if assignment change is effective immediately
+    self.login()
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']"], res.body)
+    assignment = self.person.newContent( portal_type='Assignment',
+                                  group='subcat',
+                                  site='subcat',
+                                  function='another_subcat' )
+    assignment.open()
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"], res.body)
+    assignment.setGroup('another_subcat')
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"], res.body)
     self.abort()
 
   def testLocalRolesGroupId(self):
@@ -721,6 +810,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
+    loginable_person.newContent(portal_type='ERP5 Login',
+                                reference='guest',
+                                password='guest').validate()
     self.tic()
 
     person_module_type_information = self.getTypesTool()['Person Module']
@@ -775,11 +867,13 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
     reference = 'UserReferenceTextWhichShouldBeHardToGeneratedInAnyHumanOrComputerLanguage'
     loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference=reference,
-                                                         password='guest')
+                                                         reference=reference)
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
+    loginable_person.newContent(portal_type='ERP5 Login',
+                                reference=reference,
+                                password='guest').validate()
     portal_types = portal.portal_types
     for portal_type in ('Person Module', 'Person', 'Web Site Module', 'Web Site',
                         'Web Page'):
