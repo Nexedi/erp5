@@ -25,7 +25,7 @@ if not owner or owner_value is None:
   # can do (preventing answers is even worse)
   log("ERP5 Query Workflow", "No owner defined")
   return
-if not user or user_value is None:
+if user_value is None:
   # We keep a trace because this is the best we
   # can do (preventing answers is even worse)
   log("ERP5 Query Workflow", "Current user is not defined")
