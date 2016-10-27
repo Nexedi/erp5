@@ -956,23 +956,37 @@ class ListBoxRenderer:
   getPageNavigationMode = getPageNavigationTemplate
 
   @lazyMethod
-  def getSearchColumnIdSet(self):
-    """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
+  def getSearchColumnDict(self):
+    """Return search columns
+
+    The dict values are useful when getSortColumnDict falls back on this value.
+    Fall back to the catalog schema, if not defined.
     """
     search_columns = self.field.get_value('search_columns')
     if search_columns:
-      return {c[0] for c in search_columns}
+      return dict(search_columns)
     isValidColumn = self.getCatalogTool().getSQLCatalog().isValidColumn
-    return {id for id, title in self.getAllColumnList() if isValidColumn(id)}
+    return {id: '' for id, _ in self.getAllColumnList() if isValidColumn(id)}
 
   @lazyMethod
-  def getSortColumnIdSet(self):
-    """Return the set of the ids of the sort columns. Fall back to search column ids, if not defined.
+  def getSortColumnDict(self):
+    """Return sort columns with their cast types as dict values
+
+    Cast types are prefixed by ':' for convenience.
+    Fall back to search columns, if not defined.
     """
-    sort_columns = self.field.get_value('sort_columns')
-    if sort_columns:
-      return {c[0] for c in sort_columns}
-    return self.getSearchColumnIdSet()
+    sort_dict = {}
+    for c, cast in (self.field.get_value('sort_columns') or
+                    self.getSearchColumnDict().iteritems()):
+      if cast == 'float':
+        sort_dict[c] = ':' + cast
+      else:
+        if cast:
+          warn('Each line of the "Sortable Columns" field property must be'
+                ' in the form "<column_id> | <cast_type>", where <cast_type>'
+                " is one of ('', 'float').", DeprecationWarning)
+        sort_dict[c] = ''
+    return sort_dict
 
   @lazyMethod
   def getEditableColumnIdSet(self):
@@ -1034,8 +1048,8 @@ class ListBoxRenderer:
       selection.edit(default_sort_on = self.getDefaultSortColumnList())
 
       # Filter out non-sortable items.
-      sort_column_id_set = self.getSortColumnIdSet()
-      sort_list = [c for c in selection.sort_on if c[0] in sort_column_id_set]
+      sort_column_dict = self.getSortColumnDict()
+      sort_list = [c for c in selection.sort_on if c[0] in sort_column_dict]
       if len(selection.sort_on) != len(sort_list):
         selection.sort_on = sort_list
 
@@ -1557,17 +1571,18 @@ class ListBoxRenderer:
     set to None, otherwise to a string.
     """
     sort_list = self.getSelectionTool().getSelectionSortOrder(self.getSelectionName())
-    sort_dict = {}
-    for sort_item in sort_list:
-      sort_dict[sort_item[0]] = sort_item[1] # sort_item can be couple or a triplet
-    sort_column_id_set = self.getSortColumnIdSet()
+    # sort_item can be couple or a triplet
+    sort_dict = {sort_item[0]: sort_item[1] for sort_item in sort_list}
+    sort_column_dict = self.getSortColumnDict()
 
     value_list = []
     for c in self.getSelectedColumnList():
-      if c[0] in sort_column_id_set:
-        value_list.append((c[0], c[1], sort_dict.get(c[0])))
-      else:
+      column_id = c[0]
+      as_type = sort_column_dict.get(column_id)
+      if as_type is None:
         value_list.append((None, c[1], None))
+      else:
+        value_list.append((column_id + as_type, c[1], sort_dict.get(column_id)))
 
     return value_list
 
@@ -1576,7 +1591,7 @@ class ListBoxRenderer:
     If a column is not searchable, the alias is set to None, otherwise to a string. If a search field is not present,
     it is set to None.
     """
-    search_column_id_set = self.getSearchColumnIdSet()
+    search_column_id_set = self.getSearchColumnDict()
     if param_dict is None:
       param_dict = self.getParamDict()
 
@@ -2575,8 +2590,8 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       for original_listbox_argument in listbox_arguments_list:
         listbox_argument = original_listbox_argument.replace('%s_' %field_id, '', 1)
         listbox_argument_value = form_dict.get(original_listbox_argument, None)
-        if listbox_argument in list(self.getSearchColumnIdSet()) and \
-           listbox_argument_value not in (None,):
+        if listbox_argument in self.getSearchColumnDict() and \
+           listbox_argument_value is not None:
           update_selection = True
           listbox_kw[listbox_argument] = listbox_argument_value
       if update_selection:

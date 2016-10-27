@@ -553,17 +553,26 @@ class SelectionTool( BaseTool, SimpleItem ):
         listbox_id, sort_on = form["setSelectionQuickSortOrder"].split(".", 1)
 
       # Sort order can be specified in sort_on.
-      forced_sort_order = None
-      if sort_on is not None:
-        if sort_on.endswith(':asc'):
-          forced_sort_order = 'ascending'
-          sort_on = sort_on[:-4]
-        elif sort_on.endswith(':desc'):
-          forced_sort_order = 'descending'
-          sort_on = sort_on[:-5]
-        elif sort_on.endswith(':none'):
-          forced_sort_order = 'none'
-          sort_on = sort_on[:-5]
+      if sort_on.endswith(':asc'):
+        order = 'ascending'
+        sort_on = sort_on[:-4]
+      elif sort_on.endswith(':desc'):
+        order = 'descending'
+        sort_on = sort_on[:-5]
+      elif sort_on.endswith(':none'):
+        order = 'none'
+        sort_on = sort_on[:-5]
+      else:
+        order = None
+      # ... as well as cast type
+      i = sort_on.find(':')
+      if i < 0:
+        as_type = None
+      else:
+        as_type = sort_on[i+1:]
+        if as_type != 'float':
+          return
+        sort_on = sort_on[:i]
 
       if REQUEST is not None:
         if listbox_id is not None:
@@ -574,33 +583,23 @@ class SelectionTool( BaseTool, SimpleItem ):
 
       selection = self.getSelectionFor(selection_name, REQUEST=REQUEST)
       if selection is not None:
-        if forced_sort_order is not None:
-          if forced_sort_order == 'none':
-            temporary_new_sort_on = []
-          else:
-            temporary_new_sort_on = [(sort_on, forced_sort_order)]
+        if order is not None:
           # Allow user to sort by multiple columns
-          new_sort_on = [s
-                         for s in self.getSelectionSortOrder(selection_name)
-                         if s[0]!=sort_on]
-          new_sort_on.extend(temporary_new_sort_on)
+          new_sort_on = [s for s in selection.sort_on if s[0] != sort_on]
+          if order != 'none':
+            new_sort_on.append((sort_on, order, as_type) if as_type else
+                               (sort_on, order))
         else:
-          current_sort_on = self.getSelectionSortOrder(selection_name)
           # We must first switch from asc to desc and vice-versa if sort_order exists
           # in selection
-          n = 0
-          for current in current_sort_on:
+          order = 'ascending'
+          for current in selection.sort_on:
             if current[0] == sort_on:
-              n = 1
-              if current[1] == 'ascending':
-                new_sort_on = [(sort_on, 'descending')]
-                break
-              else:
-                new_sort_on = [(sort_on,'ascending')]
-                break
-          # And if no one exists, we just set sort
-          if n == 0:
-            new_sort_on = [(sort_on, 'ascending')]
+              if current[1] == order:
+                order = 'descending'
+              break
+          new_sort_on = ((sort_on, order, as_type) if as_type else
+                         (sort_on, order),)
         selection.edit(sort_on=new_sort_on)
 
       if REQUEST is not None:

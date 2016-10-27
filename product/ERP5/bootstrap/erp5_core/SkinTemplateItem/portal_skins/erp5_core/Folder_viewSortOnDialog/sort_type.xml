@@ -238,12 +238,8 @@
                           <string>default</string>
                         </tuple>
                         <tuple>
-                          <string>Alphabetical</string>
-                          <string>CHAR</string>
-                        </tuple>
-                        <tuple>
                           <string>Numerical</string>
-                          <string>SIGNED</string>
+                          <string>float</string>
                         </tuple>
                       </list>
                     </value>
@@ -276,19 +272,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(here.Base_translateString(\'Default Sort\'), \'\'),(here.Base_translateString(\'Alphabetical\'), \'CHAR\'), (here.Base_translateString(\'Numerical\'), \'SIGNED\')]</string> </value>
+            <value> <string>python: [(here.Base_translateString(k), v) for k,v in field.get_orig_value("sort_columns")]</string> </value>
         </item>
       </dictionary>
     </pickle>
