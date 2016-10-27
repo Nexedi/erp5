@@ -238,7 +238,7 @@ class TestTradeReports(ERP5ReportTestCase):
               source_value=self.organisation_module.Organisation_2,
               source_section_value=self.organisation_module.Organisation_2,
               source_decision_value=self.organisation_module.Organisation_2,
-              start_date=DateTime(2006, 2, 2),
+              start_date=DateTime(2006, 2, 2, 10),
               resource_dict = {'product_module/product_A':{"quantity":11, "price":3},
                                'product_module/product_B':{"quantity":7, "price":6},}
               )
@@ -388,6 +388,95 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total amount': 75.0,
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
+
+
+
+    # This is exactly the same as above, by at_date is as 02/02/2006
+    # so we check that first sale_order with start_date=DateTime(2006, 2, 2, 10)
+    # is counted, i.e. at_date is inclusive.
+    request['from_date'] = DateTime(2005, 2, 2)
+    request['at_date'] = DateTime(2006, 2, 2)
+    parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
+    active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
+    request['active_process'] = active_process.getPath()
+    self.tic()
+
+    report_section_list = self.getReportSectionList(self.sale_order_module,
+                                                    'OrderModule_viewOrderReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    stat_line_list = [l for l in line_list if l.isStatLine()]
+    self.assertEqual(3, len(data_line_list))
+    self.assertEqual(1, len(stat_line_list))
+
+    # test columns values
+    line = data_line_list[0]
+    self.assertEqual(line.column_id_list, ['client',
+                    'product',
+                    'Amount 2005',
+                    'Quantity 2005',
+                    'Quantity Unit 2005',
+                    'Amount 2006',
+                    'Quantity 2006',
+                    'Quantity Unit 2006',
+                    'total amount',
+                    'total quantity'])
+
+    # First Organisation
+    d =  {'Amount 2005': 0,
+                 'Amount 2006': 75.0,
+                 'Quantity 2005': None,
+                 'Quantity 2006': None,
+                 'Quantity Unit 2005': None,
+                 'Quantity Unit 2006': None,
+                 'client': 'Organisation_1',
+                 'product': None,
+                 'total amount': 75.0,
+                 'total quantity': None}
+    self.checkLineProperties(data_line_list[0],**d)
+
+    # Product one for first organisation
+    d={'Amount 2005': 0,
+                 'Amount 2006': 33.0,
+                 'Quantity 2005': 0,
+                 'Quantity 2006': 11.0,
+                 'Quantity Unit 2005': '',
+                 'Quantity Unit 2006': 'G',
+                 'client': None,
+                 'product': 'product_A',
+                 'total amount': 33.0,
+                 'total quantity': 11.0}
+    self.checkLineProperties(data_line_list[1],**d)
+
+    # Product two for first organisation
+    d = {'Amount 2005': 0,
+                 'Amount 2006': 42.0,
+                 'Quantity 2005': 0,
+                 'Quantity 2006': 7.0,
+                 'Quantity Unit 2005': '',
+                 'Quantity Unit 2006': 'Kg',
+                 'client': None,
+                 'product': 'product_B',
+                 'total amount': 42.0,
+                 'total quantity': 7.0}
+    self.checkLineProperties(data_line_list[2],**d)
+    # stat line
+    d = {'Amount 2005': None,
+                 'Amount 2006': 75.0,
+                 'Quantity 2005': None,
+                 'Quantity 2006': None,
+                 'Quantity Unit 2005': None,
+                 'Quantity Unit 2006': None,
+                 'client': 'Total',
+                 'product': None,
+                 'total amount': 75.0,
+                 'total quantity': None}
+    self.checkLineProperties(stat_line_list[0],**d)
+
+
+
 
     #
     # Year 2005 + 2006, first document for g1
