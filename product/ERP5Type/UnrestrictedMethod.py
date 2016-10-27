@@ -105,9 +105,9 @@ def super_user():
         uf = getSite().acl_users
       role_list = uf.valid_roles()
       if anonymous:
-        # If the user is anonymous, use the id of the system user,
+        # If the user is anonymous, use the user name of the system user,
         # so that it would not be treated as an unauthorized user.
-        user_id = str(system)
+        user_id = system.getUserName()
       else:
         user_id = user.getId()
       super_user = PrivilegedUser(user_id, None,
