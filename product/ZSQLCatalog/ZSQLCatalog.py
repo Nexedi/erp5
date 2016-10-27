@@ -719,6 +719,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     catalog_id_list = self.getERP5CatalogIdList()
     for sql_catalog_id in catalog_id_list:
       catalog = self.getSQLCatalog(sql_catalog_id)
+      if not catalog.getValidationState() == 'validated':
+        continue
       hot_reindexing = (self.hot_reindexing_state is not None) and \
                        (catalog is not None) and \
                        (self.source_sql_catalog_id == catalog.id)
@@ -887,6 +889,8 @@ class ZCatalog(Folder, Persistent, Implicit):
     catalog_id_list = self.getERP5CatalogIdList()
     for sql_catalog_id in catalog_id_list:
       catalog = self.getSQLCatalog(sql_catalog_id)
+      if not catalog.getValidationState() == 'validated':
+        continue
       if catalog is not None:
         catalog.uncatalogObject(uid=uid,path=path)
         if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
@@ -908,6 +912,8 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     for sql_catalog_id in catalog_id_list:
       catalog = self.getSQLCatalog(sql_catalog_id)
+      if not catalog.getValidationState() == 'validated':
+        continue
       if catalog is not None:
         catalog.beforeUncatalogObject(uid=uid,path=path)
 
