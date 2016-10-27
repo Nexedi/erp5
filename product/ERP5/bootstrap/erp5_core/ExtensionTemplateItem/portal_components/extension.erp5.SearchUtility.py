@@ -48,7 +48,7 @@ def recurseUpdateSyntaxNode(self, node):
   elif node.isColumn():
     if node.column_name == 'mine':
       node.column_name = 'owner'
-      node.node.value = str(self.portal_membership.getAuthenticatedMember())
+      node.node.value = self.portal_membership.getAuthenticatedMember().getId()
     elif node.column_name == 'state' and node.node.value != 'all':
       node.column_name = 'simulation_state'
     elif node.column_name == 'type' and node.node.value != 'all':

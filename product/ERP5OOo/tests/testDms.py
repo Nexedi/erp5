@@ -2478,7 +2478,7 @@ return 1
     document.publish()
     document.reject()
     document.share()
-    logged_in_user = str(self.portal.portal_membership.getAuthenticatedMember())
+    logged_in_user = self.portal.portal_membership.getAuthenticatedMember().getId()
     event_list = document.Base_getWorkflowEventInfoList()
     event_list.reverse()
     # all actions by logged in user
