@@ -78,6 +78,12 @@ class BudgetCell(Predicate, MetaNode, Movement):
               "Did not find title script for portal type: %r" %
               self.getPortalType())
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasCellContent')
+  def hasCellContent(self, base_id='cell'):
+    """Budget Cells do not contain cells.
+    """
+    return False
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentInventory')
   def getCurrentInventory(self, at_date=None, **kw):
     """ Returns current inventory.
