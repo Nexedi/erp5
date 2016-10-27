@@ -288,8 +288,8 @@ class ERP5UserManager(BasePlugin):
       return []
     if isinstance(login, list):
       login = tuple(login)
-    elif not isinstance(login, tuple):
-      login = str(login)
+    elif not isinstance(login, (tuple, str)):
+      login = login.getUserName()
     try:
       return getUserByLogin(self.getPortalObject(), login, exact_match)
     except ConflictError:
