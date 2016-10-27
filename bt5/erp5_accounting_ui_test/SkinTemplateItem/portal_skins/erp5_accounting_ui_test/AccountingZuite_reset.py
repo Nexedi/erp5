@@ -30,7 +30,7 @@ for entity in ( portal.organisation_module.objectValues() +
 # enable preference
 ptool = portal.portal_preferences
 pref = ptool.accounting_zuite_preference
-if pref.owner_info()['id'] != str(context.REQUEST.AUTHENTICATED_USER):
+if pref.owner_info()['id'] != context.REQUEST.AUTHENTICATED_USER.getId():
   # we have to 'own' the preference for the test
   ptool = portal.portal_preferences
   # pref.setId('old_accounting_zuite_preference')

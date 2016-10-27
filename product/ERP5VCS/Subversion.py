@@ -112,8 +112,8 @@ class Subversion(WorkingCopy):
     if username:
       username = username.strip()
     return (username or
-      # not set in preferences, then we get the current username in zope
-      portal.portal_membership.getAuthenticatedMember().getUserName())
+      # not set in preferences, then we get the current user id in zope
+      portal.portal_membership.getAuthenticatedMember().getId())
 
   def _getClient(self, **kw):
     return newSubversionClient(self, **kw)
