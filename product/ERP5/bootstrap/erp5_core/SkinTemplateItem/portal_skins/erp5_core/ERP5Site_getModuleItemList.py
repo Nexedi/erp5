@@ -1,7 +1,7 @@
 from Products.ERP5Type.Cache import CachingMethod
 
 portal = context.getPortalObject()
-user = portal.portal_membership.getAuthenticatedMember().getUserName()
+user = portal.portal_membership.getAuthenticatedMember().getIdOrUserName()
 
 def getModuleItemList(user=None):
   gettext = portal.Localizer.erp5_ui.gettext

@@ -4,7 +4,7 @@ if portal_type_list == ():
   return []
 
 # get portal_type_listuser name
-user_name = context.portal_membership.getAuthenticatedMember().getUserName()
+user_name = context.portal_membership.getAuthenticatedMember().getIdOrUserName()
 
 if not kw.has_key('portal_type'):
   kw['portal_type'] = portal_type_list

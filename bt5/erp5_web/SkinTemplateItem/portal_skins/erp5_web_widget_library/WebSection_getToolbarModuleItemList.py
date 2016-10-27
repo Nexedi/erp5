@@ -5,7 +5,7 @@ if module_id_list is None:
   module_id_list = context.WebSection_getDefaultToolbarModuleItemList()
 
 portal = context.getPortalObject()
-user = portal.portal_membership.getAuthenticatedMember().getUserName()
+user = portal.portal_membership.getAuthenticatedMember().getIdOrUserName()
 web_site_id = getattr(context, 'getWebSiteValue', None) is not None and \
     context.getWebSiteValue().getId()
 
