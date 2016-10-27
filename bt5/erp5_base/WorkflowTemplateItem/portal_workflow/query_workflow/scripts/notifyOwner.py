@@ -17,8 +17,7 @@ owner = object.getViewPermissionOwner()
 owner_value = portal_catalog.getResultValue(portal_type='Person', reference=owner)
 
 # Get the authenticated user
-user = portal.portal_membership.getAuthenticatedMember().getUserName()
-user_value = portal_catalog.getResultValue(portal_type='Person', reference=user)
+user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 # If users are not defined, we need to log and return
 if not owner or owner_value is None:
@@ -54,4 +53,4 @@ msg = translateString(msg,
 
 # We can now notify the owner through the notification tool
 portal.portal_notifications.sendMessage(
-         sender=user, recipient=owner, subject=subject, message=msg)
+         sender=user_value, recipient=owner, subject=subject, message=msg)

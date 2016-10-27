@@ -11,8 +11,7 @@ if not person_list:
   person_list = context.portal_selections.callSelectionFor(selection_name)
 
 # Find authenticated user
-user = context.portal_membership.getAuthenticatedMember()
-user_person = context.portal_catalog.getResultValue(portal_type='Person', reference=str(user))
+user_person = context.portal_membership.getAuthenticatedMember().getUserValue()
 
 event_list = []
 # For every person, create an event
