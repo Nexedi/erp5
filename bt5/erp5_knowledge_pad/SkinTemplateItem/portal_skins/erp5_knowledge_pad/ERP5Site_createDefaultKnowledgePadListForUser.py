@@ -56,7 +56,7 @@ knowledge_pad.visible()
 if owner is not None:
   current_user = context.portal_membership.getAuthenticatedMember()
   knowledge_pad.manage_setLocalRoles(userid=owner, roles=['Owner'])
-  knowledge_pad.manage_delLocalRoles([str(current_user)])
+  knowledge_pad.manage_delLocalRoles([current_user.getIdOrUserName()])
   knowledge_pad.reindexObject()
 
 # set default gadgets

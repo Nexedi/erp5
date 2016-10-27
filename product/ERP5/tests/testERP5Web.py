@@ -321,11 +321,11 @@ Hé Hé Hé!""", page.asText().strip())
     # check if user account is 'loggable'
     uf = portal.acl_users
     user = uf.getUserById(kw['reference'])
-    self.assertEqual(str(user), kw['reference'])
+    self.assertEqual(user.getIdOrUserName(), kw['reference'])
     self.assertEqual(1, user.has_role(('Member', 'Authenticated',)))
     self.login(kw['reference'])
     self.assertEqual(kw['reference'],
-                      str(portal.portal_membership.getAuthenticatedMember()))
+                     portal.portal_membership.getAuthenticatedMember().getIdOrUserName())
 
     # test redirection to person oobject
     path = website.absolute_url_path() + '/WebSite_redirectToUserView'

@@ -182,7 +182,7 @@ class Message(BaseMessage):
       # was generated.
       # Strip last stack entry, since it will always be the same.
       self.call_traceback = ''.join(format_list(extract_stack()[:-1]))
-    self.user_name = str(_getAuthenticatedUser(self))
+    self.user_name = _getAuthenticatedUser(self).getIdOrUserName()
     # Store REQUEST Info
     self.request_info = {}
     if request is not None:

@@ -2890,7 +2890,7 @@ class Catalog(Folder,
             #'root':         ob.getPhysicalRoot(),
             #'request':      getattr( ob, 'REQUEST', None ),
             #'modules':      SecureModuleImporter,
-            #'user':         getSecurityManager().getUser(),
+            #'user':         getSecurityManager().getUser().getIdOrUserName(),
             # XXX these below are defined, because there is no
             # accessor for some attributes, and restricted environment
             # may not access them directly.

@@ -590,7 +590,7 @@ class Category(Folder):
       # cache key
       username = None
       if 'checked_permission' in kw:
-        username = str(getSecurityManager().getUser())
+        username = getSecurityManager().getUser().getIdOrUserName()
 
       # Some methods are language dependent so we include the language in the
       # key
