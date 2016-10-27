@@ -2151,14 +2151,14 @@ class ERP5Generator(PortalGenerator):
                                         'IRoleAssignerPlugin'))
       # Add ERP5UserManager
       erp5security_dispatcher = p.acl_users.manage_addProduct['ERP5Security']
-      erp5security_dispatcher.addERP5UserManager('erp5_users')
+      erp5security_dispatcher.addERP5LoginUserManager('erp5_login_users')
       erp5security_dispatcher.addERP5GroupManager('erp5_groups')
       erp5security_dispatcher.addERP5RoleManager('erp5_roles')
       erp5security_dispatcher.addERP5UserFactory('erp5_user_factory')
       erp5security_dispatcher.addERP5DumbHTTPExtractionPlugin(
                                         'erp5_dumb_http_extraction')
       # Register ERP5UserManager Interface
-      p.acl_users.erp5_users.manage_activateInterfaces(
+      p.acl_users.erp5_login_users.manage_activateInterfaces(
                                         ('IAuthenticationPlugin',
                                         'IUserEnumerationPlugin',))
       p.acl_users.erp5_groups.manage_activateInterfaces(('IGroupsPlugin',))
