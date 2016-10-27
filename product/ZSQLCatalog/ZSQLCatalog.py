@@ -717,6 +717,7 @@ class ZCatalog(Folder, Persistent, Implicit):
     """Catalog a list of objects.
     """
     catalog_id_list = self.getERP5CatalogIdList()
+    failed_object_list = []
     for sql_catalog_id in catalog_id_list:
       catalog = self.getSQLCatalog(sql_catalog_id)
       if not catalog.getValidationState() == 'validated':
@@ -726,7 +727,6 @@ class ZCatalog(Folder, Persistent, Implicit):
                        (self.source_sql_catalog_id == catalog.id)
       archiving = self.archive_path is not None
       wrapped_object_list = []
-      failed_object_list = []
       url_list = []
       archive_list = []
       portal_archives = getattr(self, 'portal_archives', None)
