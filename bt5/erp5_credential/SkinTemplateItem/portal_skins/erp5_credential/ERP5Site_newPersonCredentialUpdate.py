@@ -9,6 +9,7 @@ else:
   module = portal.getDefaultModule(portal_type='Credential Update')
   credential_update = module.newContent(
     portal_type="Credential Update",
+    reference=reference,
     first_name=first_name,
     last_name=last_name,
     gender=gender,
@@ -44,9 +45,14 @@ else:
   # within same transaction and update client side credentials cookie 
   username = person.getReference()
   if password and username == str(portal.portal_membership.getAuthenticatedMember()):
-    credential_update.accept()
-    portal.cookie_authentication.credentialsChanged(username, username, password)
+    # The password is updated synchronously and the the rest of the credential Update is done later
+    login_reference = credential_update.Credential_updatePersonPassword()
     portal_status_message = "Password changed."
+    context.getPortalObject().cookie_authentication.credentialsChanged(
+      username,
+      login_reference,
+      password,
+      )
 
 portal_status_message = context.Base_translateString(portal_status_message)
 return portal.Base_redirect(keep_items = {'portal_status_message': portal_status_message})

@@ -40,15 +40,18 @@ if default_email_text is not None:
 else:
   # Case for recovery of password
   if person_list is None:
-    person_module = portal.getDefaultModule('Person')
-    result = person_module.searchFolder(reference={'query':reference, 'key':'ExactMatch'})
+    result = portal.portal_catalog(
+      portal_type=("ERP5 Login"),
+      parent_portal_type="Person",
+      reference={'query':reference, 'key':'ExactMatch'},
+      )
     if len(result) != 1:
       portal_status_message = portal.Base_translateString("Can't find corresponding person, it's not possible to recover your credentials.")
       if web_site is not None:
         return web_site.Base_redirect('', keep_items = dict(portal_status_message=portal_status_message ))
       return portal.Base_redirect('', keep_items = dict(portal_status_message=portal_status_message ))
 
-    person_list = [result[0].getObject(),]
+    person_list = [result[0].getObject().getParentValue(),]
 
   # Check the response
   person = person_list[0]
