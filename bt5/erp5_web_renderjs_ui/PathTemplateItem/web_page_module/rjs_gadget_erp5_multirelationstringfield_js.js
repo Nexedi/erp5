@@ -1,142 +1,231 @@
-/*jslint indent: 2, maxerr: 3, nomen: true */
+/*jslint indent: 2, maxerr: 3, nomen: true, unparam: true, maxlen: 80 */
 /*global window, rJS, RSVP, document */
 (function (window, rJS, RSVP, document) {
   "use strict";
 
-  rJS(window)
-
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (gadget) {
-      gadget.props = {};
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.props.element = element;
-        });
+  function addRelationInput(gadget, value_relative_url, value_text,
+                            value_uid, value_portal_type, index) {
+    var input_gadget;
+    return gadget.declareGadget('gadget_erp5_relation_input.html', {
+      element: document.createElement("fieldset")
     })
-    .allowPublicAcquisition("addRelationInput", function () {
-      var fieldset = document.createElement("fieldset"),
-        gadget = this,
-        container = gadget.props.element.querySelector('.container');
-      return gadget.declareGadget('gadget_erp5_relation_input.html', {
-        element: fieldset
+      .push(function (result) {
+        input_gadget = result;
+        return input_gadget.render({
+          editable: gadget.state.editable,
+          query: gadget.state.query,
+          catalog_index: gadget.state.catalog_index,
+          allow_jump: gadget.state.allow_jump,
+          // required: field_json.required,
+          title: gadget.state.title,
+          key: gadget.state.key,
+          view: gadget.state.view,
+          url: gadget.state.url,
+          allow_creation: gadget.state.allow_creation,
+          portal_types: gadget.state.portal_types,
+          value_relative_url: value_relative_url,
+          value_text: value_text,
+          value_uid: value_uid,
+          value_portal_type: value_portal_type,
+          relation_index: index
+        });
       })
-        .push(function (relation_input) {
-          var field_json = gadget.props.field_json,
-            index;
-          if (field_json.default.value) {
-            index = field_json.default.relation_item_relative_url.length;
-            field_json.default.relation_item_relative_url.push('');
-            field_json.default.value.push('');
-          } else {
-            index = field_json.relation_item_relative_url.length;
-            field_json.relation_item_relative_url.push('');
-            field_json.default.push('');
-          }
-          gadget.props.gadget_list.push(relation_input);
-          return relation_input.render({field_json: gadget.props.field_json}, {
-            index: index,
-            addRelationInput: true
-          });
-        })
-        .push(function () {
-          container.appendChild(fieldset);
-        });
-    })
+      .push(function () {
+        gadget.element.appendChild(input_gadget.element);
+      });
+  }
+
+  rJS(window)
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
+      var field_json = options.field_json || {},
+        state_dict = {
+          editable: field_json.editable,
+          query: field_json.query,
+          catalog_index: field_json.catalog_index,
+          allow_jump: field_json.allow_jump,
+          required: field_json.required,
+          title: field_json.title,
+          key: field_json.key,
+          view: field_json.view,
+          url: field_json.url,
+          allow_creation: field_json.allow_creation,
+          portal_types: field_json.portal_types,
+          relation_field_id: field_json.relation_field_id
+        };
+
+      if (field_json.default.hasOwnProperty('value_text_list')) {
+        //load non saved value
+        state_dict.value_relative_url_list =
+          JSON.stringify(field_json.default.value_relative_url_list);
+        state_dict.value_text_list =
+          JSON.stringify(field_json.default.value_text_list);
+        state_dict.value_uid_list =
+          JSON.stringify(field_json.default.value_uid_list);
+        state_dict.value_portal_type_list =
+          JSON.stringify(field_json.default.value_portal_type_list);
+      } else {
+        state_dict.value_relative_url_list =
+          JSON.stringify(field_json.relation_item_relative_url);
+        state_dict.value_text_list =
+          JSON.stringify(field_json.default);
+        state_dict.value_uid_list = JSON.stringify([]);
+        state_dict.value_portal_type_list = JSON.stringify([]);
+      }
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function () {
       var gadget = this,
         i,
-        list = [],
-        fieldset,
-        container = gadget.props.element.querySelector('.container'),
-        field_json = options.field_json || {},
-        relation_item_relative_url;
-      gadget.props.field_json = field_json;
-      if (field_json.default.value) {
-        if (field_json.default.relation_item_relative_url[field_json.default.relation_item_relative_url.length - 1]) {
-          //return form listbox
-          field_json.default.value.push("");
-          field_json.default.relation_item_relative_url.push("");
-        }
-        relation_item_relative_url = field_json.default.relation_item_relative_url;
-      } else {
-        field_json.relation_item_relative_url.push('');
-        field_json.default.push('');
-        relation_item_relative_url = field_json.relation_item_relative_url;
+        queue = new RSVP.Queue(),
+        element = gadget.element,
+        value_relative_url_list =
+          JSON.parse(gadget.state.value_relative_url_list),
+        value_text_list =
+          JSON.parse(gadget.state.value_text_list),
+        value_uid_list =
+          JSON.parse(gadget.state.value_uid_list),
+        value_portal_type_list =
+          JSON.parse(gadget.state.value_portal_type_list);
+
+
+      // Always display an empty value at the end
+      value_relative_url_list.push("");
+      value_text_list.push("");
+
+      // Clear first to DOM, append after to reduce flickering/manip
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
       }
-      for (i = 0; i < relation_item_relative_url.length; i += 1) {
-        fieldset = document.createElement("fieldset");
-        container.appendChild(fieldset);
-        list.push(gadget.declareGadget('gadget_erp5_relation_input.html', {
-          element: fieldset
-        }));
+
+      function enQueue() {
+        var argument_list = arguments;
+        queue
+          .push(function () {
+            return addRelationInput.apply(this, argument_list);
+          });
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(list);
-        })
-        .push(function (gadget_list) {
-          list = [];
-          gadget.props.gadget_list = gadget_list;
-          for (i = 0; i < gadget_list.length; i += 1) {
-            list.push(gadget_list[i].render(options, {
-              index: i,
-              addRelationInput: (i === gadget_list.length - 1)
-            }));
-          }
-          return RSVP.all(list);
-        });
+
+      for (i = 0; i < value_relative_url_list.length; i += 1) {
+        enQueue(gadget, value_relative_url_list[i], value_text_list[i],
+                value_uid_list[i], value_portal_type_list[i], i);
+      }
+      return queue;
     })
-    .declareMethod('getContent', function (options) {
-      var list = [],
-        i,
-        gadget = this,
-        length = gadget.props.gadget_list.length;
-      if (options.format === 'erp5') {
-        length -= 1;
-      }
-      for (i = 0; i < length; i += 1) {
-        list.push(gadget.props.gadget_list[i].getContent(options, {"type": "MultiRelationField"}));
-      }
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all(list);
+
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
+      // An empty relation should be created when the last one is modified
+      // An empty relation should be removed
+
+      var gadget = this,
+        sub_gadget;
+      return gadget.getDeclaredGadget(scope)
+        .push(function (result) {
+          sub_gadget = result;
+          return sub_gadget.getContent();
         })
         .push(function (result) {
-          var tmp = {},
-            key,
-            key1;
-          for (i = 0; i < result.length; i += 1) {
-            for (key in result[i]) {
-              if (result[i].hasOwnProperty(key)) {
-                if (options.format === 'erp5') {
-                  if (tmp[key] === undefined) {
-                    tmp[key] = [];
-                  }
-                  tmp[key].push(result[i][key]);
-                } else {
-                  if (tmp[key] === undefined) {
-                    tmp[key] = {};
-                  }
-                  for (key1 in result[i][key]) {
-                    if (result[i][key].hasOwnProperty(key1)) {
-                      if (tmp[key][key1] === undefined) {
-                        tmp[key][key1] = [];
-                      }
-                      tmp[key][key1].push(result[i][key][key1][0]);
+          var value = result.value_text;
+          if (sub_gadget.element === gadget.element.lastChild) {
+            if (value) {
+              return addRelationInput(gadget, '', '', undefined, undefined,
+                                      gadget.element.childNodes.length);
+            }
+          /*
+          } else {
+            if (!value) {
+              gadget.element.removeChild(sub_gadget.element);
+            }
+          */
+          }
+        })
+        .push(function () {
+          return gadget.notifyChange();
+        });
+    })
+
+    .declareMethod('getContent', function (options) {
+      var i,
+        element = this.element,
+        queue = new RSVP.Queue(),
+        final_result = {},
+        result_list = [],
+        gadget = this;
+
+      function calculateSubContent(node) {
+        queue
+          .push(function () {
+            var scope = node.getAttribute('data-gadget-scope');
+            if (scope !== null) {
+              return gadget.getDeclaredGadget(
+                node.getAttribute('data-gadget-scope')
+              )
+                .push(function (result) {
+                  return result.getContent();
+                })
+                .push(function (result) {
+                  result_list.push(result);
+                });
+            }
+          });
+      }
+
+      if (this.state.editable) {
+        for (i = 0; i < element.childNodes.length; i += 1) {
+          calculateSubContent(element.childNodes[i]);
+        }
+        return queue
+          .push(function () {
+
+            var result = {},
+              j,
+              k = 0,
+              input_result;
+
+            if (options.format === "erp5") {
+              result[gadget.state.key] = [];
+            } else {
+              result[gadget.state.key] = {
+                value_text_list: [],
+                value_relative_url_list: [],
+                value_portal_type_list: [],
+                value_uid_list: []
+              };
+            }
+            for (j = 0; j < result_list.length; j += 1) {
+              input_result = result_list[j];
+
+              if (options.format === "erp5") {
+                if (input_result.hasOwnProperty('value_text')) {
+                  if (input_result.value_text) {
+                    if (input_result.value_portal_type) {
+                      result[gadget.state.relation_field_id + '_' + k] =
+                        "_newContent_" + input_result.value_portal_type;
                     }
+                    result[gadget.state.key].push(input_result.value_text);
                   }
                 }
+                k += 1;
+              } else {
+                result[gadget.state.key].value_text_list
+                  .push(input_result.value_text);
+                result[gadget.state.key].value_relative_url_list
+                  .push(input_result.value_relative_url);
+                result[gadget.state.key].value_portal_type_list
+                  .push(input_result.value_portal_type);
+                result[gadget.state.key].value_uid_list.push(undefined);
               }
             }
-          }
-          return tmp;
-        });
+            return result;
+
+          });
+      }
+      return final_result;
     });
+
 }(window, rJS, RSVP, document));

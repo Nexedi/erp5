@@ -1,7 +1,7 @@
-/*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, rJS, RSVP, URI, loopEventListener, Handlebars,
+/*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
+/*global window, rJS, RSVP, URI, Handlebars,
  SimpleQuery, ComplexQuery, Query, QueryFactory, promiseEventListener*/
-(function (window, rJS, RSVP, URI, loopEventListener, promiseEventListener,
+(function (window, rJS, RSVP, URI, promiseEventListener,
   SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars) {
   "use strict";
 
@@ -21,37 +21,43 @@
     relation_listview_source = gadget_klass.__template_element
                          .getElementById("relation-listview-template")
                          .innerHTML,
-    relation_listview_template = Handlebars.compile(relation_listview_source),
+    relation_listview_template = Handlebars.compile(relation_listview_source);
 
 
-    searching = "ui-btn ui-corner-all ui-btn-icon-notext" +
-        " ui-input-clear ui-icon-spinner ui-icon-spin",
-    jump_on = "ui-btn ui-corner-all ui-btn-icon-notext " +
-      "ui-icon-plane ui-shadow-inset ui-btn-inline",
-    jump_off = "ui-btn ui-corner-all ui-btn-icon-notext " +
-      "ui-icon-plane ui-shadow-inset ui-btn-inline ui-disabled",
-    jump_add = "ui-btn ui-corner-all ui-btn-icon-notext " +
-      "ui-icon-plus ui-shadow-inset ui-btn-inline ui-disabled",
-    jump_unknown = "ui-btn ui-corner-all ui-btn-icon-notext " +
-      "ui-icon-warning ui-shadow-inset ui-btn-inline ui-disabled";
-
-
-  rJS(window)
-
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (my_gadget) {
-      my_gadget.props = {
-        input_deferred: RSVP.defer()
-      };
-      return my_gadget.getElement()
-        .push(function (element) {
-          my_gadget.props.element = element;
-        });
+  function displayNonEditableLink(gadget) {
+    return gadget.getUrlFor({
+      command: 'index',
+      options: {
+        jio_key: gadget.state.value_relative_url
+      }
     })
+      .push(function (href) {
+        // XXX Use html5 element gadget
+        gadget.element.innerHTML = relation_link_template({
+          value: gadget.state.value_text,
+          href: href
+        });
+      });
+  }
 
+  function displayNonEditableText(gadget) {
+    gadget.element.textContent = gadget.state.value_text;
+  }
+
+  function displayEditableLink(gadget, class_name) {
+    return gadget.translateHtml(relation_input_template({
+      href: "#",
+      value: gadget.state.value_text,
+      title: gadget.state.title,
+      name: gadget.state.key,
+      class_name: class_name
+    }))
+      .push(function (html) {
+        gadget.element.innerHTML = html;
+      });
+  }
+
+  gadget_klass
     /////////////////////////////////////////////////////////////////
     // acquired methods
     /////////////////////////////////////////////////////////////////
@@ -62,375 +68,335 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getFormContent", "getFormContent")
     .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("addRelationInput", "addRelationInput")
-
+    // .declareAcquiredMethod("addRelationInput", "addRelationInput")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (options, options2) {
+    .declareMethod('render', function (options) {
+      var state_dict = {
+        editable: options.editable,
+        query: options.query,
+        catalog_index: options.catalog_index,
+        allow_jump: options.allow_jump,
+        // required: field_json.required,
+        title: options.title,
+        key: options.key,
+        view: options.view,
+        url: options.url,
+        allow_creation: options.allow_creation,
+        portal_types: options.portal_types,
+        has_focus: false,
+        relation_index: options.relation_index,
+        value_relative_url: options.value_relative_url,
+        value_uid: options.value_uid,
+        value_text: options.value_text,
+        value_portal_type: options.value_portal_type
+      };
 
+      return this.changeState(state_dict);
+    })
+
+    .onStateChange(function (modification_dict) {
       var gadget = this,
-        field_json = options.field_json || {},
-        target_url,
         queue = new RSVP.Queue(),
-        create_object,
-        unknown,
-        relation_item_relative_url,
-        uid,
-        value = "",
-        not_selected = true,
-        index = options2.index || 0;
-      gadget.props.field_json = field_json;
+        value_text = gadget.state.value_text,
+        // target_url,
+        SEARCHING_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext" +
+          " ui-input-clear ui-icon-spinner ui-icon-spin",
+        JUMP_ON_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
+          "ui-icon-plane ui-shadow-inset ui-btn-inline",
+        JUMP_OFF_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
+          "ui-icon-plane ui-shadow-inset ui-btn-inline ui-disabled",
+        JUMP_ADD_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
+          "ui-icon-plus ui-shadow-inset ui-btn-inline ui-disabled",
+        JUMP_UNKNOWN_CLASS_STR = "ui-btn ui-corner-all ui-btn-icon-notext " +
+          "ui-icon-warning ui-shadow-inset ui-btn-inline ui-disabled";
 
-      if (!field_json.editable) {
-        if (field_json.relation_item_relative_url) {
-          return gadget.getUrlFor({
-            command: 'index',
-            options: {
-              jio_key: field_json.relation_item_relative_url[index]
-            }
-          })
-            .push(function (href) {
-              gadget.props.element.innerHTML = relation_link_template({
-                value: field_json.default[index] || "",
-                href: href
-              });
-            });
+      // Non editable
+      if (!gadget.state.editable) {
+        if ((gadget.state.value_relative_url) && (gadget.state.allow_jump)) {
+          return displayNonEditableLink(gadget);
         }
-        return;
+        return displayNonEditableText(gadget);
       }
 
-      gadget.props.index = index;
-      gadget.props.addRelationInput = options2.addRelationInput;
-      if (field_json.default.value) {
-        //load non saved value
-        create_object =  field_json.default.create_object ? field_json.default.create_object[index] : false;
-        unknown = field_json.default.jump_unknown ? field_json.default.jump_unknown[index] : false;
-        relation_item_relative_url = field_json.default.relation_item_relative_url || [];
-        uid = field_json.default.uid;
-        value = field_json.default.value[index] || "";
-      } else {
-        create_object = field_json.create_object ? field_json.create_object[index] : false;
-        unknown = field_json.jump_unknown ? field_json.jump_unknown[index] : false;
-        relation_item_relative_url = field_json.relation_item_relative_url;
-        uid = field_json.uid;
-        value = field_json.default[index] || "";
+      if (modification_dict.hasOwnProperty('editable')) {
+        // First display of the input
+        queue.push(function () {
+          return displayEditableLink(gadget, JUMP_UNKNOWN_CLASS_STR);
+        });
       }
-      gadget.props.jump_url = [relation_item_relative_url[index]];
-      if (relation_item_relative_url) {
-        target_url = relation_item_relative_url[index];
-      }
-      gadget.props.query = QueryFactory.create(new URI(field_json.query).query(true).query);
-      gadget.props.create_object_type = create_object;
-      if (!value && target_url && uid) {
-        //return from listbox
-        not_selected = false;
-        queue
-          .push(function () {
+
+      return queue
+        .push(function () {
+          var plane = gadget.element.querySelector("a"),
+            ul = gadget.element.querySelector(".search_ul"),
+            input = gadget.element.querySelector("input");
+          ul.innerHTML = "";
+          plane.href = '';
+
+          if (input.value !== gadget.state.value_text) {
+            input.value = gadget.state.value_text;
+          }
+
+          // uid is known
+          // User selected a document from a listbox
+          if (gadget.state.value_uid) {
+            plane.className = SEARCHING_CLASS_STR;
             return gadget.jio_allDocs({
               "query":  Query.objectToSearchText(new SimpleQuery({
                 key: "catalog.uid",
-                value: uid,
+                value: gadget.state.value_uid,
                 limit: [0, 1]
               })),
-              "select_list": [field_json.catalog_index]
-            });
-          })
-          .push(function (result) {
-            value = result.data.rows[0].value[field_json.catalog_index];
-          });
-      }
-      if (target_url) {
-        queue
-          .push(function () {
-            return gadget.getUrlFor({
-              command: 'index',
-              options: {
-                jio_key: target_url
-              }
-            });
-          });
-      }
-      queue
-        .push(function (href) {
-          var class_name,
-            jump_href = '#';
-          if (create_object) {
-            class_name = jump_add;
-          } else {
-            if ((field_json.error_text || unknown) && not_selected) {
-              class_name = jump_unknown;
-            } else {
-              if (href) {
-                if (field_json.allow_jump) {
-                  jump_href = href;
-                  class_name = jump_on;
-                } else {
-                  class_name = jump_off;
-                }
-              } else {
-                class_name = jump_off;
-              }
-            }
+              "select_list": [gadget.state.catalog_index]
+            })
+              .push(function (result) {
+                return gadget.changeState({
+                  value_text: result.data.rows[0]
+                    .value[gadget.state.catalog_index],
+                  value_uid: null
+                });
+              });
           }
-          return gadget.translateHtml(relation_input_template({
-            href: jump_href,
-            create_object: create_object,
-            readonly: field_json.editable ? "" : "ui-state-readonly",
-            input_readonly: field_json.editable ? "" : 'readonly="readonly"',
-            required: field_json.required ? "required" : "",
-            value: value,
-            title: field_json.title,
-            name: field_json.key,
-            class_name: class_name
-          }));
-        })
-        .push(function (html) {
-          gadget.props.element.innerHTML = html;
-          gadget.props.input =
-            gadget.props.element.querySelector("input");
-          gadget.props.new_tag_div = gadget.props.element.querySelector(".new_tag");
-          gadget.props.spinner = gadget.props.element.querySelector("a");
-          gadget.props.plane = gadget.props.element.querySelector("a");
-          gadget.props.input_deferred.resolve();
+
+
+          // Expected portal type has been selected.
+          // User want to create a new document
+          if (gadget.state.value_portal_type) {
+            plane.className = JUMP_ADD_CLASS_STR;
+            return;
+          }
+
+          // Relative URL is known. Display plane icon
+          if (gadget.state.value_relative_url) {
+            if (gadget.state.allow_jump) {
+              return gadget.getUrlFor({
+                command: 'index',
+                options: {
+                  jio_key: gadget.state.value_relative_url
+                }
+              })
+                .push(function (url) {
+                  plane.href = url;
+                  plane.className = JUMP_ON_CLASS_STR;
+                });
+            }
+
+            if (modification_dict.hasOwnProperty('value_text')) {
+              plane.className = JUMP_UNKNOWN_CLASS_STR;
+            } else {
+              plane.className = JUMP_OFF_CLASS_STR;
+            }
+            return;
+          }
+
+          // No text, user want to delete the content
+          if (!gadget.state.value_text) {
+            plane.className = JUMP_OFF_CLASS_STR;
+            return;
+          }
+
+          // User entered text, but didn't select
+          // from the list
+          if (!gadget.state.has_focus) {
+            plane.className = JUMP_UNKNOWN_CLASS_STR;
+            return;
+          }
+
+          // User typed some text.
+          // Propose some documents in a list
+          plane.className = SEARCHING_CLASS_STR;
+
+          return new RSVP.Queue()
+            .push(function () {
+              // Wait a bit before launching the catalog query
+              // as user may still type new characters
+              return RSVP.delay(200);
+            })
+            .push(function () {
+              return gadget.jio_allDocs({
+                query: Query.objectToSearchText(new ComplexQuery({
+                  operator: "AND",
+                  query_list: [
+                    QueryFactory.create(
+                      new URI(gadget.state.query).query(true).query
+                    ),
+                    new SimpleQuery({
+                      key: gadget.state.catalog_index,
+                      value: value_text
+                    })
+                  ]
+                })),
+                limit: [0, 10],
+                select_list: [gadget.state.catalog_index]
+              });
+            })
+            .push(function (result) {
+              var list = [],
+                i,
+                type;
+              if (gadget.state.allow_creation) {
+                type = gadget.state.portal_types;
+              } else {
+                type = [];
+              }
+              for (i = 0; i < result.data.rows.length; i += 1) {
+                list.push({
+                  id: result.data.rows[i].id,
+                  value: result.data.rows[i].value[gadget.state.catalog_index]
+                });
+              }
+              plane.className = JUMP_UNKNOWN_CLASS_STR;
+              ul.innerHTML = relation_listview_template({
+                list: list,
+                type: type,
+                value: value_text
+              });
+            });
         });
-      return queue;
+
     })
 
-    .declareMethod('getContent', function (options, options2) {
-      var element = this.props.element.querySelector('input'),
-        result = {},
-        tmp = {},
-        field_json = this.props.field_json;
-      if (!field_json.editable) {
-        return {};
+
+    .declareMethod('getContent', function () {
+      var gadget = this,
+        result = {};
+
+      if (gadget.state.editable) {
+        result = {
+          value_relative_url: gadget.state.value_relative_url,
+          value_text: gadget.state.value_text,
+          value_portal_type: gadget.state.value_portal_type
+        };
       }
-      if (options.format === "erp5") {
-        if (this.props.plane.className === jump_add) {
-          if (options2 && options2.type === 'MultiRelationField') {
-            result[field_json.relation_field_id + '_' + this.props.index] = "_newContent_" + this.props.create_object_type;
-          } else {
-            result[field_json.relation_field_id] = "_newContent_" + this.props.create_object_type;
-          }
-        }
-        result[element.getAttribute('name')] = element.value;
-        return result;
-      }
-      tmp.value = [element.value];
-      tmp.create_object = [""];
-      tmp.jump_unknown = [""];
-      tmp.relation_item_relative_url = [""];
-      if (this.props.plane.className === jump_add) {
-        tmp.create_object = [this.props.create_object_type];
-      } else {
-        if (this.props.plane.className === jump_unknown) {
-          tmp.jump_unknown = [true];
-        } else {
-          tmp.relation_item_relative_url = this.props.jump_url;
-        }
-      }
-      result[element.getAttribute('name')] = tmp;
       return result;
     })
+
 
     /////////////////////////////////////////////////////////////////
     // declared services
     /////////////////////////////////////////////////////////////////
-    .declareService(function () {
+    .onEvent('blur', function () {
       var gadget = this,
-        props = gadget.props,
-        input,
-        search_query,
-        simple_query,
-        field_json = props.field_json,
-        ul;
+        ul,
+        new_state = {
+          has_focus: false
+        };
 
-      function generateList(event) {
-        var index = field_json.catalog_index,
-          begin_from = props.begin_from || 0,
-          lines = field_json.lines || 10,
-          my_value = event.target.value;
-
-        props.plane.className = jump_off;
-        props.jump_url = [];
-        ul.innerHTML = "";
-        if (my_value === "") {
-          props.spinner.className = jump_off;
-          return;
-        }
-        simple_query = new SimpleQuery({
-          key: index,
-          value: my_value
-        });
-        props.spinner.className = searching;
-        search_query =  Query.objectToSearchText(new ComplexQuery({
-          operator: "AND",
-          query_list: [gadget.props.query, simple_query]
-        }));
-        return new RSVP.Queue()
-          .push(function () {
-            return gadget.jio_allDocs({
-              "query": search_query,
-              "limit": [begin_from, begin_from + lines],
-              "select_list": [index]
-            });
-          })
-          .push(function (result) {
-            var list = [],
-              i,
-              type = field_json.allow_creation ? field_json.portal_types : [],
-              html;
-            for (i = 0; i < result.data.rows.length; i += 1) {
-              list.push({
-                id: result.data.rows[i].id,
-                value: result.data.rows[i].value[index]
-              });
-            }
-            props.spinner.className = jump_off;
-            html =  relation_listview_template({
-              list: list,
-              type: type,
-              value: my_value
-            });
-            ul.innerHTML = html;
-          });
+      if (!gadget.state.editable) {
+        return;
       }
 
-
-      function setSelectedElement(event) {
-        var element = event.target,
-          jump_url = element.getAttribute("data-relative-url"),
-          create_object_type = element.getAttribute("data-create-object"),
-          explore = element.getAttribute("data-explore");
-        ul.innerHTML = "";
-
-        if (jump_url) {
-          props.input.value = element.textContent;
-          props.jump_url = [jump_url];
-          return gadget.getUrlFor({
-            command: 'index',
-            options: {
-              jio_key: jump_url
-            }
-          }).push(function (url) {
-            if (field_json.allow_jump) {
-              props.plane.href = url;
-              props.plane.className = jump_on;
-            }
-          });
-        }
-        if (create_object_type) {
-          gadget.props.create_object_type = create_object_type;
-          props.plane.className = jump_add;
-          return;
-        }
-        if (explore) {
-          return gadget.getFormContent({
-            format: "json"
-          })
-            .push(function (content) {
-              return gadget.redirect({
-                command: 'index',
-                options: {
-                  page: "relation_search",
-                  url: gadget.props.field_json.url,
-                  extended_search: Query.objectToSearchText(simple_query),
-                  view: gadget.props.field_json.view,
-                  back_field: gadget.props.field_json.key,
-                  target_index: gadget.props.index
-                },
-                form_content: content
-              });
-            });
-        }
-        props.plane.className = jump_unknown;
-      }
-
+      ul = gadget.element.querySelector(".search_ul");
       return new RSVP.Queue()
         .push(function () {
-          return gadget.props.input_deferred.promise;
-        })
-        .push(function () {
-          input = gadget.props.element.querySelector('input');
-          ul = gadget.props.element.querySelector(".search_ul");
-          return RSVP.all([
-            loopEventListener(input, 'input', false, generateList),
-            loopEventListener(input, 'blur', false, function () {
-              return new RSVP.Queue()
-                .push(function () {
-                  return RSVP.any([
-                    RSVP.delay(200),
-                    promiseEventListener(ul, "click", true)
-                  ]);
-                })
-                .push(function (event) {
-                  var queue = new RSVP.Queue();
-                  if (event) {
-                    queue
-                      .push(function () {
-                        return setSelectedElement(event);
+          return RSVP.any([
+
+            new RSVP.Queue()
+              .push(function () {
+                return RSVP.delay(200);
+              })
+              .push(function () {
+                return gadget.changeState(new_state);
+              }),
+
+            new RSVP.Queue()
+              .push(function () {
+                return promiseEventListener(ul, "click", true);
+              })
+              .push(function (event) {
+                // Check which 'li' element was clicked
+                var li = event.target,
+                  data_relative_url = li.getAttribute("data-relative-url"),
+                  data_portal_type = li.getAttribute("data-create-object"),
+                  data_explore = li.getAttribute("data-explore");
+
+                // User want to create a new document
+                if (data_portal_type) {
+                  new_state.value_portal_type = data_portal_type;
+                  return gadget.changeState(new_state);
+                }
+
+                // User selected an existing document
+                if (data_relative_url) {
+                  new_state.value_text = li.textContent;
+                  new_state.value_relative_url = data_relative_url;
+                  return gadget.changeState(new_state);
+                }
+
+                // Go to the search listbox
+                if (data_explore) {
+                  return gadget.getFormContent({
+                    format: "json"
+                  })
+                    .push(function (content) {
+                      var input = gadget.element.querySelector('input');
+                      return gadget.redirect({
+                        command: 'index',
+                        options: {
+                          page: "relation_search",
+                          url: gadget.state.url,
+                          extended_search: Query.objectToSearchText(
+                            new SimpleQuery({
+                              key: gadget.state.catalog_index,
+                              value: input.value
+                            })
+                          ),
+                          view: gadget.state.view,
+                          back_field: gadget.state.key,
+                          relation_index: gadget.state.relation_index
+                        },
+                        form_content: content
                       });
-                  }
-                  if (ul.innerHTML) {
-                    ul.innerHTML = "";
-                    props.plane.className = jump_unknown;
-                    if (gadget.props.addRelationInput) {
-                      gadget.props.addRelationInput = false;
-                      queue.push(function () {
-                        return gadget.addRelationInput();
-                      });
-                    }
-                  }
-                  return queue;
+                    });
+                }
+
+                // No idea what has been clicked...
+                return gadget.changeState({
+                  has_focus: false
                 });
-            })]);
-        });
-    })
-
-    .declareService(function () {
-      var gadget = this;
-
-      function notifyInvalid(evt) {
-        return gadget.notifyInvalid(evt.target.validationMessage);
-      }
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.input_deferred.promise;
+              })
+          ]);
         })
         .push(function () {
-          // Listen to input change
-          return loopEventListener(
-            gadget.props.element.querySelector('input'),
-            'invalid',
-            false,
-            notifyInvalid
-          );
+          return gadget.notifyChange();
         });
+    }, true, false)
+
+
+    .declareMethod('checkValidity', function () {
+      return true;
     })
 
-    .declareService(function () {
-      ////////////////////////////////////
-      // Check field validity when the value changes
-      ////////////////////////////////////
-      var gadget = this;
+    // XXX Use html5 input
+    .onEvent('invalid', function (evt) {
+      // invalid event does not bubble
+      return this.notifyInvalid(evt.target.validationMessage);
+    }, true, false)
 
-      function notifyChange() {
-        return gadget.notifyChange();
+    .onEvent('change', function () {
+      return RSVP.all([
+        this.checkValidity(),
+        this.notifyChange()
+      ]);
+    }, false, false)
+
+
+    .onEvent('input', function (event) {
+      if (!this.state.editable) {
+        return;
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.input_deferred.promise;
-        })
-        .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('input'),
-            'change',
-            false,
-            notifyChange
-          );
-        });
-    });
 
-}(window, rJS, RSVP, URI, loopEventListener, promiseEventListener,
+      return this.changeState({
+        value_text: event.target.value,
+        value_relative_url: null,
+        value_uid: null,
+        value_portal_type: null,
+        has_focus: true
+      });
+    }, true, false);
+
+}(window, rJS, RSVP, URI, promiseEventListener,
   SimpleQuery, ComplexQuery, Query, QueryFactory, Handlebars));

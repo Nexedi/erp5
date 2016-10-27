@@ -446,7 +446,7 @@
   function execHistoryPreviousCommand(gadget, previous_options, load_options) {
     var history = previous_options.history,
       jio_key = previous_options.jio_key,
-      target_index = previous_options.target_index,
+      relation_index = previous_options.relation_index,
       field = previous_options.back_field,
       queue =  new RSVP.Queue(),
       previous_id;
@@ -473,9 +473,9 @@
           if (results) {
             results = JSON.parse(results.target.result);
             if (load_options.uid) {
-              results[field].value[target_index] =  "";
-              results[field].relation_item_relative_url[target_index] = load_options.jio_key;
-              results[field].uid = load_options.uid;
+              results[field].value_text_list[relation_index] =  "";
+              results[field].value_relative_url_list[relation_index] = load_options.jio_key;
+              results[field].value_uid_list[relation_index] = load_options.uid;
             }
             gadget.props.form_content = results;
           }
@@ -491,8 +491,8 @@
         return gadget.props.jio_gadget.get(history.options_id);
       })
       .push(function (result) {
-        var result_list = [result, previous_id];
-        var options = result_list[0].data,
+        var result_list = [result, previous_id],
+          options = result_list[0].data,
           next_jio_key = options.jio_key;
         delete options.jio_key;
         return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);
