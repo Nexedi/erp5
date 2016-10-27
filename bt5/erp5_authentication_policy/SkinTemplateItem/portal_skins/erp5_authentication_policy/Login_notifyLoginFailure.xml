@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_notifyLoginFailure</string> </value>
+            <value> <string>Login_notifyLoginFailure</string> </value>
         </item>
       </dictionary>
     </pickle>

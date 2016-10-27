@@ -50,20 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-                <string>Owner</string>
-              </tuple>
-            </value>
+            <value> <string>brain, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_notifyPasswordExpire</string> </value>
+            <value> <string>Login_getListboxUrl</string> </value>
         </item>
       </dictionary>
     </pickle>
