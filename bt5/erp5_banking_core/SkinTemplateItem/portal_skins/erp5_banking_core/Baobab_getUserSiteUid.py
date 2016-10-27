@@ -1,6 +1,6 @@
 from Products.ERP5Type.Cache import CachingMethod
 
-user_id = context.portal_membership.getAuthenticatedMember().getUserName()
+user_id = context.portal_membership.getAuthenticatedMember().getId()
 
 def getUserSiteUid(user_id):
   return context.Baobab_getUserAssignedRootSite(user_id=user_id, object=1).getSiteUid()

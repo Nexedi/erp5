@@ -5,7 +5,7 @@ transaction = state_change['object']
 # Compute the source form the vault choosen by
 # the accountant and find the counter with the
 # user logged in
-user_id = transaction.portal_membership.getAuthenticatedMember().getUserName()
+user_id = transaction.portal_membership.getAuthenticatedMember().getId()
 site_list = context.Baobab_getUserAssignedSiteList(user_id=user_id)
 # context.log('validateVaultBalance site_list',site_list)
 source = transaction.getSource()
