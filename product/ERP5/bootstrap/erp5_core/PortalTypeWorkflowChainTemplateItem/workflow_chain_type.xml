@@ -40,6 +40,10 @@
   <workflow>business_template_building_workflow, business_template_installation_workflow</workflow>
  </chain>
  <chain>
+  <type>Catalog</type>
+  <workflow>validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category</type>
   <workflow>edit_workflow</workflow>
  </chain>
