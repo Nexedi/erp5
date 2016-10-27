@@ -304,7 +304,7 @@
 
 
 <tr>
-  <td>verifyElementNotPresent</td>
+  <td>verifyElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[3]</td>
   <td></td>
 </tr>
