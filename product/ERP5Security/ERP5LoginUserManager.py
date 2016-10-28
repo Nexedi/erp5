@@ -224,7 +224,7 @@ class ERP5LoginUserManager(BasePlugin):
         'id': user['reference'],
         # Note: PAS forbids us from returning more than one entry per given id,
         # so take any available login.
-        'login': login_dict.get(user['uid'], [None])[0]['reference'],
+        'login': login_dict[user['uid']][0]['reference'],
         'pluginid': plugin_id,
 
         # Extra properties, specific to ERP5
@@ -235,10 +235,10 @@ class ERP5LoginUserManager(BasePlugin):
             'path': login['path'],
             'uid': login['uid'],
           }
-          for login in login_dict.get(user['uid'], [])
+          for login in login_dict[user['uid']]
         ],
       }
-      for user in user_list
+      for user in user_list if login_dict.get(user['uid'], [])
     ])
 
 classImplements(ERP5LoginUserManager, IAuthenticationPlugin, IUserEnumerationPlugin)
