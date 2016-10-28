@@ -83,11 +83,6 @@
           if (field_json.css_class) {
             gadget_element.setAttribute("class", field_json.css_class);
           }
-          if (field_json.sandbox === "iframe") {
-            iframe = gadget_element.querySelector("iframe");
-            iframe.style.width = "100%";
-            iframe.style.height = "100%";
-          }
           // Trigger render methods
           gadget.props.field_gadget = field_gadget;
           gadget.props.service_deferred.resolve(field_gadget);
