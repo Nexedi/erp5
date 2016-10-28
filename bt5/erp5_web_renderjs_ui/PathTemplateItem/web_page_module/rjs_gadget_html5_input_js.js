@@ -36,6 +36,9 @@
         textarea.setAttribute('value', this.state.value);
         textarea.value = this.state.value;
       }
+      if (this.state.type === 'radio') {
+        textarea.checked = this.state.checked;
+      }
       textarea.setAttribute('name', this.state.name);
       textarea.setAttribute('type', this.state.type);
       if (this.state.title) {
@@ -90,6 +93,10 @@
           }
         } else if (this.state.type === 'checkbox') {
           result[input.getAttribute('name')] = (input.checked ? 1 : 0);
+        } else if (this.state.type === 'radio') {
+          if (input.checked) {
+            result[input.getAttribute('name')] = input.value;
+          }
         } else {
           result[input.getAttribute('name')] = input.value;
         }
@@ -98,10 +105,14 @@
     })
 
     .declareMethod('getTextContent', function () {
-      var result,
+      var result = '',
         input = this.element.querySelector('input');
       if (this.state.type === 'checkbox') {
         result = (input.checked ? '✓' : '');
+      } else if (this.state.type === 'radio') {
+        if (input.checked) {
+          result = input.value;
+        }
       } else {
         result = input.value;
       }
