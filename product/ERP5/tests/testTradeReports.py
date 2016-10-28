@@ -225,11 +225,8 @@ class TestTradeReports(ERP5ReportTestCase):
 
     return sale_order
 
-  def testSaleOrderReport(self):
-    """
-    Sale order report.
-    """
-    # Create sales orders
+  def _createSaleOrdersForSaleOrderReportTest(self):
+    # Create sales orders to be used in testSaleOrderReportXXX tests
     first = self._makeOneSaleOrder(
               title='SO 1',
               destination_value=self.organisation_module.Organisation_1,
@@ -281,11 +278,13 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.tic()
 
-
+  def testSaleOrderReportBefore2006(self):
+    """
+    before 2006
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
     request = self.portal.REQUEST
-    #
-    # Before 2006
-    #
+
     request['from_date'] = DateTime(2004, 1, 1)
     request['at_date'] = DateTime(2005, 1, 1)
     request['aggregation_level'] = "year"
@@ -305,11 +304,20 @@ class TestTradeReports(ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(0, len(data_line_list))
 
-    #
-    # Year 2005 + 2006, first document for g2
-    #
+  def testSaleOrderReport2005_2006_g2(self):
+    """
+    Year 2005 + 2006, first document for g2
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
+
     request['from_date'] = DateTime(2005, 2, 2)
     request['at_date'] = DateTime("2006-12-31")
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['simulation_state'] = ['cancelled', 'draft']
+    request['section_category'] = 'group/g2'
+
     parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
@@ -390,12 +398,23 @@ class TestTradeReports(ERP5ReportTestCase):
     self.checkLineProperties(stat_line_list[0],**d)
 
 
+  def testSaleOrderReport2005_2006_g2_check_at_date_inclusive(self):
+    """
+    This is exactly the same as testSaleOrderReport2005_2006_g2,
+    but at_date is set as 02/02/2006
+    so we check that first sale_order with start_date=DateTime(2006, 2, 2, 10)
+    is counted, i.e. at_date is inclusive.
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
 
-    # This is exactly the same as above, by at_date is as 02/02/2006
-    # so we check that first sale_order with start_date=DateTime(2006, 2, 2, 10)
-    # is counted, i.e. at_date is inclusive.
     request['from_date'] = DateTime(2005, 2, 2)
     request['at_date'] = DateTime(2006, 2, 2)
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['simulation_state'] = ['cancelled', 'draft']
+    request['section_category'] = 'group/g2'
+
     parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
@@ -475,14 +494,18 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
+  def testSaleOrderReport2005_2006_g1(self):
+    """
+    Year 2005 + 2006, first document for g1
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
 
-
-
-    #
-    # Year 2005 + 2006, first document for g1
-    #
     request['from_date'] = DateTime(2005, 2, 2)
     request['at_date'] = DateTime("2006-12-31")
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
+    request['simulation_state'] = ['cancelled', 'draft']
     request['section_category'] = 'group/g1'
     parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
@@ -551,12 +574,17 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
+  def testSaleOrderReport2006_2007_g1(self):
+    """
+    Year 2006 + 2007, only draft documents and one group
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
 
-    #
-    # Year 2006 + 2007, only draft documents and one group
-    #
     request['from_date'] = DateTime(2006, 2, 2)
     request['at_date'] = DateTime(2007, 12, 31)
+    request['aggregation_level'] = "year"
+    request['group_by'] = "both"
     request['simulation_state'] = ['draft',]
     request['section_category'] = 'group/g2'
     parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
@@ -621,13 +649,20 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
-    # weekly aggregation level
-    # first for g2
+  def testSaleOrderReport_weekly_aggregation_level_g2(self):
+    """
+    weekly aggregation level for g2
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
+
     request['from_date'] = DateTime(2006, 2, 1)
     request['at_date'] = DateTime(2006, 2, 28)
     request['aggregation_level'] = "week"
     request['group_by'] = "client"
     request['simulation_state'] = ['cancelled', 'draft']
+    request['section_category'] = 'group/g2'
+
     parameter_dict, stat_columns, selection_columns = self.sale_order_module.OrderModule_getOrderReportParameterDict()
     active_process = self.sale_order_module.OrderModule_activateGetOrderStatList(tag="unit_test", **parameter_dict)
     request['active_process'] = active_process.getPath()
@@ -657,8 +692,13 @@ class TestTradeReports(ERP5ReportTestCase):
                       'client': 'Total',
                       'total amount': 3*11 + 7*6})
 
-    # weekly aggregation level
-    # first for g2
+  def testSaleOrderReport_weekly_aggregation_level_g1(self):
+    """
+    weekly aggregation level for g1
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
+
     request['from_date'] = DateTime(2006, 2, 1)
     request['at_date'] = DateTime(2006, 2, 28)
     request['aggregation_level'] = "week"
@@ -695,10 +735,13 @@ class TestTradeReports(ERP5ReportTestCase):
                       'client': 'Total',
                       'total amount': 5*3 + 6})
 
+  def testSaleOrderReport_dates_not_specified_g2(self):
+    """
+    dates not specified -> they should be guessed
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
 
-
-
-    # dates not specified -> they should be guessed
     request['from_date'] = None
     request['at_date'] = None
     request['simulation_state'] = ['draft',]
@@ -767,7 +810,13 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
-    # section category set, with no matching organisations
+  def testSaleOrderReport_section_category_set(self):
+    """
+    section category set, with no matching organisations
+    """
+    self._createSaleOrdersForSaleOrderReportTest()
+    request = self.portal.REQUEST
+
     request['simulation_state'] = ['draft',]
     request['aggregation_level'] = "year"
     request['group_by'] = "both"
@@ -798,10 +847,8 @@ class TestTradeReports(ERP5ReportTestCase):
                  'total quantity': None}
     self.checkLineProperties(stat_line_list[0],**d)
 
-  def testStockReport(self):
-    """
-    Stock report.
-    """
+  def _createInventoryForStockReportTest(self):
+    # Create inventories
     # Create inventories
     first = self._makeOneInventory(
               title='Inventory 1',
@@ -875,10 +922,13 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.tic()
 
+  def testStockReport_old_date(self):
+    """
+    Old date
+    """
+    self._createInventoryForStockReportTest()
+
     request = self.portal.REQUEST
-    ################################
-    # Old date
-    ################################
     request.form['at_date'] = DateTime(2005, 1, 1)
     request.form['node_category'] = 'site/demo_site_A'
 
@@ -888,9 +938,14 @@ class TestTradeReports(ERP5ReportTestCase):
 
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEqual(0, len(data_line_list))
-    ################################
-    # Middle date
-    ################################
+
+  def testStockReport_middle_date(self):
+    """
+    Middle date
+    """
+    self._createInventoryForStockReportTest()
+
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2006, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
 
@@ -916,9 +971,13 @@ class TestTradeReports(ERP5ReportTestCase):
                    inventory=11,
                    quantity_unit='G')
 
-    ################################
-    # Futur date
-    ################################
+  def testStockReport_future_date(self):
+    """
+    Future date
+    """
+    self._createInventoryForStockReportTest()
+
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
 
@@ -958,10 +1017,7 @@ class TestTradeReports(ERP5ReportTestCase):
                    inventory=66,
                    quantity_unit='')
 
-  def testStockReportWithPositiveOrNegativeOrZeroStock(self):
-    """
-    Stock report.
-    """
+  def _createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest(self):
     # Create inventories
     first = self._makeOneInventory(
               title='Inventory 1',
@@ -1034,10 +1090,13 @@ class TestTradeReports(ERP5ReportTestCase):
 
     self.tic()
 
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_positive_stock(self):
+    """
+    Don't Display Positive Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
+
     request = self.portal.REQUEST
-    ################################
-    # Don't Display Positive Stock
-    ################################
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
@@ -1064,9 +1123,15 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=[],
                    inventory=0,
                    quantity_unit='G')
-    ################################
-    # Don't Display Negative Stock
-    ################################
+
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_negative_stock(self):
+    """
+    Don't Display Negative Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
+
+    request = self.portal.REQUEST
+
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
@@ -1101,9 +1166,14 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
-    ################################
-    # Don't Display Zero Stock
-    ################################
+
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_zero_stock(self):
+    """
+    Don't Display Zero Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
+
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
@@ -1139,11 +1209,14 @@ class TestTradeReports(ERP5ReportTestCase):
                    inventory=66,
                    quantity_unit='')
 
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_positive_and_negative_stock(self):
+    """
+    Don't Display Positive Stock
+    And Negative Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
 
-    ################################
-    # Don't Display Positive Stock
-    # And Negative Stock
-    ################################
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
@@ -1164,9 +1237,15 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=[],
                    inventory=0,
                    quantity_unit='G')
-    ########################################
-    # Don't Display Positive And Zero Stock
-    ########################################
+
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_positive_and_zero_stock(self):
+    """
+    Don't Display Positive
+    And Zero Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
+
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
@@ -1187,9 +1266,15 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=[],
                    inventory=-33,
                    quantity_unit='Kg')
-    ########################################
-    # Don't Display Negative And Zero Stock
-    ########################################
+
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_negative_and_zero_stock(self):
+    """
+    Don't Display Negative
+    And Zero Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
+
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 0
@@ -1217,9 +1302,14 @@ class TestTradeReports(ERP5ReportTestCase):
                    variation_category_item_list=['colour2'],
                    inventory=66,
                    quantity_unit='')
-    ################################################
-    # Don't Display Positive,Negative And Zero Stock
-    ################################################
+
+  def testStockReportWithPositiveOrNegativeOrZeroStock_dont_display_positive_negative_and_zero_stock(self):
+    """
+    Don't Display Positive,Negative And Zero Stock
+    """
+    self._createInventoryForStockReportWithPositiveOrNegativeOrZeroStockTest()
+
+    request = self.portal.REQUEST
     request.form['at_date'] = DateTime(2008, 4, 4)
     request.form['node_category'] = 'site/demo_site_A'
     request.form['positive_stock'] = 1
