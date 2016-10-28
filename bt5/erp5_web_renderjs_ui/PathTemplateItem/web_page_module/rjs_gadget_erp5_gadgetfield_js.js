@@ -1,97 +1,76 @@
-/*global window, rJS, RSVP*/
+/*global window, rJS, document*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, document) {
   "use strict";
 
-  function enqueueRender(gadget, options) {
-    var loop_deferred = gadget.props.loop_defer,
-      new_loop_deferred = RSVP.defer();
-
-    gadget.props.loop_defer = new_loop_deferred;
-
-    gadget.props.render_queue
-      .push(function () {
-        return gadget.props.service_deferred.promise;
-      })
-      .push(function (field_gadget) {
-        return field_gadget.render(options);
-      })
-      .push(function () {
-        return new_loop_deferred.promise;
-      });
-    loop_deferred.resolve();
-  }
-
   rJS(window)
-    .ready(function (g) {
-      var loop_defer = RSVP.defer();
-      g.props = {
-        service_deferred: RSVP.defer(),
-        first_render_deferred: RSVP.defer(),
-        render_queue: new RSVP.Queue(),
-        loop_defer: loop_defer
-      };
-      g.props.render_queue
-        .push(function () {
-          return loop_defer.promise;
-        });
-    })
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-    /////////////////////////////////////////////////////////////////
-    // declared methods
-    /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function (options) {
-      var gadget = this;
 
-      enqueueRender(gadget, {
+    .declareMethod("render", function (options) {
+      return this.changeState({
         key: options.field_json.key,
         value: options.field_json.default,
-        editable: options.field_json.editable
+        editable: options.field_json.editable,
+        url: options.field_json.url,
+        sandbox: options.field_json.sandbox || undefined
       });
-      gadget.props.first_render_deferred.resolve(options.field_json);
     })
 
-    .declareMethod("getContent", function () {
-      return this.props.field_gadget.getContent();
+    .onStateChange(function (modification_dict) {
+      // Check if a sub gadget has to be regenerated
+      if ((modification_dict.hasOwnProperty('url')) ||
+          (modification_dict.hasOwnProperty('sandbox')) ||
+          (modification_dict.hasOwnProperty('key'))) {
+        return this.deferDeclareGadget();
+      }
+      return this.deferRenderGadget();
     })
 
-    .declareService(function () {
-      // Add the field in the DOM after the first render method has been called
-      var gadget = this,
-        gadget_element = gadget.props.element.querySelector('div'),
-        field_json;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.first_render_deferred.promise;
-        })
-        .push(function (result) {
-          field_json = result;
-          return gadget.declareGadget(field_json.url, {
-            scope: field_json.key,
-            sandbox: field_json.sandbox || undefined,
-            element: gadget_element
-          });
-        })
-        .push(function (field_gadget) {
-          var iframe;
+    .declareJob('deferDeclareGadget', function () {
+      var div = document.createElement('div'),
+        element = this.element,
+        gadget = this;
+/*
           if (field_json.css_class) {
             gadget_element.setAttribute("class", field_json.css_class);
           }
-          // Trigger render methods
-          gadget.props.field_gadget = field_gadget;
-          gadget.props.service_deferred.resolve(field_gadget);
+*/
+      // Clear first to DOM, append after to reduce flickering/manip
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
+      }
+      element.appendChild(div);
+
+      return gadget.declareGadget(gadget.state.url, {
+        scope: gadget.state.key,
+        sandbox: gadget.state.sandbox,
+        element: div
+      })
+        .push(function () {
+          return gadget.deferRenderGadget();
         });
     })
 
+    .declareJob('deferRenderGadget', function () {
+      var gadget = this;
+      return gadget.getDeclaredGadget(gadget.state.key)
+        .push(function (result) {
+          return result.render({
+            key: gadget.state.key,
+            value: gadget.state.value,
+            editable: gadget.state.editable
+          });
+        });
+    })
 
-    .declareService(function () {
-      // Defer render execution and check errors
-      return this.props.render_queue;
+    .declareMethod("getContent", function () {
+      var gadget = this;
+      if (!gadget.state.editable) {
+        return {};
+      }
+      return gadget.getDeclaredGadget(gadget.state.key)
+        .push(function (result) {
+          return result.getContent();
+        });
     });
-}(window, rJS, RSVP));
+
+}(window, rJS, document));
