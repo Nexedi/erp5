@@ -1301,6 +1301,24 @@ class ObjectTemplateItem(BaseTemplateItem):
         object_id = path_list[-1]
         try:
           container = self.unrestrictedResolveValue(portal, container_path)
+          # This hardcoded validation for container object is required here in
+          # case of migration of catalog. This part would be run only once
+          # when we update bt5 after migration. As we know that in bt5
+          # 'erp5_mysql_innodb_catalog', the catalog name if hardcoded, so
+          # there is no need to specify the name or call the default catalog.
+          if container.meta_type == 'ERP5 Catalog':
+            try:
+              from Products.ERP5Type.Errors import UnsupportedWorkflowMethod
+              container.validate()
+            except UnsupportedWorkflowMethod as e:
+              # In case validation is not required, just pass, but raise also
+              LOG('UnsupportedWorkflowMethod', INFO, str(e.message))
+              pass
+            except AttributeError:
+              # Raise and pass in case container is still the old one
+              # Can be the case when migration didn't take place properly
+              LOG('AttributeError', WARNING, 'validation_workflow not installed \
+                                          properly for catalog to identify it')
         except KeyError:
           # parent object can be set to nothing, in this case just go on
           container_url = '/'.join(container_path)
