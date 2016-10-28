@@ -912,8 +912,13 @@ class ZCatalog(Folder, Persistent, Implicit):
 
     for sql_catalog_id in catalog_id_list:
       catalog = self.getSQLCatalog(sql_catalog_id)
-      if not catalog.getValidationState() == 'validated':
-        continue
+      try:
+        if not catalog.getValidationState() == 'validated':
+          continue
+      except AttributeError:
+        # This is the caase when we try to migrate erp5 instance and update
+        # erp5_core bt5.
+        pass
       if catalog is not None:
         catalog.beforeUncatalogObject(uid=uid,path=path)
 
