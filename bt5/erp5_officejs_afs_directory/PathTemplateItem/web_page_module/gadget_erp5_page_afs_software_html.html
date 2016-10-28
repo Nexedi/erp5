@@ -23,7 +23,10 @@
         </li>
         <li>
           <h1>{{title}}</h1>
-          <p>{{description}}</p>
+          {{#if wikipedia_description}}
+            <p>{{wikipedia_description}}</p>
+            <br/>
+          {{/if}}
           {{#if wikipedia_url}}
             <p><a href="{{wikipedia_url}}" class="">Read more on Wikipedia</a></p>
           {{/if}}
