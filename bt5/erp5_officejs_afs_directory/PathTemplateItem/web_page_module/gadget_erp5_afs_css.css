@@ -223,6 +223,7 @@
   width: auto;
   display: block;
   margin: 0 auto;
+  max-height: 100%;
 }
 @media (max-width: 40em) {
   .custom-success-story-image-wrapper {
