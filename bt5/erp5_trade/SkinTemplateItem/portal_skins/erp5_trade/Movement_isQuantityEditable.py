@@ -13,7 +13,7 @@ to create cells and set quantities on cells.
 if not context.isMovement():
   return False
 
-if context.getVariationCategoryList() and not 'Cell' in context.getPortalType():
+if context.getVariationCategoryList(omit_optional_variation=1) and not 'Cell' in context.getPortalType():
   return False
 
 return not (context.getResource() and context.getResourceValue().getAggregatedPortalTypeList())
