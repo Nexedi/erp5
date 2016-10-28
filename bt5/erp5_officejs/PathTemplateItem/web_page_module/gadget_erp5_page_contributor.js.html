@@ -15,7 +15,7 @@
     url_list = param.url_list.split('\n');
     for (i = 0; i < url_list.length; i += 1) {
       if (i > 0) {
-        query += " AND ";
+        query += " OR ";
       }
       query += 'id: "' + url_list[i] + '"';
     }
@@ -25,17 +25,30 @@
         return gadget.notifySubmitting();
       })
       .push(function () {
+        var query_b = {
+          query:'portal_type: ("Web Illustration",'
+            + '"Web Manifest","Web Script","Web Style","Web Page")',
+          limit: [0, 2713]};
+        if (param.version_a !== "") {
+          query_b.query += ' AND version: "' + param.version_a + '"';
+        }
         return gadget.props.storage.createJio({
           type: "replicate",
+          conflict_handling: param.reverse ? 1 : 2,
+          query: {query: query, limit: [0,2713]},
+          signature_storage: {
+            type: "uuid",
+            sub_storage: {
+              type: "indexeddb",
+              database: "contributor-hash"
+            }
+          },
           remote_sub_storage: {
             type: "mapping",
+            map_all_property: true,
+            query: query_b,
             mapping_dict: {
               "id": {"equal": "reference"},
-              "text_content": {"equal": "text_content"},
-              "parent_relative_url": {"equal": "parent_relative_url"},
-              "portal_type": {"equal": "portal_type"},
-              "title": {"equal": "title"},
-              "description": {"equal": "description"}
             },
             sub_storage: {
               type: "erp5",
@@ -45,17 +58,13 @@
           },
           local_sub_storage: {
             type: "mapping",
+            map_all_property: true,
             query: {
-              "query": 'validation_state: "Draft" AND version:"'
-                + param.version_b + '"'
+              "query": 'validation_state: "Draft" ',
+              "limit": [0, 2713]
             },
             mapping_dict: {
               "id": {"equal": "reference"},
-              "parent_relative_url": {"equal": "parent_relative_url"},
-              "portal_type": {"equal": "portal_type"},
-              "text_content": {"equal": "text_content"},
-              "title": {"equal": "title"},
-              "description": {"equal": "description"},
               "version": {"default_value": param.version_b}
             },
             sub_storage: {
@@ -63,27 +72,18 @@
               url: param.url_b + "/erp5/web_site_module/hateoas",
               default_view_reference: "jio_view"
             }
-          },
-          conflict_handling: param.reverse ? 1 : 2,
-          query: {query: query},
-          signature_storage: {
-            type: "uuid",
-            sub_storage: {
-              type: "indexeddb",
-              database: "contributor-hash"
-            }
           }
         });
       })
       .push(function () {
-        return RSVP.all([
-          gadget.props.storage.repair(),
-          gadget.props.storage.allDocs()
-        ]);
+        return gadget.props.storage.repair();
+      })
+      .push(function () {
+        return gadget.props.storage.allDocs({query: query, limit: [0, 2713]});
       })
       .push(function (result) {
         gadget.props.element.querySelector(".result").innerHTML =
-          result[1].data.total_rows + " documents loaded";
+          result.data.total_rows + " documents loaded";
         return gadget.notifySubmitted();
       });
   }
@@ -134,6 +134,7 @@
       g.props.param.url_a = option.url_a || "";
       g.props.param.url_b = option.url_b || "";
       g.props.param.version_b = option.version_b || "";
+      g.props.param.version_a = option.version_a || "";
       return g.declareGadget("gadget_jio.html", {scope: "storage_local"})
         .push(function (storage_gadget) {
           g.props.storage = storage_gadget;
@@ -171,6 +172,17 @@
                 "required": 1,
                 "editable": 1,
                 "key": "url_a",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              "version_a": {
+                "description": "",
+                "title": "Version",
+                "default": g.props.param.version_a,
+                "css_class": "",
+                "required": 0,
+                "editable": 1,
+                "key": "version_a",
                 "hidden": 0,
                 "type": "StringField"
               },
@@ -231,7 +243,7 @@
               "group_list": [
                 [
                   "left",
-                  [["erp_a"], ["url_a"]]
+                  [["erp_a"], ["url_a"], ["version_a"]]
                 ],
                 [
                   "right",

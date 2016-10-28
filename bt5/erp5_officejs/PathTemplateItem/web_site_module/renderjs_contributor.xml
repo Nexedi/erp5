@@ -377,7 +377,7 @@
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_erp5_panel.html</string> </value>
+            <value> <string>gadget_erp5_no_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>

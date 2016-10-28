@@ -1,0 +1,52 @@
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*global window, rJS */
+(function (window, rJS) {
+  "use strict";
+
+  /////////////////////////////////////////////////////////////////
+  // temlates
+  /////////////////////////////////////////////////////////////////
+  // Precompile templates while loading the first gadget instance
+  rJS(window)
+
+    /////////////////////////////////////////////////////////////////
+    // ready
+    /////////////////////////////////////////////////////////////////
+    // Init local properties
+    .ready(function (g) {
+      g.props = {};
+    })
+
+    //////////////////////////////////////////////
+    // acquired method
+    //////////////////////////////////////////////
+    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+
+    // Assign the element to a variable
+    .ready(function (g) {
+      return g.getElement()
+        .push(function (element) {
+          g.props.element = element;
+        });
+    })
+
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
+    .declareMethod('toggle', function () {
+      return;
+    })
+    .declareMethod('close', function () {
+      return;
+    })
+
+    .declareMethod('render', function () {
+      return;
+    });
+
+    /////////////////////////////////////////////////////////////////
+    // declared services
+    /////////////////////////////////////////////////////////////////
+
+}(window, rJS));
