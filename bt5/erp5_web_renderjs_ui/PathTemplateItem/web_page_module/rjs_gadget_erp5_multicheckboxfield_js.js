@@ -1,82 +1,150 @@
-/*global window, rJS, Handlebars, document, RSVP, loopEventListener*/
+/*global window, rJS, RSVP, document*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, Handlebars, RSVP) {
+(function (window, rJS, RSVP, document) {
   'use strict';
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    unchecked_source = gadget_klass.__template_element
-                      .getElementById("unchecked-template")
-                      .innerHTML,
-    unchecked_template = Handlebars.compile(unchecked_source),
-    checked_source = gadget_klass.__template_element
-                       .getElementById("checked-template")
-                       .innerHTML,
-    checked_template = Handlebars.compile(checked_source);
-  gadget_klass
-    .ready(function (g) {
-      g.props = {};
-    })
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-    .declareAcquiredMethod("translateHtml", "translateHtml")
+
+  function appendCheckboxField(gadget, item, checked) {
+    var input_gadget,
+      label_gadget;
+
+    if (!gadget.state.editable) {
+      if (checked) {
+        return gadget.declareGadget('gadget_html5_element.html')
+          .push(function (result) {
+            label_gadget = result;
+            return result.render({
+              tag: 'p',
+              text_content: item[0]
+            });
+          })
+          .push(function () {
+            gadget.element.appendChild(label_gadget.element);
+          });
+      }
+      return;
+    }
+
+    return gadget.declareGadget('gadget_html5_input.html', {scope: item[1]})
+      .push(function (result) {
+        input_gadget = result;
+        var state_dict = {
+          type: 'checkbox',
+          name: gadget.state.name,
+          value: item[1],
+          checked: checked,
+          editable: true
+        };
+
+        return result.render(state_dict);
+      })
+      .push(function () {
+        return gadget.declareGadget('gadget_html5_element.html');
+      })
+      .push(function (result) {
+        label_gadget = result;
+        var state_dict = {
+          tag: 'label',
+          text_content: item[0]
+        };
+        return result.render(state_dict);
+      })
+      .push(function () {
+        var div = document.createElement("div");
+        div.setAttribute("class", "ui-field-contain");
+        div.appendChild(label_gadget.element);
+        div.appendChild(input_gadget.element);
+        gadget.element.appendChild(div);
+      });
+  }
+
+  rJS(window)
+
     .declareMethod('render', function (options) {
-      var gadget = this,
-        tmp,
-        template,
-        container,
-        field_json = options.field_json,
-        i;
-      gadget.props.field_json = field_json;
-      container = gadget.props.element.querySelector(".checkbox_container");
-      tmp = "";
-      for (i = 0; i < field_json.items.length; i += 1) {
-        if (field_json.default.indexOf(field_json.items[i][1]) > -1) {
-          template = checked_template;
-        } else {
-          template = unchecked_template;
-        }
-        tmp += template({
-          value: field_json.items[i][1],
-          text: field_json.items[i][0]
-        });
-      }
-      container.innerHTML = tmp;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.translateHtml(container.innerHTML);
-        })
-        .push(function (translated_htmls) {
-          var checkbox_list;
-          container.innerHTML = translated_htmls;
-          if (field_json.editable !== 1) {
-            checkbox_list = container.querySelectorAll('input[type="checkbox"]');
-            for (i = 0; i < checkbox_list.length; i += 1) {
-              checkbox_list[i].setAttribute("class", "ui-btn ui-shadow ui-state-readonly");
-            }
-          }
-        });
+      var field_json = options.field_json || {},
+        state_dict = {
+          editable: field_json.editable,
+          name: field_json.key,
+          item_list: field_json.items,
+          value_list: field_json.value || field_json.default
+        };
+
+      return this.changeState(state_dict);
     })
-    .declareMethod('getContent', function () {
-      var gadget = this,
-        result = {},
-        tmp = [],
-        checkbox_list = this.props.element.querySelectorAll('input[type="checkbox"]'),
-        i;
-      for (i = 0; i < checkbox_list.length; i += 1) {
-        if (checkbox_list[i].checked) {
-          tmp.push(checkbox_list[i].value);
-        }
+
+    .onStateChange(function () {
+      var element = this.element,
+        gadget = this,
+        value_list = this.state.value_list,
+        value_dict = {},
+        item_list = this.state.item_list,
+        i,
+        queue;
+
+      // Clear first to DOM, append after to reduce flickering/manip
+      while (element.firstChild) {
+        element.removeChild(element.firstChild);
       }
-      result[gadget.props.field_json.key] = tmp;
-      result["default_" + gadget.props.field_json.key + ":int"] = 0;
-      return result;
+
+      for (i = 0; i < value_list.length; i += 1) {
+        value_dict[value_list[i]] = null;
+      }
+
+      function enQueue() {
+        var argument_list = arguments;
+        queue
+          .push(function () {
+            return appendCheckboxField.apply(this, argument_list);
+          });
+      }
+
+      queue = new RSVP.Queue();
+
+      for (i = 0; i < item_list.length; i += 1) {
+        enQueue(gadget, item_list[i], value_dict.hasOwnProperty(item_list[i][1]));
+      }
+
+      return queue;
+    })
+
+    .declareMethod('getContent', function () {
+      var i,
+        queue = new RSVP.Queue(),
+        final_result = {},
+        result_list = [],
+        gadget = this;
+
+      function calculateSubContent(scope) {
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget(scope)
+              .push(function (result) {
+                return result.getContent();
+              })
+              .push(function (result) {
+                result_list.push(result);
+              });
+          });
+      }
+
+      if (this.state.editable) {
+        for (i = 0; i < gadget.state.item_list.length; i += 1) {
+          calculateSubContent(gadget.state.item_list[i][1]);
+        }
+
+        return queue
+          .push(function () {
+            var j,
+              value_list = [];
+            for (j = 0; j < result_list.length; j += 1) {
+              if (result_list[j][gadget.state.name]) {
+                value_list.push(gadget.state.item_list[j][1]);
+              }
+            }
+            final_result[gadget.state.name] = value_list;
+            final_result["default_" + gadget.state.name + ":int"] = 0;
+            return final_result;
+          });
+      }
+      return final_result;
     });
-}(window, rJS, Handlebars, RSVP));
+}(window, rJS, RSVP, document));
