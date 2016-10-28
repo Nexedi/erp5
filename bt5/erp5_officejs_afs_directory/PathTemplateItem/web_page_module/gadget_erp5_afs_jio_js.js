@@ -140,7 +140,9 @@
           function addProperties (success_case) {
             success_case.portal_type = "success_case";
             success_case.software = software.title;
+            success_case.software_website = software.website;
             success_case.publisher = publisher;
+            success_case.publisher_website = website;
             success_case.category_list = software.category_list;
             success_case.uid = (uid++).toString();
             return gadget.jio_put(success_case.uid, success_case);
