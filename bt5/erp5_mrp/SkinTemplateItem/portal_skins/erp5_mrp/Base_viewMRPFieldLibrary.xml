@@ -126,6 +126,7 @@
                         <string>my_view_mode_movement_quantity</string>
                         <string>my_view_mode_listbox_specialise_transformation_title</string>
                         <string>my_view_mode_packing_list_listbox_variation_title</string>
+                        <string>my_view_mode_industrial_phase</string>
                       </list>
                     </value>
                 </item>
