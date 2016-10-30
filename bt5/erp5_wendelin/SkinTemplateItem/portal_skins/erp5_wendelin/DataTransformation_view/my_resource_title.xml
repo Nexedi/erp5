@@ -10,8 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>sort</string>
                 <string>columns</string>
+                <string>description</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -100,6 +102,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Main input of transformation</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_transformation_resource_title</string> </value>
                 </item>
@@ -125,6 +131,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Initial Product</string> </value>
                 </item>
               </dictionary>
             </value>
