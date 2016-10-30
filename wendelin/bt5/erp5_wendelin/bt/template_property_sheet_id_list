@@ -3,4 +3,5 @@ DataArray
 DataArrayLine
 DataEvent
 DataMovement
+DataOperation
 OffsetIndex
