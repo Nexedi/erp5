@@ -28,10 +28,10 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>create_ticket</string>
-                <string>create_ticket_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
+                <string>start</string>
+                <string>start_action</string>
               </tuple>
             </value>
         </item>
