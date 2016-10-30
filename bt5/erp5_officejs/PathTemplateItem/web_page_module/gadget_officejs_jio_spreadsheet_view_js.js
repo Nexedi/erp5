@@ -110,11 +110,11 @@
     .declareAcquiredMethod("jio_put", "jio_put")
     .allowPublicAcquisition("jio_put", this_func_link("jio_put"))
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .allowPublicAcquisition("jio_getAttachment", this_func_link("jio_getAttachment"))
+    .allowPublicAcquisition("jio_getAttachment",
+                            this_func_link("jio_getAttachment"))
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
-    .allowPublicAcquisition("jio_putAttachment", function (jio_key, part_name, blob){
-      this.jio_putAttachment(jio_key, part_name, new Blob());
-    })
+    .allowPublicAcquisition("jio_putAttachment",
+                            this_func_link("jio_putAttachment"))
 
     .allowPublicAcquisition('setFillStyle', function () {
       return setFillStyle(this);
