@@ -76,6 +76,11 @@ class IngestionPolicy(Folder):
     # search  for an existing movement and if we do not find one, we create
     # a new one.
     movement_dict = tag_parsing_script(reference)
+    if not movement_dict:
+    # unsuccessfull parsing log and do not process
+      self.log("Bad tag: %s" %reference)
+      return
+
     # to simplyfy the catalog query, at the moment we assume that aggregate
     # and resource are defined on Data Ingestion Line and the rest is
     # defined on Data Ingestion. This assumption should be dropped later and
