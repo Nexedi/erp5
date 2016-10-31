@@ -112,6 +112,7 @@ class TestNode(object):
     assert len(node_test_suite.vcs_repository_list), "we must have at least one repository"
     profile_path_count = 0
     profile_content_list = []
+    revision_dict = dict(node_test_suite.revision_list)
     for vcs_repository in node_test_suite.vcs_repository_list:
       url = vcs_repository['url']
       buildout_section_id = vcs_repository.get('buildout_section_id', None)
@@ -147,15 +148,6 @@ extends = %(software_config_path)s
           repository_path = os.path.relpath(repository_path, from_path)
 
         if test_type=="ScalabilityTest":
-#          updater = Updater(repository_path, git_binary=self.config['git_binary'],
-#          branch = vcs_repository.get('branch','master'), log=self.log, process_manager=self.process_manager)
-#          updater.checkout()
-#          revision = updater.getRevision()[1]
-          all_revision = node_test_suite.revision
-          # from 'sec1=xx-azer,sec2=yy-qwer,..' to [[sec1,azer],[sec2,qwer],..]
-          revision_list = [ [x.split('=')[0],x.split('=')[1].split('-')[1]] for x in all_revision.split(',') ]
-          # from [[sec1,azer],[sec2,qwer],..] to {sec1:azer,sec2:qwer,..}
-          revision_dict = {branch:revision for branch,revision in revision_list}
           # <obfuscated_url> word is modified by in runner.prepareSlapOSForTestSuite()
           profile_content_list.append("""
 [%(buildout_section_id)s]
@@ -165,7 +157,7 @@ ignore-ssl-certificate = true
 develop = false
 shared = true
 """ %     {'buildout_section_id': buildout_section_id,
-          'revision': revision_dict[buildout_section_id]})
+          'revision': revision_dict[buildout_section_id][1]})
         else:
           profile_content_list.append("""
 [%(buildout_section_id)s]
@@ -187,10 +179,10 @@ shared = true
     custom_profile.close()
     sys.path.append(repository_path)
 
-  def getAndUpdateFullRevisionList(self, node_test_suite):
-    full_revision_list = []
+  def updateRevisionList(self, node_test_suite):
     config = self.config
     log = self.log
+    revision_list = []
     try:
       for vcs_repository in node_test_suite.vcs_repository_list:
         repository_path = vcs_repository['repository_path']
@@ -202,13 +194,12 @@ shared = true
            working_directory=node_test_suite.working_directory,
            url=vcs_repository["url"])
         updater.checkout()
-        revision = "-".join(updater.getRevision())
-        full_revision_list.append('%s=%s' % (repository_id, revision))
-      node_test_suite.revision = ','.join(full_revision_list)
+        revision_list.append((repository_id, updater.getRevision()))
     except SubprocessError, e:
       log("Error while getting repository, ignoring this test suite : %r" % (e,), exc_info=sys.exc_info())
-      full_revision_list = None
-    return full_revision_list
+      return False
+    node_test_suite.revision_list = revision_list
+    return True
 
   def registerSuiteLog(self, test_result, node_test_suite):
     """
@@ -385,8 +376,7 @@ from the distributor.")
             run_software = True
             # kill processes from previous loop if any
             self.process_manager.killPreviousRun()
-            revision_list = self.getAndUpdateFullRevisionList(node_test_suite)
-            if revision_list is None:
+            if not self.updateRevisionList(node_test_suite):
               continue
             # Write our own software.cfg to use the local repository
             self.constructProfile(node_test_suite, my_test_type, 

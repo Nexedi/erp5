@@ -272,7 +272,11 @@ develop = false
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def test_05_getAndUpdateFullRevisionList(self):
+  def getAndUpdateFullRevisionList(self, test_node, node_test_suite)
+    if test_node.updateRevisionList(node_test_suite):
+      return node_test_suite.revision.split(',')
+
+  def test_05_updateRevisionList(self):
     """
     Check if we clone correctly repositories and get right revisions
     """
@@ -280,7 +284,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(2, len(rev_list))
     self.assertEquals(rev_list[0], 'rep0=2-%s' % commit_dict['rep0'][0][0])
     self.assertEquals(rev_list[1], 'rep1=2-%s' % commit_dict['rep1'][0][0])
@@ -289,7 +293,7 @@ develop = false
     my_file.close()
     call = self.getCaller(cwd=self.remote_repository1)
     call("git commit -av -m new_commit".split())
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list[0].startswith('rep0=2-'))
     self.assertTrue(rev_list[1].startswith('rep1=3-'))
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
@@ -305,7 +309,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(3, len(rev_list))
     self.assertEquals(3, len(node_test_suite.vcs_repository_list))
     rep2_clone_path = [x['repository_path'] for x in \
@@ -319,7 +323,7 @@ develop = false
     self.assertEquals(vcs_repository_info['branch'], 'foo')
     # change it to master
     vcs_repository_info['branch'] = 'master'
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
     print output
     self.assertTrue("* master" in output.split('\n'))
@@ -327,7 +331,7 @@ develop = false
     remote_call = self.getCaller(cwd=self.remote_repository2)
     output = remote_call('git checkout master -b bar'.split())
     vcs_repository_info['branch'] = 'bar'
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
     self.assertTrue("* bar" in output.split('\n'))
 
@@ -341,7 +345,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(2, len(rev_list))
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
     # patch deleteRepository to make sure it will be called once for the wrong
@@ -362,7 +366,7 @@ develop = false
       call = self.getCaller(cwd=rep0_clone_path)
       self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository0)
-      rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+      rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
       self.assertEquals(call("git config --get remote.origin.url".split()).strip(),
                         self.remote_repository2)
       self.assertEquals([rep0_clone_path], deleted_repository_path_list)
@@ -380,7 +384,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEquals(2, len(rev_list))
     self.assertEquals(2, len(node_test_suite.vcs_repository_list))
     rep0_clone_path = [x['repository_path'] for x in \
@@ -390,7 +394,7 @@ develop = false
     my_file.write("next_content")
     my_file.close()
     # make sure code still works
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(2, len(rev_list))
     self.assertEqual(2, len(node_test_suite.vcs_repository_list))
     # and check local change was resetted
@@ -408,7 +412,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_broken_repository=True)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertEqual(None, rev_list)
 
   def test_06_checkRevision(self):
@@ -419,7 +423,7 @@ develop = false
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    rev_list = test_node.getAndUpdateFullRevisionList(node_test_suite)
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     def getRepInfo(count=0, hash=0):
       assert count or hash
       info_list = []

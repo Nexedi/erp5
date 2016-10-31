@@ -107,3 +107,9 @@ class NodeTestSuite(SlapOSInstance):
   def getSuiteLogPath(self):
     return getattr(self,"suite_log_path", None)
 
+  @property
+  def revision(self):
+    return ','.join('%s=%s-%s' % (
+        repository[:-11] if repository.endswith('-repository') else repository,
+        count, revision)
+      for repository, (count, revision) in self.revision_list)
