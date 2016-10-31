@@ -23,6 +23,9 @@
  <portal_type id="Data Ingestion">
   <item>Data Ingestion Line</item>
  </portal_type>
+ <portal_type id="Data Ingestion Batch Module">
+  <item>Data Ingestion Batch</item>
+ </portal_type>
  <portal_type id="Data Ingestion Module">
   <item>Data Ingestion</item>
  </portal_type>
