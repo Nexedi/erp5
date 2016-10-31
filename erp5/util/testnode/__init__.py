@@ -92,6 +92,7 @@ def main(*args):
   CONFIG['httpd_url'] = 'https://[%s]:%s' % (CONFIG['httpd_ip'],
         CONFIG['httpd_port'])
   CONFIG['system_temp_folder'] = "/tmp"
+  CONFIG['frontend_url'] = config.get('testnode', 'frontend_url')
 
   # generate vcs_repository_list
   if 'bot_environment' in config.sections():

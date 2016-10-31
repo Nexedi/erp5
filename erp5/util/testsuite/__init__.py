@@ -289,6 +289,9 @@ def runTestSuite():
   parser.add_argument('--master_url',
                       help='The Url of Master controling many suites',
                       default=None)
+  parser.add_argument('--frontend_url',
+                      help='The url of the frontend of this test node',
+                      default=None)
   parser.add_argument('--source_code_path_list',
                       help='List of Eggs folders to test, splited by commam',
                       default='.')
