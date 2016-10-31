@@ -163,6 +163,7 @@ repository = <obfuscated_url>/%(buildout_section_id)s/%(buildout_section_id)s.gi
 revision = %(revision)s
 ignore-ssl-certificate = true
 develop = false
+shared = true
 """ %     {'buildout_section_id': buildout_section_id,
           'revision': revision_dict[buildout_section_id]})
         else:
@@ -172,6 +173,7 @@ repository = %(repository_path)s
 branch = %(branch)s
 revision =
 develop = false
+shared = true
 """ %     {'buildout_section_id': buildout_section_id,
           'repository_path' : repository_path,
           'branch' : vcs_repository.get('branch','master')})
