@@ -1,4 +1,4 @@
-/*global window, rJS, RSVP, DocsAPI, console, document*/
+/*global window, rJS, RSVP, DocsAPI, console, document, Common, require*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 if (Common === undefined) {
   var Common = {};
@@ -127,75 +127,75 @@ if (Common === undefined) {
           element.style.width = size.width;
           // g.fullscreen();
           switch (g.props.documentType) {
-            case 'spreadsheet':
-              sdkPath = 'cell';
-              nameSpace = 'SSE';
-              backboneControllers = [
-                'Viewport',
-                'DocumentHolder',
-                'CellEditor',
-                'FormulaDialog',
-                'Print',
-                'Toolbar',
-                'Statusbar',
-                'RightMenu',
-                'LeftMenu',
-                'Main',
-                'Common.Controllers.Fonts',
-                'Common.Controllers.Chat',
-                'Common.Controllers.Comments',
-                'Common.Controllers.Plugins'
-              ];
-              styles = [
-                // sdk changed to sdk/Excel/sdk-all
-                'css!sdk/../css/main.css',
-                'css!spreadsheeteditor/main/resources/css/app.css'
-              ];
-              break;
-            case 'text':
-              sdkPath = 'word';
-              nameSpace = 'DE';
-              backboneControllers = [
-                'Viewport',
-                'DocumentHolder',
-                'Toolbar',
-                'Statusbar',
-                'RightMenu',
-                'LeftMenu',
-                'Main',
-                'Common.Controllers.Fonts',
-                'Common.Controllers.History',
-                'Common.Controllers.Chat',
-                'Common.Controllers.Comments',
-                'Common.Controllers.Plugins',
-                'Common.Controllers.ExternalDiagramEditor',
-                'Common.Controllers.ExternalMergeEditor',
-                'Common.Controllers.ReviewChanges'
-              ];
-              styles = [
-                'css!documenteditor/main/resources/css/app.css'
-              ];
-              break;
-            case 'presentation':
-              sdkPath = 'slide';
-              nameSpace = 'PE';
-              backboneControllers = [
-                'Viewport',
-                'DocumentHolder',
-                'Toolbar',
-                'Statusbar',
-                'RightMenu',
-                'LeftMenu',
-                'Main',
-                'Common.Controllers.Fonts',
-                'Common.Controllers.Chat',
-                'Common.Controllers.Comments',
-                'Common.Controllers.ExternalDiagramEditor'
-              ];
-              styles = [
-                'css!presentationeditor/main/resources/css/app.css'
-              ];
-              break;
+          case 'spreadsheet':
+            sdkPath = 'cell';
+            nameSpace = 'SSE';
+            backboneControllers = [
+              'Viewport',
+              'DocumentHolder',
+              'CellEditor',
+              'FormulaDialog',
+              'Print',
+              'Toolbar',
+              'Statusbar',
+              'RightMenu',
+              'LeftMenu',
+              'Main',
+              'Common.Controllers.Fonts',
+              'Common.Controllers.Chat',
+              'Common.Controllers.Comments',
+              'Common.Controllers.Plugins'
+            ];
+            styles = [
+              // sdk changed to sdk/Excel/sdk-all
+              'css!sdk/../css/main.css',
+              'css!spreadsheeteditor/main/resources/css/app.css'
+            ];
+            break;
+          case 'text':
+            sdkPath = 'word';
+            nameSpace = 'DE';
+            backboneControllers = [
+              'Viewport',
+              'DocumentHolder',
+              'Toolbar',
+              'Statusbar',
+              'RightMenu',
+              'LeftMenu',
+              'Main',
+              'Common.Controllers.Fonts',
+              'Common.Controllers.History',
+              'Common.Controllers.Chat',
+              'Common.Controllers.Comments',
+              'Common.Controllers.Plugins',
+              'Common.Controllers.ExternalDiagramEditor',
+              'Common.Controllers.ExternalMergeEditor',
+              'Common.Controllers.ReviewChanges'
+            ];
+            styles = [
+              'css!documenteditor/main/resources/css/app.css'
+            ];
+            break;
+          case 'presentation':
+            sdkPath = 'slide';
+            nameSpace = 'PE';
+            backboneControllers = [
+              'Viewport',
+              'DocumentHolder',
+              'Toolbar',
+              'Statusbar',
+              'RightMenu',
+              'LeftMenu',
+              'Main',
+              'Common.Controllers.Fonts',
+              'Common.Controllers.Chat',
+              'Common.Controllers.Comments',
+              'Common.Controllers.ExternalDiagramEditor'
+            ];
+            styles = [
+              'css!presentationeditor/main/resources/css/app.css'
+            ];
+            break;
           }
 
           Common.Gateway = g;
@@ -287,87 +287,87 @@ if (Common === undefined) {
             });
             Common.Locale.apply();
             switch (g.props.documentType) {
-              case 'spreadsheet':
-                require([
-                  'spreadsheeteditor/main/app/controller/Viewport',
-                  'spreadsheeteditor/main/app/controller/DocumentHolder',
-                  'spreadsheeteditor/main/app/controller/CellEditor',
-                  'spreadsheeteditor/main/app/controller/Toolbar',
-                  'spreadsheeteditor/main/app/controller/Statusbar',
-                  'spreadsheeteditor/main/app/controller/RightMenu',
-                  'spreadsheeteditor/main/app/controller/LeftMenu',
-                  'spreadsheeteditor/main/app/controller/Main',
-                  'spreadsheeteditor/main/app/controller/Print',
-                  'spreadsheeteditor/main/app/view/ParagraphSettings',
-                  'spreadsheeteditor/main/app/view/ImageSettings',
-                  'spreadsheeteditor/main/app/view/ChartSettings',
-                  'spreadsheeteditor/main/app/view/ShapeSettings',
-                  'spreadsheeteditor/main/app/view/TextArtSettings',
-                  'common/main/lib/util/utils',
-                  'common/main/lib/util/LocalStorage',
-                  'common/main/lib/controller/Fonts',
-                  'common/main/lib/controller/Comments',
-                  'common/main/lib/controller/Chat',
-                  'common/main/lib/controller/Plugins'
-                ], function () {
-                  app.start();
-                });
-                break;
-              case 'text':
-                require([
-                  'documenteditor/main/app/controller/Viewport',
-                  'documenteditor/main/app/controller/DocumentHolder',
-                  'documenteditor/main/app/controller/Toolbar',
-                  'documenteditor/main/app/controller/Statusbar',
-                  'documenteditor/main/app/controller/RightMenu',
-                  'documenteditor/main/app/controller/LeftMenu',
-                  'documenteditor/main/app/controller/Main',
-                  'documenteditor/main/app/view/ParagraphSettings',
-                  'documenteditor/main/app/view/HeaderFooterSettings',
-                  'documenteditor/main/app/view/ImageSettings',
-                  'documenteditor/main/app/view/TableSettings',
-                  'documenteditor/main/app/view/ShapeSettings',
-                  'common/main/lib/util/utils',
-                  'common/main/lib/util/LocalStorage',
-                  'common/main/lib/controller/Fonts',
-                  'common/main/lib/controller/History',
-                  'common/main/lib/controller/Comments',
-                  'common/main/lib/controller/Chat',
-                  'common/main/lib/controller/Plugins',
-                  'documenteditor/main/app/view/ChartSettings',
-                  'common/main/lib/controller/ExternalDiagramEditor',
-                  'common/main/lib/controller/ExternalMergeEditor',
-                  'common/main/lib/controller/ReviewChanges'
-                ], function () {
-                  app.start();
-                });
-                break;
-              case 'presentation':
-                require([
-                  'presentationeditor/main/app/controller/Viewport',
-                  'presentationeditor/main/app/controller/DocumentHolder',
-                  'presentationeditor/main/app/controller/Toolbar',
-                  'presentationeditor/main/app/controller/Statusbar',
-                  'presentationeditor/main/app/controller/RightMenu',
-                  'presentationeditor/main/app/controller/LeftMenu',
-                  'presentationeditor/main/app/controller/Main',
-                  'presentationeditor/main/app/view/ParagraphSettings',
-                  'presentationeditor/main/app/view/ImageSettings',
-                  'presentationeditor/main/app/view/ShapeSettings',
-                  'presentationeditor/main/app/view/SlideSettings',
-                  'presentationeditor/main/app/view/TableSettings',
-                  'presentationeditor/main/app/view/TextArtSettings',
-                  'common/main/lib/util/utils',
-                  'common/main/lib/util/LocalStorage',
-                  'common/main/lib/controller/Fonts',
-                  'common/main/lib/controller/Comments',
-                  'common/main/lib/controller/Chat',
-                  'presentationeditor/main/app/view/ChartSettings',
-                  'common/main/lib/controller/ExternalDiagramEditor'
-                ], function () {
-                  app.start();
-                });
-                break;
+            case 'spreadsheet':
+              require([
+                'spreadsheeteditor/main/app/controller/Viewport',
+                'spreadsheeteditor/main/app/controller/DocumentHolder',
+                'spreadsheeteditor/main/app/controller/CellEditor',
+                'spreadsheeteditor/main/app/controller/Toolbar',
+                'spreadsheeteditor/main/app/controller/Statusbar',
+                'spreadsheeteditor/main/app/controller/RightMenu',
+                'spreadsheeteditor/main/app/controller/LeftMenu',
+                'spreadsheeteditor/main/app/controller/Main',
+                'spreadsheeteditor/main/app/controller/Print',
+                'spreadsheeteditor/main/app/view/ParagraphSettings',
+                'spreadsheeteditor/main/app/view/ImageSettings',
+                'spreadsheeteditor/main/app/view/ChartSettings',
+                'spreadsheeteditor/main/app/view/ShapeSettings',
+                'spreadsheeteditor/main/app/view/TextArtSettings',
+                'common/main/lib/util/utils',
+                'common/main/lib/util/LocalStorage',
+                'common/main/lib/controller/Fonts',
+                'common/main/lib/controller/Comments',
+                'common/main/lib/controller/Chat',
+                'common/main/lib/controller/Plugins'
+              ], function () {
+                app.start();
+              });
+              break;
+            case 'text':
+              require([
+                'documenteditor/main/app/controller/Viewport',
+                'documenteditor/main/app/controller/DocumentHolder',
+                'documenteditor/main/app/controller/Toolbar',
+                'documenteditor/main/app/controller/Statusbar',
+                'documenteditor/main/app/controller/RightMenu',
+                'documenteditor/main/app/controller/LeftMenu',
+                'documenteditor/main/app/controller/Main',
+                'documenteditor/main/app/view/ParagraphSettings',
+                'documenteditor/main/app/view/HeaderFooterSettings',
+                'documenteditor/main/app/view/ImageSettings',
+                'documenteditor/main/app/view/TableSettings',
+                'documenteditor/main/app/view/ShapeSettings',
+                'common/main/lib/util/utils',
+                'common/main/lib/util/LocalStorage',
+                'common/main/lib/controller/Fonts',
+                'common/main/lib/controller/History',
+                'common/main/lib/controller/Comments',
+                'common/main/lib/controller/Chat',
+                'common/main/lib/controller/Plugins',
+                'documenteditor/main/app/view/ChartSettings',
+                'common/main/lib/controller/ExternalDiagramEditor',
+                'common/main/lib/controller/ExternalMergeEditor',
+                'common/main/lib/controller/ReviewChanges'
+              ], function () {
+                app.start();
+              });
+              break;
+            case 'presentation':
+              require([
+                'presentationeditor/main/app/controller/Viewport',
+                'presentationeditor/main/app/controller/DocumentHolder',
+                'presentationeditor/main/app/controller/Toolbar',
+                'presentationeditor/main/app/controller/Statusbar',
+                'presentationeditor/main/app/controller/RightMenu',
+                'presentationeditor/main/app/controller/LeftMenu',
+                'presentationeditor/main/app/controller/Main',
+                'presentationeditor/main/app/view/ParagraphSettings',
+                'presentationeditor/main/app/view/ImageSettings',
+                'presentationeditor/main/app/view/ShapeSettings',
+                'presentationeditor/main/app/view/SlideSettings',
+                'presentationeditor/main/app/view/TableSettings',
+                'presentationeditor/main/app/view/TextArtSettings',
+                'common/main/lib/util/utils',
+                'common/main/lib/util/LocalStorage',
+                'common/main/lib/controller/Fonts',
+                'common/main/lib/controller/Comments',
+                'common/main/lib/controller/Chat',
+                'presentationeditor/main/app/view/ChartSettings',
+                'common/main/lib/controller/ExternalDiagramEditor'
+              ], function () {
+                app.start();
+              });
+              break;
             }
           }, function (err) {
             throw err;
