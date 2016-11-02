@@ -303,6 +303,8 @@ class PayzenService(XMLObject, PayzenSOAP):
       elif isinstance(v, datetime.datetime):
         # for sure date
         v = v.strftime('%Y%m%d')
+      elif isinstance(v, bool):
+        v = str(int(v))
       else:
         # anything else cast to string
         v = str(v)
