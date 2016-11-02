@@ -238,7 +238,11 @@
   <td>Another Foo</td>
 </tr>
 
-
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-plane")]</td>
+  <td></td>
+</tr>
 <tr>
   <td>click</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[1]//a[contains(@class, "ui-icon-plane")]</td>
