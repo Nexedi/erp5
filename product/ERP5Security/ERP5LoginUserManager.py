@@ -85,6 +85,8 @@ class ERP5LoginUserManager(BasePlugin):
     if login_value is None:
       return
     user_value = login_value.getParentValue()
+    if not user_value.hasReference():
+      return
     if user_value.getValidationState() == 'deleted':
       return
     now = DateTime()
@@ -238,7 +240,7 @@ class ERP5LoginUserManager(BasePlugin):
           for login in login_dict[user['uid']]
         ],
       }
-      for user in user_list if login_dict.get(user['uid'], [])
+      for user in user_list if login_dict.get(user['uid'], []) and user['reference']
     ])
 
 classImplements(ERP5LoginUserManager, IAuthenticationPlugin, IUserEnumerationPlugin)
