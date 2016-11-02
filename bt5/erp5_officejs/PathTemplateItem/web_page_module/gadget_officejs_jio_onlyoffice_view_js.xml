@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_spreadsheet_view.js</string> </value>
+            <value> <string>gadget_officejs_jio_onlyoffice_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_spreadsheet_view_js</string> </value>
+            <value> <string>gadget_officejs_jio_onlyoffice_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Spreadsheet View JS</string> </value>
+            <value> <string>OfficeJS Jio OnlyOffice View JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.26863.9845.25224</string> </value>
+                <value> <string>954.40044.49043.1331</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1477848665.42</float>
+                        <float>1478035042.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

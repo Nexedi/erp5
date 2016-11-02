@@ -74,7 +74,7 @@
       "gadget_officejs_page_document_list.html",
       "gadget_officejs_page_document_list.js",
       "gadget_officejs_jio_" + name + "_view.html",
-      "gadget_officejs_jio_spreadsheet_view.js",
+      "gadget_officejs_jio_onlyoffice_view.js",
       "gadget_officejs_page_add_document.html",
       "gadget_officejs_page_add_document.js",
       "gadget_erp5_editor_panel.html",
