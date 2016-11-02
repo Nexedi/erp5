@@ -216,6 +216,15 @@ class ERP5Catalog(Folder, Catalog):
         return md.get('type', 'string')
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getValidationState')
+  def getValidationState(self):
+    """
+    Needed for bootstrap when the WorkflowState Accessor is not defined yet
+    """
+    return self.workflow_history[
+      'validation_workflow'][-1]['validation_state']
+
   ##### Overriding setters functions for multple_selection properties #######
   #####   Required as after every edit we expect the values sorted    #######
 
