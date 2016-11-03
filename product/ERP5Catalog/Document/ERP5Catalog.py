@@ -223,7 +223,7 @@ class ERP5Catalog(Folder, Catalog):
     Needed for bootstrap when the WorkflowState Accessor is not defined yet
     """
     return self.workflow_history[
-      'validation_workflow'][-1]['validation_state']
+      'catalog_validation_workflow'][-1]['validation_state']
 
   ##### Overriding setters functions for multple_selection properties #######
   #####   Required as after every edit we expect the values sorted    #######

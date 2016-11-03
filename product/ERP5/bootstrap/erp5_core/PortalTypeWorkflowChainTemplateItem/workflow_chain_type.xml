@@ -41,7 +41,7 @@
  </chain>
  <chain>
   <type>Catalog</type>
-  <workflow>validation_workflow</workflow>
+  <workflow>catalog_validation_workflow</workflow>
  </chain>
  <chain>
   <type>Category</type>
