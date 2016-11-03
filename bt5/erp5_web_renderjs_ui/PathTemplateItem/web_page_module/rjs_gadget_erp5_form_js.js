@@ -35,7 +35,7 @@
     } else if (type === 'ListBox') {
       field_url = 'gadget_erp5_field_listbox.html';
     } else if (type === 'EditorField') {
-      field_url = 'gadget_erp5_field_textarea.html';
+      field_url = 'gadget_erp5_field_editor.html';
       // field_url = 'gadget_codemirror.html';
       // sandbox = 'iframe';
     } else if (type === 'GadgetField') {

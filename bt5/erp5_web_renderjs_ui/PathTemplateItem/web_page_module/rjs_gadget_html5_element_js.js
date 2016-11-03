@@ -12,6 +12,7 @@
     .declareMethod('render', function (options) {
       var state_dict = {
           text_content: options.text_content || "",
+          inner_html: options.inner_html || "",
           tag: options.tag || 'div',
           src: options.src,
           alt: options.alt
@@ -22,7 +23,11 @@
     .onStateChange(function () {
       var element = this.element,
         new_element = document.createElement(this.state.tag);
-      new_element.textContent = this.state.text_content;
+      if (this.state.text_content) {
+        new_element.textContent = this.state.text_content;
+      } else if (this.state.inner_html) {
+        new_element.innerHTML = this.state.inner_html;
+      }
       if (this.state.src) {
         new_element.setAttribute('src', this.state.src);
       }
