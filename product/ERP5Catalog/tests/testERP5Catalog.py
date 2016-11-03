@@ -1321,7 +1321,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                                        self.new_deferred_connection_id))
 
     # Validate the new_catalog
-    new_catalog.workflow_history['validation_workflow'][-1]['validation_state'] = 'validated'
+    new_catalog.validate()
 
     #launch the full hot reindexing
     portal_catalog.manage_hotReindexAll(source_sql_catalog_id=self.original_catalog_id,
@@ -1933,7 +1933,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
 
     # Now we validate the new_catalog
-    new_catalog.workflow_history['validation_workflow'][-1]['validation_state'] = 'validated'
+    new_catalog.validate()
 
     # Update some changes in sql_method
     sql_method.setTitle('New Title')
