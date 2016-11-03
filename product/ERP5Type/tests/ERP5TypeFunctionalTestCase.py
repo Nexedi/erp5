@@ -367,6 +367,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   def afterSetUp(self):
     super(ERP5TypeFunctionalTestCase, self).afterSetUp()
     # create browser_id_manager
+    self.setTimeZoneToUTC()
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
     self.commit()

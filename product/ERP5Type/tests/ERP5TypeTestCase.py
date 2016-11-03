@@ -288,6 +288,17 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       assert date_time is None or isinstance(date_time, DateTime)
       _pinned_date_time = date_time
 
+    def setTimeZoneToUTC(self):
+      # Make sure tests runs with UTC timezone. Some tests are checking values
+      # based on now, and this could give unexpected results:
+      # DateTime("2016/10/31") - DateTime("2016/10/30") = 1.0416666666666667 if
+      # you are running on a timezone like Europe/Paris, while it return 1.0 for
+      # UTC
+      os.environ['TZ'] = "UTC"
+      time.tzset()
+      DateTime._isDST = False
+      DateTime._localzone = DateTime._localzone0 = DateTime._localzone1 = "UTC"
+
     def unpinDateTime(self):
       self.pinDateTime(None)
 
