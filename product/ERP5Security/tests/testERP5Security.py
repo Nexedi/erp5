@@ -761,40 +761,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertFalse('Assignor' in
             getSecurityManager().getUser().getRolesInContext(obj))
 
-  def testGetUserByLogin(self):
-    """Test getUserByLogin method
-    """
-    self.loginAsUser(self.username)
-
-    # getUserByLogin accept login as a string
-    self.portal.portal_caches.clearAllCache()
-    self.commit()
-    person_list = self.portal.acl_users.erp5_users.getUserByLogin(self.username)
-    self.assertEqual(1, len(person_list))
-    self.assertEqual(self.username, person_list[0].getReference())
-
-    # getUserByLogin accept login as a list
-    self.portal.portal_caches.clearAllCache()
-    self.commit()
-    person_list = self.portal.acl_users.erp5_users.getUserByLogin([self.username])
-    self.assertEqual(1, len(person_list))
-    self.assertEqual(self.username, person_list[0].getReference())
-
-    # getUserByLogin accept login as a tuple
-    self.portal.portal_caches.clearAllCache()
-    self.commit()
-    person_list = self.portal.acl_users.erp5_users.getUserByLogin((self.username,))
-    self.assertEqual(1, len(person_list))
-    self.assertEqual(self.username, person_list[0].getReference())
-
-    # PreferenceTool pass a user as parameter
-    user = getSecurityManager().getUser()
-    self.portal.portal_caches.clearAllCache()
-    self.commit()
-    person_list = self.portal.acl_users.erp5_users.getUserByLogin(user)
-    self.assertEqual(1, len(person_list))
-    self.assertEqual(self.username, person_list[0].getReference())
-
   def testLocalRoleWithTraverser(self):
     """Make sure that local role works correctly when traversing
     """
