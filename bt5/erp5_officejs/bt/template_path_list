@@ -1,6 +1,11 @@
 web_page_module/gadget_ckeditor_*
+web_page_module/gadget_jquery_sheet_*
 web_page_module/gadget_officejs_*
 web_page_module/gadget_ooffice_*
+web_page_module/gadget_web_table_*
+web_site_module/gadget_jquery_sheet_*
+web_site_module/officejs_jquery_spreadsheet
+web_site_module/officejs_jquery_spreadsheet/**
 web_site_module/officejs_spreadsheet
 web_site_module/officejs_spreadsheet/**
 web_site_module/officejs_svg_editor
