@@ -127,11 +127,11 @@ def setUpEGovSecurityManager(self):
     plugins.deactivatePlugin( interface, 'erp5_groups')
   plugins = acl_users.egov_users.plugins
   interface = plugins._getInterfaceFromName('IAuthenticationPlugin')
-  if 'erp5_users' in list(plugins._getPlugins(interface)):
-    plugins.deactivatePlugin( interface, 'erp5_users')
+  if 'erp5_login_users' in list(plugins._getPlugins(interface)):
+    plugins.deactivatePlugin( interface, 'erp5_login_users')
   interface = plugins._getInterfaceFromName('IUserEnumerationPlugin')
-  if 'erp5_users' in list(plugins._getPlugins(interface)):
-    plugins.deactivatePlugin( interface, 'erp5_users')
+  if 'erp5_login_users' in list(plugins._getPlugins(interface)):
+    plugins.deactivatePlugin( interface, 'erp5_login_users')
 
   # set properties to enable the login on Person and Organisation
   # and subcription forms (citizen, company, agent)
