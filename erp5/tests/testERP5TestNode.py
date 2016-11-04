@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 from erp5.util.testnode.testnode import TestNode
-from erp5.util.testnode.NodeTestSuite import SlapOSInstance
+from erp5.util.testnode.NodeTestSuite import SlapOSInstance, NodeTestSuite
 from erp5.util.testnode.ProcessManager import ProcessManager, SubprocessError
 from erp5.util.testnode.Updater import Updater
 
@@ -87,6 +87,7 @@ class ERP5TestNode(TestCase):
     config["server_url"] = "http://foo.bar"
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
+    config["frontend_url"] = "http://frontend/"
 
     return TestNode(self.log, config)
 
@@ -228,7 +229,8 @@ class ERP5TestNode(TestCase):
     test_node.test_suite_portal.getTestNode = TaskDistributor.getTestType
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
-    node_test_suite.revision = 'rep1=1234-azerty,rep2=3456-qwerty'
+    node_test_suite.revision_list = (('rep1', (1234, 'azerty')),
+                                     ('rep2', (3456, 'qwerty')))
     test_node.constructProfile(node_test_suite,my_test_type)
     self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
@@ -243,12 +245,14 @@ repository = %(temp_dir)s/testnode/foo/rep1
 branch = master
 revision =
 develop = false
+shared = true
 
 [rep2]
 repository = %(temp_dir)s/testnode/foo/rep2
 branch = foo
 revision =
 develop = false
+shared = true
 """ % {'temp_dir': self._temp_dir}
     else:
       revision1 = "azerty"
@@ -262,12 +266,14 @@ repository = <obfuscated_url>/rep1/rep1.git
 revision = %(revision1)s
 ignore-ssl-certificate = true
 develop = false
+shared = true
 
 [rep2]
 repository = <obfuscated_url>/rep2/rep2.git
 revision = %(revision2)s
 ignore-ssl-certificate = true
 develop = false
+shared = true
 """ % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
@@ -440,14 +446,13 @@ develop = false
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0]],
                       getRepInfo(hash=1))
     class TestResult(object):
-      pass
+      revision = NodeTestSuite.revision
     test_result = TestResult()
     # for test result to be one commit late for rep1 to force testnode to
     # reset tree to older version
-    test_result.revision = 'rep0=2-%s,rep1=1-%s' % (commit_dict['rep0'][0][0],
-                                                    commit_dict['rep1'][1][0])
+    test_result.revision_list = (('rep0', (2, commit_dict['rep0'][0][0])),
+                                 ('rep1', (1, commit_dict['rep1'][1][0])))
     test_node.checkRevision(test_result, node_test_suite)
-    expected_count_list = ['2', '1']
     self.assertEquals(['2', '1'], getRepInfo(count=1))
     self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
                       getRepInfo(hash=1))
@@ -515,7 +520,7 @@ develop = false
       # Create and initialise/regenerate a nodetestsuite
       node_test_suite = test_node.getNodeTestSuite('foo')
       self.updateNodeTestSuiteData(node_test_suite)
-      node_test_suite.revision = 'dummy'
+      node_test_suite.revision_list = ('dummy', (0, '')),
       # Path to the dummy runable
       run_test_suite_path = _createPath(
           os.path.join(slapos_controler.instance_root,'a/bin'),'runTestSuite')
@@ -527,9 +532,10 @@ develop = false
         runner = RunnerClass(test_node)
         runner.runTestSuite(node_test_suite,"http://foo.bar")
         expected_parameter_list = ['%s/a/bin/runTestSuite'
-           %(slapos_controler.instance_root), '--test_suite', 'Foo', '--revision',
-           'dummy', '--test_suite_title', 'Foo-Test', '--node_quantity', 3, '--master_url',
-           'http://foo.bar']
+           %(slapos_controler.instance_root), '--test_suite', 'Foo',
+           '--revision', 'dummy=0-', '--test_suite_title', 'Foo-Test',
+           '--node_quantity', 3, '--master_url', 'http://foo.bar',
+           '--frontend_url', 'http://frontend/']
         if additional_parameter_list:
           expected_parameter_list.extend(additional_parameter_list)
         self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
