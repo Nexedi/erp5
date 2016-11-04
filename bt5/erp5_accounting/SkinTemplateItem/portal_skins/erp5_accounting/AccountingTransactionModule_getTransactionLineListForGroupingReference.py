@@ -11,16 +11,22 @@ dialog_selection_params = portal.portal_selections.getSelectionParamsFor(
                                'grouping_reference_fast_input_selection')
 
 # support pseudo sorting; sorting is done by uid.
-orig_sort_on = portal.portal_selections.getSelectionSortOrder(
-                 'accounting_transaction_module_grouping_reference_fast_input') or (('date', 'ascending'),)
 sort_on = []
-for sort_column, sort_order in orig_sort_on:
-  if sort_column in ('grouping_reference', 'date', 'parent_title'):
-    sort_on += [(sort_column, sort_order)]
-  elif sort_column == 'node_title':
-    sort_on += [('stock.node_uid', sort_order)]
-  elif sort_column == 'Movement_getMirrorSectionTitle':
-    sort_on += [('stock.mirror_section_uid', sort_order)]
+for column in portal.portal_selections.getSelectionSortOrder(
+                 'accounting_transaction_module_grouping_reference_fast_input'
+                 ) or (('date', 'ascending'),):
+  # column can be couple or a triplet
+  column_id = column[0]
+  if column_id in ('grouping_reference', 'date', 'parent_title'):
+    sort_on.append(column)
+  else:
+    if column_id == 'node_title':
+      column_id = 'stock.node_uid'
+    elif column_id == 'Movement_getMirrorSectionTitle':
+      column_id = 'stock.mirror_section_uid'
+    else:
+      continue
+    sort_on.append((column_id, column[1]))
 
 section_category = portal.portal_preferences.getPreferredAccountingTransactionSectionCategory()
 section_category_strict = portal.portal_preferences.getPreferredAccountingSectionCategoryStrict()
