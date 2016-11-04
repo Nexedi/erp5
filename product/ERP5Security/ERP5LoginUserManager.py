@@ -226,7 +226,7 @@ class ERP5LoginUserManager(BasePlugin):
         'id': user['reference'],
         # Note: PAS forbids us from returning more than one entry per given id,
         # so take any available login.
-        'login': login_dict.get(user['uid'], [None])[0]['reference'],
+        'login': login_dict.get(user['uid'], [{'reference': None}])[0]['reference'],
         'pluginid': plugin_id,
 
         # Extra properties, specific to ERP5
