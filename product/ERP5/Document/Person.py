@@ -38,6 +38,7 @@ from Products.ERP5.mixin.login_account_provider import LoginAccountProviderMixin
 try:
   from Products import PluggableAuthService
   from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+  from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 except ImportError:
   PluggableAuthService = None
 
@@ -128,7 +129,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
         - we want to apply a different permission
 
         - we want to prevent duplicated user ids, but only when
-          PAS _AND_ ERP5UserManager are used
+          PAS _AND_ (ERP5UserManager or ERP5LoginUserManager) are used
       """
       activate_kw = {}
       portal = self.getPortalObject()
@@ -143,7 +144,7 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
           plugin_list = acl_users.plugins.listPlugins(
               PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin)
           for plugin_name, plugin_value in plugin_list:
-            if isinstance(plugin_value, ERP5UserManager):
+            if isinstance(plugin_value, (ERP5UserManager, ERP5LoginUserManager)):
               user_list = acl_users.searchUsers(id=value,
                                                 exact_match=True)
               if len(user_list) > 0:
