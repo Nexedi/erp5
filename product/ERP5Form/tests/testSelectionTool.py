@@ -140,15 +140,15 @@ class TestSelectionTool(ERP5TypeTestCase):
   def testSortOrder(self):
     self.portal_selections.setSelectionSortOrder('test_selection',
                                                  [('title', 'ascending')])
-    self.assertEqual([('title', 'ascending')],
+    self.assertSequenceEqual([('title', 'ascending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
     self.portal_selections.setSelectionQuickSortOrder('test_selection',
                                                       'title')
-    self.assertEqual([('title', 'descending')],
+    self.assertSequenceEqual([('title', 'descending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
     self.portal_selections.setSelectionQuickSortOrder('test_selection',
                                                       'date')
-    self.assertEqual([('date', 'ascending')],
+    self.assertSequenceEqual([('date', 'ascending')],
                       self.portal_selections.getSelectionSortOrder('test_selection'))
 
   def testColumns(self):
