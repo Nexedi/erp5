@@ -51,6 +51,7 @@ Catalog | clear_catalog
 Catalog | clear_reserved
 Catalog | content_view
 Catalog | export_property_content
+Catalog | predicate
 Catalog | property
 Catalog | update_catalog
 Category Acquired Membership State Constraint | predicate

@@ -34,6 +34,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.patches.PropertyManager import PropertyManager
 from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
+from Products.ERP5Type.Core.Predicate import Predicate
 
 import OFS.History
 from AccessControl import ClassSecurityInfo
@@ -134,7 +135,7 @@ class FilterDict(object):
                     'filtered', 'expression_instance'):
       filter_._method._delPropValue(prop_id)
 
-class ERP5Catalog(Folder, Catalog):
+class ERP5Catalog(Folder, Catalog, Predicate):
   """
   Catalog Folder inside ERP5 to store indexes
   """
