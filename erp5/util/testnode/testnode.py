@@ -195,7 +195,8 @@ shared = true
         updater.checkout()
         revision_list.append((repository_id, updater.getRevision()))
     except SubprocessError, e:
-      log("Error while getting repository, ignoring this test suite : %r" % (e,), exc_info=sys.exc_info())
+      log("Error while getting repository, ignoring this test suite",
+          exc_info=1)
       return False
     node_test_suite.revision_list = revision_list
     return True
@@ -288,7 +289,7 @@ shared = true
             else:
               os.remove(folder_path)
         except OSError:
-          self.log("_cleanupTemporaryFiles exception", exc_info=sys.exc_info())
+          self.log("_cleanupTemporaryFiles exception", exc_info=1)
 
   def cleanUp(self,test_result):
     log = self.log
@@ -330,13 +331,13 @@ shared = true
             # Backward compatiblity
             test_suite_data = json.loads(test_suite_data)
           test_suite_data = Utils.deunicodeData(test_suite_data)
-          log("Got following test suite data from master : %r" % \
-              (test_suite_data,))
+          log("Got following test suite data from master : %r",
+              test_suite_data)
           try:
             my_test_type = self.test_suite_portal.getTestType()
-          except:
-            log("testnode, error during requesting getTestType() method \
-from the distributor.")
+          except Exception:
+            log("testnode, error during requesting getTestType() method"
+                " from the distributor.")
             raise
           # Select runner according to the test type
           if my_test_type == 'UnitTest':
@@ -346,7 +347,7 @@ from the distributor.")
           else:
             log("testnode, Runner type %s not implemented.", my_test_type)
             raise NotImplementedError
-          log("Type of current test is %s" % (my_test_type,))
+          log("Type of current test is %s", my_test_type)
           # master testnode gets test_suites, slaves get nothing
           runner.prepareSlapOSForTestNode(test_node_slapos)
           # Clean-up test suites
@@ -386,7 +387,7 @@ from the distributor.")
                      node_test_suite.test_suite_title,
                      node_test_suite.project_title)
             remote_test_result_needs_cleanup = True
-            log("testnode, test_result : %r" % (test_result, ))
+            log("testnode, test_result : %r", test_result)
             if test_result is not None:
               self.registerSuiteLog(test_result, node_test_suite)
               self.checkRevision(test_result,node_test_suite)
@@ -424,12 +425,11 @@ from the distributor.")
                   raise ValueError(error_message)
               else:
                 raise NotImplementedError
-                  
               # break the loop to get latest priorities from master
               break
             self.cleanUp(test_result)
         except (SubprocessError, CalledProcessError, ConnectionError) as e:
-          log("SubprocessError or ConnectionError : %r" % (e,), exc_info=sys.exc_info())
+          log("", exc_info=1)
           if remote_test_result_needs_cleanup:
             status_dict = e.status_dict or {}
             test_result.reportFailure(
@@ -440,7 +440,7 @@ from the distributor.")
           continue
         except ValueError as e:
           # This could at least happens if runTestSuite is not found
-          log("ValueError : %r" % (e,), exc_info=sys.exc_info())
+          log("", exc_info=1)
           if node_test_suite is not None:
             node_test_suite.retry_software_count += 1
           if remote_test_result_needs_cleanup:
@@ -448,24 +448,20 @@ from the distributor.")
               command='', stdout='',
               stderr="ValueError was raised : %s" % (e,),
             )
-        except CancellationError, e:
-          log("CancellationError", exc_info=sys.exc_info())
+        except CancellationError:
+          log("", exc_info=1)
           self.process_manager.under_cancellation = False
           node_test_suite.retry = True
           continue
-        except:
-          ex_type, ex, tb = sys.exc_info()
-          traceback.print_tb(tb)
-          log("erp5testnode exception", exc_info=sys.exc_info())
-          raise
         now = time.time()
         self.cleanUp(test_result)
         if (now-begin) < 120:
           sleep_time = 120 - (now-begin)
-          log("End of processing, going to sleep %s" % sleep_time)
+          log("End of processing, going to sleep %s", sleep_time)
           time.sleep(sleep_time)
-    except Exception as e:
-      log("Exception in error handling : %r" % (e,), exc_info=sys.exc_info())
+    except:
+      log("", exc_info=1)
+      raise
     finally:
       if 'tb' in locals():
         del tb
