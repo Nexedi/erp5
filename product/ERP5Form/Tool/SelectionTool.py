@@ -1826,9 +1826,8 @@ for property_id in candidate_method_id_list:
     """
     portal_selection = getToolByName(self, 'portal_selections')
     request = self.REQUEST
-    try:
-      listbox_id = request.form['listbox_%s' % wrapper_property_id]
-    except KeyError:
+    listbox_id = request.form.get('listbox_%s' % wrapper_property_id, None)
+    if not listbox_id:
       # Backward-compatibility: Should be removed as soon as
       # createFolderMixInPageSelectionMethod has been removed
       warnings.warn(
