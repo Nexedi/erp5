@@ -140,8 +140,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "title": field.get_value("title"),
       "required": field.get_value("required"),
       # XXX Message can not be converted to json as is
-      "items": field.get_value("items"),
-      "first_item": field.get_value("first_item")
+      "items": field.get_value("items")
     }
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
     result["sub_select_key"] = traversed_document.Field_getSubFieldKeyDict(field, 'default:list', key=result["key"])
