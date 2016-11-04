@@ -1,7 +1,7 @@
 if user_id is None:
   person = context.portal_membership.getAuthenticatedMember().getUserValue()
 else:
-  person_list = [x for x in context.acl_users.searchUsers(login=user_id, exact_match=True) if 'path' in x]
+  person_list = [x for x in context.acl_users.searchUsers(id=user_id, exact_match=True) if 'path' in x]
   if person_list:
     person, = person_list
     person = context.getPortalObject().restrictedTraverse(person['path'])
