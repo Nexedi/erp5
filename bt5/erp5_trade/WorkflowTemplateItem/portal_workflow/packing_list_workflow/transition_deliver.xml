@@ -32,6 +32,10 @@
             <value> <string>Defined a packing list as completely processed</string> </value>
         </item>
         <item>
+            <key> <string>guard_expression</string> </key>
+            <value> <string>python: here.getPortalObject().portal_membership.checkPermission(\'Modify portal content\', here) or user.has_role(("Associate",), here)</string> </value>
+        </item>
+        <item>
             <key> <string>guard_group</string> </key>
             <value>
               <tuple/>
@@ -40,9 +44,7 @@
         <item>
             <key> <string>guard_permission</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
