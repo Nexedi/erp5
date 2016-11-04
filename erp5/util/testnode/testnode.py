@@ -431,7 +431,8 @@ shared = true
         except (SubprocessError, CalledProcessError, ConnectionError) as e:
           log("", exc_info=1)
           if remote_test_result_needs_cleanup:
-            status_dict = e.status_dict or {}
+            status_dict = getattr(e, "status_dict", None) or {
+              'stderr': "%s: %s" % (e.__class__.__name__, e)}
             test_result.reportFailure(
               command=status_dict.get('command'),
               stdout=status_dict.get('stdout'),
