@@ -66,12 +66,23 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>permissions</string> </key>
+            <key> <string>expr</string> </key>
             <value>
-              <tuple>
-                <string>Modify portal content</string>
-              </tuple>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: user.has_permission("Modify portal content", here) or user.has_role(("Associate",), here)</string> </value>
         </item>
       </dictionary>
     </pickle>
