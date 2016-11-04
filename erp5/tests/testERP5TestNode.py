@@ -272,7 +272,7 @@ develop = false
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
-  def getAndUpdateFullRevisionList(self, test_node, node_test_suite)
+  def getAndUpdateFullRevisionList(self, test_node, node_test_suite):
     if test_node.updateRevisionList(node_test_suite):
       return node_test_suite.revision.split(',')
 
