@@ -111,7 +111,7 @@ class TestBug(ERP5TypeTestCase):
     portal = self.getPortal()
     uf = portal.acl_users
     uf._doAddUser('mame', '', ['Assignor','Assignee'], [])
-    if not uf.getUser('dummy'):
+    if not uf.getUserById('dummy'):
       uf._doAddUser('manager', '', ['Manager'], [])
       self.login('manager')
       person_module = portal.getDefaultModule(self.person_portal_type)

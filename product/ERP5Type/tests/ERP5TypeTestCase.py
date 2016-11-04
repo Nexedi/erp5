@@ -260,7 +260,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       '''Creates the default user.'''
       uf = self.portal.acl_users
       # do nothing if the user already exists
-      if not uf.getUser(user_name):
+      if not uf.getUserById(user_name):
         uf._doAddUser(user_name, 'secret', ['Member'], [])
 
     def _setUpDummyMailHost(self):

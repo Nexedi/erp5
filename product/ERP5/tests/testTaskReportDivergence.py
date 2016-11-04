@@ -99,7 +99,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     simulation_tool = portal.portal_simulation
     rule_tool = portal.portal_rules
     uf = self.getPortal().acl_users
-    if not uf.getUser('manager'):
+    if not uf.getUserById('manager'):
       uf._doAddUser('manager', '', ['Manager'], [])
     self.login('manager')
     simulation_tool.Base_setDefaultSecurity()
