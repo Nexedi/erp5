@@ -192,7 +192,7 @@ class ERP5LoginUserManager(BasePlugin):
         for login in searchLogin(parent_uid=[x['uid'] for x in user_list]):
           login_dict.setdefault(login['parent_uid'], []).append(login)
       if has_super_user:
-        user_list.append({'uid': None, 'reference': SUPER_USER})
+        user_list.append({'uid': None, 'path': None, 'reference': SUPER_USER})
         login_dict[None] = [{
           'reference': SUPER_USER,
           'path': None,
