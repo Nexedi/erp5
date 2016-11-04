@@ -267,7 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \',\'.join(cell.getAggregateTitleList())</string> </value>
+            <value> <string>python: ",".join(sorted(cell.getAggregateTitleList(checked_permission="View")))</string> </value>
         </item>
       </dictionary>
     </pickle>
