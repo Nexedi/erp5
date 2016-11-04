@@ -64,10 +64,15 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       person = person_module.newContent(id='pers', portal_type='Person',
                                         reference=self.username,
                                         first_name=self.first_name,
-                                        password=self.password,
                                         default_email_text=self.recipient_email_address)
       assignment = person.newContent(portal_type='Assignment')
       assignment.open()
+      login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=self.username,
+        password=self.password,
+      )
+      login.validate()
     self.tic()
 
   def loginAsUser(self, username):
