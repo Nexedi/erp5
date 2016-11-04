@@ -375,7 +375,10 @@ class TestUserManagement(ERP5TypeTestCase):
     pers.setPassword('secret')
     self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
     self.tic()
-    self._assertUserExists('the_user', 'secret')
+    if getattr(self.portal.acl_users,'erp5_users', None) is not None:
+      self._assertUserExists('the_user', 'secret')
+    else:
+      self._assertUserDoesNotExists('the_user', 'secret')
     pers.fixConsistency(filter={'constraint_type': 'post_upgrade'})
     self.portal.portal_caches.clearAllCache()
     self.tic()
