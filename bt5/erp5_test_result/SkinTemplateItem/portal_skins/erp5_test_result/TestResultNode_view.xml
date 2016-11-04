@@ -80,7 +80,11 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_cmdline</string>
+                        <string>my_stdout</string>
+                        <string>my_stderr</string>
+                      </list>
                     </value>
                 </item>
                 <item>
