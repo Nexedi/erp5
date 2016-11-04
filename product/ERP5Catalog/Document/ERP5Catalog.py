@@ -34,6 +34,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.patches.PropertyManager import PropertyManager
 from Products.ZSQLCatalog.SQLCatalog import Catalog, CatalogError
+from Products.ERP5Type.Core.Predicate import Predicate
 
 import OFS.History
 from AccessControl import ClassSecurityInfo
@@ -149,7 +150,7 @@ class FilterDict(object):
   def __contains__(self, item):
     return item in self.keys()
 
-class ERP5Catalog(Folder, Catalog):
+class ERP5Catalog(Folder, Catalog, Predicate):
   """
   Catalog Folder inside ERP5 to store indexes
   """
