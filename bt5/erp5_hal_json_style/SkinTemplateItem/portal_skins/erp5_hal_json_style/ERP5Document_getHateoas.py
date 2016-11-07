@@ -1034,10 +1034,10 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
 
         if isinstance(sort_on, list):
           for grain in sort_on:
-            tmp_sort_on += (tuple([x for x in json.loads(grain)]),)
+            tmp_sort_on += (tuple([x for x in byteify(json.loads(grain))]),)
         else:
           #only one single criteria
-          tmp_sort_on = (tuple([x for x in json.loads(sort_on)]),)
+          tmp_sort_on = (tuple([x for x in byteify(json.loads(sort_on))]),)
 
 
       if query:
@@ -1181,7 +1181,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
     if REQUEST.other['method'] != "POST":
       response.setStatus(405)
       return ""
-    result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in json.loads(bulk_list)]
+    result_dict["result_list"] = [calculateHateoas(mode="traverse", **x) for x in byteify(json.loads(bulk_list))]
   
   elif mode == 'worklist':
     #################################################
