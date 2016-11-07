@@ -592,9 +592,6 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       field.generate_subfield_key(SUB_FIELD_ID, key=key),
     )
     if relation_uid_list in (None, ''):
-      value_list = self.default_validator_instance.validate(
-        field, key, REQUEST,
-      )
       field_value_list = self._generateFieldValueList(
         field,
         key,
@@ -721,7 +718,6 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
 
     if raising_error_value:
       self.raise_error(raising_error_value, field)
-      return value_list
     return self.editor(
       field.id,
       field.get_value('base_category'),
