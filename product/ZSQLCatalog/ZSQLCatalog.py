@@ -764,6 +764,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       if archive_enabled:
         default_catalog = self.getSQLCatalog()
 
+      predicate = catalog.asPredicate()
       # Construct list of object to catalogged
       for obj in object_list:
         if hot_reindexing:
@@ -804,8 +805,9 @@ class ZCatalog(Folder, Persistent, Implicit):
         if goto_current_catalog:
           # wrap object only when sure it will be reindex now
           # thus security uid is also reindex
-          wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
-          wrapped_object_list.append(wrap_obj)
+          if predicate.test(obj):
+            wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+            wrapped_object_list.append(wrap_obj)
 
       # run activity or execute for each archive depending on priority
       if catalog_dict:
