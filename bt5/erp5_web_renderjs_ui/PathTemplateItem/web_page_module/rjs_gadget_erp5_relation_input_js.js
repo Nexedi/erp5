@@ -142,7 +142,7 @@
 
           // uid is known
           // User selected a document from a listbox
-          if (gadget.state.value_uid) {
+          if ((gadget.state.value_uid) && (!gadget.state.value_text)) {
             plane.className = SEARCHING_CLASS_STR;
             return gadget.jio_allDocs({
               "query":  Query.objectToSearchText(new SimpleQuery({
@@ -155,8 +155,7 @@
               .push(function (result) {
                 return gadget.changeState({
                   value_text: result.data.rows[0]
-                    .value[gadget.state.catalog_index],
-                  value_uid: null
+                    .value[gadget.state.catalog_index]
                 });
               });
           }
@@ -230,7 +229,7 @@
                   ]
                 })),
                 limit: [0, 10],
-                select_list: [gadget.state.catalog_index]
+                select_list: [gadget.state.catalog_index, "uid"]
               });
             })
             .push(function (result) {
@@ -245,7 +244,8 @@
               for (i = 0; i < result.data.rows.length; i += 1) {
                 list.push({
                   id: result.data.rows[i].id,
-                  value: result.data.rows[i].value[gadget.state.catalog_index]
+                  value: result.data.rows[i].value[gadget.state.catalog_index],
+                  uid: result.data.rows[i].value.uid
                 });
               }
               plane.className = JUMP_UNKNOWN_CLASS_STR;
@@ -268,7 +268,8 @@
         result = {
           value_relative_url: gadget.state.value_relative_url,
           value_text: gadget.state.value_text,
-          value_portal_type: gadget.state.value_portal_type
+          value_portal_type: gadget.state.value_portal_type,
+          value_uid: gadget.state.value_uid
         };
       }
       return result;
@@ -310,6 +311,7 @@
                 // Check which 'li' element was clicked
                 var li = event.target,
                   data_relative_url = li.getAttribute("data-relative-url"),
+                  data_uid = li.getAttribute("data-uid"),
                   data_portal_type = li.getAttribute("data-create-object"),
                   data_explore = li.getAttribute("data-explore");
 
@@ -323,6 +325,7 @@
                 if (data_relative_url) {
                   new_state.value_text = li.textContent;
                   new_state.value_relative_url = data_relative_url;
+                  new_state.value_uid = data_uid;
                   return gadget.changeState(new_state);
                 }
 
