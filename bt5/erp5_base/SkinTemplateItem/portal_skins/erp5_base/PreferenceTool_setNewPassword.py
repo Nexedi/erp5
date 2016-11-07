@@ -4,8 +4,7 @@ from Products.ERP5Type.Message import translateString
 login = getSecurityManager().getUser().getLoginValue()
 if login is None:
   msg = translateString(
-    'You cannot change the password for $reference.',
-    mapping={'reference': reference},
+    'You cannot change the password.'
   )
 elif not login.checkPassword(current_password):
   msg = translateString("Current password is wrong.")
