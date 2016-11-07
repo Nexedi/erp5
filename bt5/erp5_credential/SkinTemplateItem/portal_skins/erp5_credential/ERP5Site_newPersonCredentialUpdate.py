@@ -1,15 +1,19 @@
 """Create a credential update in relation with the person object of current user"""
 portal = context.getPortalObject()
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+user = portal.portal_membership.getAuthenticatedMember()
+person = user.getUserValue()
+login = user.getLoginValue()
 
 if person is None:
   portal_status_message = "Can't find corresponding person, it's not possible to update your credentials."
+elif login is None:
+  portal_status_message = "Can't find corresponding login, it's not possible to update your credentials."
 else:
   # create the credential update
   module = portal.getDefaultModule(portal_type='Credential Update')
   credential_update = module.newContent(
     portal_type="Credential Update",
-    reference=reference,
+    reference=login.getReference(),
     first_name=first_name,
     last_name=last_name,
     gender=gender,
