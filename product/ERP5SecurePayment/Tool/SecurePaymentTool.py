@@ -66,7 +66,7 @@ class SecurePaymentTool(BaseTool):
     user = getSecurityManager().getUser()
     if not('Member' in user.getRoles()):
       newSecurityManager(None,
-       self.getPortalObject().acl_users.getUser(SUPER_USER))
+       self.getPortalObject().acl_users.getUserByID(SUPER_USER))
 
   def _getParametersFromSelection(self,service,selection):
     if selection is not None:

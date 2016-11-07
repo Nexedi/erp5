@@ -104,7 +104,7 @@ class ERP5User(PropertiedUser):
     As for getRolesInContext, we take into account _getAcquireLocalRoles for
     ERP5.
     """
-    if self.getUserName() == SUPER_USER:
+    if self.getId() == SUPER_USER:
       # super user is allowed to accesss any object
       return 1
 
