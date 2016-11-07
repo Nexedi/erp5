@@ -146,9 +146,9 @@ class UnitTestRunner():
                            '--test_suite', node_test_suite.test_suite,
                            '--revision', node_test_suite.revision,
                            '--test_suite_title', node_test_suite.test_suite_title,
-                           '--node_quantity', config['node_quantity'],
+                           '--node_quantity', config.get('node_quantity', 1),
                            '--master_url', portal_url,
-                           '--frontend_url', config['frontend_url']])
+                           '--frontend_url', config.get('frontend_url', '')])
     firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
         config["slapos_directory"])
     if len(firefox_bin_list):
