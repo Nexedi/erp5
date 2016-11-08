@@ -40,6 +40,8 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
+from zExceptions import Unauthorized
+
 if 1: # BBB
   # Zope 2.12, simulate setting the globalTranslationService with
   # zope.i18n utilities
@@ -621,6 +623,32 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = connection.getresponse()
     self.assertEqual(response.status, 401)
     self.assertEqual(response.getheader('WWW-Authenticate'), None)
+
+  def test_standardErrorMessageShouldNotRaiseUnauthorizeOnUnauthorizeDocument(self):
+    """
+      When trying to show the `standard_error_message` on a document that user
+      doesn't have permission to access, the Unauthorized error should be handled
+      to allow the user to see the actual error.
+    """
+    module = self.portal.newContent(portal_type='Folder', id='test_error_message')
+    document_1 = module.newContent(portal_type='Folder', id='1')
+
+    # Sanity check : can View document
+    document_1.view()
+    # Must not raise
+    document_1.standard_error_message(error_type="MyErrorType", error_message="my error message.")
+
+    document_1.manage_permission('View', [], acquire=0)
+    document_1.manage_permission('Access contents information', [], acquire=0)
+
+    # Sanity check : cannot View document anymore
+    self.assertRaises(Unauthorized, document_1.view)
+    # Must not raise even if Unauthorized to view
+    document_1.standard_error_message(error_type="MyErrorType", error_message="my error message.")
+
+    response = self.publish(document_1.getPath(), self.auth)
+    self.assertEqual(response.getStatus(), 401)
+    self.assertNotIn("Also, the following error occurred", str(response))
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -2,9 +2,8 @@
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
   xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  metal:use-macro="context/main_template/macros/master"
+  metal:define-macro="standard_error_message_render"
 >
-<metal:slot metal:fill-slot="main" i18n:domain="erp5_ui">
 <div tal:condition="options/error_message" tal:content="structure options/error_message" />
 <div tal:condition="not: options/error_message">
   <h2 i18n:translate="">Site Error</h2>
@@ -28,5 +27,4 @@
   <hr noshade="noshade" />
   <a href="error_log_url" tal:attributes="href options/error_log_url" i18n:translate="">Show Error Log Entry</a>
 </div>
-</metal:slot>
 </tal:block>
