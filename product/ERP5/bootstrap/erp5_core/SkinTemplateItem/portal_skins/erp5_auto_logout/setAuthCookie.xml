@@ -170,7 +170,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>resp, cookie_name, cookie_value</string> </value>
+            <value> <string>resp, cookie_name, cookie_value=None, login=None, password=None </string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
