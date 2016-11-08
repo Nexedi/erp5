@@ -134,8 +134,14 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
         'remote_address': '204.183.226.81 '
       }
     )
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    ret = self.portal.acl_users["erp5_users"].authenticateCredentials(ret)
     self.assertEquals(ret, (person.getReference(), person.getReference()))
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      ret[0],
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     self.assertIsNotNone(erp5_jwt_cookie)
@@ -152,7 +158,7 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
         'remote_address': '204.183.226.81 '
       }
     )
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    ret = self.portal.acl_users["erp5_users"].authenticateCredentials(ret)
     self.assertEquals(ret, (person.getReference(), person.getReference()))
 
   def test_invalid_signature(self):
@@ -179,8 +185,14 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
         'remote_address': '204.183.226.81 '
       }
     )
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    ret = self.portal.acl_users["erp5_users"].authenticateCredentials(ret)
     self.assertEquals(ret, (person.getReference(), person.getReference()))
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      ret[0],
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     request = self.do_fake_request("GET")
@@ -201,12 +213,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
       )
     self.tic()
     origin = "https://www.example.com"
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials({
-        'login': person.getReference(),
-        'password': password,
-        'remote_host': 'bobo.remote.host',
-        'remote_address': '204.183.226.81 '
-    })
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     request = self.do_fake_request("GET")
@@ -235,12 +247,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
     self.tic()
     origin = "https://www.example.com"
     self.REQUEST.form['new_cors_origin'] = origin
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials({
-        'login': person.getReference(),
-        'password': password,
-        'remote_host': 'bobo.remote.host',
-        'remote_address': '204.183.226.81 '
-    })
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_cors_jwt_cookie = response_cookie_dict.get('erp5_cors_jwt')
     request = self.do_fake_request(
@@ -273,12 +285,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
     origin = "https://www.example.com"
     origin2 = "https://www.counter-exmaple.org"
     self.REQUEST.form['new_cors_origin'] = origin
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials({
-        'login': person.getReference(),
-        'password': password,
-        'remote_host': 'bobo.remote.host',
-        'remote_address': '204.183.226.81 '
-    })
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_cors_jwt_cookie = response_cookie_dict.get('erp5_cors_jwt')
     request = self.do_fake_request(
@@ -309,12 +321,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
     self.tic()
     origin = "https://www.example.com"
     self.REQUEST.form['new_cors_origin'] = origin
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials({
-        'login': person.getReference(),
-        'password': password,
-        'remote_host': 'bobo.remote.host',
-        'remote_address': '204.183.226.81 '
-    })
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_cors_jwt_cookie = response_cookie_dict.get('erp5_cors_jwt')
     request = self.do_fake_request(
@@ -347,12 +359,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
     origin = "https://www.example.com"
     origin2 = "https://www.counter-exmaple.org"
     self.REQUEST.form['new_cors_origin'] = origin
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials({
-        'login': person.getReference(),
-        'password': password,
-        'remote_host': 'bobo.remote.host',
-        'remote_address': '204.183.226.81 '
-    })
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_cors_jwt_cookie = response_cookie_dict.get('erp5_cors_jwt')
     request = self.do_fake_request(
@@ -386,7 +398,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
         person.getReference(), password))})
     self.portal.acl_users[self.test_id].manage_setERP5JSONWebTokenPluginExtpirationDelay(2)
     ret = self.portal.acl_users[self.test_id].extractCredentials(request)
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     request = self.do_fake_request("GET")
@@ -420,7 +437,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
       {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
         person.getReference(), password))})
     ret = self.portal.acl_users[self.test_id].extractCredentials(request)
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
@@ -442,7 +464,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
       {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
         person.getReference(), password))})
     ret = self.portal.acl_users[self.test_id].extractCredentials(request)
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
@@ -453,7 +480,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
       {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
         person.getReference(), password))})
     ret = self.portal.acl_users[self.test_id].extractCredentials(request)
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     decoded_value = jwt.decode(erp5_jwt_cookie["value"], verify=False)
@@ -475,7 +507,12 @@ class TestERP5JSONWebTokenPlugin(ERP5TypeTestCase):
       {"HTTP_AUTHORIZATION": "Basic " + base64.b64encode("%s:%s" % (
         person.getReference(), password))})
     ret = self.portal.acl_users[self.test_id].extractCredentials(request)
-    ret = self.portal.acl_users[self.test_id].authenticateCredentials(ret)
+    self.portal.acl_users[self.test_id].updateCredentials(
+      self.REQUEST,
+      self.REQUEST.response,
+      person.getReference(),
+      password
+      )
     response_cookie_dict = self.REQUEST.response.cookies
     erp5_jwt_cookie = response_cookie_dict.get('erp5_jwt')
     request = self.do_fake_request("GET")
