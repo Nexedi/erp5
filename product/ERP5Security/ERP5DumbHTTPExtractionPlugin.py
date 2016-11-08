@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from base64 import standard_b64encode
+
 from Products.ERP5Type.Globals import InitializeClass
 
 from AccessControl import ClassSecurityInfo
@@ -51,11 +53,51 @@ class ERP5DumbHTTPExtractionPlugin(BasePlugin):
     #Register value
     self._setId(id)
     self.title = title
+    self.cookie_name = "__ac"
 
   security.declarePrivate('extractCredentials')
   @UnrestrictedMethod
   def extractCredentials(self, request):
     return DumbHTTPExtractor().extractCredentials(request);
+
+  ################################
+  #   ICredentialsUpdatePlugin   #
+  ################################
+  security.declarePrivate('updateCredentials')
+  def updateCredentials(self, request, response, login, password):
+    """ Respond to change of credentials"""
+    kw = {}
+    portal = self.getPortalObject()
+    expire_interval = portal.portal_preferences.getPreferredMaxUserInactivityDuration()
+    if expire_interval in ('', None):
+      ac_renew = float('inf')
+    else:
+      expire_interval /= 86400. # seconds -> days
+      now = DateTime()
+      kw['expires'] = (now + expire_interval).toZone('GMT').rfc822()
+      ac_renew = (now + expire_interval / 2).millis()
+    portal.portal_sessions[
+      portal.Base_getAutoLogoutSessionKey(username=login)
+    ]['ac_renew'] = ac_renew
+    response.setCookie(
+      name="__ac",
+      value=standard_b64encode('%s:%s' % (login, password)),
+      path='/',
+      secure=getattr(portal, 'REQUEST', {}).get('SERVER_URL', '').startswith('https:'),
+      http_only=True,
+      **kw
+    )
+
+  ################################
+  #    ICredentialsResetPlugin   #
+  ################################
+  security.declarePrivate( 'resetCredentials' )
+  def resetCredentials( self, request, response ):
+
+    """ Logout
+    """
+    response.expireCookie("__ac", path="/")
+
 
 #Form for new plugin in ZMI
 manage_addERP5DumbHTTPExtractionPluginForm = PageTemplateFile(
@@ -77,6 +119,8 @@ def addERP5DumbHTTPExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
 
 #List implementation of class
 classImplements(ERP5DumbHTTPExtractionPlugin,
-                plugins.ILoginPasswordHostExtractionPlugin
+                plugins.ILoginPasswordHostExtractionPlugin,
+                plugins.ICredentialsResetPlugin,
+                plugins.ICredentialsUpdatePlugin,
                )
 InitializeClass(ERP5DumbHTTPExtractionPlugin)

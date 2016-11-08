@@ -37,7 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+from Products.ERP5Security.ERP5UserManager import getUserByLogin
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 from ZODB.utils import u64
@@ -69,8 +69,10 @@ def addERP5JSONWebTokenPlugin(dispatcher, id, title=None, REQUEST=None):
 
 @implementer(
   plugins.ILoginPasswordHostExtractionPlugin,
+  plugins.ICredentialsResetPlugin,
+  plugins.ICredentialsUpdatePlugin,
   )
-class ERP5JSONWebTokenPlugin(ERP5UserManager):
+class ERP5JSONWebTokenPlugin(BasePlugin):
 
   meta_type = "ERP5 JSON Web Token Plugin"
   security = ClassSecurityInfo()
@@ -88,7 +90,6 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
 
 
   def __init__(self, *args, **kw):
-    super(ERP5JSONWebTokenPlugin, self).__init__(*args, **kw)
     self.manage_updateERP5JSONWebTokenPlugin()
     self.manage_setERP5JSONWebTokenPluginExtpirationDelay(0)
 
@@ -138,8 +139,7 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
           jwt.InvalidTokenError,
           jwt.DecodeError,
           ):
-        request.response.expireCookie(self.same_site_cookie, path='/')
-        request.response.expireCookie(self.cors_cookie, path='/')
+        self.resetCredentials(request, request.response)
         return None
 
       person_relative_url = data["sub"].encode()
@@ -159,25 +159,23 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
       creds['remote_address'] = request.get('REMOTE_ADDR', '')
     return creds
 
-  #
-  #   IAuthenticationPlugin implementation
-  #
-  security.declarePrivate( 'authenticateCredentials' )
-  def authenticateCredentials(self, credentials):
-    authentication_result = super(
-      ERP5JSONWebTokenPlugin,
-      self
-      ).authenticateCredentials(credentials)
+  ################################
+  #   ICredentialsUpdatePlugin   #
+  ################################
+  security.declarePrivate('updateCredentials')
+  def updateCredentials(self, request, response, login, new_password):
+    """ Respond to change of credentials"""
 
-    # In case the password is present in the request, the token is updated
-    if authentication_result is not None and "password" in credentials:
+    #Update credential for key auth or standard of.
+    #Remove conflict between both systems
+    if login is not None:
       if jwt is None:
         LOG('ERP5JSONWebTokenPlugin', INFO,
             'No jwt module, install pyjwt package. '
               'Authentication disabled.')
         return authentication_result
 
-      user = self.getUserByLogin(authentication_result[0])[0]
+      user = getUserByLogin(self.getPortalObject(), login)[0]
 
       # Activate password to have the real tid
       user.password._p_activate()
@@ -221,17 +219,24 @@ class ERP5JSONWebTokenPlugin(ERP5UserManager):
         cookie = self.same_site_cookie
         cookie_parameters["same_site"] = "Lax"
 
-      request.response.setCookie(
+      response.setCookie(
         cookie,
         jwt.encode(data, self._secret),
         **cookie_parameters
       )
 
-      # Expire default cookie set by default
-      # (even with plugin deactivated)
-      # request.response.expireCookie('__ac')
+  ################################
+  #    ICredentialsResetPlugin   #
+  ################################
+  security.declarePrivate( 'resetCredentials' )
+  def resetCredentials( self, request, response ):
 
-    return authentication_result  
+    """ Logout
+    """
+    for cookie in (self.same_site_cookie,
+                   self.cors_cookie):
+      if request.cookies.get(cookie) is not None:
+        response.expireCookie(cookie, path="/")
 
   ################################
   # Properties for ZMI managment #
