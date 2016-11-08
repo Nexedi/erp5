@@ -1,0 +1,380 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_image_editor.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_image_editor.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\r\n
+CACHE:\r\n
+rsvp.js\r\n
+renderjs.js\r\n
+jiodev.js\r\n
+gadget_image_editor.js\r\n
+gadget_image_editor.html/renderjs.js\r\n
+gadget_image_editor.html/rsvp.js\r\n
+gadget_image_editor.html/miniPaint/config.js\r\n
+gadget_image_editor.html/miniPaint/img/colorwheel.png\r\n
+gadget_image_editor.html/miniPaint/img/favicon.png\r\n
+gadget_image_editor.html/miniPaint/img/logo.png\r\n
+gadget_image_editor.html/miniPaint/img/preview.jpg\r\n
+gadget_image_editor.html/miniPaint/img/sprites.png\r\n
+gadget_image_editor.html/miniPaint/js/draw_tools.js\r\n
+gadget_image_editor.html/miniPaint/js/edit.js\r\n
+gadget_image_editor.html/miniPaint/js/effects.js\r\n
+gadget_image_editor.html/miniPaint/js/elements.js\r\n
+gadget_image_editor.html/miniPaint/js/events.js\r\n
+gadget_image_editor.html/miniPaint/js/file.js\r\n
+gadget_image_editor.html/miniPaint/js/gui.js\r\n
+gadget_image_editor.html/miniPaint/js/help.js\r\n
+gadget_image_editor.html/miniPaint/js/image.js\r\n
+gadget_image_editor.html/miniPaint/js/layers.js\r\n
+gadget_image_editor.html/miniPaint/js/main.js\r\n
+gadget_image_editor.html/miniPaint/js/tools.js\r\n
+gadget_image_editor.html/miniPaint/languages/de.js\r\n
+gadget_image_editor.html/miniPaint/languages/empty.js\r\n
+gadget_image_editor.html/miniPaint/languages/es.js\r\n
+gadget_image_editor.html/miniPaint/languages/fr.js\r\n
+gadget_image_editor.html/miniPaint/languages/it.js\r\n
+gadget_image_editor.html/miniPaint/languages/ja.js\r\n
+gadget_image_editor.html/miniPaint/languages/ko.js\r\n
+gadget_image_editor.html/miniPaint/languages/lt.js\r\n
+gadget_image_editor.html/miniPaint/languages/pt.js\r\n
+gadget_image_editor.html/miniPaint/languages/ru.js\r\n
+gadget_image_editor.html/miniPaint/languages/tr.js\r\n
+gadget_image_editor.html/miniPaint/languages/zh.js\r\n
+gadget_image_editor.html/miniPaint/libs/helpers.js\r\n
+gadget_image_editor.html/miniPaint/libs/popup.js\r\n
+gadget_image_editor.html/miniPaint/libs/sift.js\r\n
+gadget_image_editor.html/miniPaint/libs/vintage.js\r\n
+gadget_image_editor.html/miniPaint/styles/styles.css\r\n
+gadget_image_editor.html/miniPaint/vendor/exif/exif.js\r\n
+gadget_image_editor.html/miniPaint/vendor/exif/exif.min.js\r\n
+gadget_image_editor.html/miniPaint/vendor/file-saver/FileSaver.min.js\r\n
+gadget_image_editor.html/miniPaint/vendor/file-saver/canvas-toBlob.js\r\n
+gadget_image_editor.html/miniPaint/vendor/glfx/glfx.js\r\n
+gadget_image_editor.html/miniPaint/vendor/harmony/harmony.js\r\n
+gadget_image_editor.html/miniPaint/vendor/harmony/harmony.min.js\r\n
+gadget_image_editor.html/miniPaint/vendor/hermite-resize/hermite.js\r\n
+gadget_image_editor.html/miniPaint/vendor/hqx/hqx.js\r\n
+gadget_image_editor.html/miniPaint/vendor/hqx/hqx.min.js\r\n
+gadget_image_editor.html/miniPaint/vendor/imagefilters/imagefilters.js\r\n
+gadget_image_editor.html/miniPaint/vendor/imagefilters/imagefilters.min.js\r\n
+gadget_image_editor.html/miniPaint/vendor/jquery/jquery-migrate.js\r\n
+gadget_image_editor.html/miniPaint/vendor/jquery/jquery.js       \r\n
+gadget_image_editor.html/miniPaint/vendor/menu/menu.js \r\n
+gadget_image_editor.html/miniPaint/vendor/menu/menu.min.js\r\n
+gadget_image_editor.html/miniPaint/vendor/translate/jquery.translate.js\r\n
+gadget_image_editor.html/miniPaint/vendor/translate/jquery.translate.min.js\r\n
+NETWORK:\r\n
+*</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Image Editor Gadget  AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish_alive</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1479134025.22</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published_alive</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>955.17991.46421.38161</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1479134016.35</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1479133901.09</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
