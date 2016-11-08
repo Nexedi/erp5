@@ -89,7 +89,9 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
                     )
 
 
-  def __init__(self, *args, **kw):
+  def __init__(self, id, title=None, *args, **kw):
+    self._setId(id)
+    self.title = title
     self.manage_updateERP5JSONWebTokenPlugin()
     self.manage_setERP5JSONWebTokenPluginExtpirationDelay(0)
 

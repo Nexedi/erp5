@@ -2159,7 +2159,7 @@ class ERP5Generator(PortalGenerator):
       p.acl_users.erp5_jwt_extraction.manage_activateInterfaces(
                                         ('IExtractionPlugin',
                                          'ICredentialsResetPlugin',
-                                         'ICredentialsUpdatePlugin,'))
+                                         'ICredentialsUpdatePlugin',))
 
   def setupPermissions(self, p):
     permission_dict = {
