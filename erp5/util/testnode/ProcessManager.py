@@ -183,10 +183,9 @@ class ProcessManager(object):
       raise SubprocessError(result)
     return result
 
-  def getSupportedParameterSet(self, program_path ,parameter_list):
-    help_string = self.spawn(*[program_path,'--help'])['stdout']
-    help_words = set(help_string.split())
-    return help_words.intersection(set(parameter_list))
+  def getSupportedParameterList(self, program_path):
+    return re.findall('^  (--\w+)',
+      self.spawn(program_path, '--help')['stdout'], re.M)
 
   def killall(self, name):
     """
