@@ -203,6 +203,13 @@ class ERP5TestNode(TestCase):
                       node_test_suite.working_directory)
     self.assertEquals("%s/foo/test_suite" % self.working_directory,
                       node_test_suite.test_suite_directory)
+    access_path = "%s/foo/.htaccess" % self.working_directory
+    access_file = open(access_path, 'r')
+    self.assertEqual("""Order Deny,Allow\nDeny from all""",
+                     access_file.read())
+    access_file.close()
+    node_test_suite.edit(cluster_configuration={'test-url': 'https://something.com'})
+    self.assertEqual(False, os.path.exists(access_path))
 
   def test_03_NodeTestSuiteCheckDataAfterEdit(self):
     """

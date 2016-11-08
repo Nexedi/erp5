@@ -70,12 +70,32 @@ class NodeTestSuite(SlapOSInstance):
   def edit(self, **kw):
     super(NodeTestSuite, self).edit(**kw)
 
+  def _disallowFrontendIfNeeded(self):
+    """
+    Some test suite need to expose some code through a frontend to launch remote
+    tests on remote web browsers. For now, it is not clearly defined how to give
+    access to just needed parts of the code. Until this is reworked, disallow
+    access by default, and enable access only on test suite using remote web
+    browsers.
+    """
+    access_path = os.path.join(self.working_directory, '.htaccess')
+    # the way to identify a test suite launching remote browsers will change
+    # in the future, when we will have Browser Test Suite on master side
+    if getattr(self, 'cluster_configuration', {}).get('test-url') is None:
+      access_file = open(access_path, 'w')
+      access_file.write("""Order Deny,Allow\nDeny from all""")
+      access_file.close()
+    else:
+      if os.path.exists(access_path):
+        os.unlink(access_path)
+
   def _checkData(self):
     if getattr(self, "working_directory", None) is not None:
       if not(self.working_directory.endswith(os.path.sep + self.reference)):
         self.working_directory = os.path.join(self.working_directory,
                                              self.reference)
       SlapOSControler.createFolder(self.working_directory)
+      self._disallowFrontendIfNeeded()
       self.test_suite_directory = os.path.join(
                                    self.working_directory, "test_suite")
       self.custom_profile_path = os.path.join(self.working_directory,
