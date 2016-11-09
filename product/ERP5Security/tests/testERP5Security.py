@@ -106,12 +106,11 @@ class TestUserManagement(ERP5TypeTestCase):
                                        stop_date=assignment_stop_date,)
     if open_assignment:
       assignment.open()
-    if new_person.hasReference():
-      login = new_person.newContent(
-        portal_type='ERP5 Login',
-        reference=new_person.getReference(),
-        password=password,)
-      login.validate()
+    login = new_person.newContent(
+      portal_type='ERP5 Login',
+      reference=new_person.getReference(),
+      password=password,)
+    login.validate()
     if tic:
       self.tic()
     return new_person
@@ -368,8 +367,13 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserExists('the_user', 'secret')
 
   def test_PersonLoginMigration(self):
-    pers = self._makePerson()
-    pers.setReference('the_user')
+    pers = self.portal.person_module.newContent(
+      portal_type='Person',
+      reference='the_user',
+    )
+    pers.newContent(
+      portal_type='Assignment',
+    ).open()
     pers.setPassword('secret')
     self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
     self.tic()
