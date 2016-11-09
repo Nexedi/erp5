@@ -65,7 +65,7 @@ if not skip_period_validation :
     valid_date = False
     no_accounts = True
     for line in transaction_line_list:
-      if line.getSource():
+      if line.getSource(portal_type='Account'):
         no_accounts = False
     if no_accounts:
       valid_date = True
@@ -95,7 +95,7 @@ if not skip_period_validation :
     valid_date = False
     no_accounts = True
     for line in transaction_line_list:
-      if line.getDestination():
+      if line.getDestination(portal_type='Account'):
         no_accounts = False
     if no_accounts:
       valid_date = True

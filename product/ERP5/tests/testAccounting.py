@@ -425,6 +425,93 @@ class TestTransactionValidation(AccountingTestCase):
       line.setDestination(None)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
+  def test_UnusedSectionTransactionValidationDateDestination(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates. Symetric test of test_UnusedSectionTransactionValidationDate
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               destination_section_value=self.organisation_module.supplier,
+               source_section_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for source_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # If we don't have accounts on source side, validating transaction is
+    # not refused
+    for line in accounting_transaction.getMovementList():
+      line.setSource(None)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_UnusedSectionTransactionValidationDateWithSourceSetOnDelivery(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates
+    # Corner case that a source organisation is set on the transaction.
+    # Acquisition should not be a problem.
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               source_section_value=self.organisation_module.supplier,
+               source_value=self.organisation_module.supplier,
+               destination_section_value=self.section,
+               destination_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for destination_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # If we don't have accounts on destination side, validating transaction is
+    # not refused
+    for line in accounting_transaction.getMovementList():
+      line.setDestination(None)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_UnusedSectionTransactionValidationDateDestinationWithDestinationSetOnDelivery(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates.
+    # Symetric test of test_UnusedSectionTransactionValidationDateWithSourceSetOnDelivery
+    # Corner case that a destination organisation is set on the transaction.
+    # Acquisition should not be a problem.
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               destination_section_value=self.organisation_module.supplier,
+               destination_value=self.organisation_module.supplier,
+               source_section_value=self.section,
+               source_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for source_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # If we don't have accounts on source side, validating transaction is
+    # not refused
+    for line in accounting_transaction.getMovementList():
+      line.setSource(None)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
   def test_AccountingTransactionValidationStartDate(self):
     # Check we can/cannot validate at date boundaries of the period
     accounting_transaction = self._makeOne(
