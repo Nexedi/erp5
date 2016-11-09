@@ -83,7 +83,7 @@ class TestERP5Administration(InventoryAPITestCase):
 
   def test_check_consistency_alarm(self):
     alarm = self.portal.portal_alarms.check_consistency
-    person = self.portal.person_module.newContent(portal_type='Person')
+    person = self.portal.person_module.newContent(portal_type='Person', reference=None)
     # this document will be non consistent, for PropertyTypeValidity
     person.title = 3
     # tic right now to make sure the person is indexed, indeed the alarm

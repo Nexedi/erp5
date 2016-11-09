@@ -162,12 +162,14 @@ class TestERP5SyncMLMixin(TestMixin):
     person_server = self.getPersonServer()
     if getattr(person_server, self.id1, None) is None:
       person_server.newContent(id=self.id1, portal_type='Person',
+                               reference=None,
                                first_name=self.first_name1,
                                last_name=self.last_name1,
                                description=self.description1)
     if getattr(person_server, self.id2, None) is None:
       person_server.newContent(id=self.id2,
                                portal_type='Person',
+                               reference=None,
                                first_name=self.first_name2,
                                last_name=self.last_name2,
                                description=self.description2)
@@ -183,6 +185,7 @@ class TestERP5SyncMLMixin(TestMixin):
     for id in range(1, number_of_object+1):
       person_client.newContent(portal_type='Person',
                                id=id,
+                               reference=None,
                                first_name=self.first_name1,
                                last_name=self.last_name1,
                                description=self.description1)
@@ -506,7 +509,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     person = person_client1._getOb(self.id1)
     # use a temp_object to create a no persistent object in person
     sub_person =\
-    person.newContent(id=self.id1, portal_type='Person', temp_object=1)
+    person.newContent(id=self.id1, portal_type='Person', reference=None, temp_object=1)
     state_list = self.getSynchronizationState(sub_person)
     for state in state_list:
       self.assertEqual(state[1], 'conflict')
@@ -524,15 +527,15 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     """
     person_server = self.getPersonServer()
     person1 = person_server._getOb(self.id1)
-    sub_person1 = person1.newContent(id=self.id1, portal_type='Person')
+    sub_person1 = person1.newContent(id=self.id1, portal_type='Person', reference=None)
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
         'description':self.description1}
     sub_person1.edit(**kw)
-    sub_sub_person1 = sub_person1.newContent(id=self.id1, portal_type='Person')
+    sub_sub_person1 = sub_person1.newContent(id=self.id1, portal_type='Person', reference=None)
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
         'description':self.description1, 'default_telephone_text':'0689778308'}
     sub_sub_person1.edit(**kw)
-    sub_sub_person2 = sub_person1.newContent(id=self.id2, portal_type='Person')
+    sub_sub_person2 = sub_person1.newContent(id=self.id2, portal_type='Person', reference=None)
     kw = {'first_name':self.first_name2,'last_name':self.last_name2,
           'description':self.description2}
     sub_sub_person2.edit(**kw)

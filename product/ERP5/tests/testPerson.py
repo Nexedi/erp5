@@ -61,6 +61,7 @@ class TestPerson(ERP5TypeTestCase):
 
   def _makeOne(self, **kw):
     module = self.portal.person_module
+    kw.setdefault('reference', None)
     return module.newContent(portal_type="Person", **kw)
 
   def test_01_CopyPastePersonObject(self, quiet=0, run=run_all_test):

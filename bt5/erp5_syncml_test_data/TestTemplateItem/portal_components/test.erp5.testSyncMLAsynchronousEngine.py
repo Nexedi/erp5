@@ -101,7 +101,7 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
     self.title_list = []
     append = self.title_list.append
     for x in xrange(nb_objects):
-      module.newContent(title=str(x))
+      module.newContent(title=str(x), reference=None)
       append(str(x))
 
   def _setSyncMode(self, mode):

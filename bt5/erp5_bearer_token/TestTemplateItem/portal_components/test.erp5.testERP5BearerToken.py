@@ -22,8 +22,7 @@ class TestERP5BearerToken(ERP5TypeTestCase):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
-    person = person_module.newContent(portal_type='Person',
-      reference='P' + reference)
+    person = person_module.newContent(portal_type='Person')
     person.newContent(portal_type = 'Assignment').open()
     self.tic()
     return person
