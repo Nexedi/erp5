@@ -112,6 +112,14 @@
             }
           });
         });
+    })
+    .declareService(function() {
+      var gadget = this;
+      return new RSVP.Queue()
+      .push(function() {
+        var search_bar = gadget.props.element.querySelector('.ui-input-text input');
+        $(search_bar).select().focus();
+      });
     });
 
 }(window, RSVP, rJS));
