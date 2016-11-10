@@ -64,6 +64,16 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>group/3</string>
+                <string>contributor/organisation_module/1</string>
+                <string>contributor/person_module/3</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -81,9 +91,22 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>fsvdfv\n
+dfv\n
+dfv\n
+dfv\n
+dfv\n
+ddfv\n
+dfv\n
+dfv\n
+dfvdfvdfvdfv\n
+dfdfv\n
+ffffff\n
+dfvfdvdfvdfvdfvdfvdfvdfv\n
+dfv\n
+dfvdf\n
+vdf\n
+vdf</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -236,7 +259,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.58960.41752.27153</string> </value>
+                <value> <string>955.12311.36129.49083</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +277,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1477660036.34</float>
+                        <float>1478793295.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

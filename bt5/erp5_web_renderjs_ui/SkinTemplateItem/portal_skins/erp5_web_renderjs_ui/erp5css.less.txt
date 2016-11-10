@@ -34,18 +34,22 @@
 
 @radius: .325em;
 
-@headerheight: 2.6em;
-@headertitleleftlargemargin: 4em;
-@headertitleleftsmallmargin: 2em;
+// XXX BUG Generate wrong align on firefox smartphone
+@headerheight: @font-size * 2 + @margin-size;
 
-@mainpaddingdesktop: 2em;
+@main-margin-size-desktop: @quadruple-margin-size;
+@main-margin-size-smartphone: @margin-size;
+
+@headertitleleftlargemargin: @main-margin-size-desktop + @margin-size * 3;
+@headertitleleftsmallmargin: @main-margin-size-smartphone + @main-margin-size-desktop;
 
 // XXX desktop: 12em
-@panelwidth: 17em;
+@panelwidth: @margin-size * 30;
+// @panelwidth: 15em;
 
 @smartphone: ~"only screen and (max-width: 28em)";
-@tablet: ~"only screen and (min-width: 28em) and (max-width: 62em)";
-@desktop: ~"only screen and (min-width: 62em)";
+@tablet: ~"only screen and (min-width: 28em) and (max-width: 70em)";
+@desktop: ~"only screen and (min-width: 70em)";
 
 
 /**********************************************
@@ -58,24 +62,39 @@
 * Shared
 **********************************************/
 @font-family: @sans-serif;
-@font-size: 11pt;
 // Increase font size to prevent IOS auto zooming when focusing input field
-@smartphone-font-size: 12pt;
+@font-size: 12pt;
 @font-weight: 400;
 
-@line-height: 1.3;
-@letter-spacing: .05em;
+@line-height: 1.5;
 
 @header-font-weight: 700;
-// @header-font-weight: bolder;
-@header-letter-spacing: .1em;
 
-@border-size: 1pt;
+@border-size: 1px;
 @border-type: solid;
-// @border-color: @color;
-@border: @border-size @border-type @colorforeground;
+@border-transparency: .3;
+@border-color: rgba(0, 0, 0, @border-transparency);
+@border: @border-size @border-type @border-color;
+@border-radius: @radius;
+@box-shadow-transparency: .2;
+@box-shadow: inset 0 @border-size 3px rgba(0, 0, 0, @box-shadow-transparency);
+
+// #3388cc = rgba(51, 136, 204, 1)
+@focus-border-color: #3388cc;
+@focus-border: @border-size @border-type @focus-border-color;
+@focus-box-shadow: 0 0 @double-margin-size @focus-border-color;
 
 
+@half-margin-size: 3pt;
+@margin-size: 6pt;
+@double-margin-size: 12pt;
+@triple-margin-size: 18pt;
+@quadruple-margin-size: 24pt;
+
+@transition-timing: .2s ease-out;
+
+@sub-line-margin-size-desktop: @main-margin-size-desktop;
+@sub-line-min-width-desktop: 5em;
 
 ///////////////////////////////////////////////
 // Extend
@@ -205,13 +224,10 @@ body {
 
 body, button, input, textarea, select {
   font-family: @font-family;
-  // letter-spacing: @letter-spacing;
-  @media @desktop, @tablet {
-    font-size: @font-size;
-  }
-  @media @smartphone {
-    font-size: @smartphone-font-size;
-  }
+  font-size: @font-size;
+  padding: 0;
+  margin: 0;
+
   font-weight: @font-weight;
   line-height: @line-height;
 }
@@ -270,7 +286,6 @@ q {
 }
 
 mark {
-  // background-color: @colortextselection;
   color: @colortextselection;
 }
 
@@ -278,9 +293,11 @@ mark {
 * Link
 **********************************************/
 .link(@ccolor) {
+  // XXX
   color: @ccolor;
 
   text-decoration: none;
+  // TODO Animate underline by using outline?
 
   &[href=""] {
     color: @colorforeground;
@@ -291,6 +308,7 @@ mark {
     text-decoration: underline;
   }
   &:focus {
+    // XXX TODO
     outline-offset: -2px;
     outline: 2px @border-type @colorfocus;
   }
@@ -314,7 +332,6 @@ a {
 
 pre, xmp, plaintext, listing {
   display: block;
-  // font-family: @monospace;
   white-space: pre-wrap;
 }
 
@@ -334,106 +351,64 @@ hr {
 **********************************************/
 
 label {
-  display: block;
+  // XXX
   color: @grey;
 }
 
-input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]), textarea {
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]), textarea, select {
   width: 100%;
-  margin: 0;
 
-  padding: 0.4em;
-  line-height: 1.4em;
+  padding: @half-margin-size;
 
-  border: none;
   background-color: @colortextboxbackground;
   color: @colortextboxforeground;
 
-  border-radius: @radius;
-  border-width: 1px;
-  border-style: solid;
+  border: @border;
+  border-radius: @border-radius;
 
-  border-color: rgba(0, 0, 0, 0.3);
-  box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
-
-  outline-offset: 0;
-
-  &[readonly="readonly"] {
-    // XXX Should be dropped when gadget field do not use input
-    // in read only
-    border: none;
-    box-shadow: none;
-    padding: 0;
-    line-height: 1em;
-  }
+  // BUG: transition is not triggered if there is a default box-shadow
+  // probably a chrome bug. Disable for now.
+  // box-shadow: @box-shadow;
+  transition : border @transition-timing, box-shadow @transition-timing;
 
   &:active, &:focus {
-    outline-offset: 0;
+    outline: none;
   }
   &:focus {
-    box-shadow: 0 0 12px @colorfocus;
+    border: @focus-border;
+    box-shadow: @focus-box-shadow;
   }
 }
 
+
 // http://kyusuf.com/post/completely-css-custom-checkbox-radio-buttons-and-select-boxes
 select {
-   width: 100%;
-   margin: 0;
-   padding: 0.4em;
-   padding-right: 1.8em;
+  cursor: pointer;
 
   -webkit-appearance: none;
   -moz-appearance: none;
-   appearance: none;
+  appearance: none;
+  background-image: none;
+  background-color: @colortextboxbackground;
 
-   line-height: 1.4em;
-   cursor: pointer;
-
-
-   background-image: none;
-   background-color: @colortextboxbackground;
-
-   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px'><polyline fill-opacity='0.5' points='46.139,15.518 25.166,36.49 4.193,15.519'/></svg>") right no-repeat;
-   background-position: right .5em top 50%;
-   background-size: 1em 1em;
-
-
-   color: @colortextboxforeground;
-
-   border-radius: @radius;
-
-   border-width: 1px;
-   border-style: solid;
-   border-color: rgba(0, 0, 0, 0.3);
-   box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
-
-   outline-offset: 0;
-
-  &[readonly="readonly"] {
-    // XXX Should be dropped when gadget field do not use input
-    // in read only
-    border: none;
-    background: none;
-    box-shadow: none;
-    padding: 0;
-    line-height: 1em;
-  }
-
-  &:not([readonly="readonly"]) {
-    &:hover, &:active {
-      background-color: @colorblocklinkbackground;
-    }
-  }
+  padding-right: @quadruple-margin-size;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50px' height='50px'><polyline fill-opacity='0.5' points='46.139,15.518 25.166,36.49 4.193,15.519'/></svg>") right no-repeat;
+  background-position: right @margin-size top 50%;
+  background-size: @double-margin-size @double-margin-size;
 
   &:-moz-focusring {
-    color: transparent
+    // Remove outline in Firefox
+    // http://stackoverflow.com/a/18853002
+    color: transparent;
+    text-shadow: 0 0 0 #000;
   }
 }
 
 textarea {
-  width: 100%;
-  margin: 0;
-  // font-family: @monospace;
+  // Fix inconsistent Textarea bottom margin in Firefox and Chrome
+  // http://stackoverflow.com/a/26904480
+  vertical-align: top;
+  // BUG: how to transition on textarea row property
 }
 
 ::-webkit-input-placeholder {
@@ -461,20 +436,24 @@ input[type=submit], button {
   margin: 0;
   padding: 0;
   border: none;
-  background-image: none;
-  background-color: @colorbackground;
+  background:transparent;
   color: @colorforeground;
 
-  transition: background-color 0.2s ease-out;
   &:hover, &:focus {
     outline: none;
-    background-color: @colorblocklinkbackground;
+  }
+
+/*
+  // XXX TODO
+  // transition: background-color 0.2s ease-out;
+  &:hover, &:focus {
+    outline: none;
   }
   &:active {
     // box-shadow: inset 0 0 0 5px darken(@colorblocklinkbackground, 10%);
     background-color: darken(@colorblocklinkbackground, 20%);
   }
-
+*/
   cursor: pointer;
 }
 
@@ -482,7 +461,7 @@ input[type=submit], button {
 * Media
 **********************************************/
 
-img, canvas, iframe, video, svg {
+img, iframe, video, svg {
   max-width: 100%;
 }
 
@@ -499,8 +478,8 @@ svg {
 
 iframe {
   width: 100%;
-  height: 50em;
-  background-color: white;
+  height: 80vh;
+  background-color: @colorbackground;
 }
 
 img {
@@ -530,14 +509,13 @@ div[data-gadget-scope='panel'] {
   z-index: 2000;
 
   @media @smartphone, @tablet {
-    left: -@panelwidth - 1em;
+    left: -@panelwidth - @margin-size;
     transition: transform 200ms ease-out;
     transform: translate3d(0, 0, 0);
     &.visible {
-      transform: translate3d(@panelwidth + 1em, 0, 0);
+      transform: translate3d(@panelwidth + @margin-size, 0, 0);
     }
   }
-
 
   div[data-role="header"] {
     display: flex;
@@ -553,11 +531,10 @@ div[data-gadget-scope='panel'] {
       .hide_text();
       background-color: @panelbackgroundcolor;
 
-
       &::before {
         float: left;
         text-indent: 0;
-        margin-left: 1em;
+        margin-left: @double-margin-size;
       }
 
       @media @desktop {
@@ -585,15 +562,17 @@ div[data-gadget-scope='panel'] {
     li {
       a {
         color: @white;
-        padding: .4em;
-        padding-left: 1em;
+        padding: @half-margin-size;
+        padding-left: @double-margin-size;
         display: block;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap; 
 
         &::before {
-          width: @mainpaddingdesktop;
+          // Use width instead of padding-right
+          // To keep text aligned
+          width: @quadruple-margin-size;
         }
         &:hover, &:active {
           background-color: darken(@panelbackgroundcolor, 10%);
@@ -621,20 +600,20 @@ div[data-gadget-scope='editor_panel'] {
   z-index: 3000;
 
   @media @desktop {
-    left: -@panelwidth - 1em;
+    left: -@panelwidth - @margin-size;
     transition: transform 200ms ease-out;
     transform: translate3d(0, 0, 0);
     &.visible {
-      transform: translate3d(@panelwidth + 1em, 0, 0);
+      transform: translate3d(@panelwidth + @margin-size, 0, 0);
     }
     box-shadow: 5px 0 5px rgba(0,0,0,.15);
   }
   @media @smartphone, @tablet {
-    right: -@panelwidth - 1em;
+    right: -@panelwidth - @margin-size;
     transition: transform 200ms ease-out;
     transform: translate3d(0, 0, 0);
     &.visible {
-      transform: translate3d(-@panelwidth - 1em, 0, 0);
+      transform: translate3d(-@panelwidth - @margin-size, 0, 0);
     }
     box-shadow: -5px 0 5px rgba(0,0,0,.15);
   }
@@ -659,7 +638,7 @@ div[data-gadget-scope='editor_panel'] {
       &::before {
         float: left;
         text-indent: 0;
-        margin-left: 1em;
+        margin-left: @double-margin-size;
       }
 
       display: block;
@@ -669,7 +648,7 @@ div[data-gadget-scope='editor_panel'] {
   }
 
   section {
-    padding: 1em;
+    padding: @double-margin-size;
 
     fieldset {
       & > div {
@@ -678,7 +657,7 @@ div[data-gadget-scope='editor_panel'] {
       label {
         display: inline-block;
         text-align: center;
-        font-size: 0.8em;
+        // font-size: 0.8em;
       }
       input[type="radio"] {
         display: inline-block;
@@ -689,7 +668,7 @@ div[data-gadget-scope='editor_panel'] {
       & > div {
         display: flex;
         align-items: flex-start;
-        padding: 0.5em 0;
+        padding: @margin-size 0;
 
         .filter_item, .sort_item {
           flex: 1;
@@ -700,11 +679,11 @@ div[data-gadget-scope='editor_panel'] {
     button {
 
       // Copy pasted from listbox buttons
-      padding: 0.5em;
+      padding: @half-margin-size @margin-size;
       border: 1px solid rgba(0, 0, 0, 0.14);
       border-radius: @radius;
 
-      margin-right: 0.5em;
+      margin-right: @margin-size;
       &:last-of-type {
         margin-right: 0;
       }
@@ -712,7 +691,7 @@ div[data-gadget-scope='editor_panel'] {
       .hide_text(@width: 2em);
 
       &::before {
-        margin-right: 0.4em;
+        margin-right: @margin-size;
 
         float: left;
         text-indent: 0;
@@ -727,62 +706,78 @@ div[data-gadget-scope='editor_panel'] {
 /**********************************************
 * Gadget: header
 **********************************************/
+.renderDesktopSubLink() {
+  padding-left: @sub-line-margin-size-desktop;
+  padding-right: @sub-line-margin-size-desktop;
+  min-width: @sub-line-min-width-desktop;
+}
+
 div[data-gadget-scope='header'] .ui-header {
 
   position: fixed;
   z-index: 1000;
   text-align: center;
 
-  @media @tablet, @smartphone {
-    display: flex;
-    flex-flow: row wrap;
-  }
-  @media @desktop {
-    display: table;
-    margin-left: @panelwidth;
-  }
-
+  display: flex;
+  flex-flow: row wrap;
   // Prevent the header to have a width higher than the screen
   width: 100%;
 
+  @media @desktop {
+    margin-left: @panelwidth;
+  }
+
   color: @white;
+  background-color: @colorsubheaderbackground;
 
   button, a {
     color: @white;
-    background-color: @colorheaderbackground;
+    transition: background-color @transition-timing;
     &:hover, &:active {
       background-color: lighten(@colorheaderbackground, 20%);
     }
   }
 
-  // XXX TODO: restore border to separate title from button/links
-  & > .ui-btn-left {
-    button, a {
-      border-right: 1px solid rgba(255, 255, 255, 0.55);
-    }
-  }
-
   .ui-controlgroup-controls {
+    // Left, right button next to the page title
 
     button, a {
       display: block;
 
+      @media @desktop {
+        background-color: @colorsubheaderbackground;
+      }
+      @media @smartphone, @tablet {
+        background-color: @colorheaderbackground;
+      }
+
+      transition: background-color @transition-timing;
+      &:hover, &:active {
+        background-color: lighten(@colorheaderbackground, 20%);
+      }
+
       line-height: @headerheight;
 
+      @media @tablet {
       // https://css-tricks.com/forums/topic/hide-text-but-not-the-before-pseudo-class/
-      // Default size
-      width: 8em;
+        // Default size
+        width: 8em;
+      }
       @media @smartphone {
         .hide_text();
       }
 
       &::before {
-        margin-right: 0.4em;
+        @media @tablet, @desktop {
+          width: 1em;
+          margin-right: @margin-size;
+          text-align: center;
+        }
 
         @media @smartphone {
           float: left;
           text-indent: 0;
-          margin-left: 1em;
+          margin-left: @double-margin-size;
         }
       }
 
@@ -795,18 +790,21 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
+  // XXX TODO: restore border to separate title from button/links
+  & > .ui-btn-left {
+    button, a {
+      border-right: 1px solid rgba(255, 255, 255, 0.55);
+    }
+  }
+
   & > .ui-btn-right {
     button, a {
-      background-color: #F60;
+      // background-color: #F60;
       @media @smartphone, @tablet {
         border-left: 1px solid rgba(255, 255, 255, 0.55);
       }
-    }
-    @media @desktop {
-      display: table-footer-group;
-      button, a {
-        margin: 0.5em;
-        margin-left: @mainpaddingdesktop;
+      @media @desktop {
+        .renderDesktopSubLink();
       }
     }
   }
@@ -815,10 +813,13 @@ div[data-gadget-scope='header'] .ui-header {
     text-align: left;
     line-height: @headerheight;
     flex: 1;
+    @media @desktop {
+      flex: 1 100%;
+    }
 
     background-color: @colorheaderbackground;
 
-    // XXX Restore border
+    // Restore border?
     // border-left: 1px solid rgba(255, 255, 255, 0.55);
     // border-right: 1px solid rgba(255, 255, 255, 0.55);
 
@@ -834,7 +835,7 @@ div[data-gadget-scope='header'] .ui-header {
         padding-left: @headertitleleftsmallmargin;
       }
       @media @desktop {
-        padding-left: @mainpaddingdesktop;
+        padding-left: @main-margin-size-desktop;
       }
     }
     // Clickable title
@@ -851,13 +852,13 @@ div[data-gadget-scope='header'] .ui-header {
         @media @tablet, @smartphone {
           text-align: center;
         }
-        @media @desktop {
-          padding-left: @mainpaddingdesktop;
-        }
 
+        @media @desktop {
+          padding-left: @main-margin-size-desktop;
+        }
         width: @headertitleleftlargemargin;
         @media @smartphone {
-          width: @headertitleleftsmallmargin
+          width: @headertitleleftsmallmargin;
         }
 
       }
@@ -869,107 +870,75 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-subheader {
     @media @desktop {
       text-align: left;
+      flex: 1;
+    }
+
+    @media @smartphone, @tablet {
+      flex: 1 100%;
     }
 
   }
 
   ul {
-    width: 100%;
-    background-color: @colorsubheaderbackground;
-
-    display: table;
-    table-layout: fixed;
-
-    a {
-      background-color: @colorsubheaderbackground;
-    }
-
-    @media @desktop {
-    height: 100%;
+    display: flex;
 
     li {
-      display: inline-block;
-      height: 100%;
-
-      a {
-        display: block;
-
-        padding-left: @mainpaddingdesktop;
-        padding-right: @mainpaddingdesktop;
-        min-width: 5em;
-
-        line-height: @headerheight;
-        height: 100%;
-
-        white-space: nowrap;
-        overflow: hidden;
-
-        &::before {
-          display: none;
-        }
-
-      }
-    }
-    }
-
-    @media @tablet {
-      li {
-        display: table-cell;
+      @media @tablet, @smartphone {
+        flex: 1;
+        // XXX TODO Hardcoded color
         border-left: 1px solid rgba(0, 0, 0, 0.55);
-
         &:first-child {
           border-left: none;
         }
+
         a {
           display: block;
+        }
+      }
 
-          padding-top: 0.4em;
-          padding-bottom: 0.4em;
-
+      @media @tablet {
+        a {
+          padding-top: @half-margin-size;
+          padding-bottom: @half-margin-size;
           white-space: nowrap;
           overflow: hidden;
-
           &::before {
             font-size: 1.2em;
-            padding-bottom: 0.3em;
             display: block;
           }
         }
       }
-    }
 
-
-
-    @media @smartphone {
-    li {
-      line-height: @headerheight;
-
-      display: table-cell;
-      border-left: 1px solid rgba(0, 0, 0, 0.55);
-
-      &:first-child {
-        border-left: none;
-      }
-      a {
-        display: block;
-
-        text-align: center;
-        vertical-align: middle;
-        font-size: 1.5em;
-
-        padding-top: 0.4em;
-        padding-bottom: 0.4em;
-
-        .hide_text(@width: false);
-
-        &::before {
-          float: left;
-          text-indent: 0;
-          width: 100%;
+      @media @smartphone {
+        a {
+          text-align: center;
+          vertical-align: middle;
+          font-size: 1.5em;
+          padding-top: @margin-size;
+          padding-bottom: @margin-size;
+          .hide_text(@width: false);
+          &::before {
+            float: left;
+            text-indent: 0;
+            width: 100%;
+          }
         }
-
       }
-    }
+
+      @media @desktop {
+        a {
+          display: block;
+          .renderDesktopSubLink();
+          line-height: @headerheight;
+
+          white-space: nowrap;
+          overflow: hidden;
+          &::before {
+            display: none;
+          }
+        }
+      }
+
     }
 
   }
@@ -981,10 +950,8 @@ div[data-gadget-scope='header'] .ui-header {
 **********************************************/
 .gadget-content {
 
-
   input[type='submit'] {
-    padding: 0.4em;
-    line-height: 1.4em;
+    padding: @margin-size;
 
     background-color: @panelbackgroundcolor;
     color: @white;
@@ -1010,33 +977,39 @@ div[data-gadget-scope='header'] .ui-header {
   }
 
   // Top padding
-  padding: @mainpaddingdesktop;
-  padding-top: 9em;
+  padding: @main-margin-size-desktop;
+  // XXX TODO: replace em by pt, to have exact position
+  padding-top: 2 * @headerheight + @margin-size;
+  @media @tablet {
+    padding-top: 7em;
+  }
   @media @smartphone {
-    padding: 0.5em;
-    padding-top: 8em;
+    padding: @main-margin-size-smartphone;
+    padding-top: 6em;
   }
 
   // Label
 
   .ui-field-contain {
-    padding: 0.5em 0;
+    padding: @margin-size 0;
 
     div {
       width: 100%;
     }
-
-    label {
-      margin: 0 0 0.4em;
-    }
   }
 
-  .ui-content-title {
+  .ui-content-header-plain {
     font-size: 150%;
   }
 
   ul.document-listview {
-    margin-bottom: 2em;
+    &:not(:last-of-type) {
+      margin-bottom: @double-margin-size;
+    }
+    &:first-child {
+      margin-top: @margin-size;
+    }
+
     li {
       border-color: rgba(0, 0, 0, 0.3);
       border-width: 1px;
@@ -1050,9 +1023,9 @@ div[data-gadget-scope='header'] .ui-header {
             font-family: FontAwesome;
             content: "\f0da";
             text-align: right;
-            float:right;
+            float: right;
             position: absolute;
-            right: 1.5em;
+            right: @double-margin-size;
           }
         }
       }
@@ -1060,8 +1033,8 @@ div[data-gadget-scope='header'] .ui-header {
       a {
         display: block;
         position: relative;
-        padding: 0.7em 1em;
-        padding-right: 2.5em;
+        padding: @margin-size @double-margin-size;
+        padding-right: @quadruple-margin-size;
 
         color: #222222;
 
@@ -1085,11 +1058,11 @@ div[data-gadget-scope='header'] .ui-header {
 
       .ui-li-count {
         float: right;
-        padding: 0 0.5em;
+        padding: 0 @margin-size;
         border: 1px solid rgba(0, 0, 0, 0.14);
         border-radius: @radius;
         position: absolute;
-        right: .5em;
+        right: @margin-size;
       }
 
     }
@@ -1102,7 +1075,8 @@ div[data-gadget-scope='header'] .ui-header {
       width: 50%;
     }
     .right {
-      padding-left: 2%;
+      // Put padding only in .right, to keep .center aligned with .left
+      padding-left: @quadruple-margin-size;
     }
   }
 
@@ -1129,14 +1103,17 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
+/*
   @media @smartphone {
     .ui-field-contain {
-      padding: 0.8em 0;
+      // padding: 0.8em 0;
       // make sure there is a bottom border
       // XXX TODO: border should be visible only if not input
-      // border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      // XXX How to not show it on last field?
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     }
   }
+*/
 
   /* form validation (assuming label>span is used) */
   form label span {
@@ -1151,18 +1128,18 @@ div[data-gadget-scope='header'] .ui-header {
 .relation-input {
   display: flex;
   a {
-      .hide_text();
+      .hide_text(@width: @quadruple-margin-size);
 
       &::before {
         float: left;
         text-indent: 0;
-        margin-left: 1em;
+        margin-left: @margin-size;
       }
 
       display: block;
 
-      line-height: @headerheight;
-
+      padding-top: @half-margin-size;
+      padding-bottom: @half-margin-size;
   }
 
   div {
@@ -1179,16 +1156,18 @@ div[data-gadget-scope='header'] .ui-header {
       background-color: @panelbackgroundcolor;
 
       color: @white;
-      padding: .4em;
-      padding-left: 1em;
+      padding: @half-margin-size;
+      padding-left: @margin-size;
       display: block;
       text-overflow: ellipsis;
       overflow: hidden;
       white-space: nowrap; 
 
       &::before {
-        width: @mainpaddingdesktop;
+        padding-right: @margin-size;
       }
+      // No transition, as it doesn't feel right
+      // transition: background-color @transition-timing;
       &:hover, &:active {
         background-color: darken(@panelbackgroundcolor, 10%);
       }
@@ -1214,6 +1193,8 @@ div[data-gadget-scope='header'] .ui-header {
 * Listbox
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] {
+  padding-top: @margin-size;
+
   .ui-input-text {
     display: flex;
     div[data-gadget-scope='input'] {
@@ -1221,9 +1202,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     }
   }
   button {
-    margin-left: 0.5em;
-    padding: 0.5em;
-    padding-left: 0;
+    padding: @half-margin-size;
   }
 }
 
@@ -1231,7 +1210,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 
   .ui-table-header {
     display: flex;
-    padding-bottom: 0.5em;
+    padding-bottom: @margin-size;
     @media @smartphone {
       border-bottom: 2px solid rgba(0, 0, 0, 0.14902);
     }
@@ -1243,11 +1222,11 @@ div[data-gadget-scope='erp5_searchfield'] {
       align-self: flex-end;
     }
     button {
-      padding: 0.5em;
+      padding: @half-margin-size;
       border: 1px solid rgba(0, 0, 0, 0.14);
       border-radius: @radius;
 
-      margin-right: 0.5em;
+      margin-right: @margin-size;
       &:last-of-type {
         margin-right: 0;
       }
@@ -1257,7 +1236,7 @@ div[data-gadget-scope='erp5_searchfield'] {
       }
 
       &::before {
-        margin-right: 0.4em;
+        margin-right: @margin-size;
 
         @media @smartphone {
           float: left;
@@ -1272,7 +1251,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     text-align: left;
 
     th, td {
-      line-height: 1.5em;
+      // line-height: 1.5em;
       vertical-align: middle;
     }
 
@@ -1283,7 +1262,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 
       // XXX Same than cells
       tr { th {
-      padding: 0.4em 0.25em;
+        padding: @margin-size @half-margin-size;
       }}
 
       // text-align: center;
@@ -1311,7 +1290,7 @@ div[data-gadget-scope='erp5_searchfield'] {
       @media @desktop, @tablet {
         a {
           display: block;
-          padding: 0.4em 0.25em;
+          padding: @half-margin-size;
         }
       }
 
@@ -1349,7 +1328,7 @@ div[data-gadget-scope='erp5_searchfield'] {
                   content: "\f0da";
                   font-size: 1.25em;
                   position: absolute;
-                  right: 0.5em;
+                  right: @margin-size;
                   top: 50%;
                   margin-top: -0.75em;
 
@@ -1384,7 +1363,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 
     tfoot .ui-controlgroup-controls {
       display: flex;
-      padding-top: 0.5em;
+      padding-top: @margin-size;
       border-top: 2px solid rgba(0, 0, 0, 0.14902);
 
       span {
@@ -1393,11 +1372,11 @@ div[data-gadget-scope='erp5_searchfield'] {
         text-align: right;
       }
       a {
-        padding: 0.5em;
+        padding: @margin-size;
         border: 1px solid rgba(0, 0, 0, 0.14);
         border-radius: @radius;
 
-        margin-right: 0.5em;
+        margin-right: @margin-size;
         &:last-of-type {
           margin-right: 0;
         }
@@ -1407,15 +1386,15 @@ div[data-gadget-scope='erp5_searchfield'] {
         }
 
         @media @smartphone {
-          .hide_text(@width: 2em);
+          .hide_text(@width: initial);
         }
 
         &::before {
-          margin-right: 0.4em;
+          margin-right: @margin-size;
 
           @media @smartphone {
             float: left;
-            text-indent: 0.3em;
+            text-indent: @margin-size;
           }
         }
       }
@@ -1457,10 +1436,7 @@ div[data-gadget-scope='erp5_searchfield'] {
 }
 
 .ui-icon-warning {
-  // XXX does not work...
-  background: none repeat scroll 0 0 #e4ebf1;
-  border-color: rgba(0, 0, 0, 0.3);
-  color: #777;
+  background-color: @coloraccent !important;
   &::before {
     content: "\f071";
   }
