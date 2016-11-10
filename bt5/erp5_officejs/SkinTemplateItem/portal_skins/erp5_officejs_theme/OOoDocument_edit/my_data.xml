@@ -110,9 +110,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -145,7 +143,7 @@
                 <item>
                     <key> <string>gadget_url</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -249,20 +247,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/OOoDocument_convertForJio</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.getPortalObject().restrictedTraverse(\'web_site_module/officejs_spreadsheet/rjsunsafe/ooffice/gadget_ooffice.html\').absolute_url()</string> </value>
+            <value> <string>python: context.getPortalObject().restrictedTraverse(\'web_site_module/officejs_\' + context.getPortalType().lower() + \'_landing\').absolute_url() + \'/\'</string> </value>
         </item>
       </dictionary>
     </pickle>
