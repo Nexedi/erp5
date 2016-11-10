@@ -4,8 +4,8 @@
   "use strict";
 
   function this_func_link(name) {
-    return function () {
-      return this[name].apply(this, arguments[0]);
+    return function (opt) {
+      return this[name].apply(this, opt);
     };
   }
 
@@ -106,15 +106,7 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .allowPublicAcquisition("getSetting", this_func_link("getSetting"))
     .declareAcquiredMethod("jio_get", "jio_get")
-    .allowPublicAcquisition("jio_get", this_func_link("jio_get"))
     .declareAcquiredMethod("jio_put", "jio_put")
-    .allowPublicAcquisition("jio_put", this_func_link("jio_put"))
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .allowPublicAcquisition("jio_getAttachment",
-                            this_func_link("jio_getAttachment"))
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
-    .allowPublicAcquisition("jio_putAttachment",
-                            this_func_link("jio_putAttachment"))
 
     .allowPublicAcquisition('setFillStyle', function () {
       return setFillStyle(this);
@@ -200,7 +192,9 @@
         })
         .push(function (text_content_gadget) {
           return text_content_gadget.render({
-            "jio_key": gadget.options.jio_key
+            //"jio_key": gadget.options.jio_key
+            "key": 'text_content',
+            "value": gadget.options.doc.data
           });
         })
         .push(function () {
