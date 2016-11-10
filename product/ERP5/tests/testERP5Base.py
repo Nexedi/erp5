@@ -1174,7 +1174,7 @@ class TestERP5Base(ERP5TypeTestCase):
     newSecurityManager(None, user.__of__(self.portal.acl_users))
     self.assertNotEquals(None,
         self.portal.portal_catalog.getResultValue(portal_type='Preference',
-                                                  owner='user_login'))
+                                                  owner=user.getId()))
     # for his assignent group
     self.assertEqual('group/nexedi',
         self.portal.portal_preferences.getPreferredSectionCategory())
