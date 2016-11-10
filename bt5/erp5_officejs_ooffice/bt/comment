@@ -1,0 +1,3 @@
+frontend https://lab.nexedi.com/bk/web-apps.git@bk_jio_gadget
+engine  https://lab.nexedi.com/bk/sdkjs.git@bk_jio_gadget
+original project can be found in https://github.com/ONLYOFFICE/DocumentServer
