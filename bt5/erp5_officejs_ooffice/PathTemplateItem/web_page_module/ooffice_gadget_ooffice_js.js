@@ -1,10 +1,36 @@
-/*global window, rJS, RSVP, DocsAPI, console, document, Common, require*/
+/*global window, rJS, RSVP, DocsAPI, console, document,
+ Common, require, jIO, URL, FileReader, atob, ArrayBuffer,
+  Uint8Array, XMLHttpRequest, Blob, Rusha*/
 /*jslint nomen: true, maxlen:80, indent:2*/
 if (Common === undefined) {
   var Common = {};
 }
-(function (rJS, RSVP, require) {
+(function (rJS, RSVP, require, jIO) {
   "use strict";
+
+  var rusha = new Rusha();
+
+  function hexdigest(blob) {
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.readBlobAsArrayBuffer(blob)
+          .then(function (evt) {
+            return rusha.digest(evt.target.result);
+          });
+      });
+  }
+
+  function dataURLtoBlob(url) {
+    var byteString = atob(url.split(',')[1]),
+      mimeString = url.split(',')[0].split(':')[1].split(';')[0],
+      ab = new ArrayBuffer(byteString.length),
+      ia = new Uint8Array(ab),
+      i;
+    for (i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], {type: mimeString});
+  }
 
   rJS(window)
     .ready(function (g) {
@@ -24,11 +50,100 @@ if (Common === undefined) {
     .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
     .declareAcquiredMethod("setFillStyle", "setFillStyle")
     .declareAcquiredMethod('getSetting', 'getSetting')
-    .declareAcquiredMethod("jio_get", "jio_get")
-    .declareAcquiredMethod("jio_put", "jio_put")
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
-
+    .declareMethod("jio_getAttachment", function (docId, attId, opt) {
+      var g = this,
+        queue;
+      if (attId === 'body.txt') {
+        opt = 'asText';
+        if (!docId) {
+          docId = '/';
+        }
+      } else {
+        if (!docId) {
+          docId = '/media/';
+        }
+      }
+      queue = g.props.value_zip_storage.getAttachment(docId, attId)
+        .push(function (blob) {
+          var data;
+          if (opt === "asText") {
+            data = jIO.util.readBlobAsText(blob)
+              .then(function (evt) {
+                return evt.target.result;
+              });
+          } else if (opt === "asBlobURL") {
+            data = URL.createObjectURL(blob);
+          } else if (opt === "asDataURL") {
+            data = new RSVP.Promise(function (resolve, reject) {
+              var reader = new FileReader();
+              reader.addEventListener('load', function () {
+                resolve(reader.result);
+              });
+              reader.addEventListener('error', reject);
+              reader.readAsDataURL(blob);
+            });
+          } else {
+            data = blob;
+          }
+          return data;
+        });
+      return queue;
+    })
+    .declareMethod("jio_putAttachment", function (docId, atId, data) {
+      var g = this,
+        zip = g.props.value_zip_storage,
+        queue,
+        content_type,
+        start = data.slice(0, 5);
+      if (!docId) {
+        docId = '/media/';
+      }
+      if (typeof data === 'string' && start === "data:") {
+        data = dataURLtoBlob(data);
+      }
+      if (atId) {
+        queue = zip.putAttachment(docId, atId, data)
+          .push(undefined, function (error) {
+            if (error.status_code === 404) {
+              // make dir
+              return zip.put(docId, {})
+                .push(function () {
+                  return zip.putAttachment(docId, atId, data);
+                });
+            }
+            throw error;
+          });
+      } else {
+        queue = hexdigest(data)
+          .push(function (digest) {
+            content_type = data.type;
+            if (!content_type) {
+              content_type = "application/binary";
+            }
+            content_type = content_type.split('/');
+            atId = content_type[0] + ',' + digest
+              + '.' + content_type[1];
+            return zip.allAttachments(docId)
+              .push(undefined, function (error) {
+                if (error.status_code === 404) {
+                  // make dir
+                  return zip.put(docId, {});
+                }
+                throw error;
+              })
+              .push(function (list) {
+                if (list.hasOwnProperty(atId)) {
+                  return {};
+                }
+                return zip.putAttachment(docId, atId, data);
+              });
+          })
+          .push(function () {
+            return atId;
+          });
+      }
+      return queue;
+    })
 
     // methods emulating Gateway used for connection with ooffice begin.
     .declareMethod('ready', function () {
@@ -106,15 +221,37 @@ if (Common === undefined) {
 
     .declareMethod('render', function (options) {
       console.log('begin render');
-      var g = this;
+      var g = this,
+        magic,
+        queue = new RSVP.Queue();
       g.props.jio_key = options.jio_key;
-      return new RSVP.Queue()
+      g.props.key = options.key || "text_content";
+      g.props.value = options.value;
+      if (g.props.value) {
+        magic = g.props.value.slice(0, 5);
+        if (magic === "[obje") {
+          g.props.value = "";
+        }
+        if (magic === "data:") {
+          g.props.value = atob(g.props.value.split(',')[1]);
+        }
+        magic = g.props.value.slice(0, 4);
+        if (magic ===  "PK\x03\x04" || magic === "PK\x05\x06") {
+          g.props.value_zip_storage = jIO.createJIO({
+            type: "zipfile",
+            file: g.props.value
+          });
+        }
+      }
+      if (!g.props.value_zip_storage) {
+        g.props.value_zip_storage = jIO.createJIO({type: "zipfile"});
+      }
+      return queue
         .push(function () {
           return g.getSetting('portal_type');
         })
         .push(function (portal_type) {
           g.props.documentType = portal_type.toLowerCase();
-          g.props.key = options.key || "text_content";
           return g.setFillStyle();
         })
         .push(function (size) {
@@ -381,11 +518,28 @@ if (Common === undefined) {
 
     .declareMethod('getContent', function () {
       var g = this,
-        save_defer;
-      save_defer = RSVP.defer();
+        zip = g.props.value_zip_storage,
+        queue = new RSVP.Queue(),
+        save_defer = RSVP.defer();
       g.props.save_defer = save_defer;
       g.props.handlers.save();
-      return save_defer.promise;
+      return queue.push(function () {
+        return save_defer.promise;
+      })
+        .push(function (data) {
+          var body = data[g.props.key];
+          return zip.putAttachment('/', 'body.txt', body);
+        })
+        .push(function () {
+          return zip.getAttachment('/', '/');
+        })
+        .push(function (zip_blob) {
+          return jIO.util.readBlobAsDataURL(zip_blob);
+        })
+        .push(function (evt) {
+          var data = {};
+          data[g.props.key] = evt.target.result;
+          return data;
+        });
     });
-
-}(rJS, RSVP, require));
+}(rJS, RSVP, require, jIO));
