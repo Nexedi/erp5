@@ -30,6 +30,7 @@
 """Tests ERP5 User Management.
 """
 
+import transaction
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -53,6 +54,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
+    transaction.abort()
     self.getPersonModule().manage_delObjects([x for x in
                              self.getPersonModule().objectIds()])
     self.tic()
@@ -391,6 +393,17 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self._assertUserDoesNotExists('the_user', 'secret')
     self._assertUserExists('the_user', 'secret2')
+
+  def test_ERP5LoginUserManagerMigration(self):
+    acl_users= self.portal.acl_users
+    acl_users.manage_delObjects(ids=['erp5_login_users'])
+    portal_templates = self.portal.portal_templates
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    # call checkConsistency again to check if FIX does not happen by checkConsistency().
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    self.assertTrue('erp5_login_users' in acl_users)
 
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""

@@ -19,4 +19,7 @@
  <portal_type id="Query">
   <item>TextDocument</item>
  </portal_type>
+ <portal_type id="Template Tool">
+  <item>TemplateToolERP5LoginUserManagerConstraint</item>
+ </portal_type>
 </property_sheet_list>
