@@ -6,6 +6,7 @@ var global = self,
   "use strict";
 
   self.DOMParser = {};
+  self.DOMError = {};
   self.sessionStorage = {};
   self.localStorage = {};
   self.openDatabase = {};
