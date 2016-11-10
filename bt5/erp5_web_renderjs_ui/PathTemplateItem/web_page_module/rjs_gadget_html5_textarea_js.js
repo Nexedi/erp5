@@ -52,7 +52,7 @@
       }
 
       if (this.state.focused) {
-        textarea.setAttribute('rows', this.state.value.split('\n').length);
+        textarea.setAttribute('rows', Math.max(this.state.value.split('\n').length, 2));
       } else {
         textarea.setAttribute('rows', 2);
       }
