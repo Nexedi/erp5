@@ -1,9 +1,7 @@
-/*global window, rJS, jIO, FormData, UriTemplate, Rusha */
+/*global window, rJS, jIO, FormData, UriTemplate */
 /*jslint indent: 2, maxerr: 3 */
 (function (window, rJS, jIO) {
   "use strict";
-
-  var rusha = new Rusha();
 
   // jIO call wrapper for redirection to authentication page if needed
   function wrapJioCall(gadget, method_name, argument_list) {
@@ -88,80 +86,11 @@
     .declareMethod('remove', function () {
       return wrapJioCall(this, 'remove', arguments);
     })
-    .declareMethod('getAttachment', function (docId, atId, opt) {
-      return wrapJioCall(this, 'getAttachment', [docId, atId])
-      .push(function (blob) {
-        var data;
-        if (opt === "asBlobURL") {
-          data = URL.createObjectURL(blob);
-        } else if (opt === "asDataURL") {
-          data = new RSVP.Promise(function (resolve, reject) {
-            var reader = new FileReader();
-            reader.addEventListener('load', function () {
-              resolve(reader.result);
-            });
-            reader.readAsDataURL(blob);
-          });
-        } else {
-          data = blob;
-        }
-        return data;
-      });
+    .declareMethod('getAttachment', function () {
+      return wrapJioCall(this, 'gettAttachment', arguments);
     })
-    .declareMethod('putAttachment', function (docId, atId, data) {
-      var start = data.slice(0, 5),
-          gadget = this,
-          queue = new RSVP.Queue();
-      if (start === "data:") {
-        queue.push(function () {
-          var byteString = atob(data.split(',')[1]);
-
-          // separate out the mime component
-          var mimeString = data.split(',')[0].split(':')[1].split(';')[0];
-
-          // write the bytes of the string to an ArrayBuffer
-          var ab = new ArrayBuffer(byteString.length);
-          var ia = new Uint8Array(ab);
-          for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-          }
-          return [ab, mimeString];
-        });
-      } else if (start === "blob:") {
-        queue.push(function () {
-          return new Promise(function (resolve, reject) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', data, true);
-            xhr.responseType = 'arraybuffer';
-            xhr.onload = function (e) {
-              if (this.status == 200) {
-                resolve([this.response, this.getResponseHeader("Content-Type")]);
-              }
-            };
-            xhr.send();
-          });
-        });
-      }
-      return queue.push(function (result) {
-        var ab = result[0],
-            mimeString = result[1];
-        if (!atId) {
-          atId = mimeString + ',' + rusha.digestFromArrayBuffer(ab);
-        }
-        return wrapJioCall(gadget, 'allAttachments', [docId])
-          .push(function (list) {
-            var blob;
-            if (list.hasOwnProperty(atId)) {
-              return {};
-            } else {
-              blob = new Blob([ab], {type: mimeString});
-              return wrapJioCall(gadget, 'putAttachment', [docId, atId, blob]);
-            }
-          });
-      })
-      .push(function () {
-        return atId;
-      });
+    .declareMethod('putAttachment', function () {
+      return wrapJioCall(this, 'putAttachment', arguments);
     })
     .declareMethod('removeAttachment', function () {
       return wrapJioCall(this, 'removeAttachment', arguments);
