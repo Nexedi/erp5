@@ -184,6 +184,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_login</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -212,6 +222,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_login</string> </key>
+            <value> <string>../#page=login</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
@@ -253,9 +267,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>WebSection_viewHateoasPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -428,7 +440,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -442,7 +454,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.6527.32664.14592</string> </value>
+                <value> <string>955.14016.15764.22971</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -460,7 +472,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460563175.8</float>
+                        <float>1478896039.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
