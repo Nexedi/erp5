@@ -4,6 +4,9 @@ We need a proxy role to post the result.
 """
 from Products.CMFActivity.ActiveResult import ActiveResult
 
+if ledger_uid_list is not None and context.getLedgerUid() not in ledger_uid_list:
+  return
+
 portal = context.getPortalObject()
 active_process = portal.restrictedTraverse(active_process)
 accounting_line_list = context.contentValues(portal_type=portal.getPortalAccountingMovementTypeList())

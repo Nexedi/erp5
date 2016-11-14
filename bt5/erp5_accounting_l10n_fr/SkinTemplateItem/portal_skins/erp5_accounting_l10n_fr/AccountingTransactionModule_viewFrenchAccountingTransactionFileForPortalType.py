@@ -1,4 +1,5 @@
 portal = context.getPortalObject()
+portal_categories = portal.portal_categories
 
 search_kw = {
   'simulation_state': simulation_state,
@@ -11,6 +12,13 @@ method_kw = {
   'active_process': this_portal_type_active_process,
   'section_uid_list': section_uid_list,
 }
+
+if ledger is not None:
+  if isinstance(ledger, list) or isinstance(ledger, tuple):
+    ledger_uid_list = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
+  else:
+    ledger_uid_list = [portal_categories.ledger.restrictedTraverse(ledger).getUid(), ]
+  method_kw['ledger_uid_list'] = ledger_uid_list
 
 activate_kw = {
   'tag': tag,

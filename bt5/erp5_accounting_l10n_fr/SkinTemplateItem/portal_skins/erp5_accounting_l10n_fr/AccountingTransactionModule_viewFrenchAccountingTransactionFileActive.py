@@ -22,6 +22,7 @@ for portal_type in portal.getPortalAccountingTransactionTypeList():
     from_date,
     at_date,
     simulation_state,
+    ledger,
     active_process.getRelativeUrl(),
     this_portal_type_active_process.getRelativeUrl(),
     tag,
