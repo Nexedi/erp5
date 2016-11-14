@@ -159,6 +159,113 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.assertEqual(6, len(credit_list))
     self.assertEqual(372, sum([float(x.text) for x in credit_list]))
 
+  def _FECWithLedger(self, ledger_list=None):
+    self.setUpLedger()
+    account_module = self.portal.account_module
+    first = self._makeOne(
+              portal_type='Purchase Invoice Transaction',
+              title='Première Écriture',
+              simulation_state='delivered',
+              ledger='accounting/general',
+              reference='1',
+              source_section_value=self.organisation_module.supplier,
+              stop_date=DateTime(2014, 2, 2),
+              lines=(dict(destination_value=account_module.payable,
+                          destination_debit=132.00),
+                     dict(destination_value=account_module.refundable_vat,
+                          destination_credit=22.00),
+                     dict(destination_value=account_module.goods_purchase,
+                          destination_credit=110.00)))
+
+    second = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Seconde Écriture',
+              simulation_state='delivered',
+              ledger='accounting/general',
+              reference='2',
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2014, 3, 1),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=240.00),
+                     dict(source_value=account_module.collected_vat,
+                          source_credit=40.00),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=200.00)))
+
+    third = self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Troisième Écriture',
+              simulation_state='delivered',
+              ledger='accounting/detailed',
+              reference='3',
+              destination_section_value=self.organisation_module.client_2,
+              start_date=DateTime(2014, 2, 16),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=185.00),
+                     dict(source_value=account_module.collected_vat,
+                          source_credit=37.00),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=148.00)))
+    self.tic()
+
+    self.portal.accounting_module.AccountingTransactionModule_viewFrenchAccountingTransactionFile(
+        section_category='group/demo_group',
+        section_category_strict=False,
+        at_date=DateTime(2014, 12, 31),
+        simulation_state=['delivered'],
+        ledger=ledger_list)
+    self.tic()
+
+    fec_xml = ''
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEqual('"%s" <%s>' % (self.first_name, self.recipient_email_address), mto[0])
+    mail_message = email.message_from_string(message_text)
+    for part in mail_message.walk():
+      content_type = part.get_content_type()
+      file_name = part.get_filename()
+      if file_name == 'FEC-2014.zip':
+        self.assertEqual('application/zip', content_type)
+        data = part.get_payload(decode=True)
+        zf = zipfile.ZipFile(StringIO(data))
+        fec_xml = zf.open("FEC.xml").read()
+        break
+    else:
+      self.fail("Attachment not found")
+
+    # validate against official schema
+    schema = etree.XMLSchema(etree.XML(open(os.path.join(
+        os.path.dirname(__file__), 'test_data',
+        'formatA47A-I-VII-1.xsd')).read()))
+
+    # this raise if invalid
+    tree = etree.fromstring(fec_xml, etree.XMLParser(schema=schema))
+
+    return tree
+
+  def test_FECWithOneLedger(self):
+    tree = self._FECWithLedger(['accounting/general'])
+
+    debit_list = tree.xpath("//Debit")
+    self.assertEqual(6, len(debit_list))
+    self.assertEqual(372, sum([float(x.text) for x in debit_list]))
+
+    credit_list = tree.xpath("//Credit")
+    self.assertEqual(6, len(credit_list))
+    self.assertEqual(372, sum([float(x.text) for x in credit_list]))
+
+
+  def test_FECWithMultipleLedger(self):
+    tree = self._FECWithLedger(['accounting/general', 'accounting/detailed'])
+
+    debit_list = tree.xpath("//Debit")
+    self.assertEqual(9, len(debit_list))
+    self.assertEqual(557, sum([float(x.text) for x in debit_list]))
+
+    credit_list = tree.xpath("//Credit")
+    self.assertEqual(9, len(credit_list))
+    self.assertEqual(557, sum([float(x.text) for x in credit_list]))
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -21,6 +21,7 @@ context.activate().AccountingTransactionModule_viewFrenchAccountingTransactionFi
   section_category_strict,
   at_date,
   simulation_state,
+  ledger,
   user_name=person_value.getReference(),
   tag=tag,
   aggregate_tag=aggregate_tag)
