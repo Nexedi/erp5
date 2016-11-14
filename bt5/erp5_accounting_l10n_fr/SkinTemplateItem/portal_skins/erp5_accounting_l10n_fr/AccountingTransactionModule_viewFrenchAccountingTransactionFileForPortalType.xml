@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type, section_uid_list, from_date, at_date, simulation_state, active_process, this_portal_type_active_process, tag, aggregate_tag, priority</string> </value>
+            <value> <string>portal_type, section_uid_list, from_date, at_date, simulation_state, ledger, active_process, this_portal_type_active_process, tag, aggregate_tag, priority,</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
