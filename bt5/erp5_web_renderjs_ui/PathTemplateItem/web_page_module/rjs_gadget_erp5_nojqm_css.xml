@@ -259,7 +259,7 @@ vdf</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.12311.36129.49083</string> </value>
+                <value> <string>955.17985.54265.23893</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +277,7 @@ vdf</string> </value>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478793295.77</float>
+                        <float>1479134904.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

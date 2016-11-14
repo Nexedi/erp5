@@ -323,7 +323,14 @@ select:-moz-focusring {
   text-shadow: 0 0 0 #000;
 }
 textarea {
+  word-wrap: break-word;
+  white-space: normal;
   vertical-align: top;
+  transition: height 0.2s ease-out;
+  height: 4em;
+}
+textarea:focus {
+  height: 20em;
 }
 ::-webkit-input-placeholder {
   color: #575757;
