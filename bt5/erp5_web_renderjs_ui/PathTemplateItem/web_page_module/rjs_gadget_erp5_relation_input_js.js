@@ -361,10 +361,10 @@
                   has_focus: false
                 });
               })
+              .push(function () {
+                return gadget.notifyChange();
+              })
           ]);
-        })
-        .push(function () {
-          return gadget.notifyChange();
         });
     }, true, false)
 
@@ -392,13 +392,17 @@
         return;
       }
 
+      var context = this;
       return this.changeState({
         value_text: event.target.value,
         value_relative_url: null,
         value_uid: null,
         value_portal_type: null,
         has_focus: true
-      });
+      })
+        .push(function () {
+          return context.notifyChange();
+        });
     }, true, false);
 
 }(window, rJS, RSVP, URI, promiseEventListener,
