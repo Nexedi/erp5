@@ -17,4 +17,5 @@ def checkPersonLoginExistenceConsistency(self, fixit=False):
     )
     login._setEncodedPassword(self.getPassword())
     login.validate()
+    self._setEncodedPassword(None)
   return ['%s has no Login type sub document.' % self.getRelativeUrl()]
