@@ -882,6 +882,11 @@ class TestCMFCategory(ERP5TypeTestCase):
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
                                        cache=0))
+    self.assertEqual(
+      [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['2/21', '1'],
+                                       cache=0))
 
     b.manage_permission(checked_permission, roles=[], acquire=0)
 
@@ -905,6 +910,29 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(
       [['', ''], ['A', '1']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       cache=0))
+    # Verify that current_category_list parameter allows to display again
+    # hidden values
+    self.assertEqual(
+      [['', ''], ['A', '1'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['2/21'],
+                                       cache=0))
+
+    a.manage_permission(checked_permission, roles=[], acquire=0)
+    self.assertEqual(
+      [['', '']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       cache=0))
+    self.assertEqual(
+      [['', ''], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['2/21'],
+                                       cache=0))
+    self.assertEqual(
+      [['', ''], ['A', '1'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['1', '2/21'],
                                        cache=0))
 
   def test_28b_getCategoryChildItemList_checked_permission_cache(self):

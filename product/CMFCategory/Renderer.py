@@ -47,7 +47,7 @@ class Renderer(Filter):
                      is_right_display = 0, translate_display = 0,
                      translatation_domain = None, display_base_category = 0,
                      base_category = None, base = 1,
-                     display_none_category = 1, current_category = None,**kw):
+                     display_none_category = 1, **kw):
     """
     - *display_id*: the id of attribute to "call" to calculate the value to display
                       (getProperty(display_id) -> getDisplayId)
@@ -91,16 +91,9 @@ class Renderer(Filter):
 
     - *is_self_excluded*: allows to exclude this category from the displayed list
 
-    - *current_category*: allows to provide a category which is not part of the
-                          default ItemList. Very useful for displaying
-                          values in a popup menu which can no longer
-                          be selected.
-
     - *display_none_category*: allows to include an empty value. Very useful
                         to define None values or empty lists through
-                        popup widgets. If both has_empty_item and
-                        current_category are provided, current_category
-                        is displayed first.
+                        popup widgets.
 
 
     """
@@ -118,7 +111,6 @@ class Renderer(Filter):
     self.base_category = base_category
     self.base = base
     self.display_none_category = display_none_category
-    self.current_category = current_category
 
   def getObjectList(self, value_list):
     new_value_list = []
@@ -161,12 +153,6 @@ class Renderer(Filter):
 
     # Initialize the list of items.
     item_list = []
-    if self.current_category:
-      if self.is_right_display:
-        item = [None, self.current_category]
-      else:
-        item = [self.current_category, None]
-      item_list.append(item)
     if self.display_none_category:
       item = ['', '']
       item_list.append(item)
