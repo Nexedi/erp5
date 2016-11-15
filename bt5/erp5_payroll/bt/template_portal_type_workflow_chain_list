@@ -1,9 +1,7 @@
 Employment Contract | edit_workflow
 Pay Sheet Cell | delivery_movement_causality_interaction_workflow
-Pay Sheet Cell | delivery_movement_simulation_interaction_workflow
 Pay Sheet Cell | edit_workflow
 Pay Sheet Line | delivery_movement_causality_interaction_workflow
-Pay Sheet Line | delivery_movement_simulation_interaction_workflow
 Pay Sheet Line | edit_workflow
 Pay Sheet Line | trade_matrix_workflow
 Pay Sheet Model Cell | trade_model_cell_interaction_workflow
@@ -13,15 +11,14 @@ Pay Sheet Model | edit_workflow
 Pay Sheet Model | paysheet_model_interaction_workflow
 Pay Sheet Model | validation_workflow
 Pay Sheet Transaction Line | delivery_movement_causality_interaction_workflow
-Pay Sheet Transaction Line | delivery_movement_simulation_interaction_workflow
 Pay Sheet Transaction Line | edit_workflow
 Pay Sheet Transaction | accounting_workflow
 Pay Sheet Transaction | delivery_causality_interaction_workflow
 Pay Sheet Transaction | delivery_causality_workflow
-Pay Sheet Transaction | delivery_simulation_interaction_workflow
 Pay Sheet Transaction | edit_workflow
 Payroll Disenrollment Record | edit_workflow
 Payroll Disenrollment Record | validation_workflow
 Payroll Enrollment Record | edit_workflow
 Payroll Enrollment Record | validation_workflow
 Social Declaration Report | edit_workflow
+Pay Sheet Transaction | edit_workflow
