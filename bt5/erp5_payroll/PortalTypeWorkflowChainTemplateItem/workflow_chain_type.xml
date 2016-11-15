@@ -5,11 +5,11 @@
  </chain>
  <chain>
   <type>Pay Sheet Cell</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, trade_matrix_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Model</type>
@@ -25,11 +25,11 @@
  </chain>
  <chain>
   <type>Pay Sheet Transaction</type>
-  <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>accounting_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Pay Sheet Transaction Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Payroll Disenrollment Record</type>

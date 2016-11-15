@@ -77,7 +77,7 @@
  </chain>
  <chain>
   <type>Transformation</type>
-  <workflow>conversion_interaction_workflow, edit_workflow, transformation_interaction_workflow, validation_workflow</workflow>
+  <workflow>conversion_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Transformation Operation</type>

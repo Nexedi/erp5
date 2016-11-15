@@ -1,38 +1,26 @@
 <workflow_chain>
  <chain>
   <type>Open Internal Order</type>
-  <workflow>edit_workflow, open_order_simulation_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Open Internal Order Cell</type>
-  <workflow>open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Open Internal Order Line</type>
-  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Open Purchase Order</type>
-  <workflow>edit_workflow, open_order_simulation_interaction_workflow, open_order_workflow</workflow>
- </chain>
- <chain>
-  <type>Open Purchase Order Cell</type>
-  <workflow>open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, open_order_workflow</workflow>
  </chain>
  <chain>
   <type>Open Purchase Order Line</type>
-  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Open Sale Order</type>
-  <workflow>edit_workflow, open_order_simulation_interaction_workflow, open_order_workflow</workflow>
- </chain>
- <chain>
-  <type>Open Sale Order Cell</type>
-  <workflow>open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, open_order_workflow</workflow>
  </chain>
  <chain>
   <type>Open Sale Order Line</type>
-  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow, open_order_path_simulation_interaction_workflow</workflow>
+  <workflow>edit_workflow, movement_resource_interaction_workflow, open_order_line_matrix_interaction_workflow</workflow>
  </chain>
 </workflow_chain>
