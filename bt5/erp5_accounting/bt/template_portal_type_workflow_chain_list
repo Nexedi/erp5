@@ -5,14 +5,12 @@ Accounting Period | accounting_period_workflow
 Accounting Period | edit_workflow
 Accounting Transaction Balance Constraint | dynamic_class_generation_interaction_workflow
 Accounting Transaction Line | delivery_movement_causality_interaction_workflow
-Accounting Transaction Line | delivery_movement_simulation_interaction_workflow
 Accounting Transaction Line | edit_workflow
 Accounting Transaction Root Simulation Rule | edit_workflow
 Accounting Transaction Root Simulation Rule | rule_validation_workflow
 Accounting Transaction | accounting_workflow
 Accounting Transaction | delivery_causality_interaction_workflow
 Accounting Transaction | delivery_causality_workflow
-Accounting Transaction | delivery_simulation_interaction_workflow
 Accounting Transaction | edit_workflow
 Balance Transaction | accounting_workflow
 Balance Transaction | edit_workflow
@@ -27,21 +25,16 @@ Payment Simulation Rule | rule_validation_workflow
 Payment Transaction | accounting_workflow
 Payment Transaction | delivery_causality_interaction_workflow
 Payment Transaction | delivery_causality_workflow
-Payment Transaction | delivery_simulation_interaction_workflow
 Payment Transaction | edit_workflow
 Purchase Invoice Transaction Line | delivery_movement_causality_interaction_workflow
-Purchase Invoice Transaction Line | delivery_movement_simulation_interaction_workflow
 Purchase Invoice Transaction Line | edit_workflow
 Purchase Invoice Transaction | accounting_workflow
 Purchase Invoice Transaction | delivery_causality_interaction_workflow
 Purchase Invoice Transaction | delivery_causality_workflow
-Purchase Invoice Transaction | delivery_simulation_interaction_workflow
 Purchase Invoice Transaction | edit_workflow
 Sale Invoice Transaction Line | delivery_movement_causality_interaction_workflow
-Sale Invoice Transaction Line | delivery_movement_simulation_interaction_workflow
 Sale Invoice Transaction Line | edit_workflow
 Sale Invoice Transaction | accounting_workflow
 Sale Invoice Transaction | delivery_causality_interaction_workflow
 Sale Invoice Transaction | delivery_causality_workflow
-Sale Invoice Transaction | delivery_simulation_interaction_workflow
 Sale Invoice Transaction | edit_workflow
