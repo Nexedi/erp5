@@ -90,7 +90,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTotalPrice')
-  def getTotalPrice(self, fast=0, src__=0, base_contribution=None, rounding=False, **kw):
+  def getTotalPrice(self, fast=0, src__=0, base_contribution=None,
+      use=None, rounding=False, **kw):
     """ Returns the total price for this order
 
     if the `fast` argument is set to a true value, then it use
@@ -100,12 +101,12 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
     So if the order is not in the catalog, getTotalPrice(fast=1)
     will return 0, this is not a bug.
 
-    base_contribution must be a relative url of a category. If passed, then
-    fast parameter is ignored.
+      base_contribution and use must be a relative url of a category. If passed, then
+      fast parameter is ignored.
     """
     if 'portal_type' not in kw:
       kw['portal_type'] = self.getPortalObject().getPortalDeliveryMovementTypeList()
-    if base_contribution is None:
+    if base_contribution is None and use is None:
       if fast:
         # XXX fast ignores base_contribution for now, but it should be possible
         # to use a related key
@@ -119,22 +120,37 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       # Find amounts from movements in the delivery.
       if isinstance(base_contribution, (tuple, list)):
         base_contribution_list = base_contribution
-      else:
+      elif base_contribution is not None:
         base_contribution_list = (base_contribution,)
-      base_contribution_value_list = []
+      else:
+          base_contribution_list = []
+      if isinstance(use, (tuple, list)):
+        use_list = use
+      elif use is not None:
+        use_list = (use,)
+      else:
+        use_list = []
       portal_categories = self.portal_categories
+      base_contribution_value_list = []
       for relative_url in base_contribution_list:
         base_contribution_value = portal_categories.getCategoryValue(relative_url)
         if base_contribution_value is not None:
           base_contribution_value_list.append(base_contribution_value)
-      if not base_contribution_value_list:
+      use_value_list = []
+      for relative_url in use_list:
+        use_value = portal_categories.getCategoryValue(relative_url)
+        if use_value is not None:
+          use_value_list.append(use_value)
+      if (base_contribution is not None and not base_contribution_value_list) \
+          or (use is not None and not use_value_list):
         # We cannot find any amount so that the result is 0.
         result = 0
       else:
         matched_movement_list = [
            movement
             for movement in self.getMovementList()
-            if set(movement.getBaseContributionValueList()).intersection(base_contribution_value_list)]
+            if set(movement.getBaseContributionValueList()).intersection(base_contribution_value_list)
+              or set(movement.getUseValueList()).intersection(use_value_list)]
         if rounding:
           portal_roundings = self.portal_roundings
           matched_movement_list = [
