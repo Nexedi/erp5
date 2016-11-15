@@ -47,9 +47,9 @@
 @panelwidth: @margin-size * 30;
 // @panelwidth: 15em;
 
-@smartphone: ~"only screen and (max-width: 28em)";
-@tablet: ~"only screen and (min-width: 28em) and (max-width: 70em)";
-@desktop: ~"only screen and (min-width: 70em)";
+@smartphone: ~"only screen and (max-width: 45em)";
+@tablet: ~"only screen and (min-width: 45em) and (max-width: 90em)";
+@desktop: ~"only screen and (min-width: 90em)";
 
 
 /**********************************************
@@ -1075,7 +1075,7 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
-  @media @desktop {
+  @media @tablet, @desktop {
     .left, .right {
       vertical-align: top;
       display: inline-block;
@@ -1099,7 +1099,7 @@ div[data-gadget-scope='header'] .ui-header {
       }
     }
   }
-  @media @desktop {
+  @media @tablet, @desktop {
     // Align field on the left group's field
     .center {
       .ui-field-contain {
