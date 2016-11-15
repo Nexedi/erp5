@@ -47,6 +47,10 @@ def changeObjectClass(self, object_id, new_class):
   new_obj = self._getOb(object_id, new_obj)
   if new_obj.isIndexable:
     new_obj.reindexObject()
+  elif new_obj.portal_type == 'Catalog':
+    # In case of 'Catalog' portal_type, we don't want unindexing or reindexing
+    # as we don't expect it to be indexable.
+    pass
   else:
     old_obj.unindexObject()
   return new_obj
