@@ -1273,8 +1273,8 @@ class Catalog(Folder,
         uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
       uid_buffer.extend(uid_list)
 
-  security.declarePrivate('isIndexable')
-  def isIndexable(self):
+  security.declarePrivate('isIndexingRequired')
+  def isIndexingRequired(self):
     """
     This is required to check in many methods that
     the site root and zope root are indexable
@@ -1282,8 +1282,8 @@ class Catalog(Folder,
     zope_root = self.getZopeRoot()
     site_root = self.getSiteRoot() # XXX-JPS - Why don't we use getPortalObject here ?
 
-    root_indexable = int(getattr(zope_root, 'isIndexable', 1))
-    site_indexable = int(getattr(site_root, 'isIndexable', 1))
+    root_indexable = int(getattr(zope_root, 'isIndexingRequired', 1))
+    site_indexable = int(getattr(site_root, 'isIndexingRequired', 1))
     if not (root_indexable and site_indexable):
       return False
     return True
@@ -1330,7 +1330,7 @@ class Catalog(Folder,
       Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
     """
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return None
 
     klass = self.__class__
@@ -1510,7 +1510,7 @@ class Catalog(Folder,
       LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
 
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return
 
     # Reminder about optimization: It might be possible to issue just one
@@ -1771,7 +1771,7 @@ class Catalog(Folder,
     """
     Set the path as deleted
     """
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return None
 
     if uid is None and path is not None:
@@ -1804,7 +1804,7 @@ class Catalog(Folder,
     XXX Add filter of methods
 
     """
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return None
 
     if uid is None and path is not None:
