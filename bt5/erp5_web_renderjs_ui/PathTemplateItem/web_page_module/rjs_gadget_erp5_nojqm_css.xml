@@ -66,11 +66,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>group/3</string>
-                <string>contributor/organisation_module/1</string>
-                <string>contributor/person_module/3</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -91,22 +87,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>fsvdfv\n
-dfv\n
-dfv\n
-dfv\n
-dfv\n
-ddfv\n
-dfv\n
-dfv\n
-dfvdfvdfvdfv\n
-dfdfv\n
-ffffff\n
-dfvfdvdfvdfvdfvdfvdfvdfv\n
-dfv\n
-dfvdf\n
-vdf\n
-vdf</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -259,7 +242,7 @@ vdf</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.17985.54265.23893</string> </value>
+                <value> <string>955.18008.27011.15018</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -277,7 +260,7 @@ vdf</string> </value>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479134904.68</float>
+                        <float>1479216615.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
