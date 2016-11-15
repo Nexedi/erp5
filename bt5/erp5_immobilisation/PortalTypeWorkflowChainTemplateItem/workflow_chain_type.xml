@@ -5,11 +5,11 @@
  </chain>
  <chain>
   <type>Amortisation Transaction</type>
-  <workflow>accounting_workflow, amortisation_transaction_causality_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>accounting_workflow, amortisation_transaction_causality_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Amortisation Transaction Line</type>
-  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow</workflow>
+  <workflow>delivery_movement_causality_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Delivery Cell</type>
