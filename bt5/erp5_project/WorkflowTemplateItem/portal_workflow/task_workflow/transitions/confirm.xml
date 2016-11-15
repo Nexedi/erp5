@@ -11,6 +11,10 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Confirm Task</string> </value>
         </item>
@@ -20,7 +24,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>Task_buildTaskReport</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
