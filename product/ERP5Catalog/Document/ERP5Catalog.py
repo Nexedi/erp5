@@ -192,7 +192,8 @@ class ERP5Catalog(Folder, Catalog):
   _setPropValue = Catalog._setPropValue
   getProperty = Folder.getProperty
   _updateProperty = PropertyManager._updateProperty
-  isIndexable = Catalog.isIndexable
+  # We don't want to index catalog as it might create circular dependencies
+  isIndexable = 0
   __class_init__  = Catalog.__class_init__
 
   def __init__(self, id, title='', container=None):

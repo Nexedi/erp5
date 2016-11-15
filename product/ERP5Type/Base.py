@@ -2823,7 +2823,7 @@ class Base( CopyContainer,
     """
       Reindexes an object - also useful for testing
     """
-    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
+    root_indexable = int(getattr(self.getPortalObject(),'isIndexingRequired',1))
     if self.isIndexable and root_indexable:
       #LOG("immediateReindexObject",0,self.getRelativeUrl())
       # Reindex result should not depend on the user
