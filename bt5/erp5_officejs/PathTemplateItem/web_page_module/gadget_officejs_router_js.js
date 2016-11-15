@@ -182,7 +182,8 @@
         subhash,
         keyvalue,
         index,
-        args = {};
+        args = {},
+        queue = new RSVP.Queue();
       if (hash !== undefined) {
         subhashes = hash.split('&');
         for (index in subhashes) {
@@ -198,10 +199,34 @@
         }
       }
 
-      return gadget.renderApplication({
-        args: args
+      if ('serviceWorker' in navigator) {
+        // importatant register service worker
+        // for client reconnect if url change
+        queue.push(function () {
+          return RSVP.Promise(function (resolve, reject) {
+            navigator.serviceWorker.ready
+              .then(function (swr) {
+                return swr.active.scriptURL;
+              })
+              .then(function (scriptURL) {
+                return navigator.serviceWorker.register(scriptURL);
+              })
+              .then(navigator.serviceWorker.ready)
+              .then(function (reg) {
+                resolve(reg);
+              })
+              .then(undefined, function (error) {
+                reject(error);
+              });
+          });
+        });
+      }
+      queue.push(function () {
+        return gadget.renderApplication({
+          args: args
+        });
       });
-
+      return queue;
     }
 
     var result = loopEventListener(window, 'hashchange', false,
