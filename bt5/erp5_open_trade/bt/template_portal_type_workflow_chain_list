@@ -1,23 +1,14 @@
-Open Internal Order Cell | open_order_path_simulation_interaction_workflow
 Open Internal Order Line | edit_workflow
 Open Internal Order Line | movement_resource_interaction_workflow
 Open Internal Order Line | open_order_line_matrix_interaction_workflow
-Open Internal Order Line | open_order_path_simulation_interaction_workflow
 Open Internal Order | edit_workflow
-Open Internal Order | open_order_simulation_interaction_workflow
-Open Purchase Order Cell | open_order_path_simulation_interaction_workflow
 Open Purchase Order Line | edit_workflow
 Open Purchase Order Line | movement_resource_interaction_workflow
 Open Purchase Order Line | open_order_line_matrix_interaction_workflow
-Open Purchase Order Line | open_order_path_simulation_interaction_workflow
 Open Purchase Order | edit_workflow
-Open Purchase Order | open_order_simulation_interaction_workflow
 Open Purchase Order | open_order_workflow
-Open Sale Order Cell | open_order_path_simulation_interaction_workflow
 Open Sale Order Line | edit_workflow
 Open Sale Order Line | movement_resource_interaction_workflow
 Open Sale Order Line | open_order_line_matrix_interaction_workflow
-Open Sale Order Line | open_order_path_simulation_interaction_workflow
 Open Sale Order | edit_workflow
-Open Sale Order | open_order_simulation_interaction_workflow
 Open Sale Order | open_order_workflow
