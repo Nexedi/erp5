@@ -557,7 +557,8 @@ class Category(Folder):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCategoryChildItemList')
     def getCategoryChildItemList(self, recursive=1, base=0,
-                                       cache=DEFAULT_CACHE_FACTORY, **kw):
+                                       cache=DEFAULT_CACHE_FACTORY,
+                                       current_category_list=None, **kw):
       """
       Returns a list of tuples by parsing recursively all categories in a
       given list of base categories. Each tuple contains::
@@ -575,6 +576,10 @@ class Category(Folder):
 
       recursive -- if set to 0 do not apply recursively
 
+      current_category_list -- allows to provide of categories which is not part of the
+                          default ItemList. Very useful for displaying values in a popup
+                          menu which can no longer be selected.
+
       All parameters supported by getCategoryChildValueList and Render are
       supported here.
       """
@@ -583,25 +588,40 @@ class Category(Folder):
         return Renderer(base=base, **kw).render(value_list)
 
       if not cache:
-        return _renderCategoryChildItemList(
+        item_list = _renderCategoryChildItemList(
                       recursive=recursive, base=base, **kw)
+      else:
 
-      # If checked_permission is specified, we include the username in the
-      # cache key
-      username = None
-      if 'checked_permission' in kw:
-        username = str(getSecurityManager().getUser())
+        # If checked_permission is specified, we include the username in the
+        # cache key
+        username = None
+        if 'checked_permission' in kw:
+          username = str(getSecurityManager().getUser())
 
-      # Some methods are language dependent so we include the language in the
-      # key
-      localizer = getToolByName(self, 'Localizer')
-      language = localizer.get_selected_language()
-      m = CachingMethod(_renderCategoryChildItemList,
-            ('Category_getCategoryChildItemList', language,
-              self.getPath(), username),
-            cache_factory=cache)
+        # Some methods are language dependent so we include the language in the
+        # key
+        localizer = getToolByName(self, 'Localizer')
+        language = localizer.get_selected_language()
+        m = CachingMethod(_renderCategoryChildItemList,
+              ('Category_getCategoryChildItemList', language,
+                self.getPath(), username),
+              cache_factory=cache)
 
-      return m(recursive=recursive, base=base, **kw)
+        item_list = m(recursive=recursive, base=base, **kw)
+
+      if current_category_list:
+        current_kw = kw.copy()
+        current_kw['display_none_category'] = False
+        current_category_item_list = Renderer(base=base, **current_kw).render(
+          [self.unrestrictedTraverse(x) for x in current_category_list])
+        item_set = set([tuple(x) for x in item_list])
+        additional_item_list = []
+        for current_category_item in current_category_item_list:
+          if not(tuple(current_category_item) in item_set):
+            additional_item_list.append(current_category_item)
+        if additional_item_list:
+          item_list = item_list + additional_item_list
+      return item_list
 
     # Alias for compatibility
     security.declareProtected(Permissions.View, 'getFormItemList')
