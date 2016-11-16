@@ -93,15 +93,44 @@
               {{/if}}
               <p class="custom-success-story-title">{{title}}</a></p>
               <p class="custom-success-story-description">{{description}} <a href="{{url}}">Read more</a></p>
-              <p>Industry: {{industry}}</p>
-              <ul class="custom-success-story-category-list"><lh>Categories:</lh> 
-                {{#each ../category_list}}
-                  <li>{{this}}</li>
-                {{/each}}
-              </ul>
-              <p class="custom-success-story-client">Customer: <span>{{customer}}</span></p>
-              <p>Country: {{country}}</p>
-              <p>Language: {{language}}</p>
+              <table class="custom-link-table">
+                <tbody>
+                  <tr>
+                    <td>Categories</td>
+                    <td>
+                    <ul class="custom-success-story-category-list">
+                      {{#each ../category_list}}
+                        <li>{{this}}</li>
+                      {{/each}}
+                    </ul>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="custom-success-story-client">Customer</td>
+                    <td><b>{{customer}}</b></td>
+                  </tr>
+                  <tr>
+                    <td>Industry</td>
+                    <td>{{industry}}</td>
+                  </tr>
+                  <tr>
+                    <td>Country</td>
+                    <td>{{country}}</td>
+                  </tr>
+                  <tr>
+                    <td>Language</td>
+                    <td>{{language}}</td>
+                  </tr>
+                  <tr>
+                    <td>Product Site</td>
+                    <td><a href="{{software_website}}">{{software}}</a></td>
+                  </tr>
+                  <tr>
+                    <td>Publisher Site</td>
+                    <td><a href="{{publisher_website}}">{{publisher}}</a></td>
+                  </tr>
+                </tbody>
+              </table>
             </li>
           {{/each}}
         </ul>
