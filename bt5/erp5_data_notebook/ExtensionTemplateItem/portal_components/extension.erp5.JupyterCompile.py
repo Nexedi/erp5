@@ -180,7 +180,6 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
-  result_string = ''
   notebook_context = old_notebook_context
 
   # Execute only if jupyter_code is not empty
@@ -432,8 +431,7 @@ class EnvironmentDefinitionError(TypeError):
 
 
 def canSerialize(obj):
-  result = False
-        
+
   container_type_tuple = (list, tuple, dict, set, frozenset)
   
   # if object is a container, we need to check its elements for presence of
@@ -479,7 +477,7 @@ def canSerialize(obj):
     # 
     # Even though the issue seems complicated, this quickfix should be 
     # properly rewritten in a better way as soon as possible.
-    except (cPickle.PicklingError, TypeError, NameError, AttributeError) as e:
+    except (cPickle.PicklingError, TypeError, NameError, AttributeError):
       return False
     else:
       return True
@@ -735,7 +733,7 @@ class ImportFixer(ast.NodeTransformer):
                "WARNING: Your imported the module %s without using "
                "the environment object, which is not recomended. "
                "Your import was automatically converted to use such method."
-               "The setup function registered was named %s_setup.\\n" 
+               "The setup function was named as: %s_setup.\\n" 
                "'") % (module_name, module_name)
     tree = ast.parse(warning)
     return tree.body[0]
@@ -763,7 +761,7 @@ def renderAsHtml(self, renderable_object):
   compile_jupyter_frame = sys._getframe(3)
   compile_jupyter_locals = compile_jupyter_frame.f_locals
   processor = compile_jupyter_locals['processor_list'].getProcessorFor(renderable_object)
-  result, mime_type = processor(renderable_object).process()
+  result, _ = processor(renderable_object).process()
   compile_jupyter_locals['inject_variable_dict']['_print'].write(result)
   compile_jupyter_locals['display_data']['mime_type'] = 'text/html'
 
@@ -773,7 +771,7 @@ def getErrorMessageForException(self, exception, notebook_context):
     code execution (notebook_context) and will return a dict as Jupyter
     requires for error rendering.
   '''
-  etype, value, tb = sys.exc_info()
+  _, value, _ = sys.exc_info()
   traceback_text = traceback.format_exc().split('\n')[:-1]
   return {
     'status': 'error',

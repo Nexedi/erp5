@@ -46,14 +46,11 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 85,  2: Redefining name \'traceback\' from outer scope (line 9) (redefined-outer-name)</string>
-                <string>W:197,  8: Use of exec (exec-used)</string>
-                <string>W:252,  8: Use of exec (exec-used)</string>
-                <string>W:264,  8: Use of exec (exec-used)</string>
-                <string>W:327, 10: Unused variable \'mime_type\' (unused-variable)</string>
-                <string>W:462,  2: Redefining name \'IFrame\' from outer scope (line 17) (redefined-outer-name)</string>
-                <string>W:  9,  0: Unused import traceback (unused-import)</string>
-                <string>W: 13,  0: Unused import transaction (unused-import)</string>
+                <string>W:308, 10: Use of exec (exec-used)</string>
+                <string>W:357, 10: Use of exec (exec-used)</string>
+                <string>W:372, 10: Use of exec (exec-used)</string>
+                <string>W:460,  6: No exception type(s) specified (bare-except)</string>
+                <string>W:916,  2: Redefining name \'IFrame\' from outer scope (line 22) (redefined-outer-name)</string>
               </tuple>
             </value>
         </item>
