@@ -1,40 +1,37 @@
 # -*- coding: utf-8 -*-
-
+from matplotlib.figure import Figure
+from IPython.core.display import DisplayObject
+from IPython.lib.display import IFrame
 from cStringIO import StringIO
-import cPickle
 from erp5.portal_type import Image
 from types import ModuleType
 from ZODB.serialize import ObjectWriter
-
-
+import cPickle
 import sys
 import traceback
 import ast
 import base64
 import json
-
 import transaction
 import Acquisition
 import astor
 
-from matplotlib.figure import Figure
-from IPython.core.display import DisplayObject
-from IPython.lib.display import IFrame
-
-
-def Base_executeJupyter(self, python_expression=None, reference=None, title=None, request_reference=False, **kw):
+def Base_executeJupyter(self, python_expression=None, reference=None, \
+                        title=None, request_reference=False, **kw):
   # Check permissions for current user and display message to non-authorized user 
   if not self.Base_checkPermission('portal_components', 'Manage Portal'):
     return "You are not authorized to access the script"
   
   # Convert the request_reference argument string to their respeced boolean values
-  request_reference = {'True': True, 'False': False}.get(request_reference, False)
+  request_reference = {'True': True, \
+                       'False': False}.get(request_reference, False)
   
   # Return python dictionary with title and reference of all notebooks
   # for request_reference=True
   if request_reference:
     data_notebook_list = self.portal_catalog(portal_type='Data Notebook')
-    notebook_detail_list = [{'reference': obj.getReference(), 'title': obj.getTitle()} for obj in data_notebook_list]
+    notebook_detail_list = [{'reference': obj.getReference(), \
+                             'title': obj.getTitle()} for obj in data_notebook_list]
     return notebook_detail_list
   
   if not reference:
@@ -55,14 +52,12 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
     data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
       title=title,
       reference=reference,
-      batch_mode=True
-    )
+      batch_mode=True)
   
   # Add new Data Notebook Line to the Data Notebook
   data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
     notebook_code=python_expression,
-    batch_mode=True
-  )
+    batch_mode=True)
   
   # Gets the context associated to the data notebook being used
   old_notebook_context = data_notebook.getNotebookContext()
@@ -81,8 +76,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
     u'evalue': final_result['evalue'],
     u'traceback': final_result['traceback'],
     u'status': final_result['status'],
-    u'mime_type': final_result['mime_type'],
-  }
+    u'mime_type': final_result['mime_type']}
   
   # Updates the context in the notebook with the resulting context of code 
   # execution.
@@ -119,8 +113,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
   
   data_notebook_line.edit(
     notebook_code_result=result['code_result'], 
-    mime_type=result['mime_type']
-  )
+    mime_type=result['mime_type'])
   
   return serialized_result  
 
@@ -230,13 +223,13 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       
       # Variables used at the display hook to get the proper form to display
       # the last returning variable of any code cell.
-      display_data = {'result': '', 'mime_type': None}
+      display_data = {'result': '', 
+                      'mime_type': None}
       
       # This is where one part of the  display magic happens. We create an 
       # instance of ProcessorList and add each of the built-in processors.
       # The classes which each of them are responsiblefor rendering are defined
       # in the classes themselves.
-      #
       # The customized display hook will automatically use the processor
       # of the matching class to decide how the object should be displayed.
       processor_list = ProcessorList()
@@ -252,8 +245,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         '_display_data': display_data,
         '_processor_list': processor_list,
         '_volatile_variable_list': [],
-        '_print': CustomPrint()
-      }
+        '_print': CustomPrint()}
       user_context.update(inject_variable_dict)
       user_context.update(notebook_context['variables'])
       
@@ -293,8 +285,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
             'traceback': None,
           }
           return result
-            
-      
+
       # Removing all the setup functions if user call environment.clearAll()
       if environment_collector.clearAll():
         keys = notebook_context ['setup'].keys()
@@ -334,7 +325,6 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           "func_name": func_name,
           "code": setup_string
         }
-        inject_variable_dict['_print'].write(setup_string)
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
@@ -358,10 +348,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         except Exception as e:
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
-          #
-          # TODO: store which notebook line generated which exception.
           transaction.abort()
-          # Clear the portal cache from previous transaction
+
           return getErrorMessageForException(self, e, notebook_context)
 
       # Execute the interactive nodes with 'single' mode
@@ -373,10 +361,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         except Exception as e:
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
-          #
-          # TODO: store which notebook line generated which exception.
           transaction.abort()
-          # Clear the portal cache from previous transaction
+
           return getErrorMessageForException(self, e, notebook_context)
 
       mime_type = display_data['mime_type'] or mime_type
