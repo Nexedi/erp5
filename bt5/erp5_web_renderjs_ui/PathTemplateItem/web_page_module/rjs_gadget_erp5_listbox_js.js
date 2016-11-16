@@ -488,7 +488,7 @@
               } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {
                 foot.record = counter + " " + variable.translated_records;
               } else {
-                foot.record = variable.translated_records + "  " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
+                foot.record = variable.translated_records + " " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
               }
 
               if (begin_from === 0) {
