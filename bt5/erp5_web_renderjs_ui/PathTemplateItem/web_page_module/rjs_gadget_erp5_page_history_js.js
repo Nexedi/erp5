@@ -18,7 +18,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
@@ -66,8 +65,7 @@
         .push(function (result_list) {
           var i,
             document_list = [],
-            document_dict = {},
-            result_html;
+            document_dict = {};
 
           for (i = 0; i < result_list.length; i += 1) {
             document_dict[result_list[i][2]] = {
@@ -82,15 +80,9 @@
             }
           }
 
-          result_html = table_template({
+          gadget.element.querySelector('.document_list').innerHTML  = table_template({
             documentlist: document_list
           });
-
-          return gadget.translateHtml(result_html);
-        })
-        .push(function (my_translated_html) {
-          gadget.element.querySelector('.document_list').innerHTML =
-            my_translated_html;
         });
     });
 }(window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query));
