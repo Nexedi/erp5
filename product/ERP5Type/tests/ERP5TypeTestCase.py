@@ -1300,11 +1300,7 @@ def dummy_tearDown(self):
   self._clear(1)
 
 class ZEOServerTestCase(ERP5TypeTestCase):
-  """TestCase class to run a ZEO storage
-
-  Main method is 'asyncore_loop' (inherited) since there is nothing to do
-  except processing I/O.
-  """
+  """TestCase class to run a ZEO storage"""
 
   def setUp(self):
     # Start ZEO storage and send address to parent process if any.
@@ -1322,6 +1318,14 @@ class ZEOServerTestCase(ERP5TypeTestCase):
       os.write(zeo_client, repr(host_port))
       os.close(zeo_client)
     ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
+
+  def asyncore_loop(self):
+    try:
+      self.zeo_server.loop()
+    except AttributeError: # BBB
+      super(ZEOServerTestCase, self).asyncore_loop()
+    except KeyboardInterrupt:
+      pass
 
   def tearDown(self):
     self.zeo_server.close_server()
