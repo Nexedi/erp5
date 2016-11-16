@@ -266,7 +266,7 @@ class PasswordTool(BaseTool):
     try:
       register_user_login, expiration_date = self._password_request_dict[
         password_key]
-    except KeyError:
+    except (KeyError, TypeError):
       # XXX: incorrect grammar and not descriptive enough
       return error('Key not known. Please ask reset password.')
     if user_login is not None and register_user_login != user_login:

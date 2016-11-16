@@ -209,18 +209,24 @@ class BTreeMappingDict(Implicit):
     return self._getStorage().items()
 
   def __getitem__(self, key):
+    if key is None:
+      raise KeyError(key)
     return self._getStorage()[key]
 
   def __contains__(self, key):
     return key in self._getStorage().keys()
 
   def get(self, key, default=None):
+    if key is None:
+      return default
     return self._getStorage().get(key, default)
 
   def __setitem__(self, key, value):
     self._getStorage()[key] = value
 
   def __delitem__(self, key):
+    if key is None:
+      raise KeyError(key)
     del self._getStorage()[key]
 
 InitializeClass(UrlRegistryTool)
