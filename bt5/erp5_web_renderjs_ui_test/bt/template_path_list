@@ -1,5 +1,7 @@
 portal_tests/renderjs_ui_listbox_zuite
 portal_tests/renderjs_ui_listbox_zuite/**
+portal_tests/renderjs_ui_logout_translate_zuite
+portal_tests/renderjs_ui_logout_translate_zuite/**
 portal_tests/renderjs_ui_logout_zuite
 portal_tests/renderjs_ui_logout_zuite/**
 portal_tests/renderjs_ui_page_templates_zuite
@@ -8,5 +10,7 @@ portal_tests/renderjs_ui_page_zuite
 portal_tests/renderjs_ui_page_zuite/**
 portal_tests/renderjs_ui_router_zuite
 portal_tests/renderjs_ui_router_zuite/**
+portal_tests/renderjs_ui_translate_zuite
+portal_tests/renderjs_ui_translate_zuite/**
 portal_tests/renderjs_ui_zuite
 portal_tests/renderjs_ui_zuite/**
