@@ -746,8 +746,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    now = DateTime()
         #    kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
-
-        catalog_id = self.getPreferredSQLCatalogId(sql_catalog_id)
+        catalog_id = self.getSQLCatalog(sql_catalog_id).id
         query = self.getSecurityQuery(
           query=query,
           sql_catalog_id=catalog_id,
@@ -811,7 +810,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    now = DateTime()
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
-        catalog_id = self.getPreferredSQLCatalogId(sql_catalog_id)
+        catalog_id = self.getSQLCatalog(sql_catalog_id).id
         query = self.getSecurityQuery(
           query=query,
           sql_catalog_id=catalog_id,
