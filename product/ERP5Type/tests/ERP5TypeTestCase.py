@@ -695,6 +695,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         # Restore security manager
         setSecurityManager(sm)
 
+        # Make sure that the skin cache does not have objects that were
+        # loaded with the connection used by the requested url.
+        self.changeSkin(self.portal.getCurrentSkinName())
+
         return ResponseWrapper(response, outstream, path)
 
     def getConsistencyMessageList(self, obj):
