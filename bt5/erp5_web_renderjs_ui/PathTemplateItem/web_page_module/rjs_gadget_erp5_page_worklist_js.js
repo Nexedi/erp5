@@ -61,7 +61,7 @@
                 view: 'view'
               }}),
               // Remove the counter from the title
-              action_list[i].name.replace(/ \(\d+\)$/, ''),
+              action_list[i].name,
               action_list[i].count
             ]));
 

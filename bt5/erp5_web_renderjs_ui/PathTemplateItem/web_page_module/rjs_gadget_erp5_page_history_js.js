@@ -47,7 +47,7 @@
           }
           return gadget.jio_allDocs({
             query: Query.objectToSearchText(new ComplexQuery({operator: 'OR', query_list: query_list})),
-            select_list: ["title", "portal_type"],
+            select_list: ["title", "translated_portal_type"],
             limit: id_list.length
           });
         })
@@ -72,7 +72,7 @@
           for (i = 0; i < result_list.length; i += 1) {
             document_dict[result_list[i][2]] = {
               link: result_list[i][0],
-              title: (result_list[i][1].title || result_list[i][2]) + " (" + result_list[i][1].portal_type + ")"
+              title: (result_list[i][1].title || result_list[i][2]) + " (" + result_list[i][1].translated_portal_type + ")"
             };
           }
           // Sort by access time

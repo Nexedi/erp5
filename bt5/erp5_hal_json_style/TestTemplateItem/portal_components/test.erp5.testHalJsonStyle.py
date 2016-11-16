@@ -1076,12 +1076,130 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
     result_dict = json.loads(result)
     self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
 
-    work_list = [x for x in result_dict['worklist'] if x['name'].startswith('Draft To Validate (')]
+    work_list = [x for x in result_dict['worklist'] if x['name'].startswith('Draft To Validate')]
     self.assertEqual(len(work_list), 1)
     self.assertTrue(work_list[0]['count'] > 0)
-    self.assertEqual(work_list[0]['name'], 'Draft To Validate (%i)' % work_list[0]['count'])
+    self.assertEqual(work_list[0]['name'], 'Draft To Validate')
     self.assertEqual(work_list[0]['module'], 'urn:jio:get:bar_module')
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")
 
+class TestERP5Document_getHateoas_translation(ERP5HALJSONStyleSkinsMixin):
+  code_string = "\
+from Products.CMFCore.utils import getToolByName\n\
+translation_service = getToolByName(context, 'Localizer', None)\n\
+if translation_service is not None :\n\
+  try:\n\
+    if not encoding:\n\
+      return translation_service.translate(catalog, msg, lang=lang, **kw)\n\
+    msg = translation_service.translate(catalog, msg, lang=lang, **kw)\n\
+    if same_type(msg, u''):\n\
+      msg = msg.encode(encoding)\n\
+    return msg\n\
+  except AttributeError:\n\
+    pass\n\
+return msg"
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+
+  @changeSkin('Hal')
+  def test_getHateoasBulk_default_view_translation(self):
+    self.portal.Base_createUITestLanguages()
+    param_dict = [
+      { 'message': 'Title', 'translation': 'biaoti', 'language': 'wo'},
+      { 'message': 'Draft To Validate', 'translation': 'daiyanzhen', 'language': 'wo'},
+      { 'message': 'Foo', 'translation': 'Foo_zhongwen', 'language': 'wo'}]
+    for tmp in param_dict:
+      self.portal.Base_addUITestTranslation(message = tmp['message'], translation = tmp['translation'], language = tmp['language'])
+    document = self._makeDocument()
+    fake_request = do_fake_request("POST")
+
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="bulk",
+      bulk_list=json.dumps([{"relative_url": document.getRelativeUrl(), "view": "view"}])
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['result_list'][0]['_embedded']['_view']['my_title']['title'], 'biaoti')
+    self.assertEqual(result_dict['result_list'][0]['_links']['type']['name'], 'Foo_zhongwen')
+    self.assertEqual(result_dict['result_list'][0]['_embedded']['_view']['listbox']['column_list'][1][1], 'biaoti')
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+
+  @changeSkin('Hal')
+  def test_getHateoasDocument_result_translation(self):
+    document = self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = document.ERP5Document_getHateoas(REQUEST=fake_request)
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+
+    self.assertEqual(result_dict['_links']['type']['href'], 'urn:jio:get:portal_types/%s' % document.getPortalType())
+    self.assertEqual(result_dict['_links']['type']['name'], 'Foo_zhongwen')
+
+    self.assertEqual(result_dict['title'].encode("UTF-8"), document.getTitle())
+    self.assertEqual(result_dict['_debug'], "root")
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @changeSkin('Hal')
+  def test_getHateoasWorklist_default_view_translation(self):
+    # self._makeDocument()
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(
+      REQUEST=fake_request,
+      mode="worklist"
+    )
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['_links']['self'], {"href": "http://example.org/bar"})
+    work_list = [x for x in result_dict['worklist'] if x['name'].startswith('daiyanzhen')]
+    self.assertEqual(len(work_list), 1)
+    self.assertEqual(work_list[0]['name'], 'daiyanzhen')
+    self.assertTrue(work_list[0]['count'] > 0)
+    self.assertEqual(work_list[0]['module'], 'urn:jio:get:bar_module')
+    self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
+
+    self.assertEqual(result_dict['_debug'], "worklist")
+
+  @simulate('Base_getRequestUrl', '*args, **kwargs',
+      'return "http://example.org/bar"')
+  @simulate('Base_getRequestHeader', '*args, **kwargs',
+            'return "application/hal+json"')
+  @simulate('Base_translateString', 'msg, catalog="ui", encoding="utf8", lang="wo", **kw',
+  code_string)
+  @changeSkin('Hal')
+  def test_getHateoasForm_no_view(self):
+    fake_request = do_fake_request("GET")
+    result = self.portal.web_site_module.hateoas.ERP5Document_getHateoas(REQUEST=fake_request, mode="traverse", relative_url="portal_skins/erp5_ui_test/Foo_view")
+    self.assertEquals(fake_request.RESPONSE.status, 200)
+    self.assertEquals(fake_request.RESPONSE.getHeader('Content-Type'),
+      "application/hal+json"
+    )
+    result_dict = json.loads(result)
+    self.assertEqual(result_dict['title'], 'Foo_zhongwen')

@@ -27,6 +27,8 @@
     COMMAND_SELECTION_NEXT = "selection_next",
     COMMAND_HISTORY_PREVIOUS = "history_previous",
     COMMAND_PUSH_HISTORY = "push_history",
+    COMMAND_CHANGE_LANGUAGE = "change_language",
+    REDIRECT_TIMEOUT = 5055,
     VALID_URL_COMMAND_DICT = {};
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
@@ -40,6 +42,7 @@
   VALID_URL_COMMAND_DICT[COMMAND_LOGIN] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RAW] = null;
   VALID_URL_COMMAND_DICT[COMMAND_RELOAD] = null;
+  VALID_URL_COMMAND_DICT[COMMAND_CHANGE_LANGUAGE] = null;
 
 
   function endsWith(str, suffix) {
@@ -107,6 +110,20 @@
   function getCommandUrlFor(gadget, command, options) {
     if (command === COMMAND_RAW) {
       return options.url;
+    }
+    if (command === COMMAND_CHANGE_LANGUAGE) {
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.getSetting("website_url_set");
+        })
+        .push(function (result) {
+          var param_list =  window.location.hash.split('#')[1],
+            new_url = JSON.parse(result)[options.language];
+          if (param_list) {
+            new_url += '#' + param_list;
+          }
+          return new_url;
+        });
     }
     var result = "#" + PREFIX_COMMAND + (command || ""),
       prefix = "?",
@@ -858,7 +875,33 @@
     })
 
     .declareMethod('start', function () {
-      this.props.start_deferred.resolve();
+      var gadget = this;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getSetting("selected_language"),
+            gadget.getSetting("default_selected_language")
+          ]);
+        })
+        .push(function (results) {
+          if (results[1] !== results[0] && results[0]) {
+            return gadget.redirect({
+              command: 'change_language',
+              options: {
+                language: results[0]
+              }
+            });
+          }
+        })
+        .push(function () {
+          gadget.props.start_deferred.resolve();
+        })
+        .push(undefined, function (error) {
+          if (error instanceof RSVP.CancellationError) {
+            return;
+          }
+          throw error;
+        });
     })
 
     .declareAcquiredMethod('renderApplication', 'renderApplication')
