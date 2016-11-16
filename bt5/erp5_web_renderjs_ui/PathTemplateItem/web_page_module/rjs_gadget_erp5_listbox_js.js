@@ -36,10 +36,11 @@
     error_message_source = gadget_klass.__template_element
                          .getElementById("error-message-template")
                          .innerHTML,
-    error_message_template = Handlebars.compile(error_message_source);
+    error_message_template = Handlebars.compile(error_message_source),
+    variable = {};
 
 
-  function renderListboxThead(gadget, template, head_value) {
+  function renderListboxThead(gadget, template) {
     return gadget.translateHtml(template({
       head_value: gadget.props.head_value,
       show_anchor: gadget.state.show_anchor,
@@ -189,7 +190,8 @@
         field_json = options.field_json,
         i,
         sort_column_list = [],
-        search_column_list = [];
+        search_column_list = [],
+        queue;
 
       //only display which is in listbox's column list
       if (field_json.sort_column_list.length) {
@@ -215,7 +217,21 @@
       }
       search_column_list.push(["searchable_text", "Searchable Text"]);
 
-      return RSVP.Queue()
+      queue = RSVP.Queue();
+      if (!variable.translated_records) {
+        queue
+          .push(function () {
+            return RSVP.all([
+              gadget.translate('Records'),
+              gadget.translate('No records')
+            ]);
+          })
+          .push(function (results) {
+            variable.translated_records = results[0];
+            variable.translated_no_record = results[1];
+          });
+      }
+      queue
         .push(function () {
           // Cancel previous line rendering to not conflict with the asynchronous render for now
           return gadget.renderContent(true);
@@ -258,6 +274,7 @@
           // Force line calculation in any case
           return gadget.renderContent();
         });
+      return queue;
     })
 
     .onStateChange(function () {
@@ -467,11 +484,11 @@
               foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
               foot.next_url = url_list[1];
               if ((begin_from === 0) && (counter === 0)) {
-                foot.record = "No records";
+                foot.record = variable.translated_no_record;
               } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {
-                foot.record = counter + " Records";
+                foot.record = counter + " " + variable.translated_records;
               } else {
-                foot.record = "Records " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
+                foot.record = variable.translated_records + "  " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
               }
 
               if (begin_from === 0) {

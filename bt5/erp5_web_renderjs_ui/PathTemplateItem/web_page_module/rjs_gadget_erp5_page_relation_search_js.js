@@ -50,6 +50,7 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -120,6 +121,12 @@
               ]]
             }
           });
+        })
+        .push(function () {
+          return gadget.translateHtml(gadget.props.element.querySelector(".left").innerHTML);
+        })
+        .push(function (html) {
+          gadget.props.element.querySelector(".left").innerHTML = html;
         });
     })
     .declareMethod("triggerSubmit", function () {

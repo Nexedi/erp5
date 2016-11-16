@@ -86,6 +86,7 @@
         url: options.url,
         allow_creation: options.allow_creation,
         portal_types: options.portal_types,
+        translated_portal_types: options.translated_portal_types,
         has_focus: false,
         relation_index: options.relation_index,
         value_relative_url: options.value_relative_url,
@@ -235,11 +236,14 @@
             .push(function (result) {
               var list = [],
                 i,
-                type;
-              if (gadget.state.allow_creation) {
-                type = gadget.state.portal_types;
-              } else {
                 type = [];
+              if (gadget.state.allow_creation) {
+                for (i = 0; i < gadget.state.portal_types.length; i += 1) {
+                  type.push({
+                    name: gadget.state.translated_portal_types[i],
+                    value: gadget.state.portal_types[i]
+                  });
+                }
               }
               for (i = 0; i < result.data.rows.length; i += 1) {
                 list.push({
@@ -249,11 +253,14 @@
                 });
               }
               plane.className = JUMP_UNKNOWN_CLASS_STR;
-              ul.innerHTML = relation_listview_template({
+              return gadget.translateHtml(relation_listview_template({
                 list: list,
                 type: type,
                 value: value_text
-              });
+              }));
+            })
+            .push(function (html) {
+              ul.innerHTML = html;
             });
         });
 

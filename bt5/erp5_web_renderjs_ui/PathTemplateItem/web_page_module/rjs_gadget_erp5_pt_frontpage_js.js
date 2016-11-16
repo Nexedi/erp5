@@ -52,8 +52,7 @@
         })
         .push(function (form_gadget) {
           var column_list = [
-            ['title', 'Title']
-          ];
+            ['translated_title', 'Title']];
           return form_gadget.render({
             erp5_document: {"_embedded": {"_view": {
               "listbox": {

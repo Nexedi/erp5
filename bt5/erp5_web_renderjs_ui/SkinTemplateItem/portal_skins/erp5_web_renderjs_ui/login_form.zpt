@@ -10,7 +10,7 @@
 
     <div data-gadget-scope='header'>
       <div class="ui-header">
-        <h1><span>Connect</span></h1>
+        <h1><span i18n:domain="ui" i18n:translate="">Connect</span></h1>
       </div>
     </div>
 
@@ -34,22 +34,22 @@
           <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
 
             <div class="ui-field-contain">
-              <label data-i18n="Login">Login<span></span></label>
+              <label i18n:domain="ui" i18n:translate="" >Login</label>
               <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
             </div>
             <div class="ui-field-contain">
-              <label data-i18n="Password">Password<span></span></label>
+              <label i18n:domain="ui" i18n:translate="" >Password</label>
               <div><input type="password" name="__ac_password" value="" required=""></div>
             </div>
             <div class="ui-field-contain">
               <label></label>
               <div tal:define="absolute_url python:context.absolute_url()">
-                <a tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
+                <a  i18n:domain="ui" i18n:translate="" tal:attributes="href python: '%s/WebSite_viewRecoverAccount?came_from=%s' % (absolute_url, absolute_url)">I forgot my password!</a>
               </div>
             </div><br/>
             <div class="ui-field-contain">
               <label></label>
-              <div><input type="submit" value="Login" tal:attributes="name python: '%s:method' % (form_action, )"/></div>
+              <div><input type="submit" value='Login' i18n:attributes="value" i18n:domain="ui"  tal:attributes="name python: '%s:method' % (form_action, )"/></div>
             </div>
 
 
