@@ -716,147 +716,145 @@ class ZCatalog(Folder, Persistent, Implicit):
                         immediate_reindex_archive=1, **kw):
     """Catalog a list of objects.
     """
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    hot_reindexing = (self.hot_reindexing_state is not None) and \
-                     (catalog is not None) and \
-                     (self.source_sql_catalog_id == catalog.id)
-    archiving = self.archive_path is not None
-    failed_object_list = []
-    url_list = []
-    archive_list = []
-    portal_archives = getattr(self, 'portal_archives', None)
-    if portal_archives is not None:
-      if len(portal_archives):
-        archive_list = portal_archives.getArchiveList()
+    catalog_id_list = self.getERP5CatalogIdList()
+    for sql_catalog_id in catalog_id_list:
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      hot_reindexing = (self.hot_reindexing_state is not None) and \
+                       (catalog is not None) and \
+                       (self.source_sql_catalog_id == catalog.id)
+      archiving = self.archive_path is not None
+      wrapped_object_list = []
+      failed_object_list = []
+      url_list = []
+      archive_list = []
+      portal_archives = getattr(self, 'portal_archives', None)
+      if portal_archives is not None:
+        if len(portal_archives):
+          archive_list = portal_archives.getArchiveList()
 
-    catalog_dict = {}
+      catalog_dict = {}
 
-    # Create archive object list if necessary
-    if archiving:
-      # while archiving only test with the archive we used, do not care
-      # of other as they must already be ok
-      archive = self.unrestrictedTraverse(self.archive_path)
-      archive_obj_list = [archive,]
-      for archive_path in archive_list:
-        try:
-          archive = self.unrestrictedTraverse(archive_path)
-        except KeyError:
-          continue
-        if archive.getCatalogId() == self.destination_sql_catalog_id:
-          archive_obj_list.append(archive)
-    else:
-      # otherwise take all archive in use to know where object must go
-      archive_obj_list = []
-      for archive_path in archive_list:
-        try:
-          archive = self.unrestrictedTraverse(archive_path)
-        except KeyError:
-          continue
-        archive_obj_list.append(archive)
-
-    archive_enabled = (not disable_archive) \
-            and (archiving or (archive_obj_list and sql_catalog_id is None))
-    if archive_enabled:
-      default_catalog = self.getSQLCatalog()
-
-    # Construct list of object to catalogged
-    current_catalog_object_list = []
-    for obj in object_list:
-      if hot_reindexing:
-        try:
-          url = obj.getPhysicalPath
-        except AttributeError:
-          raise CatalogError(
-            "A cataloged object must support the 'getPhysicalPath' "
-            "method if no unique id is provided when cataloging"
-            )
-        url = '/'.join(url())
-        url_list.append(url)
-
-      # either we are doing archiving, either we have used archive without a catalog specified
-      if archive_enabled:
-        goto_current_catalog = 0
-        # check in which archive object must go if we defined archive
-        catalog_id = None
-        for archive in archive_obj_list:
-          if archive.test(obj) is True:
-            catalog_id = archive.getCatalogId()
-            # if current catalog, no need to construct dict as it will be reindex now
-            if catalog_id in (default_catalog.id, self.source_sql_catalog_id):
-              goto_current_catalog = 1
-              continue
-            priority = archive.getPriority()
-            if catalog_dict.has_key(catalog_id):
-              catalog_dict[catalog_id]['obj'].append(obj)
-            else:
-              catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
-        if catalog_id is None and not archiving:
-          # at least put object in current catalog if no archive match
-          # and not doing archive
-          goto_current_catalog = 1
+      # Create archive object list if necessary
+      if archiving:
+        # while archiving only test with the archive we used, do not care
+        # of other as they must already be ok
+        archive = self.unrestrictedTraverse(self.archive_path)
+        archive_obj_list = [archive,]
+        for archive_path in archive_list:
+          try:
+            archive = self.unrestrictedTraverse(archive_path)
+          except KeyError:
+            continue
+          if archive.getCatalogId() == self.destination_sql_catalog_id:
+            archive_obj_list.append(archive)
       else:
-        goto_current_catalog = 1
+        # otherwise take all archive in use to know where object must go
+        archive_obj_list = []
+        for archive_path in archive_list:
+          try:
+            archive = self.unrestrictedTraverse(archive_path)
+          except KeyError:
+            continue
+          archive_obj_list.append(archive)
 
-      if goto_current_catalog:
-        current_catalog_object_list.append(obj)
+      archive_enabled = (not disable_archive) \
+              and (archiving or (archive_obj_list and sql_catalog_id is None))
+      if archive_enabled:
+        default_catalog = self.getSQLCatalog()
 
-    # run activity or execute for each archive depending on priority
-    if catalog_dict:
-      for catalog_id in catalog_dict.keys():
-        if goto_current_catalog and catalog_id == default_catalog.id:
-          # if we reindex in current catalog, do not relaunch an activity for this
-          continue
-        d = catalog_dict[catalog_id]
-        # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
-        # to reindex it in destination catalog, it will be recorded an play only once
-        if not hot_reindexing and self.hot_reindexing_state != HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
-               self.destination_sql_catalog_id == catalog_id:
-          destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
-          # reindex objects in destination catalog
-          destination_catalog.catalogObjectList(
-            self.wrapObjectList(
-              object_value_list=d['obj'],
-              catalog_value=destination_catalog,
-            ),
-            **kw
-          )
+      # Construct list of object to catalogged
+      for obj in object_list:
+        if hot_reindexing:
+          try:
+            url = obj.getPhysicalPath
+          except AttributeError:
+            raise CatalogError(
+              "A cataloged object must support the 'getPhysicalPath' "
+              "method if no unique id is provided when cataloging"
+              )
+          url = '/'.join(url())
+          url_list.append(url)
+
+        # either we are doing archiving, either we have used archive without a catalog specified
+        if archive_enabled:
+          goto_current_catalog = 0
+          # check in which archive object must go if we defined archive
+          catalog_id = None
+          for archive in archive_obj_list:
+            if archive.test(obj) is True:
+              catalog_id = archive.getCatalogId()
+              # if current catalog, no need to construct dict as it will be reindex now
+              if catalog_id in (default_catalog.id, self.source_sql_catalog_id):
+                goto_current_catalog = 1
+                continue
+              priority = archive.getPriority()
+              if catalog_dict.has_key(catalog_id):
+                catalog_dict[catalog_id]['obj'].append(obj)
+              else:
+                catalog_dict[catalog_id] = {'priority' : priority, 'obj' : [obj,]}
+          if catalog_id is None and not archiving:
+            # at least put object in current catalog if no archive match
+            # and not doing archive
+            goto_current_catalog = 1
         else:
-          archive_catalog = self.getSQLCatalog(catalog_id)
-          if immediate_reindex_archive:
-            archive_catalog.catalogObjectList(
-              self.wrapObjectList(
-                object_value_list=d['obj'],
-                catalog_value=archive_catalog,
-              ),
-              **kw
-            )
-          else:
-            for obj in d['obj']:
-              obj._reindexObject(sql_catalog_id=catalog_id, activate_kw = \
-                                 {'priority': d['priority']}, disable_archive=1, **kw)
+          goto_current_catalog = 1
 
-    if catalog is not None:
-      if current_catalog_object_list:
-        catalog.catalogObjectList(
-          self.wrapObjectList(
-            object_value_list=current_catalog_object_list,
-            catalog_value=catalog,
-          ),
-          **kw
-        )
-      if hot_reindexing:
-        destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
-        if destination_catalog.id != catalog.id:
-          if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
-            destination_catalog.recordObjectList(url_list, 1)
-          elif object_list:
-            destination_catalog.catalogObjectList(
-              self.wrapObjectList(
-                object_value_list=object_list,
-                catalog_value=destination_catalog,
-              ),
-              **kw
-            )
+        if goto_current_catalog:
+          # wrap object only when sure it will be reindex now
+          # thus security uid is also reindex
+          wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
+          wrapped_object_list.append(wrap_obj)
+
+      # run activity or execute for each archive depending on priority
+      if catalog_dict:
+        for catalog_id in catalog_dict.keys():
+          if goto_current_catalog and catalog_id == default_catalog.id:
+            # if we reindex in current catalog, do not relaunch an activity for this
+            continue
+          d = catalog_dict[catalog_id]
+          # build the wrapped object list
+          wrapped_object_list_2 = []
+          for obj in d['obj']:
+            try:
+              wrap_obj = self.wrapObject(obj, sql_catalog_id=catalog_id)
+              wrapped_object_list_2.append(wrap_obj)
+            except ConflictError:
+              raise
+            except:
+              LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
+              failed_object_list.append(obj)
+
+          # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
+          # to reindex it in destination catalog, it will be recorded an play only once
+          if not hot_reindexing and self.hot_reindexing_state != HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
+                 self.destination_sql_catalog_id == catalog_id:
+            destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+            # reindex objects in destination catalog
+            destination_catalog.catalogObjectList(wrapped_object_list_2, **kw)
+          else:
+            archive_catalog = self.getSQLCatalog(catalog_id)
+            if immediate_reindex_archive:
+              archive_catalog.catalogObjectList(wrapped_object_list_2, **kw)
+            else:
+              for obj in d['obj']:
+                obj._reindexObject(sql_catalog_id=catalog_id, activate_kw = \
+                                   {'priority': d['priority']}, disable_archive=1, **kw)
+
+      if catalog is not None:
+        if wrapped_object_list:
+          catalog.catalogObjectList(wrapped_object_list, **kw)
+        if hot_reindexing:
+          destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+          if destination_catalog.id != catalog.id:
+            if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
+              destination_catalog.recordObjectList(url_list, 1)
+            else:
+              wrapped_destination_object_list = []
+              for obj in object_list:
+                wrap_obj = self.wrapObject(obj, sql_catalog_id=self.destination_sql_catalog_id)
+                wrapped_destination_object_list.append(wrap_obj)
+              if wrapped_destination_object_list:
+                destination_catalog.catalogObjectList(wrapped_destination_object_list,**kw)
 
     object_list[:] = failed_object_list
 
@@ -886,24 +884,28 @@ class ZCatalog(Folder, Persistent, Implicit):
                           priority=archive.getPriority()).uncatalog_object(uid=uid,path=path,
                                                                            sql_catalog_id=catalog_id)
 
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None:
-      catalog.uncatalogObject(uid=uid,path=path)
-      if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
-        destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
-        if destination_catalog.id != catalog.id:
-          if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
-            destination_catalog.recordObjectList([uid], 0)
-          else:
-            destination_catalog.uncatalogObject(uid=uid)
+    catalog_id_list = self.getERP5CatalogIdList()
+    for sql_catalog_id in catalog_id_list:
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      if catalog is not None:
+        catalog.uncatalogObject(uid=uid,path=path)
+        if self.hot_reindexing_state is not None and self.source_sql_catalog_id == catalog.id:
+          destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
+          if destination_catalog.id != catalog.id:
+            if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
+              destination_catalog.recordObjectList([uid], 0)
+            else:
+              destination_catalog.uncatalogObject(uid=uid)
 
 
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, uid=None,path=None, sql_catalog_id=None):
     """ wrapper around catalog """
-    catalog = self.getSQLCatalog(sql_catalog_id)
-    if catalog is not None:
-      catalog.beforeUncatalogObject(uid=uid,path=path)
+    catalog_id_list = self.getERP5CatalogIdList()
+    for sql_catalog_id in catalog_id_list:
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      if catalog is not None:
+        catalog.beforeUncatalogObject(uid=uid,path=path)
 
   security.declarePrivate('beforeCatalogClear')
   def beforeCatalogClear(self):
