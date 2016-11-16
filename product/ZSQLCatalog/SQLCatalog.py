@@ -1111,7 +1111,7 @@ class Catalog(Folder,
     """
     return self._getCatalogSchema()[table]
 
-  security.declarePrivate('getColumnIds')
+  security.declarePublic('getColumnIds')
   @transactional_cache_decorator('SQLCatalog.getColumnIds')
   def getColumnIds(self):
     """
@@ -1148,7 +1148,7 @@ class Catalog(Folder,
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
 
-  security.declarePrivate('getResultColumnIds')
+  security.declarePublic('getResultColumnIds')
   @transactional_cache_decorator('SQLCatalog.getResultColumnIds')
   def getResultColumnIds(self):
     """
@@ -1162,7 +1162,7 @@ class Catalog(Folder,
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
-  security.declarePrivate('getSortColumnIds')
+  security.declarePublic('getSortColumnIds')
   @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
   def getSortColumnIds(self):
     """
@@ -1176,7 +1176,7 @@ class Catalog(Folder,
         keys.add('%s.%s' % (table, field))
     return sorted(keys)
 
-  security.declarePrivate('getTableIds')
+  security.declarePublic('getTableIds')
   def getTableIds(self):
     """
     Calls the show table method and returns dictionnary of
@@ -1953,7 +1953,7 @@ class Catalog(Folder,
     ids.sort()
     return ids
 
-  security.declarePrivate('getPythonMethodIds')
+  security.declarePublic('getPythonMethodIds')
   def getPythonMethodIds(self):
     """
       Returns a list of all python scripts available in
