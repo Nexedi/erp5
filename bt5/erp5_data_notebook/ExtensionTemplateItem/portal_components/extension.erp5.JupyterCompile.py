@@ -43,21 +43,22 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     python_expression = ''
   
   # Get Data Notebook with the specific reference
-  data_notebook = self.portal_catalog.getResultValue(portal_type='Data Notebook',
-                        reference=reference)
+  data_notebook = self.portal_catalog.getResultValue(
+                         portal_type='Data Notebook',
+                         reference=reference)
   
   # Create new Data Notebook if reference doesn't match with any from existing ones
   if not data_notebook:
     notebook_module = self.getDefaultModule(portal_type='Data Notebook')
     data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
-      title=title,
-      reference=reference,
-      batch_mode=True)
+                                      title=title,
+                                      reference=reference,
+                                      batch_mode=True)
   
   # Add new Data Notebook Line to the Data Notebook
   data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
-    notebook_code=python_expression,
-    batch_mode=True)
+                                       notebook_code=python_expression,
+                                       batch_mode=True)
   
   # Gets the context associated to the data notebook being used
   old_notebook_context = data_notebook.getNotebookContext()
@@ -107,13 +108,12 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
       u'evalue': None,
       u'traceback': None,
       u'status': u'error',
-      u'mime_type': result['mime_type']
-    }
+      u'mime_type': result['mime_type']}
     serialized_result = json.dumps(result)
   
   data_notebook_line.edit(
-    notebook_code_result=result['code_result'], 
-    mime_type=result['mime_type'])
+    notebook_code_result = result['code_result'], 
+    mime_type = result['mime_type'])
   
   return serialized_result  
 
@@ -168,13 +168,16 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- user_context = globals(); user_context['context'] = self;
   user_context = {}
-  
   output = ''
 
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
   notebook_context = old_notebook_context
 
+  inject_variable_dict = {}
+  current_var_dict = {}
+  current_setup_dict = {}
+  
   # Execute only if jupyter_code is not empty
   if jupyter_code:
     # Create ast parse tree
@@ -282,8 +285,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
             'mime_type': 'text/plain',
             'evalue': None,
             'ename': None,
-            'traceback': None,
-          }
+            'traceback': None}
           return result
 
       # Removing all the setup functions if user call environment.clearAll()
@@ -323,8 +325,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         ) % (data['code'], func_name, func_name)
         notebook_context['setup'][data['alias']] = {
           "func_name": func_name,
-          "code": setup_string
-        }
+          "code": setup_string}
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
@@ -332,8 +333,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         setup_string = "%s = %s\n" % (variable, repr(value))
         notebook_context['setup'][variable] = {
           'func_name': variable,
-          'code': setup_string
-        }
+          'code': setup_string}
         user_context['_volatile_variable_list'] += variable
         
       if environment_collector.showEnvironmentSetup():
@@ -349,7 +349,6 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
           transaction.abort()
-
           return getErrorMessageForException(self, e, notebook_context)
 
       # Execute the interactive nodes with 'single' mode
@@ -362,16 +361,14 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
           transaction.abort()
-
           return getErrorMessageForException(self, e, notebook_context)
 
       mime_type = display_data['mime_type'] or mime_type
       inject_variable_dict['_print'].write("\n".join(removed_setup_message_list) + display_data['result'])
-    
-    
+
     # Saves a list of all the variables we injected into the user context and
     # shall be deleted before saving the context.
-    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context['_volatile_variable_list']
+    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context.get('_volatile_variable_list', [])
     volatile_variable_list.append('__builtins__')
 
     for key, val in user_context.items():
@@ -394,7 +391,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       if not key in user_context:
         del notebook_context['variables'][key]
     
-    output = inject_variable_dict['_print'].getCapturedOutputString()
+    if inject_variable_dict.get('_print') is not None:
+      output = inject_variable_dict['_print'].getCapturedOutputString()
   
   result = {
     'result_string': output,
@@ -403,8 +401,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     'mime_type': mime_type,
     'evalue': evalue,
     'ename': ename,
-    'traceback': tb_list,
-  }
+    'traceback': tb_list}
   return result
 
 
