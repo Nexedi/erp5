@@ -113,8 +113,9 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
     if login_pw is not None:
       creds[ 'login' ], creds[ 'password' ] = login_pw
     else:
-      # SameSite Policy is implemented serverside
       origin = request.getHeader("Origin", None)
+
+      # SameSite Policy is implemented serverside
       if origin is None:
         referer_url = request.getHeader("Referer", None)
         if referer_url is not None:
@@ -127,6 +128,22 @@ class ERP5JSONWebTokenPlugin(BasePlugin):
         cookie = self.same_site_cookie
         origin = None
       else:
+        # Always allow CORS when credentials are not in the request
+        request.response.setHeader("Access-Control-Allow-Credentials", "true")
+        request.response.setHeader(
+          "Access-Control-Allow-Headers",
+          "Origin, X-Requested-With, Content-Type, Accept"
+        )
+        request.response.setHeader(
+          "Access-Control-Allow-Methods",
+          "GET, OPTIONS, HEAD, DELETE, PUT, POST"
+        )
+        request.response.setHeader("Access-Control-Allow-Origin", origin)
+        request.response.setHeader(
+          "Access-Control-Expose-Headers",
+          "Content-Type, Content-Length, WWW-Authenticate, X-Location"
+        )
+        # For CORS use a different token
         cookie = self.cors_cookie
 
       token = request.cookies.get(cookie)
