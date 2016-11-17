@@ -15,6 +15,7 @@ import json
 import transaction
 import Acquisition
 import astor
+from Products.ERP5Type.Log import log
 
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
@@ -668,9 +669,32 @@ class ImportFixer(ast.NodeTransformer):
     with the user context.
     """
     module_name = node.names[0].name
+    
+    test_import_string = None
+    if getattr(node, "module", None) is not None:
+      # case when 'from <module_name> import <something>'
+      test_import_string = "from %s import %s" %(node.module, module_name)
+      # XXX: handle sub case when "from <module_name> import *"
+      #if module_name == '*':
+      #  module_name = '%s_ALL' %(node.module)
+      #else:
+      #  module_name = '%s_%s' %(node.module, module_name)
+      
     if getattr(node.names[0], 'asname'):
+      # case when 'import <module_name> as <name>'
       module_name = node.names[0].asname
+      test_import_string = "import %s as %s" %(node.names[0].name, module_name)
+
+    if test_import_string is None:
+      # case 'import <module_name>
+      test_import_string = "import %s" %node.names[0].name
+
+    #log('%s : %s' %(module_name, test_import_string))
     if not self.import_func_dict.get(module_name):
+      # try to import module before it is added to environment
+      # this way if user tries to import non existent module Exception
+      # is immediately raised and doesn't block next Jupyter cell execution
+      exec(test_import_string)
       empty_function = self.newEmptyFunction("%s_setup" % module_name)
       return_dict = self.newReturnDict(module_name)
       empty_function.body = [node, return_dict]
@@ -692,7 +716,7 @@ class ImportFixer(ast.NodeTransformer):
     """
       Return an AST.Expr representing a returned dict with one single key named
       `'module_name'` (as string) which returns the variable `module_name` (as 
-      exoression).
+      expression).
     """
     return_dict = "return {'%s': %s}" % (module_name, module_name)
     return ast.parse(return_dict).body[0]
