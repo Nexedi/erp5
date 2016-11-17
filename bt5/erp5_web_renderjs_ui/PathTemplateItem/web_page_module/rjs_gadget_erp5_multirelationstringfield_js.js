@@ -27,7 +27,8 @@
           value_text: value_text,
           value_uid: value_uid,
           value_portal_type: value_portal_type,
-          relation_index: index
+          relation_index: index,
+          hidden: gadget.state.hidden
         });
       })
       .push(function () {
@@ -54,7 +55,8 @@
           url: field_json.url,
           allow_creation: field_json.allow_creation,
           portal_types: field_json.portal_types,
-          relation_field_id: field_json.relation_field_id
+          relation_field_id: field_json.relation_field_id,
+          hidden: field_json.hidden
         };
 
       if (field_json.default.hasOwnProperty('value_text_list')) {

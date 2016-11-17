@@ -11,7 +11,8 @@
         value: options.field_json.default,
         editable: options.field_json.editable,
         url: options.field_json.url,
-        sandbox: options.field_json.sandbox || undefined
+        sandbox: options.field_json.sandbox || undefined,
+        hidden: options.field_json.hidden
       });
     })
 
@@ -57,7 +58,8 @@
           return result.render({
             key: gadget.state.key,
             value: gadget.state.value,
-            editable: gadget.state.editable
+            editable: gadget.state.editable,
+            hidden: gadget.state.hidden
           });
         });
     })

@@ -11,7 +11,8 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          text_content: field_json.value || field_json.default || ""
+          text_content: field_json.value || field_json.default || "",
+          hidden: field_json.hidden
         };
       return this.changeState(state_dict);
     })

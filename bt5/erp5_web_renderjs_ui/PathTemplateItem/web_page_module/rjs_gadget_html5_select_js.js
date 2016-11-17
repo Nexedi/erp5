@@ -37,7 +37,8 @@
           editable: options.editable,
           required: options.required,
           name: options.name,
-          title: options.title
+          title: options.title,
+          hidden: options.hidden
         };
       return this.changeState(state_dict);
     })
@@ -65,6 +66,12 @@
         select.readonly = true;
       } else {
         select.readonly = false;
+      }
+
+      if (this.state.hidden) {
+        select.hidden = true;
+      } else {
+        select.hidden = false;
       }
 
       if (modification_dict.hasOwnProperty('value') ||

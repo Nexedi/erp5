@@ -17,7 +17,8 @@
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
-          first_item: field_json.first_item
+          first_item: field_json.first_item,
+          hidden: field_json.hidden
         };
 
       if ((!state_dict.value) && (state_dict.first_item)) {

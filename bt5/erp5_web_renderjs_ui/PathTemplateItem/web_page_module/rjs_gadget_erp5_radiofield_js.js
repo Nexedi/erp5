@@ -16,7 +16,8 @@
           type: 'radio',
           name: gadget.state.name,
           value: item[1],
-          editable: true
+          editable: true,
+          hidden: gadget.state.hidden
         };
         if (item[1] === gadget.state.value) {
           state_dict.checked = 1;
@@ -53,7 +54,8 @@
           editable: field_json.editable,
           name: field_json.key,
           title: field_json.title,
-          item_list: field_json.items
+          item_list: field_json.items,
+          hidden: field_json.hidden
         };
 
       //the first item will always be selected if no initial default value is supplied.

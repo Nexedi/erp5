@@ -27,13 +27,21 @@
         field_url: options.field_url,
         error_text: options.field_json.error_text || '',
         options: options,
-        scope: options.field_json.key
+        scope: options.field_json.key,
+        hidden: options.field_json.hidden
       };
       return this.changeState(state_dict);
     })
 
     .onStateChange(function (modification_dict) {
       var gadget = this;
+
+      if (gadget.state.hidden) {
+        this.element.hidden = true;
+      } else {
+        this.element.hidden = false;
+      }
+
       if (modification_dict.hasOwnProperty('label_text')) {
         this.state.label_text_element.textContent = this.state.label_text;
       }

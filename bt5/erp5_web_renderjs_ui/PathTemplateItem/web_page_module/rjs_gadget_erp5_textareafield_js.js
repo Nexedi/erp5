@@ -13,7 +13,8 @@
           value: field_json.value || field_json.default || "",
           editable: field_json.editable,
           name: field_json.key,
-          title: field_json.title
+          title: field_json.title,
+          hidden: field_json.hidden
         };
       state_dict.text_content = state_dict.value;
       return this.changeState(state_dict);

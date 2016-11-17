@@ -23,7 +23,8 @@
           type: options.type || 'text',
           title: options.title,
           focus: options.focus,
-          step: options.step
+          step: options.step,
+          hidden: options.hidden
         };
       return this.changeState(state_dict);
     })
@@ -58,6 +59,12 @@
         textarea.readonly = true;
       } else {
         textarea.readonly = false;
+      }
+
+      if (this.state.hidden) {
+        textarea.hidden = true;
+      } else {
+        textarea.hidden = false;
       }
 
       if (this.state.focus === true) {

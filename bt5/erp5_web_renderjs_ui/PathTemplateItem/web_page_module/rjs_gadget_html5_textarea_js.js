@@ -25,7 +25,8 @@
           value: options.value,
           editable: options.editable,
           name: options.name,
-          title: options.title
+          title: options.title,
+          hidden: options.hidden
         };
       return this.changeState(state_dict);
     })
@@ -48,6 +49,13 @@
       } else {
         textarea.setAttribute('readonly', 'readonly');
       }
+
+      if (this.state.hidden) {
+        textarea.hidden = true;
+      } else {
+        textarea.hidden = false;
+      }
+
     })
 
     .declareMethod('getContent', function () {
