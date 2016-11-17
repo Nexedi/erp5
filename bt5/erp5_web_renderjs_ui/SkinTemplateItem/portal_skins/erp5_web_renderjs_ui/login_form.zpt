@@ -33,6 +33,17 @@
         <section>
           <form method="post" tal:attributes="action python: '%s/' % context.absolute_url()">
 
+            <div class="ui-field-contain" tal:condition="exists: request/came_from">
+              <p data-i18n="Please authenticate to allow this application to access your data in ERP5">
+                Please authenticate to allow this application to access your data in ERP5
+              </p>
+            </div>
+            <div class="ui-field-contain" tal:condition="exists: request/came_from">
+              <label data-i18n="Login">Authorize Domain<span></span></label>
+              <div><input required
+                type="text" name="new_cors_origin"
+                tal:attributes="value request/cors_origin" /></div>
+            </div>
             <div class="ui-field-contain">
               <label data-i18n="Login">Login<span></span></label>
               <div><input autofocus type="text" name="__ac_name" value="" required=""></div>
