@@ -199,7 +199,7 @@
         }
       }
 
-      if ('serviceWorker' in navigator) {
+      if (navigator.serviceWorker !== undefined) {
         // importatant register service worker
         // for client reconnect if url change
         queue.push(function () {
@@ -271,16 +271,15 @@
       if (options !== undefined && options.toExternal) {
         window.location.replace(options.url);
         return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected
-      } else {
-        return this.getCommandUrlFor(options)
-          .push(function (hash) {
-            window.location.replace(hash);
-            // prevent returning unexpected response
-            // wait for the hash change to occur
-            // fail if nothing happens
-            return RSVP.timeout(REDIRECT_TIMEOUT);
-          });
       }
+      return this.getCommandUrlFor(options)
+        .push(function (hash) {
+          window.location.replace(hash);
+          // prevent returning unexpected response
+          // wait for the hash change to occur
+          // fail if nothing happens
+          return RSVP.timeout(REDIRECT_TIMEOUT);
+        });
     })
 
     .declareMethod('route', function (options) {
@@ -356,7 +355,7 @@
           return gadget.props.start_deferred.promise;
         })
         .push(function () {
-          if (('serviceWorker' in navigator) && (NAME !== "web page")) {
+          if ((navigator.serviceWorker !== undefined) && (NAME !== "web page")) {
             return gadget.getSetting('jio_' + NAME + '_modification_date')
               .push(function (modification_date) {
                 return gadget.getSetting('jio_' + NAME + '_cache_description')
@@ -364,15 +363,14 @@
                     var jio_store = get_jio_replicate_storage(NAME);
                     if (jio_store.__storage._query_options.query === query && modification_date) {
                       return get_jio_replicate_storage(NAME, modification_date).repair();
-                    } else {
-                      return gadget.setSetting(
-                        'jio_' + NAME + '_cache_description',
-                        jio_store.__storage._query_options.query
-                      )
-                        .push(function () {
-                          return jio_store.repair();
-                        });
                     }
+                    return gadget.setSetting(
+                      'jio_' + NAME + '_cache_description',
+                      jio_store.__storage._query_options.query
+                    )
+                      .push(function () {
+                        return jio_store.repair();
+                      });
                   })
                   .push(undefined, function (error) {
                     // fix offline mode bypass network errors
@@ -380,9 +378,8 @@
                         error.srcElement instanceof XMLHttpRequest &&
                         error.type === "error") {
                       return {};
-                    } else {
-                      throw error;
                     }
+                    throw error;
                   })
                   .push(function () {
                     jIO.createJIO(get_jio_cache_storage(NAME)).allDocs({
@@ -411,9 +408,8 @@
                     return {};
                   });
               });
-          } else {
-            return {};
           }
+          return {};
         })
         .push(function () {
           return listenHashChange(gadget);
