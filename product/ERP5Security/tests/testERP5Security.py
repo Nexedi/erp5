@@ -369,6 +369,11 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserExists('the_user', 'secret')
 
   def test_PersonLoginMigration(self):
+    self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
+    self.portal.acl_users.erp5_users.manage_activateInterfaces([
+      'IAuthenticationPlugin',
+      'IUserEnumerationPlugin',
+    ])
     pers = self.portal.person_module.newContent(
       portal_type='Person',
       reference='the_user',
@@ -379,14 +384,12 @@ class TestUserManagement(ERP5TypeTestCase):
     pers.setPassword('secret')
     self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
     self.tic()
-    if getattr(self.portal.acl_users,'erp5_users', None) is not None:
-      self._assertUserExists('the_user', 'secret')
-    else:
-      self._assertUserDoesNotExists('the_user', 'secret')
-    pers.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self._assertUserExists('the_user', 'secret')
+    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
     self.portal.portal_caches.clearAllCache()
     self.tic()
     self._assertUserExists('the_user', 'secret')
+    self.assertEqual(pers.getPassword(), None)
     login = pers.objectValues(portal_type='ERP5 Login')[0]
     login.setPassword('secret2')
     self.portal.portal_caches.clearAllCache()

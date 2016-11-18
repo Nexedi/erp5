@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TemplateTool_checkERP5LoginUserManagerExistenceConsistency</string> </value>
+            <value> <string>TemplateTool_checkERP5UserManagerNonExistenceConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>
