@@ -459,7 +459,7 @@ allow_class(GroupedMessage)
 
 # Activity Registration
 def activity_dict():
-  from Activity import SQLDict, SQLQueue
+  from Activity import SQLDict, SQLQueue, SQLJoblib
   return {k: getattr(v, k)() for k, v in locals().iteritems()}
 activity_dict = activity_dict()
 
