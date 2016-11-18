@@ -288,6 +288,9 @@ class Message(BaseMessage):
   def activateResult(self, active_process, result, object):
     if not isinstance(result, ActiveResult):
       result = ActiveResult(result=result)
+    signature = self.activity_kw.get('signature')
+    if signature:
+      result.edit(id=signature)
     # XXX Allow other method_id in future
     result.edit(object_path=object, method_id=self.method_id)
     active_process.postResult(result)
@@ -459,7 +462,7 @@ allow_class(GroupedMessage)
 
 # Activity Registration
 def activity_dict():
-  from Activity import SQLDict, SQLQueue
+  from Activity import SQLDict, SQLQueue, SQLJoblib
   return {k: getattr(v, k)() for k, v in locals().iteritems()}
 activity_dict = activity_dict()
 
@@ -654,6 +657,9 @@ class ActivityTool (Folder, UniqueObject):
       self.maybeMigrateConnectionClass()
       for activity in activity_dict.itervalues():
         activity.initialize(self, clear=False)
+
+    def _callSafeFunction(self, batch_function):
+      return batch_function()
 
     security.declareProtected(Permissions.manage_properties, 'isSubscribed')
     def isSubscribed(self):
