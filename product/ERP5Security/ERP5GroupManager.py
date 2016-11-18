@@ -124,7 +124,8 @@ class ERP5GroupManager(BasePlugin):
         ]
         if not user_list:
           return ()
-        user, = user_list
+        # len(user_list) can be 2 during migration.
+        user = user_list[0]
         person_object = self.getPortalObject().unrestrictedTraverse(user['path'])
 
         # Fetch category values from defined scripts
