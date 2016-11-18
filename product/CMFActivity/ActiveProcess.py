@@ -32,6 +32,7 @@ from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.ConflictFree import ConflictFreeLog
+from BTrees.OOBTree import OOBTree
 from BTrees.Length import Length
 from random import randrange
 from .ActiveResult import ActiveResult
@@ -88,21 +89,29 @@ class ActiveProcess(Base):
   security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
   def postResult(self, result):
     try:
-      result_list = self.result_list
+      result_id = result.id
     except AttributeError:
-      # BBB: self was created before implementation of __init__
-      self.result_list = result_list = ConflictFreeLog()
+      try:
+        result_list = self.result_list
+      except AttributeError:
+        # BBB: self was created before implementation of __init__
+        self.result_list = result_list = ConflictFreeLog()
+      else:
+        if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
+          # use a random id in order to store result in a way with
+          # fewer conflict errors
+          random_id = randrange(0, 10000 * (self.result_len.value + 1))
+          while result_list.has_key(random_id):
+            random_id += 1
+          result_list[random_id] = result
+          self.result_len.change(1)
+          return
+      result_list.append(result)
     else:
-      if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
-        # use a random id in order to store result in a way with
-        # fewer conflict errors
-        random_id = randrange(0, 10000 * (self.result_len.value + 1))
-        while result_list.has_key(random_id):
-          random_id += 1
-        result_list[random_id] = result
-        self.result_len.change(1)
-        return
-    result_list.append(result)
+      try:
+        self.result_dict[result_id] = result
+      except AttributeError:
+        self.result_dict = OOBTree({result.id: result})
 
   security.declareProtected(CMFCorePermissions.ManagePortal, 'postActiveResult')
   def postActiveResult(self, *args, **kw):
@@ -125,6 +134,17 @@ class ActiveProcess(Base):
     if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
       return result_list.values()
     return list(result_list)
+
+  security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultDict')
+  def getResultDict(self, **kw):
+    """
+      Returns the result Dict
+    """
+    try:
+      return self.result_dict
+    except AttributeError:
+      self.result_dict = result_dict = OOBTree()
+      return result_dict
 
   security.declareProtected( CMFCorePermissions.View, 'hasActivity' )
   def hasActivity(self, **kw):
