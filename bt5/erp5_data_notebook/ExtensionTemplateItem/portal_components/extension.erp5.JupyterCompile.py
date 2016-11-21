@@ -1,40 +1,38 @@
 # -*- coding: utf-8 -*-
-
+from matplotlib.figure import Figure
+from IPython.core.display import DisplayObject
+from IPython.lib.display import IFrame
 from cStringIO import StringIO
-import cPickle
 from erp5.portal_type import Image
 from types import ModuleType
 from ZODB.serialize import ObjectWriter
-
-
+import cPickle
 import sys
 import traceback
 import ast
 import base64
 import json
-
 import transaction
 import Acquisition
 import astor
+from Products.ERP5Type.Log import log
 
-from matplotlib.figure import Figure
-from IPython.core.display import DisplayObject
-from IPython.lib.display import IFrame
-
-
-def Base_executeJupyter(self, python_expression=None, reference=None, title=None, request_reference=False, **kw):
+def Base_executeJupyter(self, python_expression=None, reference=None, \
+                        title=None, request_reference=False, **kw):
   # Check permissions for current user and display message to non-authorized user 
   if not self.Base_checkPermission('portal_components', 'Manage Portal'):
     return "You are not authorized to access the script"
   
   # Convert the request_reference argument string to their respeced boolean values
-  request_reference = {'True': True, 'False': False}.get(request_reference, False)
+  request_reference = {'True': True, \
+                       'False': False}.get(request_reference, False)
   
   # Return python dictionary with title and reference of all notebooks
   # for request_reference=True
   if request_reference:
     data_notebook_list = self.portal_catalog(portal_type='Data Notebook')
-    notebook_detail_list = [{'reference': obj.getReference(), 'title': obj.getTitle()} for obj in data_notebook_list]
+    notebook_detail_list = [{'reference': obj.getReference(), \
+                             'title': obj.getTitle()} for obj in data_notebook_list]
     return notebook_detail_list
   
   if not reference:
@@ -46,23 +44,22 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
     python_expression = ''
   
   # Get Data Notebook with the specific reference
-  data_notebook = self.portal_catalog.getResultValue(portal_type='Data Notebook',
-                        reference=reference)
+  data_notebook = self.portal_catalog.getResultValue(
+                         portal_type='Data Notebook',
+                         reference=reference)
   
   # Create new Data Notebook if reference doesn't match with any from existing ones
   if not data_notebook:
     notebook_module = self.getDefaultModule(portal_type='Data Notebook')
     data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
-      title=title,
-      reference=reference,
-      batch_mode=True
-    )
+                                      title=title,
+                                      reference=reference,
+                                      batch_mode=True)
   
   # Add new Data Notebook Line to the Data Notebook
   data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
-    notebook_code=python_expression,
-    batch_mode=True
-  )
+                                       notebook_code=python_expression,
+                                       batch_mode=True)
   
   # Gets the context associated to the data notebook being used
   old_notebook_context = data_notebook.getNotebookContext()
@@ -81,8 +78,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
     u'evalue': final_result['evalue'],
     u'traceback': final_result['traceback'],
     u'status': final_result['status'],
-    u'mime_type': final_result['mime_type'],
-  }
+    u'mime_type': final_result['mime_type']}
   
   # Updates the context in the notebook with the resulting context of code 
   # execution.
@@ -113,14 +109,12 @@ def Base_executeJupyter(self, python_expression=None, reference=None, title=None
       u'evalue': None,
       u'traceback': None,
       u'status': u'error',
-      u'mime_type': result['mime_type']
-    }
+      u'mime_type': result['mime_type']}
     serialized_result = json.dumps(result)
   
   data_notebook_line.edit(
-    notebook_code_result=result['code_result'], 
-    mime_type=result['mime_type']
-  )
+    notebook_code_result = result['code_result'], 
+    mime_type = result['mime_type'])
   
   return serialized_result  
 
@@ -175,14 +169,16 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   # dictionary, but that might hamper the speed of exec or eval.
   # Something like -- user_context = globals(); user_context['context'] = self;
   user_context = {}
-  
   output = ''
 
   # Saving the initial globals dict so as to compare it after code execution
   globals_dict = globals()
-  result_string = ''
   notebook_context = old_notebook_context
 
+  inject_variable_dict = {}
+  current_var_dict = {}
+  current_setup_dict = {}
+  
   # Execute only if jupyter_code is not empty
   if jupyter_code:
     # Create ast parse tree
@@ -231,13 +227,13 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       
       # Variables used at the display hook to get the proper form to display
       # the last returning variable of any code cell.
-      display_data = {'result': '', 'mime_type': None}
+      display_data = {'result': '', 
+                      'mime_type': None}
       
       # This is where one part of the  display magic happens. We create an 
       # instance of ProcessorList and add each of the built-in processors.
       # The classes which each of them are responsiblefor rendering are defined
       # in the classes themselves.
-      #
       # The customized display hook will automatically use the processor
       # of the matching class to decide how the object should be displayed.
       processor_list = ProcessorList()
@@ -253,8 +249,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         '_display_data': display_data,
         '_processor_list': processor_list,
         '_volatile_variable_list': [],
-        '_print': CustomPrint()
-      }
+        '_print': CustomPrint()}
       user_context.update(inject_variable_dict)
       user_context.update(notebook_context['variables'])
       
@@ -291,11 +286,9 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
             'mime_type': 'text/plain',
             'evalue': None,
             'ename': None,
-            'traceback': None,
-          }
+            'traceback': None}
           return result
-            
-      
+
       # Removing all the setup functions if user call environment.clearAll()
       if environment_collector.clearAll():
         keys = notebook_context ['setup'].keys()
@@ -333,9 +326,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         ) % (data['code'], func_name, func_name)
         notebook_context['setup'][data['alias']] = {
           "func_name": func_name,
-          "code": setup_string
-        }
-        inject_variable_dict['_print'].write(setup_string)
+          "code": setup_string}
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are simple variables and saving them in the setup.
@@ -343,8 +334,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         setup_string = "%s = %s\n" % (variable, repr(value))
         notebook_context['setup'][variable] = {
           'func_name': variable,
-          'code': setup_string
-        }
+          'code': setup_string}
         user_context['_volatile_variable_list'] += variable
         
       if environment_collector.showEnvironmentSetup():
@@ -359,10 +349,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         except Exception as e:
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
-          #
-          # TODO: store which notebook line generated which exception.
           transaction.abort()
-          # Clear the portal cache from previous transaction
           return getErrorMessageForException(self, e, notebook_context)
 
       # Execute the interactive nodes with 'single' mode
@@ -374,19 +361,15 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         except Exception as e:
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
-          #
-          # TODO: store which notebook line generated which exception.
           transaction.abort()
-          # Clear the portal cache from previous transaction
           return getErrorMessageForException(self, e, notebook_context)
 
       mime_type = display_data['mime_type'] or mime_type
       inject_variable_dict['_print'].write("\n".join(removed_setup_message_list) + display_data['result'])
-    
-    
+
     # Saves a list of all the variables we injected into the user context and
     # shall be deleted before saving the context.
-    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context['_volatile_variable_list']
+    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context.get('_volatile_variable_list', [])
     volatile_variable_list.append('__builtins__')
 
     for key, val in user_context.items():
@@ -409,7 +392,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       if not key in user_context:
         del notebook_context['variables'][key]
     
-    output = inject_variable_dict['_print'].getCapturedOutputString()
+    if inject_variable_dict.get('_print') is not None:
+      output = inject_variable_dict['_print'].getCapturedOutputString()
   
   result = {
     'result_string': output,
@@ -418,8 +402,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     'mime_type': mime_type,
     'evalue': evalue,
     'ename': ename,
-    'traceback': tb_list,
-  }
+    'traceback': tb_list}
   return result
 
 
@@ -432,8 +415,7 @@ class EnvironmentDefinitionError(TypeError):
 
 
 def canSerialize(obj):
-  result = False
-        
+
   container_type_tuple = (list, tuple, dict, set, frozenset)
   
   # if object is a container, we need to check its elements for presence of
@@ -479,7 +461,7 @@ def canSerialize(obj):
     # 
     # Even though the issue seems complicated, this quickfix should be 
     # properly rewritten in a better way as soon as possible.
-    except (cPickle.PicklingError, TypeError, NameError, AttributeError) as e:
+    except (cPickle.PicklingError, TypeError, NameError, AttributeError):
       return False
     else:
       return True
@@ -687,9 +669,32 @@ class ImportFixer(ast.NodeTransformer):
     with the user context.
     """
     module_name = node.names[0].name
+    
+    test_import_string = None
+    if getattr(node, "module", None) is not None:
+      # case when 'from <module_name> import <something>'
+      test_import_string = "from %s import %s" %(node.module, module_name)
+      # XXX: handle sub case when "from <module_name> import *"
+      #if module_name == '*':
+      #  module_name = '%s_ALL' %(node.module)
+      #else:
+      #  module_name = '%s_%s' %(node.module, module_name)
+      
     if getattr(node.names[0], 'asname'):
+      # case when 'import <module_name> as <name>'
       module_name = node.names[0].asname
+      test_import_string = "import %s as %s" %(node.names[0].name, module_name)
+
+    if test_import_string is None:
+      # case 'import <module_name>
+      test_import_string = "import %s" %node.names[0].name
+
+    #log('%s : %s' %(module_name, test_import_string))
     if not self.import_func_dict.get(module_name):
+      # try to import module before it is added to environment
+      # this way if user tries to import non existent module Exception
+      # is immediately raised and doesn't block next Jupyter cell execution
+      exec(test_import_string)
       empty_function = self.newEmptyFunction("%s_setup" % module_name)
       return_dict = self.newReturnDict(module_name)
       empty_function.body = [node, return_dict]
@@ -711,7 +716,7 @@ class ImportFixer(ast.NodeTransformer):
     """
       Return an AST.Expr representing a returned dict with one single key named
       `'module_name'` (as string) which returns the variable `module_name` (as 
-      exoression).
+      expression).
     """
     return_dict = "return {'%s': %s}" % (module_name, module_name)
     return ast.parse(return_dict).body[0]
@@ -735,7 +740,7 @@ class ImportFixer(ast.NodeTransformer):
                "WARNING: Your imported the module %s without using "
                "the environment object, which is not recomended. "
                "Your import was automatically converted to use such method."
-               "The setup function registered was named %s_setup.\\n" 
+               "The setup function was named as: %s_setup.\\n" 
                "'") % (module_name, module_name)
     tree = ast.parse(warning)
     return tree.body[0]
@@ -763,7 +768,7 @@ def renderAsHtml(self, renderable_object):
   compile_jupyter_frame = sys._getframe(3)
   compile_jupyter_locals = compile_jupyter_frame.f_locals
   processor = compile_jupyter_locals['processor_list'].getProcessorFor(renderable_object)
-  result, mime_type = processor(renderable_object).process()
+  result, _ = processor(renderable_object).process()
   compile_jupyter_locals['inject_variable_dict']['_print'].write(result)
   compile_jupyter_locals['display_data']['mime_type'] = 'text/html'
 
@@ -773,7 +778,7 @@ def getErrorMessageForException(self, exception, notebook_context):
     code execution (notebook_context) and will return a dict as Jupyter
     requires for error rendering.
   '''
-  etype, value, tb = sys.exc_info()
+  _, value, _ = sys.exc_info()
   traceback_text = traceback.format_exc().split('\n')[:-1]
   return {
     'status': 'error',
