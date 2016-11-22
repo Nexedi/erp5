@@ -17,6 +17,9 @@
                          .innerHTML);
 
   gadget_klass
+    .setState({
+      visible: false
+    })
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
@@ -27,12 +30,14 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('toggle', function () {
-      this.element.classList.toggle('visible');
+      return this.changeState({
+        visible: !this.state.visible
+      });
     })
     .declareMethod('close', function () {
-      if (this.element.classList.contains('visible')) {
-        this.element.classList.remove('visible');
-      }
+      return this.changeState({
+        visible: false
+      });
     })
 
     .declareMethod('render', function () {
@@ -56,7 +61,6 @@
               "module_href": all_result[0],
               "history_href": all_result[1],
               "preference_href": all_result[2],
-              // "language_list": language_list,
               "logout_href": all_result[3],
               "search_href": all_result[4],
               "worklist_href": all_result[5]
@@ -66,6 +70,18 @@
         .push(function (my_translated_or_plain_html) {
           g.element.querySelector("div").innerHTML = my_translated_or_plain_html;
         });
+    })
+
+    .onStateChange(function () {
+      if (this.state.visible) {
+        if (!this.element.classList.contains('visible')) {
+          this.element.classList.toggle('visible');
+        }
+      } else {
+        if (this.element.classList.contains('visible')) {
+          this.element.classList.remove('visible');
+        }
+      }
     })
 
     /////////////////////////////////////////////////////////////////
