@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [x for x in cell.getTestedPropertyList() if x is not None]</string> </value>
+            <value> <string>python: cell.getTestedPropertyList() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
