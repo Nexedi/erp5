@@ -8,28 +8,11 @@
   /////////////////////////////////////////////////////////////////
   // Precompile the templates while loading the first gadget instance
   var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
+    table_template = Handlebars.compile(gadget_klass.__template_element
                          .getElementById("table-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
+                         .innerHTML);
 
   gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -131,7 +114,7 @@
           ]);
         })
         .push(function (last_result_list) {
-          gadget.props.element.innerHTML = last_result_list[0];
+          gadget.element.innerHTML = last_result_list[0];
 
           return gadget.updateHeader({
             back_url: result_list[0],

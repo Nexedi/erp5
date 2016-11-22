@@ -8,28 +8,11 @@
   /////////////////////////////////////////////////////////////////
   // Precompile the templates while loading the first gadget instance
   var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
+    table_template = Handlebars.compile(gadget_klass.__template_element
                          .getElementById("table-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
+                         .innerHTML);
 
   gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
@@ -158,7 +141,7 @@
           }));
         })
         .push(function (my_translated_html) {
-          gadget.props.element.innerHTML = my_translated_html;
+          gadget.element.innerHTML = my_translated_html;
 
           return RSVP.all([
             gadget.getUrlFor({command: 'change', options: {
