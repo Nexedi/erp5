@@ -4,7 +4,10 @@
   "use strict";
 
   function translate(string, gadget) {
-    return translation_data[gadget.state.language][string] || string;
+    if (translation_data[gadget.state.language]) {
+      return translation_data[gadget.state.language][string] || string;
+    }
+    return string;
   }
 
   // translate a list of elements passed and returned as string
