@@ -1120,6 +1120,7 @@ if (typeof document.contains !== 'function') {
   };
   RenderJSGadget.setState = function (state_dict) {
     var json_state = JSON.stringify(state_dict);
+    this.prototype.__json_state = json_state;
     return this.ready(function () {
       this.state = JSON.parse(json_state);
     });
@@ -1250,7 +1251,8 @@ if (typeof document.contains !== 'function') {
     .declareMethod('changeState', function (state_dict) {
       var key,
         modified = false,
-        modification_dict = {};
+        modification_dict = {},
+        context = this;
       for (key in state_dict) {
         if (state_dict[key] !== this.state[key]) {
           this.state[key] = state_dict[key];
@@ -1259,7 +1261,18 @@ if (typeof document.contains !== 'function') {
         }
       }
       if (modified && this.__state_change_callback !== undefined) {
-        return this.__state_change_callback(modification_dict);
+        return new RSVP.Queue()
+          .push(function () {
+            return context.__state_change_callback(modification_dict);
+          })
+          .push(undefined, function (error) {
+            if (context.__json_state !== undefined) {
+              context.state = JSON.parse(context.__json_state);
+            } else {
+              context.state = {};
+            }
+            throw error;
+          });
       }
     });
 
@@ -1622,7 +1635,14 @@ if (typeof document.contains !== 'function') {
           gadget_loading_klass = undefined;
           throw e;
         });
-      local_loading_klass_promise = loading_klass_promise;
+      //gadget loading should not be interrupted
+      //if not, gadget's definition will not be complete
+      //.then will return another promise
+      //so loading_klass_promise can't be cancel
+      local_loading_klass_promise = loading_klass_promise
+        .then(function (gadget_instance) {
+          return gadget_instance;
+        });
 
       queue = new RSVP.Queue()
         .push(function () {
