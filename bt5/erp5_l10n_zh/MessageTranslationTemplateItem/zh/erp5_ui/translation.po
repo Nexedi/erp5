@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-09-26 14:01+UTC\n"
-"PO-Revision-Date: 2016-09-26 14:01+UTC\n"
+"POT-Creation-Date: 2016-11-23 12:11+UTC\n"
+"PO-Revision-Date: 2016-11-23 12:11+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -3492,6 +3492,9 @@ msgstr "姓"
 
 msgid "Latest Documents"
 msgstr "最新文件"
+
+msgid "Latest News"
+msgstr "热点新闻"
 
 msgid "Layout Configuration"
 msgstr "版面布局配置"

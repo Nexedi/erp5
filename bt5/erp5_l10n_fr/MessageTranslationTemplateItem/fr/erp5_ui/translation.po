@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-09-26 13:01+UTC\n"
-"PO-Revision-Date: 2016-09-26 13:01+UTC\n"
+"POT-Creation-Date: 2016-11-23 11:11+UTC\n"
+"PO-Revision-Date: 2016-11-23 11:11+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -7369,6 +7369,9 @@ msgstr "Exporter le dossier"
 msgid "Migration to HBTree is running."
 msgstr "La migration vers HBTree est en cours."
 
+msgid "Milestone"
+msgstr "Étape"
+
 msgid "Milestone:"
 msgstr "Étape"
 
@@ -9465,6 +9468,18 @@ msgstr "Titre du projet"
 
 msgid "Project Workflow"
 msgstr "Workflow des projets"
+
+msgid "Project effort"
+msgstr "Effort de projet"
+
+msgid "Project effort and costs"
+msgstr "Effort de projet et frais"
+
+msgid "Project effort and costs by organization"
+msgstr "Effort de projet et frais par organisation"
+
+msgid "Project effort by organization"
+msgstr "Effort de projet par organisation"
 
 msgid "Project to Open"
 msgstr "Projet à ouvrir"
