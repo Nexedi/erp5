@@ -151,7 +151,6 @@ class UnitTestRunner():
     parts += '/software_release/parts/'
     for option in (
         ('--firefox_bin', parts + 'firefox/firefox-slapos'),
-        ('--frontend_url', config['frontend_url']),
         ('--node_quantity', config['node_quantity']),
         ('--xvfb_bin', parts + 'xserver/bin/Xvfb'),
         ):

@@ -88,7 +88,6 @@ class ERP5TestNode(TestCase):
     config["server_url"] = "http://foo.bar"
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
-    config["frontend_url"] = "http://frontend/"
 
     return TestNode(self.log, config)
 
@@ -518,7 +517,6 @@ shared = true
     parts = slapos_controler.instance_root + '/a/software_release/parts/'
     for option in (
         ('--firefox_bin', parts + 'firefox/firefox-slapos'),
-        ('--frontend_url', 'http://frontend/'),
         ('--node_quantity', 3),
         ('--xvfb_bin', parts + 'xserver/bin/Xvfb'),
       ):

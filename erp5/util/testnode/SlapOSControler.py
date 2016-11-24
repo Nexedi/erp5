@@ -278,9 +278,7 @@ class SlapOSControler(object):
     proxy = subprocess.Popen([config['slapos_binary'], 
       'proxy', 'start', '--cfg' , self.slapos_config], **kwargs)
     process_manager.process_pid_set.add(proxy.pid)
-    # XXX: dirty, giving some time for proxy to being able to accept
-    # connections
-    time.sleep(20)
+    time.sleep(10)
     try:
       slap = slapos.slap.slap()
       self.slap = slap
