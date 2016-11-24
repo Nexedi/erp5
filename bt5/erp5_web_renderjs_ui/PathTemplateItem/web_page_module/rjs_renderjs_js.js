@@ -1120,7 +1120,6 @@ if (typeof document.contains !== 'function') {
   };
   RenderJSGadget.setState = function (state_dict) {
     var json_state = JSON.stringify(state_dict);
-    this.prototype.__json_state = json_state;
     return this.ready(function () {
       this.state = JSON.parse(json_state);
     });
@@ -1251,10 +1250,19 @@ if (typeof document.contains !== 'function') {
     .declareMethod('changeState', function (state_dict) {
       var key,
         modified = false,
-        modification_dict = {},
+        previous_cancelled = this.hasOwnProperty('__modification_dict'),
+        modification_dict,
         context = this;
+      if (previous_cancelled) {
+        modification_dict = this.__modification_dict;
+        modified = true;
+      } else {
+        modification_dict = {};
+        this.__modification_dict = modification_dict;
+      }
       for (key in state_dict) {
-        if (state_dict[key] !== this.state[key]) {
+        if (state_dict.hasOwnProperty(key) &&
+            (state_dict[key] !== this.state[key])) {
           this.state[key] = state_dict[key];
           modification_dict[key] = state_dict[key];
           modified = true;
@@ -1265,13 +1273,9 @@ if (typeof document.contains !== 'function') {
           .push(function () {
             return context.__state_change_callback(modification_dict);
           })
-          .push(undefined, function (error) {
-            if (context.__json_state !== undefined) {
-              context.state = JSON.parse(context.__json_state);
-            } else {
-              context.state = {};
-            }
-            throw error;
+          .push(function (result) {
+            delete context.__modification_dict;
+            return result;
           });
       }
     });
