@@ -64,26 +64,28 @@
         }
       }
 
-      if (this.state.field_url) {
-        return new RSVP.Queue()
-          .push(function () {
-            if (modification_dict.hasOwnProperty('field_url')) {
-              return gadget.declareGadget(gadget.state.field_url, {
-                scope: SCOPE
-              })
-                .push(function (field_gadget) {
-                  gadget.state.container_element.removeChild(
-                    gadget.state.container_element.querySelector('div')
-                  );
-                  gadget.state.container_element.appendChild(field_gadget.element);
-                  return field_gadget;
-                });
-            }
-            return gadget.getDeclaredGadget(SCOPE);
-          })
-          .push(function (field_gadget) {
-            return field_gadget.render(gadget.state.options);
-          });
+      if (modification_dict.hasOwnProperty('options')) {
+        if (this.state.field_url) {
+          return new RSVP.Queue()
+            .push(function () {
+              if (modification_dict.hasOwnProperty('field_url')) {
+                return gadget.declareGadget(gadget.state.field_url, {
+                  scope: SCOPE
+                })
+                  .push(function (field_gadget) {
+                    gadget.state.container_element.removeChild(
+                      gadget.state.container_element.querySelector('div')
+                    );
+                    gadget.state.container_element.appendChild(field_gadget.element);
+                    return field_gadget;
+                  });
+              }
+              return gadget.getDeclaredGadget(SCOPE);
+            })
+            .push(function (field_gadget) {
+              return field_gadget.render(gadget.state.options);
+            });
+        }
       }
     })
 
