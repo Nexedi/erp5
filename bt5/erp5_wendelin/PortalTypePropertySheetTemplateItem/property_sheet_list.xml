@@ -34,6 +34,9 @@
  <portal_type id="Data Stream">
   <item>OffsetIndex</item>
  </portal_type>
+ <portal_type id="Data Supply">
+  <item>Version</item>
+ </portal_type>
  <portal_type id="Data Supply Line">
   <item>DataMovement</item>
  </portal_type>

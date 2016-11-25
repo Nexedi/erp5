@@ -12,4 +12,5 @@ Data Release | Predicate
 Data Set | Predicate
 Data Stream | OffsetIndex
 Data Supply Line | DataMovement
+Data Supply | Version
 Ingestion Policy | IngestionPolicy
