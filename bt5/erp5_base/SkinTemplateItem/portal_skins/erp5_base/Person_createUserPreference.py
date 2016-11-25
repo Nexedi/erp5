@@ -7,12 +7,13 @@ portal = context.getPortalObject()
 if not portal.Base_checkPermission('portal_preferences', 'Add portal content'):
   return
 
-if not context.getReference():
-  # noop in case if invoked on non loggable object
+try:
+  preference = portal.portal_preferences.createPreferenceForUser(
+    context.getReference(),
+    enable=True,
+  )
+except ValueError:
   return
-
-preference = portal.portal_preferences.createPreferenceForUser(
-                                  context.getReference(), enable=True)
 
 preference.setTitle(translateString('Preference for ${name}',
                      mapping=dict(name=context.getTitle().decode('utf-8'))))
