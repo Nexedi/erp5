@@ -57,7 +57,7 @@
  </chain>
  <chain>
   <type>Data Supply</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>data_supply_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Data Supply Line</type>

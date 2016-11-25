@@ -27,9 +27,8 @@ Data Stream | validation_workflow
 Data Supply Line | edit_workflow
 Data Supply Line | edit_workflow
 Data Supply Line | validation_workflow
+Data Supply | data_supply_validation_workflow
 Data Supply | edit_workflow
-Data Supply | validation_workflow
-Data Supply | validation_workflow
 Data Transformation | edit_workflow
 Data Transformation | validation_workflow
 Ingestion Policy | edit_workflow
