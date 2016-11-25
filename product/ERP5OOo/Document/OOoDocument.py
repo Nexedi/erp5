@@ -95,6 +95,10 @@ class OOoServerProxy():
 
       transport = TimeoutTransport(timeout=timeout, scheme=scheme)
       
+      #if uri.startswith("https://"):
+      #  ssl_context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)  # allow invalid/autosigned certs
+      #  ssl_context.verify_mode = ssl.CERT_NONE
+      #  transport = SafeTransport(context=ssl_context)
       self._serverproxy_list.append(ServerProxy(uri, allow_none=True, transport=transport))
   def _proxy_function(self, func_name, *args, **kw):
     result_error_set_list = []
@@ -258,6 +262,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
 
     def cached_getTargetFormatItemList(content_type):
       server_proxy = OOoServerProxy(self)
+      # XXX cloudooo3 needed to have allowed target list given by x2t + ooo
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
                                                       content_type)
@@ -286,7 +291,13 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
              DeprecationWarning)
 
       # tuple order is reversed to be compatible with ERP5 Form
-      return [(y, x) for x, y in allowed]
+      return [(y, x) for x, y in allowed] + (
+        ##### BEGIN hack - handle yformat (which should not be OOoDocument) XXX##
+        {"Text": [("OnlyOffice Text Document", "docy")],
+         "Spreadsheet": [("OnlyOffice Spreadsheet", "xlsy")],
+         "Presentation": [("OnlyOffice Presentation", "ppty")]}.get(self.getPortalType(), [])
+        ##### END hack #####
+      )
 
     # Cache valid format list
     cached_getTargetFormatItemList = CachingMethod(
@@ -315,7 +326,24 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       z.close()
       return 'text/plain', s
     server_proxy = OOoServerProxy(self)
+    # XXX cloudooo3 needed to convert with x2t
     orig_format = self.getBaseContentType()
+    ##### BEGIN hack - handle yformat (should not be OOoDocument) XXX##
+    # XXX public cloudooo.erp5.net cannot handle x2t because of an OSError
+    __traceback_info__ = ("orig_format", orig_format, "format", format)
+    if format in ("docy", "application/x-asc-text+zip", "application/x-asc-text"):
+      encdata = server_proxy.convertFile(enc(str(self.getBaseData())), "odt", "docx")
+      #orig_format = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      return "application/x-asc-text", Pdata(dec(server_proxy.convertFile(encdata, "docx", "docy")))  # XXX change to application/x-asc-*+zip ?
+    if format in ("xsly", "application/x-asc-spreadsheet+zip", "application/x-asc-spreadsheet"):
+      encdata = server_proxy.convertFile(enc(str(self.getBaseData())), "ods", "xlsx")
+      #orig_format = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      return "application/x-asc-spreadsheet", Pdata(dec(server_proxy.convertFile(encdata, "xlsx", "xlsy")))  # XXX change to application/x-asc-*+zip ?
+    if format in ("ppty", "application/x-asc-presentation+zip", "application/x-asc-presentation"):
+      encdata = server_proxy.convertFile(enc(str(self.getBaseData())), "odp", "pptx")
+      #orig_format = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      return "application/x-asc-presentation", Pdata(dec(server_proxy.convertFile(encdata, "pptx", "ppty")))  # XXX change to application/x-asc-*+zip ?
+    ##### END hack #####
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(str(self.getBaseData())),
                                        None,
@@ -398,12 +426,19 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
           self.setConversion(data, mime, format=original_format)
           return mime, data
         return self.getConversion(format=original_format)
+    try:
+      __traceback_info__ = repr(self), repr(self.getTargetFormatItemList())
+    except ConflictError, e:
+      raise e
+    except Exception, e:
+      __traceback_info__ = str(e)
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
     has_format = self.hasConversion(format=original_format, **kw)
     if not has_format:
       # Do real conversion
+      # XXX think -> mime, data = self._getConversionFromPortalTransform(format)
       mime, data = self._getConversionFromProxyServer(format)
       if is_html:
         # Extra processing required since
@@ -490,12 +525,31 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       on the object. Update metadata information.
     """
     server_proxy = OOoServerProxy(self)
+    # XXX cloudooo3 needed to have x2t convert available
+    ##### BEGIN hack - handle yformat (which should not be OOoDocument) XXX##
+    content_type = self.getContentType()
+    filename = self.getFilename() or self.getId()
+    if content_type in ("application/x-asc-text+zip", "application/x-asc-text"):
+      encdata = server_proxy.convertFile(enc(str(self.getData())), "docy", "docx")
+      content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      filename += ".docx"
+    elif content_type in ("application/x-asc-spreadsheet+zip", "application/x-asc-spreadsheet"):
+      encdata = server_proxy.convertFile(enc(str(self.getData())), "xlsy", "xlsx")
+      content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      filename += ".xlsx"
+    elif content_type in ("application/x-asc-presentation+zip", "application/x-asc-presentation"):
+      encdata = server_proxy.convertFile(enc(str(self.getData())), "ppty", "pptx")
+      content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      filename += ".pptx"
+    else:
+      encdata = enc(str(self.getData()))
+    ##### END hack #####
     response_code, response_dict, response_message = server_proxy.run_convert(
-                                      self.getFilename() or self.getId(),
-                                      enc(str(self.getData())),
+                                      filename,
+                                      encdata,
                                       None,
                                       None,
-                                      self.getContentType())
+                                      content_type)
     if response_code == 200:
       # sucessfully converted document
       self._setBaseData(dec(response_dict['data']))
@@ -529,6 +583,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       raise NotConvertedError()
 
     server_proxy = OOoServerProxy(self)
+    # XXX cloudooo3 needed to have setMetadata on x2t
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
                                        enc(str(self.getBaseData())),
