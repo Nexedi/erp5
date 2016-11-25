@@ -1,0 +1,258 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL Method" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>isPredicate</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>predicate_property_dict</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>uid</string>
+                            <string>isPredicate</string>
+                            <string>predicate_property_dict</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>uid\r\n
+isPredicate\r\n
+predicate_property_dict</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>expression</string> </key>
+            <value> <string>python: context.isPredicate()</string> </value>
+        </item>
+        <item>
+            <key> <string>expression_cache_key</string> </key>
+            <value>
+              <tuple>
+                <string>portal_type</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>expression_instance</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>filtered</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>z_catalog_predicate_list</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SQL Method</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let predicate_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "isPredicate[loop_item]">\n
+      <dtml-if expr="_.len(predicate_property_dict[loop_item]) > 0">\n
+        <dtml-call expr="predicate_list.append(loop_item)">\n
+      </dtml-if>\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if expr="_.len(predicate_list) > 0">\n
+REPLACE INTO predicate VALUES \n
+    <dtml-in prefix="loop" expr="predicate_list">\n
+      <dtml-if sequence-start><dtml-else>,</dtml-if>\n
+( \n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'quantity\', None)" type="float" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'quantity_range_min\', None)" type="float" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'quantity_range_max\', None)" type="float" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'start_date\', None)" type="datetime" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'start_date_range_min\', None)" type="datetime" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'start_date_range_max\', None)" type="datetime" optional>\n
+)\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<dtml-let predicate_list="[]">\n
+  <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
+    <dtml-if "isPredicate[loop_item]">\n
+      <dtml-if expr="_.len(predicate_property_dict[loop_item]) > 0">\n
+        <dtml-call expr="predicate_list.append(loop_item)">\n
+      </dtml-if>\n
+    </dtml-if>\n
+  </dtml-in>\n
+  <dtml-if expr="_.len(predicate_list) > 0">\n
+REPLACE INTO predicate VALUES \n
+    <dtml-in prefix="loop" expr="predicate_list">\n
+      <dtml-if sequence-start><dtml-else>,</dtml-if>\n
+( \n
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'quantity\', None)" type="float" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'quantity_range_min\', None)" type="float" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'quantity_range_max\', None)" type="float" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'start_date\', None)" type="datetime" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'start_date_range_min\', None)" type="datetime" optional>,\n
+  <dtml-sqlvar expr="predicate_property_dict[loop_item].get(\'start_date_range_max\', None)" type="datetime" optional>\n
+)\n
+    </dtml-in>\n
+  </dtml-if>\n
+</dtml-let>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: context.isPredicate()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
