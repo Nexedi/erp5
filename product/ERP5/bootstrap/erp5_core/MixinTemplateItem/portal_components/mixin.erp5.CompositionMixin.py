@@ -53,29 +53,36 @@ def _getEffectiveModel(self, start_date, stop_date):
   if not reference:
     return self
 
-  query_list = [
-    Query(reference=reference),
-    Query(portal_type=self.getPortalType()),
-    Query(validation_state=(
-      'validated',
-      # XXX published is used in erp5_advanced_commerce
-      'published',
-    )),
-  ]
-  if start_date is not None:
-    query_list.append(ComplexQuery(Query(effective_date=None),
-                                   Query(effective_date=start_date,
+  def get_model_list(excluded_validation_state_list):
+    query_list = [Query(reference=reference),
+                  Query(portal_type=self.getPortalType()),
+                  Query(validation_state=excluded_validation_state_list,
+                      operator='NOT')]
+    if start_date is not None:
+      query_list.append(ComplexQuery(Query(effective_date=None),
+                                     Query(effective_date=start_date,
                                          range='<='),
-                                   logical_operator='OR'))
-  if stop_date is not None:
-    query_list.append(ComplexQuery(Query(expiration_date=None),
-                                   Query(expiration_date=stop_date,
-                                         range='>'),
-                                   logical_operator='OR'))
+                                     logical_operator='OR'))
+    if stop_date is not None:
+      query_list.append(ComplexQuery(Query(expiration_date=None),
+                                     Query(expiration_date=stop_date,
+                                           range='>'),
+                                     logical_operator='OR'))
 
-  model_list = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
-      query=ComplexQuery(logical_operator='AND', *query_list),
-      sort_on=(('version', 'descending'),))
+    # XXX What to do the catalog returns nothing (either because 'self' was just
+    #     created and not yet indexed, or because it was invalidated) ?
+    #     For the moment, we return self if self is invalidated and we raise otherwise.
+    #     This way, if this happens in activity it may succeed when activity is retried.
+    return self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+        query=ComplexQuery(logical_operator='AND', *query_list),
+        sort_on=(('version', 'descending'),))
+
+  # Only include default model if no other valid model found
+  model_list = get_model_list(
+      excluded_validation_state_list=('deleted', 'invalidated', 'default'))
+  if not model_list:
+    model_list = get_model_list(
+        excluded_validation_state_list=('deleted', 'invalidated'))
   if not model_list:
     # The raise below also make the activity retried for cases where the model would
     # not be indexed yet.
