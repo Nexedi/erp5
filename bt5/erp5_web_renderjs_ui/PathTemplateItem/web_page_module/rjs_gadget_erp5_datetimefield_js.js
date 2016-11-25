@@ -224,8 +224,14 @@
       } else {
         queue
           .push(function (gadget_list) {
-            p_state.text_content = gadget.state.value;
-            return gadget_list[0].render(p_state);
+            return RSVP.all([
+              gadget_list[0],
+              gadget.getTextContent()
+            ]);
+          })
+          .push(function (result_list) {
+            p_state.text_content = result_list[1];
+            return result_list[0].render(p_state);
           });
       }
       return queue;
@@ -341,7 +347,16 @@
     })
 
     .declareMethod('getTextContent', function () {
-      return this.state.value || "";
+      var result = "",
+        date;
+      if (this.state.value) {
+        date = new Date(this.state.value);
+        result = date.toLocaleDateString();
+        if (!this.state.date_only) {
+          result += " " + date.toLocaleTimeString();
+        }
+      }
+      return result;
     })
 
     .declareMethod('checkValidity', function () {
