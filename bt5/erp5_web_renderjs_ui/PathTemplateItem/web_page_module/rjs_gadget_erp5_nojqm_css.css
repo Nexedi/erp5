@@ -410,7 +410,8 @@ div[data-gadget-scope='panel'] {
   color: #FFFFFF;
   width: 180pt;
   min-height: 100%;
-  max-height: none;
+  max-height: 100%;
+  overflow-y: auto;
   position: fixed;
   top: 0;
   left: 0;
@@ -494,7 +495,8 @@ div[data-gadget-scope='editor_panel'] {
   background-color: #FFFFFF;
   width: 180pt;
   min-height: 100%;
-  max-height: none;
+  max-height: 100%;
+  overflow-y: auto;
   position: fixed;
   top: 0;
   display: block;
