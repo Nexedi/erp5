@@ -1,5 +1,6 @@
+from zExceptions import Unauthorized
+from Products.ERP5Type.Message import translateString
 if REQUEST is not None:
-  from zExceptions import Unauthorized
   raise Unauthorized(script.getId())
 
 portal = context.getPortalObject()
@@ -10,7 +11,6 @@ if not context.getReference():
   # noop in case if invoked on non loggable object
   return
 
-from Products.ERP5Type.Message import translateString
 preference = portal.portal_preferences.createPreferenceForUser(
                                   context.getReference(), enable=True)
 
