@@ -149,9 +149,9 @@ class PreferenceTool(BaseTool):
       # reset a security manager without any proxy role or unrestricted method,
       # wich affects the catalog search that we do to find applicable
       # preferences.
-      actual_user = acl_users.getUser(str(user))
-      if actual_user is not None:
-        newSecurityManager(None, actual_user.__of__(acl_users))
+      #actual_user = acl_users.getUser(str(user))
+      #if actual_user is not None:
+      #  newSecurityManager(None, actual_user.__of__(acl_users))
       tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
                                                                   sql_catalog_id)
       if tv.get(tv_key, None) is None:
