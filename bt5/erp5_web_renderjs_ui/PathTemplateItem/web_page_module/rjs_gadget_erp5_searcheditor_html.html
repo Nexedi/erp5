@@ -26,26 +26,23 @@
     <!-- custom script -->
     <script src="gadget_erp5_search_editor.js"></script>
 
-  
     <script id="options-template" type="text/x-handlebars-template">
       <select data-iconpos="left">
         {{#each option}}
-          <option value="{{value}}" data-i18n="{{text}}">{{text}}</option> 
+          <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
         {{/each}}
       </select>
     </script>
-  
-   
-  
+
     <script id="filter-item-template" type="text/x-handlebars-template">
-      <button type="submit" class="ui-icon ui-btn ui-btn-inline ui-icon-minus ui-icon-shadow"></button>
+      <button class="ui-icon ui-btn ui-btn-inline ui-icon-minus ui-icon-shadow"></button>
       <div class="filter_item {{class_value}}" >
-        <select data-iconpos="left">
+        <select class="column" data-iconpos="left">
           {{#each option}}
             {{#equal value selected_option}}
               <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>
             {{else}}
-              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option> 
+              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
             {{/equal}}
           {{/each}}
         </select>
@@ -54,7 +51,7 @@
             {{#equal value selected_option}}
               <option selected="selected" data-i18n="{{text}}" value="{{value}}">{{text}}</option>
             {{else}}
-              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option> 
+              <option value="{{value}}" data-i18n="{{text}}">{{text}}</option>
             {{/equal}}
           {{/each}}
         </select>
@@ -62,54 +59,41 @@
           <input type="{{input_type}}" value="{{input_value}}"></input>
         </div>
       </div>
-    
     </script>
-  
-  
-  
-  
-  
-  
-      <script id="filter-template" type="text/x-handlebars-template">
-        <div class="ui-panel-inner">
-          <div data-role="header" role="banner" class="ui-header ui-bar-inherit">
-            <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
-             <div class="ui-controlgroup-controls">
-              <form class="delete">
-                <button data-rel="close" type="submit" data-i18n="Close" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>
-              </form>
-             </div>
-            </div>
-         
-            <h1 class="ui-title" role="heading" data-i18n="Filter Editor" aria-level="1">Filter Editor</h1>
-            <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
-              <div class="ui-controlgroup-controls">
-                <form class="submit">
-                  <button data-rel="save" data-i18n="submit" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>
-                </form>
-              </div>
+
+    <script id="filter-template" type="text/x-handlebars-template">
+      <div class="ui-panel-inner">
+        <div data-role="header" role="banner" class="ui-header ui-bar-inherit">
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-right">
+            <div class="ui-controlgroup-controls">
+              <button data-i18n="submit" type="submit" class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check">Submit</button>
             </div>
           </div>
 
+          <h1 class="ui-title" role="heading" data-i18n="Filter Editor" aria-level="1">Filter Editor</h1>
+          <div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
+            <div class="ui-controlgroup-controls">
+              <button data-i18n="Close" class="close responsive ui-first-child ui-btn ui-btn-icon-left ui-icon-times">Close</button>
+            </div>
+          </div>
+        </div>
 
-         <section class="ui-body-c ui-content-section">
+
+        <section class="ui-body-c ui-content-section">
           <fieldset class="ui-controlgroup ui-corner-all">
             <select data-iconpos="left" name="heard_about">
               <option data-i18n="All criterions (AND)" value="AND">All criterions (AND)</option>
               <option data-i18n="At least one (OR)" value="OR">At least one (OR)</option>
             </select>
-           </fieldset>
-         
-           <div class="filter_item_container">
-           </div>
-            <form class="plus">
-             <button type="submit" class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all">Add Criteria</button>
-           </form>
-         </section>
-     </div>
+          </fieldset>
+
+          <div class="filter_item_container">
+          </div>
+          <button class="plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all">Add Criteria</button>
+        </section>
+      </div>
     </script>
 
-    
   </head>
   <body>
     <form class="filter_editor">

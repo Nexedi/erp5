@@ -527,6 +527,7 @@ div[data-gadget-scope='editor_panel'] {
 div[data-gadget-scope='editor_panel'] div[data-role="header"] {
   display: flex;
   justify-content: space-between;
+  flex-direction: row-reverse;
 }
 div[data-gadget-scope='editor_panel'] div[data-role="header"] h1 {
   text-align: left;

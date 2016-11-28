@@ -633,6 +633,7 @@ div[data-gadget-scope='editor_panel'] {
 
     display: flex;
     justify-content: space-between;
+    flex-direction: row-reverse;
 
     h1 {
       text-align: left;
