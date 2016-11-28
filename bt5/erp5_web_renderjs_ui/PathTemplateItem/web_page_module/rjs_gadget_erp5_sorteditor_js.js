@@ -1,16 +1,16 @@
 /*jslint indent: 2, maxerr: 3, nomen: true */
-/*global window, document, rJS, RSVP, Handlebars, loopEventListener*/
-(function (window, document, rJS, RSVP, Handlebars, loopEventListener) {
+/*global window, document, rJS, RSVP, Handlebars*/
+(function (window, document, rJS, RSVP, Handlebars) {
   "use strict";
+
   var gadget_klass = rJS(window),
-    sort_item_source = gadget_klass.__template_element
+    template_element = gadget_klass.__template_element,
+    sort_item_template = Handlebars.compile(template_element
                          .getElementById("sort-item-template")
-                         .innerHTML,
-    sort_item_template = Handlebars.compile(sort_item_source),
-    sort_source = gadget_klass.__template_element
+                         .innerHTML),
+    sort_template = Handlebars.compile(template_element
                          .getElementById("sort-template")
-                         .innerHTML,
-    sort_template = Handlebars.compile(sort_source);
+                         .innerHTML);
 
   Handlebars.registerHelper('equal', function (left_value, right_value, options) {
     if (arguments.length < 3) {
@@ -24,17 +24,16 @@
 
 
   function createSortItemTemplate(gadget, sort_value) {
-    var sort_column_list = gadget.props.sort_column_list,
+    var sort_column_list = gadget.state.sort_column_list,
       sort_value_list = sort_value || [],
       option_list = [],
       i;
 
-
     for (i = 0; i < sort_column_list.length; i += 1) {
       option_list.push({
-        "text": sort_column_list[i][1],
-        "value": sort_column_list[i][0],
-        "selected_option": sort_value_list[0]
+        text: sort_column_list[i][1],
+        value: sort_column_list[i][0],
+        selected_option: sort_value_list[0]
       });
     }
 
@@ -44,151 +43,109 @@
     }));
   }
 
-
-
-
-  rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
-
-
+  gadget_klass
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("trigger", "trigger")
-    //////////////////////////////////////////////
-    // initialize the gadget content
-    //////////////////////////////////////////////
-    .declareMethod('render', function (options) {
-      var gadget = this;
-      gadget.props.sort_column_list = options.sort_column_list || [];
-      gadget.props.key = options.key;
-      gadget.props.sort_list = options.sort_list;
 
-      return new RSVP.Queue()
-        .push(function () {
-          var tmp = sort_template();
-          return gadget.translateHtml(tmp);
-        })
-        .push(function (translated_html) {
-          var tmp = document.createElement("div");
-          tmp.innerHTML = translated_html;
-          gadget.props.element.querySelector(".container").appendChild(tmp);
-        });
-    })
-    //////////////////////////////////////////////
-    .declareService(function () {
+    .onStateChange(function () {
       var gadget = this,
-        i,
-        list = [];
-      return new RSVP.Queue()
-        .push(function () {
-          for (i = 0; i < gadget.props.sort_list.length; i += 1) {
-            if (gadget.props.sort_list[i]) {
-              list.push(createSortItemTemplate(gadget, gadget.props.sort_list[i]));
+        div = document.createElement("div"),
+        container = gadget.element.querySelector(".container");
+
+      return gadget.translateHtml(sort_template())
+        .push(function (translated_html) {
+          var i,
+            promise_list = [];
+
+          div.innerHTML = translated_html;
+
+          for (i = 0; i < gadget.state.sort_list.length; i += 1) {
+            if (gadget.state.sort_list[i]) {
+              promise_list.push(createSortItemTemplate(gadget, gadget.state.sort_list[i]));
             }
           }
-          return RSVP.all(list);
+          return RSVP.all(promise_list);
         })
-        .push(function (all_result) {
-          var div,
-            container = gadget.props.element.querySelector(".sort_item_container");
-          for (i = 0; i < all_result.length; i += 1) {
-            div = document.createElement("div");
-            div.innerHTML = all_result[i];
-            container.appendChild(div);
+        .push(function (result_list) {
+          var i,
+            subdiv,
+            filter_item_container = div.querySelector('.sort_item_container');
+
+          for (i = 0; i < result_list.length; i += 1) {
+            subdiv = document.createElement("div");
+            subdiv.innerHTML = result_list[i];
+            filter_item_container.appendChild(subdiv);
           }
+
+          while (container.firstChild) {
+            container.removeChild(container.firstChild);
+          }
+          container.appendChild(div);
         });
     })
-    .declareService(function () {
-      var gadget = this,
-        container = gadget.props.element.querySelector(".sort_item_container");
-      return loopEventListener(
-        gadget.props.element.querySelector(".sort_editor"),
-        "submit",
-        false,
-        function () {
-          var focused = document.activeElement;
-          container.removeChild(focused.parentElement);
-        }
-      );
-    })
-    .declareService(function () {
-      var gadget = this;
-      return loopEventListener(
-        gadget.props.element.querySelector(".submit"),
-        "submit",
-        false,
-        function () {
-          var sort_list = gadget.props.element.querySelectorAll(".sort_item"),
-            sort_query = [],
-            select_list,
-            sort_item,
-            options = {},
-            i;
 
-          for (i = 0; i < sort_list.length; i += 1) {
-            sort_item = sort_list[i];
-            select_list = sort_item.querySelectorAll("select");
-            sort_query[i] = [select_list[0][select_list[0].selectedIndex].value,
-              select_list[1][select_list[1].selectedIndex].value];
-          }
-          if (i === 0) {
-            options[gadget.props.key] = undefined;
-          } else {
-            options[gadget.props.key] = sort_query;
-          }
-          return gadget.redirect({
-            command: 'store_and_change',
-            options: options
+    .declareMethod('render', function (options) {
+      return this.changeState({
+        sort_column_list: options.sort_column_list || [],
+        key: options.key,
+        sort_list: options.sort_list
+      });
+    })
+
+    .onEvent('click', function (evt) {
+      var gadget = this;
+
+      if (evt.target.classList.contains('close')) {
+        evt.preventDefault();
+        return this.trigger();
+      }
+
+      if (evt.target.classList.contains('plus')) {
+        evt.preventDefault();
+        return createSortItemTemplate(gadget)
+          .push(function (template) {
+            var tmp = document.createElement("div"),
+              container = gadget.element.querySelector(".sort_item_container");
+            tmp.innerHTML = template;
+            container.appendChild(tmp);
           });
-        }
-      );
-    })
-    .declareService(function () {
-      var gadget = this;
-      return loopEventListener(
-        gadget.props.element.querySelector(".plus"),
-        "submit",
-        false,
-        function () {
-          return new RSVP.Queue()
-            .push(function () {
-              return createSortItemTemplate(gadget);
-            })
-            .push(function (template) {
-              var tmp = document.createElement("div"),
-                container = gadget.props.element.querySelector(".sort_item_container");
-              tmp.innerHTML = template;
-              container.appendChild(tmp);
-            });
-        }
-      );
-    })
-    .declareService(function () {
-      var gadget = this;
-      return loopEventListener(
-        gadget.props.element.querySelector(".delete"),
-        "submit",
-        false,
-        function () {
-          return gadget.trigger();
-        }
-      );
+      }
+
+      if (evt.target.classList.contains('ui-icon-minus')) {
+        evt.preventDefault();
+        evt.target.parentElement.parentElement.removeChild(evt.target.parentElement);
+      }
+
+    }, false, false)
+
+    .onEvent('submit', function () {
+      var gadget = this,
+        sort_list = gadget.element.querySelectorAll(".sort_item"),
+        sort_query = [],
+        select_list,
+        sort_item,
+        options = {},
+        i;
+
+      for (i = 0; i < sort_list.length; i += 1) {
+        sort_item = sort_list[i];
+        select_list = sort_item.querySelectorAll("select");
+        sort_query[i] = [select_list[0][select_list[0].selectedIndex].value,
+          select_list[1][select_list[1].selectedIndex].value];
+      }
+      if (i === 0) {
+        options[gadget.state.key] = undefined;
+      } else {
+        options[gadget.state.key] = sort_query;
+      }
+      return gadget.redirect({
+        command: 'store_and_change',
+        options: options
+      });
     });
 
-}(window, document, rJS, RSVP, Handlebars, loopEventListener));
+}(window, document, rJS, RSVP, Handlebars));
