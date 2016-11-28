@@ -62,7 +62,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//form[@class='plus']</td>
+  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
   <td></td>
 </tr>
 
@@ -70,7 +70,7 @@
 
 <tr>
   <td>click</td>
-  <td>//form[@class='plus']//button</td>
+  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
   <td></td>
 </tr>
 
@@ -83,7 +83,7 @@
 
 <tr>
   <td>click</td>
-  <td>//form[@class='plus']//button</td>
+  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
   <td></td>
 </tr>
 
