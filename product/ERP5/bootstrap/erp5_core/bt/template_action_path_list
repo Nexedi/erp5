@@ -103,6 +103,7 @@ Preference Type | view
 Preference | change_password
 Preference | html_style_preferences
 Preference | view
+Preference | view_catalog
 Preference | view_template
 Property Existence Constraint | predicate
 Property Existence Constraint | view
