@@ -301,7 +301,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
-    self.login("ERP5TypeTestCase")
+    self.login()
     self.tic()
     person = portal_catalog.getResultValue(reference=reference,
                                            portal_type="Person")
@@ -807,7 +807,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_address_city="Campos",
         default_address_zip_code="28024030",
         **kw)
-    self.login("ERP5TypeTestCase")
+    self.login()
     self.tic()
     return result
 
@@ -1108,7 +1108,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_follow_up_uid=credential_request.getUid())
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
-    self.login("ERP5TypeTestCase")
+    self.login()
     self.tic()
     person = portal_catalog.getResultValue(reference="barney",
         portal_type="Person")

@@ -392,7 +392,7 @@ class TestPreferences(PropertySheetTestCase):
     portal_workflow.doActionFor(
        user_b, 'enable_action', wf_id='preference_workflow')
 
-    self.login('ERP5TypeTestCase')
+    self.login()
     script = createZODBPythonScript(
      self.portal.portal_skins.custom,
      'PreferenceTool_testPreferencesProxyRole', '',

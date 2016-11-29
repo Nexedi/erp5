@@ -57,7 +57,7 @@ class TestTemplate(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def afterSetUp(self):
-    self.login('ERP5TypeTestCase')
+    self.login()
     portal_preferences = self.portal.portal_preferences
     portal_preferences.deleteContent(list(portal_preferences.objectIds()))
     self.tic()
@@ -240,7 +240,7 @@ class TestTemplate(ERP5TypeTestCase):
   def test_TemplateCreatePreferenceWithSystemPreferenceEnabled(self):
     # TODO: This test *might* be removed if it is good to trust
     #       getActivePreference to return only Preference portal type
-    self.login('ERP5TypeTestCase')
+    self.login()
     system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
     system_preference.setPriority(Priority.SITE)
