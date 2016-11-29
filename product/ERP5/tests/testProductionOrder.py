@@ -83,9 +83,9 @@ class TestProductionOrderMixin(TestOrderMixin):
 
   def afterSetUp(self):
     TestOrderMixin.afterSetUp(self)
-    self.login('manager')
+    self.loginByUserName('manager')
     self.setUpPreferences()
-    self.login('test_user')
+    self.loginByUserName('test_user')
 
   def createCategories(self):
     """

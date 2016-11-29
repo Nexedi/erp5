@@ -112,7 +112,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       This user will be used to initialize data in the method afterSetup
     """
     self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
+    self.loginByUserName('manager')
 
   def createERP5Users(self, user_dict):
     """

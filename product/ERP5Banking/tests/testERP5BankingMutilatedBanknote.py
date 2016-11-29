@@ -103,7 +103,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.future_date =  DateTime(DateTime().Date()) + 4
     self.openCounterDate(site=self.paris)
     self.openCounterDate(site=self.siege, id='counter_date_2')
@@ -549,14 +549,14 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     Login as a headquarter user
     """
     self.logout()
-    self.login("hq_super_user")
+    self.loginByUserName("hq_super_user")
 
   def stepHQLogout(self, sequence=None, sequence_list=None, **kw):
     """
     Login as a headquarter user
     """
     self.logout()
-    self.login("super_user")
+    self.loginByUserName("super_user")
 
   def stepCheckHQInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """

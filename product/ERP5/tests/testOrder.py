@@ -104,7 +104,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
                     ['Assignee', 'Assignor', 'Member',
                      'Associate', 'Auditor', 'Author'])
     self.createUser('manager', ['Manager'])
-    self.login('manager')
+    self.loginByUserName('manager')
     self.category_tool = self.getCategoryTool()
     portal_catalog = self.getCatalogTool()
     #portal_catalog.manage_catalogClear()
@@ -116,7 +116,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     # 1. All calculations are done relative to the same time
     # 2. We don't get random failures when tests run close to midnight
     self.pinDateTime(self.datetime)
-    self.login('test_user')
+    self.loginByUserName('test_user')
 
   def beforeTearDown(self):
     self.unpinDateTime()

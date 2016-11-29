@@ -60,7 +60,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
     self.tic()
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
 
   def beforeTearDown(self):
     self.abort()
@@ -73,7 +73,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
   def test_01_get_document(self):
     module = self.getNotificationMessageModule()
     tool = self.getPortal().portal_notifications
-    self.login('manager')
+    self.loginByUserName('manager')
     #Test Document A in english
     n_m_en = module.newContent(portal_type='Notification Message',
                                reference='A',

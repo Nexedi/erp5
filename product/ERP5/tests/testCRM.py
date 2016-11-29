@@ -1671,7 +1671,7 @@ class TestCRMMailSend(BaseTestCRM):
                               default_career_subordination_value=organisation)
       user.setDefaultCareerSubordinationValue(my_company)
       # log in user
-      self.login('crm_agent')
+      self.loginByUserName('crm_agent')
 
       ### Incoming on Person ###
       # Submit the dialog on person

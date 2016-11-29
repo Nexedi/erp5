@@ -248,7 +248,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.createUser('usual_member')
     self.logout()
     self.tic()
-    super(TestERP5Core, self).login('usual_member')
+    super(TestERP5Core, self).loginByUserName('usual_member')
     expected = {'folder': [],
                 'global': [],
                 'object': [],

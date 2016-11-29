@@ -64,7 +64,7 @@ class TestUNGSecurity(ERP5TypeTestCase):
   def testERP5Site_createNewWebDocumentWithUNGRole(self):
     """Test use script ERP5Site_createNewWebDocument when a erp5 user have role
     to create and edit document in UNG"""
-    self.login("ung_user")
+    self.loginByUserName("ung_user")
     web_page = self.portal.portal_catalog.getResultValue(portal_type="Web Page")
     self.assertEqual(web_page, None)
     self.changeSkin("UNGDoc")
@@ -83,14 +83,14 @@ class TestUNGSecurity(ERP5TypeTestCase):
     assignment.setFunction("function/ung_user")
     assignment.open()
     self.tic()
-    self.login("ung_user")
+    self.loginByUserName("ung_user")
     self.changeSkin("UNGDoc")
     self.portal.ERP5Site_createNewWebDocument("web_table_template")
     self.tic()
     web_table = self.portal.portal_catalog.getResultValue(portal_type="Web Table")
     web_table.setReference("share-Web.Table")
     self.tic()
-    self.login("ung_user2")
+    self.loginByUserName("ung_user2")
     self.assertEqual(len(self.portal.web_page_module.searchFolder()), 0)
     ung_web_site = self.portal.web_site_module.ung
     self.changeSkin("UNGDoc")
@@ -109,7 +109,7 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.changeSkin("UNGDoc")
     self.assertEqual('{"events": []}',
                       self.portal.Base_updateCalendarEventList("list"))
-    self.login("ung_user")
+    self.loginByUserName("ung_user")
     self.changeSkin("UNGDoc")
     event_list = json.loads(self.portal.Base_updateCalendarEventList("list"))
     self.assertEqual(event_list.get("events"), [])
@@ -176,18 +176,18 @@ class TestUNGSecurity(ERP5TypeTestCase):
     assignment.setFunction("function/ung_user")
     assignment.open()
     self.tic()
-    self.login("ung_user")
+    self.loginByUserName("ung_user")
     self.changeSkin("UNGDoc")
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
     self.assertEqual(preference_dict, {u'preference': u'portal_preferences/1'})
-    self.login("ung_user2")
+    self.loginByUserName("ung_user2")
     self.changeSkin("UNGDoc")
     preference_dict = json.loads(self.portal.Base_getPreferencePathList())
     self.assertEqual(preference_dict, {u'preference': u'portal_preferences/2'})
   
   def testWebPage_shareDocument(self):
     """ """
-    self.login("ung_user")
+    self.loginByUserName("ung_user")
     self.changeSkin("UNGDoc")
     self.portal.ERP5Site_createNewWebDocument("web_page_template")
     self.tic()

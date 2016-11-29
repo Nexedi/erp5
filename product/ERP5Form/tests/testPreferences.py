@@ -53,7 +53,7 @@ class TestPreferences(PropertySheetTestCase):
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('manager', '', ['Manager', 'Assignor', ], [])
-    self.login('manager')
+    self.loginByUserName('manager')
     self.createPreferences()
 
   def beforeTearDown(self):
@@ -292,7 +292,7 @@ class TestPreferences(PropertySheetTestCase):
     uf._doAddUser('user_a', '', ['Member', ], [])
     uf._doAddUser('user_b', '', ['Member', ], [])
 
-    self.login('user_a')
+    self.loginByUserName('user_a')
 
     # create 2 prefs as user_a
     user_a_1 = portal_preferences.newContent(
@@ -307,7 +307,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(user_a_1.getPreferenceState(), 'enabled')
     self.assertEqual(user_a_2.getPreferenceState(), 'disabled')
 
-    self.login('user_b')
+    self.loginByUserName('user_b')
 
     # create a pref for user_b
     user_b_1 = portal_preferences.newContent(
@@ -326,7 +326,7 @@ class TestPreferences(PropertySheetTestCase):
 
     # Checks that a manager preference doesn't disable any other user
     # preferences
-    self.login('manager')
+    self.loginByUserName('manager')
 
     self.assert_('Manager' in
       getSecurityManager().getUser().getRolesInContext(portal_preferences))
@@ -352,7 +352,7 @@ class TestPreferences(PropertySheetTestCase):
     # is Manager and Owner, but for Manager, we have an exception, only
     # preferences actually owned by the user are taken into account.
     uf._doAddUser('manager_and_owner', '', ['Manager', 'Owner'], [])
-    self.login('manager_and_owner')
+    self.loginByUserName('manager_and_owner')
     self.assert_('Owner' in
       getSecurityManager().getUser().getRolesInContext(manager_pref))
     self.assertEqual(None,
@@ -367,7 +367,7 @@ class TestPreferences(PropertySheetTestCase):
     uf._doAddUser('user_a', '', ['Member', ], [])
     uf._doAddUser('user_b', '', ['Member', ], [])
 
-    self.login('user_a')
+    self.loginByUserName('user_a')
 
     user_a = portal_preferences.newContent(
         id='user_a', portal_type='Preference',
@@ -381,7 +381,7 @@ class TestPreferences(PropertySheetTestCase):
     portal_workflow.doActionFor(
        user_a, 'enable_action', wf_id='preference_workflow')
 
-    self.login('user_b')
+    self.loginByUserName('user_b')
     # create a pref for user_b
     user_b = portal_preferences.newContent(
         id='user_b', portal_type='Preference',
@@ -399,7 +399,7 @@ class TestPreferences(PropertySheetTestCase):
      'return context.getPreferredAccountingTransactionSimulationStateList()')
     script.manage_proxy(['Manager'])
 
-    self.login('user_a')
+    self.loginByUserName('user_a')
     self.assertEqual(['user_a'],
         portal_preferences.PreferenceTool_testPreferencesProxyRole())
 
@@ -463,7 +463,7 @@ class TestPreferences(PropertySheetTestCase):
     uf = self.getPortal().acl_users
     uf._doAddUser('member', '', ['Member', ], [])
     member = uf.getUserById('member').__of__(uf)
-    self.login('member')
+    self.loginByUserName('member')
     user_pref = preference_tool.newContent(portal_type='Preference')
 
     # Members can copy & paste existing preferences
@@ -518,7 +518,7 @@ class TestPreferences(PropertySheetTestCase):
     # Members can't add new system preferences
     uf = self.getPortal().acl_users
     uf._doAddUser('member', '', ['Member', ], [])
-    self.login('member')
+    self.loginByUserName('member')
     self.assertRaises(Unauthorized, preference_tool.newContent, portal_type='System Preference')
     # But they can see others
     system_pref.view()
