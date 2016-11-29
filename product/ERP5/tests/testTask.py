@@ -129,7 +129,7 @@ class TestTaskMixin:
 #    uf = portal.acl_users
 #    if not uf.getUserById('dummy'):
 #      uf._doAddUser('manager', '', ['Manager'], [])
-#      self.login('manager')
+#      self.loginByUserName('manager')
 #      person_module = portal.getDefaultModule(self.person_portal_type)
 #      person = person_module.newContent(id='dummy', title='dummy',
 #                                        reference='dummy')
@@ -168,7 +168,7 @@ class TestTaskMixin:
 #      self.tic()
 #      portal.portal_caches.clearAllCache()
 #
-#    self.login('dummy')
+#    self.loginByUserName('dummy')
   def stepLogin(self, quiet=0, run=1, **kw):
     uf = self.getPortal().acl_users
     uf._doAddUser('alex', '', ['Manager', 'Assignee', 'Assignor',
@@ -720,13 +720,13 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     uf = self.getPortal().acl_users
     if not uf.getUserById('manager'):
       uf._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
+    self.loginByUserName('manager')
     try:
       simulation_tool.Base_setDefaultSecurity()
       self.logout()
       sequence_list.play(self)
     finally:
-      self.login('manager')
+      self.loginByUserName('manager')
       for permission in simulation_tool.possible_permissions():
         simulation_tool.manage_permission(permission, roles=(), acquire=1)
       self.logout()

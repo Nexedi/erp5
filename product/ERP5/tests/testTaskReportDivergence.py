@@ -101,7 +101,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     uf = self.getPortal().acl_users
     if not uf.getUserById('manager'):
       uf._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
+    self.loginByUserName('manager')
     simulation_tool.Base_setDefaultSecurity()
     rule_tool.Base_setDefaultSecurity()
     self.logout()
@@ -139,7 +139,7 @@ class TestTaskReportDivergenceMixin(TestTaskMixin, SecurityTestCase):
     """
     task_report = sequence.get('task_report')
     self.logout()
-    self.login('alex')
+    self.loginByUserName('alex')
     cloned_task_report = task_report.Base_createCloneDocument(batch_mode=1)
     self.tic()
     self.assertEqual(cloned_task_report.getCausalityState(), 'draft')

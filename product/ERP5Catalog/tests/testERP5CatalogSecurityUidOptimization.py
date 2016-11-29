@@ -156,7 +156,7 @@ CREATE TABLE alternate_roles_and_users (
                       alternate_roles_and_users)
 
       # low level check of the security query of a logged in user
-      self.login('user1')
+      self.loginByUserName('user1')
       security_query = self.portal.portal_catalog.getSecurityQuery()
       # This query is a complex query wrapping another complex query with a
       # criterion on altenate_security_uid. This check is quite low level and
@@ -177,7 +177,7 @@ CREATE TABLE alternate_roles_and_users (
           local_roles='Auditor')])
 
       # searches still work for other users
-      self.login('user2')
+      self.loginByUserName('user2')
       self.assertEqual([user2],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
 
@@ -197,10 +197,10 @@ CREATE TABLE alternate_roles_and_users (
       self.assertTrue(dict(uid=career.getUid(),
                            alternate_security_uid=user1_alternate_security_uid) in
                       alternate_roles_and_users)
-      self.login('user1')
+      self.loginByUserName('user1')
       self.assertEqual([career],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
-      self.login('user2')
+      self.loginByUserName('user2')
       self.assertEqual([],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Career')])
 

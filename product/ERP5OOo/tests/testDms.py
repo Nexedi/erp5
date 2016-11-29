@@ -1134,7 +1134,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # login as another user
-    super(TestDocument, self).login('user1')
+    super(TestDocument, self).loginByUserName('user1')
     document_4 = portal.document_module.newContent(
                    portal_type = 'Presentation',
                    description = 'owner different user contributing document',
@@ -1217,7 +1217,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
 
     # only my docs
-    super(TestDocument, self).login('user1')
+    super(TestDocument, self).loginByUserName('user1')
     kw = {'searchabletext_any': 'owner'}
     # should return all documents matching a word no matter if we're owner or not
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
@@ -1669,7 +1669,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
 
     # login as first one
-    super(TestDocument, self).login('contributor1')
+    super(TestDocument, self).loginByUserName('contributor1')
     doc = document_module.newContent(portal_type='File',
                                      title='Test1')
     self.tic()
@@ -1678,7 +1678,7 @@ class TestDocument(TestDocumentMixin):
                        doc.getContributorValueList())
 
     # login as second one
-    super(TestDocument, self).login('contributor2')
+    super(TestDocument, self).loginByUserName('contributor2')
     doc.edit(title='Test2')
     self.tic()
     self.login()

@@ -101,7 +101,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def afterSetUp(self):
     self.stepLogin()
-    self.login(user_name='test_configurator_user')
+    self.loginByUserName(user_name='test_configurator_user')
     # XXX (lucas): The request is not clean between tests.
     # So, we need to force the test to use a clean REQUEST
     # Otherwise the next test will fail trying to validate the form,
@@ -770,7 +770,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                     username, 'invalidate_action', entity)
 
   def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
-    self.login(user_name='test_configurator_user')
+    self.loginByUserName(user_name='test_configurator_user')
     business_configuration = sequence.get('business_configuration')
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
     self.assertNotEquals(0, len(person_list))
@@ -781,7 +781,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
         self.failUnlessUserCanViewDocument(username, entity)
 
   def stepViewCreatedOrganisations(self, sequence=None, sequence_list=None, **kw):
-    self.login(user_name='test_configurator_user')
+    self.loginByUserName(user_name='test_configurator_user')
     business_configuration = sequence.get('business_configuration')
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
     self.assertNotEquals(0, len(organisation_list))
@@ -792,7 +792,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
         self.failUnlessUserCanViewDocument(username, entity)
 
   def stepViewCreatedAssignemnts(self, sequence=None, sequence_list=None, **kw):
-    self.login(user_name='test_configurator_user')
+    self.loginByUserName(user_name='test_configurator_user')
     business_configuration = sequence.get('business_configuration')
     person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
     self.assertNotEquals(0, len(person_list))

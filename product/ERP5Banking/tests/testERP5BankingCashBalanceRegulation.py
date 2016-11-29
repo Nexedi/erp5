@@ -143,7 +143,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     # open counter date and counter
     self.openCounterDate(site=self.paris)
 

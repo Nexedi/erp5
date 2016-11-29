@@ -90,7 +90,7 @@ class TestWorklist(ERP5TypeTestCase):
     This user will be used to initialize data in the method afterSetup
     """
     self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
+    self.loginByUserName('manager')
 
   def createERP5Users(self, user_dict):
     """
@@ -252,7 +252,7 @@ class TestWorklist(ERP5TypeTestCase):
 
       # Users can not see worklist as they are not Assignor
       for user_id in ('manager', ):
-        self.login(user_id)
+        self.loginByUserName(user_id)
         result = workflow_tool.listActions(object=document)
         self.logMessage("Check %s worklist as Assignor" % user_id)
         self.checkWorklist(result, self.actbox_assignor_name, 0)
@@ -260,13 +260,13 @@ class TestWorklist(ERP5TypeTestCase):
         self.checkWorklist(result, self.actbox_owner_name, 1)
       for user_id in ('foo', 'bar'):
         self.logMessage("Check %s worklist" % user_id)
-        self.login(user_id)
+        self.loginByUserName(user_id)
         result = workflow_tool.listActions(object=document)
         self.assertEqual(result, [])
 
       for role, user_id_list in (('Assignor', ('foo', 'manager')),
                                  ('Assignee', ('foo', 'bar'))):
-        self.login('manager')
+        self.loginByUserName('manager')
         for user_id in user_id_list:
           self.logMessage("Give %s %s role" % (user_id, role))
           document.manage_addLocalRoles(user_id, [role])
@@ -277,7 +277,7 @@ class TestWorklist(ERP5TypeTestCase):
         for user_id, assignor, owner, both in (('manager', 1, 1, 1),
                                                ('bar'    , 0, 0, 0),
                                                ('foo'    , 1, 0, 1)):
-          self.login(user_id)
+          self.loginByUserName(user_id)
           result = workflow_tool.listActions(object=document)
           self.logMessage("  Check %s worklist as Assignor" % user_id)
           self.checkWorklist(result, self.actbox_assignor_name, assignor)
@@ -288,7 +288,7 @@ class TestWorklist(ERP5TypeTestCase):
 
       # Check if int variable are managed by the worklist
       user_id = 'manager'
-      self.login(user_id)
+      self.loginByUserName(user_id)
       result = workflow_tool.listActions(object=document)
       self.logMessage("Check %s worklist with int value as %s" % \
                                      (user_id, self.int_value))
@@ -308,11 +308,11 @@ class TestWorklist(ERP5TypeTestCase):
       #
       # Check monovalued security role
       #
-      self.login('manager')
+      self.loginByUserName('manager')
       module = self.getPortal().getDefaultModule(self.checked_portal_type)
       module.manage_setLocalRoles('bar', ['Author'])
 
-      self.login('bar')
+      self.loginByUserName('bar')
 
       bar_document = self.createDocument()
       bar_document.manage_permission('View', ['Owner', 'Assignee'], 0)
@@ -322,7 +322,7 @@ class TestWorklist(ERP5TypeTestCase):
       bar_assignee_document.manage_permission('View', ['Owner', 'Assignee'], 0)
 
       user_id = 'manager'
-      self.login(user_id)
+      self.loginByUserName(user_id)
 
       module.manage_delLocalRoles('bar')
 
@@ -445,12 +445,12 @@ class TestWorklist(ERP5TypeTestCase):
       self.checkWorklist(result, 'valid_guard_expression', 0)
 
       self.logMessage("  Check that user bar can access worklist")
-      self.login('bar')
+      self.loginByUserName('bar')
       result = workflow_tool.listActions(object=document)
       self.checkWorklist(result, 'valid_guard_expression', 1)
 
       self.logMessage("  Check that user foo can not access worklist")
-      self.login('foo')
+      self.loginByUserName('foo')
       result = workflow_tool.listActions(object=document)
       self.checkWorklist(result, 'valid_guard_expression', 0)
     finally:

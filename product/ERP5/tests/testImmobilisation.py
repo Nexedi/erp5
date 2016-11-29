@@ -125,7 +125,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     all_roles = ['Manager','Assignor','Assignee','Author','Associate','Auditor']
     if not "manager" in [x.id for x in self.getUserFolder().objectValues()]:
       self.getUserFolder()._doAddUser('manager', '', all_roles, [])
-    self.login('manager')
+    self.loginByUserName('manager')
     self.assignPASRolesToUser('test_user_1_', all_roles)
 
 
@@ -223,7 +223,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
     Delete all Objects in PL & M Module
     """
     self.logout()
-    self.login('manager')
+    self.loginByUserName('manager')
 
     self.tic()
 

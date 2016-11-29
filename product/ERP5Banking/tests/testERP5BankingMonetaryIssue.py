@@ -148,7 +148,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.openCounterDate(site=self.paris)
     # this is required in order to have some items
     # in the source

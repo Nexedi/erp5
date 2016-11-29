@@ -61,7 +61,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     uf = portal.acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    self.login(self.manager_username)
+    self.loginByUserName(self.manager_username)
     kw = dict(portal_type='Person',
               reference = 'test')
     if portal.portal_catalog.getResultValue(**kw) is None:

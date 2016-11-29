@@ -56,20 +56,20 @@ class TestCertificateAuthority(ERP5TypeTestCase):
   def test_person_request_certificate(self):
     login = self._createPerson()
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    self.loginByUserName(login)
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % login in certificate['certificate'])
 
   def test_person_revoke_certificate(self):
     login = self._createPerson()
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    self.loginByUserName(login)
     self.assertRaises(ValueError, person.revokeCertificate)
 
   def test_person_request_revoke_certificate(self):
     login = self._createPerson()
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    self.loginByUserName(login)
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % login in certificate['certificate'])
     person.revokeCertificate()
@@ -77,7 +77,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
   def test_person_request_certificate_twice(self):
     login = self._createPerson()
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    self.loginByUserName(login)
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % login in certificate['certificate'])
     self.assertRaises(ValueError, person.getCertificate)
@@ -86,17 +86,17 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     login = self._createPerson()
     login2 = self._createPerson()
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login2)
+    self.loginByUserName(login2)
     self.assertRaises(Unauthorized, person.getCertificate)
 
   def test_person_revoke_certificate_for_another(self):
     login = self._createPerson()
     login2 = self._createPerson()
     person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    self.loginByUserName(login)
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % login in certificate['certificate'])
-    self.login(login2)
+    self.loginByUserName(login2)
     self.assertRaises(Unauthorized, person.revokeCertificate)
 
 def test_suite():

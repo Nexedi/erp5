@@ -99,7 +99,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.openCounterDate(site=self.testsite.paris)
 
 

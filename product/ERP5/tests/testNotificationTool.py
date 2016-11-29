@@ -113,7 +113,7 @@ class TestNotificationTool(ERP5TypeTestCase):
 
   def changeUser(self, name):
     self.old_user = getSecurityManager().getUser()
-    self.login(name)
+    self.loginByUserName(name)
 
   def changeToPreviousUser(self):
     newSecurityManager(None, self.old_user)
@@ -129,12 +129,12 @@ class TestNotificationTool(ERP5TypeTestCase):
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
     self.tic()
-    self.login('erp5user')
+    self.loginByUserName('erp5user')
 
   def beforeTearDown(self):
     self.abort()
     # clear modules if necessary
-    self.login('manager')
+    self.loginByUserName('manager')
     self.portal.person_module.manage_delObjects(
             list(self.portal.person_module.objectIds()))
     self.tic()

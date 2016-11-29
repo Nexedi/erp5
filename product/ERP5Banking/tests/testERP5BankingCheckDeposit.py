@@ -78,7 +78,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     # create a person with a bank account
     self.person_1 = self.createPerson(id='person_1',
                                       first_name='toto',
@@ -144,7 +144,7 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     self.logout()
 
   def stepLoginAsSuperUser(self, sequence=None, sequence_list=None, **kwd):
-    self.login('super_user')
+    self.loginByUserName('super_user')
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
     """

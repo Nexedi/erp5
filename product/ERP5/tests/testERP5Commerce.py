@@ -115,7 +115,7 @@ class TestCommerce(ERP5TypeTestCase):
     uf._doAddUser('ivan', '', ['Manager'], [])
     uf._doAddUser('customer', '', ['Auditor', 'Author'], [])
 
-    self.login('ivan')
+    self.loginByUserName('ivan')
 
     product_module = self.portal.product_module
     currency_module = self.portal.currency_module
@@ -177,7 +177,7 @@ class TestCommerce(ERP5TypeTestCase):
                                             currency.getRelativeUrl())
 
     self.app.REQUEST.set('session_id', SESSION_ID)
-    self.login('ivan')
+    self.loginByUserName('ivan')
     self.tic()
 
   def clearModule(self, module):
@@ -559,7 +559,7 @@ class TestCommerce(ERP5TypeTestCase):
                     self.app.REQUEST.RESPONSE.getHeader('location'))
 
     # but it should work if the user is authenticated
-    self.login('customer')
+    self.loginByUserName('customer')
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
@@ -597,7 +597,7 @@ class TestCommerce(ERP5TypeTestCase):
     """
       Test the SaleOrder_finalizeShopping script
     """
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     self.website.Resource_addToShoppingCart(self.getDefaultProduct(),
                                            quantity=1)
     self.website.Resource_addToShoppingCart(self.getDefaultProduct('2'),
@@ -710,7 +710,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.setProperty('ecommerce_paypal_signature', 'signature')
 
     #2 login and activate a cart
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     request = self.app.REQUEST
     request.set('session_id', SESSION_ID)
 
@@ -848,7 +848,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
     self.tic()
 
-    self.login('toto')
+    self.loginByUserName('toto')
     self.portal.SaleOrder_paymentRedirect()
     self.assertTrue(urllib.quote("SaleOrder_viewAsWeb") in
                     self.app.REQUEST.RESPONSE.getHeader('location'))
@@ -862,7 +862,7 @@ class TestCommerce(ERP5TypeTestCase):
     person_object = self.website.SaleOrder_getShoppingCartCustomer()
     self.assertEqual(person_object, None)
 
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     person_object = self.website.SaleOrder_getShoppingCartCustomer()
     self.assertNotEquals(person_object, None)
     self.assertEqual(person_object.getReference(), 'webmaster')
@@ -925,7 +925,7 @@ class TestCommerce(ERP5TypeTestCase):
       Testing if the comment added during the checkout will be set on the sale
       order object generated.
     """
-    self.login('webmaster')
+    self.loginByUserName('webmaster')
     comment = 'TESTING COMMENT'
     self.website.Resource_addToShoppingCart(self.getDefaultProduct(),
                                            quantity=1)

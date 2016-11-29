@@ -87,7 +87,7 @@ class TestZODBHistory(ERP5TypeTestCase):
      Make sure the very basic function that is possible to test in unittest.
      TODO: The details should be tested in a functional test.
     """
-    self.login('tatuya')
+    self.loginByUserName('tatuya')
     org = self.addOrganisation('org')
     history_list = org.Base_getZODBChangeHistoryList(org)
     self.assertTrue(len(history_list) > 0)
@@ -101,7 +101,7 @@ class TestZODBHistory(ERP5TypeTestCase):
     """
      Make sure the preference of zodb history size.
     """
-    self.login('tatuya')
+    self.loginByUserName('tatuya')
     org2 = self.addOrganisation('org2')
     for i in range(60):
       org2.edit(title='org%d' % i)
