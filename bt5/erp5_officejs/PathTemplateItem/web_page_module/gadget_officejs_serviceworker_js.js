@@ -1,5 +1,6 @@
 /*jslint indent: 2*/
-/*global self, caches, importScripts, fetch, Promise, Request, Response, jIO, console, Headers, URI, location*/
+/*global self, caches, importScripts, fetch,
+ Promise, Request, Response, jIO, console, Headers, URI, location, RSVP*/
 var global = self,
   window = self;
 (function (self, fetch) {
@@ -52,25 +53,10 @@ var global = self,
 
   // 2. readonly cache for end user
   self.jio_erp5_cache_storage = {
-    type: "memoryindex",
-    select_list: ['reference', 'url_string'],
-    index: {
-      url_string: null,
-      reference: function (obj) {
-        if (!obj.url_string) {
-          return obj.reference;
-        }
-      }
-    },
+    type: "query",
     sub_storage: {
-      type: "query",
-      sub_storage: {
-        type: "uuid",
-        sub_storage: {
-          type: "indexeddb",
-          database: self.jio_cache.name + '_erp5'
-        }
-      }
+      type: "indexeddb",
+      database: self.jio_cache.name + '_erp5'
     }
   };
   // sync in service worker not work.
@@ -80,8 +66,7 @@ var global = self,
       type: "replicate",
       // XXX This drop the signature lists...
       query: {
-        query: '(portal_type: ("Web Style", "Web Page", "Web Script")) AND ' +
-          self.jio_cache.erp5_query,
+        query: self.jio_cache.erp5_query,
         limit: [0, 1234567890]
       },
       use_remote_post: true,
@@ -92,20 +77,25 @@ var global = self,
       check_remote_modification: true,
       check_remote_creation: true,
       check_remote_deletion: true,
-      local_sub_storage: {
-        type: "attachasproperty",
-        map: {
-          text_content: "text_content",
-          data: "data"
-        },
-        sub_storage: self.jio_erp5_cache_storage
-      },
+      use_bulk: false,
+      local_sub_storage: self.jio_erp5_cache_storage,
       remote_sub_storage: {
-        type: "erp5",
-        url: (new URI("hateoas"))
-          .absoluteTo(location.href)
-          .toString(),
-        default_view_reference: "jio_view"
+        type: "mapping",
+        sub_storage: {
+          type: "erp5",
+          url: (new URI("hateoasnoauth"))
+            .absoluteTo(location.href)
+            .toString(),
+          default_view_reference: "jio_view"
+        },
+        mapping_dict: {"id": {
+          "equal": "url_string",
+          "default_property": "reference"
+        }},
+        query: {
+          "query":
+            'reference: "%" AND (portal_type: ("Web Style", "Web Page", "Web Script"))'
+        }
       }
     });
   } else {
@@ -155,7 +145,7 @@ var global = self,
     },
     is_excluded_url = function (url) {
       var prefix, i;
-      for (i = 0; i < exclude_urls.length; i++) {
+      for (i = 0; i < exclude_urls.length; i += 1) {
         prefix = exclude_urls[i];
         if (url === prefix) {
           return true;
@@ -166,27 +156,12 @@ var global = self,
       }
       return false;
     },
-    get_mapped_url = function (url) {
-      var prefix,
-        prefix_id,
-        key;
-      for (key in map_url2url) {
-        if (map_url2url.hasOwnProperty(key)) {
-          if (url === key) {
-            return map_url2url[key];
-          }
-          if (url.startsWith(key)) {
-            return url.replace(key, map_url2url[key]);
-          }
-        }
-      }
-    },
     get_relative_url = function (url) {
       var prefix,
         relative_url,
         i,
         prefix_id;
-      for (i = 0; i < websections_url.length; i++) {
+      for (i = 0; i < websections_url.length; i += 1) {
         prefix = websections_url[i];
         if (url.startsWith(prefix)) {
           prefix_id = map_url2id_prefix[prefix];
@@ -196,20 +171,19 @@ var global = self,
           relative_url = url.replace(prefix, prefix_id);
           if (relative_url) {
             return relative_url;
-          } else {
-            return url;
           }
+          return url;
         }
       }
       return url;
     },
     get_from_cache_storage = function (url, storage) {
-      var jio_key = get_relative_url(url);
+      var jio_key = url;
       if (!storage) {
         storage = self.jio_cache_storage;
       }
       return new Promise(function (resolve, reject) {
-        storage.getAttachment(jio_key, 'body')
+        storage.getAttachment(jio_key, "body")
           .push(function (body) {
             resolve(new Response(body, {
               'headers': {
@@ -222,69 +196,23 @@ var global = self,
           });
       });
     },
-    get_specific_url = function (url) {
-      var prefix,
-        prefix_id,
-        i;
-      for (i = 0; i < websections_url.length; i++) {
-        prefix = websections_url[i];
-        if (url.startsWith(prefix)) {
-          prefix_id = map_url2id_prefix[prefix];
-          if (prefix_id !== "") {
-            return url.replace(prefix, prefix_id + '/');
-          }
-          break;
-        }
-      }
-    },
-    find_and_get = function (query, storage) {
-      if (!storage) {
-        storage = self.jio_dev_storage;
-      }
-      query.limit = [0, 1];
-      query.select_list = ['portal_type'];
-      return storage.allDocs(query)
-        .push(function (result) {
-          if (result.data.total_rows == 1) {
-            return {
-              id: result.data.rows[0].id,
-              portal_type: result.data.rows[0].value.portal_type
-            };
-          } else {
-            throw {status_code: 404};
-          }
-        });
-    },
     get_from_storage = function (url, storage) {
-      var url_string = get_specific_url(url),
-        url_object = new URI(url),
-        key,
-        reference = url_object.filename();
       if (!storage) {
         storage = self.jio_dev_storage;
       }
       return new Promise(function (resolve, reject) {
-        var find_queue;
-        if (url_string !== undefined) {
-          key = storage.__storage._find_key('url_string', url_string);
-          //if (!self.jio_cache.development_mode && !key) {
-          //  key = storage.__storage._find_key('reference', reference);
-          //}
-        } else if (reference === get_relative_url(url)) {
-          key = storage.__storage._find_key('reference', reference);
-        }
-        if (!key) {
+        if (!url) {
           reject({status_code: 404});
           return;
         }
-        find_queue = storage.getAttachment(key, 'text_content')
-              .push(function (body) {
-                resolve(new Response(body, {
-                  'headers': {
-                    'content-type': body.type
-                  }
-                }));
-              })
+        storage.get(url)
+          .push(function (body) {
+            resolve(new Response(body.text_content, {
+              'headers': {
+                'content-type': body.content_type
+              }
+            }));
+          })
           .push(undefined, function (error) {
             reject(error);
           });
@@ -357,7 +285,8 @@ var global = self,
                metadata.portal_type = portal_type;
                }*/
               if (!portal_type) {
-                console.log('content_type ' + content_type + ' not supported: ' + url);
+                console.log('content_type ' + content_type +
+                  ' not supported: ' + url);
                 return resolve();
               }
               self.jio_dev_storage.put(jio_key, metadata)
@@ -378,9 +307,8 @@ var global = self,
                 });
             });
           });
-      } else {
-        return Promise.resolve();
       }
+      return Promise.resolve();
     };
 
   (function () {
@@ -403,8 +331,8 @@ var global = self,
   }());
 
   // TODO: generate from special websections current website
-  map_url2id_prefix[site_url + 'rjsunsafe/ooffice_fonts/'] = 'ooffice_fonts';
-  map_url2id_prefix[site_url + 'rjsunsafe/ooffice/'] = 'ooffice';
+  //map_url2id_prefix[site_url + 'rjsunsafe/ooffice_fonts/'] = 'ooffice_fonts';
+  //map_url2id_prefix[site_url + 'rjsunsafe/ooffice/'] = 'ooffice';
   map_url2id_prefix[site_url + 'rjsunsafe/'] = '';
   map_url2id_prefix[site_url] = '';
   map_url2id_prefix['https:'] = '';
@@ -412,9 +340,12 @@ var global = self,
   exclude_urls.push(site_url + 'hateoas');
   exclude_urls.push(site_url + 'hateoasnoauth');
 
-  map_url2url[site_url + 'rjsunsafe/ooffice/apps/'] = 'https://localhost/OfficeWebDeploy/apps/';
-  map_url2url[site_url + 'rjsunsafe/ooffice/sdkjs/'] = 'https://localhost/OfficeWebDeploy/sdkjs/';
-  map_url2url[site_url + 'rjsunsafe/ooffice/vendor/'] = 'https://localhost/OfficeWebDeploy/vendor/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/apps/'] =
+    'https://localhost/OfficeWebDeploy/apps/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/sdkjs/'] =
+    'https://localhost/OfficeWebDeploy/sdkjs/';
+  map_url2url[site_url + 'rjsunsafe/ooffice/vendor/'] =
+    'https://localhost/OfficeWebDeploy/vendor/';
 
   (function () {
     var url;
@@ -471,15 +402,18 @@ var global = self,
                 var modification_mark_exist = false;
                 if (metadata.headers.ETag !== undefined) {
                   modification_mark_exist = true;
-                  request.headers.append('If-None-Match', metadata.headers.Etag);
+                  request.headers.append('If-None-Match',
+                    metadata.headers.Etag);
                 } else if (metadata.headers['last-modified'] !== undefined) {
                   modification_mark_exist = true;
-                  request.headers.append('If-Modified-Since', metadata.headers['last-modified']);
+                  request.headers.append('If-Modified-Since',
+                    metadata.headers['last-modified']);
                 }
                 if (modification_mark_exist) {
                   return fetch(request)
                     .then(undefined, function () {
-                      // We say 'file not changed' if downloading is not possible with additional header
+                      // We say 'file not changed' if downloading is not
+                      // possible with additional header
                       return new Response(null, {status: 304});
                     });
                 }
@@ -493,39 +427,38 @@ var global = self,
                   result_jio_save = result_jio_save.then(resolve);
                 }
                 return Promise.resolve();
-              } else {
-                return response.metadata_w_blob()
-                  .then(function (response) {
-                    // files save one by one
-                    result_jio_save = result_jio_save.then(function () {
-                      return new Promise(function (resolve) {
-                        self.jio_cache_storage.put(jio_key, response.metadata)
-                          .push(function () {
-                            return self.jio_cache_storage.putAttachment(
-                              jio_key,
-                              "body",
-                              response.blob
-                            )
-                              .push(function () {
-                                console.log('jio_save: ' + jio_key);
-                                resolve();
-                              });
-                          })
-                          .push(undefined, function (error) {
-                            console.log(error);
-                            reject();
-                          });
-                      });
-                    });
-
-
-                    if (i === requests_len) {
-                      // latest file saved
-                      result_jio_save = result_jio_save.then(resolve);
-                    }
-                    return Promise.resolve();
-                  });
               }
+              return response.metadata_w_blob()
+                .then(function (response) {
+                  // files save one by one
+                  result_jio_save = result_jio_save.then(function () {
+                    return new Promise(function (resolve) {
+                      self.jio_cache_storage.put(jio_key, response.metadata)
+                        .push(function () {
+                          return self.jio_cache_storage.putAttachment(
+                            jio_key,
+                            "body",
+                            response.blob
+                          )
+                            .push(function () {
+                              console.log('jio_save: ' + jio_key);
+                              resolve();
+                            });
+                        })
+                        .push(undefined, function (error) {
+                          console.log(error);
+                          reject();
+                        });
+                    });
+                  });
+
+
+                  if (i === requests_len) {
+                    // latest file saved
+                    result_jio_save = result_jio_save.then(resolve);
+                  }
+                  return Promise.resolve();
+                });
             });
         });
       })
@@ -541,106 +474,66 @@ var global = self,
 
   self.jio_cache_fetch = function (event) {
     var url = event.request.url,
-      mapped_url,
-      relative_url = get_relative_url(url),
-      specific_url = get_specific_url(url) || relative_url,
-      not_found_in_dev_storage = false,
-      queue;
+      url_string,
+      not_found_in_dev_storage = false;
 
-    if (is_excluded_url(url)) {
-      queue = fetch(event.request);
+    if (is_excluded_url(url) || url === site_url) {
+      event.respondWith(fetch(event.request));
     } else {
-      mapped_url = get_mapped_url(url);
-      if (self.jio_cache.development_mode && mapped_url) {
-        queue = fetch(mapped_url)
-          .then(undefined, function (error) {
-            if (error.status_code === 404) {
-              console.log(url + ',' + specific_url + ' not found by ' + mapped_url + ' storage');
-              return get_from_storage(url, self.jio_erp5_cache_storage);
-            } else {
-              throw error;
-            }
-          })
-          .then(undefined, function (error) {
-            if (error.status_code === 404) {
-              console.log(url + ',' + specific_url + ' not found in erp5 cache storage');
-              return get_from_cache_storage(url);
-            } else {
-              throw error;
-            }
-          })
-          .then(function (response) {
-            if (response.ok) {
-              save_in_dev_storage(url, response.clone());
-              //console.log('returned: ' + url);
-              return response;
-            } else {
-              debugger;
-            }
-          })
-          .then(undefined, function (error) {
-            console.log(error);
-          });
-      } else {
-        queue = Promise.resolve()
-          .then(function () {
+      url_string = get_relative_url(url);
+      event.respondWith(new RSVP.Queue()
+        .push(function () {
+          if (self.jio_cache.development_mode) {
+            // 1 level storage development
+            return get_from_storage(url_string, self.jio_dev_storage);
+          }
+          throw {status_code: 404};
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
             if (self.jio_cache.development_mode) {
-              // 1 level storage development
-              return get_from_storage(url, self.jio_dev_storage);
-            } else {
-              throw {status_code: 404};
+              console.log(url + ' not found in dev storage');
+              not_found_in_dev_storage = true;
             }
-          })
-          .then(undefined, function (error) {
-            if (error.status_code === 404) {
-              if (self.jio_cache.development_mode) {
-                console.log(url + ',' + specific_url + ' not found in dev storage');
-                not_found_in_dev_storage = true;
-              }
-              // 2 level storage from erp5
-              return get_from_storage(url, self.jio_erp5_cache_storage);
-            } else {
-              throw error;
+            // 2 level storage from erp5
+            return get_from_storage(url_string, self.jio_erp5_cache_storage);
+          }
+          throw error;
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            console.log(url + ' not found in erp5 cache storage');
+            // 3 level cache urls one for all aplications
+            return get_from_cache_storage(url_string);
+          }
+          throw error;
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            console.log(url + ' not found in cache storage');
+            // fetch
+            return fetch(event.request);
+          }
+          throw error;
+        })
+        .push(function (response) {
+          if (response.ok) {
+            if (not_found_in_dev_storage) {
+              save_in_dev_storage(url_string, response.clone());
             }
-          })
-          .then(undefined, function (error) {
-            if (error.status_code === 404) {
-              console.log(url + ',' + specific_url + ' not found in erp5 cache storage');
-              // 3 level cache urls one for all aplications
-              return get_from_cache_storage(url);
-            } else {
-              throw error;
-            }
-          })
-          .then(undefined, function (error) {
-            if (error.status_code === 404) {
-              console.log(url + ',' + relative_url + ' not found in cache storage');
-              // fetch
-              return fetch(event.request);
-            } else {
-              throw error;
-            }
-          })
-          .then(function (response) {
-            if (response.ok) {
-              if (not_found_in_dev_storage) {
-                save_in_dev_storage(url, response.clone());
-              }
-              //console.log('returned: ' + url);
-            }
-            return response;
-          })
-          .then(undefined, function (error) {
-            console.log(error);
-          });
-      }
+            //console.log('returned: ' + url);
+          }
+          return response;
+        })
+        .push(undefined, function (error) {
+          console.log(error);
+        }));
     }
-    event.respondWith(queue);
   };
 
   self.jio_cache_activate = function (event) {
-    /* Just like with the install event, event.waitUntil blocks activate on a promise.
-     Activation will fail unless the promise is fulfilled.
+    /* Just like with the install event, event.waitUntil blocks activate on a
+    promise. Activation will fail unless the promise is fulfilled.
      */
     event.waitUntil(self.clients.claim());
   };

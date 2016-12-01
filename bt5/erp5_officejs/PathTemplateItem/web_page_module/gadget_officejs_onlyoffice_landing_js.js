@@ -20,11 +20,8 @@
     return {
       type: "query",
       sub_storage: {
-        type: "uuid",
-        sub_storage: {
-          type: "indexeddb",
-          database: 'officejs_' + name + '_cache_erp5'
-        }
+        type: "indexeddb",
+        database: 'officejs_' + name + '_cache_erp5'
       }
     };
   }
@@ -146,7 +143,7 @@
     return jIO.createJIO({
       type: "replicate",
       query: {
-        query: '(portal_type: ("Web Style", "Web Page", "Web Script")) AND ' +
+        query: 'reference: "%" AND (portal_type: ("Web Style", "Web Page", "Web Script")) AND ' +
           erp5_query + modification_date,
         limit: [0, 1234567890]
       },
@@ -158,26 +155,22 @@
       check_remote_modification: true,
       check_remote_creation: true,
       check_remote_deletion: true,
-      local_sub_storage: {
-        type: "attachasproperty",
-        map: {
-          text_content: {
-            body_name: "text_content",
-            content_type_name: "content_type"
-          },
-          data: {
-            body_name: "data",
-            content_type_name: "content_type"
-          }
-        },
-        sub_storage: get_jio_cache_storage(name)
-      },
+      //use_bulk_get: true,
+      use_bulk: false,
+      local_sub_storage: get_jio_cache_storage(name),
       remote_sub_storage: {
-        type: "erp5",
-        url: (new URI("hateoasnoauth"))
-          .absoluteTo(location.href)
-          .toString(),
-        default_view_reference: "jio_view"
+        type: "mapping",
+        sub_storage: {
+          type: "erp5",
+          url: (new URI("hateoasnoauth"))
+            .absoluteTo(location.href)
+            .toString(),
+          default_view_reference: "jio_view"
+        },
+        mapping_dict: {"id": {
+          "equal": "url_string",
+          "default_property": "reference"
+        }}
       }
     });
   }
