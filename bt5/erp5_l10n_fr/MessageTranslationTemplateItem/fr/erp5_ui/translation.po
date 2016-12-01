@@ -547,6 +547,12 @@ msgstr "Écritures comptables à valider"
 msgid "Accounting View"
 msgstr "Comptabilité"
 
+msgid "Accounting View Destination"
+msgstr "Comptabilité pour la destination"
+
+msgid "Accounting View Source"
+msgstr "Comptabilité pour la source"
+
 msgid "Accounting Workflow"
 msgstr "Workflow de comptabilité"
 
@@ -6372,6 +6378,12 @@ msgstr "Nombre entier utilisé pour classer l'agent."
 
 msgid "Interaction Workflow Definition"
 msgstr "Définition du workflow d'interaction"
+
+msgid "Internal Invoice Transaction"
+msgstr "Écriture interne"
+
+msgid "Internal Invoice Transaction Line"
+msgstr "Ligne d'écriture interne"
 
 msgid "Internal Money Deposit"
 msgstr "Dépôt sur compte d'ordre"
