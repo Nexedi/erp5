@@ -100,6 +100,7 @@ request.set('analytic_column_list', analytic_column_list) # for Movement_getExpl
 selection_columns = (
   ('date', 'Operation Date'),
   ('Movement_getSpecificReference', 'Transaction Reference'),
+  ('mirror_section_title', 'Third Party'),
   ('Movement_getExplanationTitleAndAnalytics', 'Title\nReference and Analytics' if analytic_column_list else 'Title\nReference'),
 )
 if len(section_uid) > 1:
@@ -110,7 +111,6 @@ selection_columns += (
   ('running_total_price', 'Running Balance'),
   ('grouping_reference', 'Grouping Reference'),
   ('grouping_date', 'Grouping Date'),
-  ('modification_date', 'Modification Date'),
   ('getTranslatedSimulationStateTitle', 'State'),
 )
 

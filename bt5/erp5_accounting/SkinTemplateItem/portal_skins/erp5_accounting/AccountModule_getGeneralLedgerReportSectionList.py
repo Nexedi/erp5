@@ -119,13 +119,13 @@ request.set('analytic_column_list', analytic_column_list) # for Movement_getExpl
 account_columns = (
   ('date', 'Operation Date'),
   ('Movement_getSpecificReference', 'Transaction Reference'),
+  ('mirror_section_title', 'Third Party'),
   ('Movement_getExplanationTitleAndAnalytics', 'Title\nReference and Analytics' if analytic_column_list else 'Title\nReference'),
   ('debit_price', 'Debit'),
   ('credit_price', 'Credit'),
   ('running_total_price', 'Running Balance'),
   ('grouping_reference', 'Grouping Reference'),
   ('grouping_date', 'Grouping Date'),
-  ('modification_date', 'Modification Date'),
   ('getTranslatedSimulationStateTitle', 'State'),
 )
 # export mode have a different layout

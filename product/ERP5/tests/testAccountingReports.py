@@ -927,15 +927,15 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # test columns values
     line = data_line_list[0]
     self.assertEqual(line.column_id_list,
-        ['date', 'Movement_getSpecificReference',
+        ['date', 'Movement_getSpecificReference', 'mirror_section_title',
         'Movement_getExplanationTitleAndAnalytics', 'debit_price',
         'credit_price', 'running_total_price', 'grouping_reference',
-        'grouping_date', 'modification_date',
-        'getTranslatedSimulationStateTitle'])
+        'grouping_date', 'getTranslatedSimulationStateTitle'])
 
     self.checkLineProperties(data_line_list[0],
         Movement_getSpecificReference='1',
         date=DateTime(2006, 2, 1),
+        mirror_section_title='Client 1',
         Movement_getExplanationTitleAndAnalytics='Transaction 1\nref1',
         debit_price=100,
         credit_price=0,
@@ -944,6 +944,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(data_line_list[1],
         Movement_getSpecificReference='2',
         date=DateTime(2006, 2, 1, 0, 1),
+        mirror_section_title='Client 1',
         Movement_getExplanationTitleAndAnalytics='Transaction 2\nref2',
         debit_price=0,
         credit_price=200,
@@ -1205,16 +1206,16 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
 
     # report layout
-    self.assertEqual( ['date', 'Movement_getSpecificReference',
+    self.assertEqual( ['date', 'Movement_getSpecificReference', 'mirror_section_title',
         'Movement_getExplanationTitleAndAnalytics', 'debit_price',
         'credit_price', 'running_total_price', 'grouping_reference',
-        'grouping_date', 'modification_date',
-        'getTranslatedSimulationStateTitle'],
+        'grouping_date', 'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
 
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='2',
+          mirror_section_title='Client 2',
           Movement_getExplanationTitleAndAnalytics='Grouped after period\nref2',
           grouping_reference='B',
           grouping_date=DateTime(2006, 3, 2),
@@ -1706,7 +1707,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         Movement_getExplanationTitleAndAnalytics=None,
         grouping_date=None,
         grouping_reference=None,
-        modification_date='',
         debit_price=300,
         credit_price=21,
         running_total_price=279)
@@ -3877,16 +3877,16 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         AccountModule_viewGeneralLedgerReport.your_currency.get_value('default'))
 
     # report layout
-    self.assertEqual( ['date', 'Movement_getSpecificReference',
+    self.assertEqual( ['date', 'Movement_getSpecificReference', 'mirror_section_title',
         'Movement_getExplanationTitleAndAnalytics', 'debit_price',
         'credit_price', 'running_total_price', 'grouping_reference',
-        'grouping_date', 'modification_date',
-        'getTranslatedSimulationStateTitle'],
+        'grouping_date', 'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
 
     self.assertEqual(2, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
           Movement_getSpecificReference='1',
+          mirror_section_title='Client 1',
           Movement_getExplanationTitleAndAnalytics='Transaction 1\nref1',
           date=DateTime(2006, 2, 1),
           debit_price=0, credit_price=100, running_total_price=-100, )
@@ -5228,10 +5228,10 @@ DT, b, P2 - Project 2''',
     data_line_list = [l for l in line_list if l.isDataLine()]
 
     self.assertEqual( ['date', 'Movement_getSpecificReference',
-        'Movement_getExplanationTitleAndAnalytics', 'debit_price',
-        'credit_price', 'running_total_price', 'grouping_reference',
-        'grouping_date', 'modification_date',
-        'getTranslatedSimulationStateTitle'],
+      'mirror_section_title', 'Movement_getExplanationTitleAndAnalytics',
+      'debit_price', 'credit_price', 'running_total_price',
+      'grouping_reference', 'grouping_date',
+      'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
 
     self.checkLineProperties(data_line_list[0],
@@ -5282,11 +5282,10 @@ DT, b, P2 - Project 2''',
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEqual( ['date', 'Movement_getSpecificReference',
+    self.assertEqual( ['date', 'Movement_getSpecificReference', 'mirror_section_title',
         'Movement_getExplanationTitleAndAnalytics', 'debit_price',
         'credit_price', 'running_total_price', 'grouping_reference',
-        'grouping_date', 'modification_date',
-        'getTranslatedSimulationStateTitle'],
+        'grouping_date', 'getTranslatedSimulationStateTitle'],
         data_line_list[0].column_id_list)
     # receivable account
     self.assertEqual(1, len(data_line_list))
