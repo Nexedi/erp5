@@ -26,9 +26,9 @@
 #
 ##############################################################################
 
-from SQLQueue import SQLQueue
+from SQLDict import SQLDict
 
-class SQLJoblib(SQLQueue):
+class SQLJoblib(SQLDict):
   """
     XXX SQLJoblib
   """

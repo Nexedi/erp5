@@ -40,7 +40,7 @@ document_classes = updateGlobals(this_module, globals(),
 # Finish installation
 def initialize( context ):
   # Define object classes and tools
-  import ActivityTool, ActiveProcess, ActivityConnection
+  import ActivityTool, ActiveProcess, ActivityConnection, ActivityJoblibBackend
   object_classes = (ActiveProcess.ActiveProcess,
                     #ActivityConnection.ActivityConnection
                     )
