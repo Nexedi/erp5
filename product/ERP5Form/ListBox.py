@@ -1014,9 +1014,6 @@ class ListBoxRenderer:
       list_action_part_list.append('&ignore_layout:int=1')
     return ''.join(list_action_part_list)
 
-  # Whether the selection object is initialized.
-  is_selection_initialized = False
-
   @lazyMethod
   def getSelection(self):
     """FIXME: Tweak a selection and return the selection object.
@@ -1027,9 +1024,6 @@ class ListBoxRenderer:
     selection_tool = self.getSelectionTool()
     selection_name = self.getSelectionName()
     selection = selection_tool.getSelectionFor(selection_name, REQUEST = self.request)
-
-    if self.is_selection_initialized:
-      return selection
 
     # Create a selection, if not present, with the default sort order.
     if selection is None:
@@ -1060,8 +1054,6 @@ class ListBoxRenderer:
     # Remember if the items have to be displayed for report tree mode.
     is_report_opened = self.request.get('is_report_opened', selection.isReportOpened())
     selection.edit(report_opened = is_report_opened)
-
-    self.is_selection_initialized = True
 
     return selection
 
@@ -1958,8 +1950,6 @@ class ListBoxRenderer:
     """Get report sections and construct a list of lines. Note that this method has a side
     effect in the selection, and the renderer object itself.
     """
-    start = self.getLineStart()
-    max_lines = self.getMaxLineNumber()
     if self.isHideRowsOnNoSearchCriterion():
       report_section_list = []
     else:
@@ -1967,28 +1957,26 @@ class ListBoxRenderer:
     param_dict = self.getParamDict()
 
     # Set the total number of objects.
-    self.total_size = sum([s.object_list_len for s in report_section_list])
+    self.total_size = end = sum(s.object_list_len for s in report_section_list)
     limit = param_dict.get('limit')
     if isinstance(limit, basestring):
       limit = int(limit)
-    self.is_sample = self.total_size == limit
+    self.is_sample = end == limit
 
     # Calculuate the start and the end offsets, and set the page numbers.
-    if max_lines == 0:
-      end = self.total_size
-      self.total_pages = 1
-      self.current_page = 0
+    param_dict['list_lines'] = max_lines = self.getMaxLineNumber()
+    if max_lines:
+      start = end and end - 1
+      self.total_pages = 1 + start // max_lines
+      start = min(start, self.getLineStart())
+      start -= start % max_lines
+      end = min(start + max_lines, end)
+      self.current_page = start // max_lines
     else:
-      self.total_pages = int(max(self.total_size - 1, 0) / max_lines) + 1
-      if start >= self.total_size:
-        start = max(self.total_size - 1, 0)
-      start -= (start % max_lines)
-      self.current_page = int(start / max_lines)
-      end = min(start + max_lines, self.total_size)
-      param_dict['list_start'] = start
-      param_dict['list_lines'] = max_lines
-      selection = self.getSelection()
-      selection.edit(params = param_dict)
+      self.total_pages = 1
+      self.current_page = start = 0
+    param_dict['list_start'] = start
+    self.getSelection().edit(params = param_dict)
 
     # Make a list of lines.
     line_class = self.getLineClass()
@@ -1999,7 +1987,7 @@ class ListBoxRenderer:
       current_section_base_index = 0
       current_section = report_section_list[0]
       current_section_size = current_section.object_list_len
-      for i in range(start, end):
+      for i in xrange(start, end):
         # Make sure we go to the right section.
         while current_section_base_index + current_section_size <= i:
           current_section_base_index += current_section_size
@@ -2015,8 +2003,7 @@ class ListBoxRenderer:
         else:
           index = i
         #LOG('ListBox', 0, 'current_section.__dict__ = %r' % (current_section.__dict__,))
-        if 'total_size' in param_dict.keys():
-          param_dict.pop('total_size')
+        param_dict.pop('total_size', None)
         row_css_class_name = self.getRowCSSClassName(
           brain=current_section.object_list[offset],
           field=self.field,
@@ -2510,7 +2497,6 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     """
     return ListBoxHTMLRendererLine
 
-  @lazyMethod
   def getLineStart(self):
     """Return a requested start number.
     """
