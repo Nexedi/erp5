@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>total_selected_amount</string> </value>
+            <value> <string>your_total_selected_amount</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

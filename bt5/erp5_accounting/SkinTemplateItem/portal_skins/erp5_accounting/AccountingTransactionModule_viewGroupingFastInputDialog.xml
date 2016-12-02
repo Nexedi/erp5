@@ -107,7 +107,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>total_selected_amount</string>
+                        <string>your_total_selected_amount</string>
                       </list>
                     </value>
                 </item>
