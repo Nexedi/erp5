@@ -753,8 +753,7 @@
   rJS(window)
     .ready(function (gadget) {
       gadget.props = {
-        options: {},
-        start_deferred: RSVP.defer()
+        options: {}
       };
     })
 
@@ -891,9 +890,7 @@
               }
             });
           }
-        })
-        .push(function () {
-          gadget.props.start_deferred.resolve();
+          return gadget.listenHashChange();
         })
         .push(undefined, function (error) {
           if (error instanceof RSVP.CancellationError) {
@@ -910,15 +907,8 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('renderError', 'reportServiceError')
 
-    .declareService(function () {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.start_deferred.promise;
-        })
-        .push(function () {
-          return listenHashChange(gadget);
-        });
+    .declareJob('listenHashChange', function () {
+      return listenHashChange(this);
     });
 
 }(window, rJS, RSVP, loopEventListener, document, jIO, URI, URL, Blob));
