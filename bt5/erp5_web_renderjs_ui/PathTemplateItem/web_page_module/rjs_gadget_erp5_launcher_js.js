@@ -168,46 +168,14 @@
       });
   }
 
-  function getSetting(gadget, key, default_value) {
-    return gadget.getDeclaredGadget("setting_gadget")
-      .push(function (jio_gadget) {
-        return jio_gadget.get("setting");
-      })
-      .push(function (doc) {
-        return doc[key] || default_value;
-      }, function (error) {
-        if (error.status_code === 404) {
-          return default_value;
-        }
-        throw error;
-      });
-  }
-
-  function setSetting(gadget, key, value) {
-    var jio_gadget;
-    return gadget.getDeclaredGadget("setting_gadget")
-      .push(function (result) {
-        jio_gadget = result;
-        return jio_gadget.get("setting");
-      })
-      .push(undefined, function (error) {
-        if (error.status_code === 404) {
-          return {};
-        }
-        throw error;
-      })
-      .push(function (doc) {
-        doc[key] = value;
-        return jio_gadget.put('setting', doc);
-      });
-  }
-
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
   rJS(window)
     .ready(function () {
-      var gadget = this;
+      var gadget = this,
+        setting_gadget,
+        setting;
       this.props = {
         loading_counter: 0,
         content_element: this.element.querySelector('.gadget-content')
@@ -215,14 +183,23 @@
 
       // Configure setting storage
       return gadget.getDeclaredGadget("setting_gadget")
-        .push(function (jio_gadget) {
-          return jio_gadget.createJio({
+        .push(function (result) {
+          setting_gadget = result;
+          setting_gadget.createJio({
             type: "indexeddb",
             database: "setting"
           });
-        })
 
-        .push(function () {
+          return setting_gadget.get("setting")
+            .push(undefined, function (error) {
+              if (error.status_code === 404) {
+                return {};
+              }
+              throw error;
+            });
+        })
+        .push(function (result) {
+          setting = result;
           // Extract configuration parameters stored in HTML
           // XXX Will work only if top gadget...
           var element_list =
@@ -231,44 +208,30 @@
             len = element_list.length,
             key,
             value,
-            i,
-            queue = new RSVP.Queue();
-
-          function push(a, b) {
-            queue.push(function () {
-              return setSetting(gadget, a, b);
-            });
-          }
+            i;
 
           for (i = 0; i < len; i += 1) {
             key = element_list[i].getAttribute('data-renderjs-configuration');
             value = element_list[i].textContent;
             gadget.props[key] = value;
-            push(key, value);
+            setting[key] = value;
           }
-          return queue;
-        })
 
-        .push(function () {
-          return setSetting(gadget, 'hateoas_url',
-                            (new URI(gadget.props.hateoas_url))
+          // Calculate erp5 hateoas url
+          setting.hateoas_url = (new URI(gadget.props.hateoas_url))
                               .absoluteTo(location.href)
-                              .toString()
-            );
-        })
+                              .toString();
 
+          return setting_gadget.put("setting", setting);
+        })
         .push(function () {
           // Configure jIO storage
-          return RSVP.all([
-            gadget.getDeclaredGadget("jio_gadget"),
-            getSetting(gadget, 'jio_storage_description')
-          ]);
-        })
-        .push(function (result_list) {
-          return result_list[0].createJio(result_list[1]);
+          return gadget.getDeclaredGadget("jio_gadget");
         })
 
-        .push(function () {
+        .push(function (jio_gadget) {
+          jio_gadget.createJio(setting.jio_storage_description);
+
           return gadget.getDeclaredGadget('panel');
         })
         .push(function (panel_gadget) {
@@ -287,10 +250,42 @@
     // Allow Acquisition
     //////////////////////////////////////////
     .allowPublicAcquisition("getSetting", function (argument_list) {
-      return getSetting(this, argument_list[0], argument_list[1]);
+      var gadget = this,
+        key = argument_list[0],
+        default_value = argument_list[1];
+      return gadget.getDeclaredGadget("setting_gadget")
+        .push(function (jio_gadget) {
+          return jio_gadget.get("setting");
+        })
+        .push(function (doc) {
+          return doc[key] || default_value;
+        }, function (error) {
+          if (error.status_code === 404) {
+            return default_value;
+          }
+          throw error;
+        });
     })
     .allowPublicAcquisition("setSetting", function (argument_list) {
-      return setSetting(this, argument_list[0], argument_list[1]);
+      var jio_gadget,
+        gadget = this,
+        key = argument_list[0],
+        value = argument_list[1];
+      return gadget.getDeclaredGadget("setting_gadget")
+        .push(function (result) {
+          jio_gadget = result;
+          return jio_gadget.get("setting");
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            return {};
+          }
+          throw error;
+        })
+        .push(function (doc) {
+          doc[key] = value;
+          return jio_gadget.put('setting', doc);
+        });
     })
     .allowPublicAcquisition("translateHtml", function (argument_list) {
       return this.getDeclaredGadget("translation_gadget")
