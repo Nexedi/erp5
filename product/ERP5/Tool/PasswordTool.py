@@ -114,7 +114,8 @@ class PasswordTool(BaseTool):
                                notification_message=None, sender=None,
                                store_as_event=False,
                                expiration_date=None,
-                               substitution_method_parameter_dict=None):
+                               substitution_method_parameter_dict=None,
+                               batch=False):
     """
     Create a random string and expiration date for request
     Parameters:
@@ -162,7 +163,10 @@ class PasswordTool(BaseTool):
             "User ${user} does not have an email address, please contact site "
             "administrator directly", mapping={'user':user_login})
     if msg:
-      return redirect(REQUEST, site_url, msg)
+      if batch:
+        raise RuntimeError(msg)
+      else:
+        return redirect(REQUEST, site_url, msg)
 
     key = self.getResetPasswordKey(user_login=user_login,
                                    expiration_date=expiration_date)
@@ -209,8 +213,9 @@ class PasswordTool(BaseTool):
                                                             store_as_event=store_as_event,
                                                             message_text_format=message_text_format,
                                                             event_keyword_argument_dict=event_keyword_argument_dict)
-    return redirect(REQUEST, site_url,
-                    translateString("An email has been sent to you."))
+    if not batch:
+      return redirect(REQUEST, site_url,
+                      translateString("An email has been sent to you."))
 
   def _generateUUID(self, args=""):
     """
