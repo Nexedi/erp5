@@ -461,29 +461,26 @@
           .push(function (main_gadget) {
             // Append loaded gadget in the page
             if (main_gadget !== undefined) {
-              return main_gadget.getElement()
-                .push(function (fragment) {
-                  var element = gadget.props.content_element,
-                    content_container = document.createElement("div");
-                  content_container.className = "ui-content " +
-                    (gadget.props.sub_header_class || "");
-                  // reset subheader indicator
-                  delete gadget.props.sub_header_class;
+              var element = gadget.props.content_element,
+                content_container = document.createDocumentFragment();
+              // content_container.className = "ui-content " +
+              //   (gadget.props.sub_header_class || "");
+              // reset subheader indicator
+              delete gadget.props.sub_header_class;
 
-                  // go to the top of the page
-                  window.scrollTo(0, 0);
+              // go to the top of the page
+              window.scrollTo(0, 0);
 
-                  // Clear first to DOM, append after to reduce flickering/manip
-                  while (element.firstChild) {
-                    element.removeChild(element.firstChild);
-                  }
-                  content_container.appendChild(fragment);
-                  element.appendChild(content_container);
+              // Clear first to DOM, append after to reduce flickering/manip
+              while (element.firstChild) {
+                element.removeChild(element.firstChild);
+              }
+              content_container.appendChild(main_gadget.element);
+              element.appendChild(content_container);
 
-                  return updateHeader(gadget);
-                  // XXX Drop notification
-                  // return header_gadget.notifyLoaded();
-                });
+              return updateHeader(gadget);
+              // XXX Drop notification
+              // return header_gadget.notifyLoaded();
             }
           });
       }
