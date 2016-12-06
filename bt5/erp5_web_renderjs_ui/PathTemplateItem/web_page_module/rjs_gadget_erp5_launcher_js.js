@@ -206,77 +206,78 @@
   // Page rendering
   //////////////////////////////////////////
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.loading_counter = 0;
-          g.props.element = element;
-          g.props.content_element = element.querySelector('.gadget-content');
-        });
-    })
-    // Configure setting storage
-    .ready(function (g) {
-      return g.getDeclaredGadget("setting_gadget")
+    .ready(function () {
+      var gadget = this;
+      this.props = {
+        loading_counter: 0,
+        content_element: this.element.querySelector('.gadget-content')
+      };
+
+      // Configure setting storage
+      return gadget.getDeclaredGadget("setting_gadget")
         .push(function (jio_gadget) {
           return jio_gadget.createJio({
             type: "indexeddb",
             database: "setting"
           });
-        });
-    })
-    .ready(function (g) {
-      // Extract configuration parameters stored in HTML
-      // XXX Will work only if top gadget...
-      var element_list =
-        document.querySelectorAll("[data-renderjs-configuration]"),
-        len = element_list.length,
-        key,
-        value,
-        i,
-        queue = new RSVP.Queue();
-
-      function push(a, b) {
-        queue.push(function () {
-          return setSetting(g, a, b);
-        });
-      }
-
-      for (i = 0; i < len; i += 1) {
-        key = element_list[i].getAttribute('data-renderjs-configuration');
-        value = element_list[i].textContent;
-        g.props[key] = value;
-        push(key, value);
-      }
-      return queue;
-    })
-    .ready(function (g) {
-      return setSetting(g, 'hateoas_url',
-          (new URI(g.props.hateoas_url))
-            .absoluteTo(location.href)
-            .toString()
-        );
-    })
-    // Configure jIO storage
-    .ready(function (g) {
-      var jio_gadget;
-      return g.getDeclaredGadget("jio_gadget")
-        .push(function (result) {
-          jio_gadget = result;
-          return getSetting(g, 'jio_storage_description');
         })
-        .push(function (result) {
-          return jio_gadget.createJio(result);
-        });
-    })
-    .ready(function (g) {
-      return g.getDeclaredGadget('panel')
+
+        .push(function () {
+          // Extract configuration parameters stored in HTML
+          // XXX Will work only if top gadget...
+          var element_list =
+            document.head
+            .querySelectorAll("script[data-renderjs-configuration]"),
+            len = element_list.length,
+            key,
+            value,
+            i,
+            queue = new RSVP.Queue();
+
+          function push(a, b) {
+            queue.push(function () {
+              return setSetting(gadget, a, b);
+            });
+          }
+
+          for (i = 0; i < len; i += 1) {
+            key = element_list[i].getAttribute('data-renderjs-configuration');
+            value = element_list[i].textContent;
+            gadget.props[key] = value;
+            push(key, value);
+          }
+          return queue;
+        })
+
+        .push(function () {
+          return setSetting(gadget, 'hateoas_url',
+                            (new URI(gadget.props.hateoas_url))
+                              .absoluteTo(location.href)
+                              .toString()
+            );
+        })
+
+        .push(function () {
+          // Configure jIO storage
+          return RSVP.all([
+            gadget.getDeclaredGadget("jio_gadget"),
+            getSetting(gadget, 'jio_storage_description')
+          ]);
+        })
+        .push(function (result_list) {
+          return result_list[0].createJio(result_list[1]);
+        })
+
+        .push(function () {
+          return gadget.getDeclaredGadget('panel');
+        })
         .push(function (panel_gadget) {
           return panel_gadget.render();
-        });
-    })
-    .ready(function (g) {
-      return g.getDeclaredGadget('router')
+        })
+
+        .push(function () {
+          return gadget.getDeclaredGadget('router');
+        })
         .push(function (router_gadget) {
           return router_gadget.start();
         });
