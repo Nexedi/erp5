@@ -20,13 +20,22 @@ if (Common === undefined) {
       });
   }
 
+  function display_error(gadget, error) {
+    var display_error_element;
+    display_error_element = gadget.props.element;
+    display_error_element.innerHTML =
+      '<br/><p style="color: red"></p><br/><br/>';
+    display_error_element.querySelector('p').textContent = error;
+    throw error;
+  }
+
   function dataURLtoBlob(url) {
     var byteString = atob(url.split(',')[1]),
       mimeString = url.split(',')[0].split(':')[1].split(';')[0],
       ab = new ArrayBuffer(byteString.length),
       ia = new Uint8Array(ab),
       i;
-    for (i = 0; i < byteString.length; i++) {
+    for (i = 0; i < byteString.length; i += 1) {
       ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ab], {type: mimeString});
@@ -228,19 +237,29 @@ if (Common === undefined) {
       g.props.key = options.key || "text_content";
       g.props.value = options.value;
       if (g.props.value) {
-        magic = g.props.value.slice(0, 5);
-        if (magic === "[obje") {
-          g.props.value = "";
+        if (g.props.value.slice === undefined) {
+          display_error(g, "not suported type of document value: " +
+            typeof g.props.value);
         }
+        magic = g.props.value.slice(0, 5);
         if (magic === "data:") {
           g.props.value = atob(g.props.value.split(',')[1]);
         }
         magic = g.props.value.slice(0, 4);
-        if (magic ===  "PK\x03\x04" || magic === "PK\x05\x06") {
+        switch (magic) {
+        case 'XLSY':
+        case 'PPTY':
+        case 'DOCY':
+          break;
+        case "PK\x03\x04":
+        case "PK\x05\x06":
           g.props.value_zip_storage = jIO.createJIO({
             type: "zipfile",
             file: g.props.value
           });
+          break;
+        default:
+          display_error(g, 'not supported format: "' + g.props.value + '"');
         }
       }
       if (!g.props.value_zip_storage) {
@@ -512,7 +531,7 @@ if (Common === undefined) {
           return {};
         })
         .push(undefined, function (error) {
-          console.log('gadget_ooffice.js redner error:' + error);
+          display_error(g, error);
         });
     })
 
