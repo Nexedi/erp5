@@ -156,7 +156,9 @@ class TestUNGSecurity(ERP5TypeTestCase):
     self.logout()
     form_dict = dict(firstname="My First Name",
                      lastname="My Last Name",
-                     password="ung_password")
+                     password="ung_password",
+                     login_name=self.id(),
+    )
     self.portal.REQUEST.form.update(form_dict)
     self.changeSkin("UNGDoc")
     self.portal.ERPSite_createUNGUser()
