@@ -305,7 +305,7 @@ class ERP5TypeInformation(XMLObject,
       # Document related to a person's assignment or career step
       'personal_item',
       # Base
-      'entity',
+      'entity', 'login',
       # LEGACY - needs a warning - XXX-JPS
       'tax_movement',
     )

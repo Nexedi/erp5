@@ -30,6 +30,7 @@
 """Tests ERP5 User Management.
 """
 
+import transaction
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -39,6 +40,7 @@ from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 from Products import ERP5Security
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
@@ -54,6 +56,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
+    transaction.abort()
     self.getPersonModule().manage_delObjects([x for x in
                              self.getPersonModule().objectIds()])
     self.tic()
@@ -302,9 +305,19 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self._assertUserExists('the_user', 'secret')
     self.loginAsUser('the_user')
-    self.portal.REQUEST.set('current_password', 'secret')
-    self.portal.REQUEST.set('new_password', 'new_secret')
-    self.portal.portal_preferences.PreferenceTool_setNewPassword()
+    login = [x for x in pers.objectValues(portal_type='ERP5 Login')][0]
+    result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
+      dialog_id='PreferenceTool_viewChangePasswordDialog',
+      current_password='wrong_secret',
+      new_password='new_secret',
+    )
+    self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences/PreferenceTool_viewChangePasswordDialog?portal_status_message=Current%20password%20is%20wrong.')
+    result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
+      dialog_id='PreferenceTool_viewChangePasswordDialog',
+      current_password='secret',
+      new_password='new_secret',
+    )
+    self.assertEqual(result, self.portal.absolute_url()+'/logout')
     self._assertUserExists('the_user', 'new_secret')
     self._assertUserDoesNotExists('the_user', 'secret')
 
@@ -341,6 +354,45 @@ class TestUserManagement(ERP5TypeTestCase):
     pers.setPassword('secret')
     self._assertUserExists('the_user', 'secret')
 
+  def test_PersonLoginMigration(self):
+    self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
+    self.portal.acl_users.erp5_users.manage_activateInterfaces([
+      'IAuthenticationPlugin',
+      'IUserEnumerationPlugin',
+    ])
+    pers = self.portal.person_module.newContent(
+      portal_type='Person',
+      reference='the_user',
+    )
+    pers.newContent(
+      portal_type='Assignment',
+    ).open()
+    pers.setPassword('secret')
+    self.assertEqual(len(pers.objectValues(portal_type='ERP5 Login')), 0)
+    self.tic()
+    self._assertUserExists('the_user', 'secret')
+    self.portal.portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    self._assertUserExists('the_user', 'secret')
+    self.assertEqual(pers.getPassword(), None)
+    login = pers.objectValues(portal_type='ERP5 Login')[0]
+    login.setPassword('secret2')
+    self.portal.portal_caches.clearAllCache()
+    self.tic()
+    self._assertUserDoesNotExists('the_user', 'secret')
+    self._assertUserExists('the_user', 'secret2')
+
+  def test_ERP5LoginUserManagerMigration(self):
+    acl_users= self.portal.acl_users
+    acl_users.manage_delObjects(ids=['erp5_login_users'])
+    portal_templates = self.portal.portal_templates
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
+    # call checkConsistency again to check if FIX does not happen by checkConsistency().
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
+    portal_templates.fixConsistency(filter={'constraint_type': 'pre_upgrade'})
+    self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
+    self.assertTrue('erp5_login_users' in acl_users)
 
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""
@@ -400,6 +452,50 @@ class TestUserManagement(ERP5TypeTestCase):
     person.setReference(None)
     self.tic()
     self.assertEqual(None, person.getReference())
+
+  def test_duplicatePersonReference(self):
+    person1 = self._makePerson(reference='foo', password='secret',)
+    self.tic()
+    self.assertRaises(RuntimeError, self._makePerson,
+                      reference='foo', password='secret',)
+
+  def test_duplicateLoginReference(self):
+    person1 = self._makePerson(reference='foo', password='secret',)
+    self.tic()
+    person2 = self._makePerson(reference='bar', password='secret',)
+    login = person2.objectValues(portal_type='ERP5 Login')[0]
+    login.invalidate()
+    login.setReference('foo')
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login, 'validate_action')
+
+  def test_duplicateLoginReferenceInSameTransaction(self):
+    person1 = self._makePerson(reference='foo', password='secret', tic=False)
+    person2 = self._makePerson(reference='bar', password='secret', tic=False)
+    login = person2.newContent(portal_type='ERP5 Login')
+    login = person2.objectValues(portal_type='ERP5 Login')[0]
+    login.invalidate()
+    login.setReference('foo')
+    self.portal.portal_workflow.doActionFor(login, 'validate_action')
+    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
+    self.assertEqual(result, None)
+    self.tic()
+    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
+    self.assertEqual(len(result.getResultList()), 1)
+    self.assertEqual(result.getResultList()[0].summary, 'Logins having the same reference exist')
+
+  def test_duplicateLoginReferenceInAnotherTransaction(self):
+    person1 = self._makePerson(reference='foo', password='secret', tic=False)
+    person2 = self._makePerson(reference='bar', password='secret', tic=False)
+    self.commit()
+    login = person2.newContent(portal_type='ERP5 Login')
+    login.setReference('foo')
+    self.portal.portal_workflow.doActionFor(login, 'validate_action')
+    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
+    self.assertEqual(result, None)
+    self.tic()
+    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
+    self.assertEqual(len(result.getResultList()), 1)
+    self.assertEqual(result.getResultList()[0].summary, 'Logins having the same reference exist')
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
   def getTitle(self):
