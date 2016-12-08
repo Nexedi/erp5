@@ -10,8 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
-                <string>editable</string>
+                <string>items</string>
+                <string>required</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -54,16 +55,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,7 +63,21 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -83,26 +88,22 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The username this person will use to log in the system.\n
-\n
-The system will check that there isn\'t another user with the same username.</string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Person_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -126,7 +127,7 @@ The system will check that there isn\'t another user with the same username.</st
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_membership.getAuthenticatedMember().getUserName()</string> </value>
+            <value> <string>python: [(x, x) for x in here.Base_getValidatedLoginReferenceList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
