@@ -79,8 +79,13 @@ if ENABLE_JOBLIB:
     def __init__(self, *args, **kwargs):
       self.zope_context = kwargs['zope_context']
     def effective_n_jobs(self, n_jobs):
-      # TODO
-      return n_jobs
+      """Dummy implementation to prevent n_jobs <=0
+
+      and allow (sequential) n_jobs=1 and n_jobs != 1 (parallel) behaviour
+      """
+      if n_jobs == 0:
+          raise ValueError('n_jobs == 0 in Parallel has no meaning')
+      return abs(n_jobs)
     def apply_async(self, batch, callback=None):
       """Schedule a func to be run"""
       portal_activities = self.zope_context.portal_activities
