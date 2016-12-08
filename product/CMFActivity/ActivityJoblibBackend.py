@@ -43,38 +43,38 @@ except ImportError:
   LOG("CMFActivityBackend", WARNING, "CLASS NOT LOADED!!!")
   ENABLE_JOBLIB = False
 
-class MySafeFunction(SafeFunction):
-  """Wrapper around a SafeFunction that catches any exception
-  
-  The exception can be handled in CMFActivityResult.get
-  """
-  def __call__(self, *args, **kwargs):
-    try:
-      return super(MySafeFunction, self).__call__(*args, **kwargs)
-    except Exception as exc:
-      return exc
-
-class CMFActivityResult(object):
-  def __init__(self, active_process, callback):
-    self.active_process = active_process
-    self.callback = callback
-  def get(self, timeout=None):
-    while not self.active_process.getResultList():
-      time.sleep(1)
-      if timeout is not None:
-        timeout -= 1
-        if timeout < 0:
-          raise RuntimeError('Timeout reached')
-      transaction.commit()
-    result = self.active_process.getResultList()[0].result
-    # TODO raise before or after the callback?
-    if isinstance(result, Exception):
-      raise result
-    if self.callback is not None:
-      self.callback(result)
-    return result
-
 if ENABLE_JOBLIB:
+  class MySafeFunction(SafeFunction):
+    """Wrapper around a SafeFunction that catches any exception
+  
+    The exception can be handled in CMFActivityResult.get
+    """
+    def __call__(self, *args, **kwargs):
+      try:
+        return super(MySafeFunction, self).__call__(*args, **kwargs)
+      except Exception as exc:
+        return exc
+
+  class CMFActivityResult(object):
+    def __init__(self, active_process, callback):
+      self.active_process = active_process
+      self.callback = callback
+    def get(self, timeout=None):
+      while not self.active_process.getResultList():
+        time.sleep(1)
+        if timeout is not None:
+          timeout -= 1
+          if timeout < 0:
+            raise RuntimeError('Timeout reached')
+        transaction.commit()
+      result = self.active_process.getResultList()[0].result
+      # TODO raise before or after the callback?
+      if isinstance(result, Exception):
+        raise result
+      if self.callback is not None:
+        self.callback(result)
+      return result
+
   class CMFActivityBackend(ParallelBackendBase):
     def __init__(self, *args, **kwargs):
       self.zope_context = kwargs['zope_context']
