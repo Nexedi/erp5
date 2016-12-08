@@ -31,8 +31,8 @@
 </tal:block>
 
 <span style="float:right;" tal:condition="python:not here.portal_membership.isAnonymousUser()">
-Logged in as: <a style="color:blue;" tal:define="user here/portal_membership/getAuthenticatedMember"
-                 tal:content="user"
+Logged in as: <a style="color:blue;"
+                 tal:content="python: here.Base_getUserCaption()"
                  tal:attributes="href python:'WebSite_redirectToUserView?%s&user=%s' % (
-                                 request.get('http_parameters', None), user)">userid</a>
+                                 request.get('http_parameters', None), here.getPortalObject().portal_membership.getAuthenticatedMember().getId())"></a>
 </span>
