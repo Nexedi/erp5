@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Alarm" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>active_sense_method_id</string> </key>
+            <value> <string>ERP5Site_checkDuplicateLoginReferenceLogin</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>enabled</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>check_duplicate_login_reference</string> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_day_frequency</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour</string> </key>
+            <value>
+              <tuple>
+                <int>3</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_hour_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute</string> </key>
+            <value>
+              <tuple>
+                <int>3</int>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_minute_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_month_day</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_start_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1283335200.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>periodicity_week</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Alarm</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Check Duplicate Login Reference</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

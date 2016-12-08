@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>editable</string>
                 <string>enabled</string>
               </list>
             </value>
@@ -78,10 +79,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The username this person will use to log in the system.\n
-\n
-The system will check that there isn\'t another user with the same username.</string> </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -98,10 +97,6 @@ The system will check that there isn\'t another user with the same username.</st
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>User Login</string> </value>
                 </item>
               </dictionary>
             </value>
