@@ -51,6 +51,11 @@ class TestUNGSecurity(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.setFunction("function/ung_user")
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='ung_user',
+    )
+    login.validate()
     self.tic()
 
   def testERP5Site_createNewWebDocumentAsAnonymous(self):
@@ -82,6 +87,11 @@ class TestUNGSecurity(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.setFunction("function/ung_user")
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='ung_user2',
+    )
+    login.validate()
     self.tic()
     self.loginByUserName("ung_user")
     self.changeSkin("UNGDoc")
@@ -175,6 +185,11 @@ class TestUNGSecurity(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.setFunction("function/ung_user")
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='ung_user2',
+    )
+    login.validate()
     self.tic()
     self.loginByUserName("ung_user")
     self.changeSkin("UNGDoc")

@@ -133,10 +133,12 @@ class TestUNG(ERP5TypeTestCase):
                                              reference="ung_new_user")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    person.newContent(portal_type='ERP5 Login', reference=person.getReference()).validate()
     person = portal.person_module.newContent(portal_type='Person',
                                              reference="ung_new_user2")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    person.newContent(portal_type='ERP5 Login', reference=person.getReference()).validate()
     self.tic()
     self.loginByUserName("ung_new_user")
     self.changeSkin("UNGDoc")

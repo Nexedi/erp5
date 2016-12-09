@@ -150,6 +150,10 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       #   by the assignment workflow when NuxUserGroup is used and
       #   by ERP5Security PAS plugins in the context of PAS use.
       assignment.open()
+      person.newContent(
+        portal_type='ERP5 Login',
+        reference=user_login,
+      ).validate()
 
     if self.PAS_installed:
       # reindexing is required for the security to work
