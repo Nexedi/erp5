@@ -9,7 +9,7 @@ if not key:
 
 token = {
   'expiration_timestamp': addToDate(DateTime(), to_add={'hour': 1}).timeTime(),
-  'reference': context.getReference(),
+  'reference': context.Person_getUserId(),
   'user-agent': context.REQUEST.getHeader('User-Agent'),
   'remote-addr': context.REQUEST.get('REMOTE_ADDR')
 }

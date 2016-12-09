@@ -6,6 +6,8 @@ class TestDiscussionThread(SecurityTestCase):
   A Sample Test Class
   """
 
+  user_id_dict = {}
+
   def getTitle(self):
     return "TestDiscussionThread"
 
@@ -27,7 +29,9 @@ class TestDiscussionThread(SecurityTestCase):
     ]
     # now we create the users
     for user in user_list:
-      self.createSimpleUser(**user)
+      if not self.portal.acl_users.searchUsers(login=user['reference'], exact_match=True):
+        self.user_id_dict[user['reference']] = \
+          self.createSimpleUser(**user).Person_getUserId()
 
     self.commit()
     self.tic()
@@ -52,19 +56,19 @@ class TestDiscussionThread(SecurityTestCase):
         - that user can reply to his thread
     """
     # forum_user should be able to access/view the forum module
-    self.assertUserCanAccessDocument('forum_user', self.forum_module)
-    self.assertUserCanViewDocument('forum_user', self.forum_module)
-    self.assertUserCanAddDocument('forum_user', self.forum_module)
+    self.assertUserCanAccessDocument(self.user_id_dict['forum_user'], self.forum_module)
+    self.assertUserCanViewDocument(self.user_id_dict['forum_user'], self.forum_module)
+    self.assertUserCanAddDocument(self.user_id_dict['forum_user'], self.forum_module)
 
-    self.login('forum_user')
+    self.login(self.user_id_dict['forum_user'])
 
     thread_content='Hey, lets create a new thread!'
     thread = self._newThread(content=thread_content)
 
     # user should be able to access/view the created thread
-    self.assertUserCanViewDocument('forum_user', thread)
-    self.assertUserCanAccessDocument('forum_user', thread)
-    self.assertUserCanAddDocument('forum_user', thread)
+    self.assertUserCanViewDocument(self.user_id_dict['forum_user'], thread)
+    self.assertUserCanAccessDocument(self.user_id_dict['forum_user'], thread)
+    self.assertUserCanAddDocument(self.user_id_dict['forum_user'], thread)
 
     # get thread posts
     thread_posts = thread.objectValues()
@@ -89,8 +93,8 @@ class TestDiscussionThread(SecurityTestCase):
         batch_mode=True,
         )
 
-    self.assertUserCanViewDocument('forum_user', post)
-    self.assertUserCanAccessDocument('forum_user', post)
+    self.assertUserCanViewDocument(self.user_id_dict['forum_user'], post)
+    self.assertUserCanAccessDocument(self.user_id_dict['forum_user'], post)
 
     self.tic()
 
@@ -110,22 +114,22 @@ class TestDiscussionThread(SecurityTestCase):
         - outsiders can't read the thread
         - visitor can read the thread
     """
-    self.login('forum_user')
+    self.login(self.user_id_dict['forum_user'])
     thread = self._newThread()
 
-    self.failIfUserCanViewDocument('spy', thread)
-    self.failIfUserCanAccessDocument('spy', thread)
+    self.failIfUserCanViewDocument(self.user_id_dict['spy'], thread)
+    self.failIfUserCanAccessDocument(self.user_id_dict['spy'], thread)
 
-    self.assertUserCanViewDocument('visitor', thread)
-    self.assertUserCanAccessDocument('visitor', thread)
+    self.assertUserCanViewDocument(self.user_id_dict['visitor'], thread)
+    self.assertUserCanAccessDocument(self.user_id_dict['visitor'], thread)
 
     # Check that visitor has permissions on related objects
     # for example, if visitor has no permissions on the Person
     # module, the above checks will pass, but the view
     # will not work, because Person.getTitle() will fail
 
-    self.assertUserCanViewDocument('visitor', self.portal.person_module)
-    self.assertUserCanAccessDocument('visitor', self.portal.person_module)
+    self.assertUserCanViewDocument(self.user_id_dict['visitor'], self.portal.person_module)
+    self.assertUserCanAccessDocument(self.user_id_dict['visitor'], self.portal.person_module)
 
     response = self.publish('/%s/%s' % \
                     (self.portal.getId(), thread.getRelativeUrl()),
@@ -140,13 +144,13 @@ class TestDiscussionThread(SecurityTestCase):
         - visitor cannot reply
         - visitor cannot post a new thread
     """
-    self.login('forum_user')
+    self.login(self.user_id_dict['forum_user'])
     thread = self._newThread()
 
     # visitor cannot reply to a thread
-    self.failIfUserCanAddDocument('visitor', thread)
+    self.failIfUserCanAddDocument(self.user_id_dict['visitor'], thread)
     # visitor cannot create a new thread
-    self.failIfUserCanAddDocument('visitor', self.forum_module)
+    self.failIfUserCanAddDocument(self.user_id_dict['visitor'], self.forum_module)
 
   def testAdminCanModerate(self):
     """
@@ -157,16 +161,16 @@ class TestDiscussionThread(SecurityTestCase):
         - admin can display it
         - admin reopens it
     """
-    self.login('admin')
+    self.login(self.user_id_dict['admin'])
     thread = self._newThread()
 
-    self.assertUserCanPassWorkflowTransition('admin', 'close_action', thread)
+    self.assertUserCanPassWorkflowTransition(self.user_id_dict['admin'], 'close_action', thread)
     thread.close()
     self.commit()
 
-    self.assertUserCanViewDocument('admin', thread)
-    self.assertUserCanAccessDocument('admin', thread)
-    self.assertUserCanPassWorkflowTransition('admin', 'unclose_action', thread)
+    self.assertUserCanViewDocument(self.user_id_dict['admin'], thread)
+    self.assertUserCanAccessDocument(self.user_id_dict['admin'], thread)
+    self.assertUserCanPassWorkflowTransition(self.user_id_dict['admin'], 'unclose_action', thread)
 
   def testUserCannotModerate(self):
     """
@@ -174,11 +178,11 @@ class TestDiscussionThread(SecurityTestCase):
         - user creates thread
         - user cannot close it
     """
-    self.login('forum_user')
+    self.login(self.user_id_dict['forum_user'])
     thread = self._newThread()
 
-    self.assertUserCanPassWorkflowTransition('forum_user', 'close_action', thread)
-    self.failIfUserCanPassWorkflowTransition('another_forum_user', 'close_action', thread)
+    self.assertUserCanPassWorkflowTransition(self.user_id_dict['forum_user'], 'close_action', thread)
+    self.failIfUserCanPassWorkflowTransition(self.user_id_dict['another_forum_user'], 'close_action', thread)
 
 
   def testCanPostIfNotOwner(self):
@@ -188,14 +192,14 @@ class TestDiscussionThread(SecurityTestCase):
         - another_forum_user displays it
         - another_forum_user replies
     """
-    self.login('forum_user')
+    self.login(self.user_id_dict['forum_user'])
     thread = self._newThread()
 
     # other user (not thread owner) can access and view the thread
-    self.assertUserCanViewDocument('another_forum_user', thread)
-    self.assertUserCanAccessDocument('another_forum_user', thread)
+    self.assertUserCanViewDocument(self.user_id_dict['another_forum_user'], thread)
+    self.assertUserCanAccessDocument(self.user_id_dict['another_forum_user'], thread)
     # ... and can reply to thread even if he did not start it
-    self.assertUserCanAddDocument('another_forum_user', thread)
+    self.assertUserCanAddDocument(self.user_id_dict['another_forum_user'], thread)
 
     response = self.publish('/%s/%s' % \
                     (self.portal.getId(), thread.getRelativeUrl()),

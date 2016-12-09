@@ -231,7 +231,7 @@ class TestCommerce(ERP5TypeTestCase):
 
     #XXX: Security hack (lucas)
     self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Manager',
-                                                           reference)
+                                                           person.Person_getUserId())
 
   def getDefaultProduct(self, id='1'):
     """

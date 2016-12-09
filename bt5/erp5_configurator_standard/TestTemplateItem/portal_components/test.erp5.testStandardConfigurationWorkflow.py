@@ -765,9 +765,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual('2008', period.getShortTitle())
 
     # security on this period has been initialised
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'cancel_action', period)
+          user_id, 'cancel_action', period)
 
   def stepCheckSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """

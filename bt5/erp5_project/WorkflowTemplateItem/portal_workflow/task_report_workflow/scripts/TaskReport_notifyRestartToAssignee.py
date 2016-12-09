@@ -12,8 +12,8 @@ if destination_decision_person is None:
 if source_person is not None \
       and destination_decision_person is not None\
       and source_person.getDefaultEmailText() \
-      and source_person.getReference():
-  if portal.acl_users.searchUsers(id=source_person.getReference(), exact_match=True):
+      and source_person.Person_getUserId():
+  if portal.acl_users.searchUsers(id=source_person.Person_getUserId(), exact_match=True):
     message = """
 Restarted task has been assigned to you by %(assignor)s.
 

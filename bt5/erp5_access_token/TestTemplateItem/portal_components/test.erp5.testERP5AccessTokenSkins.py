@@ -91,7 +91,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
     self.portal.REQUEST.form["access_token_secret"] = access_token.getReference()
 
     result = self._getTokenCredential(self.portal.REQUEST)
-    self.assertEqual(result.get('external_login'), person.getReference())
+    self.assertEqual(result.get('external_login'), person.Person_getUserId())
 
   def test_bad_token(self):
     person = self.person = self._createPerson(self.new_id)
@@ -129,7 +129,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
 
     result = access_token.RestrictedAccessToken_getExternalLogin()
 
-    self.assertEqual(result, person.getReference())
+    self.assertEqual(result, person.Person_getUserId())
     self.assertEqual(access_token.getValidationState(), 'validated')
 
   def test_RestrictedAccessToken_getExternalLogin_access_token_secret(self):
@@ -156,7 +156,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
 
     result = access_token.RestrictedAccessToken_getExternalLogin()
 
-    self.assertEqual(result, person.getReference())
+    self.assertEqual(result, person.Person_getUserId())
     self.assertEqual(access_token.getValidationState(), 'validated')
 
   def test_RestrictedAccessToken_getExternalLogin_no_agent(self):
@@ -226,7 +226,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
 
     result = access_token.OneTimeRestrictedAccessToken_getExternalLogin()
 
-    self.assertEqual(result, person.getReference())
+    self.assertEqual(result, person.Person_getUserId())
     self.assertEqual(access_token.getValidationState(), 'invalidated')
 
   def test_OneTimeRestrictedAccessToken_getExternalLogin_wrong_values(self):

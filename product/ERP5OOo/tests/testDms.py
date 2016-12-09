@@ -1130,7 +1130,7 @@ class TestDocument(TestDocumentMixin):
     # create test Person objects and add pseudo local security
     person1 =  self.createUser(reference='user1')
     person1.setTitle('Another Contributor')
-    portal.document_module.manage_setLocalRoles('user1', ['Assignor',])
+    portal.document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
     self.tic()
 
     # login as another user
@@ -1663,9 +1663,9 @@ class TestDocument(TestDocumentMixin):
 
     # create Person objects and add pseudo local security
     person1 =  self.createUser(reference='contributor1')
-    document_module.manage_setLocalRoles('contributor1', ['Assignor',])
+    document_module.manage_setLocalRoles(person1.Person_getUserId(), ['Assignor',])
     person2 =  self.createUser(reference='contributor2')
-    document_module.manage_setLocalRoles('contributor2', ['Assignor',])
+    document_module.manage_setLocalRoles(person2.Person_getUserId(), ['Assignor',])
     self.tic()
 
     # login as first one

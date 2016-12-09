@@ -137,7 +137,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                     )
       if self.PAS_installed and len(user_roles) > 0:
         # In the case of PAS, if we want global roles on user, we have to do it manually.
-        self.assignPASRolesToUser(user_login, user_roles)
+        self.assignPASRolesToUser(person.Person_getUserId(), user_roles)
       elif not self.PAS_installed:
         # The user_folder counterpart of the erp5 user must be
         #   created manually in the case of NuxUserGroup.

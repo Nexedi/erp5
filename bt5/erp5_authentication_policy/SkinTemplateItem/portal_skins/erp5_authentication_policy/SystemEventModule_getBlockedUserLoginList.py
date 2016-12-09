@@ -35,6 +35,6 @@ for person, failure_list in all_blocked_user_login_dict.items():
                                                person.getTitle(), 
                                                **{'title': person.getTitle(),
                                                   'count':len(failure_list),
-                                                  'reference': person.getReference(),
+                                                  'reference': person.Person_getUserId(),
                                                   'url': person.absolute_url()}))
 return blocked_user_login_list

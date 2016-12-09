@@ -263,7 +263,7 @@ class TestRunMyDocsConfiguratorWorkflowFranceLanguage(TestRunMyDocsConfiguratorW
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
-    self.login("french_creator")
+    self.loginByUserName("french_creator")
     self._stepCheckKnowledgePadRole()
 
 
@@ -312,5 +312,5 @@ class TestRunMyDocsConfiguratorWorkflowBrazilLanguage(TestRunMyDocsConfiguratorW
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
-    self.login("person_creator")
+    self.loginByUserName("person_creator")
     self._stepCheckKnowledgePadRole()

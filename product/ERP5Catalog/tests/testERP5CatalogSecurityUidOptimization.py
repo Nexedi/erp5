@@ -126,24 +126,26 @@ CREATE TABLE alternate_roles_and_users (
       # create two persons and users
       user1 = self.portal.person_module.newContent(portal_type='Person',
         reference='user1')
+      user1_id = user1.Person_getUserId()
       user1.newContent(portal_type='Assignment', group='g1').open()
       user1.updateLocalRolesOnSecurityGroups()
-      self.assertEqual(user1.__ac_local_roles__.get('user1'), ['Auditor'])
+      self.assertEqual(user1.__ac_local_roles__.get(user1_id), ['Auditor'])
       self.assertEqual(user1.__ac_local_roles__.get('GROUP1'), ['Unknown'])
 
       user2 = self.portal.person_module.newContent(portal_type='Person',
         reference='user2')
+      user2_id = user2.Person_getUserId()
       user2.newContent(portal_type='Assignment', group='g1').open()
       user2.updateLocalRolesOnSecurityGroups()
-      self.assertEqual(user2.__ac_local_roles__.get('user2'), ['Auditor'])
+      self.assertEqual(user2.__ac_local_roles__.get(user2_id), ['Auditor'])
       self.assertEqual(user2.__ac_local_roles__.get('GROUP1'), ['Unknown'])
       self.tic()
 
       # security_uid_dict in catalog contains entries for user1 and user2:
       user1_alternate_security_uid = sql_catalog.security_uid_dict[
-        ('Alternate', ('user:user1', 'user:user1:Auditor'))]
+        ('Alternate', ('user:' + user1_id, 'user:' + user1_id + ':Auditor'))]
       user2_alternate_security_uid = sql_catalog.security_uid_dict[
-        ('Alternate', ('user:user2', 'user:user2:Auditor'))]
+        ('Alternate', ('user:' + user2_id, 'user:' + user2_id + ':Auditor'))]
 
       # those entries are in alternate security table
       alternate_roles_and_users = sql_connection.manage_test(

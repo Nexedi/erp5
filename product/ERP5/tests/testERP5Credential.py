@@ -597,7 +597,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._assertUserExists('barney', 'secret')
     self.login('barney')
     from AccessControl import getSecurityManager
-    self.assertEqual(getSecurityManager().getUser().getIdOrUserName(), 'barney')
+    self.assertEqual(getSecurityManager().getUser().getIdOrUserName(), person.Person_getUserId())
 
     self.login()
     # create a credential recovery
@@ -833,14 +833,14 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepSetAssigneeRoleToCurrentPersonInCredentialUpdateModule(self,
       sequence=None, sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
-    self.portal.credential_update_module.manage_setLocalRoles(person_reference,
+    user, = self.portal.acl_users.searchUsers(login=sequence['person_reference'], exact_match=True)
+    self.portal.credential_update_module.manage_setLocalRoles(user['id'],
         ['Assignor',])
 
   def stepSetAssigneeRoleToCurrentPersonInCredentialRecoveryModule(self,
       sequence=None, sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
-    self.portal.credential_recovery_module.manage_setLocalRoles(person_reference,
+    user, = self.portal.acl_users.searchUsers(login=sequence['person_reference'], exact_match=True)
+    self.portal.credential_recovery_module.manage_setLocalRoles(user['id'],
         ['Assignor',])
 
   def stepLogin(self, sequence):
@@ -861,9 +861,8 @@ class TestERP5Credential(ERP5TypeTestCase):
       sequence_list=None, **kw):
     person_reference = sequence["person_reference"]
     self.login()
-    person = self.portal.portal_catalog.getResultValue(portal_type="Person",
-        reference=person_reference)
-    person.manage_setLocalRoles(person_reference, ["Auditor"])
+    person = self.portal.acl_users.getUser(person_reference).getUserValue()
+    person.manage_setLocalRoles(person.Person_getUserId(), ["Auditor"])
     self.logout()
 
   def stepCheckPersonAfterUpdatePerson(self, sequence=None,

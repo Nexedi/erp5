@@ -1674,6 +1674,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section = site.newContent(portal_type='Web Section', id='section')
     person = portal.person_module.newContent(portal_type = 'Person',
                                              reference = person_reference)
+    person_user_id = person.Person_getUserId()
     # add Role Definition for site and section
     site_role_definition = site.newContent(portal_type = 'Role Definition',
                                            role_name = 'Assignee',
@@ -1684,9 +1685,9 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
     # check if Role Definition have create local roles
     self.assertSameSet(('Assignee',),
-                          site.get_local_roles_for_userid(person_reference))
+                          site.get_local_roles_for_userid(person_user_id))
     self.assertSameSet(('Associate',),
-                          section.get_local_roles_for_userid(person_reference))
+                          section.get_local_roles_for_userid(person_user_id))
     self.assertRaises(Unauthorized, site_role_definition.edit,
                       role_name='Manager')
 
@@ -1695,9 +1696,9 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     section.manage_delObjects(section_role_definition.getId())
     self.tic()
     self.assertSameSet((),
-                       site.get_local_roles_for_userid(person_reference))
+                       site.get_local_roles_for_userid(person_user_id))
     self.assertSameSet((),
-                       section.get_local_roles_for_userid(person_reference))
+                       section.get_local_roles_for_userid(person_user_id))
 
   def test_03_WebSection_getDocumentValueListSecurity(self):
     """ Test WebSection_getDocumentValueList behaviour and security"""

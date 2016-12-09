@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006-2007 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2006-2007,2016 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,8 +30,7 @@ def getPersonRoleList(self, person, object):
   """ 
   Get list of local roles for user.
   """
-  acl_users = self.getPortalObject().acl_users
-  if person.getReference() is not None:
-    user = acl_users.getUserById(person.getReference()).__of__(acl_users)
-    user_role_list = user.getRolesInContext(object)
-    return user_role_list
+  user_id = person.Person_getUserId()
+  if user_id is not None:
+    acl_users = self.getPortalObject().acl_users
+    return acl_users.getUserById(user_id).__of__(acl_users).getRolesInContext(object)

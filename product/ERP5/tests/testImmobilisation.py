@@ -160,7 +160,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
                                       , site              = user_data[4]
                                       )
         # In the case of PAS, if we want global roles on user, we have to do it manually.
-        self.assignPASRolesToUser(user_login, user_roles)
+        self.assignPASRolesToUser(person.Person_getUserId(), user_roles)
         assignment.open()
         person.validate()
 
