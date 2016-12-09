@@ -251,7 +251,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
             result["portal_type"] = field.get_value('portal_type')
           result["query"] = url_template_dict["jio_search_template"] % {
             "query": make_query({"query": sql_catalog.buildQuery(
-              dict(portal_type = [x[1] for x in result["portal_type"]],
+              dict(portal_type = [x[-1] for x in result["portal_type"]],
                 **result["default_params"]), ignore_unknown_columns=True
            ).asSearchTextExpression(sql_catalog)})
           }
