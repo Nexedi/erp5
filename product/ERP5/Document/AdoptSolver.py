@@ -66,9 +66,10 @@ class AdoptSolver(ConfigurablePropertySolverMixin):
             quantity = simulation_movement.getQuantity()
             if total_quantity == 0:
               delivery_ratio = 1.
+              delivery_error = 0
             else:
               delivery_ratio = quantity / total_quantity
-            delivery_error = total_quantity * delivery_ratio - quantity
+              delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error,
                                      activate_kw=activate_kw)
