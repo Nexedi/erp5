@@ -89,7 +89,7 @@ item_list = getItemList( category=category,
                     portal_path=context.getPortalObject().getPhysicalPath(),
                     mirror=mirror,
                     omit_filter=omit_filter, # XXX possible optim: only one cache if omit_filter
-                    user_name=str(getSecurityManager().getUser()),
+                    user_name=getSecurityManager().getUser().getIdOrUserName(),
                     simulation_state=simulation_state)
 
 # make sure that the current value is included in this list, this is 

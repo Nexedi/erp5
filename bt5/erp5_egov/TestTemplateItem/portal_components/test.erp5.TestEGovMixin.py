@@ -335,7 +335,7 @@ class TestEGovMixin(SecurityTestCase):
     '''
 
     # save previous user
-    previous_user = str(getSecurityManager().getUser())
+    previous_user = getSecurityManager().getUser().getIdOrUseName()
     self.loginAsUser(login)
 
     worklist_dict = self.portal.getPortalTypeWorklistDictForWorkflow(\
