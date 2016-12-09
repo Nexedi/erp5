@@ -137,6 +137,10 @@
             <value> <string>OfficeJS Setting Gadget JS</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_setting.js</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value> <string>001</string> </value>
         </item>
@@ -198,7 +202,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -220,7 +224,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1466090877.76</float>
+                        <float>1481106069.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
