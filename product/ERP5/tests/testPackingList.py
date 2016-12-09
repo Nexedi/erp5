@@ -1316,10 +1316,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self)
 
-  # The 3 following tests currently fail because they are making assertions on
-  # an applied rule which with the new simulation structure is not the same as
-  # in the original test packing list.
-
   def test_06_SimulationChangeStartDate(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
