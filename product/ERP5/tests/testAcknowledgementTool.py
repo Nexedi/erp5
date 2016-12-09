@@ -63,7 +63,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     self.tic()
 
     acknowledgement_tool_kw = {}
-    acknowledgement_tool_kw['user_name'] = 'seb'
+    acknowledgement_tool_kw['user_name'] = person.Person_getUserId()
     acknowledgement_tool_kw['portal_type'] = event_type
     # draft document must be not be part of acknowledgements
     document_url_list = portal.portal_acknowledgements\
@@ -98,7 +98,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     # We now acknowledge the event
     acknowledgement = portal.portal_acknowledgements.acknowledge(
          path=event.getRelativeUrl(),
-         user_name='seb')
+         user_name=person.Person_getUserId())
     # Make sure that we have a new acknowledge document which is a proxy of
     # the event
     self.assertEqual(acknowledgement.getPortalType(), 'Acknowledgement')

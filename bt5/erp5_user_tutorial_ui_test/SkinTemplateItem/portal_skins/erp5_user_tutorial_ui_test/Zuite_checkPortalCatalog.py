@@ -6,8 +6,8 @@ for key in kw.keys():
     query_dict[key] = dict(query=kw[key], key='ExactMatch')
 result_list = context.portal_catalog(**query_dict)
 owner_id = context.portal_membership.getAuthenticatedMember().getId()
-functional_test_username = context.Zuite_getHowToInfo()['functional_test_username']
-functional_another_test_username = context.Zuite_getHowToInfo()['functional_another_test_username']
+functional_test_username = context.Base_getUserIdByUserName(context.Zuite_getHowToInfo()['functional_test_username'])
+functional_another_test_username = context.Base_getUserIdByUserName(context.Zuite_getHowToInfo()['functional_another_test_username'])
 
 for result in result_list:
   object = result.getObject()

@@ -45,7 +45,11 @@ else:
   username = person.getReference()
   if password and username == str(portal.portal_membership.getAuthenticatedMember()):
     credential_update.accept()
-    portal.cookie_authentication.credentialsChanged(username, username, password)
+    portal.cookie_authentication.credentialsChanged(
+      person.Person_getUserId(),
+      username,
+      password,
+    )
     portal_status_message = "Password changed."
 
 portal_status_message = context.Base_translateString(portal_status_message)

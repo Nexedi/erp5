@@ -85,7 +85,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
     self.tic()
 
     uf = self.portal.acl_users
-    uf.zodb_roles.assignRoleToPrincipal('Assignor', self.username)
+    uf.zodb_roles.assignRoleToPrincipal('Assignor', person.Person_getUserId())
     user = uf.getUser(self.username).__of__(uf)
     newSecurityManager(None, user)
 

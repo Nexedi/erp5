@@ -11,8 +11,7 @@ if not person_list:
   person_list = context.portal_selections.getSelectionValueList(selection_name)
 
 # Find authenticated user
-user = context.portal_membership.getAuthenticatedMember()
-user_person = context.portal_catalog.getResultValue(portal_type='Person', reference=user)
+user_value = context.portal_membership.getAuthenticatedMember().getUserValue()
 
 # For every person, create an event
 if not single_event:
@@ -28,12 +27,12 @@ if not single_event:
     # Trigger appropriate workflow action
     if direction == 'incoming':
       event.setSourceValue(person)
-      event.setDestinationValue(user_person)
+      event.setDestinationValue(user_value)
       event.receive()
     else:
       event.plan()
       event.setDestinationValue(person)
-      event.setSourceValue(user_person)
+      event.setSourceValue(user_value)
 else:
   if direction == 'incoming' and len(person_list) > 1:
     # This case is not possible
@@ -48,7 +47,7 @@ else:
                             text_content=text_content) # text_format is set by Event_init
   event.plan()
   event.setDestinationValueList(person_list)
-  event.setSourceValue(user_person)
+  event.setSourceValue(user_value)
   count = 1
 
 # Redirect to the event module (but is this the best place to go since events are not yet indexed ?)

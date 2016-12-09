@@ -23,7 +23,7 @@ def getActorName(actor):
     return actor_name_cache[actor]
   except KeyError:
     actor_name_cache[actor] = actor
-    person = portal_object.portal_catalog.getResultValue(portal_type='Person', reference=actor)
+    person = portal_object.Base_getUserValueByUserId(actor)
     if person is not None:
       actor_name_cache[actor] = person.getTitle()
     return actor_name_cache[actor]

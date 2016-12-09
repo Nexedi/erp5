@@ -24,7 +24,7 @@ if context.getPortalObject().hasObject('event_module'):
     form_id='Person_viewPersonDetailedEventList'))
 
 # contributions list
-if context.getReference() not in (None, ""):
+if context.Person_getUserId() not in (None, ""):
   # list only if user has a login defined
   aggregation_level = context.REQUEST.get('aggregation_level')
   from_date = context.REQUEST.get('from_date')

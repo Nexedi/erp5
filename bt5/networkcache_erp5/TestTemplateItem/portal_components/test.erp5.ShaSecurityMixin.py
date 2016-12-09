@@ -40,18 +40,15 @@ class ShaSecurityMixin(object):
     """
       Initialize the ERP5 site.
     """
-    self.lucas_user = 'lucas'
-    self.createUser(self.lucas_user, self.lucas_user)
+    self.lucas_user = self.createUser('lucas', 'lucas').Person_getUserId()
 
-    self.toto_user = 'toto'
-    self.createUser(self.toto_user, self.toto_user)
+    self.toto_user = self.createUser('toto', 'toto').Person_getUserId()
 
   def createUser(self, reference, password):
     """
       Create a user with basic information
     """
-    person = self.portal.portal_catalog.getResultValue(portal_type='Person',
-                                                      reference=reference)
+    person = self.portal.portal_catalog.getResultValue(portal_type='Person', reference=reference)
     if person is None:
       person = self.portal.person_module.newContent(portal_type='Person')
       person.edit(first_name=reference,
@@ -70,6 +67,8 @@ class ShaSecurityMixin(object):
       assignment.edit(group=self.group)
       assignment.open()
       self.tic()
+
+    return person
 
   def changeUser(self, user_id):
     """

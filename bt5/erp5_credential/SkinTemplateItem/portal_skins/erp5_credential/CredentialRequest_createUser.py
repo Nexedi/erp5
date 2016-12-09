@@ -13,8 +13,9 @@ portal_preferences = context.portal_preferences
 person = context.getDestinationDecisionValue(portal_type="Person")
 
 # Create user of the person only if not exist
-if person.hasReference() and person.getPassword():
-  return person.getReference(), None
+user_id = person.Person_getUserId()
+if user_id and person.hasPassword():
+  return user_id, None
 
 # Set login
 login = context.getReference()

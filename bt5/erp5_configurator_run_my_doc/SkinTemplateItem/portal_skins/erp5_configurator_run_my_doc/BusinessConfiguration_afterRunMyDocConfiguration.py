@@ -78,7 +78,7 @@ for gadget in context.portal_gadgets.objectValues():
 # Add a tab and a gadget for everyone
 portal = context.getPortalObject()
 for person in context.person_module.objectValues():
-  user_name = person.getReference()
+  user_name = person.Person_getUserId()
   tag = '%s_%s_%s' %(user_name,
                    'erp5_front',
                    None)

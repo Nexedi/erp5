@@ -390,15 +390,15 @@ class TestUNGConfiguratorWorkflowFranceLanguage(TestUNGConfiguratorWorkflowMixin
 
   def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
     """ Check permission of Web Site with normal user """
-    self.login("french_assignor")
+    self.loginByUserName("french_assignor")
     self._stepCheckWebSiteRoles()
 
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
-    self.login("french_creator")
+    self.loginByUserName("french_creator")
     self._stepCheckKnowledgePadRole()
 
   def stepCheckCreateNewEvent(self, sequence=None, sequence_list=None, **kw):
-    self.login("french_assignee")
+    self.loginByUserName("french_assignee")
     self._stepCheckCreateNewEvent()
 
 
@@ -485,13 +485,13 @@ class TestUNGConfiguratorWorkflowBrazilLanguage(TestUNGConfiguratorWorkflowMixin
 
   def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
     """ Check permission of Web Site with normal user """
-    self.login("person_assignor")
+    self.loginByUserName("person_assignor")
     self._stepCheckWebSiteRoles()
 
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
-    self.login("person_creator")
+    self.loginByUserName("person_creator")
     self._stepCheckKnowledgePadRole()
 
   def stepCheckCreateNewEvent(self, sequence=None, sequence_list=None, **kw):
-    self.login("person_assignee")
+    self.loginByUserName("person_assignee")
     self._stepCheckCreateNewEvent()

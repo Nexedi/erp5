@@ -150,6 +150,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
     self.changeToPreviousUser()
+    sequence['user_a_id'] = person.Person_getUserId()
 
   def stepAddUserB(self, sequence=None, sequence_list=None, **kw):
     """
@@ -162,6 +163,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
     self.changeToPreviousUser()
+    sequence['user_b_id'] = person.Person_getUserId()
 
   def stepAddUserWithoutEmail(self, sequence=None, sequence_list=None, **kw):
     """
@@ -174,6 +176,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
     self.changeToPreviousUser()
+    sequence['user_without_email_id'] = person.Person_getUserId()
 
   def test_01_defaultBehaviour(self):
     self.assertRaises(
@@ -191,7 +194,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     Check that notification works without sender
     """
     self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject', message='Message')
+        recipient=sequence['user_a_id'], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
@@ -216,7 +219,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     self.assertRaises(
       TypeError,
       self.portal.portal_notifications.sendMessage,
-        recipient='userA', message='Message'
+        recipient=sequence['user_a_id'], message='Message'
     )
 
   def test_03_noSubject(self):
@@ -244,7 +247,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     Check that notification is send when no message is passed
     """
     self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject', )
+        recipient=sequence['user_a_id'], subject='Subject', )
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
@@ -267,7 +270,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     Check that notification is send in standard use case
     """
     self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject', message='Message')
+        recipient=sequence['user_a_id'], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
@@ -295,7 +298,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     Check attachment
     """
     self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject', message='Message',
+        recipient=sequence['user_a_id'], subject='Subject', message='Message',
         attachment_list=[
           {
             'name': 'Attachment 1',
@@ -339,7 +342,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     Check that notification can be send to multiple recipient
     """
     self.portal.portal_notifications.sendMessage(
-        recipient=['userA', 'userB'], subject='Subject', message='Message')
+        recipient=[sequence['user_a_id'], sequence['user_b_id']], subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
 
     self.assertNotEquals((), last_message)
@@ -371,7 +374,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     """
     with self.assertRaisesRegexp(ValueError, "email must be set"):
       self.portal.portal_notifications.sendMessage(
-          recipient='userWithoutEmail', subject='Subject', message='Message')
+          recipient=sequence['user_without_email_id'], subject='Subject', message='Message')
 
   def test_08_PersonWithoutEmail(self):
     sequence_list = SequenceList()
@@ -393,7 +396,7 @@ class TestNotificationTool(ERP5TypeTestCase):
     """
     Check that notification is send when recipient is a Person
     """
-    person = self.portal.portal_catalog(reference='userA', portal_type='Person')[0]
+    person = self.portal.Base_getUserValueByUserId(sequence['user_a_id'])
     self.portal.portal_notifications.sendMessage(
         recipient=person.getObject(), subject='Subject', message='Message')
     last_message = self.portal.MailHost._last_message
@@ -428,7 +431,7 @@ class TestNotificationTool(ERP5TypeTestCase):
 Yes, I will go."""
 
     self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject',
+        recipient=sequence['user_a_id'], subject='Subject',
         message_text_format='text/plain', message=message)
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -460,7 +463,7 @@ Yes, I will go."""
     message = """<a href="http://www.erp5.com/">Click Here!!</a>"""
 
     self.portal.portal_notifications.sendMessage(
-        recipient='userA', subject='Subject',
+        recipient=sequence['user_a_id'], subject='Subject',
         message_text_format='text/html', message=message)
     last_message, = self.portal.MailHost._message_list
     mfrom, mto, messageText = last_message

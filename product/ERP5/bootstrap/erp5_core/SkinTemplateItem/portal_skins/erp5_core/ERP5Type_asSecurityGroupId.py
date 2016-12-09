@@ -72,7 +72,7 @@ for base_category in category_order:
     portal_type = category_object.getPortalType()
     if portal_type == 'Person':
       # We define a person here
-      user_name = category_object.getReference()
+      user_name = category_object.Person_getUserId()
       if user_name is not None:
         user_list.append(user_name)
     else:

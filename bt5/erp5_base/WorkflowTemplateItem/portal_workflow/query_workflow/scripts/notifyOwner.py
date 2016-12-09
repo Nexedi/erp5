@@ -8,13 +8,12 @@ catalog.
 from Products.ERP5Type.Log import log
 
 object = sci['object']
-portal = sci.getPortal()
+portal = object.getPortalObject()
 translateString = portal.Base_translateString
-portal_catalog = portal.portal_catalog
 
 # Get the owner
 owner = object.getViewPermissionOwner()
-owner_value = portal_catalog.getResultValue(portal_type='Person', reference=owner)
+owner_value = portal.Base_getUserValueByUserId(owner)
 
 # Get the authenticated user
 user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
