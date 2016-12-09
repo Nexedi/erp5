@@ -1419,7 +1419,7 @@ class _TestZodbComponent(SecurityTestCase):
     otherwise it should not be importable at all
     """
     uf = self.portal.acl_users
-    if not uf.getUser('ERP5TypeTestCase_NonDeveloper'):
+    if not uf.getUserById('ERP5TypeTestCase_NonDeveloper'):
       uf._doAddUser('ERP5TypeTestCase_NonDeveloper',
                     '', ['Manager', 'Member', 'Assignee',
                          'Assignor', 'Author', 'Auditor', 'Associate'], [])

@@ -73,7 +73,7 @@ class TestZODBHistory(ERP5TypeTestCase):
   def addUser(self, user_name, role=['Member', 'Owner', 'Assignor']):
     """ Create a test user."""
     uf = self.portal.acl_users
-    if not uf.getUser(user_name):
+    if not uf.getUserById(user_name):
       uf._doAddUser(user_name, '', role, [])
 
   def _clearCache(self):

@@ -2090,7 +2090,7 @@ return 1
     """
     # Create a root level zope user
     root_user_folder = self.getPortalObject().aq_parent.acl_users
-    if not root_user_folder.getUser('zope_user'):
+    if not root_user_folder.getUserById('zope_user'):
       root_user_folder._doAddUser('zope_user', '', ['Manager',], [])
       self.commit()
     # Create document with good content

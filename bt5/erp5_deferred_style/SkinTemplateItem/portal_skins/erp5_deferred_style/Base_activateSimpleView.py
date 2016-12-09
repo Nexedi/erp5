@@ -7,7 +7,8 @@ skin_name = request.get('deferred_portal_skin', portal.portal_skins.getDefaultSk
 tag = 'active-report-wrapped-%s' % random.randint(0, 1000)
 priority = 3
 
-person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+user = portal.portal_membership.getAuthenticatedMember()
+person_value = user.getUserValue()
 if person_value is None:
   portal.changeSkin(None)
   return context.Base_redirect('view', keep_items=dict(
@@ -20,8 +21,6 @@ if person_value.getDefaultEmailText('') in ('', None):
               portal_status_message=translateString(
                         "You haven't defined your email address")))
   
-user_name = person_value.getReference()
-
 # save request parameters
 # XXX we exclude some reserved names in a very ad hoc way
 request_form = {}
@@ -62,7 +61,7 @@ activity_context.activate(
            skin_name=skin_name,
            request_form=request_form,
            deferred_style_dialog_method=deferred_style_dialog_method,
-           user_name=user_name,
+           user_name=user.getId(),
            params=params,
           )
 

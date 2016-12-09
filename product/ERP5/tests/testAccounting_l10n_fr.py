@@ -74,7 +74,8 @@ class TestAccounting_l10n_fr(AccountingTestCase):
   def createUserAndlogin(self, name=username):
     # create a user with an email address
     person_module = self.portal.person_module
-    if person_module._getOb('pers', None) is None:
+    person = person_module._getOb('pers', None)
+    if person is None:
       person = person_module.newContent(id='pers', portal_type='Person',
                                         reference=self.username,
                                         first_name=self.first_name,
@@ -85,7 +86,7 @@ class TestAccounting_l10n_fr(AccountingTestCase):
 
     uf = self.portal.acl_users
     uf.zodb_roles.assignRoleToPrincipal('Assignor', self.username)
-    user = uf.getUserById(self.username).__of__(uf)
+    user = uf.getUser(self.username).__of__(uf)
     newSecurityManager(None, user)
 
   def test_FEC(self):

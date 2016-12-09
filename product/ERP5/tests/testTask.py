@@ -127,7 +127,7 @@ class TestTaskMixin:
 #  def stepLogin(self, **kw):
 #    portal = self.getPortal()
 #    uf = portal.acl_users
-#    if not uf.getUser('dummy'):
+#    if not uf.getUserById('dummy'):
 #      uf._doAddUser('manager', '', ['Manager'], [])
 #      self.login('manager')
 #      person_module = portal.getDefaultModule(self.person_portal_type)
@@ -718,7 +718,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
     simulation_tool = self.getPortal().portal_simulation
     uf = self.getPortal().acl_users
-    if not uf.getUser('manager'):
+    if not uf.getUserById('manager'):
       uf._doAddUser('manager', '', ['Manager'], [])
     self.login('manager')
     try:

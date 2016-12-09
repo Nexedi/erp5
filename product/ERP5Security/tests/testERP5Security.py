@@ -115,7 +115,7 @@ class TestUserManagement(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    self.assertNotEquals(uf.getUserById(login, None), None)
+    self.assertNotEquals(uf.getUser(login), None)
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
