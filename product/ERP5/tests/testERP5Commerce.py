@@ -227,6 +227,7 @@ class TestCommerce(ERP5TypeTestCase):
                     start_date='1972-01-01', stop_date='2999-12-31',
                     group=group, destination_project=destination_project)
     assignment.open()
+    person.newContent(portal_type='ERP5 Login', reference=reference).validate()
     self.tic()
 
     #XXX: Security hack (lucas)

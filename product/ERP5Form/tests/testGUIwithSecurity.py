@@ -72,6 +72,7 @@ class TestGUISecurity(ERP5TypeTestCase):
     self.assertTrue('Created Successfully' in message)
     if not hasattr(portal.person_module, 'user'):
       user = portal.person_module.newContent(portal_type='Person', id='user', reference='user')
+      user.newContent(portal_type='ERP5 Login', reference='user').validate()
       asg = user.newContent(portal_type='Assignment')
       asg.setStartDate(DateTime() - 100)
       asg.setStopDate(DateTime() + 100)

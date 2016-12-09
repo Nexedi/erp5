@@ -50,6 +50,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(portal_type='Person',
       reference=login, password=login)
     person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login', reference=login).validate()
     self.tic()
     return login
 

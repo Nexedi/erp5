@@ -126,6 +126,7 @@ class TestBug(ERP5TypeTestCase):
                                      start_date='1980-01-01',
                                      stop_date='2099-12-31')
       assignment.open()
+      person.newContent(portal_type='ERP5 Login', reference='dummy').validate()
       self.tic()
       portal_type_list = []
       for portal_type in (self.project_portal_type,

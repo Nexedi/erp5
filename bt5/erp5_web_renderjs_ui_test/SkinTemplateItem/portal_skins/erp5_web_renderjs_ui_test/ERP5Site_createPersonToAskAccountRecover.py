@@ -11,10 +11,15 @@ else:
   person = person_module.newContent(portal_type="Person",
                                     reference=user_id,
                                     id=user_id,
-                                    password=new_password,
                                     default_email_text="userA@example.invalid")
   assignment = person.newContent(portal_type='Assignment')
   assignment.open()
+  login = person.newContent(
+    portal_type='ERP5 Login',
+    reference=user_id,
+    password=new_password,
+  )
+  login.validate()
 
 # Make sure always a new password
 person.setPassword(new_password)

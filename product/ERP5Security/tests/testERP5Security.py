@@ -30,21 +30,26 @@
 """Tests ERP5 User Management.
 """
 
+import itertools
 import transaction
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl import SpecialUsers
 from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 from Products import ERP5Security
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
+AUTO_LOGIN = object()
+
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
   """
+  _login_generator = itertools.count().next
 
   def getTitle(self):
     """Title of the test."""
@@ -52,7 +57,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_administration',)
 
   def beforeTearDown(self):
     """Clears person module and invalidate caches when tests are finished."""
@@ -97,8 +102,8 @@ class TestUserManagement(ERP5TypeTestCase):
     user = uf.getUserById(username).__of__(uf)
     newSecurityManager(None, user)
 
-  def _makePerson(self, open_assignment=1, assignment_start_date=None,
-                  assignment_stop_date=None, **kw):
+  def _makePerson(self, login=AUTO_LOGIN, open_assignment=1, assignment_start_date=None,
+                  assignment_stop_date=None, tic=True, password='secret', **kw):
     """Creates a person in person module, and returns the object, after
     indexing is done. """
     person_module = self.getPersonModule()
@@ -109,8 +114,17 @@ class TestUserManagement(ERP5TypeTestCase):
                                        stop_date=assignment_stop_date,)
     if open_assignment:
       assignment.open()
-    self.tic()
-    return new_person
+    if login is not None:
+      if login is AUTO_LOGIN:
+        login = 'login_%s' % self._login_generator()
+      new_person.newContent(
+        portal_type='ERP5 Login',
+        reference=login,
+        password=password,
+      ).validate()
+    if tic:
+      self.tic()
+    return new_person.Person_getUserId(), login, password
 
   def _assertUserExists(self, login, password):
     """Checks that a user with login and password exists and can log in to the
@@ -146,125 +160,184 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_PersonWithLoginPasswordAreUsers(self):
     """Tests a person with a login & password is a valid user."""
-    p = self._makePerson(reference='the_user', password='secret',)
-    self._assertUserExists('the_user', 'secret')
+    _, login, password = self._makePerson()
+    self._assertUserExists(login, password)
 
   def test_PersonLoginCaseSensitive(self):
     """Login/password are case sensitive."""
-    p = self._makePerson(reference='the_user', password='secret',)
-    self._assertUserExists('the_user', 'secret')
-    self._assertUserDoesNotExists('the_User', 'secret')
+    login = 'case_test_user'
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists('case_test_User', password)
 
   def test_PersonLoginIsNotStripped(self):
     """Make sure 'foo ', ' foo' and ' foo ' do not match user 'foo'. """
-    p = self._makePerson(reference='foo', password='secret',)
-    self._assertUserExists('foo', 'secret')
-    self._assertUserDoesNotExists('foo ', 'secret')
-    self._assertUserDoesNotExists(' foo', 'secret')
-    self._assertUserDoesNotExists(' foo ', 'secret')
+    _, login, password = self._makePerson()
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists(login + ' ', password)
+    self._assertUserDoesNotExists(' ' + login, password)
+    self._assertUserDoesNotExists(' ' + login + ' ', password)
 
   def test_PersonLoginCannotBeComposed(self):
     """Make sure ZSQLCatalog keywords cannot be used at login time"""
-    p = self._makePerson(reference='foo', password='secret',)
-    self._assertUserExists('foo', 'secret')
-    self._assertUserDoesNotExists('bar', 'secret')
-    self._assertUserDoesNotExists('bar OR foo', 'secret')
+    _, login, password = self._makePerson()
+    self._assertUserExists(login, password)
+    doest_not_exist = 'bar'
+    self._assertUserDoesNotExists(doest_not_exist, password)
+    self._assertUserDoesNotExists(login + ' OR ' + doest_not_exist, password)
+    self._assertUserDoesNotExists(doest_not_exist + ' OR ' + login, password)
 
   def test_PersonLoginQuote(self):
-    p = self._makePerson(reference="'", password='secret',)
-    self._assertUserExists("'", 'secret')
+    login = "'"
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
+    login = '"'
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
 
   def test_PersonLogin_OR_Keyword(self):
-    p = self._makePerson(reference='foo OR bar', password='secret',)
-    self._assertUserExists('foo OR bar', 'secret')
-    self._assertUserDoesNotExists('foo', 'secret')
+    base_login = 'foo'
+    login = base_login + ' OR bar'
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists(base_login, password)
 
   def test_PersonLoginCatalogKeyWord(self):
     # use something that would turn the username in a ZSQLCatalog catalog keyword
-    p = self._makePerson(reference="foo%", password='secret',)
-    self._assertUserExists("foo%", 'secret')
-    self._assertUserDoesNotExists("foo", 'secret')
-    self._assertUserDoesNotExists("foobar", 'secret')
+    base_login ='foo'
+    login = base_login + '%'
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists(base_login, password)
+    self._assertUserDoesNotExists(base_login + "bar", password)
 
   def test_PersonLoginNGT(self):
-    p = self._makePerson(reference='< foo', password='secret',)
-    self._assertUserExists('< foo', 'secret')
+    login = '< foo'
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists('fo', password)
 
   def test_PersonLoginNonAscii(self):
     """Login can contain non ascii chars."""
-    p = self._makePerson(reference='j\xc3\xa9', password='secret',)
-    self._assertUserExists('j\xc3\xa9', 'secret')
+    login = 'j\xc3\xa9'
+    _, _, password = self._makePerson(login=login)
+    self._assertUserExists(login, password)
 
   def test_PersonWithLoginWithEmptyPasswordAreNotUsers(self):
     """Tests a person with a login but no password is not a valid user."""
-    self._makePerson(reference='the_user')
-    self._assertUserDoesNotExists('the_user', None)
-    self._makePerson(reference='another_user', password='',)
-    self._assertUserDoesNotExists('another_user', '')
+    password = None
+    _, login, _ = self._makePerson(password=password)
+    self._assertUserDoesNotExists(login, password)
+    password = ''
+    _, login, self._makePerson(password=password)
+    self._assertUserDoesNotExists(login, password)
 
   def test_PersonWithEmptyLoginAreNotUsers(self):
-    """Tests a person with empty login & password is a valid user."""
-    self._makePerson(reference='', password='secret')
-    self._assertUserDoesNotExists('', 'secret')
+    """Tests a person with empty login & password is not a valid user."""
+    _, login, _ = self._makePerson()
+    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    pas_login, = pas_user['login_list']
+    login_value = self.portal.restrictedTraverse(pas_login['path'])
+    login_value.invalidate()
+    login_value.setReference('')
+    self.commit()
+    self.assertRaises(ValidationFailed, login_value.validate)
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login_value, 'validate_action')
 
   def test_PersonWithLoginWithNotAssignmentAreNotUsers(self):
     """Tests a person with a login & password and no assignment open is not a valid user."""
-    self._makePerson(reference='the_user', password='secret', open_assignment=0)
-    self._assertUserDoesNotExists('the_user', 'secret')
+    _, login, password = self._makePerson(open_assignment=0)
+    self._assertUserDoesNotExists(login, password)
 
-  def test_PersonWithSuperUserLoginCannotBeCreated(self):
-    """Tests one cannot create person with the "super user" special login."""
-    self.assertRaises(RuntimeError, self._makePerson, reference=ERP5Security.SUPER_USER)
+  def _testUserNameExistsButCannotLoginAndCannotCreate(self, login):
+    self.assertTrue(self.getUserFolder().searchUsers(login=login, exact_match=True))
+    self._assertUserDoesNotExists(login, '')
+    self.assertRaises(ValidationFailed, self._makePerson, login=login)
 
   def test_PersonWithSuperUserLogin(self):
     """Tests one cannot use the "super user" special login."""
-    self._assertUserDoesNotExists(ERP5Security.SUPER_USER, '')
+    self._testUserNameExistsButCannotLoginAndCannotCreate(ERP5Security.SUPER_USER)
 
-  def test_searchUsers(self):
-    p1 = self._makePerson(reference='person1')
-    p2 = self._makePerson(reference='person2')
-    self.assertEqual({'person1', 'person2'},
-      {x['userid'] for x in self.portal.acl_users.searchUsers(id='person')})
+  def test_PersonWithAnonymousLogin(self):
+    """Tests one cannot use the "anonymous user" special login."""
+    self._testUserNameExistsButCannotLoginAndCannotCreate(SpecialUsers.nobody.getUserName())
 
-  def test_searchUsersExactMatch(self):
-    p = self._makePerson(reference='person')
-    p1 = self._makePerson(reference='person1')
-    p2 = self._makePerson(reference='person2')
-    self.assertEqual(['person', ],
-         [x['userid'] for x in
-           self.portal.acl_users.searchUsers(id='person', exact_match=True)])
+  def test_PersonWithSystemUserLogin(self):
+    """Tests one cannot use the "system user" special login."""
+    self._testUserNameExistsButCannotLoginAndCannotCreate(SpecialUsers.system.getUserName())
 
-  def test_MultiplePersonReference(self):
-    """Tests that it's refused to create two Persons with same reference."""
-    self._makePerson(reference='new_person')
-    self.assertRaises(RuntimeError, self._makePerson, reference='new_person')
+  def test_searchUserId(self):
+    substring = 'person_id'
+    user_id_set = {substring + '1', '1' + substring}
+    for user_id in user_id_set:
+      self._makePerson(reference=user_id)
+    self.assertEqual(
+      user_id_set,
+      {x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=False)},
+    )
+
+  def test_searchLogin(self):
+    substring = 'person_login'
+    login_set = {substring + '1', '1' + substring}
+    for login in login_set:
+      self._makePerson(login=login)
+    self.assertEqual(
+      login_set,
+      {x['login'] for x in self.portal.acl_users.searchUsers(login=substring, exact_match=False)},
+    )
+
+  def test_searchUsersIdExactMatch(self):
+    substring = 'person2_id'
+    self._makePerson(reference=substring)
+    self._makePerson(reference=substring + '1')
+    self._makePerson(reference='1' + substring)
+    self.assertEqual(
+      [substring],
+      [x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=True)],
+    )
+
+  def test_searchUsersLoginExactMatch(self):
+    substring = 'person2_login'
+    self._makePerson(login=substring)
+    self._makePerson(login=substring + '1')
+    self._makePerson(login='1' + substring)
+    self.assertEqual(
+      [substring],
+      [x['login'] for x in self.portal.acl_users.searchUsers(login=substring, exact_match=True)],
+    )
+
+  def test_MultipleUsers(self):
+    """Tests that it's refused to create two Persons with same user id."""
+    user_id, login, _ = self._makePerson()
+    self.assertRaises(ValidationFailed, self._makePerson, reference=user_id)
+    self.assertRaises(ValidationFailed, self._makePerson, login=login)
 
   def test_MultiplePersonReferenceWithoutCommit(self):
     """
-    Tests that it's refused to create two Persons with same reference.
+    Tests that it's refused to create two Persons with same user id.
     Check if both persons are created in the same transaction
     """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
                      portal_type='Person', reference='new_person')
-    self.assertRaises(RuntimeError, person_module.newContent,
+    self.assertRaises(ValidationFailed, person_module.newContent,
                      portal_type='Person', reference='new_person')
 
   def test_MultiplePersonReferenceWithoutTic(self):
     """
-    Tests that it's refused to create two Persons with same reference.
+    Tests that it's refused to create two Persons with same user id.
     Check if both persons are created in 2 different transactions.
     """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
                      portal_type='Person', reference='new_person')
     self.commit()
-    self.assertRaises(RuntimeError, person_module.newContent,
+    self.assertRaises(ValidationFailed, person_module.newContent,
                      portal_type='Person', reference='new_person')
 
   def test_MultiplePersonReferenceConcurrentTransaction(self):
     """
-    Tests that it's refused to create two Persons with same reference.
+    Tests that it's refused to create two Persons with same user id.
     Check if both persons are created in 2 concurrent transactions.
     For now, just verify that serialize is called on person_module.
     """
@@ -292,67 +365,82 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_PersonCopyAndPaste(self):
     """If we copy and paste a person, login must not be copyied."""
-    person = self._makePerson(reference='new_person')
-    person_module = self.getPersonModule()
-    copy_data = person_module.manage_copyObjects([person.getId()])
-    changed, = person_module.manage_pasteObjects(copy_data)
-    self.assertNotEquals(person_module[changed['new_id']].getReference(),
-                         person_module[changed['id']].getReference())
+    user_id, _, _ = self._makePerson(reference='new_person')
+    user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    user_value = self.portal.restrictedTraverse(user['path'])
+    container = user_value.getParentValue()
+    changed, = container.manage_pasteObjects(
+      container.manage_copyObjects([user_value.getId()]),
+    )
+    self.assertNotEquals(
+      container[changed['new_id']].Person_getUserId(),
+      user_id,
+    )
 
   def test_PreferenceTool_setNewPassword(self):
     # Preference Tool has an action to change password
-    pers = self._makePerson(reference='the_user', password='secret',)
-    self.tic()
-    self._assertUserExists('the_user', 'secret')
-    self.loginAsUser('the_user')
-    login = [x for x in pers.objectValues(portal_type='ERP5 Login')][0]
+    user_id, login, password = self._makePerson()
+    self._assertUserExists(login, password)
+    pas_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    pas_login, = pas_user['login_list']
+    login_value = self.portal.restrictedTraverse(pas_login['path'])
+    new_password = 'new' + password
+
+    self.loginAsUser(user_id)
     result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
       dialog_id='PreferenceTool_viewChangePasswordDialog',
-      current_password='wrong_secret',
-      new_password='new_secret',
+      current_password='bad' + password,
+      new_password=new_password,
     )
     self.assertEqual(result, self.portal.absolute_url()+'/portal_preferences/PreferenceTool_viewChangePasswordDialog?portal_status_message=Current%20password%20is%20wrong.')
+
+    self.login()
+    self._assertUserExists(login, password)
+    self._assertUserDoesNotExists(login, new_password)
+
+    self.loginAsUser(user_id)
     result = self.portal.portal_preferences.PreferenceTool_setNewPassword(
       dialog_id='PreferenceTool_viewChangePasswordDialog',
-      current_password='secret',
-      new_password='new_secret',
+      current_password=password,
+      new_password=new_password,
     )
     self.assertEqual(result, self.portal.absolute_url()+'/logout')
-    self._assertUserExists('the_user', 'new_secret')
-    self._assertUserDoesNotExists('the_user', 'secret')
 
+    self.login()
+    self._assertUserExists(login, new_password)
+    self._assertUserDoesNotExists(login, password)
     # password is not stored in plain text
-    self.assertNotEquals('new_secret', pers.getPassword())
-
+    self.assertNotEquals(new_password, self.portal.restrictedTraverse(pas_user['path']).getPassword())
 
   def test_OpenningAssignmentClearCache(self):
     """Openning an assignment for a person clear the cache automatically."""
-    pers = self._makePerson(reference='the_user', password='secret',
-                            open_assignment=0)
-    self._assertUserDoesNotExists('the_user', 'secret')
+    user_id, login, password = self._makePerson(open_assignment=0)
+    self._assertUserDoesNotExists(login, password)
+    user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    pers = self.portal.restrictedTraverse(user['path'])
     assi = pers.newContent(portal_type='Assignment')
     assi.open()
     self.commit()
-    self._assertUserExists('the_user', 'secret')
+    self._assertUserExists(login, password)
     assi.close()
     self.commit()
-    self._assertUserDoesNotExists('the_user', 'secret')
+    self._assertUserDoesNotExists(login, password)
 
   def test_PersonNotIndexedNotCached(self):
-    pers = self._makePerson(password='secret',)
-    pers.setReference('the_user')
+    user_id, login, password = self._makePerson(tic=False)
     # not indexed yet
-    self._assertUserDoesNotExists('the_user', 'secret')
-
+    self._assertUserDoesNotExists(login, password)
     self.tic()
-
-    self._assertUserExists('the_user', 'secret')
+    self._assertUserExists(login, password)
 
   def test_PersonNotValidNotCached(self):
-    pers = self._makePerson(reference='the_user', password='other',)
-    self._assertUserDoesNotExists('the_user', 'secret')
-    pers.setPassword('secret')
-    self._assertUserExists('the_user', 'secret')
+    user_id, login, password = self._makePerson()
+    password += '2'
+    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    pas_login, = pas_user['login_list']
+    self._assertUserDoesNotExists(login, password)
+    self.portal.restrictedTraverse(pas_login['path']).setPassword(password)
+    self._assertUserExists(login, password)
 
   def test_PersonLoginMigration(self):
     self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
@@ -363,6 +451,7 @@ class TestUserManagement(ERP5TypeTestCase):
     pers = self.portal.person_module.newContent(
       portal_type='Person',
       reference='the_user',
+      reference=None,
     )
     pers.newContent(
       portal_type='Assignment',
@@ -376,6 +465,7 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self._assertUserExists('the_user', 'secret')
     self.assertEqual(pers.getPassword(), None)
+    self.assertEqual(pers.Person_getUserId(), 'the_user')
     login = pers.objectValues(portal_type='ERP5 Login')[0]
     login.setPassword('secret2')
     self.portal.portal_caches.clearAllCache()
@@ -397,105 +487,111 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""
     date = DateTime()
-    p = self._makePerson(reference='the_user', password='secret',
-                         assignment_start_date=date-5,
-                         assignment_stop_date=date+5)
-    self._assertUserExists('the_user', 'secret')
+    _, login, password = self._makePerson(
+      assignment_start_date=date - 5,
+      assignment_stop_date=date + 5,
+    )
+    self._assertUserExists(login, password)
 
   def test_AssignmentWithBadStartDate(self):
     """Tests a person with an assignment with bad start date is not a valid user."""
     date = DateTime()
-    p = self._makePerson(reference='the_user', password='secret',
-                         assignment_start_date=date+1,
-                         assignment_stop_date=date+5)
-    self._assertUserDoesNotExists('the_user', 'secret')
+    _, login, password = self._makePerson(
+      assignment_start_date=date + 1,
+      assignment_stop_date=date + 5,
+    )
+    self._assertUserDoesNotExists(login, password)
 
   def test_AssignmentWithBadStopDate(self):
     """Tests a person with an assignment with bad stop date is not a valid user."""
     date = DateTime()
-    p = self._makePerson(reference='the_user', password='secret',
-                         assignment_start_date=date-5,
-                         assignment_stop_date=date-1)
-    self._assertUserDoesNotExists('the_user', 'secret')
+    _, login, password = self._makePerson(
+      assignment_start_date=date - 5,
+      assignment_stop_date=date - 1,
+    )
+    self._assertUserDoesNotExists(login, password)
 
   def test_DeletedPersonIsNotUser(self):
-    p = self._makePerson(reference='the_user', password='secret')
-    self._assertUserExists('the_user', 'secret')
-
-    p.delete()
+    user_id, login, password = self._makePerson()
+    self._assertUserExists(login, password)
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    self.portal.restrictedTraverse(acl_user['path']).delete()
     self.commit()
-
-    self._assertUserDoesNotExists('the_user', 'secret')
+    self._assertUserDoesNotExists(login, password)
 
   def test_ReallyDeletedPersonIsNotUser(self):
-    p = self._makePerson(reference='the_user', password='secret')
-    self._assertUserExists('the_user', 'secret')
-
+    user_id, login, password = self._makePerson()
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    p = self.portal.restrictedTraverse(acl_user['path'])
+    self._assertUserExists(login, password)
     p.getParentValue().deleteContent(p.getId())
     self.commit()
-
-    self._assertUserDoesNotExists('the_user', 'secret')
+    self._assertUserDoesNotExists(login, password)
 
   def test_InvalidatedPersonIsUser(self):
-    p = self._makePerson(reference='the_user', password='secret')
-    self._assertUserExists('the_user', 'secret')
-
+    user_id, login, password = self._makePerson()
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    p = self.portal.restrictedTraverse(acl_user['path'])
+    self._assertUserExists(login, password)
     p.validate()
     p.invalidate()
     self.commit()
+    self._assertUserExists(login, password)
 
-    self._assertUserExists('the_user', 'secret')
-
-  def test_PersonLoginIsPossibleToUnset(self):
-    """Make sure that it is possible to remove reference"""
-    person = self._makePerson(reference='foo', password='secret',)
+  def test_UserIdIsPossibleToUnset(self):
+    """Make sure that it is possible to remove user id"""
+    user_id, login, password = self._makePerson()
+    acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
+    person = self.portal.restrictedTraverse(acl_user['path'])
     person.setReference(None)
     self.tic()
-    self.assertEqual(None, person.getReference())
+    self.assertEqual(None, person.Person_getUserId())
 
-  def test_duplicatePersonReference(self):
-    person1 = self._makePerson(reference='foo', password='secret',)
-    self.tic()
-    self.assertRaises(RuntimeError, self._makePerson,
-                      reference='foo', password='secret',)
+  def test_duplicatePersonUserId(self):
+    user_id, _, _ = self._makePerson()
+    self.assertRaises(ValidationFailed, self._makePerson, reference=user_id)
 
   def test_duplicateLoginReference(self):
-    person1 = self._makePerson(reference='foo', password='secret',)
+    _, login1, _ = self._makePerson()
+    _, login2, _ = self._makePerson()
+    pas_user2, = self.portal.acl_users.searchUsers(login=login2, exact_match=True)
+    pas_login2, = pas_user2['login_list']
+    login2_value = self.portal.restrictedTraverse(pas_login2['path'])
+    login2_value.invalidate()
+    login2_value.setReference(login1)
+    self.commit()
+    self.assertRaises(ValidationFailed, login2_value.validate)
+    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
+
+  def _duplicateLoginReference(self, commit):
+    _, login1, _ = self._makePerson(tic=False)
+    user_id2, login2, _ = self._makePerson(tic=False)
+    if commit:
+      self.commit()
+    # Note: cannot rely on catalog, on purpose.
+    person_value, = [
+      x for x in self.portal.person_module.objectValues()
+      if x.Person_getUserId() == user_id2
+    ]
+    login_value, = [
+      x for x in person_value.objectValues(portal_type='ERP5 Login')
+      if x.getReference() == login2
+    ]
+    login_value.invalidate()
+    login_value.setReference(login1)
+    self.portal.portal_workflow.doActionFor(login_value, 'validate_action')
+    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
+    self.assertEqual(result, None)
     self.tic()
-    person2 = self._makePerson(reference='bar', password='secret',)
-    login = person2.objectValues(portal_type='ERP5 Login')[0]
-    login.invalidate()
-    login.setReference('foo')
-    self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login, 'validate_action')
+    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
+    self.assertEqual(len(result.getResultList()), 1)
+    self.assertEqual(result.getResultList()[0].summary, 'Logins having the same reference exist')
 
   def test_duplicateLoginReferenceInSameTransaction(self):
-    person1 = self._makePerson(reference='foo', password='secret', tic=False)
-    person2 = self._makePerson(reference='bar', password='secret', tic=False)
-    login = person2.newContent(portal_type='ERP5 Login')
-    login = person2.objectValues(portal_type='ERP5 Login')[0]
-    login.invalidate()
-    login.setReference('foo')
-    self.portal.portal_workflow.doActionFor(login, 'validate_action')
-    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
-    self.assertEqual(result, None)
-    self.tic()
-    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
-    self.assertEqual(len(result.getResultList()), 1)
-    self.assertEqual(result.getResultList()[0].summary, 'Logins having the same reference exist')
+    self._duplicateLoginReference(False)
 
   def test_duplicateLoginReferenceInAnotherTransaction(self):
-    person1 = self._makePerson(reference='foo', password='secret', tic=False)
-    person2 = self._makePerson(reference='bar', password='secret', tic=False)
-    self.commit()
-    login = person2.newContent(portal_type='ERP5 Login')
-    login.setReference('foo')
-    self.portal.portal_workflow.doActionFor(login, 'validate_action')
-    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
-    self.assertEqual(result, None)
-    self.tic()
-    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
-    self.assertEqual(len(result.getResultList()), 1)
-    self.assertEqual(result.getResultList()[0].summary, 'Logins having the same reference exist')
+    self._duplicateLoginReference(True)
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
   def getTitle(self):
@@ -522,13 +618,9 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
      Make sure that we can grant security using a ERP5 External Authentication Plugin.
     """
 
-    reference = 'external_auth_person'
-    loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference=reference,
-                                                         password='guest')
-    assignment = loginable_person.newContent(portal_type='Assignment')
-    assignment.open()
-    self.tic()
+    _, login, _ = self._makePerson()
+    pas_user, = self.portal.acl_users.searchUsers(login=login, exact_match=True)
+    reference = self.portal.restrictedTraverse(pas_user['path']).getReference()
 
     base_url = self.portal.absolute_url(relative=1)
 
@@ -542,7 +634,7 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
     # self.assertTrue(response.headers['location'].endswith('login_form'))
 
     # view front page we should be logged in if we use authentication key
-    response = self.publish(base_url, env={self.user_id_key.replace('-', '_').upper():reference})
+    response = self.publish(base_url, env={self.user_id_key.replace('-', '_').upper(): login})
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 
@@ -579,12 +671,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       base_cat.newContent(portal_type='Category',
                           id='subcat',
                           codification="%s1" % code)
-    # add another function subcategory.
-    function_category = category_tool['function']
-    if function_category.get('another_subcat', None) is None:
-      function_category.newContent(portal_type='Category',
-                                   id='another_subcat',
-                                   codification='F2')
+      base_cat.newContent(portal_type='Category',
+                          id='another_subcat',
+                          codification="%s2" % code)
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -595,13 +684,15 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
-                                             reference=self.username,
-                                             password=self.username)
+                                             reference=self.username)
     assignment = pers.newContent( portal_type='Assignment',
                                   group='subcat',
                                   site='subcat',
                                   function='subcat' )
     assignment.open()
+    pers.newContent(portal_type='ERP5 Login',
+                    reference=self.username,
+                    password=self.username).validate()
     self.person = pers
     self.tic()
 
@@ -638,7 +729,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
+    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms', 'erp5_administration')
 
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
@@ -670,6 +761,30 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
     self.assertFalse('Assignee' in user.getRolesInContext(obj))
+
+    # check if assignment change is effective immediately
+    self.login()
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']"], res.body)
+    assignment = self.person.newContent( portal_type='Assignment',
+                                  group='subcat',
+                                  site='subcat',
+                                  function='another_subcat' )
+    assignment.open()
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']", "--> ['F2_G1_S1']"], res.body)
+    assignment.setGroup('another_subcat')
+    res = self.publish(self.portal.absolute_url_path() + \
+                       '/Base_viewSecurity?__ac_name=%s&__ac_password=%s' % \
+                       (self.username, self.username))
+    self.assertEqual([x for x in res.body.splitlines() if x.startswith('-->')],
+                     ["--> ['F1_G1_S1']", "--> ['F2_G2_S1']"], res.body)
     self.abort()
 
   def testLocalRolesGroupId(self):
@@ -722,7 +837,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """Test dynamic role generation when an assignment defines several functions
     """
     assignment, = self.portal.portal_catalog(portal_type='Assignment',
-                                             parent_reference=self.username)
+                                             parent_reference=self.person.getReference())
     assignment.setFunctionList(('subcat', 'another_subcat'))
     self._getTypeInfo().newContent(portal_type='Role Information',
       role_name='Assignee',
@@ -782,6 +897,9 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
+    loginable_person.newContent(portal_type='ERP5 Login',
+                                reference='guest',
+                                password='guest').validate()
     self.tic()
 
     person_module_type_information = self.getTypesTool()['Person Module']
@@ -836,11 +954,13 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
     reference = 'UserReferenceTextWhichShouldBeHardToGeneratedInAnyHumanOrComputerLanguage'
     loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference=reference,
-                                                         password='guest')
+                                                         reference=reference)
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
+    loginable_person.newContent(portal_type='ERP5 Login',
+                                reference=reference,
+                                password='guest').validate()
     portal_types = portal.portal_types
     for portal_type in ('Person Module', 'Person', 'Web Site Module', 'Web Site',
                         'Web Page'):

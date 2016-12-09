@@ -117,6 +117,7 @@ class TestWorklist(ERP5TypeTestCase):
         stop_date = '01/01/2900',
       )
       assignment.open()
+      person.newContent(portal_type='ERP5 Login', reference=user_login).validate()
     # Reindexing is required for the security to work
     self.tic()
 

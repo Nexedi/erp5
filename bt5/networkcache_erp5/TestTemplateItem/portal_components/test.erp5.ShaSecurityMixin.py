@@ -52,8 +52,13 @@ class ShaSecurityMixin(object):
     if person is None:
       person = self.portal.person_module.newContent(portal_type='Person')
       person.edit(first_name=reference,
-                  reference=reference,
-                  password=password)
+                  reference=reference)
+      login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=reference,
+        password=password,
+      )
+      login.validate()
       self.tic()
 
     create = True

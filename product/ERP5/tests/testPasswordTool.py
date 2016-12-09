@@ -67,7 +67,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    self.assertNotEquals(uf.getUserById(login, None), None)
+    self.assertNotEquals(uf.getUser(login), None)
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
@@ -98,10 +98,15 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     person = self.portal.person_module.newContent(portal_type="Person",
                                     reference="userA",
-                                    password="passwordA",
                                     default_email_text="userA@example.invalid")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='userA-login',
+      password='passwordA',
+    )
+    login.validate()
 
   def stepCheckPasswordToolExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -113,13 +118,13 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     Check existence of password tool
     """
-    self._assertUserExists('userA', 'passwordA')
+    self._assertUserExists('userA-login', 'passwordA')
 
   def stepCheckUserLoginWithNewPassword(self, sequence=None, sequence_list=None, **kw):
     """
     Check existence of password tool
     """
-    self._assertUserExists('userA', 'secret')
+    self._assertUserExists('userA-login', 'secret')
 
   def stepCheckUserNotLoginWithBadPassword(self, sequence=None, sequence_list=None, **kw):
     """
@@ -137,13 +142,13 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     Required a new password
     """
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userA-login")
 
   def stepTryLostPasswordWithBadUser(self, sequence=None, sequence_list=None, **kw):
     """
     Required a new password
     """
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ-login")
 
   def stepCheckNoMailSent(self, sequence=None, sequence_list=None, **kw):
     """
@@ -169,7 +174,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     But random is also check by changeUserPassword, so it's the same
     """
     key = self.portal.portal_password._password_request_dict.keys()[0]
-    self.portal.portal_password.changeUserPassword(user_login="userA",
+    self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="secret",
                                                    password_confirmation="secret",
                                                    password_key=key)
@@ -183,7 +188,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     key = self.portal.portal_password._password_request_dict.keys()[0]
     sequence.edit(key=key)
-    self.portal.portal_password.changeUserPassword(user_login="userZ",
+    self.portal.portal_password.changeUserPassword(user_login="userZ-login",
                                                    password="secret",
                                                    password_confirmation="secret",
                                                    password_key=key)
@@ -195,7 +200,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     As we already change password, this must npot work anylonger
     """
     key = sequence.get('key')
-    self.portal.portal_password.changeUserPassword(user_login="userA",
+    self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="passwordA",
                                                    password_confirmation="passwordA",
                                                    password_key=key)
@@ -206,7 +211,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     """
     Try to reset a password with bad random part
     """
-    self.portal.portal_password.changeUserPassword(user_login="userA",
+    self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="secret",
                                                    password_confirmation="secret",
                                                    password_key="toto")
@@ -302,108 +307,128 @@ class TestPasswordTool(ERP5TypeTestCase):
   def test_two_concurrent_password_reset(self):
     personA = self.portal.person_module.newContent(portal_type="Person",
                                     reference="userA",
-                                    password="passwordA",
                                     default_email_text="userA@example.invalid")
     assignment = personA.newContent(portal_type='Assignment')
     assignment.open()
+    login = personA.newContent(
+      portal_type='ERP5 Login',
+      reference='userA-login',
+      password='passwordA',
+    )
+    login.validate()
 
     personB = self.portal.person_module.newContent(portal_type="Person",
                                     reference="userB",
-                                    password="passwordB",
                                     default_email_text="userB@example.invalid")
     assignment = personB.newContent(portal_type='Assignment')
     assignment.open()
+    login = personB.newContent(
+      portal_type='ERP5 Login',
+      reference='userB-login',
+      password='passwordB',
+    )
+    login.validate()
     self.tic()
 
-    self._assertUserExists('userA', 'passwordA')
-    self._assertUserExists('userB', 'passwordB')
+    self._assertUserExists('userA-login', 'passwordA')
+    self._assertUserExists('userB-login', 'passwordB')
 
     self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userA-login")
     self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
     key_a = self.portal.portal_password._password_request_dict.keys()[0]
     self.tic()
 
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userB")
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userB-login")
     possible_key_list =\
         self.portal.portal_password._password_request_dict.keys()
     self.assertEqual(2, len(possible_key_list))
     key_b = [k for k in possible_key_list if k != key_a][0]
     self.tic()
 
-    self._assertUserExists('userA', 'passwordA')
-    self._assertUserExists('userB', 'passwordB')
+    self._assertUserExists('userA-login', 'passwordA')
+    self._assertUserExists('userB-login', 'passwordB')
 
-    self.portal.portal_password.changeUserPassword(user_login="userA",
+    self.portal.portal_password.changeUserPassword(user_login="userA-login",
                                                    password="newA",
                                                    password_confirmation="newA",
                                                    password_key=key_a)
     self.tic()
 
-    self._assertUserExists('userA', 'newA')
-    self._assertUserExists('userB', 'passwordB')
+    self._assertUserExists('userA-login', 'newA')
+    self._assertUserExists('userB-login', 'passwordB')
 
-    self.portal.portal_password.changeUserPassword(user_login="userB",
+    self.portal.portal_password.changeUserPassword(user_login="userB-login",
                                                    password="newB",
                                                    password_confirmation="newB",
                                                    password_key=key_b)
     self.tic()
 
-    self._assertUserExists('userA', 'newA')
-    self._assertUserExists('userB', 'newB')
+    self._assertUserExists('userA-login', 'newA')
+    self._assertUserExists('userB-login', 'newB')
 
   def test_login_with_trailing_space(self):
     person = self.portal.person_module.newContent(portal_type="Person",
                                     reference="userZ ",
-                                    password="passwordZ",
                                     default_email_text="userA@example.invalid")
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='userZ-login ',
+      password='passwordZ',
+    )
+    login.validate()
 
     self.tic()
 
-    self._assertUserExists('userZ ', 'passwordZ')
+    self._assertUserExists('userZ-login ', 'passwordZ')
 
     self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
     # No reset should be send if trailing space is not entered
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ-login")
     self.assertEqual(0, len(self.portal.portal_password._password_request_dict))
-    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ ")
+    self.portal.portal_password.mailPasswordResetRequest(user_login="userZ-login ")
     self.assertEqual(1, len(self.portal.portal_password._password_request_dict))
 
     key_a = self.portal.portal_password._password_request_dict.keys()[0]
     self.tic()
 
-    self._assertUserExists('userZ ', 'passwordZ')
+    self._assertUserExists('userZ-login ', 'passwordZ')
 
     # Check that password is not changed if trailing space is not entered
-    self.portal.portal_password.changeUserPassword(user_login="userZ",
+    self.portal.portal_password.changeUserPassword(user_login="userZ-login",
                                                    password="newZ",
                                                    password_confirmation="newZ",
                                                    password_key=key_a)
     self.tic()
-    self._assertUserExists('userZ ', 'passwordZ')
+    self._assertUserExists('userZ-login ', 'passwordZ')
 
     # Check that password is changed if trailing space is entered
-    self.portal.portal_password.changeUserPassword(user_login="userZ ",
+    self.portal.portal_password.changeUserPassword(user_login="userZ-login ",
                                                    password="newZ2",
                                                    password_confirmation="newZ2",
                                                    password_key=key_a)
     self.tic()
-    self._assertUserExists('userZ ', 'newZ2')
+    self._assertUserExists('userZ-login ', 'newZ2')
 
   def test_no_email_on_person(self):
     person = self.portal.person_module.newContent(portal_type="Person",
-                                    reference="user",
-                                    password="password",)
+                                    reference="user",)
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='user-login',
+      password='password',
+    )
+    login.validate()
 
     self.tic()
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(
-                  user_login='user', REQUEST=self.portal.REQUEST)
-    self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
+                  user_login='user-login', REQUEST=self.portal.REQUEST)
+    self.assertTrue("portal_status_message=User+user-login+does+not+have+an+email+"\
         "address%2C+please+contact+site+administrator+directly" in str(ret))
 
   def test_acquired_email_on_person(self):
@@ -412,17 +437,22 @@ class TestPasswordTool(ERP5TypeTestCase):
                                     default_email_text="organisation@example.com",)
     person = self.portal.person_module.newContent(portal_type="Person",
                                     reference="user",
-                                    password="password",
                                     default_career_subordination_value=organisation)
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference='user-login',
+      password='password',
+    )
+    login.validate()
 
     self.tic()
-    self._assertUserExists('user', 'password')
+    self._assertUserExists('user-login', 'password')
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(
-                  user_login='user', REQUEST=self.portal.REQUEST)
-    self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
+                  user_login='user-login', REQUEST=self.portal.REQUEST)
+    self.assertTrue("portal_status_message=User+user-login+does+not+have+an+email+"\
         "address%2C+please+contact+site+administrator+directly" in str(ret))
 
 class TestPasswordToolWithCRM(TestPasswordTool):
