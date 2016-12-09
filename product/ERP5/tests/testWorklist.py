@@ -105,7 +105,7 @@ class TestWorklist(ERP5TypeTestCase):
       self.logMessage("Create user: %s" % user_login)
       person = module.newContent(
         portal_type='Person',
-        reference=user_login,
+        user_id=user_login,
         password='hackme',
       )
       # Create the Assignment.

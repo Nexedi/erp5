@@ -2,8 +2,10 @@ def migrateToERP5Login(self):
   assert self.getPortalType() == 'Person'
   reference = self.getReference()
   if not reference:
-    # no login is required
+    # no user id and no login is required
     return
+  if not self.hasUserId() or self.getUserId() == reference:
+    self.setUserId(reference)
   if not self.hasPassword():
     # no login is required, but possibly another Login type object is required if implemented
     return

@@ -106,7 +106,7 @@ class ERP5LoginUserManager(BasePlugin):
     if login_value is None:
       return
     user_value = login_value.getParentValue()
-    if not user_value.hasReference():
+    if not user_value.hasUserId():
       return
     if user_value.getValidationState() == 'deleted':
       return
@@ -136,7 +136,7 @@ class ERP5LoginUserManager(BasePlugin):
         return
       if login_value.isLoginBlocked():
         return
-    return (user_value.getReference(), login_value.getReference())
+    return (user_value.getUserId(), login_value.getReference())
 
   def _getLoginValueFromLogin(self, login, login_portal_type=None):
     user_list = self.enumerateUsers(
@@ -166,8 +166,7 @@ class ERP5LoginUserManager(BasePlugin):
       login_portal_type = portal.getPortalLoginTypeList()
     unrestrictedSearchResults = portal.portal_catalog.unrestrictedSearchResults
     searchUser = lambda **kw: unrestrictedSearchResults(
-      select_list=('reference', ),
-      portal_type='Person',
+      select_list=('user_id', ),
       **kw
     ).dictionaries()
     searchLogin = lambda **kw: unrestrictedSearchResults(
@@ -190,13 +189,13 @@ class ERP5LoginUserManager(BasePlugin):
           requested = lambda x: True
         user_list = [
           x for x in searchUser(
-            reference={
+            user_id={
               'query': id,
               'key': 'ExactMatch' if exact_match else 'Keyword',
             },
             limit=max_results,
           )
-          if requested(x['reference'])
+          if requested(x['user_id'])
         ]
       else:
         user_list = []
@@ -235,7 +234,7 @@ class ERP5LoginUserManager(BasePlugin):
     plugin_id = self.getId()
     result = [
       {
-        'id': user['reference'],
+        'id': user['user_id'],
         # Note: PAS forbids us from returning more than one entry per given id,
         # so take any available login.
         'login': login_dict.get(user['uid'], [{'reference': None}])[0]['reference'],
@@ -253,7 +252,7 @@ class ERP5LoginUserManager(BasePlugin):
           for login in login_dict.get(user['uid'], [])
         ],
       }
-      for user in user_list if user['reference']
+      for user in user_list if user['user_id']
     ]
     for special_user_name in special_user_name_set:
       # Note: special users are a bastard design in Zope: they are expected to

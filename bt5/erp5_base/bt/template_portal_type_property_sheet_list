@@ -2,6 +2,7 @@ Notification Message | ItemAggregation
 Notification Message | Reference
 Organisation | DefaultImage
 Person | DefaultImage
+Person | ERP5User
 Preference | TelephonePreference
 Previous Causality Movement Group | PreviousCausalityMovementGroup
 Query | TextDocument

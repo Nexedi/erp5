@@ -37,9 +37,9 @@ credential_request = module.newContent(
                 date_of_birth=date_of_birth)
 
 credential_request.setCategoryList(category_list)
-# Same tag is used as in Document.Person._setReference, in order to protect against
+# Same tag is used as in ERP5 Login._setReference, in order to protect against
 # concurrency between Credential Request and Person object too
-credential_request.reindexObject(activate_kw=dict(tag='Person_setReference_%s' % reference.encode('hex')))
+credential_request.reindexObject(activate_kw=dict(tag='set_login_%s' % reference.encode('hex')))
 
 #We attach the current user to the credential request if not anonymous
 if not context.portal_membership.isAnonymousUser():
