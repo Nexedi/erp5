@@ -47,8 +47,7 @@ else:
 
   # if we are changing password for current logged in user then do it
   # within same transaction and update client side credentials cookie 
-  username = person.getReference()
-  if password and username == str(portal.portal_membership.getAuthenticatedMember()):
+  if password:
     # The password is updated synchronously and the the rest of the credential Update is done later
     login_reference = credential_update.Credential_updatePersonPassword()
     portal.cookie_authentication.credentialsChanged(

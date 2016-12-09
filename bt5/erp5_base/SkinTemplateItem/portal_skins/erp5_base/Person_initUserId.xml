@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>*args, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_afterClone</string> </value>
+            <value> <string>Person_initUserId</string> </value>
         </item>
       </dictionary>
     </pickle>

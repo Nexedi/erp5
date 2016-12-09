@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>set a login</string> </value>
+            <value> <string>set a user id</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -56,7 +56,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setReference</string>
+                <string>_setUserId</string>
               </list>
             </value>
         </item>

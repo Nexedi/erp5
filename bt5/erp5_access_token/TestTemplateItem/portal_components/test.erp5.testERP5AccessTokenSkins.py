@@ -45,7 +45,7 @@ class TestERP5AccessTokenSkins(ERP5TypeTestCase):
     indexing is done. """
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person',
-      reference='TESTP-' + new_id)
+      user_id='TESTP-' + new_id)
     person.newContent(portal_type = 'Assignment').open()
     transaction.commit()
     return person

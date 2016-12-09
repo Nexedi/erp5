@@ -29,10 +29,8 @@ if not login.hasReference():
   if not reference:
     raise ValueError, "Impossible to create an account without login"
   login.setReference(reference)
-  if not person.hasReference():
-    person.setReference(reference)
-else:
-  reference = person.getReference()
+  if not user_id:
+    person.setUserId(reference)
 
 password = None
 # Set password if no password on the Login

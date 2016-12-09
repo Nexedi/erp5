@@ -270,7 +270,7 @@ class TestUserManagement(ERP5TypeTestCase):
     substring = 'person_id'
     user_id_set = {substring + '1', '1' + substring}
     for user_id in user_id_set:
-      self._makePerson(reference=user_id)
+      self._makePerson(user_id=user_id)
     self.assertEqual(
       user_id_set,
       {x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=False)},
@@ -288,9 +288,9 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_searchUsersIdExactMatch(self):
     substring = 'person2_id'
-    self._makePerson(reference=substring)
-    self._makePerson(reference=substring + '1')
-    self._makePerson(reference='1' + substring)
+    self._makePerson(user_id=substring)
+    self._makePerson(user_id=substring + '1')
+    self._makePerson(user_id='1' + substring)
     self.assertEqual(
       [substring],
       [x['userid'] for x in self.portal.acl_users.searchUsers(id=substring, exact_match=True)],
@@ -309,7 +309,7 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_MultipleUsers(self):
     """Tests that it's refused to create two Persons with same user id."""
     user_id, login, _ = self._makePerson()
-    self.assertRaises(ValidationFailed, self._makePerson, reference=user_id)
+    self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
     self.assertRaises(ValidationFailed, self._makePerson, login=login)
 
   def test_MultiplePersonReferenceWithoutCommit(self):
@@ -319,9 +319,9 @@ class TestUserManagement(ERP5TypeTestCase):
     """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
-                     portal_type='Person', reference='new_person')
+                     portal_type='Person', user_id='new_person')
     self.assertRaises(ValidationFailed, person_module.newContent,
-                     portal_type='Person', reference='new_person')
+                     portal_type='Person', user_id='new_person')
 
   def test_MultiplePersonReferenceWithoutTic(self):
     """
@@ -330,10 +330,10 @@ class TestUserManagement(ERP5TypeTestCase):
     """
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
-                     portal_type='Person', reference='new_person')
+                     portal_type='Person', user_id='new_person')
     self.commit()
     self.assertRaises(ValidationFailed, person_module.newContent,
-                     portal_type='Person', reference='new_person')
+                     portal_type='Person', user_id='new_person')
 
   def test_MultiplePersonReferenceConcurrentTransaction(self):
     """
@@ -359,13 +359,13 @@ class TestUserManagement(ERP5TypeTestCase):
     person_module = self.getPersonModule()
     try:
       self.assertRaises(DummyTestException, person_module.newContent,
-                       portal_type='Person', reference='new_person')
+                       portal_type='Person', user_id='new_person')
     finally:
       Base.serialize = Base.serialize_call
 
   def test_PersonCopyAndPaste(self):
     """If we copy and paste a person, login must not be copyied."""
-    user_id, _, _ = self._makePerson(reference='new_person')
+    user_id, _, _ = self._makePerson(user_id='new_person')
     user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
     user_value = self.portal.restrictedTraverse(user['path'])
     container = user_value.getParentValue()
@@ -451,7 +451,7 @@ class TestUserManagement(ERP5TypeTestCase):
     pers = self.portal.person_module.newContent(
       portal_type='Person',
       reference='the_user',
-      reference=None,
+      user_id=None,
     )
     pers.newContent(
       portal_type='Assignment',
@@ -543,13 +543,13 @@ class TestUserManagement(ERP5TypeTestCase):
     user_id, login, password = self._makePerson()
     acl_user, = self.portal.acl_users.searchUsers(id=user_id, exact_match=True)
     person = self.portal.restrictedTraverse(acl_user['path'])
-    person.setReference(None)
+    person.setUserId(None)
     self.tic()
     self.assertEqual(None, person.Person_getUserId())
 
   def test_duplicatePersonUserId(self):
     user_id, _, _ = self._makePerson()
-    self.assertRaises(ValidationFailed, self._makePerson, reference=user_id)
+    self.assertRaises(ValidationFailed, self._makePerson, user_id=user_id)
 
   def test_duplicateLoginReference(self):
     _, login1, _ = self._makePerson()
@@ -684,7 +684,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.username = 'usérn@me'
     # create a user and open an assignement
     pers = self.getPersonModule().newContent(portal_type='Person',
-                                             reference=self.username)
+                                             user_id=self.username)
     assignment = pers.newContent( portal_type='Assignment',
                                   group='subcat',
                                   site='subcat',
@@ -892,7 +892,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                                       first_name='First',
                                       last_name='Last')
     loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference='guest',
+                                                         user_id='guest',
                                                          password='guest')
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
@@ -1138,7 +1138,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # But non-module objects, with subobjects that acquire local
     # roles, should reindex their security recursively:
     person, = [rec.getObject()
-               for rec in person_module.searchFolder(reference=self.username)]
+               for rec in person_module.searchFolder(user_id=self.username)]
     self.assertTrue(len(person.objectIds()))
     person.reindexObjectSecurity()
     self.commit()

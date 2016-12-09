@@ -89,11 +89,11 @@ The system will check that there isn\'t another user with the same username.</st
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Person_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
