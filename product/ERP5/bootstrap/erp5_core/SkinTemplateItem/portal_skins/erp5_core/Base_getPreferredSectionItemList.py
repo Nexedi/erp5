@@ -26,7 +26,7 @@ def getPreferredSectionItemList(portal_type, validation_state):
 
 getPreferredSectionItemList = CachingMethod(getPreferredSectionItemList,
                                             '%s.%s' % (script.getId(),
-                                              getSecurityManager().getUser()),
+                                              getSecurityManager().getUser().getIdOrUserName()),
                                             cache_factory='erp5_ui_short')
 section_item_list = getPreferredSectionItemList(portal_type, validation_state)
 

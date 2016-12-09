@@ -66,7 +66,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     returns properties which should be set on the document
     """
     if user_login is None:
-      user_login = str(getSecurityManager().getUser())
+      user_login = getSecurityManager().getUser().getIdOrUserName()
     method = self._getTypeBasedMethod('getPropertyDictFromUserLogin',
         fallback_script_id='Document_getPropertyDictFromUserLogin')
     if method is not None:

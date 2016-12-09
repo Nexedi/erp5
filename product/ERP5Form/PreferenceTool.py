@@ -149,10 +149,10 @@ class PreferenceTool(BaseTool):
       # reset a security manager without any proxy role or unrestricted method,
       # wich affects the catalog search that we do to find applicable
       # preferences.
-      actual_user = acl_users.getUser(str(user))
+      actual_user = acl_users.getUser(user.getIdOrUserName())
       if actual_user is not None:
         newSecurityManager(None, actual_user.__of__(acl_users))
-      tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
+      tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user.getIdOrUserName(),
                                                                   sql_catalog_id)
       if tv.get(tv_key, None) is None:
         prefs = []
@@ -284,7 +284,7 @@ class PreferenceTool(BaseTool):
       return False
 
     tv = getTransactionalVariable()
-    tv_key = 'PreferenceTool._isAuthenticationPolicyEnabled.%s' % getSecurityManager().getUser()
+    tv_key = 'PreferenceTool._isAuthenticationPolicyEnabled.%s' % getSecurityManager().getUser().getIdOrUserName()
     if tv.get(tv_key, None) is None:
       _isAuthenticationPolicyEnabled = CachingMethod(_isAuthenticationPolicyEnabled,
                                                      id='PortalPreferences_isAuthenticationPolicyEnabled',
