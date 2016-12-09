@@ -250,6 +250,17 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
         next_dict.setdefault(k, []).append(v)
     sequence.edit(next_dict=next_dict)
 
+  def _getUserIdList(self, login_list):
+    user_id_dict = {
+      x['login']: x['id'] for x in self.portal.acl_users.searchUsers(
+        login=login_list,
+        exact_match=True,
+      )
+    }
+    self.assertSameSet(user_id_dict, login_list)
+    return user_id_dict.values()
+
+
   def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
     """
       Check if multiple Person Configuration Item of the Business
@@ -546,7 +557,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     """
        Test if gadget system is working.
     """
-    for user_id in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       self._loginAsUser(user_id)
       knowledge_pad_module = self.portal.knowledge_pad_module
       knowledge_pad = knowledge_pad_module.newContent(portal_type='Knowledge Pad')
@@ -560,78 +571,78 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def stepViewEventModule(self, sequence=None, sequence_list=None, **kw):
     """ Everybody can view events. """
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, self.portal.event_module)
-      self.failUnlessUserCanAccessDocument(username, self.portal.event_module)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, self.portal.event_module)
+      self.failUnlessUserCanAccessDocument(user_id, self.portal.event_module)
 
   def stepAddEvent(self, sequence=None, sequence_list=None, **kw):
     """ Everybody can add events. """
-    for username in self.all_username_list:
-      self.failUnlessUserCanAddDocument(username, self.portal.event_module)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanAddDocument(user_id, self.portal.event_module)
       for event_type in ('Visit', 'Web Message', 'Letter', 'Note',
                          'Phone Call', 'Mail Message', 'Fax Message'):
-        self._loginAsUser(username)
+        self._loginAsUser(user_id)
         event = self.portal.event_module.newContent(portal_type=event_type)
-        self.failUnlessUserCanViewDocument(username, event)
-        self.failUnlessUserCanAccessDocument(username, event)
+        self.failUnlessUserCanViewDocument(user_id, event)
+        self.failUnlessUserCanAccessDocument(user_id, event)
 
   def stepSentEventWorkflow(self, sequence=None, sequence_list=None, **kw):
     for event_type in ('Visit', 'Web Message', 'Letter', 'Note',
                        'Phone Call', 'Mail Message', 'Fax Message'):
       event = self.portal.event_module.newContent(portal_type=event_type)
       # in draft state, we can view & modify
-      for username in self.all_username_list:
-        self.failUnlessUserCanAccessDocument(username, event)
-        self.failUnlessUserCanViewDocument(username, event)
-        self.failUnlessUserCanModifyDocument(username, event)
+      for user_id in self._getUserIdList(self.all_username_list):
+        self.failUnlessUserCanAccessDocument(user_id, event)
+        self.failUnlessUserCanViewDocument(user_id, event)
+        self.failUnlessUserCanModifyDocument(user_id, event)
 
       # everybody can cancel from draft
-      for username in self.all_username_list:
+      for user_id in self._getUserIdList(self.all_username_list):
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'cancel_action', event)
+                    user_id, 'cancel_action', event)
 
       # everybody can plan
-      for username in self.all_username_list:
+      for user_id in self._getUserIdList(self.all_username_list):
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'plan_action', event)
+                    user_id, 'plan_action', event)
 
       event.plan()
       self.assertEqual('planned', event.getSimulationState())
 
       # everybody can confirm or send a planned event
-      for username in self.all_username_list:
+      for user_id in self._getUserIdList(self.all_username_list):
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'confirm_action', event)
+                    user_id, 'confirm_action', event)
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'start_action', event)
+                    user_id, 'start_action', event)
 
       event.start()
       self.assertEqual('started', event.getSimulationState())
 
       # everybody can deliver a sent event
-      for username in self.all_username_list:
+      for user_id in self._getUserIdList(self.all_username_list):
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'deliver_action', event)
+                    user_id, 'deliver_action', event)
       event.deliver()
       self.assertEqual('delivered', event.getSimulationState())
 
   ## Accounts {{{
   def stepViewAccountModule(self, sequence=None, sequence_list=None, **kw):
     """ everybody can view and access account module. """
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id,
                               self.portal.account_module)
-      self.failUnlessUserCanAccessDocument(username,
+      self.failUnlessUserCanAccessDocument(user_id,
                               self.portal.account_module)
 
   def stepAddAccountModule(self, sequence=None, sequence_list=None, **kw):
     """ only accountants can add accounts. """
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanAddDocument(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanAddDocument(user_id,
                     self.portal.account_module)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanAddDocument(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanAddDocument(user_id,
                       self.portal.account_module)
 
   def stepViewAccount(self, sequence=None, sequence_list=None, **kw):
@@ -640,60 +651,60 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in draft state,
     self.assertEqual('draft', account.getValidationState())
     # everybody can see
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, account)
-      self.failUnlessUserCanAccessDocument(username, account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, account)
+      self.failUnlessUserCanAccessDocument(user_id, account)
 
     # only accountants can modify
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, account)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, account)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, account)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, account)
 
     # only accountants can validate
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-                  username, 'validate_action', account)
+                  user_id, 'validate_action', account)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
         self.failIfUserCanPassWorkflowTransition(
-                    username, 'validate_action', account)
+                    user_id, 'validate_action', account)
 
     account.validate()
     self.assertEqual('validated', account.getValidationState())
     # in validated state, every body can view, but *nobody* can modify
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, account)
-      self.failUnlessUserCanAccessDocument(username, account)
-      self.failIfUserCanModifyDocument(username, account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, account)
+      self.failUnlessUserCanAccessDocument(user_id, account)
+      self.failIfUserCanModifyDocument(user_id, account)
 
     # only accountants can invalidate
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-                  username, 'invalidate_action', account)
+                  user_id, 'invalidate_action', account)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
         self.failIfUserCanPassWorkflowTransition(
-                  username, 'invalidate_action', account)
+                  user_id, 'invalidate_action', account)
 
     account.invalidate()
     self.assertEqual('invalidated', account.getValidationState())
     # back in invalidated state, everybody can view
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, account)
-      self.failUnlessUserCanAccessDocument(username, account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, account)
+      self.failUnlessUserCanAccessDocument(user_id, account)
     # only accountants can modify
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, account)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, account)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, account)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, account)
 
     account.delete()
     # nobody can view delete object, but we can still access, for safety
-    for username in self.all_username_list:
-      self.failIfUserCanViewDocument(username, account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failIfUserCanViewDocument(user_id, account)
 
   def stepCopyPasteAccount(self, sequence=None, sequence_list=None, **kw):
     # tests copy / pasting accounts from account module
@@ -703,40 +714,40 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('draft', account.getValidationState())
 
     # everybody can see
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, account)
-      self.failUnlessUserCanAccessDocument(username, account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, account)
+      self.failUnlessUserCanAccessDocument(user_id, account)
 
   def stepViewEntityModules(self, sequence=None, sequence_list=None, **kw):
     # Everybody can view entities.
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       for module in [self.portal.person_module,
                      self.portal.organisation_module]:
-        self.failUnlessUserCanViewDocument(username, module)
-        self.failUnlessUserCanAccessDocument(username, module)
+        self.failUnlessUserCanViewDocument(user_id, module)
+        self.failUnlessUserCanAccessDocument(user_id, module)
 
   def stepAddEntityModules(self, sequence=None, sequence_list=None, **kw):
     # Everybody can add entities.
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       for module in [self.portal.person_module,
                      self.portal.organisation_module]:
-        self.failUnlessUserCanAddDocument(username, module)
+        self.failUnlessUserCanAddDocument(user_id, module)
 
   def stepCopyAndPastePerson(self, sequence=None, sequence_list=None, **kw):
     # copy & paste in person module
     person = self.portal.person_module.newContent(
                                     portal_type='Person')
 
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       person.Base_createCloneDocument()
 
   def stepCopyAndPasteOrganisation(self, sequence=None, sequence_list=None, **kw):
     # copy & paste in organisation module
     organisation = self.portal.organisation_module.newContent(
                                     portal_type='Organisation')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       organisation.Base_createCloneDocument()
 
   def stepEntityWorkflow(self, sequence=None, sequence_list=None, **kw):
@@ -744,30 +755,30 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                    self.portal.organisation_module]:
       entity = module.newContent()
       # in draft state, we can view, modify & add
-      for username in self.all_username_list:
-        self.failUnlessUserCanAccessDocument(username, entity)
-        self.failUnlessUserCanViewDocument(username, entity)
-        self.failUnlessUserCanModifyDocument(username, entity)
-        self.failUnlessUserCanAddDocument(username, entity)
+      for user_id in self._getUserIdList(self.all_username_list):
+        self.failUnlessUserCanAccessDocument(user_id, entity)
+        self.failUnlessUserCanViewDocument(user_id, entity)
+        self.failUnlessUserCanModifyDocument(user_id, entity)
+        self.failUnlessUserCanAddDocument(user_id, entity)
 
       # everybody can validate
-      for username in self.all_username_list:
+      for user_id in self._getUserIdList(self.all_username_list):
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'validate_action', entity)
+                    user_id, 'validate_action', entity)
       entity.validate()
       self.assertEqual('validated', entity.getValidationState())
 
       # in validated state, we can still modify
-      for username in self.all_username_list:
-        self.failUnlessUserCanAccessDocument(username, entity)
-        self.failUnlessUserCanViewDocument(username, entity)
-        self.failUnlessUserCanModifyDocument(username, entity)
-        self.failUnlessUserCanAddDocument(username, entity)
+      for user_id in self._getUserIdList(self.all_username_list):
+        self.failUnlessUserCanAccessDocument(user_id, entity)
+        self.failUnlessUserCanViewDocument(user_id, entity)
+        self.failUnlessUserCanModifyDocument(user_id, entity)
+        self.failUnlessUserCanAddDocument(user_id, entity)
 
       # and invalidate
-      for username in self.all_username_list:
+      for user_id in self._getUserIdList(self.all_username_list):
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'invalidate_action', entity)
+                    user_id, 'invalidate_action', entity)
 
   def stepViewCreatedPersons(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
@@ -776,9 +787,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertNotEquals(0, len(person_list))
 
     for entity in person_list:
-      for username in self.all_username_list:
-        self.failUnlessUserCanAccessDocument(username, entity)
-        self.failUnlessUserCanViewDocument(username, entity)
+      for user_id in self._getUserIdList(self.all_username_list):
+        self.failUnlessUserCanAccessDocument(user_id, entity)
+        self.failUnlessUserCanViewDocument(user_id, entity)
 
   def stepViewCreatedOrganisations(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
@@ -787,9 +798,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertNotEquals(0, len(organisation_list))
 
     for entity in organisation_list:
-      for username in self.all_username_list:
-        self.failUnlessUserCanAccessDocument(username, entity)
-        self.failUnlessUserCanViewDocument(username, entity)
+      for user_id in self._getUserIdList(self.all_username_list):
+        self.failUnlessUserCanAccessDocument(user_id, entity)
+        self.failUnlessUserCanViewDocument(user_id, entity)
 
   def stepViewCreatedAssignemnts(self, sequence=None, sequence_list=None, **kw):
     self.loginByUserName(user_name='test_configurator_user')
@@ -801,9 +812,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       found_one = 0
       for assignment in person.contentValues(portal_type='Assignment'):
         found_one = 1
-        for username in self.all_username_list:
-          self.failUnlessUserCanAccessDocument(username, assignment)
-          self.failUnlessUserCanViewDocument(username, assignment)
+        for user_id in self._getUserIdList(self.all_username_list):
+          self.failUnlessUserCanAccessDocument(user_id, assignment)
+          self.failUnlessUserCanViewDocument(user_id, assignment)
       self.assertTrue(found_one, 'No assignment found in %s' % person)
 
   # }}}
@@ -813,8 +824,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # Everybody can add accounting periods.
     organisation = self.portal.organisation_module.newContent(
                           portal_type='Organisation')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       self.assertTrue('Accounting Period' in
             organisation.getVisibleAllowedContentTypeList())
 
@@ -834,42 +845,44 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual(accounting_period.getSimulationState(), 'draft')
 
     # accountants can modify the period
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, accounting_period)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, accounting_period)
     # accountants can cancel the period
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'cancel_action', accounting_period)
+          user_id, 'cancel_action', accounting_period)
     # accountants can start the period
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'start_action', accounting_period)
+          user_id, 'start_action', accounting_period)
 
     # once the period is started, nobody can modify
     accounting_period.start()
     self.assertEqual('started', accounting_period.getSimulationState())
-    for username in self.accountant_username_list:
-      self.failIfUserCanModifyDocument(username, accounting_period)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failIfUserCanModifyDocument(user_id, accounting_period)
     # accountants can still cancel the period
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'cancel_action', accounting_period)
+          user_id, 'cancel_action', accounting_period)
     # accountants can stop the period
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'stop_action', accounting_period)
+          user_id, 'stop_action', accounting_period)
     # and reopen it
     accounting_period.stop()
     self.assertEqual('stopped', accounting_period.getSimulationState())
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'restart_action', accounting_period)
+          user_id, 'restart_action', accounting_period)
     # but only accounting manager can close it
+    accounting_manager_id, = self._getUserIdList([self.accounting_manager_reference])
     self.failUnlessUserCanPassWorkflowTransition(
-          self.accounting_manager_reference, 'deliver_action', accounting_period)
+          accounting_manager_id, 'deliver_action', accounting_period)
     if self.restricted_security:
+      accounting_agent_id, = self._getUserIdList([self.accounting_agent_reference])
       self.failIfUserCanPassWorkflowTransition(
-          self.accounting_agent_reference, 'deliver_action', accounting_period)
+          accounting_agent_id, 'deliver_action', accounting_period)
 
   # }}}
 
@@ -881,15 +894,15 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     bank_account = entity.newContent(portal_type='Bank Account')
     # everybody can view in draft ...
     self.assertEqual('draft', bank_account.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, bank_account)
-      self.failUnlessUserCanAccessDocument(username, bank_account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, bank_account)
+      self.failUnlessUserCanAccessDocument(user_id, bank_account)
     # ... and validated states
     bank_account.validate()
     self.assertEqual('validated', bank_account.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, bank_account)
-      self.failUnlessUserCanAccessDocument(username, bank_account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, bank_account)
+      self.failUnlessUserCanAccessDocument(user_id, bank_account)
 
   def stepViewCreditCard(self, sequence=None, sequence_list=None, **kw):
     # Everybody can view credit cards
@@ -898,15 +911,15 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     ext_payment = entity.newContent(portal_type='Credit Card')
     # every body can view in draft ...
     self.assertEqual('draft', ext_payment.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, ext_payment)
-      self.failUnlessUserCanAccessDocument(username, ext_payment)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, ext_payment)
+      self.failUnlessUserCanAccessDocument(user_id, ext_payment)
     # ... and validated states
     ext_payment.validate()
     self.assertEqual('validated', ext_payment.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username, ext_payment)
-      self.failUnlessUserCanAccessDocument(username, ext_payment)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id, ext_payment)
+      self.failUnlessUserCanAccessDocument(user_id, ext_payment)
 
   def stepValidateAndModifyBankAccount(self, sequence=None, sequence_list=None, **kw):
     # Every body can modify Bank Accounts
@@ -914,26 +927,26 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                                                portal_type='Organisation')
     bank_account = entity.newContent(portal_type='Bank Account')
     # draft
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, bank_account)
-    for username in self.all_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, bank_account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                 'validate_action', bank_account)
     # validated
     bank_account.validate()
     self.assertEqual('validated', bank_account.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, bank_account)
-    for username in self.all_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, bank_account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                 'invalidate_action', bank_account)
     # invalidated
     bank_account.invalidate()
     self.assertEqual('invalidated', bank_account.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, bank_account)
-    for username in self.all_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, bank_account)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                 'validate_action', bank_account)
 
   def stepValidateAndModifyCreditCard(self, sequence=None, sequence_list=None, **kw):
@@ -942,33 +955,33 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                                                portal_type='Organisation')
     credit_card = entity.newContent(portal_type='Credit Card')
     # draft
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, credit_card)
-    for username in self.all_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, credit_card)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                 'validate_action', credit_card)
     # validated
     credit_card.validate()
     self.assertEqual('validated', credit_card.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, credit_card)
-    for username in self.all_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, credit_card)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                 'invalidate_action', credit_card)
     # invalidated
     credit_card.invalidate()
     self.assertEqual('invalidated', credit_card.getValidationState())
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, credit_card)
-    for username in self.all_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, credit_card)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                 'validate_action', credit_card)
 
   def stepAddPaymentNodeInPerson(self, sequence=None, sequence_list=None, **kw):
     person = self.portal.person_module.newContent(portal_type='Person')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
-      self.failUnlessUserCanAddDocument(username, person)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
+      self.failUnlessUserCanAddDocument(user_id, person)
       self.assertTrue('Bank Account' in
                     person.getVisibleAllowedContentTypeList())
       self.assertTrue('Credit Card' in
@@ -976,9 +989,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # when the entity is validated, we can still add some payment nodes
     person.validate()
     self.portal.portal_caches.clearAllCache()
-    for username in self.all_username_list:
-      self._loginAsUser(username)
-      self.failUnlessUserCanAddDocument(username, person)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
+      self.failUnlessUserCanAddDocument(user_id, person)
       self.assertTrue('Bank Account' in
                     person.getVisibleAllowedContentTypeList())
       self.assertTrue('Credit Card' in
@@ -987,9 +1000,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepAddPaymentNodeInOrganisation(self, sequence=None, sequence_list=None, **kw):
     org = self.portal.organisation_module.newContent(
                                     portal_type='Organisation')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
-      self.failUnlessUserCanAddDocument(username, org)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
+      self.failUnlessUserCanAddDocument(user_id, org)
       self.assertTrue('Bank Account' in
                     org.getVisibleAllowedContentTypeList())
       self.assertTrue('Credit Card' in
@@ -997,9 +1010,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # when the entity is validated, we can still add some payment nodes
     org.validate()
     self.portal.portal_caches.clearAllCache()
-    for username in self.all_username_list:
-      self._loginAsUser(username)
-      self.failUnlessUserCanAddDocument(username, org)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
+      self.failUnlessUserCanAddDocument(user_id, org)
       self.assertTrue('Bank Account' in
                     org.getVisibleAllowedContentTypeList())
       self.assertTrue('Credit Card' in
@@ -1011,8 +1024,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                                     portal_type='Organisation')
     bank_account = person.newContent(
                               portal_type='Bank Account')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       bank_account.Base_createCloneDocument()
 
   def stepCopyAndPasteBankAccountInOrganisation(self, sequence=None, sequence_list=None, **kw):
@@ -1021,24 +1034,24 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                                     portal_type='Organisation')
     bank_account = organisation.newContent(
                               portal_type='Bank Account')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       bank_account.Base_createCloneDocument()
 
   # }}}
 
   ## Accounting Module {{{
   def stepViewAccountingTransactionModule(self, sequence=None, sequence_list=None, **kw):
-    for username in self.all_username_list:
-      self.failUnlessUserCanViewDocument(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanViewDocument(user_id,
               self.portal.accounting_module)
-      self.failUnlessUserCanAccessDocument(username,
+      self.failUnlessUserCanAccessDocument(user_id,
               self.portal.accounting_module)
 
   def stepAddAccountingTransactionModule(self, sequence=None, sequence_list=None, **kw):
     # Anyone can adds accounting transactions
-    for username in self.all_username_list:
-      self.failUnlessUserCanAddDocument(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanAddDocument(user_id,
               self.portal.accounting_module)
 
   def stepCopyAndPasteAccountingTransactions(self, sequence=None, sequence_list=None, **kw):
@@ -1047,8 +1060,8 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       if portal_type != 'Balance Transaction':
         transaction = self.portal.accounting_module.newContent(
                                         portal_type=portal_type)
-        for username in self.all_username_list:
-          self._loginAsUser(username)
+        for user_id in self._getUserIdList(self.all_username_list):
+          self._loginAsUser(user_id)
           transaction.Base_createCloneDocument()
 
   def _getAccountingTransactionTypeList(self):
@@ -1062,47 +1075,47 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                       start_date=DateTime(2001, 01, 01),
                       stop_date=DateTime(2001, 01, 01))
     self.assertEqual('draft', transaction.getSimulationState())
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanAddDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'plan_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'confirm_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'start_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'cancel_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'plan_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'confirm_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
       # TODO
-      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ### self.failUnlessUserCanPassWorkflowTransition(user_id,
       ###                                          'delete_action',
       ###                                          transaction)
 
@@ -1111,55 +1124,55 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
 
     # only accountant can modify
     if self.restricted_security:
-      for username in  (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-        self.failIfUserCanAddDocument(username, transaction)
+      for user_id in  self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+        self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
       # only accountant can "stop"
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
 
     transaction.stop()
     self.assertEqual('stopped', transaction.getSimulationState())
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
       # nobody can modify
-      self.failIfUserCanModifyDocument(username, transaction)
-      self.failIfUserCanAddDocument(username, transaction)
+      self.failIfUserCanModifyDocument(user_id, transaction)
+      self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'restart_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'restart_action',
                                                transaction)
     # in started state, we can modify again, and go back to stopped state
@@ -1167,9 +1180,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                   'stop_action',
                                                   transaction)
 
@@ -1178,11 +1191,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('stopped', transaction.getSimulationState())
 
     # only accounting_manager can validate
-    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+    accounting_manager_id, = self._getUserIdList([self.accounting_manager_reference])
+    self.failUnlessUserCanPassWorkflowTransition(accounting_manager_id,
                                             'deliver_action',
                                              transaction)
     if self.restricted_security:
-      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+      accounting_agent_id, = self._getUserIdList([self.accounting_agent_reference])
+      self.failIfUserCanPassWorkflowTransition(accounting_agent_id,
                                               'deliver_action',
                                                transaction)
 
@@ -1192,57 +1207,57 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                       start_date=DateTime(2001, 01, 01),
                       stop_date=DateTime(2001, 01, 01))
     self.assertEqual('draft', transaction.getSimulationState())
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanAddDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list -
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list -
                        self.sales_and_purchase_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'plan_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'confirm_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
 
-    for username in self.sales_and_purchase_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'cancel_action',
                                                     transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'plan_action',
                                                     transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'confirm_action',
                                                     transaction)
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'cancel_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'plan_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'confirm_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
       # TODO
-      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ### self.failUnlessUserCanPassWorkflowTransition(user_id,
       ###                                          'delete_action',
       ###                                          transaction)
 
@@ -1251,55 +1266,55 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
 
     # only accountant can modify
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-        self.failIfUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+        self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
       # only accountant can "stop"
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
 
     transaction.stop()
     self.assertEqual('stopped', transaction.getSimulationState())
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
       # nobody can modify
-      self.failIfUserCanModifyDocument(username, transaction)
-      self.failIfUserCanAddDocument(username, transaction)
+      self.failIfUserCanModifyDocument(user_id, transaction)
+      self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'restart_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'restart_action',
                                                transaction)
     # in started state, we can modify again, and go back to stopped state
@@ -1307,9 +1322,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                   'stop_action',
                                                   transaction)
 
@@ -1318,11 +1333,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('stopped', transaction.getSimulationState())
 
     # only accounting_manager can validate
-    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+    accounting_manager_id, = self._getUserIdList([self.accounting_manager_reference])
+    self.failUnlessUserCanPassWorkflowTransition(accounting_manager_id,
                                             'deliver_action',
                                              transaction)
     if self.restricted_security:
-      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+      accounting_agent_id, = self._getUserIdList([self.accounting_agent_reference])
+      self.failIfUserCanPassWorkflowTransition(accounting_agent_id,
                                               'deliver_action',
                                                transaction)
 
@@ -1333,62 +1350,62 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                       start_date=DateTime(2001, 01, 01),
                       stop_date=DateTime(2001, 01, 01))
     self.assertEqual('draft', transaction.getSimulationState())
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanAddDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list -
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list -
                        self.sales_and_purchase_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'plan_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'confirm_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
 
-    for username in self.sales_and_purchase_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'cancel_action',
                                                     transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'plan_action',
                                                     transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'confirm_action',
                                                     transaction)
       # XXX would require to go to confirmed state first
-      # self.failIfUserCanPassWorkflowTransition(username,
+      # self.failIfUserCanPassWorkflowTransition(user_id,
       #                                         'start_action',
       #                                         transaction)
 
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'cancel_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'plan_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'confirm_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
       # TODO
-      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ### self.failUnlessUserCanPassWorkflowTransition(user_id,
       ###                                          'delete_action',
       ###                                          transaction)
 
@@ -1397,55 +1414,55 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
 
     # only accountant can modify
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-        self.failIfUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+        self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
       # only accountant can "stop"
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
 
     transaction.stop()
     self.assertEqual('stopped', transaction.getSimulationState())
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
       # nobody can modify
-      self.failIfUserCanModifyDocument(username, transaction)
-      self.failIfUserCanAddDocument(username, transaction)
+      self.failIfUserCanModifyDocument(user_id, transaction)
+      self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'restart_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'restart_action',
                                                transaction)
     # in started state, we can modify again, and go back to stopped state
@@ -1453,9 +1470,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                   'stop_action',
                                                   transaction)
 
@@ -1464,11 +1481,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('stopped', transaction.getSimulationState())
 
     # only accounting_manager can validate
-    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+    accounting_manager_id, = self._getUserIdList([self.accounting_manager_reference])
+    self.failUnlessUserCanPassWorkflowTransition(accounting_manager_id,
                                             'deliver_action',
                                              transaction)
     if self.restricted_security:
-      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+      accounting_agent_id, = self._getUserIdList([self.accounting_agent_reference])
+      self.failIfUserCanPassWorkflowTransition(accounting_agent_id,
                                               'deliver_action',
                                                transaction)
 
@@ -1478,47 +1497,47 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                       start_date=DateTime(2001, 01, 01),
                       stop_date=DateTime(2001, 01, 01))
     self.assertEqual('draft', transaction.getSimulationState())
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanAddDocument(user_id, transaction)
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'plan_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'confirm_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'start_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'cancel_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'plan_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'confirm_action',
                                                transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
       # TODO
-      ### self.failUnlessUserCanPassWorkflowTransition(username,
+      ### self.failUnlessUserCanPassWorkflowTransition(user_id,
       ###                                          'delete_action',
       ###                                          transaction)
 
@@ -1527,55 +1546,55 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
 
     # only accountant can modify
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanModifyDocument(username, transaction)
-        self.failIfUserCanAddDocument(username, transaction)
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanModifyDocument(user_id, transaction)
+        self.failIfUserCanAddDocument(user_id, transaction)
 
     # only accountant can "stop"
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'stop_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'stop_action',
                                                transaction)
 
     transaction.stop()
     self.assertEqual('stopped', transaction.getSimulationState())
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       # everybody can view
-      self.assertUserCanViewDocument(username, transaction)
-      self.assertUserCanAccessDocument(username, transaction)
+      self.assertUserCanViewDocument(user_id, transaction)
+      self.assertUserCanAccessDocument(user_id, transaction)
       # nobody can modify
-      self.failIfUserCanModifyDocument(username, transaction)
-      self.failIfUserCanAddDocument(username, transaction)
+      self.failIfUserCanModifyDocument(user_id, transaction)
+      self.failIfUserCanAddDocument(user_id, transaction)
 
     if self.restricted_security:
-      for username in (self.all_username_list - self.accountant_username_list):
-        self.failIfUserCanPassWorkflowTransition(username,
+      for user_id in self._getUserIdList(self.all_username_list - self.accountant_username_list):
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'restart_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'deliver_action',
                                                  transaction)
-        self.failIfUserCanPassWorkflowTransition(username,
+        self.failIfUserCanPassWorkflowTransition(user_id,
                                                  'cancel_action',
                                                  transaction)
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                'restart_action',
                                                transaction)
     # in started state, we can modify again, and go back to stopped state
@@ -1583,9 +1602,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('started', transaction.getSimulationState())
     self.tic()
 
-    for username in self.accountant_username_list:
-      self.failUnlessUserCanModifyDocument(username, transaction)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.accountant_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, transaction)
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                   'stop_action',
                                                   transaction)
 
@@ -1594,11 +1613,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEqual('stopped', transaction.getSimulationState())
 
     # only accounting_manager can validate
-    self.failUnlessUserCanPassWorkflowTransition(self.accounting_manager_reference,
+    accounting_manager_id, = self._getUserIdList([self.accounting_manager_reference])
+    self.failUnlessUserCanPassWorkflowTransition(accounting_manager_id,
                                             'deliver_action',
                                              transaction)
     if self.restricted_security:
-      self.failIfUserCanPassWorkflowTransition(self.accounting_agent_reference,
+      accounting_agent_id, = self._getUserIdList([self.accounting_agent_reference])
+      self.failIfUserCanPassWorkflowTransition(accounting_agent_id,
                                               'deliver_action',
                                                transaction)
 
@@ -1607,13 +1628,14 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # done from unrestricted code, so no problem)
     balance_transaction = self.portal.accounting_module.newContent(
                       portal_type='Balance Transaction')
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, balance_transaction)
-      self.assertUserCanAccessDocument(username, balance_transaction)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, balance_transaction)
+      self.assertUserCanAccessDocument(user_id, balance_transaction)
 
   def stepAccountingTransaction_getCausalityGroupedAccountingTransactionList(
       self, sequence=None, sequence_list=None, **kw):
-    self._loginAsUser(self.accounting_manager_reference)
+    accounting_manager_id, = self._getUserIdList([self.accounting_manager_reference])
+    self._loginAsUser(accounting_manager_id)
     accounting_transaction_x_related_to_a = self.portal.\
                                     accounting_module.newContent(
                                     portal_type='Accounting Transaction',
@@ -1685,11 +1707,11 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   def stepAddAssignments(self, sequence=None, sequence_list=None, **kw):
     # for now, anybody can add assignements
     person = self.portal.person_module.newContent(portal_type='Person')
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       self.assertTrue('Assignment' in
                   person.getVisibleAllowedContentTypeList())
-      self.failUnlessUserCanAddDocument(username, person)
+      self.failUnlessUserCanAddDocument(user_id, person)
 
   def stepAssignmentTI(self, sequence=None, sequence_list=None, **kw):
     ti = self.getTypesTool().getTypeInfo('Assignment')
@@ -1701,9 +1723,9 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # everybody can open assignments in express
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment')
-    for username in self.all_username_list:
-      self.failUnlessUserCanModifyDocument(username, assignment)
-      self.failUnlessUserCanPassWorkflowTransition(username,
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.failUnlessUserCanModifyDocument(user_id, assignment)
+      self.failUnlessUserCanPassWorkflowTransition(user_id,
                                                    'open_action',
                                                    assignment)
   # }}}
@@ -1711,106 +1733,106 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   # {{{ Trade
   def stepViewAcessAddPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
     module = self.portal.purchase_trade_condition_module
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, module)
-      self.assertUserCanAccessDocument(username, module)
-    for username in self.sales_and_purchase_username_list:
-      self.assertUserCanAddDocument(username, module)
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, module)
+      self.assertUserCanAccessDocument(user_id, module)
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.assertUserCanAddDocument(user_id, module)
+      self._loginAsUser(user_id)
       tc = module.newContent(portal_type='Purchase Trade Condition')
-      self.assertUserCanViewDocument(username, tc)
+      self.assertUserCanViewDocument(user_id, tc)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'validate_action', tc)
+                    user_id, 'validate_action', tc)
       self.portal.portal_workflow.doActionFor(tc, 'validate_action')
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'invalidate_action', tc)
+                    user_id, 'invalidate_action', tc)
 
   def stepViewAccessAddSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
     module = self.portal.sale_trade_condition_module
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, module)
-      self.assertUserCanAccessDocument(username, module)
-    for username in self.sales_and_purchase_username_list:
-      self.assertUserCanAddDocument(username, module)
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, module)
+      self.assertUserCanAccessDocument(user_id, module)
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.assertUserCanAddDocument(user_id, module)
+      self._loginAsUser(user_id)
       tc = module.newContent(portal_type='Sale Trade Condition')
-      self.assertUserCanViewDocument(username, tc)
+      self.assertUserCanViewDocument(user_id, tc)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'validate_action', tc)
+                    user_id, 'validate_action', tc)
       self.portal.portal_workflow.doActionFor(tc, 'validate_action')
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'invalidate_action', tc)
+                    user_id, 'invalidate_action', tc)
 
   def stepViewAccessAddSaleOrder(self, sequence=None, sequence_list=None, **kw):
     module = self.portal.sale_order_module
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, module)
-      self.assertUserCanAccessDocument(username, module)
-    for username in self.sales_and_purchase_username_list:
-      self.assertUserCanAddDocument(username, module)
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, module)
+      self.assertUserCanAccessDocument(user_id, module)
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.assertUserCanAddDocument(user_id, module)
+      self._loginAsUser(user_id)
       order = module.newContent(portal_type='Sale Order')
-      self.assertUserCanViewDocument(username, order)
+      self.assertUserCanViewDocument(user_id, order)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'plan_action', order)
+                    user_id, 'plan_action', order)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'confirm_action', order)
+                    user_id, 'confirm_action', order)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'cancel_action', order)
+                    user_id, 'cancel_action', order)
 
       order.confirm()
       self.assertEqual('confirmed', order.getSimulationState())
-      self.assertUserCanViewDocument(username, order)
-      self.failIfUserCanModifyDocument(username, order)
+      self.assertUserCanViewDocument(user_id, order)
+      self.failIfUserCanModifyDocument(user_id, order)
 
 
   def stepViewAccessAddSalePackingList(self, sequence=None, sequence_list=None, **kw):
     module = self.portal.sale_packing_list_module
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, module)
-      self.assertUserCanAccessDocument(username, module)
-    for username in self.sales_and_purchase_username_list:
-      self.assertUserCanAddDocument(username, module)
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, module)
+      self.assertUserCanAccessDocument(user_id, module)
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.assertUserCanAddDocument(user_id, module)
+      self._loginAsUser(user_id)
       pl = module.newContent(portal_type='Sale Packing List')
-      self.assertUserCanViewDocument(username, pl)
+      self.assertUserCanViewDocument(user_id, pl)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'confirm_action', pl)
+                    user_id, 'confirm_action', pl)
 
   def stepViewAccessPurchaseOrder(self, sequence=None, sequence_list=None, **kw):
     module = self.portal.purchase_order_module
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, module)
-      self.assertUserCanAccessDocument(username, module)
-    for username in self.sales_and_purchase_username_list:
-      self.assertUserCanAddDocument(username, module)
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, module)
+      self.assertUserCanAccessDocument(user_id, module)
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.assertUserCanAddDocument(user_id, module)
+      self._loginAsUser(user_id)
       order = module.newContent(portal_type='Purchase Order')
-      self.assertUserCanViewDocument(username, order)
+      self.assertUserCanViewDocument(user_id, order)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'plan_action', order)
+                    user_id, 'plan_action', order)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'confirm_action', order)
+                    user_id, 'confirm_action', order)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'cancel_action', order)
+                    user_id, 'cancel_action', order)
 
       order.confirm()
       self.assertEqual('confirmed', order.getSimulationState())
-      self.assertUserCanViewDocument(username, order)
-      self.failIfUserCanModifyDocument(username, order)
+      self.assertUserCanViewDocument(user_id, order)
+      self.failIfUserCanModifyDocument(user_id, order)
 
   def stepPurchasePackingList(self, sequence=None, sequence_list=None, **kw):
     module = self.portal.purchase_packing_list_module
-    for username in self.all_username_list:
-      self.assertUserCanViewDocument(username, module)
-      self.assertUserCanAccessDocument(username, module)
-    for username in self.sales_and_purchase_username_list:
-      self.assertUserCanAddDocument(username, module)
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self.assertUserCanViewDocument(user_id, module)
+      self.assertUserCanAccessDocument(user_id, module)
+    for user_id in self._getUserIdList(self.sales_and_purchase_username_list):
+      self.assertUserCanAddDocument(user_id, module)
+      self._loginAsUser(user_id)
       pl = module.newContent(portal_type='Purchase Packing List')
-      self.assertUserCanViewDocument(username, pl)
+      self.assertUserCanViewDocument(user_id, pl)
       self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'confirm_action', pl)
+                    user_id, 'confirm_action', pl)
 
   # }}}
   # web
@@ -1832,7 +1854,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     """
     portal_contributions = self.portal.portal_contributions
     checkPermission = self.portal.portal_membership.checkPermission
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       self.assertEqual(True,  \
                         checkPermission('Modify portal content', portal_contributions))
