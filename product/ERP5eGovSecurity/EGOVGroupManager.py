@@ -35,7 +35,7 @@ import sys
 
 from zLOG import LOG, WARNING
 
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 
 NO_CACHE_MODE = 0
@@ -86,7 +86,7 @@ class EGOVGroupManager(ERP5GroupManager):
     """ See IGroupsPlugin.
     """
     # If this is the super user, skip the check.
-    if principal.getId() == SUPER_USER:
+    if principal.getId() == ERP5Security.SUPER_USER:
       return ()
 
     def _getGroupsForPrincipal(user_name, path):
@@ -98,8 +98,8 @@ class EGOVGroupManager(ERP5GroupManager):
       # because we aren't logged in, we have to create our own
       # SecurityManager to be able to access the Catalog
       sm = getSecurityManager()
-      if sm.getUser().getId() != SUPER_USER:
-        newSecurityManager(self, self.getUser(SUPER_USER))
+      if sm.getUser().getId() != ERP5Security.SUPER_USER:
+        newSecurityManager(self, self.getUser(ERP5Security.SUPER_USER))
       try:
         # To get the complete list of groups, we try to call the
         # ERP5Type_getSecurityCategoryMapping which should return a list

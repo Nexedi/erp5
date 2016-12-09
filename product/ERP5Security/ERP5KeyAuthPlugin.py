@@ -47,8 +47,8 @@ from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHel
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
-                                                  SUPER_USER, \
                                                   _AuthenticationFailure
+from Products import ERP5Security
 
 from Crypto.Cipher import AES
 from Crypto import Random
@@ -325,7 +325,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     if key != None:
       login = self.decrypt(key)
       # Forbidden the usage of the super user.
-      if login == SUPER_USER:
+      if login == ERP5Security.SUPER_USER:
         return None
 
       #Function to allow cache

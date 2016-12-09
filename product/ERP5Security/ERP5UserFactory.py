@@ -26,7 +26,7 @@ from Products.PluggableAuthService.interfaces.plugins import IUserFactoryPlugin
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from Products.PluggableAuthService.PropertiedUser import \
                                             _what_not_even_god_should_do
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 manage_addERP5UserFactoryForm = PageTemplateFile(
     'www/ERP5Security_addERP5UserFactory', globals(),
@@ -104,7 +104,7 @@ class ERP5User(PropertiedUser):
     As for getRolesInContext, we take into account _getAcquireLocalRoles for
     ERP5.
     """
-    if self.getUserName() == SUPER_USER:
+    if self.getUserName() == ERP5Security.SUPER_USER:
       # super user is allowed to accesss any object
       return 1
 

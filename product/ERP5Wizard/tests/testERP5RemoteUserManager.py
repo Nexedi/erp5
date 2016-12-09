@@ -28,7 +28,7 @@
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5.ERP5Site import ERP5Site
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Wizard import addERP5RemoteUserManager
@@ -41,7 +41,7 @@ def proxyMethodHandler(self, kw):
   """Dummy proxyMethodHandler"""
   # login as super user
   newSecurityManager(self, self.getPortalObject().acl_users.getUserById(
-      SUPER_USER))
+      ERP5Security.SUPER_USER))
   data = getattr(self, kw['method_id'])(**kw['method_kw'])
   response = GeneratorCall(data=data)
   return response.dump()

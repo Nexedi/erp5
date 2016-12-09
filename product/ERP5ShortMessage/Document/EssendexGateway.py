@@ -44,7 +44,7 @@ from zLOG import LOG, INFO
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 #Product Module
 from Products.ERP5ShortMessage.Errors import SMSGatewayError
@@ -237,7 +237,7 @@ class EssendexGateway(XMLObject):
       try:
         #Use SUPER_USER
         portal_membership = self.getPortalObject().portal_membership
-        newSecurityManager(None, portal_membership.getMemberById(SUPER_USER))
+        newSecurityManager(None, portal_membership.getMemberById(ERP5Security.SUPER_USER))
 
         #Parse XML
         root = etree.fromstring(datas)

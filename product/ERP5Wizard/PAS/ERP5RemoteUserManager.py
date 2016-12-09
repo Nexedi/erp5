@@ -25,7 +25,8 @@ from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlug
                                                              IUserEnumerationPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from DateTime import DateTime
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager, SUPER_USER, _AuthenticationFailure
+from Products.ERP5Security.ERP5UserManager import ERP5UserManager, _AuthenticationFailure
+from Products import ERP5Security
 
 from BTrees.OOBTree import OOBTree
 from zLOG import LOG, INFO, WARNING
@@ -133,7 +134,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
             ILoginPasswordExtractionPlugin.
         """
         # Forbidden the usage of the super user.
-        if credentials.get('login') == SUPER_USER:
+        if credentials.get('login') == ERP5Security.SUPER_USER:
           return None
 
         def _authenticateCredentials(login, password, path):
@@ -148,8 +149,8 @@ class ERP5RemoteUserManager(ERP5UserManager):
             user = user_list[0]
 
             sm = getSecurityManager()
-            if sm.getUser().getId() != SUPER_USER:
-              newSecurityManager(self, self.getUser(SUPER_USER))
+            if sm.getUser().getId() != ERP5Security.SUPER_USER:
+              newSecurityManager(self, self.getUser(ERP5Security.SUPER_USER))
             try:
               # get assignment
               assignment_list = [x for x in user.contentValues(portal_type="Assignment") \

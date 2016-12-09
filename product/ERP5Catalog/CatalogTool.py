@@ -48,7 +48,7 @@ from AccessControl.PermissionRole import rolesForPermissionOn
 from MethodObject import Method
 
 from Products.ERP5Security import mergedLocalRoles
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 from Products.ZSQLCatalog.Utils import sqlquote
 
 import warnings
@@ -470,7 +470,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       user = _getAuthenticatedUser(self)
       user_str = str(user)
-      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
+      user_is_superuser = (user == system_user) or (user_str == ERP5Security.SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
       local_role_column_dict = {}
@@ -596,7 +596,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       user = _getAuthenticatedUser(self)
       user_str = str(user)
-      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
+      user_is_superuser = (user == system_user) or (user_str == ERP5Security.SUPER_USER)
       if user_is_superuser:
         # We need no security check for super user.
         return query

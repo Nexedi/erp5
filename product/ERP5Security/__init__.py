@@ -21,16 +21,8 @@ from AccessControl.Permissions import manage_users as ManageUsers
 from Products.PluggableAuthService.PluggableAuthService import registerMultiPlugin
 from Products.PluggableAuthService.permissions import ManageGroups
 
-import ERP5UserManager
-import ERP5GroupManager
-import ERP5RoleManager
-import ERP5UserFactory
-import ERP5KeyAuthPlugin
-import ERP5ExternalAuthenticationPlugin
-import ERP5BearerExtractionPlugin
-import ERP5ExternalOauth2ExtractionPlugin
-import ERP5AccessTokenExtractionPlugin
-import ERP5DumbHTTPExtractionPlugin
+# This user is used to bypass all security checks.
+SUPER_USER = '__erp5security-=__'
 
 def mergedLocalRoles(object):
   """Returns a merging of object and its ancestors'
@@ -60,19 +52,30 @@ def mergedLocalRoles(object):
 
   return deepcopy(merged)
 
-registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
-registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
-registerMultiPlugin(ERP5RoleManager.ERP5RoleManager.meta_type)
-registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
-registerMultiPlugin(ERP5KeyAuthPlugin.ERP5KeyAuthPlugin.meta_type)
-registerMultiPlugin(ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin.meta_type)
-registerMultiPlugin(ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin.meta_type)
-registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin.meta_type)
-registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
-registerMultiPlugin(ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin.meta_type)
-registerMultiPlugin(ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin.meta_type)
-
 def initialize(context):
+  import ERP5UserManager
+  import ERP5GroupManager
+  import ERP5RoleManager
+  import ERP5UserFactory
+  import ERP5KeyAuthPlugin
+  import ERP5ExternalAuthenticationPlugin
+  import ERP5BearerExtractionPlugin
+  import ERP5ExternalOauth2ExtractionPlugin
+  import ERP5AccessTokenExtractionPlugin
+  import ERP5DumbHTTPExtractionPlugin
+
+  registerMultiPlugin(ERP5UserManager.ERP5UserManager.meta_type)
+  registerMultiPlugin(ERP5GroupManager.ERP5GroupManager.meta_type)
+  registerMultiPlugin(ERP5RoleManager.ERP5RoleManager.meta_type)
+  registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
+  registerMultiPlugin(ERP5KeyAuthPlugin.ERP5KeyAuthPlugin.meta_type)
+  registerMultiPlugin(ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin.meta_type)
+  registerMultiPlugin(ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin.meta_type)
+  registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin.meta_type)
+  registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
+  registerMultiPlugin(ERP5AccessTokenExtractionPlugin.ERP5AccessTokenExtractionPlugin.meta_type)
+  registerMultiPlugin(ERP5DumbHTTPExtractionPlugin.ERP5DumbHTTPExtractionPlugin.meta_type)
+
 
   context.registerClass( ERP5UserManager.ERP5UserManager
                        , permission=ManageUsers
