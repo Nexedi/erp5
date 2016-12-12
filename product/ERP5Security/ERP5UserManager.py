@@ -267,6 +267,7 @@ class ERP5UserManager(BasePlugin):
 
         # Extra properties, specific to ERP5
         'path': user['path'],
+        'uid': user['uid'],
         'login_list': user['path'] and [
           {
             'reference': user['reference'],
