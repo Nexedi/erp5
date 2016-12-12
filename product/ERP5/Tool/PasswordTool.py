@@ -143,19 +143,19 @@ class PasswordTool(BaseTool):
 
     msg = None
     # check user exists, and have an email
-    user_list = [x for x in self.getPortalObject().acl_users.searchUsers(
+    user_path_set = {x['path'] for x in self.getPortalObject().acl_users.searchUsers(
       login=user_login,
       exact_match=True,
-    ) if 'path' in x]
-    if len(user_list) == 0:
+    ) if 'path' in x}
+    if len(user_path_set) == 0:
       msg = translateString("User ${user} does not exist.",
                             mapping={'user':user_login})
     else:
       # We use checked_permission to prevent errors when trying to acquire
       # email from organisation
-      user, = user_list
+      user_path, = user_path_set
       user_value = self.getPortalObject().unrestrictedTraverse(
-        user['path'])
+        user_path)
       email_value = user_value.getDefaultEmailValue(
         checked_permission='Access content information')
       if email_value is None or not email_value.asText():

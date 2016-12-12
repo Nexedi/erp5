@@ -205,14 +205,16 @@ class ERP5User(PropertiedUser):
     result = self._user_path
     if result is not None:
       return self.getPortalObject().unrestrictedTraverse(result)
-    user_list = [x for x in self.aq_parent.searchUsers(
+    # user id may match in more than one PAS plugin, but fail if more than one
+    # underlying path is found.
+    user_path_set = {x['path'] for x in self.aq_parent.searchUsers(
       exact_match=True,
       id=self.getId(),
-    ) if 'path' in x]
-    if user_list:
-      user, = user_list
-      result = self._user_path = user['path']
-      return self.getPortalObject().unrestrictedTraverse(result)
+    ) if 'path' in x}
+    if user_path_set:
+      user_path, = user_path_set
+      self._user_path = user_path
+      return self.getPortalObject().unrestrictedTraverse(user_path)
 
   def getLoginValue(self):
     """ -> login document
@@ -222,6 +224,7 @@ class ERP5User(PropertiedUser):
     result = self._login_path
     if result is not None:
       return self.getPortalObject().unrestrictedTraverse(result)
+    # user name may match at most once, or there can be endless ambiguity.
     user_list = [x for x in self.aq_parent.searchUsers(
       exact_match=True,
       login=self.getUserName(),
@@ -237,17 +240,19 @@ class ERP5User(PropertiedUser):
 
     Return the list of login documents belonging to current user.
     """
-    user_list = [x for x in self.aq_parent.searchUsers(
-      exact_match=True,
-      id=self.getId(),
-      login_portal_type=portal_type,
-      max_results=limit,
-    ) if 'login_list' in x]
-    if user_list:
-      user, = user_list
-      unrestrictedTraverse = self.getPortalObject().unrestrictedTraverse
-      return [unrestrictedTraverse(x['path']) for x in user['login_list']]
-    return []
+    # Aggregate all login paths.
+    user_path_set = {
+      login['path']
+      for user in self.aq_parent.searchUsers(
+        exact_match=True,
+        id=self.getId(),
+        login_portal_type=portal_type,
+        max_results=limit,
+      ) if 'login_list' in user
+      for login in user['login_list']
+    }
+    unrestrictedTraverse = self.getPortalObject().unrestrictedTraverse
+    return [unrestrictedTraverse(x) for x in user_path_set]
 
 InitializeClass(ERP5User)
 

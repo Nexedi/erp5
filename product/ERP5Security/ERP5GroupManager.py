@@ -118,14 +118,15 @@ class ERP5GroupManager(BasePlugin):
           security_definition_list = mapping_method()
 
         # get the person from its login - no security check needed
-        user_list = [
-          x for x in self.searchUsers(id=user_id, exact_match=True)
+        user_path_set = {
+          x['path']
+          for x in self.searchUsers(id=user_id, exact_match=True)
           if 'path' in x
-        ]
-        if not user_list:
+        }
+        if not user_path_set:
           return ()
-        user, = user_list
-        person_object = self.getPortalObject().unrestrictedTraverse(user['path'])
+        user_path, = user_path_set
+        person_object = self.getPortalObject().unrestrictedTraverse(user_path)
 
         # Fetch category values from defined scripts
         for (method_name, base_category_list) in security_definition_list:
