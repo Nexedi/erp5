@@ -2,10 +2,13 @@ Image | jio_data
 Image | jio_view
 PDF | jio_data
 PDF | jio_view
+Presentation | jio_data
 Presentation | jio_view
 Presentation | ooeditor
+Spreadsheet | jio_data
 Spreadsheet | jio_view
 Spreadsheet | ooeditor
+Text | jio_data
 Text | jio_view
 Text | ooeditor
 Web Illustration | jio_view
