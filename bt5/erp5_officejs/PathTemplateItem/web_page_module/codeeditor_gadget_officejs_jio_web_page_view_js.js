@@ -25,7 +25,12 @@
         doc.text_content = data.text_content;
         doc.parent_relative_url = data.parent_relative_url || "web_page_module";
         doc.portal_type = data.portal_type || "Web Page";
-        return gadget.put(gadget.options.jio_key, doc);
+        if (gadget.options.jio_key !== doc.url_string) {
+          return gadget.remove(gadget.options.jio_key);
+        }
+      })
+      .push(function () {
+        return gadget.put(doc.url_string, doc);
       });
   }
 
@@ -69,6 +74,7 @@
     .declareAcquiredMethod("get", "jio_get")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("put", "jio_put")
+    .declareAcquiredMethod("remove","jio_remove")
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
     .declareAcquiredMethod("redirect", "redirect")
 
@@ -98,6 +104,7 @@
       var gadget = this;
       gadget.options = options;
       gadget.options.doc.title = gadget.options.doc.title || "";
+      gadget.options.doc.url_string = gadget.options.jio_key;
       return new RSVP.Queue()
         .push(function () {
           return gadget.translateHtml(template(options.doc));

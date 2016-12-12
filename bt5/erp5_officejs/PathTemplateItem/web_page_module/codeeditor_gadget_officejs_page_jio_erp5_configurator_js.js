@@ -15,8 +15,7 @@
             type: "replicate",
             // XXX This drop the signature lists...
             query: {
-              query: '(portal_type: ("Web Page","Web Script","Web Manifest","Web Style")) ' +
-                ' AND (version: "' + version + '")',
+              query: 'portal_type: ("Web Page","Web Script","Web Manifest","Web Style")',
               limit: [0, 30],
               sort_on: [["modification_date", "descending"]]
             },
@@ -27,37 +26,38 @@
                 database: version + "_hash"
               }
             },
-            use_remote_post: true,
+            use_remote_post: false,
             conflict_handling: 1,
             check_local_modification: true,
             check_local_creation: true,
             check_local_deletion: false,
             check_remote_modification: true,
             check_remote_creation: true,
-            check_remote_deletion: true,
+            check_remote_deletion: false,
             local_sub_storage: {
-              type: "mapping",
-              mapping_dict: {
-                "id": {"equal": "relative_url"},
-                "url_string": {"equal": "id"}
-              },
+              type: "query",
               sub_storage: {
-                type: "query",
+                type: "uuid",
                 sub_storage: {
-                  type: "uuid",
-                  sub_storage: {
-                    type: "indexeddb",
-                    database: version
-                  }
+                  type: "indexeddb",
+                  database: version
                 }
               }
             },
             remote_sub_storage: {
-              type: "erp5",
-              url: (new URI("hateoas"))
-              .absoluteTo(erp5_url)
-              .toString(),
-              default_view_reference: "jio_view"
+              type: "mapping",
+              mapping_dict: {
+                "id": {"equal": "url_string"},
+                "relative_url": "ignore",
+                "version": {"default_value": version}
+              },
+              sub_storage: {
+                type: "erp5",
+                url: (new URI("hateoas"))
+                .absoluteTo(erp5_url)
+                .toString(),
+                default_view_reference: "jio_view"
+              }
             }
           }
         );

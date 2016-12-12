@@ -8883,10 +8883,10 @@ return new Parser;
               use_bulk_get: use_bulk_get,
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_REMOTE),
-              conflict_ignore: ((context._conflict_handling ===
-                                CONFLICT_CONTINUE) ||
-                                (context._conflict_handling ===
-                                CONFLICT_KEEP_LOCAL)),
+              conflict_ignore: (context._conflict_handling ===
+                                CONFLICT_CONTINUE) || 
+                               (context._conflict_handling ===
+                                CONFLICT_KEEP_LOCAL),
               check_modification: context._check_remote_modification,
               check_creation: context._check_remote_creation,
               check_deletion: context._check_remote_deletion
@@ -12077,7 +12077,8 @@ return new Parser;
   };
 
   IndexedDBStorage.prototype.getAttachment = function (id, name, options) {
-    var type,
+    var transaction,
+      type,
       start,
       end;
     if (options === undefined) {
@@ -12085,63 +12086,48 @@ return new Parser;
     }
     return openIndexedDB(this)
       .push(function (db) {
-        return new RSVP.Promise(function (resolve, reject) {
-          var transaction = openTransaction(db, ["attachment", "blob"],
-            "readonly"),
-            // XXX Should raise if key is not good
-            request = transaction.objectStore("attachment")
-            .get(buildKeyPath([id, name]));
-          request.onerror = function (error) {
-            transaction.abort();
-            reject(error);
-          };
-          request.onsuccess = function () {
-            var attachment = request.result,
-              total_length,
-              i,
-              promise_list = [],
-              store = transaction.objectStore("blob"),
-              start_index,
-              end_index;
+        transaction = openTransaction(db, ["attachment", "blob"], "readonly");
+        // XXX Should raise if key is not good
+        return handleGet(transaction.objectStore("attachment")
+                         .get(buildKeyPath([id, name])));
+      })
+      .push(function (attachment) {
+        var total_length = attachment.info.length,
+          i,
+          promise_list = [],
+          store = transaction.objectStore("blob"),
+          start_index,
+          end_index;
 
-            if (!attachment) {
-              return reject(
-                new jIO.util.jIOError("Cannot find attachment", 404)
-              );
-            }
+        type = attachment.info.content_type;
+        start = options.start || 0;
+        end = options.end || total_length;
+        if (end > total_length) {
+          end = total_length;
+        }
 
-            total_length = attachment.info.length;
-            type = attachment.info.content_type;
-            start = options.start || 0;
-            end = options.end || total_length;
-            if (end > total_length) {
-              end = total_length;
-            }
+        if (start < 0 || end < 0) {
+          throw new jIO.util.jIOError("_start and _end must be positive",
+                                      400);
+        }
+        if (start > end) {
+          throw new jIO.util.jIOError("_start is greater than _end",
+                                      400);
+        }
 
-            if (start < 0 || end < 0) {
-              throw new jIO.util.jIOError("_start and _end must be positive",
-                400);
-            }
-            if (start > end) {
-              throw new jIO.util.jIOError("_start is greater than _end",
-                400);
-            }
+        start_index = Math.floor(start / UNITE);
+        end_index =  Math.floor(end / UNITE);
+        if (end % UNITE === 0) {
+          end_index -= 1;
+        }
 
-            start_index = Math.floor(start / UNITE);
-            end_index =  Math.floor(end / UNITE);
-            if (end % UNITE === 0) {
-              end_index -= 1;
-            }
-
-            for (i = start_index; i <= end_index; i += 1) {
-              promise_list.push(
-                handleGet(store.get(buildKeyPath([id,
-                  name, i])))
-              );
-            }
-            resolve(RSVP.all(promise_list));
-          };
-        });
+        for (i = start_index; i <= end_index; i += 1) {
+          promise_list.push(
+            handleGet(store.get(buildKeyPath([id,
+                                name, i])))
+          );
+        }
+        return RSVP.all(promise_list);
       })
       .push(function (result_list) {
         var array_buffer_list = [],
@@ -12201,12 +12187,10 @@ return new Parser;
         }
 
         // Remove previous attachment
-        transaction = openTransaction(db, ["attachment", "blob"],
-          "readwrite", false);
+        transaction = openTransaction(db, ["attachment", "blob"], "readwrite");
         return removeAttachment(transaction, id, name);
       })
       .push(function () {
-        transaction = openTransaction(db, ["attachment", "blob"], "readwrite");
 
         var promise_list = [
             handleRequest(transaction.objectStore("attachment").put({
@@ -12882,10 +12866,6 @@ return new Parser;
             if (sub_doc.id !== undefined) {
               return sub_doc.id;
             }
-            throw new jIO.util.jIOError(
-              "Cannot find id field related",
-              400
-            );
           }
           query = new SimpleQuery({
             key: storage._mapping_dict.id.equal,
@@ -12938,6 +12918,10 @@ return new Parser;
         return property;
       }
     }
+    if (!storage._map_all_property ||
+        storage._mapping_dict[property] === "ignore") {
+      return false;
+    }
     if (storage._map_all_property) {
       sub_doc[property] = doc[property];
       return property;
@@ -12959,6 +12943,10 @@ return new Parser;
       if (storage._mapping_dict[property].default_value !== undefined) {
         return property;
       }
+    }
+    if (!storage._map_all_property ||
+        storage._mapping_dict[property] === "ignore") {
+      return property;
     }
     if (storage._map_all_property) {
       if (sub_doc.hasOwnProperty(property)) {
@@ -13262,7 +13250,6 @@ return new Parser;
     )
       .push(function (result) {
         for (i = 0; i < result.data.total_rows; i += 1) {
-          result.data.rows[i].value.id = result.data.rows[i].id;
           result.data.rows[i].value =
             mapToMainDocument(
               context,

@@ -91,16 +91,20 @@
             i_len,
             i,
             j_len,
-            j;
+            j,
+            value;
 
           // build handlebars object
 
           for (j = 0, j_len = all_docs_result.data.total_rows; j < j_len; j += 1) {
             cell_list = [];
             for (i = 0, i_len = option_dict.column_list.length; i < i_len; i += 1) {
+              value = option_dict.column_list[i].select === "url_string" ?
+                all_docs_result.data.rows[j].id :
+                all_docs_result.data.rows[j].value[option_dict.column_list[i].select];
               cell_list.push({
                 "href": link_list[j],
-                "value": all_docs_result.data.rows[j].value[option_dict.column_list[i].select]
+                "value": value
               });
             }
             row_list.push({"cell_list": cell_list});

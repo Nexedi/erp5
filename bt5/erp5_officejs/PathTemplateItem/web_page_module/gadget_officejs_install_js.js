@@ -219,15 +219,25 @@ var repair = false;
             });
             return gadget.props.storage.get(gadget.props.cache_file)
               .push(function (doc) {
-                var url_list = doc.text_content.split('\n'),
+                var url_list = doc.text_content.split('\r\n'),
                   i,
-                  start = url_list.indexOf("CACHE:") + 1,
-                  len = url_list.indexOf("NETWORK:");
-                for (i = start; i < len; i += 1) {
-                  if (url_list[i] !== "" &&
+                  take = false;
+                if (typeof url_list === "string") {
+                  url_list = doc.text_content.split('\n');
+                }
+                for (i = 0; i < url_list.length; i += 1) {
+                  if (url_list[i].indexOf("NETWORK:") >= 0) {
+                    take = false;
+                  }
+                  if (take &&
+                      url_list[i] !== "" &&
                       url_list[i].charAt(0) !== '#' &&
                       url_list[i].charAt(0) !== ' ') {
+                    url_list[i].replace("\r","");
                     gadget.props.cached_url.push(url_list[i]);
+                  }
+                  if (url_list[i].indexOf("CACHE:") >= 0) {
+                    take = true;
                   }
                 }
               });

@@ -98,6 +98,10 @@
             <value> <string>Web Script</string> </value>
         </item>
         <item>
+            <key> <string>revision</string> </key>
+            <value> <string>13</string> </value>
+        </item>
+        <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>
@@ -240,7 +244,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.56020.64919.42120</string> </value>
+                <value> <string>955.59464.8628.44953</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +262,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481331946.97</float>
+                        <float>1481541034.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -98,6 +98,16 @@
             <value> <string>Web Script</string> </value>
         </item>
         <item>
+            <key> <string>revision</string> </key>
+            <value> <string>7</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS jIO ERP5 Configurator Page JS</string> </value>
         </item>
@@ -234,7 +244,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55534.6594.50944</string> </value>
+                <value> <string>955.59548.4928.4881</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +262,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481327828.02</float>
+                        <float>1481541022.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
