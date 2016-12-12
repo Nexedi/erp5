@@ -157,9 +157,9 @@ class ERP5CatalogTool(BaseTool, CMFCore_CatalogTool):
       if id is None:
         # Better to get preferred catalog and use it is as the default catalog
         # instead of getting default catalog from properties
-        catalog_path = self.portal_preferences.getPreferredCatalog()
-        catalog = self.unrestrictedTraverse(catalog_path)
-        return catalog
+        #catalog_path = self.portal_preferences.getPreferredCatalog()
+        #catalog = self.unrestrictedTraverse(catalog_path)
+        #return catalog
         if not self.default_erp5_catalog_id:
           id_list = self.getERP5CatalogIdList()
           if len(id_list) > 0:
