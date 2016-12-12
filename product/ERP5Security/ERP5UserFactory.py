@@ -204,7 +204,7 @@ class ERP5User(PropertiedUser):
     """
     result = self._user_path
     if result is not None:
-      return self.getPortalObject().unrestrictedTraverse(result)
+      return self.getPortalObject().restrictedTraverse(result)
     # user id may match in more than one PAS plugin, but fail if more than one
     # underlying path is found.
     user_path_set = {x['path'] for x in self.aq_parent.searchUsers(
@@ -214,7 +214,7 @@ class ERP5User(PropertiedUser):
     if user_path_set:
       user_path, = user_path_set
       self._user_path = user_path
-      return self.getPortalObject().unrestrictedTraverse(user_path)
+      return self.getPortalObject().restrictedTraverse(user_path)
 
   def getLoginValue(self):
     """ -> login document
@@ -223,7 +223,7 @@ class ERP5User(PropertiedUser):
     """
     result = self._login_path
     if result is not None:
-      return self.getPortalObject().unrestrictedTraverse(result)
+      return self.getPortalObject().restrictedTraverse(result)
     # user name may match at most once, or there can be endless ambiguity.
     user_list = [x for x in self.aq_parent.searchUsers(
       exact_match=True,
@@ -233,7 +233,7 @@ class ERP5User(PropertiedUser):
       user, = user_list
       login, = user['login_list']
       result = self._login_path = login['path']
-      return self.getPortalObject().unrestrictedTraverse(result)
+      return self.getPortalObject().restrictedTraverse(result)
 
   def getLoginValueList(self, portal_type=None, limit=None):
     """ -> list of login documents
@@ -251,8 +251,8 @@ class ERP5User(PropertiedUser):
       ) if 'login_list' in user
       for login in user['login_list']
     }
-    unrestrictedTraverse = self.getPortalObject().unrestrictedTraverse
-    return [unrestrictedTraverse(x) for x in user_path_set]
+    restrictedTraverse = self.getPortalObject().restrictedTraverse
+    return [restrictedTraverse(x) for x in user_path_set]
 
 InitializeClass(ERP5User)
 
