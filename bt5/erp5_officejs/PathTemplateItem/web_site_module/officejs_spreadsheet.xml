@@ -289,6 +289,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -333,7 +343,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' https://netdna.bootstrapcdn.com data:; font-src \'self\' https://netdna.bootstrapcdn.com data:; frame-src \'self\' data:</string> </value>
+            <value> <string>img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' https://netdna.bootstrapcdn.com data:; font-src \'self\' https://netdna.bootstrapcdn.com data:; frame-src \'self\' data: https://setting-gadget.app.officejs.com</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -380,6 +390,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>SAMEORIGIN</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
@@ -616,7 +630,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.23434.60810.22272</string> </value>
+                <value> <string>955.56775.45620.18517</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -634,7 +648,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467750427.13</float>
+                        <float>1481384398.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -16,6 +16,7 @@
     })
 
     .declareAcquiredMethod("post", "jio_post")
+    .declareAcquiredMethod("put", "jio_put")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('getSetting', 'getSetting')
@@ -28,12 +29,14 @@
           return RSVP.all([
             gadget.getSetting("portal_type"),
             gadget.getSetting("document_title"),
-            gadget.getSetting("parent_relative_url")
+            gadget.getSetting("parent_relative_url"),
+            gadget.getSetting("filename_extension")
           ]);
         }).push(function (answer_list) {
           gadget.props.portal_type = answer_list[0];
           gadget.props.document_title = answer_list[1];
           gadget.props.parent_relative_url = answer_list[2];
+          gadget.props.filename_extension = answer_list[3];
           return gadget.updateHeader({
             title: "New " + gadget.props.document_title
           });
@@ -51,12 +54,18 @@
           return gadget.props.deferred.promise;
         })
         .push(function () {
+          return gadget.post({});
+        })
+        .push(function (data) {
           var doc = {
             // XXX Hardcoded
             parent_relative_url: gadget.props.parent_relative_url,
             portal_type: gadget.props.portal_type
           };
-          return gadget.post(doc);
+          if (gadget.props.filename_extension) {
+            doc.filename = data + '.' + gadget.props.filename_extension;
+          }
+          return gadget.put(data, doc).then(function () {return data; });
         })
         .push(function (data) {
           return gadget.redirect({

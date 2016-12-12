@@ -1,6 +1,6 @@
-/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, document*/
+/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, document, jIO*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS, Handlebars, loopEventListener) {
+(function (window, document, RSVP, rJS, Handlebars, loopEventListener, jIO) {
   "use strict";
 
   function this_func_link(name) {
@@ -26,8 +26,11 @@
       .push(function (text_content_gadget) {
         return text_content_gadget.getContent();
       })
-      .push(function (data) {
-        doc.data = data.text_content;
+      .push(function(datauri) {
+        return gadget.jio_putAttachment(gadget.options.jio_key, 'data',
+          jIO.util.dataURItoBlob(datauri.text_content));
+      })
+      .push(function () {
         return gadget.jio_put(gadget.options.jio_key, doc);
       });
   }
@@ -107,6 +110,8 @@
     .allowPublicAcquisition("getSetting", this_func_link("getSetting"))
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
 
     .allowPublicAcquisition('setFillStyle', function () {
       return setFillStyle(this);
@@ -139,9 +144,31 @@
       var gadget = this;
       gadget.options = options;
 
-      return gadget.jio_get(options.jio_key)
-        .push(function (doc) {
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.jio_get(options.jio_key),
+            gadget.jio_getAttachment(options.jio_key, "data")
+              .then(undefined, function (error) {
+                if (error.status_code === 404) {
+                  return new Blob();
+                }
+                throw error;
+              })
+          ]);
+        })
+        .push(function (result) {
+          return jIO.util.readBlobAsDataURL(result[1])
+            .then(function (evt) {
+              result[1] = evt.target.result;
+              return result;
+            });
+        })
+        .push(function (list) {
+          var doc = list[0],
+            data = list[1];
           gadget.options.doc = doc;
+          gadget.options.data = data;
           gadget.options.doc.title = gadget.options.doc.title || "";
           return new RSVP.Queue()
             .push(function () {
@@ -194,7 +221,7 @@
           return text_content_gadget.render({
             //"jio_key": gadget.options.jio_key
             "key": 'text_content',
-            "value": gadget.options.doc.data
+            "value": gadget.options.data
           });
         })
         .push(function () {
@@ -227,4 +254,4 @@
         });
     });
 
-}(window, document, RSVP, rJS, Handlebars, loopEventListener));
+}(window, document, RSVP, rJS, Handlebars, loopEventListener, jIO));

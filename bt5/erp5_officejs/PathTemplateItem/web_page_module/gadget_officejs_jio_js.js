@@ -23,8 +23,8 @@
                 regexp.exec(auth_page)[1]
               ).expand({
                 came_from: window.location.href,
-                cors_origin: window.location.origin,
-                });
+                cors_origin: window.location.origin
+              });
             }
           }
           if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
@@ -35,8 +35,8 @@
                 regexp.exec(auth_page)[1]
               ).expand({
                 back_url: window.location.href,
-                origin: window.location.origin,
-                });
+                origin: window.location.origin
+              });
             }
           }
           if (site) {
@@ -87,7 +87,7 @@
       return wrapJioCall(this, 'remove', arguments);
     })
     .declareMethod('getAttachment', function () {
-      return wrapJioCall(this, 'gettAttachment', arguments);
+      return wrapJioCall(this, 'getAttachment', arguments);
     })
     .declareMethod('putAttachment', function () {
       return wrapJioCall(this, 'putAttachment', arguments);
