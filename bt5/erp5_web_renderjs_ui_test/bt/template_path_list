@@ -4,6 +4,8 @@ portal_tests/renderjs_ui_logout_translate_zuite
 portal_tests/renderjs_ui_logout_translate_zuite/**
 portal_tests/renderjs_ui_logout_zuite
 portal_tests/renderjs_ui_logout_zuite/**
+portal_tests/renderjs_ui_notification_zuite
+portal_tests/renderjs_ui_notification_zuite/**
 portal_tests/renderjs_ui_page_templates_zuite
 portal_tests/renderjs_ui_page_templates_zuite/**
 portal_tests/renderjs_ui_page_zuite
