@@ -30,6 +30,9 @@ if (Common === undefined) {
   }
 
   function dataURLtoBlob(url) {
+    if (url === 'data:') {
+      return new Blob();
+    }
     var byteString = atob(url.split(',')[1]),
       mimeString = url.split(',')[0].split(':')[1].split(';')[0],
       ab = new ArrayBuffer(byteString.length),
@@ -236,6 +239,9 @@ if (Common === undefined) {
       g.props.jio_key = options.jio_key;
       g.props.key = options.key || "text_content";
       g.props.value = options.value;
+      if (g.props.value === "data:") {
+        g.props.value = undefined;
+      }
       if (g.props.value) {
         if (g.props.value.slice === undefined) {
           display_error(g, "not suported type of document value: " +
@@ -257,6 +263,13 @@ if (Common === undefined) {
             type: "zipfile",
             file: g.props.value
           });
+          g.props.value_zip_storage.getAttachment('/', 'body.txt')
+            .then(undefined, function (error) {
+              if (error.status_code === 404) {
+                display_error(g, 'not supported format: "' + g.props.value + '"');
+              }
+              display_error(g, error);
+            });
           break;
         default:
           display_error(g, 'not supported format: "' + g.props.value + '"');
