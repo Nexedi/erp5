@@ -32,7 +32,8 @@
           name: gadget.state.name,
           value: item[1],
           checked: checked,
-          editable: true
+          editable: true,
+          hidden: gadget.state.hidden
         };
 
         return result.render(state_dict);
@@ -65,7 +66,8 @@
           editable: field_json.editable,
           name: field_json.key,
           item_list: field_json.items,
-          value_list: field_json.value || field_json.default
+          value_list: field_json.value || field_json.default,
+          hidden: field_json.hidden
         };
 
       return this.changeState(state_dict);

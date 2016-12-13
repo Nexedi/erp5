@@ -3,7 +3,8 @@ request = container.REQUEST
 portal = context.getPortalObject()
 N_ = portal.Base_translateString
 
-person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+user = portal.portal_membership.getAuthenticatedMember()
+person_value = user.getUserValue()
 if person_value is None:
   portal.changeSkin(None)
   return context.Base_redirect('view', keep_items=dict(
@@ -15,7 +16,6 @@ if person_value.getDefaultEmailText('') in ('', None):
               portal_status_message=N_("You haven't defined your email address")))
 
 
-user_name = person_value.getReference()
 tag = 'active-report-%s' % random.randint(0, 1000)
 priority = 2
 format = request.get('format', '')
@@ -43,7 +43,7 @@ context.activate(activity="SQLQueue", tag=tag, after_tag=after_tag,
   priority=priority).Base_computeReportSection(
     form=form.getId(), 
     request_other=request_other, 
-    user_name=user_name, 
+    user_name=user.getId(),
     tag=tag,
     skin_name=skin_name, 
     format=format,

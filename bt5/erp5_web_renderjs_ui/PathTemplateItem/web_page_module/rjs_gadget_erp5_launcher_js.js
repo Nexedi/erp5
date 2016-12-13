@@ -168,115 +168,79 @@
       });
   }
 
-  function getSetting(gadget, key, default_value) {
-    return gadget.getDeclaredGadget("setting_gadget")
-      .push(function (jio_gadget) {
-        return jio_gadget.get("setting");
-      })
-      .push(function (doc) {
-        return doc[key] || default_value;
-      }, function (error) {
-        if (error.status_code === 404) {
-          return default_value;
-        }
-        throw error;
-      });
-  }
-
-  function setSetting(gadget, key, value) {
-    var jio_gadget;
-    return gadget.getDeclaredGadget("setting_gadget")
-      .push(function (result) {
-        jio_gadget = result;
-        return jio_gadget.get("setting");
-      })
-      .push(undefined, function (error) {
-        if (error.status_code === 404) {
-          return {};
-        }
-        throw error;
-      })
-      .push(function (doc) {
-        doc[key] = value;
-        return jio_gadget.put('setting', doc);
-      });
-  }
-
   //////////////////////////////////////////
   // Page rendering
   //////////////////////////////////////////
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.loading_counter = 0;
-          g.props.element = element;
-          g.props.content_element = element.querySelector('.gadget-content');
-        });
-    })
-    // Configure setting storage
-    .ready(function (g) {
-      return g.getDeclaredGadget("setting_gadget")
-        .push(function (jio_gadget) {
-          return jio_gadget.createJio({
+    .ready(function () {
+      var gadget = this,
+        setting_gadget,
+        setting;
+      this.props = {
+        loading_counter: 0,
+        content_element: this.element.querySelector('.gadget-content')
+      };
+
+      // Configure setting storage
+      return gadget.getDeclaredGadget("setting_gadget")
+        .push(function (result) {
+          setting_gadget = result;
+          setting_gadget.createJio({
             type: "indexeddb",
             database: "setting"
           });
-        });
-    })
-    .ready(function (g) {
-      // Extract configuration parameters stored in HTML
-      // XXX Will work only if top gadget...
-      var element_list =
-        document.querySelectorAll("[data-renderjs-configuration]"),
-        len = element_list.length,
-        key,
-        value,
-        i,
-        queue = new RSVP.Queue();
 
-      function push(a, b) {
-        queue.push(function () {
-          return setSetting(g, a, b);
-        });
-      }
-
-      for (i = 0; i < len; i += 1) {
-        key = element_list[i].getAttribute('data-renderjs-configuration');
-        value = element_list[i].textContent;
-        g.props[key] = value;
-        push(key, value);
-      }
-      return queue;
-    })
-    .ready(function (g) {
-      return setSetting(g, 'hateoas_url',
-          (new URI(g.props.hateoas_url))
-            .absoluteTo(location.href)
-            .toString()
-        );
-    })
-    // Configure jIO storage
-    .ready(function (g) {
-      var jio_gadget;
-      return g.getDeclaredGadget("jio_gadget")
-        .push(function (result) {
-          jio_gadget = result;
-          return getSetting(g, 'jio_storage_description');
+          return setting_gadget.get("setting")
+            .push(undefined, function (error) {
+              if (error.status_code === 404) {
+                return {};
+              }
+              throw error;
+            });
         })
         .push(function (result) {
-          return jio_gadget.createJio(result);
-        });
-    })
-    .ready(function (g) {
-      return g.getDeclaredGadget('panel')
+          setting = result;
+          // Extract configuration parameters stored in HTML
+          // XXX Will work only if top gadget...
+          var element_list =
+            document.head
+            .querySelectorAll("script[data-renderjs-configuration]"),
+            len = element_list.length,
+            key,
+            value,
+            i;
+
+          for (i = 0; i < len; i += 1) {
+            key = element_list[i].getAttribute('data-renderjs-configuration');
+            value = element_list[i].textContent;
+            gadget.props[key] = value;
+            setting[key] = value;
+          }
+
+          // Calculate erp5 hateoas url
+          setting.hateoas_url = (new URI(gadget.props.hateoas_url))
+                              .absoluteTo(location.href)
+                              .toString();
+
+          return setting_gadget.put("setting", setting);
+        })
+        .push(function () {
+          // Configure jIO storage
+          return gadget.getDeclaredGadget("jio_gadget");
+        })
+
+        .push(function (jio_gadget) {
+          jio_gadget.createJio(setting.jio_storage_description);
+
+          return gadget.getDeclaredGadget('panel');
+        })
         .push(function (panel_gadget) {
           return panel_gadget.render();
-        });
-    })
-    .ready(function (g) {
-      return g.getDeclaredGadget('router')
+        })
+
+        .push(function () {
+          return gadget.getDeclaredGadget('router');
+        })
         .push(function (router_gadget) {
           return router_gadget.start();
         });
@@ -286,10 +250,42 @@
     // Allow Acquisition
     //////////////////////////////////////////
     .allowPublicAcquisition("getSetting", function (argument_list) {
-      return getSetting(this, argument_list[0], argument_list[1]);
+      var gadget = this,
+        key = argument_list[0],
+        default_value = argument_list[1];
+      return gadget.getDeclaredGadget("setting_gadget")
+        .push(function (jio_gadget) {
+          return jio_gadget.get("setting");
+        })
+        .push(function (doc) {
+          return doc[key] || default_value;
+        }, function (error) {
+          if (error.status_code === 404) {
+            return default_value;
+          }
+          throw error;
+        });
     })
     .allowPublicAcquisition("setSetting", function (argument_list) {
-      return setSetting(this, argument_list[0], argument_list[1]);
+      var jio_gadget,
+        gadget = this,
+        key = argument_list[0],
+        value = argument_list[1];
+      return gadget.getDeclaredGadget("setting_gadget")
+        .push(function (result) {
+          jio_gadget = result;
+          return jio_gadget.get("setting");
+        })
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            return {};
+          }
+          throw error;
+        })
+        .push(function (doc) {
+          doc[key] = value;
+          return jio_gadget.put('setting', doc);
+        });
     })
     .allowPublicAcquisition("translateHtml", function (argument_list) {
       return this.getDeclaredGadget("translation_gadget")
@@ -461,29 +457,26 @@
           .push(function (main_gadget) {
             // Append loaded gadget in the page
             if (main_gadget !== undefined) {
-              return main_gadget.getElement()
-                .push(function (fragment) {
-                  var element = gadget.props.content_element,
-                    content_container = document.createElement("div");
-                  content_container.className = "ui-content " +
-                    (gadget.props.sub_header_class || "");
-                  // reset subheader indicator
-                  delete gadget.props.sub_header_class;
+              var element = gadget.props.content_element,
+                content_container = document.createDocumentFragment();
+              // content_container.className = "ui-content " +
+              //   (gadget.props.sub_header_class || "");
+              // reset subheader indicator
+              delete gadget.props.sub_header_class;
 
-                  // go to the top of the page
-                  window.scrollTo(0, 0);
+              // go to the top of the page
+              window.scrollTo(0, 0);
 
-                  // Clear first to DOM, append after to reduce flickering/manip
-                  while (element.firstChild) {
-                    element.removeChild(element.firstChild);
-                  }
-                  content_container.appendChild(fragment);
-                  element.appendChild(content_container);
+              // Clear first to DOM, append after to reduce flickering/manip
+              while (element.firstChild) {
+                element.removeChild(element.firstChild);
+              }
+              content_container.appendChild(main_gadget.element);
+              element.appendChild(content_container);
 
-                  return updateHeader(gadget);
-                  // XXX Drop notification
-                  // return header_gadget.notifyLoaded();
-                });
+              return updateHeader(gadget);
+              // XXX Drop notification
+              // return header_gadget.notifyLoaded();
             }
           });
       }

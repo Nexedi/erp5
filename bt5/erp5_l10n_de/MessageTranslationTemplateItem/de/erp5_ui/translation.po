@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-01-08 14:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 14:01+UTC\n"
+"POT-Creation-Date: 2016-11-23 12:11+UTC\n"
+"PO-Revision-Date: 2016-11-23 12:11+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: de <>\n"
 "MIME-Version: 1.0\n"
@@ -440,6 +440,9 @@ msgstr "Diese Aktion setzt den Zustand der gewählten Berufsetappe auf \"gestopp
 msgid "Action that will trigger the confirmed state of a workflow, for example for an accounting transaction or a sale packing list."
 msgstr "Ein Vorgang der den \"Bestätigt\" Zustand setzt, und die zugehörigen Aktionen auslöst. (z.B. für eine Buchung oder einen Lieferschein)"
 
+msgid "Action to be Triggered on the Response Event"
+msgstr "Aktion die bei Beantwortung des Ereignisses ausgeführt wird"
+
 msgid "Action to be triggered on the Response Event"
 msgstr "Aktion die bei Beantwortung des Ereignisses ausgeführt wird"
 
@@ -541,6 +544,9 @@ msgstr "Alarm Bericht"
 
 msgid "All"
 msgstr "Alle"
+
+msgid "All criterions (AND)"
+msgstr "Alle Kriterien (AND)"
 
 msgid "All Accounting Transactions for this organisation during the period have to be closed first."
 msgstr "Alle Buchungs-Transaktionen für diese Organisation während des Zeitraums müssen zuerst abschlossen werden"
@@ -665,6 +671,9 @@ msgstr "Aufgabenzuweisungen im \"Aktualisiert\" Zustand werden aktualisiert, bev
 msgid "At Date"
 msgstr "Enddatum"
 
+msgid "At least one (OR)"
+msgstr "Mindestens ein Datensaz (OR)"
+
 msgid "Attach Document"
 msgstr "Dokument Anfügen"
 
@@ -676,6 +685,9 @@ msgstr "Automatisch Erkennen"
 
 msgid "Available"
 msgstr "Verfügbar"
+
+msgid "ascending"
+msgstr "aufsteigend"
 
 msgid "Bad login provided."
 msgstr "Falsches Login."
@@ -769,6 +781,9 @@ msgstr "Beides"
 
 msgid "Boxes"
 msgstr "Boxen"
+
+msgid "Breadcrumb"
+msgstr "Navigation"
 
 msgid "Branch Number"
 msgstr "Zweigstellennummer"
@@ -1082,6 +1097,9 @@ msgstr "Kontaktart"
 msgid "Contacts"
 msgstr "Kontakte"
 
+msgid "Contain"
+msgstr "Enthält"
+
 msgid "Container"
 msgstr "Transportbehälter"
 
@@ -1195,6 +1213,9 @@ msgstr "Follow Up Ticket Erzeugen"
 
 msgid "Create Initial Balance Transaction"
 msgstr "(Eröffnungs/Abschluss)Saldo-Transaktion Erstellen"
+
+msgid "Create New"
+msgstr "Neuen Datensatz erstellen"
 
 msgid "Create New Bug"
 msgstr "Neuen Bug Erstellen"
@@ -1760,6 +1781,9 @@ msgstr "Doppelte ID gefunden in ${table} Zeile ${line} : ${id}"
 msgid "Duration"
 msgstr "Dauer"
 
+msgid "descending"
+msgstr "absteigend"
+
 msgid "EAN 13 Code"
 msgstr "Zolltarifnummer"
 
@@ -1786,6 +1810,9 @@ msgstr "Form ID bearbeiten"
 
 msgid "Edit Workflow"
 msgstr "Editier Arbeitsablauf"
+
+msgid "Editable"
+msgstr "Editierbar"
 
 msgid "Effective Date"
 msgstr "Wirksamkeitsdatum"
@@ -2006,6 +2033,9 @@ msgstr "Erläutert das erwartete Ergebnis dieser Projekt-Positon"
 msgid "Explanation"
 msgstr "Erläuterung"
 
+msgid "Explore the Search Result List"
+msgstr "Suchergebnisse verfeinern"
+
 msgid "Export"
 msgstr "Exportieren"
 
@@ -2083,6 +2113,9 @@ msgstr "Filtern"
 
 msgid "Filter Content Types"
 msgstr "Inhalstypen Filtern"
+
+msgid "Filter Editor"
+msgstr "Filter Bearbeiten"
 
 msgid "Financial Information"
 msgstr "Finanzielle Informationen"
@@ -2360,6 +2393,9 @@ msgstr "Dokument Verstecken"
 msgid "Hide tabs"
 msgstr "Tabs Verstecken"
 
+msgid "Hide Rows"
+msgstr "Datensätze verbergen"
+
 msgid "Hides a document which was published or released by mistake by setting the validation_state to hidden."
 msgstr "Versteckt ein Dokument, was versehentlich veröffentlicht wurde durch Setzen des Validierungszustands auf Versteckt."
 
@@ -2374,6 +2410,9 @@ msgstr "Historische Revisionen sind nicht verfügbar. Eventuell wurde die Datenb
 
 msgid "History"
 msgstr "Historie"
+
+msgid "Home"
+msgstr "Startseite"
 
 msgid "Home Area Form"
 msgstr "Arbeitsbereich"
@@ -2534,6 +2573,9 @@ msgstr "Interne Aufträge"
 msgid "Internal Packing Lists"
 msgstr "Interne Lieferscheine"
 
+msgid "Invalid Search Criteria"
+msgstr "Suchkriterien Ungültig"
+
 msgid "Invalidate"
 msgstr "Annulieren"
 
@@ -2622,6 +2664,9 @@ msgid "Journalised"
 msgstr "Journalisiert"
 
 msgid "Jump"
+msgstr "Springen"
+
+msgid "Jumps"
 msgstr "Springen"
 
 msgid "Jump Relation"
@@ -2747,6 +2792,9 @@ msgstr "Liste der Dokumente"
 msgid "List of all events related to the causality event"
 msgstr "Liste aller mit dem ursächlichen Ereignis verknüpften Ereignisse"
 
+msgid "Loading"
+msgstr "Laden"
+
 msgid "Loading ..."
 msgstr "Laden..."
 
@@ -2773,6 +2821,9 @@ msgstr "Logischer Pfad"
 
 msgid "Login"
 msgstr "Einloggen"
+
+msgid "Logout"
+msgstr "Ausloggen"
 
 msgid "Lost Sale Opportunity, as it has been rejected by the customer"
 msgstr "GescheiterteVerkaufsgelegenheit, da vom Kunden abgelehnt."
@@ -3028,6 +3079,9 @@ msgstr "Kein(e) ${portal_type} verknüpft."
 
 msgid "No Project"
 msgstr "kein Projekt"
+
+msgid "No records"
+msgstr "Keine Datensätze"
 
 msgid "No Sale Invoice Transaction Related"
 msgstr "Keine verknüpften Verkaufs-Rechnungs-Transaktionen"
@@ -3719,6 +3773,9 @@ msgstr "Privat"
 msgid "Privilege"
 msgstr "Privileg"
 
+msgid "Proceed"
+msgstr "Weiter"
+
 msgid "Product Interest"
 msgstr "Leistungsinteresse"
 
@@ -4076,6 +4133,9 @@ msgstr "Empfänger"
 msgid "Recipients email must be defined"
 msgstr "Die E-Mail des Empfängers muss definiert sein"
 
+msgid "Records"
+msgstr "Datensätze"
+
 msgid "Reference"
 msgstr "Referenz"
 
@@ -4288,6 +4348,9 @@ msgstr "Anforderungs-Dokumente"
 
 msgid "Requirements"
 msgstr "Anforderungen"
+
+msgid "Reset"
+msgstr "Zurücksetzen"
 
 msgid "Reset Prices"
 msgstr "Preise zurücksetzen"
@@ -4580,6 +4643,9 @@ msgstr "Bewertung Lieferung"
 msgid "Search"
 msgstr "Suche"
 
+msgid "Searchable Text"
+msgstr "Durchsuchbarer Text"
+
 msgid "Search Key"
 msgstr "Suchschlüssel"
 
@@ -4600,6 +4666,9 @@ msgstr "Kategorie der Organisationseinheit"
 
 msgid "Section Transaction Reference"
 msgstr "Transaktions-Referenz Bereich"
+
+msgid "Select Template"
+msgstr "Auswahlvorlage"
 
 msgid "Select Favorite"
 msgstr "Favorit Auswählen"
@@ -4831,6 +4900,9 @@ msgstr "Sortier Index"
 
 msgid "Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents."
 msgstr "Der Sortier Index bestimmt entweder die Berechnungs- oder Sortierreihenfolge von Dokumenten in Listen."
+
+msgid "Sort Editor"
+msgstr "Sortierung Bearbeiten"
 
 msgid "Sort Order"
 msgstr "Sortierreihenfolge"
@@ -6164,6 +6236,13 @@ msgstr "Alte Revision Ansehen"
 msgid "View Report"
 msgstr "Bericht Ansehen"
 
+msgid "Viewable"
+msgstr "Ansicht"
+
+
+msgid "Views"
+msgstr "Ansichten"
+
 msgid "Visit"
 msgstr "Besuch"
 
@@ -6268,6 +6347,9 @@ msgstr "IST-Gesamstunden des Monats"
 
 msgid "Workflow"
 msgstr "Arbeitsablauf"
+
+msgid "Workflow-Transitions"
+msgstr "Arbeitsablauf-Buchungen"
 
 msgid "Workflow History"
 msgstr "Arbeitsablauf Historie"

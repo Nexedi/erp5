@@ -61,7 +61,7 @@
                 view: 'view'
               }}),
               // Remove the counter from the title
-              action_list[i].name.replace(/ \(\d+\)$/, ''),
+              action_list[i].name,
               action_list[i].count
             ]));
 
@@ -78,14 +78,9 @@
               count: result_list[i][2]
             });
           }
-          return gadget.translateHtml(table_template({
+          gadget.element.querySelector('.document_list').innerHTML = table_template({
             documentlist: line_list
-          }));
-        })
-
-        .push(function (my_translated_html) {
-          gadget.element.querySelector('.document_list').innerHTML =
-            my_translated_html;
+          });
         });
     });
 

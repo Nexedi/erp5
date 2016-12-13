@@ -181,7 +181,7 @@ CREATE TABLE alternate_roles_and_users (
       self.assertEqual([user2],
         [o.getObject() for o in self.portal.portal_catalog(portal_type='Person')])
 
-      self.login('ERP5TypeTestCase')
+      self.login()
       self.assertSameSet([user1, user2],
         [o.getObject() for o in
           self.portal.portal_catalog(portal_type='Person')])

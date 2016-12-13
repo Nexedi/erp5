@@ -1,11 +1,15 @@
 from DateTime import DateTime
 
-person_list = [x for x in context.acl_users.searchUsers(login=login, exact_match=True) if 'path' in x]
-if not person_list:
+person_path_set = {
+  x['path']
+  for x in context.acl_users.searchUsers(login=login, exact_match=True)
+  if 'path' in x
+}
+if not person_path_set:
   return False, []
 
-person, = person_list
-person = context.getPortalObject().restrictedTraverse(person['path'])
+person_path, = person_path_set
+person = context.getPortalObject().restrictedTraverse(person_path)
 if person.getPassword(format='palo_md5') != password:
   return False, []
 

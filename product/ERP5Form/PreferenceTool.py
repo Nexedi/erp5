@@ -253,12 +253,12 @@ class PreferenceTool(BaseTool):
     """Creates a preference for a given user, and optionnally enable the
     preference.
     """
+    user_folder = self.acl_users
+    user = user_folder.getUserById(username)
+    if user is None:
+      raise ValueError("User %r not found" % (username, ))
     security_manager = getSecurityManager()
     try:
-      user_folder = self.getPortalObject().acl_users
-      user = user_folder.getUserById(username)
-      if user is None:
-        raise ValueError("User %r not found" % (username, ))
       newSecurityManager(None, user.__of__(user_folder))
       preference = self.newContent(portal_type='Preference')
       if enable:

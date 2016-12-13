@@ -18,7 +18,6 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
@@ -47,7 +46,7 @@
           }
           return gadget.jio_allDocs({
             query: Query.objectToSearchText(new ComplexQuery({operator: 'OR', query_list: query_list})),
-            select_list: ["title", "portal_type"],
+            select_list: ["title", "translated_portal_type"],
             limit: id_list.length
           });
         })
@@ -66,13 +65,12 @@
         .push(function (result_list) {
           var i,
             document_list = [],
-            document_dict = {},
-            result_html;
+            document_dict = {};
 
           for (i = 0; i < result_list.length; i += 1) {
             document_dict[result_list[i][2]] = {
               link: result_list[i][0],
-              title: (result_list[i][1].title || result_list[i][2]) + " (" + result_list[i][1].portal_type + ")"
+              title: (result_list[i][1].title || result_list[i][2]) + " (" + result_list[i][1].translated_portal_type + ")"
             };
           }
           // Sort by access time
@@ -82,15 +80,9 @@
             }
           }
 
-          result_html = table_template({
+          gadget.element.querySelector('.document_list').innerHTML  = table_template({
             documentlist: document_list
           });
-
-          return gadget.translateHtml(result_html);
-        })
-        .push(function (my_translated_html) {
-          gadget.element.querySelector('.document_list').innerHTML =
-            my_translated_html;
         });
     });
 }(window, rJS, RSVP, Handlebars, SimpleQuery, ComplexQuery, Query));

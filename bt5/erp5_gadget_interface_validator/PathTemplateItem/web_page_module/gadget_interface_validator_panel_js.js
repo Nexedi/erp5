@@ -42,7 +42,8 @@
     })
 
 
-    .ready(function (g) {
+    .declareMethod('render', function () {
+      var g = this;
       return g.translateHtml(panel_template_header() + panel_template_body())
         .push(function (my_translated_or_plain_html) {
           g.props.jelement.html(my_translated_or_plain_html);
@@ -58,9 +59,7 @@
       this.props.jelement.panel("close");
     })
 
-    .declareMethod('render', function () {
-      return;
-    })
+
 
     /////////////////////////////////////////////////////////////////
     // declared services

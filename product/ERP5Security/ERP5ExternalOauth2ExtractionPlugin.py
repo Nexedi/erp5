@@ -33,7 +33,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 from AccessControl.SecurityManagement import getSecurityManager, \
   setSecurityManager, newSecurityManager
@@ -182,8 +182,8 @@ class ERP5ExternalOauth2ExtractionPlugin:
       # create the user if not found
       if not self.searchUsers(id=user, exact_match=True):
         sm = getSecurityManager()
-        if sm.getUser().getId() != SUPER_USER:
-          newSecurityManager(self, self.getUser(SUPER_USER))
+        if sm.getUser().getId() != ERP5Security.SUPER_USER:
+          newSecurityManager(self, self.getUser(ERP5Security.SUPER_USER))
         try:
           self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
           if user_entry is None:

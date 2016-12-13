@@ -8,7 +8,7 @@
       .push(function () {
         var title = erp5_document.title,
           portal_type = erp5_document._links.type.name;
-        if (/ Module$/.test(portal_type)) {
+        if (/ Module$/.test(erp5_document._links.type.href)) {
           return portal_type;
         }
         return portal_type + ': ' + title;

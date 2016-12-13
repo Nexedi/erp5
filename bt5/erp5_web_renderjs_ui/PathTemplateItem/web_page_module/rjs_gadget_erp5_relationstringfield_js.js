@@ -24,8 +24,10 @@
             url: field_json.url,
             allow_creation: field_json.allow_creation,
             portal_types: field_json.portal_types,
+            translated_portal_types: field_json.translated_portal_types,
             value_relative_url: field_json.relation_item_relative_url[0],
-            relation_index: 0
+            relation_index: 0,
+            hidden: field_json.hidden
           };
 
           if (field_json.default.hasOwnProperty('value_text_list')) {

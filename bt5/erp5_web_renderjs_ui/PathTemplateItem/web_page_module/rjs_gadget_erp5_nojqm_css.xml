@@ -64,6 +64,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -236,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.58960.41752.27153</string> </value>
+                <value> <string>955.33777.42224.15633</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1477660036.34</float>
+                        <float>1480337940.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

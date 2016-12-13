@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-01-08 13:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 13:01+UTC\n"
+"POT-Creation-Date: 2016-11-23 11:11+UTC\n"
+"PO-Revision-Date: 2016-11-23 11:11+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -547,6 +547,12 @@ msgstr "Écritures comptables à valider"
 msgid "Accounting View"
 msgstr "Comptabilité"
 
+msgid "Accounting View Destination"
+msgstr "Comptabilité pour la destination"
+
+msgid "Accounting View Source"
+msgstr "Comptabilité pour la source"
+
 msgid "Accounting Workflow"
 msgstr "Workflow de comptabilité"
 
@@ -861,6 +867,9 @@ msgstr "Tous les documents"
 
 msgid "All Related Documents"
 msgstr "Tous les documents liés"
+
+msgid "All criterions (AND)"
+msgstr "Tous critères (AND)"
 
 msgid "All needed information is collected."
 msgstr "Les informations nécessaires ont été collectées"
@@ -1413,6 +1422,9 @@ msgstr "Date de fin (inclus)"
 
 msgid "At Date (or Stop Date)"
 msgstr "Date de fin"
+
+msgid "At lease one (OR)"
+msgstr "Au moins un (OR)"
 
 msgid "At least one line is required"
 msgstr "Le document doit contenir au moins une ligne"
@@ -2986,6 +2998,9 @@ msgstr "Envoyer la demande"
 msgid "Contacted"
 msgstr "Contacté"
 
+msgid "Contain"
+msgstr "Contenir"
+
 msgid "Contained Quantity"
 msgstr "Quantité contenue"
 
@@ -3252,6 +3267,9 @@ msgstr "Ajouter une fiche"
 
 msgid "Create Module"
 msgstr "Créer un module"
+
+msgid "Create New"
+msgstr "Créer Nouveau"
 
 msgid "Create New Bug"
 msgstr "Créer un bogue"
@@ -4254,6 +4272,9 @@ msgstr "Dépendances"
 
 msgid "Descending"
 msgstr "Décroissant"
+
+msgid "Description"
+msgstr "Description"
 
 msgid "Description of project line."
 msgstr "Description de la ligne de projet"
@@ -5308,6 +5329,9 @@ msgstr "Expiré"
 msgid "Explanation"
 msgstr "Explications"
 
+msgid "Explore the Search Result List"
+msgstr "Explorer la Liste des Résultats de Recherche"
+
 msgid "Export"
 msgstr "Exporter"
 
@@ -5484,6 +5508,9 @@ msgstr "Entrez votre nom d'utilisateur et votre mot de passe"
 
 msgid "Filter"
 msgstr "Filtrer"
+
+msgid "Filter Editor"
+msgstr "Editeur de Filtre"
 
 msgid "Final Balance"
 msgstr "Solde Final"
@@ -5956,6 +5983,9 @@ msgstr "Cacher (action)"
 msgid "Hide Document [transition in document_publication_workflow]"
 msgstr "Cacher"
 
+msgid "Hide Rows"
+msgstr "Cacher les Lignes"
+
 msgid "Hide tabs"
 msgstr "Cacher les onglets"
 
@@ -6349,6 +6379,12 @@ msgstr "Nombre entier utilisé pour classer l'agent."
 msgid "Interaction Workflow Definition"
 msgstr "Définition du workflow d'interaction"
 
+msgid "Internal Invoice Transaction"
+msgstr "Écriture interne"
+
+msgid "Internal Invoice Transaction Line"
+msgstr "Ligne d'écriture interne"
+
 msgid "Internal Money Deposit"
 msgstr "Dépôt sur compte d'ordre"
 
@@ -6447,6 +6483,9 @@ msgstr "BIC invalide."
 
 msgid "Invalid IBAN."
 msgstr "IBAN invalide."
+
+msgid "Invalid Search Criteria"
+msgstr "Critère de Recherche Invalide"
 
 msgid "Invalidate"
 msgstr "Invalider"
@@ -6712,6 +6751,9 @@ msgstr "Aller au payement"
 msgid "Jump..."
 msgstr "Aller à ..."
 
+msgid "Jumps"
+msgstr "Aller à"
+
 msgid "June"
 msgstr "Juin"
 
@@ -6912,6 +6954,9 @@ msgstr "Liste des documents"
 
 msgid "Listbox"
 msgstr "Liste"
+
+msgid "Loading"
+msgstr "Chargement"
 
 msgid "Local Permissions"
 msgstr "Permissions locales"
@@ -7333,6 +7378,9 @@ msgstr "Exporter le dossier"
 msgid "Migration to HBTree is running."
 msgstr "La migration vers HBTree est en cours."
 
+msgid "Milestone"
+msgstr "Étape"
+
 msgid "Milestone:"
 msgstr "Étape"
 
@@ -7422,6 +7470,9 @@ msgstr "Modifier l'interface utilisateur"
 
 msgid "Module Property"
 msgstr "Propriétés du module"
+
+msgid "Modules"
+msgstr "Modules"
 
 msgid "Monday"
 msgstr "Lundi"
@@ -7728,6 +7779,9 @@ msgstr "Aucune information disponible pour ce profil."
 
 msgid "No quantity is defined on this line."
 msgstr "Aucune quantité n'est indiquée !"
+
+msgid "No records"
+msgstr "Aucune Résult"
 
 msgid "No related documents found."
 msgstr "Aucun document correspondant n'a été trouvé."
@@ -9298,6 +9352,9 @@ msgstr "Problème"
 msgid "Problem Detected"
 msgstr "Problème détecté"
 
+msgid "Proceed"
+msgstr "Procéder"
+
 msgid "Process file [transition in processing_status_workflow]"
 msgstr "Traiter le fichier"
 
@@ -9420,6 +9477,18 @@ msgstr "Titre du projet"
 
 msgid "Project Workflow"
 msgstr "Workflow des projets"
+
+msgid "Project effort"
+msgstr "Effort de projet"
+
+msgid "Project effort and costs"
+msgstr "Effort de projet et frais"
+
+msgid "Project effort and costs by organization"
+msgstr "Effort de projet et frais par organisation"
+
+msgid "Project effort by organization"
+msgstr "Effort de projet par organisation"
 
 msgid "Project to Open"
 msgstr "Projet à ouvrir"
@@ -10027,6 +10096,9 @@ msgstr "Écritures rapprochées"
 msgid "Reconfigure Portal"
 msgstr "Configurer l'application"
 
+msgid "Records"
+msgstr "Résult"
+
 msgid "Reference"
 msgstr "Référence"
 
@@ -10543,6 +10615,9 @@ msgstr "Édition rapide des expressions de besoins"
 msgid "Requirements with Sub-Requirements"
 msgstr "Hiérarchie d'expression de besoins"
 
+msgid "Reset"
+msgstr "Réinitialiser"
+
 msgid "Reset List Setting"
 msgstr "Réinitialiser la configuration de la liste"
 
@@ -11049,6 +11124,9 @@ msgstr "Résultats de la recherche"
 
 msgid "Search the ERP5 Knowledge Base"
 msgstr "Rechercher dans la base de connaissance"
+
+msgid "Searchable Text"
+msgstr "Texte Recherchable"
 
 msgid "Section"
 msgstr "Entité"
@@ -11646,6 +11724,9 @@ msgstr "Suppression+impossible.+Un+autre+objet+dépend+de+celui-ci."
 
 msgid "Sort"
 msgstr "Trier"
+
+msgid "Sort Editor"
+msgstr "Editeur de Tri"
 
 msgid "Sort Index"
 msgstr "Index"
@@ -14299,6 +14380,12 @@ msgstr "Source"
 msgid "View Style"
 msgstr "Style vue"
 
+msgid "Viewable"
+msgstr "Visible"
+
+msgid "Views"
+msgstr "Vues"
+
 msgid "Visa, BlueCard and MasterCard must have 16 digits. If your Credit Card has more or less than 16 digits, please contact us (express-support@myerp5.com)"
 msgstr "Un numéro de carte de crédit comporte 16 chiffres pour les Visa, Carte Bleue et MasterCard. Si votre carte fait exception à cette règle, contactez l'Equipe d'Assistance Express (express-support@myerp5.com)"
 
@@ -14500,6 +14587,12 @@ msgstr "Changement d'état en cours"
 msgid "Workflows updated."
 msgstr "Workflow mis à jour"
 
+msgid "Worklist"
+msgstr "Liste de travail"
+
+msgid "Worklists"
+msgstr "Liste de travail"
+
 msgid "Works"
 msgstr "Travaux"
 
@@ -14670,6 +14763,9 @@ msgstr "recherche avancée"
 
 msgid "an increasing number with each modification done to the web page"
 msgstr "un numéro qui augmente avec chaque modification faite sur la page web."
+
+msgid "ascending"
+msgstr "Croissant"
 
 msgid "auto_planned"
 msgstr "Planifié (automatiquement)"

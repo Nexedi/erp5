@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, Handlebars, RSVP, loopEventListener */
-(function (window, rJS, Handlebars, RSVP, loopEventListener) {
+/*global window, rJS, Handlebars, RSVP, Node */
+(function (window, rJS, Handlebars, RSVP, Node) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -8,49 +8,36 @@
   /////////////////////////////////////////////////////////////////
   // Precompile templates while loading the first gadget instance
   var gadget_klass = rJS(window),
-    source_header = gadget_klass.__template_element
+    template_element = gadget_klass.__template_element,
+    panel_template_header = Handlebars.compile(template_element
                          .getElementById("panel-template-header")
-                         .innerHTML,
-    panel_template_header = Handlebars.compile(source_header),
-    source_body = gadget_klass.__template_element
+                         .innerHTML),
+    panel_template_body = Handlebars.compile(template_element
                          .getElementById("panel-template-body")
-                         .innerHTML,
-    panel_template_body = Handlebars.compile(source_body);
+                         .innerHTML);
 
   gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
+    .setState({
+      visible: false
     })
-
     //////////////////////////////////////////////
     // acquired method
     //////////////////////////////////////////////
-    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.render_deferred = RSVP.defer();
-        });
-    })
+    .declareAcquiredMethod("translateHtml", "translateHtml")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('toggle', function () {
-      this.props.element.classList.toggle('visible');
+      return this.changeState({
+        visible: !this.state.visible
+      });
     })
     .declareMethod('close', function () {
-      if (this.props.element.classList.contains('visible')) {
-        this.props.element.classList.remove('visible');
-      }
+      return this.changeState({
+        visible: false
+      });
     })
 
     .declareMethod('render', function () {
@@ -68,46 +55,43 @@
         })
         .push(function (all_result) {
           // XXX: Customize panel header!
-          var tmp = panel_template_header();
-          tmp += panel_template_body({
-            "module_href": all_result[0],
-            "history_href": all_result[1],
-            "preference_href": all_result[2],
-            // "language_list": language_list,
-            "logout_href": all_result[3],
-            "search_href": all_result[4],
-            "worklist_href": all_result[5]
-          });
-          return tmp;
+          return g.translateHtml(
+            panel_template_header() +
+            panel_template_body({
+              "module_href": all_result[0],
+              "history_href": all_result[1],
+              "preference_href": all_result[2],
+              "logout_href": all_result[3],
+              "search_href": all_result[4],
+              "worklist_href": all_result[5]
+            })
+          );
         })
         .push(function (my_translated_or_plain_html) {
-          g.props.element.querySelector("div").innerHTML = my_translated_or_plain_html;
-          g.props.render_deferred.resolve();
+          g.element.querySelector("div").innerHTML = my_translated_or_plain_html;
         });
+    })
+
+    .onStateChange(function () {
+      if (this.state.visible) {
+        if (!this.element.classList.contains('visible')) {
+          this.element.classList.toggle('visible');
+        }
+      } else {
+        if (this.element.classList.contains('visible')) {
+          this.element.classList.remove('visible');
+        }
+      }
     })
 
     /////////////////////////////////////////////////////////////////
     // declared services
     /////////////////////////////////////////////////////////////////
-    .declareService(function () {
-      var panel_gadget = this;
-
-      function formSubmit() {
-        panel_gadget.toggle();
+    .onEvent('click', function (evt) {
+      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
+          (evt.target.tagName === 'BUTTON')) {
+        return this.toggle();
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return panel_gadget.props.render_deferred.promise;
-        })
-        .push(function () {
-          return loopEventListener(
-            panel_gadget.props.element.querySelector('button'),
-            'click',
-            false,
-            formSubmit
-          );
-        });
+    }, false, false);
 
-    });
-
-}(window, rJS, Handlebars, RSVP, loopEventListener));
+}(window, rJS, Handlebars, RSVP, Node));

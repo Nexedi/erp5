@@ -11,8 +11,9 @@
       templater.getElementById("display-template").innerHTML
     );
     
-  function clean(case_list) {
-    var i,
+  function clean(case_list, software_website, software_title, publisher_website, publisher_title) {
+    var emptry_string = "",
+      i,
       len,
       entry;
     for (i = 0, len = case_list.length; i < len; i += 1) {
@@ -21,6 +22,10 @@
         entry.image = PLACEHOLDER;
         entry.image_class = "custom-placeholder";
       }
+      entry.software_website = software_website || emptry_string;
+      entry.software = software_title || emptry_string;
+      entry.publisher_website = publisher_website || emptry_string;
+      entry.publisher = publisher_title  || emptry_string;
     }
     return case_list;
   }
@@ -45,6 +50,7 @@
           return gadget.jio_get(options.jio_key);
         })
         .push(function (software) {
+          
           // https://en.wikipedia.org/api/rest_v1/
           // only works in for english
           var wikipedia_api_url = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
@@ -61,7 +67,13 @@
               software.success_case_list[0].title === "") {
             delete software.success_case_list;
           } else {
-            software.success_case_list = clean(software.success_case_list);
+            software.success_case_list = clean(
+              software.success_case_list, 
+              software.website, 
+              software.title,
+              software.publisher_website,
+              software.publisher
+            );
           }
           if (software.wikipedia_url == "N/A") {
             delete software.wikipedia_url;
@@ -88,7 +100,7 @@
               });
 
         })
-        .push(function (my_software) { 
+        .push(function (my_software) {
           gadget.props.element.querySelector(".display-widget")
             .innerHTML = display_widget_table(my_software);
           

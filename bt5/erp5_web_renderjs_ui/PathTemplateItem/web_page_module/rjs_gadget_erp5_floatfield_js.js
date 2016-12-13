@@ -18,7 +18,8 @@
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
-          precision: field_json.precision
+          precision: field_json.precision,
+          hidden: field_json.hidden
         };
       state_dict.text_content = state_dict.value;
       if (field_json.precision) {

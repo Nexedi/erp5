@@ -114,7 +114,8 @@ class PasswordTool(BaseTool):
                                notification_message=None, sender=None,
                                store_as_event=False,
                                expiration_date=None,
-                               substitution_method_parameter_dict=None):
+                               substitution_method_parameter_dict=None,
+                               batch=False):
     """
     Create a random string and expiration date for request
     Parameters:
@@ -142,19 +143,19 @@ class PasswordTool(BaseTool):
 
     msg = None
     # check user exists, and have an email
-    user_list = [x for x in self.getPortalObject().acl_users.searchUsers(
+    user_path_set = {x['path'] for x in self.getPortalObject().acl_users.searchUsers(
       login=user_login,
       exact_match=True,
-    ) if 'path' in x]
-    if len(user_list) == 0:
+    ) if 'path' in x}
+    if len(user_path_set) == 0:
       msg = translateString("User ${user} does not exist.",
                             mapping={'user':user_login})
     else:
       # We use checked_permission to prevent errors when trying to acquire
       # email from organisation
-      user, = user_list
+      user_path, = user_path_set
       user_value = self.getPortalObject().unrestrictedTraverse(
-        user['path'])
+        user_path)
       email_value = user_value.getDefaultEmailValue(
         checked_permission='Access content information')
       if email_value is None or not email_value.asText():
@@ -162,7 +163,10 @@ class PasswordTool(BaseTool):
             "User ${user} does not have an email address, please contact site "
             "administrator directly", mapping={'user':user_login})
     if msg:
-      return redirect(REQUEST, site_url, msg)
+      if batch:
+        raise RuntimeError(msg)
+      else:
+        return redirect(REQUEST, site_url, msg)
 
     key = self.getResetPasswordKey(user_login=user_login,
                                    expiration_date=expiration_date)
@@ -209,8 +213,9 @@ class PasswordTool(BaseTool):
                                                             store_as_event=store_as_event,
                                                             message_text_format=message_text_format,
                                                             event_keyword_argument_dict=event_keyword_argument_dict)
-    return redirect(REQUEST, site_url,
-                    translateString("An email has been sent to you."))
+    if not batch:
+      return redirect(REQUEST, site_url,
+                      translateString("An email has been sent to you."))
 
   def _generateUUID(self, args=""):
     """
@@ -266,7 +271,7 @@ class PasswordTool(BaseTool):
     try:
       register_user_login, expiration_date = self._password_request_dict[
         password_key]
-    except KeyError:
+    except (KeyError, TypeError):
       # XXX: incorrect grammar and not descriptive enough
       return error('Key not known. Please ask reset password.')
     if user_login is not None and register_user_login != user_login:

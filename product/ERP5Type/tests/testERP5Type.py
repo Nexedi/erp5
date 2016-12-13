@@ -26,7 +26,10 @@
 #
 ##############################################################################
 
-import cPickle
+try:
+  from ZODB._compat import cPickle
+except ImportError: # BBB: ZODB < 4
+  import cPickle
 import unittest
 import sys
 

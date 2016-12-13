@@ -47,8 +47,8 @@ from Products.PluggableAuthService.plugins.CookieAuthHelper import CookieAuthHel
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, \
-                                                  SUPER_USER, \
                                                   _AuthenticationFailure
+from Products import ERP5Security
 
 from Crypto.Cipher import AES
 from Crypto import Random
@@ -325,7 +325,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     if key != None:
       login = self.decrypt(key)
       # Forbidden the usage of the super user.
-      if login == SUPER_USER:
+      if login == ERP5Security.SUPER_USER:
         return None
 
       #Function to allow cache
@@ -335,15 +335,15 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           return None
 
         #Search the user by his login
-        user_list = self.getUserByLogin(login)
-        if len(user_list) != 1:
+        user = self.getUser(login)
+        if user is None:
           raise _AuthenticationFailure()
-        user = user_list[0]
+        user_value = user.getUserValue()
 
         if True:
           try:
             # get assignment list
-            assignment_list = [x for x in user.contentValues(portal_type="Assignment") \
+            assignment_list = [x for x in user_value.contentValues(portal_type="Assignment") \
                                  if x.getValidationState() == "open"]
             valid_assignment_list = []
             # check dates if exist
@@ -359,7 +359,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
 
             # validate
             if len(valid_assignment_list) > 0:
-              return (login, login)
+              return (user.getId(), user.getUserName())
           finally:
             pass
 

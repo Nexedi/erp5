@@ -12,7 +12,13 @@ if not transaction.getStartDate() and transaction.getStopDate():
   transaction.setStartDate(transaction.getStopDate())
 
 # XXX auto-fill mirror accounts, if necessary.
-transaction.AccountingTransaction_setDefaultMirrorAccountList()
+# We do not do it for internal invoice transaction, because we do it in
+# only after starting the invoice, because this can make invoice not balanced
+# for destination section, which is not a problem for source section accountant
+# when starting.
+# Using this in non-internal transaction is probably a bad idea.
+if transaction.getPortalType() != 'Internal Invoice Transaction':
+  transaction.AccountingTransaction_setDefaultMirrorAccountList()
 
 # Check constraints
 transaction.Base_checkConsistency()
@@ -65,7 +71,7 @@ if not skip_period_validation :
     valid_date = False
     no_accounts = True
     for line in transaction_line_list:
-      if line.getSource():
+      if line.getSource(portal_type='Account'):
         no_accounts = False
     if no_accounts:
       valid_date = True
@@ -95,7 +101,7 @@ if not skip_period_validation :
     valid_date = False
     no_accounts = True
     for line in transaction_line_list:
-      if line.getDestination():
+      if line.getDestination(portal_type='Account'):
         no_accounts = False
     if no_accounts:
       valid_date = True

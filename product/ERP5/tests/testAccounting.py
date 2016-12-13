@@ -425,6 +425,93 @@ class TestTransactionValidation(AccountingTestCase):
       line.setDestination(None)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
+  def test_UnusedSectionTransactionValidationDateDestination(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates. Symetric test of test_UnusedSectionTransactionValidationDate
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               destination_section_value=self.organisation_module.supplier,
+               source_section_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for source_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # If we don't have accounts on source side, validating transaction is
+    # not refused
+    for line in accounting_transaction.getMovementList():
+      line.setSource(None)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_UnusedSectionTransactionValidationDateWithSourceSetOnDelivery(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates
+    # Corner case that a source organisation is set on the transaction.
+    # Acquisition should not be a problem.
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               source_section_value=self.organisation_module.supplier,
+               source_value=self.organisation_module.supplier,
+               destination_section_value=self.section,
+               destination_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for destination_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # If we don't have accounts on destination side, validating transaction is
+    # not refused
+    for line in accounting_transaction.getMovementList():
+      line.setDestination(None)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_UnusedSectionTransactionValidationDateDestinationWithDestinationSetOnDelivery(self):
+    # If a section doesn't have any accounts on its side, we don't check the
+    # accounting period dates.
+    # Symetric test of test_UnusedSectionTransactionValidationDateWithSourceSetOnDelivery
+    # Corner case that a destination organisation is set on the transaction.
+    # Acquisition should not be a problem.
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2006/03/03'),
+               destination_section_value=self.organisation_module.supplier,
+               destination_value=self.organisation_module.supplier,
+               source_section_value=self.section,
+               source_value=self.section,
+               payment_mode='default',
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           destination_value=self.account_module.goods_purchase,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+
+    # 2006 is closed for source_section
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # If we don't have accounts on source side, validating transaction is
+    # not refused
+    for line in accounting_transaction.getMovementList():
+      line.setSource(None)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
   def test_AccountingTransactionValidationStartDate(self):
     # Check we can/cannot validate at date boundaries of the period
     accounting_transaction = self._makeOne(
@@ -5300,7 +5387,127 @@ class TestAccountingTransactionTemplate(AccountingTestCase):
     self.assertTrue('Template%20created.' in ret, ret)
     self.assertEqual(2, len(self.accounting_module.contentValues()))
 
+class TestInternalInvoiceTransaction(AccountingTestCase):
+  def afterSetUp(self):
+    AccountingTestCase.afterSetUp(self)
+    # Allow internal invoice in accounting module
+    module_allowed_type_list = self.portal.portal_types[
+        'Accounting Transaction Module'].getTypeAllowedContentTypeList()
+    self.portal.portal_types[
+        'Accounting Transaction Module'].setTypeAllowedContentTypeList(
+          module_allowed_type_list + ['Internal Invoice Transaction',])
+    # configure mirror accounts
+    self.portal.account_module.receivable.setDestinationValue(
+      self.portal.account_module.payable)
 
+  def test_internal_invoice_transaction(self):
+    # source accountant create internal invoice and set values for source side
+    internal_invoice = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='test invoice',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+    )
+    line_1, line_2 = internal_invoice.getMovementList()
+    line_1.edit(
+      source_value=self.portal.account_module.receivable,
+      source_debit=100)
+    line_2.edit(
+      source_value=self.portal.account_module.goods_sales,
+      source_credit=100)
+    self.commit()
+    internal_invoice.view() # no error on view..
+
+    self.portal.portal_workflow.doActionFor(
+        internal_invoice, 'start_action')
+    self.assertEqual('started', internal_invoice.getSimulationState())
+
+    # mirror accounts are initialised
+    self.assertEqual(self.portal.account_module.payable, line_1.getDestinationValue())
+    self.assertEqual(None, line_2.getDestinationValue())
+
+    # destination accountant set values for source side
+    internal_invoice.edit(
+      stop_date=DateTime(2015, 1, 2),
+    )
+    # the amounts can be split over multiple accounts
+    internal_invoice.newContent(
+      portal_type='Internal Invoice Transaction Line',
+      destination_value=self.portal.account_module.refundable_vat,
+      destination_debit=30)
+    internal_invoice.newContent(
+      portal_type='Internal Invoice Transaction Line',
+      destination_value=self.portal.account_module.goods_purchase,
+      destination_debit=70)
+
+    self.portal.portal_workflow.doActionFor(
+        internal_invoice, 'stop_action')
+    self.assertEqual('stopped', internal_invoice.getSimulationState())
+
+    # the lines are different on source and destination views
+    source_line_list = internal_invoice.InternalInvoiceTransaction_viewSource.listbox.get_value(
+      'default',
+      render_format='list',
+      REQUEST=self.portal.REQUEST)
+    self.assertEqual(2, len([l for l in source_line_list if l.isDataLine()]))
+    stat_line, = [l for l in source_line_list if l.isStatLine()]
+    self.assertEqual(100, stat_line.getColumnProperty('source_debit'))
+    self.assertEqual(100, stat_line.getColumnProperty('source_credit'))
+
+    destination_line_list = internal_invoice.InternalInvoiceTransaction_viewDestination.listbox.get_value(
+      'default',
+      render_format='list',
+      REQUEST=self.portal.REQUEST)
+    self.assertEqual(3, len([l for l in destination_line_list if l.isDataLine()]))
+    stat_line, = [l for l in destination_line_list if l.isStatLine()]
+    self.assertEqual(100, stat_line.getColumnProperty('destination_debit'))
+    self.assertEqual(100, stat_line.getColumnProperty('destination_credit'))
+
+  def test_internal_invoice_transaction_balanced_constraint(self):
+    internal_invoice = self.portal.accounting_module.newContent(
+      portal_type='Internal Invoice Transaction',
+      title='test invoice',
+      source_section_value=self.section,
+      destination_section_value=self.main_section,
+      start_date=DateTime(2015, 1, 1),
+    )
+    line_1, line_2 = internal_invoice.getMovementList()
+    line_1.edit(
+      source_value=self.portal.account_module.receivable,
+      source_debit=100)
+    line_2.edit(
+      source_value=self.portal.account_module.goods_sales,
+      source_credit=101)
+
+    with self.assertRaisesRegexp(ValidationFailed,
+        '.*Transaction is not balanced.*'):
+      self.portal.portal_workflow.doActionFor(
+        internal_invoice, 'start_action')
+
+    line_2.setSourceCredit(100)
+    self.portal.portal_workflow.doActionFor(
+      internal_invoice, 'start_action')
+
+    self.assertEqual('started', internal_invoice.getSimulationState())
+
+    self.assertEqual(self.portal.account_module.payable, line_1.getDestinationValue())
+    line_3 = internal_invoice.newContent(
+      portal_type='Internal Invoice Transaction Line',
+      destination_value=self.portal.account_module.refundable_vat,
+      destination_debit=101)
+
+    with self.assertRaisesRegexp(ValidationFailed,
+        '.*Transaction is not balanced.*'):
+      self.portal.portal_workflow.doActionFor(
+        internal_invoice, 'stop_action')
+
+    line_3.setDestinationDebit(100)
+    self.portal.portal_workflow.doActionFor(
+        internal_invoice, 'stop_action')
+    self.assertEqual('stopped', internal_invoice.getSimulationState())
+
+  
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccountingWithSequences))
@@ -5310,4 +5517,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestTransactionValidation))
   suite.addTest(unittest.makeSuite(TestAccountingExport))
   suite.addTest(unittest.makeSuite(TestAccountingTransactionTemplate))
+  suite.addTest(unittest.makeSuite(TestInternalInvoiceTransaction))
   return suite

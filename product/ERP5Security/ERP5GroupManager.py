@@ -32,7 +32,7 @@ import sys
 
 from zLOG import LOG, WARNING
 
-from ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 # It can be useful to set NO_CACHE_MODE to 1 in order to debug
 # complex security issues related to caching groups. For example,
@@ -83,7 +83,7 @@ class ERP5GroupManager(BasePlugin):
     """ See IGroupsPlugin.
     """
     # If this is the super user, skip the check.
-    if principal.getId() == SUPER_USER:
+    if principal.getId() == ERP5Security.SUPER_USER:
       return ()
 
     @UnrestrictedMethod
@@ -118,14 +118,15 @@ class ERP5GroupManager(BasePlugin):
           security_definition_list = mapping_method()
 
         # get the person from its login - no security check needed
-        user_list = [
-          x for x in self.searchUsers(id=user_id, exact_match=True)
+        user_path_set = {
+          x['path']
+          for x in self.searchUsers(id=user_id, exact_match=True)
           if 'path' in x
-        ]
-        if not user_list:
+        }
+        if not user_path_set:
           return ()
-        user, = user_list
-        person_object = self.getPortalObject().unrestrictedTraverse(user['path'])
+        user_path, = user_path_set
+        person_object = self.getPortalObject().unrestrictedTraverse(user_path)
 
         # Fetch category values from defined scripts
         for (method_name, base_category_list) in security_definition_list:

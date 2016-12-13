@@ -512,6 +512,10 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
     test_suite.setClusterConfiguration('{"foo": 3}')
     self.assertEquals('{"configuration_list": [{"foo": 3}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
+    # make sure generateConfiguration does not fail if test suite is invalidated
+    test_suite.invalidate()
+    self.tic()
+    self.assertEquals('{"configuration_list": [{}]}', self.distributor.generateConfiguration(test_suite.getTitle()))
 
   def _checkTestSuiteAggregateList(self, *args):
     self.tic()

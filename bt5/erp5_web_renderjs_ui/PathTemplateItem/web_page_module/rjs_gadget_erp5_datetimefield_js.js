@@ -56,7 +56,8 @@
           subfield_day_key: field_json.subfield_day_key,
           subfield_timezone_key: field_json.subfield_timezone_key,
           start_datetime: field_json.start_datetime,
-          end_datetime: field_json.end_datetime
+          end_datetime: field_json.end_datetime,
+          hidden: field_json.hidden
         };
       return this.changeState(state_dict);
     })
@@ -84,14 +85,16 @@
           name: gadget.state.key + '_input',
           editable: gadget.state.editable,
           required: gadget.state.required,
-          type: gadget.state.date_only ? "date" : "datetime-local"
+          type: gadget.state.date_only ? "date" : "datetime-local",
+          hidden: gadget.state.hidden
         },
         select_state = {
           name: gadget.state.key + '_select',
           value: "+0000",
           item_list: ZONE_LIST,
           editable: gadget.state.editable,
-          required: gadget.state.required
+          required: gadget.state.required,
+          hidden: gadget.state.hidden
               // name: field_json.key,
               // title: field_json.title
         },
@@ -221,8 +224,14 @@
       } else {
         queue
           .push(function (gadget_list) {
-            p_state.text_content = gadget.state.value;
-            return gadget_list[0].render(p_state);
+            return RSVP.all([
+              gadget_list[0],
+              gadget.getTextContent()
+            ]);
+          })
+          .push(function (result_list) {
+            p_state.text_content = result_list[1];
+            return result_list[0].render(p_state);
           });
       }
       return queue;
@@ -338,7 +347,16 @@
     })
 
     .declareMethod('getTextContent', function () {
-      return this.state.value || "";
+      var result = "",
+        date;
+      if (this.state.value) {
+        date = new Date(this.state.value);
+        result = date.toLocaleDateString();
+        if (!this.state.date_only) {
+          result += " " + date.toLocaleTimeString();
+        }
+      }
+      return result;
     })
 
     .declareMethod('checkValidity', function () {

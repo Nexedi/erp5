@@ -1,4 +1,5 @@
 portal = context.getPortalObject()
+portal_categories = portal.portal_categories
 
 search_kw = {
   'simulation_state': simulation_state,
@@ -6,6 +7,13 @@ search_kw = {
   'operation_date': {'query': (from_date, at_date), 'range': 'minngt' },
   'portal_type': portal_type,
 }
+
+if ledger is not None:
+  if isinstance(ledger, list) or isinstance(ledger, tuple):
+    ledger_uid_list = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
+  else:
+    ledger_uid_list = [portal_categories.ledger.restrictedTraverse(ledger).getUid(), ]
+  search_kw['default_ledger_uid'] = ledger_uid_list
 
 method_kw = {
   'active_process': this_portal_type_active_process,

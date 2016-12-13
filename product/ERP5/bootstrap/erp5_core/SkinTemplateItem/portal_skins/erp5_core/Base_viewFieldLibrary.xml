@@ -158,6 +158,7 @@
                         <string>my_view_mode_reference_as_name</string>
                         <string>my_gadget_field</string>
                         <string>my_iframe_gadget_field</string>
+                        <string>my_view_mode_raw_text_content</string>
                       </list>
                     </value>
                 </item>

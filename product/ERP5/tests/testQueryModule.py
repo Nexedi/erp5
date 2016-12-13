@@ -99,8 +99,8 @@ class TestQueryModule(ERP5TypeTestCase):
     assignment.validate()
     self.tic()
     uf = self.portal.acl_users
-    owner_user = uf.getUser('owner_user').__of__(uf)
-    question_user = uf.getUser('question_user').__of__(uf)
+    owner_user = uf.getUserById('owner_user').__of__(uf)
+    question_user = uf.getUserById('question_user').__of__(uf)
 
     # add Author local roles on person and query modules
     self.portal.person_module.manage_setLocalRoles('owner_user', ['Author'])

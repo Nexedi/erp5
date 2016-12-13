@@ -38,6 +38,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
+from Products import ERP5Security
 
 class TestUserManagement(ERP5TypeTestCase):
   """Tests User Management in ERP5Security.
@@ -115,7 +116,7 @@ class TestUserManagement(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    self.assertNotEquals(uf.getUserById(login, None), None)
+    self.assertNotEquals(uf.getUser(login), None)
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin ):
       if plugin.authenticateCredentials(
@@ -210,13 +211,11 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_PersonWithSuperUserLoginCannotBeCreated(self):
     """Tests one cannot create person with the "super user" special login."""
-    from Products.ERP5Security.ERP5UserManager import SUPER_USER
-    self.assertRaises(RuntimeError, self._makePerson, reference=SUPER_USER)
+    self.assertRaises(RuntimeError, self._makePerson, reference=ERP5Security.SUPER_USER)
 
   def test_PersonWithSuperUserLogin(self):
     """Tests one cannot use the "super user" special login."""
-    from Products.ERP5Security.ERP5UserManager import SUPER_USER
-    self._assertUserDoesNotExists(SUPER_USER, '')
+    self._assertUserDoesNotExists(ERP5Security.SUPER_USER, '')
 
   def test_searchUsers(self):
     p1 = self._makePerson(reference='person1')

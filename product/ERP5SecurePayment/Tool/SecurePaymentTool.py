@@ -33,7 +33,7 @@ from Products.ERP5Type.Permissions import ManagePortal
 
 from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5SecurePayment import _dtmldir
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from zLOG import LOG
@@ -66,7 +66,7 @@ class SecurePaymentTool(BaseTool):
     user = getSecurityManager().getUser()
     if not('Member' in user.getRoles()):
       newSecurityManager(None,
-       self.getPortalObject().acl_users.getUserById(SUPER_USER))
+       self.getPortalObject().acl_users.getUserById(ERP5Security.SUPER_USER))
 
   def _getParametersFromSelection(self,service,selection):
     if selection is not None:

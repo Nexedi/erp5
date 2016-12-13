@@ -16,7 +16,8 @@
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
-          type: 'email'
+          type: 'email',
+          hidden: field_json.hidden
         };
       state_dict.text_content = state_dict.value;
       return this.changeState(state_dict);

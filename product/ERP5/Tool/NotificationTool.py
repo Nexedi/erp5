@@ -245,10 +245,9 @@ class NotificationTool(BaseTool):
       This method provides only high-level functionality so that you can't use email address
       for sender and recipient, or raw data for attachments.
 
-      sender -- a login name(reference of Person document) or a Person document
+      sender -- a user id or a user document
 
-      recipient -- a login name(reference of Person document) or a Person document,
-                   a list of thereof
+      recipient -- a user id or a user document, or a list thereof
 
       subject -- the subject of the message
 
@@ -282,14 +281,13 @@ class NotificationTool(BaseTool):
       event_keyword_argument_dict -- additional keyword arguments which is used for
                                      constructor of event document.
 
-      portal_type_list -- Portal Type of Users
-
     TODO: support default notification email
     """
     portal = self.getPortalObject()
-    catalog_tool = getToolByName(self, 'portal_catalog')
-    if portal_type_list is None:
-      portal_type_list = ('Person',)
+    searchUsers = self.acl_users.searchUsers
+    def getUserValueByUserId(user_id):
+      user, = searchUsers(id=user_id, exact_match=True)
+      return portal.restrictedTraverse(user['path'])
 
     if notifier_list is None:
       # XXX TODO: Use priority_level. Need to implement default notifier query system.
@@ -304,8 +302,7 @@ class NotificationTool(BaseTool):
     # Find "From" Person
     from_person = None
     if isinstance(sender, basestring):
-      sender = catalog_tool.getResultValue(portal_type=portal_type_list,
-                                           reference=sender)
+      sender = getUserValueByUserId(sender)
     if sender is not None:
       email_value = sender.getDefaultEmailValue()
       if email_value is not None and email_value.asText():
@@ -313,15 +310,17 @@ class NotificationTool(BaseTool):
 
     # Find "To" Person list
     to_person_list = []
+    # XXX: evaluating a document as boolean is bad, as __bool__ may be
+    # overloaded to (for example) return False if there are no children (which
+    # would have unintended effects here).
     if recipient:
       if not isinstance(recipient, (list, tuple)):
-        recipient = (recipient,)
+        recipient = (recipient, )
       for person in recipient:
         if isinstance(person, basestring):
-          person_value = catalog_tool.getResultValue(portal_type=portal_type_list,
-                                                     reference=person)
+          person_value = getUserValueByUserId(person)
           if person_value is None:
-            raise ValueError("Can't find person document which reference is '%s'" % person)
+            raise ValueError("Can't find user with id %r" % (person, ))
           person = person_value
         to_person_list.append(person)
 

@@ -391,8 +391,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_node = self._getTestNodeFromTitle(node_title)
     test_node.setPingDate()
     test_suite = self._getTestSuiteFromTitle(name)
-    test_suite.setPingDate()
-    return portal.portal_task_distribution_tool.createTestResult(name,
+    if test_suite is not None:
+      test_suite.setPingDate()
+      return portal.portal_task_distribution_tool.createTestResult(name,
            revision, test_name_list, allow_restart,
            test_title=title_title, node_title=node_title,
            project_title=project_title)
@@ -412,9 +413,11 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       portal_type='Test Suite',
       title=SimpleQuery(comparison_operator='=', title=suite_title),
       validation_state='validated')
-    assert len(test_suite_list) == 1, "We found %i test suite for %s" % (
+    assert len(test_suite_list) <= 1, "We found %i test suite for %s" % (
                                       len(test_suite_list), suite_title)
-    test_suite = test_suite_list[0].getObject()
+    test_suite = None
+    if len(test_suite_list):
+      test_suite = test_suite_list[0].getObject()
     return test_suite
 
   security.declarePublic("startUnitTest")
@@ -445,11 +448,13 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     always return a list.
     """
     test_suite = self._getTestSuiteFromTitle(test_suite_title)
-    cluster_configuration = test_suite.getClusterConfiguration() or '{}'
-    try:
-      generated_configuration = {"configuration_list": [json.loads(cluster_configuration)]}
-    except ValueError:
-      generated_configuration = {"configuration_list": [{}]}
+    generated_configuration = {"configuration_list": [{}]}
+    if test_suite is not None:
+      cluster_configuration = test_suite.getClusterConfiguration() or '{}'
+      try:
+        generated_configuration = {"configuration_list": [json.loads(cluster_configuration)]}
+      except ValueError:
+        pass
     if batch_mode:
       return generated_configuration
     return json.dumps(generated_configuration)

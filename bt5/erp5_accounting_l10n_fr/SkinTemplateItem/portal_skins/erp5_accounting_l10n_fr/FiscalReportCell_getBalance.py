@@ -20,6 +20,14 @@ kw["section_category"]  = kwd.get("section_category",
 kw['to_date'] = kwd.get('at_date', request['at_date']) +1
 kw['where_expression'] = " section.portal_type = 'Organisation' "
 
+ledger = kw.get('ledger', request.get("ledger", None))
+if ledger is not None:
+  portal_categories = context.getPortalObject().portal_categories
+  if isinstance(ledger, list) or isinstance(ledger, tuple):
+    kw['ledger_uid'] = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
+  else:
+    kw['ledger_uid'] = portal_categories.ledger.restrictedTraverse(item).getUid()
+
 sum = 0.0
 for accountNumber in accounts:
   # we get all acounts strict member of this GAP category

@@ -8,6 +8,7 @@
       gap_base
       simulation_state
       section_category
+      ledger
 
   those are ignored from the request and should explicitely passed as keywords args to this script:
       from_date
@@ -22,12 +23,23 @@ getURL   = lambda gap_id: context.GAPCategory_getURLFromId(gap_id, gap_base)
 section        = context.restrictedTraverse(request.get("organisation"))
 section_region = section.getRegion()
 
+ledger = request.get("ledger", None)
+if ledger is not None:
+  portal_categories = context.getPortalObject().portal_categories
+  if isinstance(ledger, list) or isinstance(ledger, tuple):
+    ledger_uid = [portal_categories.ledger.restrictedTraverse(item).getUid() for item in ledger]
+  else:
+    ledger_uid = portal_categories.ledger.restrictedTraverse(item).getUid()
+else:
+  ledger_uid = None
+
 # 'getInventory' common parameters
 params = { 'omit_simulation' : True
          , 'simulation_state': request.get("simulation_state", ['stopped', 'delivered'])
          , 'section_uid'     : section.getUid()
          , 'precision'       : 2
          , 'at_date'         : request['at_date']
+         , 'ledger_uid'      : ledger_uid
          }
 params.update(kw)
 

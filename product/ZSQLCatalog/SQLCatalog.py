@@ -255,10 +255,9 @@ class LazyIndexationParameterList(tuple):
     document = self._document_list[index]
     attribute = self._attribute
     global_cache_key = (document.uid, attribute)
-    global_cache = self._global_cache
-    if global_cache_key in global_cache:
-      value = global_cache[global_cache_key]
-    else:
+    try:
+      value = self._global_cache[global_cache_key]
+    except KeyError:
       value = getattr(document, attribute, None)
       if callable(value):
         try:
@@ -271,7 +270,7 @@ class LazyIndexationParameterList(tuple):
             error=True,
           )
           value = None
-      global_cache[global_cache_key] = value
+      self._global_cache[global_cache_key] = value
     return value
 
   def __iter__(self):
@@ -1498,9 +1497,8 @@ class Catalog(Folder,
 
     for object in object_list:
       uid = getattr(aq_base(object), 'uid', None)
-      # Several Tool objects have uid=0 (not 0L) from the beginning, but
-      # we need an unique uid for each object.
-      if uid is None or isinstance(uid, int) and uid == 0:
+      # Generate unique uid for object having 0 or None as uid
+      if uid is None or uid == 0:
         try:
           object.uid = self.newUid()
         except ConflictError:

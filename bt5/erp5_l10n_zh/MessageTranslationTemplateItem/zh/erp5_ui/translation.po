@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-01-08 14:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 14:01+UTC\n"
+"POT-Creation-Date: 2016-11-23 12:11+UTC\n"
+"PO-Revision-Date: 2016-11-23 12:11+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: zh <>\n"
 "MIME-Version: 1.0\n"
@@ -757,6 +757,9 @@ msgstr "警报解除开始"
 msgid "Alarms"
 msgstr "警报"
 
+msgid "All criterions (AND)"
+msgstr "符合所有(和)"
+
 msgid "All Documents"
 msgstr "所有文件"
 
@@ -898,6 +901,9 @@ msgstr "在重新开始前已更新的分配"
 msgid "At Date"
 msgstr "结束日期"
 
+msgid "At least one (OR)"
+msgstr "至少一个(或)"
+
 msgid "Attach Document"
 msgstr "附加文件"
 
@@ -915,6 +921,9 @@ msgstr "可用"
 
 msgid "Available Languages"
 msgstr "可用语言"
+
+msgid "ascending"
+msgstr "升序"
 
 msgid "Balance"
 msgstr "余额"
@@ -1035,6 +1044,9 @@ msgstr "板块"
 
 msgid "Branch Number"
 msgstr "支行代码"
+
+msgid "Breadcrumb"
+msgstr "浏览路径"
 
 msgid "Browse"
 msgstr "浏览"
@@ -1557,6 +1569,9 @@ msgstr "联系我们"
 msgid "Contacts"
 msgstr "联系方式"
 
+msgid "Contain"
+msgstr "包含"
+
 msgid "Contained Total Quantity"
 msgstr "总含量"
 
@@ -1704,6 +1719,9 @@ msgstr "创建初始结余处理"
 msgid "Create Module"
 msgstr "创建模块"
 
+msgid "Create New"
+msgstr "添加"
+
 msgid "Create New Bug"
 msgstr "创建新错误"
 
@@ -1847,6 +1865,9 @@ msgstr "收件人地区"
 
 msgid "Customer Street Address"
 msgstr "收件人地址"
+
+msgid "Cut"
+msgstr "剪切"
 
 msgid "DMS"
 msgstr "文件管理系统"
@@ -2414,8 +2435,14 @@ msgstr "待验证草稿"
 msgid "Drawing"
 msgstr "绘图文件"
 
+msgid "descending"
+msgstr "降序"
+
 msgid "EAN-13 Code"
 msgstr "EAN-13位代码"
+
+msgid "Equals To"
+msgstr "等于"
 
 msgid "ERP5 Configuration"
 msgstr "ERP5配置"
@@ -2425,6 +2452,9 @@ msgstr "ERP5站点"
 
 msgid "Edit"
 msgstr "编辑"
+
+msgid "Editable"
+msgstr "可编辑"
 
 msgid "Edit Business Template"
 msgstr "编辑业务模板"
@@ -2597,6 +2627,9 @@ msgstr "待验证事件"
 msgid "Everything"
 msgstr "所有类型"
 
+msgid "Exact Match"
+msgstr "完全符合"
+
 msgid "Exchange"
 msgstr "文件交换"
 
@@ -2626,6 +2659,12 @@ msgstr "说明该项目明细的预期成果"
 
 msgid "Explanation"
 msgstr "说明"
+
+msgid "Explore the Search Result List"
+msgstr "浏览结果列表"
+
+msgid "Export"
+msgstr "导出"
 
 msgid "Export Format"
 msgstr "输出格式"
@@ -2666,8 +2705,14 @@ msgstr "文件状态"
 msgid "Filename parsing regular expression"
 msgstr "文件名称解析常规表达式"
 
+msgid "Filter"
+msgstr "过滤"
+
 msgid "Filter Content Types"
 msgstr "过滤内容类型"
+
+msgid "Filter Editor"
+msgstr "过滤编辑器"
 
 msgid "Financial Information"
 msgstr "财务信息"
@@ -2819,6 +2864,9 @@ msgstr "职称"
 msgid "Graph"
 msgstr "图表"
 
+msgid "Greater Than"
+msgstr "大于"
+
 msgid "Gross Weight"
 msgstr "毛重"
 
@@ -2870,6 +2918,9 @@ msgstr "隐藏文件"
 msgid "Hide Listbox Rows (If No Search Criterion)"
 msgstr "隐藏列表框的行（如果没有搜索标准）"
 
+msgid "Hide Rows"
+msgstr "隐藏列"
+
 msgid "Hide tabs"
 msgstr "隐藏标签"
 
@@ -2881,6 +2932,9 @@ msgstr "强调部分编号"
 
 msgid "History"
 msgstr "历史记录"
+
+msgid "Home"
+msgstr "主页"
 
 msgid "Hostname of the oood server."
 msgstr "oood服务器的主机名"
@@ -3209,6 +3263,9 @@ msgstr "内部贸易条款"
 msgid "Internal Uses"
 msgstr "内部用途"
 
+msgid "Invalid Search Criteria"
+msgstr "无效搜索条件"
+
 msgid "Invalidate"
 msgstr "废止"
 
@@ -3370,6 +3427,12 @@ msgid ""
 "a journal as a debit and a credit."
 msgstr "一项会计交易已经被记入流水帐，记入借方和贷方"
 
+msgid "Jump"
+msgstr "前往"
+
+msgid "Jumps"
+msgstr "前往"
+
 msgid "Jump to Accounting Preference"
 msgstr "跳至会计偏好设置"
 
@@ -3384,6 +3447,9 @@ msgstr "跳至相关支付"
 
 msgid "Jump..."
 msgstr "前往..."
+
+msgid "Keyword"
+msgstr "关键词"
 
 msgid "Keyword Keys"
 msgstr "关键词密钥"
@@ -3427,6 +3493,9 @@ msgstr "姓"
 msgid "Latest Documents"
 msgstr "最新文件"
 
+msgid "Latest News"
+msgstr "热点新闻"
+
 msgid "Layout Configuration"
 msgstr "版面布局配置"
 
@@ -3441,6 +3510,9 @@ msgstr "该商业公司的法律形式"
 
 msgid "Length (m)"
 msgstr "长度(米)"
+
+msgid "Less Than"
+msgstr "小于"
 
 msgid "Letter"
 msgstr "信件"
@@ -3481,6 +3553,9 @@ msgstr "完成项目的具体要求列表"
 msgid "List of the specific needs to complete the task."
 msgstr "完成该项任务的详细要求"
 
+msgid "Loading"
+msgstr "加载中"
+
 msgid "Local ID of the object in its enclosing container"
 msgstr "该对象在此封闭容器中的本地ID"
 
@@ -3504,6 +3579,9 @@ msgstr "商标"
 
 msgid "Logo Reference"
 msgstr "商标编号"
+
+msgid "Logout"
+msgstr "退出"
 
 msgid "Long Title"
 msgstr "长标题"
@@ -3767,6 +3845,9 @@ msgstr "新建"
 msgid "News Reference"
 msgstr "新闻编号"
 
+msgid "Next"
+msgstr "下一个"
+
 msgid "Next Alarm Date"
 msgstr "下次警报日期"
 
@@ -3781,6 +3862,9 @@ msgstr "无相关销售发票交易"
 
 msgid "No Sale Packing List Related"
 msgstr "无相关销售装箱单"
+
+msgid "No records"
+msgstr "没有记录"
 
 msgid "No related documents found."
 msgstr "无相关文件。"
@@ -3802,6 +3886,12 @@ msgstr "正常工作时数"
 
 msgid "Not Installed"
 msgstr "未安装"
+
+msgid "Not Greater Than"
+msgstr "小于等于"
+
+msgid "Not Less Than"
+msgstr "大于等于"
 
 msgid "Note"
 msgstr "笔记"
@@ -4472,6 +4562,9 @@ msgstr "上一次银行结单余额"
 msgid "Previous Bank Statement Date"
 msgstr "上一次银行结单日期"
 
+msgid "Previous"
+msgstr "上一个"
+
 msgid "Price"
 msgstr "单价"
 
@@ -4525,6 +4618,9 @@ msgstr "私人的"
 
 msgid "Problem Detected"
 msgstr "发现问题"
+
+msgid "Procced"
+msgstr "继续"
 
 msgid "Process File"
 msgstr "操作文件"
@@ -4952,6 +5048,9 @@ msgstr "对账交易"
 msgid "Recorded Properties"
 msgstr "已记录属性"
 
+msgid "Records"
+msgstr "记录"
+
 msgid "Recur every periodicity hours (ex, at 10 and at 16 )"
 msgstr "每小时周期复发（例如，在10小时和16小时复发）"
 
@@ -5245,6 +5344,9 @@ msgstr "要求标题"
 
 msgid "Requirements"
 msgstr "要求"
+
+msgid "Reset"
+msgstr "重设"
 
 msgid "Reset List Setting"
 msgstr "重设列表设置"
@@ -5608,6 +5710,9 @@ msgstr "销售用途"
 msgid "Schedule delivery of the remaining at later time"
 msgstr "计划稍后交付缺少产品的日程"
 
+msgid "Save"
+msgstr "保存"
+
 msgid "Scriptable Keys"
 msgstr "可编写脚本密钥"
 
@@ -5619,6 +5724,9 @@ msgstr "搜索密钥"
 
 msgid "Search Transactions"
 msgstr "查询交易事项"
+
+msgid "Searchable Text"
+msgstr "检索文本"
 
 msgid "Searchable Text Method Ids"
 msgstr "可检索的文本方法ID"
@@ -5658,6 +5766,9 @@ msgstr "选择尚未核对交易"
 
 msgid "Select Report"
 msgstr "选择报表"
+
+msgid "Select Template"
+msgstr "选择模板"
 
 msgid "Sell"
 msgstr "销售"
@@ -5904,6 +6015,12 @@ msgstr "解决中"
 
 msgid "Solving means that an action has been taken to correct the divergent state of a document in ERP5. During the calculations, the state will be displayed as Solving. Once the calculations are over, the state will become Solved."
 msgstr "“解决中”意味着系统正在采取行动纠正ERP5里一个文件“不匹配”的整合状态。在计算过程中，该文件的整合状态将显示为“解决中”。一旦计算结束，文件的整合状态将变为“已解决”。"
+
+msgid "Sort"
+msgstr "排序"
+
+msgid "Sort Editor"
+msgstr "排序编辑器"
 
 msgid "Sort Index"
 msgstr "排序索引"
@@ -7757,6 +7874,12 @@ msgstr "该网络页面的版本"
 msgid "View"
 msgstr "概览"
 
+msgid "Viewable"
+msgstr "预览"
+
+msgid "Views"
+msgstr "概览"
+
 msgid "View ${portal_type}"
 msgstr "浏览 ${portal_type}"
 
@@ -7883,6 +8006,9 @@ msgstr "必须定义工作开始期间"
 msgid "Workflow"
 msgstr "流程"
 
+msgid "Workflow-Transitions"
+msgstr "流程-过渡流程"
+
 msgid "Workflow Chains"
 msgstr "流程链"
 
@@ -7903,6 +8029,9 @@ msgstr "用于验证装箱单与相应发票一致性的流程"
 
 msgid "Workflows"
 msgstr "工作流程"
+
+msgid "Worklist"
+msgstr "工作列表"
 
 msgid "Worklists"
 msgstr "工作列表"

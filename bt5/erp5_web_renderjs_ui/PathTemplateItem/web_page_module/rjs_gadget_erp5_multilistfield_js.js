@@ -20,7 +20,8 @@
             // Check requirement globally instead
             required: 0,
             key: 'sub',
-            title: gadget.state.title
+            title: gadget.state.title,
+            hidden: gadget.state.hidden
           };
         return result.render({field_json: state});
       });
@@ -38,7 +39,8 @@
           name: field_json.key,
           title: field_json.title,
           sub_select_key: field_json.sub_select_key,
-          sub_input_key: field_json.sub_input_key
+          sub_input_key: field_json.sub_input_key,
+          hidden: field_json.hidden
         };
       if ((item_list.length === 0) || (item_list[0][0] !== "")) {
         item_list.unshift(["", ""]);

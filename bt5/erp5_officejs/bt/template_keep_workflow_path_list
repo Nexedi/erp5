@@ -6,6 +6,8 @@ web_site_module/devtool
 web_site_module/devtool/**
 web_site_module/officejs_text_editor
 web_site_module/officejs_text_editor/**
+web_site_module/officejs_setting_gadget
+web_site_module/officejs_setting_gadget/**
 web_site_module/officejs_spreadsheet
 web_site_module/officejs_spreadsheet/**
 web_site_module/officejs_spreadsheet_landing

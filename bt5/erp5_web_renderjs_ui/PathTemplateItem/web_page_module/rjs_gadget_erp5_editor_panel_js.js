@@ -1,6 +1,6 @@
 /*jslint indent: 2, maxerr: 3, nomen: true, maxlen: 80 */
-/*global window, rJS */
-(function (window, rJS) {
+/*global window, rJS, RSVP */
+(function (window, rJS, RSVP) {
   "use strict";
   rJS(window)
 
@@ -8,44 +8,88 @@
     // acquired method
     //////////////////////////////////////////////
     .allowPublicAcquisition('trigger', function () {
-      this.element.classList.toggle('visible');
+      return this.toggle();
+    })
+
+    .declareMethod('toggle', function () {
+      if (this.state.visible) {
+        return this.close();
+      }
+      return this.changeState({
+        visible: !this.state.visible
+      });
     })
 
     .declareMethod('close', function () {
-      var element = this.element;
-      while (element.firstChild) {
-        element.removeChild(element.firstChild);
-      }
-      if (element.classList.contains('visible')) {
-        element.classList.remove('visible');
-      }
+      return this.changeState({
+        visible: false,
+        url: undefined,
+        options: undefined
+      });
     })
 
     .declareMethod('render', function (url, options) {
-      this.element.classList.toggle('visible');
+      // XXX Hack to close the panel if the sort/filter button
+      // is clicked twice
+      if (url === this.state.url) {
+        return this.changeState({
+          visible: false,
+          url: undefined,
+          options: undefined
+        });
+      }
       return this.changeState({
+        visible: true,
         url: url,
-        options: JSON.stringify(options)
+        options: options
       });
     })
 
     .onStateChange(function (modification_dict) {
-      var gadget = this,
-        declared_gadget;
-      if (gadget.state.url && modification_dict.hasOwnProperty('options')) {
-        return gadget.declareGadget(gadget.state.url,
-                                    {scope: "declared_gadget"})
-          .push(function (result) {
-            declared_gadget = result;
-            return declared_gadget.render(JSON.parse(gadget.state.options));
+      var queue,
+        gadget = this;
+      if (this.state.visible) {
+        if (!this.element.classList.contains('visible')) {
+          this.element.classList.toggle('visible');
+        }
+      } else {
+        if (this.element.classList.contains('visible')) {
+          this.element.classList.remove('visible');
+        }
+      }
+
+      if (modification_dict.hasOwnProperty('url')) {
+        if (this.state.url === undefined) {
+          while (this.element.firstChild) {
+            this.element.removeChild(this.element.firstChild);
+          }
+        } else {
+          queue = this.declareGadget(this.state.url,
+                                     {scope: "declared_gadget"});
+        }
+      } else {
+        if (this.state.url !== undefined) {
+          queue = this.getDeclaredGadget("declared_gadget");
+        }
+      }
+
+      if (queue !== undefined) {
+        return queue
+          .push(function (declared_gadget) {
+            return RSVP.all([
+              declared_gadget,
+              declared_gadget.render(gadget.state.options)
+            ]);
           })
-          .push(function () {
-            return gadget.close();
-          })
-          .push(function () {
-            gadget.element.appendChild(declared_gadget.element);
-            gadget.element.classList.toggle('visible');
+          .push(function (result_list) {
+            if (modification_dict.hasOwnProperty('url')) {
+              while (gadget.element.firstChild) {
+                gadget.element.removeChild(gadget.element.firstChild);
+              }
+              gadget.element.appendChild(result_list[0].element);
+            }
           });
       }
     });
-}(window, rJS));
+
+}(window, rJS, RSVP));

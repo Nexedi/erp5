@@ -72,8 +72,8 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def loginAsUser(self, username):
     uf = self.portal.acl_users
-    uf.zodb_roles.assignRoleToPrincipal('Manager', username)
-    user = uf.getUserById(username).__of__(uf)
+    user = uf.getUser(username).__of__(uf)
+    uf.zodb_roles.assignRoleToPrincipal('Manager', user.getId())
     newSecurityManager(None, user)
 
   def test_skin_selection(self):

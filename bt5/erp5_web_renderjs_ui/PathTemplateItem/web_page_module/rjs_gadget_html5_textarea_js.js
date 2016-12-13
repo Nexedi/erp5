@@ -17,7 +17,6 @@
   rJS(window)
     .setState({
       editable: false,
-      focused: false,
       value: ''
     })
 
@@ -26,7 +25,8 @@
           value: options.value,
           editable: options.editable,
           name: options.name,
-          title: options.title
+          title: options.title,
+          hidden: options.hidden
         };
       return this.changeState(state_dict);
     })
@@ -37,7 +37,6 @@
       textarea.value = this.state.value;
       textarea.setAttribute('name', this.state.name);
       textarea.setAttribute('title', this.state.title);
-      textarea.setAttribute('wrap', 'off');
 
       if (this.state.required) {
         textarea.setAttribute('required', 'required');
@@ -51,11 +50,12 @@
         textarea.setAttribute('readonly', 'readonly');
       }
 
-      if (this.state.focused) {
-        textarea.setAttribute('rows', this.state.value.split('\n').length);
+      if (this.state.hidden) {
+        textarea.hidden = true;
       } else {
-        textarea.setAttribute('rows', 2);
+        textarea.hidden = false;
       }
+
     })
 
     .declareMethod('getContent', function () {
@@ -89,13 +89,6 @@
       // invalid event does not bubble
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, true)
-
-    .onEvent('focus', function () {
-      return this.changeState({focused: true, value: this.element.querySelector('textarea').value});
-    }, true, false)
-    .onEvent('blur', function () {
-      return this.changeState({focused: false, value: this.element.querySelector('textarea').value});
-    }, true, false)
 
     .declareAcquiredMethod("notifySubmit", "notifySubmit")
     .onEvent('keydown', function (evt) {

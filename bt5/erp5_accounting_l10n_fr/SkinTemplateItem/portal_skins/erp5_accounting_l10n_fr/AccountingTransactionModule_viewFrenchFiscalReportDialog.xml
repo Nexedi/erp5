@@ -38,6 +38,16 @@
             <value> <string>FiscalReport_doReport</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -62,6 +72,7 @@
                     <key> <string>Default</string> </key>
                     <value>
                       <list>
+                        <string>my_organisation</string>
                         <string>my_from_date</string>
                         <string>my_from_date_n_1</string>
                         <string>my_report</string>
@@ -74,7 +85,6 @@
                       <list>
                         <string>my_at_date</string>
                         <string>my_at_date_n_1</string>
-                        <string>my_organisation</string>
                       </list>
                     </value>
                 </item>
@@ -115,6 +125,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

@@ -864,7 +864,16 @@ class TestCMFCategory(ERP5TypeTestCase):
                                 checked_permission='Manage portal',
                                 portal_type='Person Module'))
 
-  def test_28_getCategoryChildItemList_checked_permission(self):
+  def clearCategoryCache(self):
+    """ Clear cache to remove old categories values. It would be much
+        better to use cache cookie and interaction when category is modified. """
+    self.portal.portal_caches.clearCache(
+      cache_factory_list=('erp5_ui_long',))
+
+  def _testGetCategoryChildItemListWithCheckedPermission(self, cache=None):
+    uf = self.getPortal().acl_users
+    uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
+    uf._doAddUser('bob', '', ['Member'], [])
     pc = self.getCategoriesTool()
 
     bc_id = 'barfoo'
@@ -877,20 +886,26 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
-      bc.getCategoryChildTitleItemList(cache=0))
+      bc.getCategoryChildTitleItemList(cache=cache))
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
-                                       cache=0))
+                                       cache=cache))
+    self.assertEqual(
+      [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['barfoo/2/21', 'barfoo/1'],
+                                       cache=cache))
 
     b.manage_permission(checked_permission, roles=[], acquire=0)
+    self.clearCategoryCache()
 
     self.assertEqual(
-      3, len(bc.getCategoryChildValueList(cache=0)))
+      3, len(bc.getCategoryChildValueList(cache=cache)))
     self.assertEqual(
       1,
       len(bc.getCategoryChildValueList(checked_permission=checked_permission,
-                                       cache=0)))
+                                       cache=cache)))
 
     self.assertEqual(
       ['%s/1' % bc_id, '%s/2' % bc_id, '%s/2/21' % bc_id],
@@ -901,30 +916,41 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
-      bc.getCategoryChildTitleItemList(cache=0))
+      bc.getCategoryChildTitleItemList(cache=cache))
     self.assertEqual(
       [['', ''], ['A', '1']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
-                                       cache=0))
+                                       cache=cache))
+    # Verify that current_category_list parameter allows to display again
+    # hidden values
+    self.assertEqual(
+      [['', ''], ['A', '1'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['barfoo/2/21'],
+                                       cache=cache))
 
-  def test_28b_getCategoryChildItemList_checked_permission_cache(self):
-    # getCategoryChildTitleItemList take into account user
-    pc = self.getCategoriesTool()
+    a.manage_permission(checked_permission, roles=[], acquire=0)
+    self.clearCategoryCache()
+    self.assertEqual(
+      [['', '']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       cache=cache))
+    self.assertEqual(
+      [['', ''], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['barfoo/2/21'],
+                                       cache=cache))
+    self.assertEqual(
+      [['', ''], ['A', '1'], ['B1', '2/21']],
+      bc.getCategoryChildTitleItemList(checked_permission=checked_permission,
+                                       current_category_list=['barfoo/1', 'barfoo/2/21'],
+                                       cache=cache))
 
-    bc_id = 'barfoo'
-    bc = pc.newContent(portal_type='Base Category', id=bc_id)
-    a = bc.newContent(portal_type='Category', id='1', title='A')
-    b = bc.newContent(portal_type='Category', id='2', title='B')
-    b1 = b.newContent(portal_type='Category', id='21', title='B1')
-
-    uf = self.getPortal().acl_users
-    uf._doAddUser('alice', '', ['Member', 'Manager', 'Assignor'], [])
-    uf._doAddUser('bob', '', ['Member'], [])
-    login = PortalTestCase.login
-
-    checked_permission = 'View'
-
+    # Result can be different depending on user, so make sure result is correct
+    # with or without cache
+    a.manage_permission(checked_permission, roles=[], acquire=1)
     b.manage_permission(checked_permission, roles=['Assignor'], acquire=0)
+    login = PortalTestCase.login
     login(self, 'alice')
     self.assertEqual(
       [['', ''], ['A', '1'], ['B', '2'], ['B1', '2/21']],
@@ -935,6 +961,11 @@ class TestCMFCategory(ERP5TypeTestCase):
       [['', ''], ['A', '1']],
       bc.getCategoryChildTitleItemList(checked_permission=checked_permission,))
 
+  def test_28_getCategoryChildItemListWithCheckedPermissionAndNoCache(self):
+    self._testGetCategoryChildItemListWithCheckedPermission(cache=None)
+
+  def test_28_getCategoryChildItemListWithCheckedPermissionAndCache(self):
+    self._testGetCategoryChildItemListWithCheckedPermission(cache='erp5_ui_long')
 
   def test_29_renameBaseCategory(self):
     bc = self.portal.portal_categories.newContent(

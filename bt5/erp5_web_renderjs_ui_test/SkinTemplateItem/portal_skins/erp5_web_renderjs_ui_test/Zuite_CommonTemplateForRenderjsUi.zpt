@@ -80,7 +80,7 @@
 
     <tr>
       <td>waitForElementPresent</td>
-      <td>//form[@class='plus']</td>
+      <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
       <td></td>
     </tr>
 
@@ -108,6 +108,23 @@
       <td></td>
     </tr>
 
+  </tal:block>
+  
+  
+  <tal:block metal:define-macro="create_translation_data">
+    <tr>
+      <td>open</td>
+      <td>${base_url}/Base_createBaseLanguage</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>done</td>
+      <td></td>
+    </tr>
+ 
+   <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
   </tal:block>
 
 

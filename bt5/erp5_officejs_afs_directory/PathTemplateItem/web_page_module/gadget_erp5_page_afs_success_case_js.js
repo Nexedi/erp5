@@ -30,7 +30,6 @@
           return gadget.jio_get(options.jio_key);
         })
         .push(function (story) {
-          console.log(story)
           if (story.image === "N/A" || story.image === "") {
             story.image = PLACEHOLDER;
             story.image_class = "custom-placeholder";

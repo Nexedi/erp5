@@ -26,7 +26,7 @@ from Products.PluggableAuthService.interfaces.plugins import IUserFactoryPlugin
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from Products.PluggableAuthService.PropertiedUser import \
                                             _what_not_even_god_should_do
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 manage_addERP5UserFactoryForm = PageTemplateFile(
     'www/ERP5Security_addERP5UserFactory', globals(),
@@ -104,7 +104,7 @@ class ERP5User(PropertiedUser):
     As for getRolesInContext, we take into account _getAcquireLocalRoles for
     ERP5.
     """
-    if self.getUserName() == SUPER_USER:
+    if self.getUserName() == ERP5Security.SUPER_USER:
       # super user is allowed to accesss any object
       return 1
 
@@ -204,15 +204,17 @@ class ERP5User(PropertiedUser):
     """
     result = self._user_path
     if result is not None:
-      return self.getPortalObject().unrestrictedTraverse(result)
-    user_list = [x for x in self.aq_parent.searchUsers(
+      return self.getPortalObject().restrictedTraverse(result)
+    # user id may match in more than one PAS plugin, but fail if more than one
+    # underlying path is found.
+    user_path_set = {x['path'] for x in self.aq_parent.searchUsers(
       exact_match=True,
       id=self.getId(),
-    ) if 'path' in x]
-    if user_list:
-      user, = user_list
-      result = self._user_path = user['path']
-      return self.getPortalObject().unrestrictedTraverse(result)
+    ) if 'path' in x}
+    if user_path_set:
+      user_path, = user_path_set
+      self._user_path = user_path
+      return self.getPortalObject().restrictedTraverse(user_path)
 
   def getLoginValue(self):
     """ -> login document
@@ -221,7 +223,8 @@ class ERP5User(PropertiedUser):
     """
     result = self._login_path
     if result is not None:
-      return self.getPortalObject().unrestrictedTraverse(result)
+      return self.getPortalObject().restrictedTraverse(result)
+    # user name may match at most once, or there can be endless ambiguity.
     user_list = [x for x in self.aq_parent.searchUsers(
       exact_match=True,
       login=self.getUserName(),
@@ -230,24 +233,26 @@ class ERP5User(PropertiedUser):
       user, = user_list
       login, = user['login_list']
       result = self._login_path = login['path']
-      return self.getPortalObject().unrestrictedTraverse(result)
+      return self.getPortalObject().restrictedTraverse(result)
 
   def getLoginValueList(self, portal_type=None, limit=None):
     """ -> list of login documents
 
     Return the list of login documents belonging to current user.
     """
-    user_list = [x for x in self.aq_parent.searchUsers(
-      exact_match=True,
-      id=self.getId(),
-      login_portal_type=portal_type,
-      max_results=limit,
-    ) if 'login_list' in x]
-    if user_list:
-      user, = user_list
-      unrestrictedTraverse = self.getPortalObject().unrestrictedTraverse
-      return [unrestrictedTraverse(x['path']) for x in user['login_list']]
-    return []
+    # Aggregate all login paths.
+    user_path_set = {
+      login['path']
+      for user in self.aq_parent.searchUsers(
+        exact_match=True,
+        id=self.getId(),
+        login_portal_type=portal_type,
+        max_results=limit,
+      ) if 'login_list' in user
+      for login in user['login_list']
+    }
+    restrictedTraverse = self.getPortalObject().restrictedTraverse
+    return [restrictedTraverse(x) for x in user_path_set]
 
 InitializeClass(ERP5User)
 

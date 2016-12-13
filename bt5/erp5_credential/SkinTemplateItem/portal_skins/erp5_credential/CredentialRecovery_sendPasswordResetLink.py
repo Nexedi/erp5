@@ -25,4 +25,5 @@ portal.portal_password.mailPasswordResetRequest(user_login=reference,
                                                 REQUEST=context.REQUEST,
                                                 notification_message=notification_message,
                                                 store_as_event=portal.portal_preferences.isPreferredStoreEvents(),
+                                                batch=True,
                                                 **kw)

@@ -13,12 +13,6 @@ if portal.acl_users.getUserById(reference) is not None or  \
   portal.aq_parent.acl_users.getUserById(reference) is not None:
     return 0
 
-# ... then check already created accounts
-if portal.portal_catalog.getResultValue(
-      reference = reference, 
-      portal_type = "Person") is not None:
-  return 0
-
 # first check if a Business Configuration has not already "reserved" it
 # through a Person Configuration Item which when build will create a real
 # Nexedi ERP5 account.

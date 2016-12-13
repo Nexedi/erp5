@@ -23,7 +23,7 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IRolesPlugin, \
   IRoleEnumerationPlugin
 
-from ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 manage_addERP5RoleManagerForm = PageTemplateFile(
   'www/ERP5Security_addERP5RoleManager', globals(),
@@ -64,7 +64,7 @@ class ERP5RoleManager( BasePlugin ):
     """ See IRolesPlugin.
     We only ever return Member for every principal
     """
-    if principal.getId() == SUPER_USER:
+    if principal.getId() == ERP5Security.SUPER_USER:
       # If this is the super user, give all the roles present in this system.
       # XXX no API to do this in PAS.
       rolemakers = self._getPAS().plugins.listPlugins( IRoleEnumerationPlugin )

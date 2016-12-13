@@ -108,10 +108,11 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 07 Nov 2016 10:00:00 GMT\n
+# generated on Thu, 01 Dec 2016 15:00:00 GMT\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
+favicon.ico\n
 font-awesome/font-awesome-webfont.eot?v=4.6.3\n
 font-awesome/font-awesome-webfont.eot?#iefix&v=4.6.3\n
 font-awesome/font-awesome-webfont.woff?v=4.6.3\n
@@ -230,7 +231,6 @@ gadget_translation.html\n
 gadget_translation.js\n
 gadget_translation_data.js\n
 handlebars.js\n
-i18next.js\n
 jiodev.js\n
 renderjs.js\n
 rsvp.js\n
@@ -366,7 +366,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.7684.22445.34560</string> </value>
+                <value> <string>955.43982.28112.56149</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -384,7 +384,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478515550.48</float>
+                        <float>1480609455.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

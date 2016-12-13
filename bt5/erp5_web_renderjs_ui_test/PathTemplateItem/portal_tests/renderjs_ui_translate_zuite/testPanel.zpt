@@ -1,0 +1,79 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/create_translation_data" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/wo/</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Home"]</td>
+  <td></td>
+</tr>
+ 
+ 
+ <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Home"]</td>
+   <td>zhuye</td>
+ </tr>
+
+
+ <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Modules"]</td>
+   <td>mokuai</td>
+ </tr>
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Worklists"]</td>
+   <td>gongzhuoliebiao</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="History"]</td>
+   <td>lishi</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Search"]</td>
+   <td>soushuo</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Preference"]</td>
+   <td>pianai</td>
+ </tr>
+ 
+ 
+  <tr>
+   <td>verifyText</td>
+   <td>//a[@data-i18n="Logout"]</td>
+   <td>tuichu</td>
+ </tr>
+
+
+</tbody></table>
+</body>
+</html>

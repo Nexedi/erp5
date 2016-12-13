@@ -673,7 +673,7 @@ if (typeof document.contains !== 'function') {
  * http://www.renderjs.org/documentation
  */
 (function (document, window, RSVP, DOMParser, Channel, MutationObserver,
-           Node, FileReader, Blob) {
+           Node, FileReader, Blob, navigator, Event) {
   "use strict";
 
   function readBlobAsDataURL(blob) {
@@ -687,6 +687,66 @@ if (typeof document.contains !== 'function') {
     }, function () {
       fr.abort();
     });
+  }
+
+  function loopEventListener(target, type, useCapture, callback,
+                             prevent_default) {
+    //////////////////////////
+    // Infinite event listener (promise is never resolved)
+    // eventListener is removed when promise is cancelled/rejected
+    //////////////////////////
+    var handle_event_callback,
+      callback_promise;
+
+    if (prevent_default === undefined) {
+      prevent_default = true;
+    }
+
+    function cancelResolver() {
+      if ((callback_promise !== undefined) &&
+          (typeof callback_promise.cancel === "function")) {
+        callback_promise.cancel();
+      }
+    }
+
+    function canceller() {
+      if (handle_event_callback !== undefined) {
+        target.removeEventListener(type, handle_event_callback, useCapture);
+      }
+      cancelResolver();
+    }
+    function itsANonResolvableTrap(resolve, reject) {
+      var result;
+      handle_event_callback = function (evt) {
+        if (prevent_default) {
+          evt.stopPropagation();
+          evt.preventDefault();
+        }
+
+        cancelResolver();
+
+        try {
+          result = callback(evt);
+        } catch (e) {
+          result = RSVP.reject(e);
+        }
+
+        callback_promise = result;
+        new RSVP.Queue()
+          .push(function () {
+            return result;
+          })
+          .push(undefined, function (error) {
+            if (!(error instanceof RSVP.CancellationError)) {
+              canceller();
+              reject(error);
+            }
+          });
+      };
+
+      target.addEventListener(type, handle_event_callback, useCapture);
+    }
+    return new RSVP.Promise(itsANonResolvableTrap, canceller);
   }
 
   function ajax(url) {
@@ -737,7 +797,19 @@ if (typeof document.contains !== 'function') {
     renderJS,
     Monitor,
     scope_increment = 0,
-    isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i');
+    isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i'),
+    is_page_unloaded = false,
+    error_list = [];
+
+  window.addEventListener('error', function (error) {
+    error_list.push(error);
+  });
+
+  window.addEventListener('beforeunload', function () {
+    // XXX If another listener cancel the page unload,
+    // it will not restore renderJS crash report
+    is_page_unloaded = true;
+  });
 
   /////////////////////////////////////////////////////////////////
   // Helper functions
@@ -751,23 +823,111 @@ if (typeof document.contains !== 'function') {
   }
 
   function letsCrash(e) {
-    if (e.constructor === XMLHttpRequest) {
-      e = {
-        readyState: e.readyState,
-        status: e.status,
-        statusText: e.statusText,
-        response_headers: e.getAllResponseHeaders()
-      };
+    var i,
+      body,
+      container,
+      paragraph,
+      link,
+      error;
+    if (is_page_unloaded) {
+      /*global console*/
+      console.info('-- Error dropped, as page is unloaded');
+      console.info(e);
+      return;
     }
-    if (e.constructor === Array ||
-        e.constructor === String ||
-        e.constructor === Object) {
-      try {
-        e = JSON.stringify(e);
-      } catch (ignore) {
+
+    error_list.push(e);
+    // Add error handling stack
+    error_list.push(new Error('stopping renderJS'));
+
+    body = document.getElementsByTagName('body')[0];
+    while (body.firstChild) {
+      body.removeChild(body.firstChild);
+    }
+
+    container = document.createElement("section");
+    paragraph = document.createElement("h1");
+    paragraph.textContent = 'Unhandled Error';
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'Please report this error to the support team';
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'Location: ';
+    link = document.createElement("a");
+    link.href = link.textContent = window.location.toString();
+    paragraph.appendChild(link);
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'User-agent: ' + navigator.userAgent;
+    container.appendChild(paragraph);
+
+    paragraph = document.createElement("p");
+    paragraph.textContent = 'Date: ' + new Date(Date.now()).toISOString();
+    container.appendChild(paragraph);
+
+    body.appendChild(container);
+
+    for (i = 0; i < error_list.length; i += 1) {
+      error = error_list[i];
+
+      if (error instanceof Event) {
+        error = {
+          string: error.toString(),
+          message: error.message,
+          type: error.type,
+          target: error.target
+        };
+        if (error.target !== undefined) {
+          error_list.splice(i + 1, 0, error.target);
+        }
       }
+
+      if (error instanceof XMLHttpRequest) {
+        error = {
+          message: error.toString(),
+          readyState: error.readyState,
+          status: error.status,
+          statusText: error.statusText,
+          response: error.response,
+          responseUrl: error.responseUrl,
+          response_headers: error.getAllResponseHeaders()
+        };
+      }
+      if (error.constructor === Array ||
+          error.constructor === String ||
+          error.constructor === Object) {
+        try {
+          error = JSON.stringify(error);
+        } catch (ignore) {
+        }
+      }
+
+      container = document.createElement("section");
+
+      paragraph = document.createElement("h2");
+      paragraph.textContent = error.message || error;
+      container.appendChild(paragraph);
+
+      if (error.fileName !== undefined) {
+        paragraph = document.createElement("p");
+        paragraph.textContent = 'File: ' +
+          error.fileName +
+          ': ' + error.lineNumber;
+        container.appendChild(paragraph);
+      }
+
+      if (error.stack !== undefined) {
+        paragraph = document.createElement("pre");
+        paragraph.textContent = 'Stack: ' + error.stack;
+        container.appendChild(paragraph);
+      }
+
+      body.appendChild(container);
     }
-    document.getElementsByTagName('body')[0].textContent = e;
     // XXX Do not crash the application if it fails
     // Where to write the error?
     /*global console*/
@@ -908,6 +1068,9 @@ if (typeof document.contains !== 'function') {
       g.__monitor.cancel();
     }
     g.__monitor = new Monitor();
+    g.__job_dict = {};
+    g.__job_list = [];
+    g.__job_triggered = false;
     g.__monitor.fail(function (error) {
       if (!(error instanceof RSVP.CancellationError)) {
         return g.aq_reportServiceError(error);
@@ -924,7 +1087,7 @@ if (typeof document.contains !== 'function') {
   }
 
   function loadSubGadgetDOMDeclaration(g) {
-    var element_list = g.__element.querySelectorAll('[data-gadget-url]'),
+    var element_list = g.element.querySelectorAll('[data-gadget-url]'),
       element,
       promise_list = [],
       scope,
@@ -955,24 +1118,88 @@ if (typeof document.contains !== 'function') {
     this.__ready_list.push(callback);
     return this;
   };
+  RenderJSGadget.setState = function (state_dict) {
+    var json_state = JSON.stringify(state_dict);
+    return this.ready(function () {
+      this.state = JSON.parse(json_state);
+    });
+  };
+  RenderJSGadget.onStateChange = function (callback) {
+    this.prototype.__state_change_callback = callback;
+    return this;
+  };
 
   RenderJSGadget.__service_list = [];
   RenderJSGadget.declareService = function (callback) {
     this.__service_list.push(callback);
     return this;
   };
+  RenderJSGadget.onEvent = function (type, callback, use_capture,
+                                     prevent_default) {
+    this.__service_list.push(function () {
+      return loopEventListener(this.element, type, use_capture,
+                               callback.bind(this), prevent_default);
+    });
+    return this;
+  };
+
+  function runJob(gadget, name, callback, argument_list) {
+    var job_promise = new RSVP.Queue()
+      .push(function () {
+        return callback.apply(gadget, argument_list);
+      });
+    if (gadget.__job_dict.hasOwnProperty(name)) {
+      gadget.__job_dict[name].cancel();
+    }
+    gadget.__job_dict[name] = job_promise;
+    gadget.__monitor.monitor(new RSVP.Queue()
+      .push(function () {
+        return job_promise;
+      })
+      .push(undefined, function (error) {
+        if (!(error instanceof RSVP.CancellationError)) {
+          throw error;
+        }
+      }));
+  }
 
   function startService(gadget) {
     gadget.__monitor.monitor(new RSVP.Queue()
       .push(function () {
         var i,
-          service_list = gadget.constructor.__service_list;
+          service_list = gadget.constructor.__service_list,
+          job_list = gadget.__job_list;
         for (i = 0; i < service_list.length; i += 1) {
           gadget.__monitor.monitor(service_list[i].apply(gadget));
         }
+        for (i = 0; i < job_list.length; i += 1) {
+          runJob(gadget, job_list[i][0], job_list[i][1], job_list[i][2]);
+        }
+        gadget.__job_list = [];
+        gadget.__job_triggered = true;
       })
       );
   }
+
+  /////////////////////////////////////////////////////////////////
+  // RenderJSGadget.declareJob
+  // gadget internal method, which trigger execution
+  // of a function inside a service
+  /////////////////////////////////////////////////////////////////
+  RenderJSGadget.declareJob = function (name, callback) {
+    this.prototype[name] = function () {
+      var context = this,
+        argument_list = arguments;
+
+      if (context.__job_triggered) {
+        runJob(context, name, callback, argument_list);
+      } else {
+        context.__job_list.push([name, callback, argument_list]);
+      }
+    };
+    // Allow chain
+    return this;
+  };
 
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.declareMethod
@@ -1014,10 +1241,43 @@ if (typeof document.contains !== 'function') {
     })
     .declareMethod('getElement', function () {
       // Returns the DOM Element of a gadget
-      if (this.__element === undefined) {
+      // XXX Kept for compatibility. Use element property directly
+      if (this.element === undefined) {
         throw new Error("No element defined");
       }
-      return this.__element;
+      return this.element;
+    })
+    .declareMethod('changeState', function (state_dict) {
+      var key,
+        modified = false,
+        previous_cancelled = this.hasOwnProperty('__modification_dict'),
+        modification_dict,
+        context = this;
+      if (previous_cancelled) {
+        modification_dict = this.__modification_dict;
+        modified = true;
+      } else {
+        modification_dict = {};
+        this.__modification_dict = modification_dict;
+      }
+      for (key in state_dict) {
+        if (state_dict.hasOwnProperty(key) &&
+            (state_dict[key] !== this.state[key])) {
+          this.state[key] = state_dict[key];
+          modification_dict[key] = state_dict[key];
+          modified = true;
+        }
+      }
+      if (modified && this.__state_change_callback !== undefined) {
+        return new RSVP.Queue()
+          .push(function () {
+            return context.__state_change_callback(modification_dict);
+          })
+          .push(function (result) {
+            delete context.__modification_dict;
+            return result;
+          });
+      }
     });
 
   /////////////////////////////////////////////////////////////////
@@ -1106,8 +1366,14 @@ if (typeof document.contains !== 'function') {
     RenderJSGadget.__service_list.slice();
   RenderJSEmbeddedGadget.ready =
     RenderJSGadget.ready;
+  RenderJSEmbeddedGadget.setState =
+    RenderJSGadget.setState;
+  RenderJSEmbeddedGadget.onStateChange =
+    RenderJSGadget.onStateChange;
   RenderJSEmbeddedGadget.declareService =
     RenderJSGadget.declareService;
+  RenderJSEmbeddedGadget.onEvent =
+    RenderJSGadget.onEvent;
   RenderJSEmbeddedGadget.prototype = new RenderJSGadget();
   RenderJSEmbeddedGadget.prototype.constructor = RenderJSEmbeddedGadget;
 
@@ -1136,9 +1402,10 @@ if (typeof document.contains !== 'function') {
           template_node_list = Klass.__template_element.body.childNodes;
         gadget_loading_klass = Klass;
         gadget_instance = new Klass();
-        gadget_instance.__element = options.element;
+        gadget_instance.element = options.element;
+        gadget_instance.state = {};
         for (i = 0; i < template_node_list.length; i += 1) {
-          gadget_instance.__element.appendChild(
+          gadget_instance.element.appendChild(
             template_node_list[i].cloneNode(true)
           );
         }
@@ -1180,9 +1447,15 @@ if (typeof document.contains !== 'function') {
   RenderJSIframeGadget.__ready_list = RenderJSGadget.__ready_list.slice();
   RenderJSIframeGadget.ready =
     RenderJSGadget.ready;
+  RenderJSIframeGadget.setState =
+    RenderJSGadget.setState;
+  RenderJSIframeGadget.onStateChange =
+    RenderJSGadget.onStateChange;
   RenderJSIframeGadget.__service_list = RenderJSGadget.__service_list.slice();
   RenderJSIframeGadget.declareService =
     RenderJSGadget.declareService;
+  RenderJSIframeGadget.onEvent =
+    RenderJSGadget.onEvent;
   RenderJSIframeGadget.prototype = new RenderJSGadget();
   RenderJSIframeGadget.prototype.constructor = RenderJSIframeGadget;
 
@@ -1210,7 +1483,8 @@ if (typeof document.contains !== 'function') {
 //    gadget_instance.element.setAttribute("seamless", "seamless");
     iframe.setAttribute("src", url);
     gadget_instance.__path = url;
-    gadget_instance.__element = options.element;
+    gadget_instance.element = options.element;
+    gadget_instance.state = {};
     // Attach it to the DOM
     options.element.appendChild(iframe);
 
@@ -1273,7 +1547,13 @@ if (typeof document.contains !== 'function') {
       iframe_loading_deferred.promise,
       // Timeout to prevent non renderJS embeddable gadget
       // XXX Maybe using iframe.onload/onerror would be safer?
-      RSVP.timeout(5000)
+      new RSVP.Queue()
+        .push(function () {
+          return RSVP.timeout(5000);
+        })
+        .push(undefined, function () {
+          throw new Error('Timeout while loading: ' + url);
+        })
     ]);
   }
 
@@ -1359,7 +1639,14 @@ if (typeof document.contains !== 'function') {
           gadget_loading_klass = undefined;
           throw e;
         });
-      local_loading_klass_promise = loading_klass_promise;
+      //gadget loading should not be interrupted
+      //if not, gadget's definition will not be complete
+      //.then will return another promise
+      //so loading_klass_promise can't be cancel
+      local_loading_klass_promise = loading_klass_promise
+        .then(function (gadget_instance) {
+          return gadget_instance;
+        });
 
       queue = new RSVP.Queue()
         .push(function () {
@@ -1373,10 +1660,17 @@ if (typeof document.contains !== 'function') {
           function ready_wrapper() {
             return gadget_instance;
           }
+          function ready_executable_wrapper(fct) {
+            return function (g) {
+              return fct.call(g, g);
+            };
+          }
           for (i = 0; i < gadget_instance.constructor.__ready_list.length;
                i += 1) {
             // Put a timeout?
-            queue.push(gadget_instance.constructor.__ready_list[i]);
+            queue.push(ready_executable_wrapper(
+              gadget_instance.constructor.__ready_list[i]
+            ));
             // Always return the gadget instance after ready function
             queue.push(ready_wrapper);
           }
@@ -1392,16 +1686,16 @@ if (typeof document.contains !== 'function') {
             }
           }
           parent_gadget.__sub_gadget_dict[scope] = gadget_instance;
-          gadget_instance.__element.setAttribute("data-gadget-scope",
-                                                 scope);
+          gadget_instance.element.setAttribute("data-gadget-scope",
+                                               scope);
 
           // Put some attribute to ease page layout comprehension
-          gadget_instance.__element.setAttribute("data-gadget-url", url);
-          gadget_instance.__element.setAttribute("data-gadget-sandbox",
-                                                 options.sandbox);
-          gadget_instance.__element._gadget = gadget_instance;
+          gadget_instance.element.setAttribute("data-gadget-url", url);
+          gadget_instance.element.setAttribute("data-gadget-sandbox",
+                                               options.sandbox);
+          gadget_instance.element._gadget = gadget_instance;
 
-          if (document.contains(gadget_instance.__element)) {
+          if (document.contains(gadget_instance.element)) {
             // Put a timeout
             queue.push(startService);
           }
@@ -1554,14 +1848,22 @@ if (typeof document.contains !== 'function') {
         tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();
         tmp_constructor.declareMethod =
           RenderJSGadget.declareMethod;
+        tmp_constructor.declareJob =
+          RenderJSGadget.declareJob;
         tmp_constructor.declareAcquiredMethod =
           RenderJSGadget.declareAcquiredMethod;
         tmp_constructor.allowPublicAcquisition =
           RenderJSGadget.allowPublicAcquisition;
         tmp_constructor.ready =
           RenderJSGadget.ready;
+        tmp_constructor.setState =
+          RenderJSGadget.setState;
+        tmp_constructor.onStateChange =
+          RenderJSGadget.onStateChange;
         tmp_constructor.declareService =
           RenderJSGadget.declareService;
+        tmp_constructor.onEvent =
+          RenderJSGadget.onEvent;
         tmp_constructor.prototype = new RenderJSGadget();
         tmp_constructor.prototype.constructor = tmp_constructor;
         tmp_constructor.prototype.__path = url;
@@ -1701,9 +2003,6 @@ if (typeof document.contains !== 'function') {
 
       last_acquisition_gadget = new RenderJSGadget();
       last_acquisition_gadget.__acquired_method_dict = {
-        getTopURL: function () {
-          return url;
-        },
         reportServiceError: function (param_list) {
           letsCrash(param_list[0]);
         }
@@ -1730,15 +2029,20 @@ if (typeof document.contains !== 'function') {
           RenderJSGadget.call(this);
         };
         tmp_constructor.declareMethod = RenderJSGadget.declareMethod;
+        tmp_constructor.declareJob = RenderJSGadget.declareJob;
         tmp_constructor.declareAcquiredMethod =
           RenderJSGadget.declareAcquiredMethod;
         tmp_constructor.allowPublicAcquisition =
           RenderJSGadget.allowPublicAcquisition;
         tmp_constructor.__ready_list = RenderJSGadget.__ready_list.slice();
         tmp_constructor.ready = RenderJSGadget.ready;
+        tmp_constructor.setState = RenderJSGadget.setState;
+        tmp_constructor.onStateChange = RenderJSGadget.onStateChange;
         tmp_constructor.__service_list = RenderJSGadget.__service_list.slice();
         tmp_constructor.declareService =
           RenderJSGadget.declareService;
+        tmp_constructor.onEvent =
+          RenderJSGadget.onEvent;
         tmp_constructor.prototype = new RenderJSGadget();
         tmp_constructor.prototype.constructor = tmp_constructor;
         tmp_constructor.prototype.__path = url;
@@ -1815,30 +2119,19 @@ if (typeof document.contains !== 'function') {
               });
               return;
             }
-            // Get Top URL
-            return tmp_constructor.prototype.__aq_parent('getTopURL', [])
-              .then(function (topURL) {
-                var base = document.createElement('base');
-                base.href = topURL;
-                base.target = "_top";
-                document.head.appendChild(base);
-                connection_ready = true;
-                notifyReady();
-                //the channel is ok
-                //so bind calls to renderJS method on the instance
-                embedded_channel.bind("methodCall", function (trans, v) {
-                  root_gadget[v[0]].apply(root_gadget, v[1])
-                    .then(function (g) {
-                      trans.complete(g);
-                    }).fail(function (e) {
-                      trans.error(e.toString());
-                    });
-                  trans.delayReturn(true);
+            connection_ready = true;
+            notifyReady();
+            //the channel is ok
+            //so bind calls to renderJS method on the instance
+            embedded_channel.bind("methodCall", function (trans, v) {
+              root_gadget[v[0]].apply(root_gadget, v[1])
+                .then(function (g) {
+                  trans.complete(g);
+                }).fail(function (e) {
+                  trans.error(e.toString());
                 });
-              })
-              .fail(function (error) {
-                throw error;
-              });
+              trans.delayReturn(true);
+            });
           }
         });
 
@@ -1872,6 +2165,10 @@ if (typeof document.contains !== 'function') {
 
         tmp_constructor.declareService =
           RenderJSGadget.declareService;
+        tmp_constructor.declareJob =
+          RenderJSGadget.declareJob;
+        tmp_constructor.onEvent =
+          RenderJSGadget.onEvent;
         tmp_constructor.declareAcquiredMethod =
           RenderJSGadget.declareAcquiredMethod;
         tmp_constructor.allowPublicAcquisition =
@@ -1894,10 +2191,11 @@ if (typeof document.contains !== 'function') {
           }
         }
         tmp_constructor.__template_element = document.createElement("div");
-        root_gadget.__element = document.body;
-        for (j = 0; j < root_gadget.__element.childNodes.length; j += 1) {
+        root_gadget.element = document.body;
+        root_gadget.state = {};
+        for (j = 0; j < root_gadget.element.childNodes.length; j += 1) {
           tmp_constructor.__template_element.appendChild(
-            root_gadget.__element.childNodes[j].cloneNode(true)
+            root_gadget.element.childNodes[j].cloneNode(true)
           );
         }
         RSVP.all([root_gadget.getRequiredJSList(),
@@ -2001,7 +2299,11 @@ if (typeof document.contains !== 'function') {
         function ready_wrapper() {
           return root_gadget;
         }
-
+        function ready_executable_wrapper(fct) {
+          return function (g) {
+            return fct.call(g, g);
+          };
+        }
         tmp_constructor.ready(function (g) {
           return startService(g);
         });
@@ -2010,7 +2312,7 @@ if (typeof document.contains !== 'function') {
         for (i = 0; i < tmp_constructor.__ready_list.length; i += 1) {
           // Put a timeout?
           loading_gadget_promise
-            .push(tmp_constructor.__ready_list[i])
+            .push(ready_executable_wrapper(tmp_constructor.__ready_list[i]))
             // Always return the gadget instance after ready function
             .push(ready_wrapper);
         }
@@ -2047,4 +2349,4 @@ if (typeof document.contains !== 'function') {
   bootstrap();
 
 }(document, window, RSVP, DOMParser, Channel, MutationObserver, Node,
-  FileReader, Blob));
+  FileReader, Blob, navigator, Event));

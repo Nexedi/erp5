@@ -10,5 +10,7 @@ if not content_type:
     content_type = 'text/css'
   elif (portal_type == "Web Page"):
     content_type = 'text/html'
+  elif (portal_type == "Web Manifest"):
+    content_type = 'text/cache-manifest'
 
 return content_type

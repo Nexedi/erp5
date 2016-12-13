@@ -15,6 +15,7 @@ from erp5.util.testnode.SlapOSControler import createFolder
 from erp5.util.taskdistribution import TaskDistributor
 from erp5.util.taskdistribution import TaskDistributionTool
 from erp5.util.taskdistribution import TestResultProxy
+import argparse
 import os
 import shutil
 import subprocess
@@ -473,87 +474,57 @@ shared = true
     test_node.checkOldTestSuite(test_suite_data)
     self.assertEquals(['foo'], os.listdir(self.working_directory))
 
-  def test_08_getSupportedParamaterSet(self):
-    original_spawn = ProcessManager.spawn
-    try:
-      def get_help(self, *args, **kw):
-        return {'stdout': """My Program
-                  --foo  foo
-                  --bar  bar"""}
-      ProcessManager.spawn = get_help
-      process_manager = ProcessManager(log=None)
-      parameter_list = ['--foo', '--baz']
-      expected_suported_parameter_set = set(['--foo'])
-      supported_parameter_set = process_manager.getSupportedParameterSet(
-                                 "dummy_program_path", parameter_list)
-      self.assertEquals(expected_suported_parameter_set, supported_parameter_set)
-    finally:
-      ProcessManager.spawn = original_spawn
-
   def test_09_runTestSuite(self, my_test_type='UnitTest'):
     """
     Check parameters passed to runTestSuite
-    Also make sure that --firefox_bin and --xvfb_bin are passed when needed
+    Also make sure that optional parameters are passed when needed
     """
-    original_getSupportedParameter = ProcessManager.getSupportedParameterSet
-    original_spawn = ProcessManager.spawn
-    try:
-      # Create a file
-      def _createPath(path_to_create, end_path):
-        os.makedirs(path_to_create)
-        return os.close(os.open(os.path.join(path_to_create,
-                                 end_path),os.O_CREAT))
+    call_parameter_list = []
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--foo', type=int)
+    parser.add_argument('--hello_world', help='Hello world!')
+    def spawn(*args, **kw):
+      if args[1] == '--help':
+        return {'stdout': parser.format_help()}
+      call_parameter_list.append(args)
 
-      def get_parameters(self, *args, **kw):
-        call_parameter_list.append({'args': [x for x in args], 'kw':kw})
+    test_node = self.getTestNode()
+    test_node.process_manager.spawn = spawn
+    RunnerClass = self.returnGoodClassRunner(my_test_type)
+    runner = self.returnGoodClassRunner(my_test_type)(test_node)
+    slapos_controler = runner._getSlapOSControler(self.working_directory)
+    # Create and initialise/regenerate a nodetestsuite
+    node_test_suite = test_node.getNodeTestSuite('foo')
+    self.updateNodeTestSuiteData(node_test_suite)
+    node_test_suite.revision_list = ('dummy', (0, '')),
 
-      def patch_getSupportedParameterSet(self, run_test_suite_path, parameter_list,):
-       if '--firefox_bin' and '--xvfb_bin' in parameter_list:
-         return set(['--firefox_bin','--xvfb_bin'])
-       else:
-         return []
+    path = slapos_controler.instance_root + '/a/bin/runTestSuite'
+    os.makedirs(os.path.dirname(path))
+    os.close(os.open(path, os.O_CREAT))
 
-      test_node = self.getTestNode()
-      RunnerClass = self.returnGoodClassRunner(my_test_type)
-      runner = RunnerClass(test_node)
-      slapos_controler = runner._getSlapOSControler(self.working_directory)
-      # Create and initialise/regenerate a nodetestsuite
-      node_test_suite = test_node.getNodeTestSuite('foo')
-      self.updateNodeTestSuiteData(node_test_suite)
-      node_test_suite.revision_list = ('dummy', (0, '')),
-      # Path to the dummy runable
-      run_test_suite_path = _createPath(
-          os.path.join(slapos_controler.instance_root,'a/bin'),'runTestSuite')
+    expected_parameter_list = [path,
+      '--master_url', 'http://foo.bar',
+      '--revision', 'dummy=0-',
+      '--test_suite', 'Foo',
+      '--test_suite_title', 'Foo-Test',
+    ]
+    def checkRunTestSuiteParameters():
+      runner.runTestSuite(node_test_suite, "http://foo.bar")
+      self.assertEqual(list(call_parameter_list.pop()), expected_parameter_list)
+      self.assertFalse(call_parameter_list)
 
-      def checkRunTestSuiteParameters(additional_parameter_list=None):
-        ProcessManager.getSupportedParameterSet = patch_getSupportedParameterSet
-        ProcessManager.spawn = get_parameters
-        RunnerClass = self.returnGoodClassRunner(my_test_type)
-        runner = RunnerClass(test_node)
-        runner.runTestSuite(node_test_suite,"http://foo.bar")
-        expected_parameter_list = ['%s/a/bin/runTestSuite'
-           %(slapos_controler.instance_root), '--test_suite', 'Foo',
-           '--revision', 'dummy=0-', '--test_suite_title', 'Foo-Test',
-           '--node_quantity', 3, '--master_url', 'http://foo.bar',
-           '--frontend_url', 'http://frontend/']
-        if additional_parameter_list:
-          expected_parameter_list.extend(additional_parameter_list)
-        self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
+    checkRunTestSuiteParameters()
 
-      call_parameter_list = []
+    parts = slapos_controler.instance_root + '/a/software_release/parts/'
+    for option in (
+        ('--firefox_bin', parts + 'firefox/firefox-slapos'),
+        ('--frontend_url', 'http://frontend/'),
+        ('--node_quantity', 3),
+        ('--xvfb_bin', parts + 'xserver/bin/Xvfb'),
+      ):
+      parser.add_argument(option[0])
+      expected_parameter_list += option
       checkRunTestSuiteParameters()
-      _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/firefox'),'firefox-slapos')
-      _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/xserver/bin'),'Xvfb')
-      call_parameter_list = []
-      checkRunTestSuiteParameters(additional_parameter_list=['--firefox_bin',
-        '%s/soft/a/parts/firefox/firefox-slapos'
-         %(test_node.config['slapos_directory']),
-        '--xvfb_bin',
-        '%s/soft/a/parts/xserver/bin/Xvfb'
-          %(test_node.config['slapos_directory'])])
-    finally:
-      ProcessManager.getSupportedParameterSet = original_getSupportedParameter
-      ProcessManager.spawn = original_spawn
 
   def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()

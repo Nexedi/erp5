@@ -99,7 +99,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_grouping</string>
+                        <string>your_section_category</string>
+                        <string>your_section_category_strict</string>
                       </list>
                     </value>
                 </item>
@@ -107,7 +108,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>total_selected_amount</string>
+                        <string>your_grouping</string>
+                        <string>your_total_selected_amount</string>
                       </list>
                     </value>
                 </item>

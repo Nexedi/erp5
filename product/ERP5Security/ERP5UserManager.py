@@ -31,9 +31,7 @@ from ZODB.POSException import ConflictError
 import sys
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
-
-# This user is used to bypass all security checks.
-SUPER_USER = '__erp5security-=__'
+from Products import ERP5Security
 
 manage_addERP5UserManagerForm = PageTemplateFile(
   'www/ERP5Security_addERP5UserManager', globals(),
@@ -139,7 +137,7 @@ class ERP5UserManager(BasePlugin):
       login = credentials.get('external_login')
       ignore_password = True
     # Forbidden the usage of the super user.
-    if login == SUPER_USER:
+    if login == ERP5Security.SUPER_USER:
       return None
 
     @UnrestrictedMethod
@@ -235,7 +233,7 @@ class ERP5UserManager(BasePlugin):
     id_list = []
     has_super_user = False
     for user_id in id:
-      if user_id == SUPER_USER:
+      if user_id == ERP5Security.SUPER_USER:
         has_super_user = True
       elif user_id:
         id_list.append(user_id)
@@ -257,7 +255,7 @@ class ERP5UserManager(BasePlugin):
     else:
       user_list = []
     if has_super_user:
-      user_list.append({'uid': None, 'path': None, 'reference': SUPER_USER})
+      user_list.append({'uid': None, 'path': None, 'reference': ERP5Security.SUPER_USER})
     plugin_id = self.getId()
     return tuple([
       {
@@ -269,13 +267,14 @@ class ERP5UserManager(BasePlugin):
 
         # Extra properties, specific to ERP5
         'path': user['path'],
-        'login_list': [
+        'uid': user['uid'],
+        'login_list': user['path'] and [
           {
             'reference': user['reference'],
             'path': user['path'],
             'uid': user['uid'],
           }
-        ],
+        ] or [],
       }
       for user in user_list
     ])

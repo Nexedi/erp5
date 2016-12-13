@@ -1283,29 +1283,25 @@ class SelectionTool( BaseTool, SimpleItem ):
 
         # Save the current REQUEST form
         # We can't put FileUpload instances because we can't pickle them
-        saved_form_data = {}
-        for key, value in REQUEST.form.items():
-          if not isinstance(value, FileUpload):
-            saved_form_data[key] = value
+        saved_form_data = {key: value
+          for key, value in REQUEST.form.items()
+          if not isinstance(value, FileUpload)}
 
-        base_category = None
-        kw = {}
-        kw['dialog_id'] = dialog_id
-        kw['selection_name'] = selection_name
-        kw['selection_index'] = 0 # We start on the first page
-        kw['field_id'] = field.id
-        parameter_list = field.get_value('parameter_list')
-        if len(parameter_list) > 0:
-          for k,v in parameter_list:
-            kw[k] = v
-        kw['reset'] = 0
-        kw['base_category'] = field.get_value( 'base_category')
-        kw['form_id'] = form_id
-        kw[field.get_value('catalog_index')] = field_value
-        kw['portal_status_message'] = portal_status_message
-        kw['saved_form_data'] = saved_form_data
-        kw['ignore_layout'] = int(REQUEST.get('ignore_layout', 0))
-        kw['ignore_hide_rows'] = 1
+        kw = {
+          'dialog_id': dialog_id,
+          'selection_name': selection_name,
+          'selection_index': 0, # We start on the first page
+          'field_id': field.id,
+          'reset': 0,
+          'base_category': field.get_value( 'base_category'),
+          'form_id': form_id,
+          field.get_value('catalog_index'): field_value,
+          'portal_status_message': portal_status_message,
+          'saved_form_data': saved_form_data,
+          'ignore_layout': int(REQUEST.get('ignore_layout', 0)),
+          'ignore_hide_rows': 1,
+        }
+        kw.update(field.get_value('parameter_list'))
         # remove ignore_layout parameter from cancel_url otherwise we
         # will have two ignore_layout parameters after clicking cancel
         # button.

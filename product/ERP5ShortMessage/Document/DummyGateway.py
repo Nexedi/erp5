@@ -42,7 +42,7 @@ import zope.interface
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products import ERP5Security
 
 
 class DummyGateway(XMLObject):
@@ -114,7 +114,7 @@ class DummyGateway(XMLObject):
       try:
         #Use SUPER_USER
         portal_membership = self.getPortalObject().portal_membership
-        newSecurityManager(None, portal_membership.getMemberById(SUPER_USER))
+        newSecurityManager(None, portal_membership.getMemberById(ERP5Security.SUPER_USER))
 
         #Dummy notify only new SMS
         self.notifyReception(REQUEST.get("sender"),

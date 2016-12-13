@@ -1,6 +1,6 @@
-Interaction between Jupyter(IPython Notebook) and ERP5.
+Interaction between Jupyter (former IPython Notebook) and ERP5.
 
 !WARNING!
 This business template is unsafe to install on a public server as one of the extensions uses eval and allows remote code execution. Proper security should be taken into account. 
-This template includes a highly exprimental integration with PivotTableJs which doesn't follow ERP5 Javascript standards and will be refactored to use JIO and RenderJS.
+This template includes a highly experimental integration with PivotTableJs which doesn't follow ERP5 JavaScript standards and will be re factored to use jIO and RenderJS.
 !WARNING!
