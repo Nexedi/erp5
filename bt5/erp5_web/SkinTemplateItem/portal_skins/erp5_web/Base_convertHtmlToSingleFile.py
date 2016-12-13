@@ -169,6 +169,7 @@ def handleImageSourceObject(obj, src):
       if key == "format" and value is not None:
         format_kw["format"] = value
       elif key == "display" and value is not None:
+        format_kw.setdefault("format", "")
         format_kw["display"] = value
     if format_kw:
       mime, data = obj.convert(**format_kw)
