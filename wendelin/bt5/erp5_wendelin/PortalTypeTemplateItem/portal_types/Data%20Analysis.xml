@@ -23,6 +23,14 @@ An analyses is usually done on big parts of data (usually represented by special
             <value> <string>addXMLObject</string> </value>
         </item>
         <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>delivery</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Data Analysis</string> </value>
         </item>
@@ -44,7 +52,7 @@ An analyses is usually done on big parts of data (usually represented by special
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Order</string> </value>
+            <value> <string>Delivery</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

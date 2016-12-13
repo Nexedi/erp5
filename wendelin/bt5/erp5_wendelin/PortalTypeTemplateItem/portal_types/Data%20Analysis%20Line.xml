@@ -24,7 +24,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>amount_generator</string>
+                <string>delivery_movement</string>
               </tuple>
             </value>
         </item>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>OrderLine</string> </value>
+            <value> <string>DeliveryLine</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
