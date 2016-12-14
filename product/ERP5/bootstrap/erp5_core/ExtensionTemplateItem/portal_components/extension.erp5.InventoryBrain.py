@@ -47,9 +47,9 @@ class ComputedAttributeGetItemCompatibleMixin(ZSQLBrain):
       return item.__of__(self)
     return item
 
-class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
+class InventoryListBrainBase(ComputedAttributeGetItemCompatibleMixin):
   """
-    Lists each variation
+    Common interface for all inventory API brains
   """
   # Stock management
   def _callSimulationTool(self, method_id, ignore_unknown_columns=True, **kw):
@@ -284,7 +284,25 @@ class InventoryListBrain(ComputedAttributeGetItemCompatibleMixin):
                                  mapping=mapping)
     return translateString('Unknown')
 
-class TrackingListBrain(InventoryListBrain):
+class InventoryListBrain(InventoryListBrainBase):
+  """ Brains for InventoryList
+  """
+  def getQuantity(self):
+    raise ValueError("Do not use getQuantity on InventoryListBrain, use brain.total_quantity instead")
+
+  def _quantity(self):
+    raise ValueError("Do not use quantity on InventoryListBrain, use brain.total_quantity instead")
+  quantity = ComputedAttribute(_quantity, 1)
+
+  def getPrice(self):
+    raise ValueError("Do not use getPrice on InventoryListBrain, use brain.total_price instead")
+
+  def _price(self):
+    raise ValueError("Do not use price on InventoryListBrain, use brain.total_price instead")
+  price = ComputedAttribute(_price, 1)
+
+
+class TrackingListBrain(InventoryListBrainBase):
   """
   List of aggregated movements
   """
@@ -305,7 +323,7 @@ class TrackingListBrain(InventoryListBrain):
     return self.date
 
 
-class MovementHistoryListBrain(InventoryListBrain):
+class MovementHistoryListBrain(InventoryListBrainBase):
   """Brain for getMovementHistoryList
   """
 
