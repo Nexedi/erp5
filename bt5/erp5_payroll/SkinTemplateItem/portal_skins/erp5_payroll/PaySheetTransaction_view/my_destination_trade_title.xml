@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_section_title</string> </value>
+            <value> <string>my_destination_trade_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,7 +78,7 @@
               <dictionary>
                 <item>
                     <key> <string>base_category</string> </key>
-                    <value> <string>destination_section</string> </value>
+                    <value> <string>destination_trade</string> </value>
                 </item>
                 <item>
                     <key> <string>catalog_index</string> </key>
@@ -86,7 +86,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Company accounting the transaction</string> </value>
+                    <value> <string>The employer.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -124,7 +124,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Company</string> </value>
+                    <value> <string>Employer</string> </value>
                 </item>
               </dictionary>
             </value>
