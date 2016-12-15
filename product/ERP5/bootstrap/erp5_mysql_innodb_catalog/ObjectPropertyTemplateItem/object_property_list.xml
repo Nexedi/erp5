@@ -1,0 +1,8 @@
+<object_property_list>
+  <object relative_url="portal_catalog/erp5_mysql_innodb">
+    <property name="sql_search_result_keys">
+      <item>catalog.path</item>
+      <item>catalog.uid</item>
+    </property>
+  </object>
+</object_property_list>
