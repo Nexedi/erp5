@@ -9,7 +9,7 @@
       <dtml-in prefix="loop" expr="email_list">
       (
         <dtml-sqlvar expr="uid[loop_item]" type="int">,  
-        <dtml-sqlvar expr="getUrlString[loop_item]" type="string" optional>
+        <dtml-sqlvar expr="getUrlString[loop_item] or getReference[loop_item]" type="string" optional>
       )
       <dtml-if sequence-end><dtml-else>,</dtml-if>
     </dtml-in>
