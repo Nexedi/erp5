@@ -13,8 +13,11 @@
     return {
       type: "query",
       sub_storage: {
-        type: "indexeddb",
-        database: 'officejs_' + name + '_cache_erp5'
+        type: "uuid",
+        sub_storage: {
+          type: "indexeddb",
+          database: 'officejs_' + name + '_cache_erp5'
+        }
       }
     };
   }
@@ -138,6 +141,7 @@
       query: {
         query: 'reference: "%" AND (portal_type: ("Web Style", "Web Page", "Web Script")) AND ' +
           erp5_query + modification_date,
+        select_list: ["url_string"],
         limit: [0, 1234567890]
       },
       use_remote_post: true,
@@ -148,22 +152,23 @@
       check_remote_modification: true,
       check_remote_creation: true,
       check_remote_deletion: true,
-      //use_bulk_get: true,
-      use_bulk: false,
-      local_sub_storage: get_jio_cache_storage(name),
-      remote_sub_storage: {
+      use_bulk_get: true,
+      use_bulk: true,
+      attachment_list: [],
+      local_sub_storage: {
         type: "mapping",
-        sub_storage: {
-          type: "erp5",
-          url: (new URI("hateoasnoauth"))
-            .absoluteTo(location.href)
-            .toString(),
-          default_view_reference: "jio_view"
-        },
-        mapping_dict: {"id": {
-          "equal": "url_string",
-          "default_property": "reference"
-        }}
+        sub_storage: get_jio_cache_storage(name),
+        mapping_dict: {
+          "id": {"equal": "relative_url"},
+          "url_string": {"equal": "id"}
+        }
+      },
+      remote_sub_storage: {
+        type: "erp5",
+        url: (new URI("hateoasnoauth"))
+          .absoluteTo(location.href)
+          .toString(),
+        default_view_reference: "jio_view"
       }
     });
   }
