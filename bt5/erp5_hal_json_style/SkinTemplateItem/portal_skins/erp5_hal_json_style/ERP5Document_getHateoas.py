@@ -1219,24 +1219,33 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
                                 .asSearchTextExpression(sql_catalog)
 
         query += ' AND %s' % role_query.replace('simulation_state', 'local_roles')
+      worklist_dict = {
+        'href': url_template_dict["jio_search_template"] % {
+          "query": make_query({"query": query})
+        },
+        'name': Base_translateString(re.sub(r' \(\d+\)$', '', action['name'])),
+        'count': action['count']
+      }
 
-      portal_type = action['query'].get('portal_type', None)
-      if (portal_type):
-        if not same_type(portal_type, ''):
-          portal_type = portal_type[0]
+      portal_type_list = action['query'].get('portal_type', None)
+      if (portal_type_list):
+        worklist_module_id = None
+        if same_type(portal_type_list, ''):
+          portal_type_list = [portal_type_list]
 
-        worklist_module_id = portal.getDefaultModuleId(portal_type, default=None, only_visible=True)
+        for portal_type in portal_type_list:
+          if (worklist_module_id is None):
+            worklist_module_id = portal.getDefaultModuleId(portal_type, default=None, only_visible=True)
+          elif (worklist_module_id != portal.getDefaultModuleId(portal_type, default=None, only_visible=True)):
+            worklist_module_id = None
+          if worklist_module_id is None:
+            break
+
         if (worklist_module_id is not None):
-          work_list.append({
-            'href': url_template_dict["jio_search_template"] % {
-                      "query": make_query({"query": query})
-                    },
-            'name': Base_translateString(re.sub(r' \(\d+\)$', '', action['name'])),
-            'count': action['count'],
-            'module': default_document_uri_template % {
-                        "relative_url": worklist_module_id
-                      }
-        })
+          worklist_dict['module'] = default_document_uri_template % {
+            "relative_url": worklist_module_id
+          }
+      work_list.append(worklist_dict)
 
     result_dict["worklist"] = work_list
 
