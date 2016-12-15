@@ -12,7 +12,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -22,8 +21,10 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -40,7 +41,10 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -50,7 +54,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -71,8 +74,20 @@
             <value> <string>renderjs.js</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>codeeditor_renderjs_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -84,7 +99,7 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>renderjs.js</string> </value>
+            <value> <string>web_page_module/codeeditor_renderjs_js</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -144,7 +159,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>archive</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -170,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481330967.3</float>
+                        <float>1482260156.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -179,7 +196,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>archived</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -215,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55463.47325.37836</string> </value>
+                <value> <string>956.5999.64582.54698</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -233,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481295825.16</float>
+                        <float>1482260562.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -292,7 +309,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481295823.27</float>
+                        <float>1482260156.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

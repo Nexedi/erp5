@@ -78,16 +78,34 @@
             <value> <string>codemirror-landingpage_no_sw.html</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>codeeditor_codemirror-landingpage_no_sw_html</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Test Texteditor Landing Page No SW</string> </value>
+            <value> <string>CodeMirror Landing Page No SW</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -177,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481300079.99</float>
+                        <float>1482261084.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -222,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55462.11698.1297</string> </value>
+                <value> <string>956.6008.44391.32972</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -240,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481295731.19</float>
+                        <float>1482261051.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

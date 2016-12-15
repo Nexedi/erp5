@@ -12,7 +12,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -22,8 +21,10 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -40,7 +41,10 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -50,7 +54,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -162,7 +165,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>archive</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -188,7 +193,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481331852.55</float>
+                        <float>1482261192.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -197,7 +202,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>archived</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -233,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.56050.7702.23142</string> </value>
+                <value> <string>956.6017.14169.60996</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -251,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481331009.52</float>
+                        <float>1482261223.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -308,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481331000.2</float>
+                        <float>1482261192.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
