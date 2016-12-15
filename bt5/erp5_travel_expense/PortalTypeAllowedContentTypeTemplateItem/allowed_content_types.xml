@@ -5,4 +5,14 @@
  <portal_type id="Expense Validation Item Module">
   <item>Expense Validation Item</item>
  </portal_type>
+ <portal_type id="Expense Validation Request Module">
+  <item>Expense Validation Request</item>
+ </portal_type>
+ <portal_type id="Record Module">
+  <item>Leave Request Record</item>
+  <item>Travel Request Record</item>
+ </portal_type>
+ <portal_type id="Travel Request Module">
+  <item>Travel Request</item>
+ </portal_type>
 </allowed_content_type_list>

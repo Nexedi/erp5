@@ -2,4 +2,16 @@
  <portal_type id="Expense Record">
   <item>ExpenseRecord</item>
  </portal_type>
+ <portal_type id="Expense Validation Request">
+  <item>ExpenseValidationRequest</item>
+ </portal_type>
+ <portal_type id="Leave Request Record">
+  <item>LeaveRequestRecord</item>
+ </portal_type>
+ <portal_type id="Travel Request">
+  <item>TravelRequest</item>
+ </portal_type>
+ <portal_type id="Travel Request Record">
+  <item>TravelRequestRecord</item>
+ </portal_type>
 </property_sheet_list>

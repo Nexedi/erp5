@@ -1,2 +1,5 @@
 2016-9-1 yusei
 * Initial version.
+2016-12-14 Cédric LN
+* Use Generic Record Mechanism
+* Remove hardcoded elements
