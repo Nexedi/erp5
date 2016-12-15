@@ -39,6 +39,136 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>SQLCatalog_deferFullTextIndex</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 Python Script</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>SQLCatalog_deferFullTextIndexActivity</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 Python Script</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>SQLCatalog_makeFullTextQuery</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 Python Script</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_drop_catalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_drop_content_translation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_drop_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_uncatalog_catalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_uncatalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_catalog_catalog_fulltext_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_catalog_fulltext_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_create_catalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_create_content_translation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_create_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>z0_drop_accounting_transaction</string> </value>
                   </item>
                   <item>
@@ -274,12 +404,7 @@
         <item>
             <key> <string>sql_catalog_full_text_search_keys</string> </key>
             <value>
-              <list>
-                <string>SearchableText</string>
-                <string>catalog_full_text.description</string>
-                <string>catalog_full_text.title</string>
-                <string>full_text.SearchableText</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -313,9 +438,7 @@
             <value>
               <tuple>
                 <string>SQLCatalog_catalogTransformationList</string>
-                <string>SQLCatalog_deferFullTextIndex</string>
                 <string>z_catalog_alarm_list</string>
-                <string>z_catalog_catalog_fulltext_list</string>
                 <string>z_catalog_delivery_list</string>
                 <string>z_catalog_item_list</string>
                 <string>z_catalog_measure_list</string>
@@ -346,7 +469,6 @@
               <list>
                 <string>base_category_id | category,catalog/id/z_related_base_category_id</string>
                 <string>career_skill_id | category,catalog,catalog/id/z_related_career_skill</string>
-                <string>career_skill_title | category,catalog,catalog/title/z_related_career_skill</string>
                 <string>causality_translated_portal_type | category,catalog,translation/translated_message/z_related_translated_causality_portal_type</string>
                 <string>causality_translated_validation_state_title | category,catalog,translation/translated_message/z_related_translated_causality_validation_state_title</string>
                 <string>child_address_SearchableText | catalog,full_text/SearchableText/z_related_child_address</string>
@@ -364,7 +486,6 @@
                 <string>item_resource_category_uid | category/category_uid/z_related_resource_uid_from_item</string>
                 <string>item_section_category_uid | category/category_uid/z_related_section_uid_from_item</string>
                 <string>metric_type_uid | measure/metric_type_uid/z_related_metric_type</string>
-                <string>parent_description | catalog/description/z_related_parent</string>
                 <string>parent_float_index | catalog/float_index/z_related_parent</string>
                 <string>parent_int_index | catalog/int_index/z_related_parent</string>
                 <string>parent_portal_type | catalog/portal_type/z_related_parent</string>
@@ -374,7 +495,6 @@
                 <string>parent_specialise_reference | category,catalog/reference/z_related_parent_specialise</string>
                 <string>parent_strict_group_uid | category,catalog/uid/z_related_parent_strict_group</string>
                 <string>parent_string_index | catalog/string_index/z_related_parent</string>
-                <string>parent_title | catalog/title/z_related_parent</string>
                 <string>predicate_category_base_category_uid | predicate_category/base_category_uid/z_related_predicate_category</string>
                 <string>predicate_category_category_strict_membership | predicate_category/category_strict_membership/z_related_predicate_category</string>
                 <string>predicate_category_category_uid | predicate_category/category_uid/z_related_predicate_category</string>
@@ -387,7 +507,6 @@
                 <string>stock_explanation_portal_type | catalog/portal_type/z_related_explanation_from_stock</string>
                 <string>stock_explanation_reference | catalog/reference/z_related_explanation_from_stock</string>
                 <string>stock_explanation_simulation_state | catalog/simulation_state/z_related_explanation_from_stock</string>
-                <string>stock_explanation_title | catalog/title/z_related_explanation_from_stock</string>
                 <string>stock_explanation_translated_portal_type | catalog,translation/translated_message/z_related_explanation_translated_portal_type_from_stock</string>
                 <string>stock_function_category_strict_membership_uid | category/category_uid/z_related_strict_membership_function_uid_from_stock</string>
                 <string>stock_function_category_uid | category/category_uid/z_related_function_uid_from_stock</string>
@@ -397,10 +516,8 @@
                 <string>stock_ledger_category_uid | category/category_uid/z_related_ledger_uid_from_stock</string>
                 <string>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</string>
                 <string>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</string>
-                <string>stock_mirror_section_title | catalog/title/z_related_mirror_section_uid_from_stock</string>
                 <string>stock_node_category_strict_membership_uid | category/category_uid/z_related_strict_membership_node_uid_from_stock</string>
                 <string>stock_node_category_uid | category/category_uid/z_related_node_uid_from_stock</string>
-                <string>stock_node_title | catalog/title/z_related_node_uid_from_stock</string>
                 <string>stock_payment_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_uid_from_stock</string>
                 <string>stock_payment_category_uid | category/category_uid/z_related_payment_uid_from_stock</string>
                 <string>stock_payment_request_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_request_uid_from_stock</string>
@@ -490,11 +607,8 @@
               <tuple>
                 <string>z0_drop_alarm</string>
                 <string>z0_drop_catalog</string>
-                <string>z0_drop_catalog_fulltext</string>
                 <string>z0_drop_category</string>
-                <string>z0_drop_content_translation</string>
                 <string>z0_drop_delivery</string>
-                <string>z0_drop_fulltext</string>
                 <string>z0_drop_item</string>
                 <string>z0_drop_measure</string>
                 <string>z0_drop_predicate</string>
@@ -509,11 +623,8 @@
                 <string>z0_drop_versioning</string>
                 <string>z_create_alarm</string>
                 <string>z_create_catalog</string>
-                <string>z_create_catalog_fulltext</string>
                 <string>z_create_category</string>
-                <string>z_create_content_translation</string>
                 <string>z_create_delivery</string>
-                <string>z_create_fulltext</string>
                 <string>z_create_item</string>
                 <string>z_create_measure</string>
                 <string>z_create_predicate</string>
@@ -584,10 +695,8 @@
               <list>
                 <string>catalog</string>
                 <string>alarm</string>
-                <string>catalog_full_text</string>
                 <string>category</string>
                 <string>delivery</string>
-                <string>full_text</string>
                 <string>item</string>
                 <string>predicate</string>
                 <string>predicate_category</string>
@@ -603,9 +712,7 @@
             <value>
               <tuple>
                 <string>z0_uncatalog_alarm</string>
-                <string>z0_uncatalog_catalog_fulltext</string>
                 <string>z0_uncatalog_category</string>
-                <string>z0_uncatalog_fulltext</string>
                 <string>z0_uncatalog_item</string>
                 <string>z0_uncatalog_measure</string>
                 <string>z0_uncatalog_predicate</string>
