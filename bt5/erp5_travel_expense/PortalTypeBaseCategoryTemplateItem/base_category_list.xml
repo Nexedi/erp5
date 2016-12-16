@@ -2,9 +2,6 @@
  <portal_type id="Expense Record Module">
   <item>business_application</item>
  </portal_type>
- <portal_type id="Expense Validation Item Module">
-  <item>business_application</item>
- </portal_type>
  <portal_type id="Expense Validation Request Module">
   <item>business_application</item>
  </portal_type>
