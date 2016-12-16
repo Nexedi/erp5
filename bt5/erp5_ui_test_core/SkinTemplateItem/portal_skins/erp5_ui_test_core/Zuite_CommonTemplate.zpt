@@ -3,7 +3,7 @@
   <tal:block metal:define-macro="init">
     <tr>
       <td>setTimeout</td>
-      <td>90000</td>
+      <td>40000</td>
       <td></td>
     </tr>
     <tr>
