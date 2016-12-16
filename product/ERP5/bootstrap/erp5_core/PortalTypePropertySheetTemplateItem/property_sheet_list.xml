@@ -68,6 +68,7 @@
   <item>SimpleItem</item>
  </portal_type>
  <portal_type id="Simulation Movement">
+  <item>Reference</item>
   <item>SortIndex</item>
  </portal_type>
  <portal_type id="String Attribute Match Constraint">
