@@ -31,6 +31,7 @@ Data Set Module | view
 Data Set | predicate
 Data Set | view
 Data Stream Module | view
+Data Stream | append_file
 Data Stream | preview
 Data Stream | view
 Data Supply Line | view
