@@ -34,8 +34,10 @@ Data Stream Module | view
 Data Stream | append_file
 Data Stream | preview
 Data Stream | view
+Data Supply Line | profile_view
 Data Supply Line | view
 Data Supply Module | view
+Data Supply | profile_view
 Data Supply | view
 Data Transformation Module | view
 Data Transformation Operation Line | view
