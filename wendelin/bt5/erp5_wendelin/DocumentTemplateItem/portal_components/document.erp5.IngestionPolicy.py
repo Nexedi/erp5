@@ -60,8 +60,6 @@ class IngestionPolicy(Folder):
     if self.REQUEST.method != 'POST':
       raise BadRequest('Only POST request is allowed.')
       
-    reference = self.REQUEST.get('reference')
-    data_chunk = self.REQUEST.get('data_chunk')  
     tag_parsing_script_id = self.getScriptId()
     
     if tag_parsing_script_id is None:
@@ -70,6 +68,14 @@ class IngestionPolicy(Folder):
     tag_parsing_script = getattr(self, tag_parsing_script_id, None)
     if tag_parsing_script is None:
       raise NotFound('No tag parsing script found.')
+      
+    # XXX Compatibility with old ingestion. Must be dropped before merging
+    # with wendelin master
+    if tag_parsing_script_id == "ERP5Site_handleDefaultFluentdIngestion":
+      return tag_parsing_script(**kw)
+    
+    reference = self.REQUEST.get('reference')
+    data_chunk = self.REQUEST.get('data_chunk')  
 
     # the script parses the fluentd tag (reference) and returns a dictionary
     # which describes the ingestion movement. Then we use this dictionary to
