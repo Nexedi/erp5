@@ -1,5 +1,5 @@
-return {
+return [{
   "wendelin_url": "",
   "username": "",
   "password": "",
-  "timeout": 60}
+  "timeout": 60}]
