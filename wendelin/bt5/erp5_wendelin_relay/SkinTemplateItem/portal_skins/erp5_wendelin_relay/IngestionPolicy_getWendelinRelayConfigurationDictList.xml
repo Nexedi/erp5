@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IngestionPolicy_getWendelinRelayConfigurationDict</string> </value>
+            <value> <string>IngestionPolicy_getWendelinRelayConfigurationDictList</string> </value>
         </item>
       </dictionary>
     </pickle>
