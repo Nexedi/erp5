@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, **kw</string> </value>
+            <value> <string>append_file, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataStream_saveDataStream</string> </value>
+            <value> <string>DataStream_appendFile</string> </value>
         </item>
       </dictionary>
     </pickle>

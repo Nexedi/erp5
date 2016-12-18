@@ -7,6 +7,27 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -14,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>DataStream_appendFile</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -39,10 +60,6 @@
             <value>
               <list>
                 <string>left</string>
-                <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -51,46 +68,10 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_source_title</string>
-                        <string>my_reference</string>
-                        <string>my_version</string>
-                        <string>my_publication_section_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_content_type</string>
-                        <string>my_filename</string>
-                        <string>my_size</string>
-                        <string>my_file</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>your_append_file</string>
                       </list>
                     </value>
                 </item>
@@ -99,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DataStream_view</string> </value>
+            <value> <string>DataStream_viewAppendFileExchangeDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -107,11 +88,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>DataStream_view</string> </value>
+            <value> <string>DataStream_viewAppendFileExchangeForm</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>form_dialog</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -123,7 +104,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Data Stream</string> </value>
+            <value> <string>Append File</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
