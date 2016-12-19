@@ -57,8 +57,8 @@ from zLOG import LOG, PROBLEM, WARNING, INFO
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
 DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
-STRICT_DYNAMIC_METHOD_NAME = DYNAMIC_METHOD_NAME + 'strict_'
-STRICT_DYNAMIC_METHOD_NAME_LEN = len(STRICT_DYNAMIC_METHOD_NAME)
+STRICT_METHOD_NAME = 'strict_'
+STRICT_METHOD_NAME_LEN = len(STRICT_METHOD_NAME)
 RELATED_DYNAMIC_METHOD_NAME = '_related'
 # Negative as it's used as a slice end offset
 RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
@@ -941,7 +941,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       )
       base_cat_id_set.discard('parent')
       default_string = 'default_'
-      strict_string = 'strict_'
+      strict_string = STRICT_METHOD_NAME
       related_string = 'related_'
       column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
       for key in key_list:
@@ -953,7 +953,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if key.startswith(strict_string):
           strict = 1
           key = key[len(strict_string):]
-          prefix = prefix + strict_string
+          prefix += strict_string
         split_key = key.split('_')
         for i in xrange(len(split_key) - 1, 0, -1):
           expected_base_cat_id = '_'.join(split_key[0:i])
@@ -975,10 +975,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 ('' if is_uid else ',catalog') +
                 '/' +
                 end_key +
-                '/z_related_' +
-                ('strict_' if strict else '') +
+                '/' + DYNAMIC_METHOD_NAME +
+                (STRICT_METHOD_NAME if strict else '') +
                 expected_base_cat_id +
-                ('_related' if related else '')
+                (RELATED_DYNAMIC_METHOD_NAME if related else '')
               )
 
       return related_key_list
@@ -991,18 +991,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       result = None
       if name.startswith(DYNAMIC_METHOD_NAME) and \
           not name.endswith(ZOPE_SECURITY_SUFFIX):
+        base_name = name[DYNAMIC_METHOD_NAME_LEN:]
         kw = {}
-        if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
-          end_offset = RELATED_DYNAMIC_METHOD_NAME_LEN
+        if base_name.endswith(RELATED_DYNAMIC_METHOD_NAME):
+          base_name = base_name[:RELATED_DYNAMIC_METHOD_NAME_LEN]
           kw['related'] = 1
-        else:
-          end_offset = None
-        if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-          start_offset = STRICT_DYNAMIC_METHOD_NAME_LEN
+        if base_name.startswith(STRICT_METHOD_NAME):
+          base_name = base_name[STRICT_METHOD_NAME_LEN:]
           kw['strict_membership'] = 1
-        else:
-          start_offset = DYNAMIC_METHOD_NAME_LEN
-        method = RelatedBaseCategory(name[start_offset:end_offset], **kw)
+        method = RelatedBaseCategory(base_name, **kw)
         setattr(self.__class__, name, method)
         # This getattr has 2 purposes:
         # - wrap in acquisition context
