@@ -14,6 +14,7 @@ import os
 import random
 import re
 import socket
+import string
 import sys
 import time
 import traceback
@@ -228,6 +229,18 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """
       return str(self.__class__)
 
+    def addERP5TypeTestCaseUser(self, password=None, user_folder=None):
+      if password is None:
+        password = self.newPassword()
+      if user_folder is None:
+        user_folder = self.portal.acl_users
+      user_folder._doAddUser('ERP5TypeTestCase', password, ['Manager', 'Member', 'Assignee',
+                    'Assignor', 'Author', 'Auditor', 'Associate'], [])
+
+    def newPassword(self):
+      """ Generate a password """
+      return ''.join(random.SystemRandom().sample(string.letters + string.digits, 20))
+
     def login(self, user_name='ERP5TypeTestCase', quiet=0):
       """
       Most of the time, we need to login before doing anything
@@ -235,9 +248,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       try:
         PortalTestCase.login(self, user_name)
       except AttributeError:
-        uf = self.portal.acl_users
-        uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-                      'Assignor', 'Author', 'Auditor', 'Associate'], [])
+        self.addERP5TypeTestCaseUser()
         return PortalTestCase.login(self, user_name)
 
     def changeSkin(self, skin_name):
@@ -261,7 +272,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       uf = self.portal.acl_users
       # do nothing if the user already exists
       if not uf.getUserById(user_name):
-        uf._doAddUser(user_name, 'secret', ['Member'], [])
+        uf._doAddUser(user_name, self.newPassword(), ['Member'], [])
 
     def _setUpDummyMailHost(self):
       """Replace Original Mail Host by Dummy Mail Host in a non-persistent way
@@ -717,6 +728,9 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
 class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
+    def addERP5TypeTestCaseUser(self, password=None, **kw):
+      return super(ERP5TypeCommandLineTestCase, self).addERP5TypeTestCaseUser(password='', **kw)
+
     def getPortalName(self):
       """
         Return the name of a portal for this test case.
@@ -1035,8 +1049,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             if not quiet:
               ZopeTestCase._print('Adding ERP5TypeTestCase user ...\n')
             uf = app.acl_users
-            uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-                          'Assignor', 'Author', 'Auditor', 'Associate'], [])
+            self.addERP5TypeTestCaseUser(user_folder=uf)
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
             newSecurityManager(None, user)
 
@@ -1097,8 +1110,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self._updateMemcachedConfiguration()
             # Create a Manager user at the Portal level
             uf = self.getPortal().acl_users
-            uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
-                            'Assignor', 'Author', 'Auditor', 'Associate'], [])
+            self.addERP5TypeTestCaseUser()
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
             self._callSetUpOnce()
