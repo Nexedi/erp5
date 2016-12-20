@@ -1801,46 +1801,32 @@ class Catalog(Folder,
   security.declarePrivate('getUidDictForPathList')
   def getUidDictForPathList(self, path_list):
     """ Looks up into catalog table to convert path into uid """
-    # Get the appropriate SQL Method
-    method = getattr(self, self.sql_getitem_by_path)
-    path_uid_dict = {}
-    try:
-      search_result = method(path_list = path_list)
-      # If not empty, return first record
-      for result in search_result:
-        path_uid_dict[result.path] = result.uid
-    except ValueError, message:
-      # This code is only there for backward compatibility
-      # XXX this must be removed one day
-      # This means we have the previous zsql method
-      # and we must call the method for every path
-      for path in path_list:
-        search_result = method(path = path)
-        if len(search_result) > 0:
-          path_uid_dict[path] = search_result[0].uid
-    return path_uid_dict
+    return  {
+      x.path: x.uid
+      for x in getattr(
+        self,
+        self.sql_getitem_by_path,
+      )(
+        path=None,
+        path_list=path_list,
+        uid_only=False,
+      )
+    }
 
   security.declarePrivate('getPathDictForUidList')
   def getPathDictForUidList(self, uid_list):
     """ Looks up into catalog table to convert uid into path """
-    # Get the appropriate SQL Method
-    method = getattr(self, self.sql_getitem_by_uid)
-    uid_path_dict = {}
-    try:
-      search_result = method(uid_list = uid_list)
-      # If not empty, return first record
-      for result in search_result:
-        uid_path_dict[result.uid] = result.path
-    except ValueError, message:
-      # This code is only there for backward compatibility
-      # XXX this must be removed one day
-      # This means we have the previous zsql method
-      # and we must call the method for every path
-      for uid in uid_list:
-        search_result = method(uid = uid)
-        if len(search_result) > 0:
-          uid_path_dict[uid] = search_result[0].path
-    return uid_path_dict
+    return  {
+      x.uid: x.path
+      for x in getattr(
+        self,
+        self.sql_getitem_by_uid,
+      )(
+        uid=None,
+        uid_list=uid_list,
+        path_only=False,
+      )
+    }
 
   security.declarePrivate('hasPath')
   def hasPath(self, path):
