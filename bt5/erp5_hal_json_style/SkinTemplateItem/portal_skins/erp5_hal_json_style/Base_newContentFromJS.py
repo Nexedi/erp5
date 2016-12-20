@@ -34,4 +34,4 @@ for f in form.get_fields():
 
 redirect_document = context.newContent(portal_type=doaction_param_list['portal_type'])
 
-return redirect_document.Base_redirect()
+return redirect_document.Base_redirect(keep_items={'portal_status_message': 'Document created.'})

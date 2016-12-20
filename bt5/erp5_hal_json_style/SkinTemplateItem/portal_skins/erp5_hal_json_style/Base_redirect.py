@@ -7,6 +7,8 @@
    be redundant.
 """
 from ZTUtils import make_query
+import json
+
 request_form = context.REQUEST.form
 request_form.update(kw)
 request_form = context.ERP5Site_filterParameterList(request_form)
@@ -32,4 +34,14 @@ context.Base_prepareCorsResponse(RESPONSE=response)
 # http://en.wikipedia.org/wiki/Post/Redirect/Get
 response.setStatus(201)
 response.setHeader("X-Location", "urn:jio:get:%s" % context.getRelativeUrl())
-return
+
+result_dict = {
+  'portal_status_message': "%s" % keep_items.pop("portal_status_message", ""),
+  '_links': {
+    "self": {
+      # XXX Include query parameters
+      "href": context.Base_getRequestUrl()
+    }
+  }
+}
+return json.dumps(result_dict, indent=2)
