@@ -150,8 +150,13 @@
         .push(function (evt) {
           var location = evt.target.getResponseHeader("X-Location"),
             jio_key,
-            list = [];
-          list.push(form_gadget.notifySubmitted());
+            list = [],
+            message;
+          try {
+            message = JSON.parse(evt.target.response).portal_status_message;
+          } catch (ignore) {
+          }
+          list.push(form_gadget.notifySubmitted(message));
 
           if (redirect_to_parent) {
             list.push(form_gadget.redirect({command: 'history_previous'}));

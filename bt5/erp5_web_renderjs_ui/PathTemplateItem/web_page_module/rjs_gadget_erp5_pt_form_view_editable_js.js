@@ -133,7 +133,14 @@
                   )
                 ]);
               })
-              .push(form_gadget.notifySubmitted.bind(form_gadget))
+              .push(function (result_list) {
+                var message;
+                try {
+                  message = JSON.parse(result_list[1].target.responseText).portal_status_message;
+                } catch (ignore) {
+                }
+                return form_gadget.notifySubmitted(message);
+              })
               .push(function () {
                 return form_gadget.redirect({command: 'reload'});
               })

@@ -836,6 +836,8 @@
 
     .declareMethod('redirect', function (options) {
       this.props.form_content = options.form_content;
+      // XXX Should we make it a second method parameter
+      this.props.keep_message = true;
       delete options.form_content;
       return this.getCommandUrlFor(options)
         .push(function (hash) {
@@ -867,7 +869,11 @@
         })
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
-            return gadget.renderApplication(route_result);
+            return gadget.renderApplication(route_result, gadget.props.keep_message)
+              .push(function (result) {
+                gadget.props.keep_message = false;
+                return result;
+              });
           }
         });
     })

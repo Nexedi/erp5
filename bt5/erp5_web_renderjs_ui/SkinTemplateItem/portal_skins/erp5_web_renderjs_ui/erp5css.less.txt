@@ -1414,6 +1414,34 @@ div[data-gadget-scope='erp5_searchfield'] {
 }
 
 /**********************************************
+* Notification
+**********************************************/
+div[data-gadget-scope='notification'] {
+  position: fixed;
+  z-index: 99999;
+  bottom: @double-margin-size;
+
+  right: -@panelwidth - @double-margin-size;
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
+  &.visible {
+    transform: translate3d(-@panelwidth - @double-margin-size - @main-margin-size-desktop, 0, 0);
+    @media @smartphone {
+      transform: translate3d(-@panelwidth - @double-margin-size - @main-margin-size-smartphone, 0, 0);
+    }
+  }
+
+  button {
+    text-align: left;
+    width: @panelwidth;
+    padding: @double-margin-size;
+    background-color: @coloraccent;
+    color: @colorsubheaderlink;
+    border-radius: @border-radius;
+  }
+}
+
+/**********************************************
 * JQM
 **********************************************/
 .ui-disabled {

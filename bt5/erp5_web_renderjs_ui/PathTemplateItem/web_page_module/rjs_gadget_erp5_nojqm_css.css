@@ -1214,6 +1214,33 @@ div[data-gadget-scope='erp5_searchfield'] button {
   }
 }
 /**********************************************
+* Notification
+**********************************************/
+div[data-gadget-scope='notification'] {
+  position: fixed;
+  z-index: 99999;
+  bottom: 12pt;
+  right: -192pt;
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
+}
+div[data-gadget-scope='notification'].visible {
+  transform: translate3d(-216pt, 0, 0);
+}
+@media only screen and (max-width: 45em) {
+  div[data-gadget-scope='notification'].visible {
+    transform: translate3d(-198pt, 0, 0);
+  }
+}
+div[data-gadget-scope='notification'] button {
+  text-align: left;
+  width: 180pt;
+  padding: 12pt;
+  background-color: #FF6600;
+  color: #f8fff3;
+  border-radius: 0.325em;
+}
+/**********************************************
 * JQM
 **********************************************/
 .ui-disabled {
