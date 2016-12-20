@@ -1429,7 +1429,7 @@ return True
     # Test part
     mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
     message = EmailParser().parsestr(mhtml_data)
-    self.assertEqual(len(message.get_payload()), 6)
+    self.assertEqual(len(message.get_payload()), 7)
     htmlmessage = message.get_payload()[0]
     self.assertEqual(
       quopri.decodestring(htmlmessage.get_payload()),
