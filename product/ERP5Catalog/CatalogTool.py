@@ -1080,7 +1080,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             activity='SQLQueue', **activate_kw)
           r = getattr(portal_activities, select_method_id)(r)
           activate = getattr(active_portal_activities, method_id)
-          for i in xrange(0, result_count, packet_size):
+          for i in xrange(0, len(r), packet_size):
             activate(r[i:i+packet_size], *method_args, **method_kw)
         else:
           kw = activate_kw.copy()
