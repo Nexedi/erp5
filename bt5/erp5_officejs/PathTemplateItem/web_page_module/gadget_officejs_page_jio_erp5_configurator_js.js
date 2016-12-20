@@ -21,7 +21,8 @@
             check_remote_creation: true,
             check_remote_deletion: true,
             query: {
-              query: 'portal_type:"' + portal_type + '" '
+              query: 'portal_type:"' + portal_type + '" ',
+              limit: [0, 30]
             },
             attachment_list: ["data"],
             local_sub_storage: {
@@ -40,8 +41,8 @@
                 "data": {
                   "get": {
                     "uri_template": (new URI("hateoas"))
-                                   .absoluteTo(erp5_url)
-                                   .toString() + "/{+id}?format="
+                      .absoluteTo(erp5_url)
+                      .toString() + "/{+id}/Base_downloadWithCors"
                   }
                 }
               },
