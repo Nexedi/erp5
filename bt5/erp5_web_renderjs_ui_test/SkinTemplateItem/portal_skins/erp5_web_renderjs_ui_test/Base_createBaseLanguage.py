@@ -29,7 +29,7 @@ param_dict = [
   { 'message': 'Sort Editor', 'translation': 'paixubianyiqi', 'language': 'wo'},
   { 'message': 'Home', 'translation': 'zhuye', 'language': 'wo'},
   { 'message': 'State', 'translation': 'zhuangtai', 'language': 'wo'},
-  { 'message': 'Preference', 'translation': 'pianai', 'language': 'wo'},
+  { 'message': 'Preferences', 'translation': 'pianai', 'language': 'wo'},
   { 'message': 'Worklists', 'translation': 'gongzhuoliebiao', 'language': 'wo'},
   { 'message': 'Viewable', 'translation': 'shitujiemian', 'language': 'wo'},
   { 'message': 'Language', 'translation': 'yuyan', 'language': 'wo'},
