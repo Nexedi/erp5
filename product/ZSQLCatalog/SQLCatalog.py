@@ -1796,17 +1796,7 @@ class Catalog(Folder,
   security.declarePrivate('getUidForPath')
   def getUidForPath(self, path):
     """ Looks up into catalog table to convert path into uid """
-    #try:
-    if path is None:
-      return None
-    # Get the appropriate SQL Method
-    method = getattr(self, self.sql_getitem_by_path)
-    search_result = method(path = path, uid_only=1)
-    # If not empty, return first record
-    if len(search_result) > 0:
-      return long(search_result[0].uid)
-    else:
-      return None
+    return self.getUidDictForPathList([path]).get(path)
 
   security.declarePrivate('getUidDictForPathList')
   def getUidDictForPathList(self, path_list):
@@ -1860,40 +1850,16 @@ class Catalog(Folder,
   security.declarePrivate('getPathForUid')
   def getPathForUid(self, uid):
     """ Looks up into catalog table to convert uid into path """
-    try:
-      if uid is None:
-        return None
-      try:
-        int(uid)
-      except ValueError:
-        return None
-      # Get the appropriate SQL Method
-      method = getattr(self, self.sql_getitem_by_uid)
-      search_result = method(uid = uid)
-      # If not empty return first record
-      if len(search_result) > 0:
-        return search_result[0].path
-      else:
-        return None
-    except ConflictError:
-      raise
-    except:
-      # This is a real LOG message
-      # which is required in order to be able to import .zexp files
-      LOG('SQLCatalog', WARNING, "could not find path from uid %s" % (uid,))
-      return None
+    return self.getPathDictForUidList([uid]).get(uid)
 
   security.declarePrivate('getMetadataForUid')
   def getMetadataForUid(self, uid):
     """ Accesses a single record for a given uid """
-    if uid is None:
-      return None
-    # Get the appropriate SQL Method
-    method = getattr(self, self.sql_getitem_by_uid)
-    brain = method(uid = uid)[0]
     result = {}
-    for k in brain.__record_schema__.keys():
-      result[k] = getattr(brain,k)
+    path = self.getPathForUid(uid)
+    if uid is not None:
+      result['path'] = path
+      result['uid'] = uid
     return result
 
   security.declarePrivate('getIndexDataForUid')
@@ -1904,22 +1870,12 @@ class Catalog(Folder,
   security.declarePrivate('getMetadataForPath')
   def getMetadataForPath(self, path):
     """ Accesses a single record for a given path """
-    try:
-      # Get the appropriate SQL Method
-      method = getattr(self, self.sql_getitem_by_path)
-      brain = method(path = path)[0]
-      result = {}
-      for k in brain.__record_schema__.keys():
-        result[k] = getattr(brain,k)
-      return result
-    except ConflictError:
-      raise
-    except:
-      # This is a real LOG message
-      # which is required in order to be able to import .zexp files
-      LOG('SQLCatalog', WARNING,
-          "could not find metadata from path %s" % (path,))
-      return None
+    result = {}
+    uid = self.getUidForPath(path)
+    if uid is not None:
+      result['path'] = path
+      result['uid'] = uid
+    return result
 
   security.declarePrivate('getIndexDataForPath')
   def getIndexDataForPath(self, path):
