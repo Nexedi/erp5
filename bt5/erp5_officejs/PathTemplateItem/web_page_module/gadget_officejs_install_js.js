@@ -38,10 +38,11 @@ var repair = false;
       },
       local_sub_storage: {
         type: "mapping",
+        no_query_id: true,
         map_all_property: true,
+        map_id: ["equalSubProperty", "relative_url"],
         mapping_dict: {
-          "id": {"equal": "relative_url"},
-          "url_string": {"equal": "id"}
+          "url_string": ["equalSubId"]
         },
         sub_storage: {
           type: "query",
@@ -222,8 +223,11 @@ var repair = false;
                 var url_list = doc.text_content.split('\r\n'),
                   i,
                   take = false;
-                if (typeof url_list === "string") {
+                if (url_list.length === 1) {
                   url_list = doc.text_content.split('\n');
+                }
+                if (url_list.length === 1) {
+                  url_list = doc.text_content.split('\r');
                 }
                 for (i = 0; i < url_list.length; i += 1) {
                   if (url_list[i].indexOf("NETWORK:") >= 0) {
