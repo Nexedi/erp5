@@ -1624,27 +1624,26 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
-    def getCategoryMemberValueList(self, context, base_category = None,
-                                         spec = (), filter=None, portal_type=(), **kw):
+    def getCategoryMemberValueList(self, context, base_category=None,
+                                         portal_type=(), strict_membership=False, strict=False, **kw):
       """
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
       """
+      sql_kw = {}
+      if portal_type:
+        sql_kw['portal_type'] = portal_type
       if base_category is None:
-        if context.getPortalType() in ( "Base Category", "Category") :
-          base_category = context.getBaseCategoryId()
-        else:
-          raise CategoryError('getCategoryMemberValueList must know the base category')
-      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
-
-      domain_dict = {base_category: ('portal_categories', context.getRelativeUrl())}
-      if strict_membership:
-        catalog_search = self.portal_catalog(portal_type = portal_type,
-                           selection_report = domain_dict)
-      else:
-        catalog_search = self.portal_catalog(portal_type = portal_type,
-                           selection_domain = domain_dict)
-
-      return catalog_search
+        base_category = context.getBaseCategoryId()
+      sql_kw[
+        (
+          'strict_'
+          if strict_membership or strict else
+          'default_'
+        ) +
+        base_category +
+        '_uid'
+      ] = context.getUid()
+      return self.getPortalObject().portal_catalog(**sql_kw)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
     def getCategoryMemberItemList(self, context, **kw):
