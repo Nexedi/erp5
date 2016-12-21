@@ -10,7 +10,8 @@
       checked: undefined,
       title: '',
       type: 'text',
-      required: false
+      required: false,
+      trim: false
     })
 
     .declareMethod('render', function (options) {
@@ -24,7 +25,8 @@
           title: options.title,
           focus: options.focus,
           step: options.step,
-          hidden: options.hidden
+          hidden: options.hidden,
+          trim: options.trim || false
         };
       return this.changeState(state_dict);
     })
@@ -105,7 +107,11 @@
             result[input.getAttribute('name')] = input.value;
           }
         } else {
-          result[input.getAttribute('name')] = input.value;
+          if (this.state.trim) {
+            result[input.getAttribute('name')] = input.value.trim();
+          } else {
+            result[input.getAttribute('name')] = input.value;
+          }
         }
       }
       return result;
@@ -122,6 +128,9 @@
         }
       } else {
         result = input.value;
+        if (this.state.trim) {
+          result = result.trim();
+        }
       }
       return result;
     })

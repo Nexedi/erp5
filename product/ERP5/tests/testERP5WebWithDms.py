@@ -1371,6 +1371,7 @@ return True
     page.edit(text_content="".join([
       "<p>Hello</p>",
       '<img src="%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="%s?display=" />' % svg.getRelativeUrl(),
       '<img src="/%s?format=" />' % svg.getRelativeUrl(),
       '<img src="//test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
       '<img src="http://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
@@ -1389,7 +1390,7 @@ return True
       "<p>Hello</p>",
     ] + ([
       '<img src="data:image/svg+xml;base64,%s" />' % b64encode(XSMALL_SVG_IMAGE_ICON_DATA),
-    ] * 5) + [
+    ] * 6) + [
       '<img src="%s//example.com/%s?format=" />' % (protocol, svg.getRelativeUrl()),
       '<img src="http://example.com/%s?format=" />' % svg.getRelativeUrl(),
       '<img src="https://example.com/%s?format=" />' % svg.getRelativeUrl(),
@@ -1412,6 +1413,7 @@ return True
     page.edit(text_content="".join([
       "<p>Hello</p>",
       '<img src="%s?format=" />' % svg.getRelativeUrl(),
+      '<img src="%s?display=" />' % svg.getRelativeUrl(),
       '<img src="/%s?format=" />' % svg.getRelativeUrl(),
       '<img src="//test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
       '<img src="http://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
@@ -1427,13 +1429,14 @@ return True
     # Test part
     mhtml_data = page.WebPage_exportAsSingleFile(format="mhtml")
     message = EmailParser().parsestr(mhtml_data)
-    self.assertEqual(len(message.get_payload()), 6)
+    self.assertEqual(len(message.get_payload()), 7)
     htmlmessage = message.get_payload()[0]
     self.assertEqual(
       quopri.decodestring(htmlmessage.get_payload()),
       "".join([
         "<p>Hello</p>",
         '<img src="%s/%s?format=" />' % (page.absolute_url(), svg.getRelativeUrl()),
+        '<img src="%s/%s?display=" />' % (page.absolute_url(), svg.getRelativeUrl()),
         '<img src="%s?format=" />' % svg.absolute_url(),
         '<img src="%s//test.portal.erp/%s?format=" />' % (protocol, svg.getRelativeUrl()),
         '<img src="http://test.portal.erp/%s?format=" />' % svg.getRelativeUrl(),
@@ -1448,10 +1451,11 @@ return True
     )
     for message, location in [
           (message.get_payload()[1], "%s/%s?format=" % (page.absolute_url(), svg.getRelativeUrl())),
-          (message.get_payload()[2], "%s?format=" % svg.absolute_url()),
-          (message.get_payload()[3], "%s//test.portal.erp/%s?format=" % (protocol, svg.getRelativeUrl())),
-          (message.get_payload()[4], "http://test.portal.erp/%s?format=" % svg.getRelativeUrl()),
-          (message.get_payload()[5], "https://test.portal.erp/%s?format=" % svg.getRelativeUrl()),
+          (message.get_payload()[2], "%s/%s?display=" % (page.absolute_url(), svg.getRelativeUrl())),
+          (message.get_payload()[3], "%s?format=" % svg.absolute_url()),
+          (message.get_payload()[4], "%s//test.portal.erp/%s?format=" % (protocol, svg.getRelativeUrl())),
+          (message.get_payload()[5], "http://test.portal.erp/%s?format=" % svg.getRelativeUrl()),
+          (message.get_payload()[6], "https://test.portal.erp/%s?format=" % svg.getRelativeUrl()),
         ]:
       self.assertEqual(
         message.get("Content-Location"),

@@ -1656,12 +1656,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
                             objects belonging to child categories.
         strict            : a deprecated alias for strict_membership
       """
-      k = {}
-      for v in ('portal_type', 'spec', 'strict', 'strict_membership'):
-        if v in kw:
-          k[v] = kw[v]
-      catalog_search = self.getCategoryMemberValueList(context, **k)
-      return Renderer(**kw).render(catalog_search)
+      return Renderer(**kw).render(self.getCategoryMemberValueList(
+        context,
+        portal_type=kw.get('portal_type'),
+        strict_membership=kw.get('strict_membership'),
+        strict=kw.get('strict'),
+      ))
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                                                 'getCategoryMemberTitleItemList' )

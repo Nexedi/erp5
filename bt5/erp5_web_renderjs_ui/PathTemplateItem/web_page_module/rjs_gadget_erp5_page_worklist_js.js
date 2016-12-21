@@ -48,18 +48,27 @@
           var action_list = links.worklist,
             query_string,
             promise_list = [],
+            display_options,
             i;
           for (i = 0; i < action_list.length; i += 1) {
-
             query_string = new URI(action_list[i].href).query(true).query;
+            display_options = {extended_search: query_string};
 
-            promise_list.push(RSVP.all([
-              gadget.getUrlFor({command: 'display', options: {
+            if (action_list[i].hasOwnProperty('module')) {
+              display_options = {
                 jio_key: new URI(action_list[i].module).segment(2),
                 extended_search: query_string,
                 page: 'form',
                 view: 'view'
-              }}),
+              };
+            } else {
+              display_options = {
+                extended_search: query_string,
+                page: 'search'
+              };
+            }
+            promise_list.push(RSVP.all([
+              gadget.getUrlFor({command: 'display', options: display_options}),
               // Remove the counter from the title
               action_list[i].name,
               action_list[i].count

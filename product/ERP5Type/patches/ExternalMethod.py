@@ -96,7 +96,6 @@ class _(PatchClass(ExternalMethod)):
         self.checkGuard(True)
 
         _f = self._getFunction()
-        __traceback_info__ = args, kw, _f[1]
 
         if _f[3]:
             return _f[0](self.aq_parent, *args, **kw)

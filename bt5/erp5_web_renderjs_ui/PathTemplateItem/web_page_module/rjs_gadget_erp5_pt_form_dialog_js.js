@@ -158,12 +158,12 @@
           } else {
             if (location === undefined || location === null) {
               // No redirection, stay on the same document
-              list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined}}));
+              list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined, editable: form_gadget.state.editable}}));
             } else {
               jio_key = new URI(location).segment(2);
               if (form_gadget.state.id === jio_key) {
                 // Do not update navigation history if dialog redirect to the same document
-                list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, editable: form_gadget.state.editable}}));
+                list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, view: "view", page: undefined, editable: form_gadget.state.editable}}));
               } else {
                 list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: jio_key, editable: form_gadget.state.editable}}));
               }

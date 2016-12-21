@@ -491,6 +491,7 @@
     indentWithTabs: false,
     matchBrackets: true,
     extraKeys: {"Ctrl-Space": "autocomplete",
+                "Alt-Space": "autocomplete",
                 "Ctrl-Q": function(cm){cm.foldCode(cm.getCursor());},
                 "Tab": function(cm) {
                   // We want to insert spaces, not tab, and we also want to keep the behaviour of indenting selection.
@@ -500,6 +501,8 @@
                   var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                   cm.replaceSelection(spaces);
                 },
+                "Ctrl-I": "indentAuto",
+                "Shift-Tab": "indentLess",
                 "Ctrl-S": function(cm){saveDocument(cm, $.Event('click'))}},
     foldGutter: true,
     lineWrapping: true,
@@ -703,3 +706,4 @@
  generateHistorySelectElement();
 </dtml-unless>
 </script>
+

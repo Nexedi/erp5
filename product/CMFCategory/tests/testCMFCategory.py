@@ -314,27 +314,105 @@ class TestCMFCategory(ERP5TypeTestCase):
 
   def test_09_GetCategoryParentUidList(self):
     # Test if an infinite loop of the acquisition for a single value is working
-    # WARNING: getCategoryParentUidList does not provide a sorted result
     portal_categories = self.getCategoriesTool()
-    # Create a base category basecat
-    #portal_categories.manage_addProduct['ERP5'].addBaseCategory('basecat')
-    portal_categories.newContent(portal_type='Base Category',id='basecat')
-    # Create a category cat1 at basecate
-    portal_categories.basecat.newContent(id='cat1',portal_type='Category')
-    basecat = portal_categories.basecat
-    cat1 = portal_categories.basecat.cat1
-    # Create a category cat2 at cat1
-    portal_categories.basecat.cat1.newContent(portal_type='Category',id='cat2')
-    cat2 = portal_categories.basecat.cat1.cat2
-    cat2.newContent(id='cat2',portal_type='Category')
-    # Compare result after sorting it
-    parent_uid_list = [(cat2.getUid(), basecat.getUid(), 1),
-                       (cat1.getUid(), basecat.getUid(), 0),
-                       (basecat.getUid(), basecat.getUid(), 0)]
-    parent_uid_list.sort()
-    parent_uid_list2 = cat2.getCategoryParentUidList(relative_url = cat2.getRelativeUrl())
-    parent_uid_list2.sort()
-    self.assertEqual(parent_uid_list2, parent_uid_list)
+    getCategoryParentUidList = portal_categories.getCategoryParentUidList
+    basecat = portal_categories.newContent(portal_type='Base Category', id='basecat')
+    basecat2 = portal_categories.newContent(portal_type='Base Category', id='basecat2')
+    cat1 = basecat.newContent(portal_type='Category', id='cat1')
+    cat2 = cat1.newContent(portal_type='Category', id='cat2')
+    cat22 = cat2.newContent(portal_type='Category', id='cat2')
+    cat3 = cat1.newContent(portal_type='Category', id='cat3')
+    module = self.getPersonModule()
+    person = module.newContent(portal_type='Person')
+    address = person.newContent(portal_type='Address')
+    # Non-strict, implicit base category
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=cat2.getRelativeUrl(),
+      ),
+      [
+        (cat2.getUid(), basecat.getUid(), 1),
+        (cat1.getUid(), basecat.getUid(), 0),
+        (basecat.getUid(), basecat.getUid(), 0),
+      ],
+    )
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=cat22.getRelativeUrl(),
+      ),
+      [
+        (cat22.getUid(), basecat.getUid(), 1),
+        (cat2.getUid(), basecat.getUid(), 0),
+        (cat1.getUid(), basecat.getUid(), 0),
+        (basecat.getUid(), basecat.getUid(), 0),
+      ],
+    )
+    # Non-canonical path
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=cat2.getRelativeUrl() + '/' + cat3.getId(),
+      ),
+      [
+        (cat3.getUid(), basecat.getUid(), 1),
+        (cat2.getUid(), basecat.getUid(), 0),
+        (cat1.getUid(), basecat.getUid(), 0),
+        (basecat.getUid(), basecat.getUid(), 0),
+      ],
+    )
+    # Strict, implicit base category
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=cat2.getRelativeUrl(),
+        strict=True,
+      ),
+      [
+        (cat2.getUid(), basecat.getUid(), 1),
+      ],
+    )
+    # Non-strict, explicit base category
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=cat2.getRelativeUrl(),
+        base_category=basecat2.getId(),
+      ),
+      [
+        (cat2.getUid(), basecat2.getUid(), 1),
+        (cat1.getUid(), basecat2.getUid(), 0),
+        (basecat.getUid(), basecat2.getUid(), 0),
+      ],
+    )
+    # Strict, explicit base category
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=cat2.getRelativeUrl(),
+        base_category=basecat2.getId(),
+        strict=True,
+      ),
+      [
+        (cat2.getUid(), basecat2.getUid(), 1),
+      ],
+    )
+    # Non-strict with a non-category relation: only strict relation uid.
+    # Note: not providing base_category is undefined behaviour.
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=person.getRelativeUrl(),
+        base_category=basecat.getId(),
+      ),
+      [
+        (person.getUid(), basecat.getUid(), 1),
+      ],
+    )
+    # ... even on a subobject
+    self.assertItemsEqual(
+      getCategoryParentUidList(
+        relative_url=address.getRelativeUrl(),
+        base_category=basecat.getId(),
+      ),
+      [
+        (address.getUid(), basecat.getUid(), 1),
+      ],
+    )
 
   def test_10_FallBackBaseCategory(self):
     # Test if we can use an alternative base category

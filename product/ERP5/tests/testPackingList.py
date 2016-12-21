@@ -1274,9 +1274,47 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual('solved', packing_list.getCausalityState())
     self.assertEqual(2, len(applied_rule.objectValues()))
 
-  # The 3 following tests currently fail because they are making assertions on
-  # an applied rule which with the new simulation structure is not the same as
-  # in the original test packing list.
+  def stepModifySimulationMovementWithOppositeQuantities(self,sequence=None, sequence_list=None, **kw):
+    """
+      Make simulation movement having opposite quantities
+    """
+    simulation_movement_list = self._getSPLSimulationMovementList(sequence)
+    new_quantity_list = [self.default_quantity, -self.default_quantity]
+    for index, simulation_movement in enumerate(simulation_movement_list):
+      # we record the property so it doesn't get changed by expand with
+      # the value from a higher simulation level
+      simulation_movement.recordProperty('quantity')
+      simulation_movement.edit(quantity=new_quantity_list[index])
+      simulation_movement.expand()
+
+  def stepCheckPackingListLineHavingQuantityZero(self,sequence=None, sequence_list=None, **kw):
+    """
+      Look if the packing list has new previsions
+    """
+    packing_list_line = sequence.get('packing_list_line')
+    self.assertEqual(packing_list_line.getQuantity(), 0)
+
+  def test_05h_SimulationAdoptPrevisionOnAMergeLineHavingQuantityZero(self):
+    """
+    In some cases, we might have several simulation movements that makes a total
+    quantity of zero. Make sure Adopt Solver works fine in such case
+    """
+    sequence_list = SequenceList()
+
+    sequence_string = self.default_sequence_with_duplicated_lines + """
+        CheckTwoSimulationLines
+        ModifySimulationMovementWithOppositeQuantities
+        Tic
+        CheckPackingListIsDiverged
+        AdoptPrevisionQuantity
+        Tic
+        CheckPackingListIsNotDivergent
+        CheckPackingListIsSolved
+        CheckPackingListLineHavingQuantityZero
+        """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
 
   def test_06_SimulationChangeStartDate(self, quiet=quiet, run=run_all_test):
     if not run: return

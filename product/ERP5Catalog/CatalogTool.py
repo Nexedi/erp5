@@ -57,8 +57,10 @@ from zLOG import LOG, PROBLEM, WARNING, INFO
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
 DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
-STRICT_DYNAMIC_METHOD_NAME = DYNAMIC_METHOD_NAME + 'strict_'
-STRICT_DYNAMIC_METHOD_NAME_LEN = len(STRICT_DYNAMIC_METHOD_NAME)
+STRICT_METHOD_NAME = 'strict_'
+STRICT_METHOD_NAME_LEN = len(STRICT_METHOD_NAME)
+PARENT_METHOD_NAME = 'parent_'
+PARENT_METHOD_NAME_LEN = len(PARENT_METHOD_NAME)
 RELATED_DYNAMIC_METHOD_NAME = '_related'
 # Negative as it's used as a slice end offset
 RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
@@ -251,7 +253,7 @@ class IndexableObjectWrapper(object):
 class RelatedBaseCategory(Method):
     """A Dynamic Method to act as a related key.
     """
-    def __init__(self, id, strict_membership=0, related=0):
+    def __init__(self, id, strict_membership=0, related=0, query_table_column='uid'):
       self._id = id
       if strict_membership:
         strict = 'AND %(category_table)s.category_strict_membership = 1\n'
@@ -274,16 +276,18 @@ class RelatedBaseCategory(Method):
 %%(category_table)s.base_category_uid = %%(base_category_uid)s
 %(strict)sAND %%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
 %%(RELATED_QUERY_SEPARATOR)s
-%%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
+%%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
           'strict': strict,
           'foreign_side': foreign_side,
           'query_table_side': query_table_side,
+          'query_table_column': query_table_column
       }
       self._monotable_template = """\
 %%(category_table)s.base_category_uid = %%(base_category_uid)s
-%(strict)sAND %%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
+%(strict)sAND %%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
           'strict': strict,
           'query_table_side': query_table_side,
+          'query_table_column': query_table_column,
       }
 
     def __call__(self, instance, table_0, table_1=None, query_table='catalog',
@@ -941,19 +945,25 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       )
       base_cat_id_set.discard('parent')
       default_string = 'default_'
-      strict_string = 'strict_'
+      strict_string = STRICT_METHOD_NAME
+      parent_string = PARENT_METHOD_NAME
       related_string = 'related_'
       column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
       for key in key_list:
         prefix = ''
         strict = 0
+        parent = 0
         if key.startswith(default_string):
           key = key[len(default_string):]
           prefix = default_string
         if key.startswith(strict_string):
           strict = 1
           key = key[len(strict_string):]
-          prefix = prefix + strict_string
+          prefix += strict_string
+        if key.startswith(parent_string):
+          parent = 1
+          key = key[len(parent_string):]
+          prefix += parent_string
         split_key = key.split('_')
         for i in xrange(len(split_key) - 1, 0, -1):
           expected_base_cat_id = '_'.join(split_key[0:i])
@@ -975,10 +985,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 ('' if is_uid else ',catalog') +
                 '/' +
                 end_key +
-                '/z_related_' +
-                ('strict_' if strict else '') +
+                '/' + DYNAMIC_METHOD_NAME +
+                (STRICT_METHOD_NAME if strict else '') +
+                (PARENT_METHOD_NAME if parent else '') +
                 expected_base_cat_id +
-                ('_related' if related else '')
+                (RELATED_DYNAMIC_METHOD_NAME if related else '')
               )
 
       return related_key_list
@@ -991,18 +1002,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       result = None
       if name.startswith(DYNAMIC_METHOD_NAME) and \
           not name.endswith(ZOPE_SECURITY_SUFFIX):
+        base_name = name[DYNAMIC_METHOD_NAME_LEN:]
         kw = {}
-        if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
-          end_offset = RELATED_DYNAMIC_METHOD_NAME_LEN
+        if base_name.endswith(RELATED_DYNAMIC_METHOD_NAME):
+          base_name = base_name[:RELATED_DYNAMIC_METHOD_NAME_LEN]
           kw['related'] = 1
-        else:
-          end_offset = None
-        if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-          start_offset = STRICT_DYNAMIC_METHOD_NAME_LEN
+        if base_name.startswith(STRICT_METHOD_NAME):
+          base_name = base_name[STRICT_METHOD_NAME_LEN:]
           kw['strict_membership'] = 1
-        else:
-          start_offset = DYNAMIC_METHOD_NAME_LEN
-        method = RelatedBaseCategory(name[start_offset:end_offset], **kw)
+        if base_name.startswith(PARENT_METHOD_NAME):
+          base_name = base_name[PARENT_METHOD_NAME_LEN:]
+          kw['query_table_column'] = 'parent_uid'
+        method = RelatedBaseCategory(base_name, **kw)
         setattr(self.__class__, name, method)
         # This getattr has 2 purposes:
         # - wrap in acquisition context
@@ -1080,7 +1091,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             activity='SQLQueue', **activate_kw)
           r = getattr(portal_activities, select_method_id)(r)
           activate = getattr(active_portal_activities, method_id)
-          for i in xrange(0, result_count, packet_size):
+          for i in xrange(0, len(r), packet_size):
             activate(r[i:i+packet_size], *method_args, **method_kw)
         else:
           kw = activate_kw.copy()

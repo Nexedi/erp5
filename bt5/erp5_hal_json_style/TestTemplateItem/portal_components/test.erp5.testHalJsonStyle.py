@@ -1080,7 +1080,7 @@ class TestERP5Document_getHateoas_mode_worklist(ERP5HALJSONStyleSkinsMixin):
     self.assertEqual(len(work_list), 1)
     self.assertTrue(work_list[0]['count'] > 0)
     self.assertEqual(work_list[0]['name'], 'Draft To Validate')
-    self.assertEqual(work_list[0]['module'], 'urn:jio:get:bar_module')
+    self.assertFalse('module' in work_list[0])
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")
@@ -1182,7 +1182,7 @@ return msg"
     self.assertEqual(len(work_list), 1)
     self.assertEqual(work_list[0]['name'], 'daiyanzhen')
     self.assertTrue(work_list[0]['count'] > 0)
-    self.assertEqual(work_list[0]['module'], 'urn:jio:get:bar_module')
+    self.assertFalse('module' in work_list[0])
     self.assertEqual(work_list[0]['href'], 'urn:jio:allDocs?query=portal_type%3A%28%22Bar%22%20OR%20%22Foo%22%29%20AND%20simulation_state%3A%22draft%22')
 
     self.assertEqual(result_dict['_debug'], "worklist")

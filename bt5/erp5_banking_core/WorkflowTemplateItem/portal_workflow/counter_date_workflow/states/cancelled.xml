@@ -53,7 +53,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>AccessContentsInformation</string> </key>
+                    <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
                         <string>Assignor</string>

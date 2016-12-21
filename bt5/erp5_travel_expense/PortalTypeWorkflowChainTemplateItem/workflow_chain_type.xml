@@ -1,10 +1,26 @@
 <workflow_chain>
  <chain>
   <type>Expense Record</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, pricing_interaction_workflow, travel_expense_event_simulation_workflow, travel_expense_jio_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Expense Validation Item</type>
-  <workflow>edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow, travel_expense_jio_interaction_workflow</workflow>
+  <type>Expense Validation Request</type>
+  <workflow>edit_workflow, pricing_interaction_workflow, ticket_acceptance_simulation_workflow, ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Leave Request Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Record Module</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Travel Request</type>
+  <workflow>edit_workflow, pricing_interaction_workflow, ticket_acceptance_simulation_workflow, ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Travel Request Record</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

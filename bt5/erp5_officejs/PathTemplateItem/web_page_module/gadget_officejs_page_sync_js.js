@@ -12,14 +12,23 @@
   function repair_and_redirect(gadget) {
     gadget.props.element.querySelector("button").disabled = true;
     return new RSVP.Queue()
-     .push(function () {
-       return gadget.repair()
-     })
-     .push(function (result) {
-       if (result !== undefined && result.hasOwnProperty('redirect')){
-         return gadget.redirect(result.redirect);
-       }
-       return gadget.redirect({});
+      .push(function(){
+        return gadget.getSetting('sync_reload', false);
+      })
+     .push(function (sync_reload) {
+        if (sync_reload) {
+          return gadget.setSetting('sync_reload', false)
+            .push(function () {
+              return gadget.reload();
+            });
+        }
+        return gadget.repair()
+         .push(function (result) {
+           if (result !== undefined && result.hasOwnProperty('redirect')){
+             return gadget.redirect(result.redirect);
+           }
+           return gadget.redirect({});
+         });
      });
   }
 
@@ -55,6 +64,9 @@
 
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("repair", "jio_repair")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("reload", "reload")
 
     .declareService(function () {
       var gadget = this;

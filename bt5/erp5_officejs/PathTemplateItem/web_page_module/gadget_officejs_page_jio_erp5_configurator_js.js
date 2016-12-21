@@ -64,7 +64,7 @@
         return gadget.setGlobalSetting('erp5_url', erp5_url);
       })
       .push(function () {
-        return gadget.reload();
+        return gadget.setSetting('sync_reload', true);
       })
       .push(function () {
         return gadget.redirect({page: 'sync', auto_repair: 'true'});
