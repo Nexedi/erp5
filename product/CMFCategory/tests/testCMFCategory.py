@@ -333,7 +333,6 @@ class TestCMFCategory(ERP5TypeTestCase):
       [
         (cat2.getUid(), basecat.getUid(), 1),
         (cat1.getUid(), basecat.getUid(), 0),
-        (basecat.getUid(), basecat.getUid(), 0),
       ],
     )
     self.assertItemsEqual(
@@ -344,7 +343,6 @@ class TestCMFCategory(ERP5TypeTestCase):
         (cat22.getUid(), basecat.getUid(), 1),
         (cat2.getUid(), basecat.getUid(), 0),
         (cat1.getUid(), basecat.getUid(), 0),
-        (basecat.getUid(), basecat.getUid(), 0),
       ],
     )
     # Non-canonical path
@@ -356,7 +354,6 @@ class TestCMFCategory(ERP5TypeTestCase):
         (cat3.getUid(), basecat.getUid(), 1),
         (cat2.getUid(), basecat.getUid(), 0),
         (cat1.getUid(), basecat.getUid(), 0),
-        (basecat.getUid(), basecat.getUid(), 0),
       ],
     )
     # Strict, implicit base category
@@ -613,12 +610,12 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     c1 = bc.newContent(portal_type='Category', id='1')
     self.tic()
-    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc, c1])
+    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc])
     self.assertItemsEqual(pc.getRelatedValueList(c1), [c1])
 
     c11 = c1.newContent(portal_type='Category', id='1')
     self.tic()
-    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc, c1, c11])
+    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc])
     self.assertItemsEqual(pc.getRelatedValueList(c1), [c1, c11])
     self.assertItemsEqual(pc.getRelatedValueList(c11), [c11])
 
@@ -671,6 +668,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     """Test strict_membership parameter to Category Member Value List """
     portal_categories = self.getCategoryTool()
     organisation = self.getOrganisationModule().newContent(
+              test0='region/europe', test1='region',
               portal_type='Organisation', region='europe/west/france')
 
     self.tic()
@@ -681,7 +679,6 @@ class TestCMFCategory(ERP5TypeTestCase):
                           base_category='region',
                           strict_membership=0,
                           portal_type='Organisation')], [organisation])
-
     self.assertEqual([x.getObject() for x in
                        portal_categories.getCategoryMemberValueList(
                           portal_categories.region.europe.west.france,
@@ -695,7 +692,6 @@ class TestCMFCategory(ERP5TypeTestCase):
                           base_category='region',
                           strict_membership=0,
                           portal_type='Organisation')], [organisation])
-
     self.assertEqual([x.getObject() for x in
                       portal_categories.getCategoryMemberValueList(
                           portal_categories.region.europe.west,
@@ -707,6 +703,32 @@ class TestCMFCategory(ERP5TypeTestCase):
                       portal_categories.getCategoryMemberValueList(
                           portal_categories.region,
                           base_category='region',
+                          portal_type='Organisation')], [organisation])
+
+    self.assertEqual([x.getObject() for x in
+                      portal_categories.getCategoryMemberValueList(
+                          portal_categories.region,
+                          base_category='test0',
+                          strict_membership=0,
+                          portal_type='Organisation')], [organisation])
+    self.assertEqual([x.getObject() for x in
+                      portal_categories.getCategoryMemberValueList(
+                          portal_categories.region,
+                          base_category='test0',
+                          strict_membership=1,
+                          portal_type='Organisation')], [])
+
+    self.assertEqual([x.getObject() for x in
+                      portal_categories.getCategoryMemberValueList(
+                          portal_categories.region,
+                          base_category='test1',
+                          strict_membership=0,
+                          portal_type='Organisation')], [organisation])
+    self.assertEqual([x.getObject() for x in
+                      portal_categories.getCategoryMemberValueList(
+                          portal_categories.region,
+                          base_category='test1',
+                          strict_membership=1,
                           portal_type='Organisation')], [organisation])
 
   def test_20_CategoryChildTitleAndIdItemList(self):
