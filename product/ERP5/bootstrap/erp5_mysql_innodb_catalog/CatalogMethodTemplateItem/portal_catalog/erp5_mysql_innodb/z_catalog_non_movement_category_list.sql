@@ -6,10 +6,10 @@ WHERE
 </dtml-in>
 ;
 <dtml-var "'\0'">
-<dtml-let category_list="[]">
+<dtml-let category_list="[]" getCategoryParentUidList="portal_categories.getCategoryParentUidList">
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 <dtml-if expr="getAcquiredCategoryList[loop_item]">
-<dtml-let uid_list="portal_categories.getCategoryParentUidList(getAcquiredCategoryList[loop_item])">
+<dtml-let uid_list="getCategoryParentUidList(getAcquiredCategoryList[loop_item])">
 <dtml-if uid_list>
 <dtml-in prefix="uid" expr="uid_list">
 <dtml-call expr="category_list.append((uid[loop_item], uid_item[0], uid_item[1], uid_item[2]))">
