@@ -1227,17 +1227,18 @@ class TestInventoryList(InventoryAPITestCase):
                                                 self.other_node.getUid()),
                                       group_by=('use_uid', ),
                                       select_list=['use_uid'])
-    self.assertEqual(4, len(inventory_list))
+    self.assertEqual(3, len(inventory_list))
     self.assertTrue(hasattr(inventory_list[0], 'use_uid'))
     self.assertEqual([r.inventory for r in inventory_list
       if r.use_uid == use.use1.use11.getUid()], [5])
     self.assertEqual([r.inventory for r in inventory_list
       if r.use_uid == use.use1.use12.getUid()], [11])
-    # the summary lines
+    # the summary line
     self.assertEqual([r.inventory for r in inventory_list
       if r.use_uid == use.use1.getUid()], [11+5])
-    self.assertEqual([r.inventory for r in inventory_list
-      if r.use_uid == use.getUid()], [11+5])
+    # no summary for base category
+    self.assertEqual([r.use_uid for r in inventory_list
+      if r.use_uid == use.getUid()], [])
 
     # the name of a column can also be used, from stock or other tables
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
