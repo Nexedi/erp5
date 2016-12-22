@@ -590,12 +590,11 @@ class TestUserManagement(ERP5TypeTestCase):
     login_value.invalidate()
     login_value.setReference(login1)
     self.portal.portal_workflow.doActionFor(login_value, 'validate_action')
-    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
-    self.assertEqual(result, None)
+    result = [x for x in self.portal.portal_catalog(portal_type='ERP5 Login') if x.checkConsistency()]
+    self.assertEqual(result, [])
     self.tic()
-    result = self.portal.portal_alarms.check_duplicate_login_reference.ERP5Site_checkDuplicateLoginReferenceLogin()
-    self.assertEqual(len(result.getResultList()), 1)
-    self.assertEqual(result.getResultList()[0].summary, 'Logins having the same reference exist')
+    result = [x for x in self.portal.portal_catalog(portal_type='ERP5 Login') if x.checkConsistency()]
+    self.assertEqual(len(result), 2)
 
   def test_duplicateLoginReferenceInSameTransaction(self):
     self._duplicateLoginReference(False)
