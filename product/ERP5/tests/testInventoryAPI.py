@@ -170,8 +170,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'group/anotherlevel',
               'product_line/level1/level2',
               'product_line/anotherlevel',
-              'use/use1',
-              'use/use2',
+              'use/use1/use11',
+              'use/use1/use12',
               'function/function1',
               'function/function1/function2',
               'ledger/accounting',
@@ -1177,21 +1177,22 @@ class TestInventoryList(InventoryAPITestCase):
 
   def test_GroupByRelatedKey(self):
     getInventoryList = self.getSimulationTool().getInventoryList
-    self._makeMovement(quantity=2, use='use1')
-    self._makeMovement(quantity=3, use='use1',
+    self._makeMovement(quantity=2, use='use1/use11')
+    self._makeMovement(quantity=3, use='use1/use11',
                        destination_value=self.other_node)
-    self._makeMovement(quantity=7, use='use2')
-    self._makeMovement(quantity=4, use='use2')
+    self._makeMovement(quantity=7, use='use1/use12')
+    self._makeMovement(quantity=4, use='use1/use12')
+    use = self.portal.portal_categories.use
     # note that grouping by related key only make sense if you group by strict
     # membership related keys
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by=('strict_use_uid', ))
     self.assertEqual(2, len(inventory_list))
-    self.assertEqual([r for r in inventory_list
-            if r.getObject().getUse() == 'use1'][0].inventory, 5)
-    self.assertEqual([r for r in inventory_list
-        if r.getObject().getUse() == 'use2'][0].inventory, 11)
+    self.assertEqual([r.inventory for r in inventory_list
+            if r.strict_use_uid == use.use1.use11.getUid()], [5])
+    self.assertEqual([r.inventory for r in inventory_list
+        if r.strict_use_uid == use.use1.use12.getUid()], [11])
 
     # in such case, it's interesting to pass a select expression, to be have on
     # brain the information of which category is used
@@ -1202,37 +1203,41 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEqual(2, len(inventory_list))
     self.assertTrue(hasattr(inventory_list[0], 'strict_use_uid'))
     use = self.portal.portal_categories.use
-    self.assertEqual([r for r in inventory_list
-      if r.strict_use_uid == use.use1.getUid()][0].inventory, 5)
-    self.assertEqual([r for r in inventory_list
-      if r.strict_use_uid == use.use2.getUid()][0].inventory, 11)
+    self.assertEqual([r.inventory for r in inventory_list
+      if r.strict_use_uid == use.use1.use11.getUid()], [5])
+    self.assertEqual([r.inventory for r in inventory_list
+      if r.strict_use_uid == use.use1.use12.getUid()], [11])
 
     # group_by can also be passed as string
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by='strict_use_uid', )
     self.assertEqual(2, len(inventory_list))
-    self.assertEqual([r for r in inventory_list
-            if r.getObject().getUse() == 'use1'][0].inventory, 5)
-    self.assertEqual([r for r in inventory_list
-        if r.getObject().getUse() == 'use2'][0].inventory, 11)
+    self.assertEqual([r.inventory for r in inventory_list
+            if r.strict_use_uid == use.use1.use11.getUid()], [5])
+    self.assertEqual([r.inventory for r in inventory_list
+        if r.strict_use_uid == use.use1.use12.getUid()], [11])
+    # no summary lines
+    self.assertEqual([r.strict_use_uid for r in inventory_list
+      if r.strict_use_uid in (use.use1.getUid(), use.getUid())], [])
 
     # if we group by "use_uid" instead of "strict_use_uid", then we'll have
-    # summary lines.
+    # summary lines, up to but excluding Base Category.
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by=('use_uid', ),
                                       select_list=['use_uid'])
-    self.assertEqual(3, len(inventory_list))
+    self.assertEqual(4, len(inventory_list))
     self.assertTrue(hasattr(inventory_list[0], 'use_uid'))
-    use = self.portal.portal_categories.use
-    self.assertEqual([r for r in inventory_list
-      if r.use_uid == use.use1.getUid()][0].inventory, 5)
-    self.assertEqual([r for r in inventory_list
-      if r.use_uid == use.use2.getUid()][0].inventory, 11)
-    # the summary line
-    self.assertEqual([r for r in inventory_list
-      if r.use_uid == use.getUid()][0].inventory, 11+5)
+    self.assertEqual([r.inventory for r in inventory_list
+      if r.use_uid == use.use1.use11.getUid()], [5])
+    self.assertEqual([r.inventory for r in inventory_list
+      if r.use_uid == use.use1.use12.getUid()], [11])
+    # the summary lines
+    self.assertEqual([r.inventory for r in inventory_list
+      if r.use_uid == use.use1.getUid()], [11+5])
+    self.assertEqual([r.inventory for r in inventory_list
+      if r.use_uid == use.getUid()], [11+5])
 
     # the name of a column can also be used, from stock or other tables
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
@@ -1250,14 +1255,14 @@ class TestInventoryList(InventoryAPITestCase):
                                       group_by_node=True,
                                       group_by=('strict_use_uid',))
     self.assertEqual(3, len(inventory_list))
-    self.assertEqual([r for r in inventory_list
-            if r.getObject().getUse() == 'use1'
-            and r.node_uid == self.node.getUid()][0].inventory, 2)
-    self.assertEqual([r for r in inventory_list
-            if r.getObject().getUse() == 'use1'
-            and r.node_uid == self.other_node.getUid()][0].inventory, 3)
-    self.assertEqual([r for r in inventory_list
-        if r.getObject().getUse() == 'use2'][0].inventory, 11)
+    self.assertEqual([r.inventory for r in inventory_list
+            if r.strict_use_uid == use.use1.use11.getUid()
+            and r.node_uid == self.node.getUid()], [2])
+    self.assertEqual([r.inventory for r in inventory_list
+            if r.strict_use_uid == use.use1.use11.getUid()
+            and r.node_uid == self.other_node.getUid()], [3])
+    self.assertEqual([r.inventory for r in inventory_list
+        if r.strict_use_uid == use.use1.use12.getUid()], [11])
 
   def test_OmitInputOmitOutput(self):
     getInventoryList = self.getSimulationTool().getInventoryList
