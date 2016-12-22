@@ -93,6 +93,7 @@
       "gadget_translate.js",
       "i18next.js",
       "jiodev.js",
+      "zipfilestorage-with-jszip.js",
       "jquery.js",
       "jquerymobile.css",
       "jquerymobile.js",
