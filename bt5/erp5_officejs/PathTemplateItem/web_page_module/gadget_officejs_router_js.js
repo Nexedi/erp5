@@ -11,13 +11,10 @@
 
   function get_jio_cache_storage(name) {
     return {
-      type: "query",
+      type: "uuid",
       sub_storage: {
-        type: "uuid",
-        sub_storage: {
-          type: "indexeddb",
-          database: 'officejs_' + name + '_cache_erp5'
-        }
+        type: "indexeddb",
+        database: 'officejs_' + name + '_cache_erp5'
       }
     };
   }
@@ -155,12 +152,17 @@
       use_bulk_get: true,
       use_bulk: true,
       attachment_list: [],
+      signature_storage: get_jio_cache_storage(name + "_hash"),
       local_sub_storage: {
         type: "mapping",
-        sub_storage: get_jio_cache_storage(name),
+        map_all_property: true,
+        map_id: ["equalSubProperty", "relative_url"],
         mapping_dict: {
-          "id": {"equal": "relative_url"},
-          "url_string": {"equal": "id"}
+          "url_string": ["equalSubId"]
+        },
+        sub_storage: {
+          type: "query",
+          sub_storage: get_jio_cache_storage(name)
         }
       },
       remote_sub_storage: {
