@@ -39,6 +39,8 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl import SpecialUsers
 from Products.PluggableAuthService import PluggableAuthService
+from Products.PluggableAuthService.interfaces.plugins \
+  import IAuthenticationPlugin, IUserEnumerationPlugin
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
 from Products import ERP5Security
@@ -443,7 +445,8 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserExists(login, password)
 
   def test_PersonLoginMigration(self):
-    self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
+    if 'erp5_users' not in self.portal.acl_users:
+      self.portal.acl_users.manage_addProduct['ERP5Security'].addERP5UserManager('erp5_users')
     self.portal.acl_users.erp5_users.manage_activateInterfaces([
       'IAuthenticationPlugin',
       'IUserEnumerationPlugin',
@@ -472,6 +475,10 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self._assertUserDoesNotExists('the_user', 'secret')
     self._assertUserExists('the_user', 'secret2')
+    self.assertFalse('erp5_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
+    self.assertFalse('erp5_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
   def test_ERP5LoginUserManagerMigration(self):
     acl_users= self.portal.acl_users
@@ -482,7 +489,10 @@ class TestUserManagement(ERP5TypeTestCase):
     self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
     portal_templates.fixConsistency(filter={'constraint_type': 'pre_upgrade'})
     self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
-    self.assertTrue('erp5_login_users' in acl_users)
+    self.assertTrue('erp5_login_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
+    self.assertTrue('erp5_login_users' in \
+                     [x[0] for x in self.portal.acl_users.plugins.listPlugins(IUserEnumerationPlugin)])
 
   def test_AssignmentWithDate(self):
     """Tests a person with an assignment with correct date is a valid user."""
