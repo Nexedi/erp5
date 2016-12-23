@@ -24,7 +24,7 @@
       .push(function (data) {
         doc.text_content = data.text_content;
         doc.parent_relative_url = data.parent_relative_url || "web_page_module";
-        doc.portal_type = data.portal_type || "Web Page";
+        doc.portal_type = doc.portal_type || "Web Page";
         if (gadget.options.jio_key !== doc.url_string) {
           return gadget.remove(gadget.options.jio_key);
         }
@@ -112,7 +112,7 @@
         .push(function (html) {
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
-            title: options.doc.title + '|' +
+            title: options.doc.title + ' | ' +
               options.doc.portal_type || "| Web Page",
             save_action: true,
             maximize_action: true,

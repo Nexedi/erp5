@@ -8884,9 +8884,7 @@ return new Parser;
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_REMOTE),
               conflict_ignore: (context._conflict_handling ===
-                                CONFLICT_CONTINUE) || 
-                               (context._conflict_handling ===
-                                CONFLICT_KEEP_LOCAL),
+                                CONFLICT_CONTINUE),
               check_modification: context._check_remote_modification,
               check_creation: context._check_remote_creation,
               check_deletion: context._check_remote_deletion
@@ -12077,8 +12075,7 @@ return new Parser;
   };
 
   IndexedDBStorage.prototype.getAttachment = function (id, name, options) {
-    var transaction,
-      type,
+    var type,
       start,
       end;
     if (options === undefined) {
@@ -12086,48 +12083,63 @@ return new Parser;
     }
     return openIndexedDB(this)
       .push(function (db) {
-        transaction = openTransaction(db, ["attachment", "blob"], "readonly");
-        // XXX Should raise if key is not good
-        return handleGet(transaction.objectStore("attachment")
-                         .get(buildKeyPath([id, name])));
-      })
-      .push(function (attachment) {
-        var total_length = attachment.info.length,
-          i,
-          promise_list = [],
-          store = transaction.objectStore("blob"),
-          start_index,
-          end_index;
+        return new RSVP.Promise(function (resolve, reject) {
+          var transaction = openTransaction(db, ["attachment", "blob"],
+            "readonly"),
+            // XXX Should raise if key is not good
+            request = transaction.objectStore("attachment")
+            .get(buildKeyPath([id, name]));
+          request.onerror = function (error) {
+            transaction.abort();
+            reject(error);
+          };
+          request.onsuccess = function () {
+            var attachment = request.result,
+              total_length,
+              i,
+              promise_list = [],
+              store = transaction.objectStore("blob"),
+              start_index,
+              end_index;
 
-        type = attachment.info.content_type;
-        start = options.start || 0;
-        end = options.end || total_length;
-        if (end > total_length) {
-          end = total_length;
-        }
+            if (!attachment) {
+              return reject(
+                new jIO.util.jIOError("Cannot find attachment", 404)
+              );
+            }
 
-        if (start < 0 || end < 0) {
-          throw new jIO.util.jIOError("_start and _end must be positive",
-                                      400);
-        }
-        if (start > end) {
-          throw new jIO.util.jIOError("_start is greater than _end",
-                                      400);
-        }
+            total_length = attachment.info.length;
+            type = attachment.info.content_type;
+            start = options.start || 0;
+            end = options.end || total_length;
+            if (end > total_length) {
+              end = total_length;
+            }
 
-        start_index = Math.floor(start / UNITE);
-        end_index =  Math.floor(end / UNITE);
-        if (end % UNITE === 0) {
-          end_index -= 1;
-        }
+            if (start < 0 || end < 0) {
+              throw new jIO.util.jIOError("_start and _end must be positive",
+                400);
+            }
+            if (start > end) {
+              throw new jIO.util.jIOError("_start is greater than _end",
+                400);
+            }
 
-        for (i = start_index; i <= end_index; i += 1) {
-          promise_list.push(
-            handleGet(store.get(buildKeyPath([id,
-                                name, i])))
-          );
-        }
-        return RSVP.all(promise_list);
+            start_index = Math.floor(start / UNITE);
+            end_index =  Math.floor(end / UNITE);
+            if (end % UNITE === 0) {
+              end_index -= 1;
+            }
+
+            for (i = start_index; i <= end_index; i += 1) {
+              promise_list.push(
+                handleGet(store.get(buildKeyPath([id,
+                  name, i])))
+              );
+            }
+            resolve(RSVP.all(promise_list));
+          };
+        });
       })
       .push(function (result_list) {
         var array_buffer_list = [],
@@ -12187,10 +12199,12 @@ return new Parser;
         }
 
         // Remove previous attachment
-        transaction = openTransaction(db, ["attachment", "blob"], "readwrite");
+        transaction = openTransaction(db, ["attachment", "blob"],
+          "readwrite", false);
         return removeAttachment(transaction, id, name);
       })
       .push(function () {
+        transaction = openTransaction(db, ["attachment", "blob"], "readwrite");
 
         var promise_list = [
             handleRequest(transaction.objectStore("attachment").put({
@@ -12793,6 +12807,47 @@ return new Parser;
   Query) {
   "use strict";
 
+  function initializeQueryAndDefaultMapping(storage) {
+    var property, query_list = [];
+    for (property in storage._mapping_dict) {
+      if (storage._mapping_dict.hasOwnProperty(property)) {
+        if (storage._mapping_dict[property][0] === "equalValue") {
+          if (storage._mapping_dict[property][1] === undefined) {
+            throw new jIO.util.jIOError("equalValue has not parameter", 400);
+          }
+          storage._default_mapping[property] =
+            storage._mapping_dict[property][1];
+          query_list.push(new SimpleQuery({
+            key: property,
+            value: storage._mapping_dict[property][1],
+            type: "simple"
+          }));
+        }
+        if (storage._mapping_dict[property][0] === "equalSubId") {
+          if (storage._property_for_sub_id !== undefined) {
+            throw new jIO.util.jIOError(
+              "equalSubId can be defined one time",
+              400
+            );
+          }
+          storage._property_for_sub_id = property;
+        }
+      }
+    }
+    if (storage._query.query !== undefined) {
+      query_list.push(QueryFactory.create(storage._query.query));
+    }
+    if (query_list.length > 1) {
+      storage._query.query = new ComplexQuery({
+        type: "complex",
+        query_list: query_list,
+        operator: "AND"
+      });
+    } else if (query_list.length === 1) {
+      storage._query.query = query_list[0];
+    }
+  }
+
   function MappingStorage(spec) {
     this._mapping_dict = spec.mapping_dict || {};
     this._sub_storage = jIO.createJIO(spec.sub_storage);
@@ -12800,43 +12855,15 @@ return new Parser;
         spec.map_all_property : true;
     this._attachment_mapping_dict = spec.attachment_mapping_dict || {};
     this._query = spec.query || {};
-
+    this._map_id = spec.map_id;
+    this._id_mapped = (spec.map_id !== undefined) ? spec.map_id[1] : false;
+    this._no_query_sub_id = spec.no_query_sub_id || false;
     if (this._query.query !== undefined) {
       this._query.query = QueryFactory.create(this._query.query);
     }
     this._default_mapping = {};
-    this._id_is_mapped = (this._mapping_dict.id !== undefined
-            && this._mapping_dict.id.equal !== "id");
-    var property, query_list = [];
 
-    // handle default_value.
-    for (property in this._mapping_dict) {
-      if (this._mapping_dict.hasOwnProperty(property)) {
-        if (this._mapping_dict[property].default_value !== undefined) {
-          this._default_mapping[property] =
-            this._mapping_dict[property].default_value;
-          query_list.push(new SimpleQuery({
-            key: property,
-            value: this._mapping_dict[property].default_value,
-            type: "simple"
-          }));
-        }
-      }
-    }
-
-    if (this._query.query !== undefined) {
-      query_list.push(QueryFactory.create(this._query.query));
-    }
-
-    if (query_list.length > 1) {
-      this._query.query = new ComplexQuery({
-        type: "complex",
-        query_list: query_list,
-        operator: "AND"
-      });
-    } else if (query_list.length === 1) {
-      this._query.query = query_list[0];
-    }
+    initializeQueryAndDefaultMapping(this);
   }
 
   function getAttachmentId(storage, sub_id, attachment_id, method) {
@@ -12852,23 +12879,24 @@ return new Parser;
     return attachment_id;
   }
 
-  function getSubStorageId(storage, id, sub_doc) {
+  function getSubStorageId(storage, id, doc) {
     var query;
     return new RSVP.Queue()
       .push(function () {
-        if (!storage._id_is_mapped || id === undefined) {
+        if (storage._property_for_sub_id !== undefined &&
+            doc !== undefined &&
+            doc[storage._property_for_sub_id] !== undefined) {
+          return doc[storage._property_for_sub_id];
+        }
+        if (!storage._id_mapped) {
           return id;
         }
-        if (storage._mapping_dict.id.equal !== undefined) {
-          if (JSON.stringify(storage._mapping_dict)
-              .indexOf('{"equal":"id"}') >= 0
-              && sub_doc !== undefined) {
-            if (sub_doc.id !== undefined) {
-              return sub_doc.id;
-            }
+        if (storage._map_id[0] === "equalSubProperty") {
+          if (storage._no_query_sub_id) {
+            throw new jIO.util.jIOError("no query sub id activate", 404);
           }
           query = new SimpleQuery({
-            key: storage._mapping_dict.id.equal,
+            key: storage._map_id[1],
             value: id,
             type: "simple"
           });
@@ -12908,18 +12936,23 @@ return new Parser;
   }
 
   function mapToSubProperty(storage, property, sub_doc, doc) {
+    var mapping_function, parameter;
     if (storage._mapping_dict[property] !== undefined) {
-      if (storage._mapping_dict[property].equal !== undefined) {
-        sub_doc[storage._mapping_dict[property].equal] = doc[property];
-        return storage._mapping_dict[property].equal;
+      mapping_function = storage._mapping_dict[property][0];
+      parameter = storage._mapping_dict[property][1];
+      if (mapping_function === "equalSubProperty") {
+        sub_doc[parameter] = doc[property];
+        return parameter;
       }
-      if (storage._mapping_dict[property].default_value !== undefined) {
-        sub_doc[property] = storage._mapping_dict[property].default_value;
+      if (mapping_function === "equalValue") {
+        sub_doc[property] = parameter;
         return property;
       }
+      if (mapping_function === "ignore" || mapping_function === "equalSubId") {
+        return false;
+      }
     }
-    if (!storage._map_all_property ||
-        storage._mapping_dict[property] === "ignore") {
+    if (!storage._map_all_property) {
       return false;
     }
     if (storage._map_all_property) {
@@ -12933,20 +12966,22 @@ return new Parser;
   }
 
   function mapToMainProperty(storage, property, sub_doc, doc) {
+    var mapping_function, parameter;
     if (storage._mapping_dict[property] !== undefined) {
-      if (storage._mapping_dict[property].equal !== undefined) {
-        if (sub_doc.hasOwnProperty(storage._mapping_dict[property].equal)) {
-          doc[property] = sub_doc[storage._mapping_dict[property].equal];
+      mapping_function = storage._mapping_dict[property][0];
+      parameter = storage._mapping_dict[property][1];
+      if (mapping_function === "equalSubProperty") {
+        if (sub_doc.hasOwnProperty(parameter)) {
+          doc[property] = sub_doc[parameter];
         }
-        return storage._mapping_dict[property].equal;
+        return parameter;
       }
-      if (storage._mapping_dict[property].default_value !== undefined) {
+      if (mapping_function === "equalValue") {
         return property;
       }
-    }
-    if (!storage._map_all_property ||
-        storage._mapping_dict[property] === "ignore") {
-      return property;
+      if (mapping_function === "ignore") {
+        return property;
+      }
     }
     if (storage._map_all_property) {
       if (sub_doc.hasOwnProperty(property)) {
@@ -12957,13 +12992,10 @@ return new Parser;
     return false;
   }
 
-  function mapToMainDocument(storage, sub_doc, sub_id, delete_id_from_doc) {
+  function mapToMainDocument(storage, sub_doc, sub_id) {
     var doc = {},
       property,
-      property_list = [];
-    if (sub_id) {
-      sub_doc.id = sub_id;
-    }
+      property_list = [storage._id_mapped];
     for (property in storage._mapping_dict) {
       if (storage._mapping_dict.hasOwnProperty(property)) {
         property_list.push(mapToMainProperty(storage, property, sub_doc, doc));
@@ -12978,15 +13010,15 @@ return new Parser;
         }
       }
     }
-    if (delete_id_from_doc) {
-      delete doc.id;
+    if (storage._property_for_sub_id !== undefined &&
+        sub_id !== undefined) {
+      doc[storage._property_for_sub_id] = sub_id;
     }
     return doc;
   }
 
-  function mapToSubstorageDocument(storage, doc, id, delete_id_from_doc) {
+  function mapToSubstorageDocument(storage, doc, id) {
     var sub_doc = {}, property;
-    doc.id = id;
 
     for (property in doc) {
       if (doc.hasOwnProperty(property)) {
@@ -12998,8 +13030,8 @@ return new Parser;
         sub_doc[property] = storage._default_mapping[property];
       }
     }
-    if (delete_id_from_doc) {
-      delete sub_doc.id;
+    if (storage._id_mapped && id !== undefined) {
+      sub_doc[storage._id_mapped] = id;
     }
     return sub_doc;
   }
@@ -13027,7 +13059,7 @@ return new Parser;
       .push(function (sub_id) {
         return context._sub_storage.get(sub_id)
           .push(function (sub_doc) {
-            return mapToMainDocument(context, sub_doc, sub_id, true);
+            return mapToMainDocument(context, sub_doc, sub_id);
           });
       });
   };
@@ -13036,9 +13068,7 @@ return new Parser;
     if (!this._id_is_mapped) {
       return this._sub_storage.post(mapToSubstorageDocument(
         this,
-        doc,
-        true,
-        true
+        doc
       ));
     }
     throw new jIO.util.jIOError(
@@ -13049,15 +13079,13 @@ return new Parser;
 
   MappingStorage.prototype.put = function (id, doc) {
     var context = this,
-      sub_doc = mapToSubstorageDocument(this, doc, id, false);
-    return getSubStorageId(this, id, sub_doc)
+      sub_doc = mapToSubstorageDocument(this, doc, id);
+    return getSubStorageId(this, id, doc)
       .push(function (sub_id) {
-        delete sub_doc.id;
         return context._sub_storage.put(sub_id, sub_doc);
       })
       .push(undefined, function (error) {
         if (error instanceof jIO.util.jIOError && error.status_code === 404) {
-          delete sub_doc.id;
           return context._sub_storage.post(sub_doc);
         }
         throw error;
@@ -13157,9 +13185,7 @@ return new Parser;
         for (i = 0; i < result.length; i += 1) {
           mapped_result.push(mapToMainDocument(
             context,
-            result[i],
-            false,
-            true
+            result[i]
           ));
         }
         return mapped_result;
@@ -13175,16 +13201,23 @@ return new Parser;
       sort_on = [];
 
     function mapQuery(one_query) {
-      var j, query_list = [];
+      var j, query_list = [], key, sub_query;
       if (one_query.type === "complex") {
         for (j = 0; j < one_query.query_list.length; j += 1) {
-          query_list.push(mapQuery(one_query.query_list[j]));
+          sub_query = mapQuery(one_query.query_list[j]);
+          if (sub_query) {
+            query_list.push(sub_query);
+          }
         }
         one_query.query_list = query_list;
         return one_query;
       }
-      one_query.key = mapToMainProperty(context, one_query.key, {}, {});
-      return one_query;
+      key = mapToMainProperty(context, one_query.key, {}, {});
+      if (key) {
+        one_query.key = key;
+        return one_query;
+      }
+      return false;
     }
 
     if (option.sort_on !== undefined) {
@@ -13219,8 +13252,9 @@ return new Parser;
         }
       }
     }
-    if (this._id_is_mapped) {
-      select_list.push(this._mapping_dict.id.equal);
+    if (this._id_mapped) {
+      // modify here for future way to map id
+      select_list.push(this._id_mapped);
     }
     if (option.query !== undefined) {
       query = mapQuery(QueryFactory.create(option.query));
@@ -13249,19 +13283,17 @@ return new Parser;
       }
     )
       .push(function (result) {
+        var doc;
         for (i = 0; i < result.data.total_rows; i += 1) {
+          doc = result.data.rows[i].value;
           result.data.rows[i].value =
             mapToMainDocument(
               context,
-              result.data.rows[i].value,
-              false,
-              false
+              doc
             );
-          if (context._id_is_mapped) {
-            result.data.rows[i].id =
-                result.data.rows[i].value.id;
+          if (context._id_mapped) {
+            result.data.rows[i].id = doc[context._id_mapped];
           }
-          delete result.data.rows[i].value.id;
         }
         return result.data.rows;
       });

@@ -5,7 +5,7 @@
   "use strict";
 
   function setERP5Configuration(gadget) {
-    return gadget.redirect({page: 'jio_erp5_configurator'});
+    return gadget.redirect({page: 'jio_erp5_code_editor_configurator'});
   }
 
   function setLocalConfiguration(gadget) {

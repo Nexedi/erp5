@@ -46,10 +46,10 @@
             },
             remote_sub_storage: {
               type: "mapping",
+              map_id: ["equalSubProperty", "url_string"],
               mapping_dict: {
-                "id": {"equal": "url_string"},
-                "relative_url": "ignore",
-                "version": {"default_value": version}
+                "relative_url": ["ignore"],
+                "version": ["equalValue", version]
               },
               sub_storage: {
                 type: "erp5",
