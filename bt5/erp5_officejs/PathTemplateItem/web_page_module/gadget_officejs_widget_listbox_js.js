@@ -80,7 +80,11 @@
             i;
           all_docs_result = result;
           for (i = 0, i_len = result.data.total_rows; i < i_len; i += 1) {
-            promise_list.push(gadget.getUrlFor({jio_key: result.data.rows[i].id, page: 'view'}));
+            if (option_dict.came_from_jio_key) {
+              promise_list.push(gadget.getUrlFor({jio_key: option_dict.came_from_jio_key, page: 'view', came_from_jio_key: result.data.rows[i].id}));
+            } else {
+              promise_list.push(gadget.getUrlFor({jio_key: result.data.rows[i].id, page: 'view'}));
+            }
           }
 
           return RSVP.all(promise_list);
@@ -146,7 +150,8 @@
               return gadget.redirect({
                 jio_key: gadget.property_dict.option_dict.jio_key || '',
                 page: gadget.property_dict.option_dict.search_page || '',
-                search: evt.target[0].value
+                search: evt.target[0].value,
+                came_from_jio_key: gadget.property_dict.option_dict.came_from_jio_key
               });
             }
           );

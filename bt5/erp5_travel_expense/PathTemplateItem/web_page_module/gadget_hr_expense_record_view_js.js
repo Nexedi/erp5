@@ -7,8 +7,61 @@
     source = gadget_klass.__template_element
                               .querySelector(".view-expense-record-template")
                               .innerHTML,
-    template = Handlebars.compile(source);
+    template = Handlebars.compile(source),
 
+    relation_listview_source = gadget_klass.__template_element
+                         .getElementById("relation-listview-template")
+                         .innerHTML,
+    relation_listview_template = Handlebars.compile(relation_listview_source),
+
+    searching = "animation ui-btn ui-corner-all ui-btn-icon-notext" +
+        " ui-input-clear ui-icon-spinner ui-icon-spin",
+    searched = "animation ui-hidden-accessible",
+    jump_on = "animation ui-btn ui-corner-all ui-btn-icon-notext " +
+      "ui-icon-plane ui-shadow-inset ui-input-clear",
+    jump_off = jump_on +  " ui-disabled",
+    jump_unknown = "animation ui-btn ui-corner-all ui-btn-icon-notext " +
+      "ui-icon-warning ui-shadow-inset ui-input-clear ui-disabled";
+
+
+
+  function getData(gadget) {
+    var form = gadget.props.element.querySelector('form');
+    return getSequentialID(gadget, 'EXP')
+      .push(function (source_reference) {
+        var i,
+          doc = {
+            parent_relative_url: "expense_record_module",
+            portal_type: "Expense Record Temp",
+            source_reference: source_reference,
+            visible_in_html5_app_flag: 1,
+            record_revision: (gadget.options.doc.record_revision || 1),
+            photo_data: gadget.options.doc.photo_data || "",
+            modification_date: new Date().toISOString()
+          };
+        for (i = 0; i < form.length; i += 1) {
+            // XXX Should check input type instead
+          if (form[i].name && form[i].type != "submit") {
+            if ((form[i].type == "radio" || form[i].type == "checkbox") && !form[i].checked){
+              continue;
+             }
+            if (form[i].name === "photo") {
+              continue;
+            }
+            doc[form[i].name] = form[i].value;
+            if (form[i].name === 'resource') {
+              doc.resource_title = form[i][form[i].selectedIndex].text;
+            }
+          }
+        }
+        if (doc.sync_flag === "1"){
+          doc.simulation_state = 'draft';
+          doc.portal_type = 'Expense Record'; // For to avoid sync
+        }
+      doc.related_mission_url = gadget.props.related_mission_url;
+      return doc;
+      });  
+  }
   function getWorkflowState(id, sync_flag)  {
     var sync_state;
     if(id.indexOf("_module/") > 0){
@@ -121,7 +174,7 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod("repair", "jio_repair")
-    
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     
     .declareMethod('triggerSubmit', function () {
       return this.props.element.querySelector('button').click();
@@ -132,11 +185,46 @@
        sync_checked,
        sync_state = getWorkflowState(options.jio_key, options.doc.sync_flag),
        geoLocation,
+       related_mission_class,
+       related_mission_url,
+       related_mission,
        not_sync_checked;
       gadget.options = options;
 
       return new RSVP.Queue()
-        .push (function () {
+        .push(function () {
+          if(options.came_from_jio_key) {
+           gadget.props.related_mission_url = options.came_from_jio_key;
+           return gadget.get(options.came_from_jio_key)
+             .push(function (data) {
+               related_mission_class = jump_on;
+               related_mission = data.title;
+               options.doc.related_mission = related_mission;
+               options.doc.related_mission_url = gadget.props.related_mission_url;
+               //saved when return from listbox
+               return gadget.put(gadget.options.jio_key, options.doc);
+             })
+             .push(function () {
+               return gadget.getUrlFor({jio_key: options.came_from_jio_key, page: 'view'});
+             });
+          } else {
+            related_mission = options.doc.related_mission;
+            if (options.doc.related_mission_url) {
+              related_mission_class = jump_on;
+              gadget.props.related_mission_url = options.doc.related_mission_url;
+              return gadget.getUrlFor({jio_key: options.doc.related_mission_url, page: 'view'});
+            } else {
+              if (related_mission) {
+                related_mission_class = jump_unknown;
+              } else {
+                related_mission_class = jump_off;
+              }
+              return;
+            }
+          }
+        })
+        .push (function (url) {
+          related_mission_url = url;
           if (sync_state === 'Synced') {
             geoLocation= {coords: {latitude: options.doc.latitude, longitude: options.doc.longitude}};
           } else {
@@ -183,7 +271,10 @@
             not_sync_checked: not_sync_checked,
             select_options: select_options,
             longitude: geoLocation.coords.longitude || "",
-            latitude: geoLocation.coords.latitude || ""
+            latitude: geoLocation.coords.latitude || "",
+            related_mission_url: related_mission_url || "",
+            related_mission_class: related_mission_class,
+            related_mission: related_mission
           };
           if (sync_state !== 'Synced') {
             ops.not_readonly = true;
@@ -310,38 +401,11 @@
             form,
             'submit',
             false,
-            function (submit_event) {
-              return getSequentialID(gadget, 'EXP')
-                .push(function (source_reference) {
-                  var i,
-                    doc = {
-                      parent_relative_url: "expense_record_module",
-                      portal_type: "Expense Record Temp",
-                      source_reference: source_reference,
-                      visible_in_html5_app_flag: 1,
-                      record_revision: (gadget.options.doc.record_revision || 1),
-                      photo_data: gadget.options.doc.photo_data || "",
-                      modification_date: new Date().toISOString()
-                    };
-                  for (i = 0; i < submit_event.target.length; i += 1) {
-                    // XXX Should check input type instead
-                    if (submit_event.target[i].name && submit_event.target[i].type != "submit") {
-                      if ((submit_event.target[i].type == "radio" || submit_event.target[i].type == "checkbox") && !submit_event.target[i].checked){
-                        continue
-                      }
-                      if (submit_event.target[i].name === "photo") {
-                        continue
-                      }
-                      doc[submit_event.target[i].name] = submit_event.target[i].value;
-                      if (submit_event.target[i].name === 'resource') {
-                        doc.resource_title = submit_event.target[i][submit_event.target[i].selectedIndex].text;
-                      }
-                    }
-                  }
-                  if (doc.sync_flag === "1"){
+            function () {
+              return getData(gadget)
+                .push(function (doc) {
+                  if (doc.sync_flag === '1') {
                     sync = 1;
-                    doc.simulation_state = 'draft';
-                    doc.portal_type = 'Expense Record'; // For to avoid sync
                   }
                   return gadget.put(gadget.options.jio_key, doc);
                 })
@@ -465,6 +529,102 @@
             }
           );
         });
+    })
+     .declareService(function () {
+      var gadget = this,
+        my_value,
+        props = gadget.props,
+        input = gadget.props.element.querySelector('.relation_input'),
+        ul = gadget.props.element.querySelector(".search_ul"),
+        animation = gadget.props.element.querySelector('.animation');
+
+      function generateList(event) {
+        my_value = event.target.value;
+        ul.innerHTML = "";
+        gadget.props.related_mission_url = '';
+        if (my_value === "") {
+          animation.className = searched;
+          return;
+        }
+        animation.className = searching;
+        return new RSVP.Queue()
+          .push(function () {
+            return gadget.allDocs({
+              "query": 'portal_type: "Travel Request Record" AND state: "Accepted" AND title: %' + my_value + '%',
+              "limit": [0, 11],
+              "select_list": ['title']
+            });
+          })
+          .push(function (result) {
+            var list = [],
+              i,
+              html;
+            for (i = 0; i < result.data.rows.length; i += 1) {
+              list.push({
+                id: result.data.rows[i].id,
+                value: result.data.rows[i].value['title']
+              });
+            }
+            animation.className = searched;
+            html =  relation_listview_template({
+              list: list,
+              value: my_value
+            });
+            $(ul).toggle();
+            ul.innerHTML = html;
+            $(ul).toggle();
+          });
+      }
+      function setSelectedElement(event) {
+        var element = event.target,
+          jump_url = element.getAttribute("data-relative-url");
+        ul.innerHTML = "";
+        if (jump_url) {
+          input.value = element.textContent;
+          return gadget.getUrlFor({jio_key: jump_url, page: 'view'})
+          .push(function (url) {
+              gadget.props.related_mission_url = jump_url;
+              animation.href = url;
+              animation.className = jump_on;
+          });
+        } else {
+           return getData(gadget)
+             .push(function (doc) {
+               doc.sync_flag = "0";
+               doc.portal_type = 'Expense Record Temp';
+               return gadget.put(gadget.options.jio_key, doc);
+             })
+             .push(function () {
+               return gadget.redirect({
+                 page: 'travel_request_record_list',
+                 came_from_jio_key: gadget.options.jio_key,
+                 search: my_value
+               });
+          });
+        }
+      }
+
+      return RSVP.all([
+        loopEventListener(input, 'input', false, generateList),
+        loopEventListener(input, 'blur', false, function () {
+          return new RSVP.Queue()
+            .push(function () {
+              return RSVP.any([
+                RSVP.delay(200),
+                promiseEventListener(ul, "click", true)
+              ]);
+            })
+            .push(function (event) {
+              if (event) {
+                return setSelectedElement(event);
+              }
+              if (ul.innerHTML) {
+                ul.innerHTML = "";
+                animation.className = jump_unknown;
+              }
+            });
+        })]
+        );
     });
 
 }(window, document, RSVP, rJS, Handlebars, loopEventListener, promiseEventListener, alertify));
