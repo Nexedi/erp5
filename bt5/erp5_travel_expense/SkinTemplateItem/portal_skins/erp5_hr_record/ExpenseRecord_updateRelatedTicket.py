@@ -35,6 +35,7 @@ ticket.edit(
   description=record.getComment(),
   latitude=record.getLatitude(),
   longitude=record.getLongitude(),
+  source_project=record.getRelatedMissionUrl()
   )
 photo_data = record.getPhotoData()
 if photo_data:

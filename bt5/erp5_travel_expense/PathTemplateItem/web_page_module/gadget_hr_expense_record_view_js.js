@@ -7,7 +7,24 @@
     source = gadget_klass.__template_element
                               .querySelector(".view-expense-record-template")
                               .innerHTML,
-    template = Handlebars.compile(source);
+    template = Handlebars.compile(source),
+
+    relation_listview_source = gadget_klass.__template_element
+                         .getElementById("relation-listview-template")
+                         .innerHTML,
+    relation_listview_template = Handlebars.compile(relation_listview_source),
+
+    searching = "animation ui-btn ui-corner-all ui-btn-icon-notext" +
+        " ui-input-clear ui-icon-spinner ui-icon-spin",
+    searched = "animation ui-hidden-accessible",
+    jump_on = "animation ui-btn ui-corner-all ui-btn-icon-notext " +
+      "ui-icon-plane ui-shadow-inset ui-input-clear",
+    jump_off = jump_on +  " ui-disabled",
+    jump_unknown = "animation ui-btn ui-corner-all ui-btn-icon-notext " +
+      "ui-icon-warning ui-shadow-inset ui-input-clear ui-disabled";
+
+
+
 
   function getWorkflowState(id, sync_flag)  {
     var sync_state;
@@ -121,7 +138,7 @@
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod("repair", "jio_repair")
-    
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     
     .declareMethod('triggerSubmit', function () {
       return this.props.element.querySelector('button').click();
@@ -132,11 +149,29 @@
        sync_checked,
        sync_state = getWorkflowState(options.jio_key, options.doc.sync_flag),
        geoLocation,
+       related_mission_class,
+       related_mission_url,
+       related_mission,
        not_sync_checked;
       gadget.options = options;
 
       return new RSVP.Queue()
-        .push (function () {
+        .push(function () {
+          related_mission = options.doc.related_mission;
+          if (options.doc.related_mission_url) {
+            related_mission_class = jump_on;
+            return gadget.getUrlFor({jio_key: options.doc.related_mission_url, page: 'view'});
+          } else {
+            if (related_mission) {
+              related_mission_class = jump_unknown;
+            } else {
+              related_mission_class = jump_off;
+            }
+            return;
+          }
+        })
+        .push (function (url) {
+          related_mission_url = url;
           if (sync_state === 'Synced') {
             geoLocation= {coords: {latitude: options.doc.latitude, longitude: options.doc.longitude}};
           } else {
@@ -183,7 +218,10 @@
             not_sync_checked: not_sync_checked,
             select_options: select_options,
             longitude: geoLocation.coords.longitude || "",
-            latitude: geoLocation.coords.latitude || ""
+            latitude: geoLocation.coords.latitude || "",
+            related_mission_url: related_mission_url,
+            related_mission_class: related_mission_class,
+            related_mission: related_mission
           };
           if (sync_state !== 'Synced') {
             ops.not_readonly = true;
@@ -338,11 +376,13 @@
                       }
                     }
                   }
+                  
                   if (doc.sync_flag === "1"){
                     sync = 1;
                     doc.simulation_state = 'draft';
                     doc.portal_type = 'Expense Record'; // For to avoid sync
                   }
+                  doc.related_mission_url = gadget.props.related_mission_url;
                   return gadget.put(gadget.options.jio_key, doc);
                 })
                 .push(function () {
@@ -465,6 +505,87 @@
             }
           );
         });
+    })
+     .declareService(function () {
+      var gadget = this,
+        props = gadget.props,
+        input = gadget.props.element.querySelector('.relation_input'),
+        ul = gadget.props.element.querySelector(".search_ul"),
+        animation = gadget.props.element.querySelector('.animation');
+
+      function generateList(event) {
+        var my_value = event.target.value;
+        ul.innerHTML = "";
+        gadget.props.related_mission_url = '';
+        if (my_value === "") {
+          animation.className = searched;
+          return;
+        }
+        animation.className = searching;
+        return new RSVP.Queue()
+          .push(function () {
+            return gadget.allDocs({
+              "query": 'portal_type: "Travel Request Record" AND state: "Accepted" AND title: %' + my_value + '%',
+              "limit": [0, 11],
+              "select_list": ['title']
+            });
+          })
+          .push(function (result) {
+            var list = [],
+              i,
+              html;
+            for (i = 0; i < result.data.rows.length; i += 1) {
+              list.push({
+                id: result.data.rows[i].id,
+                value: result.data.rows[i].value['title']
+              });
+            }
+            animation.className = searched;
+            html =  relation_listview_template({
+              list: list,
+              value: my_value
+            });
+            $(ul).toggle();
+            ul.innerHTML = html;
+            $(ul).toggle();
+          });
+      }
+      function setSelectedElement(event) {
+        var element = event.target,
+          jump_url = element.getAttribute("data-relative-url");
+        ul.innerHTML = "";
+        if (jump_url) {
+          input.value = element.textContent;
+          return gadget.getUrlFor({jio_key: jump_url, page: 'view'})
+          .push(function (url) {
+              gadget.props.related_mission_url = jump_url;
+              animation.href = url;
+              animation.className = jump_on;
+          });
+        }
+      }
+
+      return RSVP.all([
+        loopEventListener(input, 'input', false, generateList),
+        loopEventListener(input, 'blur', false, function () {
+          return new RSVP.Queue()
+            .push(function () {
+              return RSVP.any([
+                RSVP.delay(200),
+                promiseEventListener(ul, "click", true)
+              ]);
+            })
+            .push(function (event) {
+              if (event) {
+                return setSelectedElement(event);
+              }
+              if (ul.innerHTML) {
+                ul.innerHTML = "";
+                animation.className = jump_unknown;
+              }
+            });
+        })]
+        );
     });
 
 }(window, document, RSVP, rJS, Handlebars, loopEventListener, promiseEventListener, alertify));
