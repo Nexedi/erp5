@@ -219,7 +219,7 @@
             select_options: select_options,
             longitude: geoLocation.coords.longitude || "",
             latitude: geoLocation.coords.latitude || "",
-            related_mission_url: related_mission_url,
+            related_mission_url: related_mission_url || "",
             related_mission_class: related_mission_class,
             related_mission: related_mission
           };
