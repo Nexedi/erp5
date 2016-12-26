@@ -608,21 +608,19 @@ class TestCMFCategory(ERP5TypeTestCase):
     """ Checks on getting related values"""
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='related_value_test')
-    self.assertTrue(bc is not None)
     self.tic()
-    # A newly created base category should be referred to only by itself
-    value_list = pc.getRelatedValueList(bc)
-    self.assertEqual(len(value_list), 1)
+    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc])
 
-    c = bc.newContent(portal_type='Category', id='1')
-    self.assertTrue(c is not None)
+    c1 = bc.newContent(portal_type='Category', id='1')
     self.tic()
-    value_list = pc.getRelatedValueList(bc)
-    # Now the base category should be referred to by itself and this sub category
-    self.assertEqual(len(value_list), 2)
-    # This sub category should be referred to only by itself
-    value_list = pc.getRelatedValueList(c)
-    self.assertEqual(len(value_list), 1)
+    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc, c1])
+    self.assertItemsEqual(pc.getRelatedValueList(c1), [c1])
+
+    c11 = c1.newContent(portal_type='Category', id='1')
+    self.tic()
+    self.assertItemsEqual(pc.getRelatedValueList(bc), [bc, c1, c11])
+    self.assertItemsEqual(pc.getRelatedValueList(c1), [c1, c11])
+    self.assertItemsEqual(pc.getRelatedValueList(c11), [c11])
 
     #test _getDefaultRelatedProperty Accessor
     person = self.portal.person_module.newContent(id='person_test')
