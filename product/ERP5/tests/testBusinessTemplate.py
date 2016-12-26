@@ -61,6 +61,7 @@ Transform_manage_beforeDelete = Transform.manage_beforeDelete
 from Products.ERP5.Document.Organisation import Organisation
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from ZODB.broken import Broken
+from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
 
 instance_home = os.environ['INSTANCE_HOME']
 
@@ -6383,6 +6384,54 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     use for anything containing text or code)
     """
     self.test_168_CheckPortalTypeAndPathInSameBusinessTemplate(change_broken_object=True)
+
+  def test_170_check_python_script_with_space_in_id_is_not_allowed(self):
+    """
+    Check that adding a PythonScript with space in id raises
+    """
+    python_script_id = 'ERP5Site_dummyScriptWithSpaceInId '
+    skin_folder_id = 'custom'
+    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
+      self.portal.portal_skins.manage_addProduct['OFSP'].\
+        manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    self.assertRaises(
+      ValueError,
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript,
+        id=python_script_id
+      )
+
+  def test_171_check_external_method_with_space_in_id_is_not_allowed(self):
+    """
+    Check that adding an External Method with space in id raises
+    """
+    document_id = 'document' + '.erp5.' + 'FooReference'
+    component = self.portal.portal_components.newContent(
+      id=document_id,
+      version='erp5',
+      title='FooReference',
+      reference='FooReference',
+      text_content='''def testFoo():
+  return 'foo'
+''',
+      portal_type='Extension Component',
+    )
+    component.validate()
+    self.tic()
+    external_method_id = 'ERP5Site_dummyExternalMethodWithSpaceInId '
+    skin_folder_id = 'custom'
+    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
+      self.portal.portal_skins.manage_addProduct['OFSP'].\
+        manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    self.assertRaises(
+      ValueError,
+      skin_folder.manage_addProduct['ExternalMethod'].manage_addExternalMethod,
+        id=external_method_id,
+        title='',
+        module='FooReference',
+        function='testFoo',
+      )
 
   def test_type_provider(self):
     self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
