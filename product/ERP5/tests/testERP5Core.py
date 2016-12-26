@@ -632,6 +632,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     module = self.portal.newContent(portal_type='Folder', id='test_error_message')
     document_1 = module.newContent(portal_type='Folder', id='1')
+    self.tic()
 
     # Sanity check : can View document
     document_1.view()
