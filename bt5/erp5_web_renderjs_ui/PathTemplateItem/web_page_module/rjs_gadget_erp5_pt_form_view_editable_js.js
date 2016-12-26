@@ -8,6 +8,7 @@
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -148,7 +149,10 @@
                 if ((error.target !== undefined) && (error.target.status === 400)) {
                   return form_gadget.notifySubmitted()
                     .push(function () {
-                      return form_gadget.notifyChange();
+                      return form_gadget.translate('Input data has errors');
+                    })
+                    .push(function (message) {
+                      return form_gadget.notifyChange(message + '.');
                     })
                     .push(function () {
                       return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
