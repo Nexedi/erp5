@@ -671,34 +671,34 @@ class TestCMFCategory(ERP5TypeTestCase):
     """Test strict_membership parameter to Category Member Value List """
     portal_categories = self.getCategoryTool()
     organisation = self.getOrganisationModule().newContent(
-              portal_type='Organisation', region='west/france')
+              portal_type='Organisation', region='europe/west/france')
 
     self.tic()
 
     self.assertEqual([x.getObject() for x in
                         portal_categories.getCategoryMemberValueList(
-                          portal_categories.region.west.france,
+                          portal_categories.region.europe.west.france,
                           base_category='region',
                           strict_membership=0,
                           portal_type='Organisation')], [organisation])
 
     self.assertEqual([x.getObject() for x in
                        portal_categories.getCategoryMemberValueList(
-                          portal_categories.region.west.france,
+                          portal_categories.region.europe.west.france,
                           base_category='region',
                           strict_membership=1,
                           portal_type='Organisation')], [organisation])
 
     self.assertEqual([x.getObject() for x in
                        portal_categories.getCategoryMemberValueList(
-                          portal_categories.region.west,
+                          portal_categories.region.europe.west,
                           base_category='region',
                           strict_membership=0,
                           portal_type='Organisation')], [organisation])
 
     self.assertEqual([x.getObject() for x in
                       portal_categories.getCategoryMemberValueList(
-                          portal_categories.region.west,
+                          portal_categories.region.europe.west,
                           base_category='region',
                           strict_membership=1,
                           portal_type='Organisation')], [])
