@@ -22,6 +22,7 @@ from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 from Acquisition import aq_base, aq_parent
 from zExceptions import Forbidden
+from Shared.DC.Scripts.Script import defaultBindings
 
 ### Guards
 
@@ -150,6 +151,15 @@ def addGuard(cls, set_permission):
 class _(PatchClass(PythonScript)):
 
   security = ClassSecurityInfo()
+
+  def __init__(self, id):
+      # START PATCH: do not allow spaces in id
+      if ' ' in id:
+          raise ValueError('PythonScript id cannot contain spaces!')
+      # END PATCH: do not allow spaces in id
+      self.id = id
+      self.ZBindings_edit(defaultBindings)
+      self._makeFunction()
 
   # Add proxy role icon in ZMI
 
