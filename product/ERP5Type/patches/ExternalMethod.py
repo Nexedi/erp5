@@ -23,6 +23,14 @@ class _(PatchClass(ExternalMethod)):
 
     reloadIfChanged = getFuncDefaults = getFuncCode = filepath = None
 
+    def __init__(self, id, title, module, function):
+        # START PATCH: do not allow spaces in id
+        if ' ' in id:
+            raise ValueError('External Method id cannot contain spaces!')
+        # END PATCH: do not allow spaces in id
+        self.id=id
+        self.manage_edit(title, module, function)
+
     @property
     def func_defaults(self):
         return self._getFunction()[1]
