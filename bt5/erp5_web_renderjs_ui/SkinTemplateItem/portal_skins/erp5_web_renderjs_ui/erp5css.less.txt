@@ -1455,6 +1455,17 @@ div[data-gadget-scope='notification'] {
 }
 
 /**********************************************
+* First loader
+**********************************************/
+.first-loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 300%;
+}
+
+/**********************************************
 * Keyframes
 **********************************************/
 @keyframes spin {
