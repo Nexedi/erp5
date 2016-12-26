@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>title</string>
-                <string>default</string>
               </list>
             </value>
         </item>
@@ -54,12 +53,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -83,14 +76,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>defined which email address is used bu default for ingestion</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_email</string> </value>
                 </item>
@@ -108,22 +93,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getPreferredDocumentEmailIngestionAddress() or preferences.getPreferredDocumentEmailIngestionAddress()</string> </value>
         </item>
       </dictionary>
     </pickle>
