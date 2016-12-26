@@ -703,6 +703,12 @@ class TestCMFCategory(ERP5TypeTestCase):
                           strict_membership=1,
                           portal_type='Organisation')], [])
 
+    self.assertEqual([x.getObject() for x in
+                      portal_categories.getCategoryMemberValueList(
+                          portal_categories.region,
+                          base_category='region',
+                          portal_type='Organisation')], [organisation])
+
   def test_20_CategoryChildTitleAndIdItemList(self):
     """Tests getCategoryChildTitleAndIdItemList."""
     base_cat = self.getCategoryTool().newContent(portal_type='Base Category')
