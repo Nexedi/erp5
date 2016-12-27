@@ -1,6 +1,5 @@
 portal = context.getPortalObject()
 params = portal.ERP5Accounting_getParams(selection_name)
-selection_params = context.portal_selections.getSelectionParamsFor(selection_name)
 
 params['omit_asset_increase'] = omit_asset_increase
 params['omit_asset_decrease'] = omit_asset_decrease
@@ -19,17 +18,11 @@ if kw.get('closed_summary'):
   params['closed_summary'] = kw['closed_summary']
 if context.portal_selections.getSelectionInvertModeFor(selection_name):
   params['node_uid'] = context.portal_selections.getSelectionInvertModeUidListFor(selection_name)
-elif 'title' in selection_params or \
-   'preferred_gap_id' in selection_params or \
-   'id' in selection_params or \
-   'translated_validation_state_title' in selection_params:
+else:
+  selection_params = context.portal_selections.getSelectionParamsFor(selection_name)
   selection_params['ignore_unknown_columns'] = True
-  # if list is filtered, apply the same filter here
   params['node_uid'] = [x.uid for x in
                         portal.portal_catalog(**selection_params)]
-else:
-  # make sure we only have Accounts as nodes
-  params['node_category'] = ['account_type',]
 
 # Remove params used internally by ERP5Accounting_getParams before passing to inventory API
 params.pop("period_start_date", None)
