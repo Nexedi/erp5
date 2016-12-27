@@ -73,7 +73,6 @@ class GroupCalendarAssignment(PresencePeriod):
           period_list.append(
             period.asContext(
               start_date=max(period.getStartDate(start_date), start_date),
-              stop_date=max(period.getStopDate(stop_date), stop_date),
               periodicity_stop_date=min(
                 period.getPeriodicityStopDate(stop_date), stop_date))
           )
