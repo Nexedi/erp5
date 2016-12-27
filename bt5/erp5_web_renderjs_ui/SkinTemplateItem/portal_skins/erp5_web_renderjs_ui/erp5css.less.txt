@@ -1200,6 +1200,15 @@ div[data-gadget-scope='header'] .ui-header {
 }
 
 /**********************************************
+* Gadget: float/integer field
+**********************************************/
+.floatfield, .integerfield {
+  p, input {
+    text-align: right;
+  }
+}
+
+/**********************************************
 * Listbox
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] {

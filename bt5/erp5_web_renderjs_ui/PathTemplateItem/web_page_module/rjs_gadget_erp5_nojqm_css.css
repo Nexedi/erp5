@@ -1023,6 +1023,15 @@ div[data-gadget-scope='header'] .ui-header ul {
   flex: 1;
 }
 /**********************************************
+* Gadget: float/integer field
+**********************************************/
+.floatfield p,
+.integerfield p,
+.floatfield input,
+.integerfield input {
+  text-align: right;
+}
+/**********************************************
 * Listbox
 **********************************************/
 div[data-gadget-scope='erp5_searchfield'] {
