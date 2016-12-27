@@ -42,7 +42,7 @@
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//input[@value='' and @name='field_my_quantity']</td>
+  <td>//input[@value='0.0' and @name='field_my_quantity']</td>
   <td></td>
 </tr>
 <tr>
