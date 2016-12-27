@@ -224,14 +224,17 @@
       } else {
         queue
           .push(function (gadget_list) {
-            return RSVP.all([
-              gadget_list[0],
-              gadget.getTextContent()
-            ]);
-          })
-          .push(function (result_list) {
-            p_state.text_content = result_list[1];
-            return result_list[0].render(p_state);
+            var text_content = "",
+              state_date;
+            if (gadget.state.value) {
+              state_date = new Date(gadget.state.value);
+              text_content = state_date.toLocaleDateString();
+              if (!gadget.state.date_only) {
+                text_content += " " + state_date.toLocaleTimeString();
+              }
+            }
+            p_state.text_content = text_content;
+            return gadget_list[0].render(p_state);
           });
       }
       return queue;
@@ -342,19 +345,6 @@
             result[gadget.state.key] = value + timezone;
             return result;
           });
-      }
-      return result;
-    })
-
-    .declareMethod('getTextContent', function () {
-      var result = "",
-        date;
-      if (this.state.value) {
-        date = new Date(this.state.value);
-        result = date.toLocaleDateString();
-        if (!this.state.date_only) {
-          result += " " + date.toLocaleTimeString();
-        }
       }
       return result;
     })
