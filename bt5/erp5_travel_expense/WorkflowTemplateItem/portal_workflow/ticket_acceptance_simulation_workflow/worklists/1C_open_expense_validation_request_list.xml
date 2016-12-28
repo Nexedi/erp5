@@ -16,19 +16,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Suspended Support Requests (%(count)s)</string> </value>
+            <value> <string>Expense Validation Requests to Accept (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-support_request_module?simulation_state=suspended&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
+expense_validation_request_module?simulation_state=validated&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Suspended Support Requests</string> </value>
+            <value> <string>Open Expense Validation Requests</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -38,7 +38,7 @@ support_request_module?simulation_state=suspended&portal_type:list=%(portal_type
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2D_suspended_support_request_list</string> </value>
+            <value> <string>1C_open_expense_validation_request_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -59,8 +59,8 @@ support_request_module?simulation_state=suspended&portal_type:list=%(portal_type
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -81,7 +81,7 @@ support_request_module?simulation_state=suspended&portal_type:list=%(portal_type
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Support Request</string>
+                        <string>Expense Validation Request</string>
                       </tuple>
                     </value>
                 </item>
@@ -89,7 +89,7 @@ support_request_module?simulation_state=suspended&portal_type:list=%(portal_type
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>suspended</string>
+                        <string>validated</string>
                       </tuple>
                     </value>
                 </item>
