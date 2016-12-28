@@ -96,7 +96,7 @@
                         <string>my_title</string>
                         <string>my_relative_url</string>
                         <string>my_parent_uid</string>
-                        <string>my_logical_path</string>
+                        <string>my_use</string>
                         <string>my_validation_state</string>
                       </list>
                     </value>
@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_viewAsJio</string> </value>
+            <value> <string>Service_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
