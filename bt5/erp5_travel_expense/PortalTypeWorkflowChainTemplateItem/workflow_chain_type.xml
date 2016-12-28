@@ -8,6 +8,14 @@
   <workflow>edit_workflow, pricing_interaction_workflow, ticket_acceptance_simulation_workflow, ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Leave Request</type>
+  <workflow>ticket_record_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Leave Request Period</type>
+  <workflow>ticket_record_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Leave Request Record</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow, validation_workflow</workflow>
  </chain>
