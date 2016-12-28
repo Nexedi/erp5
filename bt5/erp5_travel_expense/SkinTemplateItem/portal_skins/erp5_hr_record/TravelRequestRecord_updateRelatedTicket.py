@@ -23,7 +23,7 @@ record.setFollowUpValue(ticket)
 
 ticket.edit(
   title=record.getTitle(),
-  #resource=record.getSource(),
+  resource=record.getResource(),
   start_date=DateTime(record.getStartDate()),
   stop_date=DateTime(record.getStopDate()),
   animation_center=record.getSite(),

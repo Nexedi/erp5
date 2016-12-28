@@ -97,7 +97,7 @@
                         <string>my_relative_url</string>
                         <string>my_parent_uid</string>
                         <string>my_logical_path</string>
-                        <string>my_validation_state</string>
+                        <string>my_category_relative_url</string>
                       </list>
                     </value>
                 </item>
@@ -112,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Currency_viewAsJio</string> </value>
+            <value> <string>Category_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -136,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Currency</string> </value>
+            <value> <string>View</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
