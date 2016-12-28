@@ -967,6 +967,9 @@ div[data-gadget-scope='header'] .ui-header {
 * Gadget: main
 **********************************************/
 .gadget-content {
+  div[data-gadget-scope='m'] {
+    animation: fadein @transition-timing;
+  }
 
   input[type='submit'] {
     padding: @margin-size;

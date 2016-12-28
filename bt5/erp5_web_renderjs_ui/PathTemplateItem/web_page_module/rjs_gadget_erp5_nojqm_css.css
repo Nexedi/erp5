@@ -850,6 +850,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 */
   /* form validation (assuming label>span is used) */
 }
+.gadget-content div[data-gadget-scope='m'] {
+  animation: fadein 0.2s ease-out;
+}
 .gadget-content input[type='submit'] {
   padding: 6pt;
   background-color: #444444;
