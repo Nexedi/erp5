@@ -24,6 +24,8 @@ new_record.edit(
   site=context.getAnimationCenter(),
   destination_node_title=context.getTravelDestination(),
   # XX Hackish
+  resource=context.getResource(),
+  resource_title=context.getResourceTitle(),
   comment=context.getDescription(),
   
   )

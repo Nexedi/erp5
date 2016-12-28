@@ -16,19 +16,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Meetings to Open (%(count)s)</string> </value>
+            <value> <string>Expense Validation Requests to Submit (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-meeting_module?simulation_state=submitted&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
+expense_validation_request_module?simulation_state=draft&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Submitted Meetings</string> </value>
+            <value> <string>Draft Expense Validation Requests</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -38,7 +38,7 @@ meeting_module?simulation_state=submitted&portal_type:list=%(portal_type)s&local
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1B_submitted_meeting_list</string> </value>
+            <value> <string>1A_draft_expense_validation_request_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -59,7 +59,7 @@ meeting_module?simulation_state=submitted&portal_type:list=%(portal_type)s&local
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -80,7 +80,7 @@ meeting_module?simulation_state=submitted&portal_type:list=%(portal_type)s&local
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Meeting</string>
+                        <string>Expense Validation Request</string>
                       </tuple>
                     </value>
                 </item>
@@ -88,7 +88,7 @@ meeting_module?simulation_state=submitted&portal_type:list=%(portal_type)s&local
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>submitted</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>
