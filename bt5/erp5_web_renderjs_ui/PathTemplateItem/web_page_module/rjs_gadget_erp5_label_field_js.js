@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP */
+/*global window, document, rJS, RSVP */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, document, rJS, RSVP) {
   "use strict";
 
   var SCOPE = 'field';
@@ -34,7 +34,8 @@
     })
 
     .onStateChange(function (modification_dict) {
-      var gadget = this;
+      var gadget = this,
+        span;
 
       if (gadget.state.hidden) {
         this.element.hidden = true;
@@ -48,10 +49,11 @@
       this.state.label_element.setAttribute('for', gadget.state.scope);
 
       if (modification_dict.hasOwnProperty('error_text')) {
+        this.state.error_element.textContent = "";
         if (this.state.error_text) {
-          this.state.error_element.textContent = " (" + this.state.error_text + ")";
-        } else {
-          this.state.error_element.textContent = "";
+          span = document.createElement('span');
+          span.textContent = this.state.error_text;
+          this.state.error_element.appendChild(span);
         }
       }
 
@@ -127,4 +129,4 @@
       return this.changeState({error_text: ''});
     });
 
-}(window, rJS, RSVP));
+}(window, document, rJS, RSVP));

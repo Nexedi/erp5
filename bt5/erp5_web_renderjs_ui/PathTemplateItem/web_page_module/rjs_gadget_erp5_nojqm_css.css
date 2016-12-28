@@ -306,6 +306,16 @@ select:focus {
   border: 1px solid #3388cc;
   box-shadow: 0 0 12pt #3388cc;
 }
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid,
+textarea:invalid,
+select:invalid {
+  border: 1px solid #FF6600;
+}
+input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]):invalid:focus,
+textarea:invalid:focus,
+select:invalid:focus {
+  box-shadow: 0 0 12pt #FF6600;
+}
 select {
   cursor: pointer;
   -webkit-appearance: none;
@@ -960,8 +970,41 @@ div[data-gadget-scope='header'] .ui-header ul {
     flex: 7;
   }
 }
-.gadget-content form label span {
-  color: red;
+.gadget-content form label {
+  position: relative;
+}
+.gadget-content form label span span {
+  animation: fadein 0.2s ease-out;
+}
+@media only screen and (min-width: 90em), only screen and (min-width: 45em) and (max-width: 90em) {
+  .gadget-content form label span span {
+    background-color: #FF6600;
+    color: #f8fff3;
+    left: 110%;
+    position: absolute;
+    bottom: 130%;
+    white-space: pre;
+    padding: 6pt;
+    border-radius: 0.325em;
+    width: auto;
+    z-index: 1001;
+  }
+  .gadget-content form label span span:before {
+    position: absolute;
+    top: 100%;
+    left: 2em;
+    display: inline-block;
+    border-right: 6pt solid transparent;
+    border-top: 6pt solid #FF6600;
+    border-left: 6pt solid transparent;
+    content: '';
+  }
+}
+@media only screen and (max-width: 45em) {
+  .gadget-content form label span span {
+    margin-left: 6pt;
+    color: #FF6600;
+  }
 }
 /**********************************************
 * Gadget: relation field
@@ -1279,6 +1322,14 @@ div[data-gadget-scope='notification'] button {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 /**********************************************

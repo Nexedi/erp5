@@ -84,6 +84,8 @@
 @focus-border: @border-size @border-type @focus-border-color;
 @focus-box-shadow: 0 0 @double-margin-size @focus-border-color;
 
+@invalid-border: @border-size @border-type @coloraccent;
+@invalid-box-shadow: 0 0 @double-margin-size @coloraccent;
 
 @half-margin-size: 3pt;
 @margin-size: 6pt;
@@ -377,6 +379,12 @@ input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio])
   &:focus {
     border: @focus-border;
     box-shadow: @focus-box-shadow;
+  }
+  &:invalid {
+    border: @invalid-border;
+    &:focus {
+      box-shadow: @invalid-box-shadow;
+    }
   }
 }
 
@@ -1126,10 +1134,41 @@ div[data-gadget-scope='header'] .ui-header {
 */
 
   /* form validation (assuming label>span is used) */
-  form label span {
-    color: red;
-  }
+  form label {
+    position: relative;
 
+    span span {
+      animation: fadein @transition-timing;
+
+      @media @desktop, @tablet {
+        background-color: @coloraccent;
+        color: @colorsubheaderlink;
+        left: 110%;
+        position: absolute;
+        bottom: 130%;
+        white-space: pre;
+        padding: @margin-size;
+        border-radius: @border-radius;
+        width: auto;
+        z-index: 1001;
+
+        &:before {
+          position: absolute;
+          top: 100%;
+          left: 2em;
+          display: inline-block;
+          border-right: @margin-size solid transparent;
+          border-top: @margin-size solid @coloraccent;
+          border-left: @margin-size solid transparent;
+          content: '';
+        }
+      }
+      @media @smartphone {
+        margin-left: @margin-size;
+        color: @coloraccent;
+      }
+    }
+  }
 }
 
 /**********************************************
@@ -1480,6 +1519,11 @@ div[data-gadget-scope='notification'] {
 @keyframes spin {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
+}
+
+@keyframes fadein {
+    from {opacity:0;}
+    to {opacity:1;}
 }
 
 /**********************************************
