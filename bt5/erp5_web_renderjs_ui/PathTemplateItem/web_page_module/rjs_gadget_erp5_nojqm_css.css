@@ -1155,6 +1155,9 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table table a {
   color: #1F1F1F;
 }
+.document_table table tbody {
+  animation: fadein 0.2s ease-out;
+}
 .document_table table tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }

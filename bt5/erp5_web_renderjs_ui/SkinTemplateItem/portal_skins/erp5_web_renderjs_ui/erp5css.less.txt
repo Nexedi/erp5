@@ -1338,6 +1338,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     }
 
     tbody {
+      animation: fadein @transition-timing;
 
       tr {
         &:nth-child(even) {
