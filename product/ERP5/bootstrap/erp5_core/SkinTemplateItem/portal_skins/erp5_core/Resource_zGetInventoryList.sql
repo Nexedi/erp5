@@ -77,7 +77,6 @@ SELECT
   COUNT(DISTINCT <dtml-var stock_table_id>.uid) AS stock_uid,
   MAX(<dtml-var stock_table_id>.date) AS date
 </dtml-if>
-<dtml-if group_by_time_sequence_list>, slot_index </dtml-if> <dtml-comment>XXX is this really needed? are empty slots returned ? </dtml-comment>
 
 <dtml-if select_expression>, <dtml-var select_expression></dtml-if>
 
@@ -188,16 +187,11 @@ WHERE
 <dtml-if group_by_expression>
 GROUP BY
     <dtml-if transformed_uid>transformation.transformed_uid,</dtml-if>
-    <dtml-if group_by_time_sequence_list>slot_index,</dtml-if>
     <dtml-var group_by_expression>
 
 </dtml-if>
 <dtml-if order_by_expression>
 ORDER BY
   <dtml-var order_by_expression>
-<dtml-else>
-  <dtml-if group_by_time_sequence_list>
-    ORDER BY slot_index
-  </dtml-if>
 </dtml-if>
 </dtml-let>

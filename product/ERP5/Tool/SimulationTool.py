@@ -515,6 +515,16 @@ class SimulationTool(BaseTool):
           from_table_dict[alias] = table
         sql_kw.update(catalog_sql_kw)
         sql_kw['from_table_list'] = from_table_dict.items()
+
+        # When group_by_time_sequence_list is used, the ZSQL method template
+        # will use a variable slot_index, we want to select it, group and order
+        # by it.
+        if sql_kw.get('group_by_time_sequence_list'):
+          new_kw['group_by_list'] = new_kw.get('group_by_list', []) + ['slot_index']
+          new_kw['order_by_list'] = new_kw.get('order_by_list', []) + [('slot_index', )]
+          new_kw.setdefault('select_dict', {})['slot_index'] = 'slot_index'
+
+        sql_kw.update(ctool.buildSQLQuery(**new_kw))
         return sql_kw
 
     def _generateKeywordDict(self,
