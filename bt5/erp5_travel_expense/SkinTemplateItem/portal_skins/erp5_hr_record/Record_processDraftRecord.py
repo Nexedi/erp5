@@ -17,6 +17,7 @@ new_record_list = portal.portal_catalog(
 if len(new_record_list) != 1:
   if record.getSimulationState() != "started":
     record.start(comment="Multiple similar records detected, please pick one")
+    return
 # It is the only record to be taken into account
 
 if record.getSimulationState() != "started":
