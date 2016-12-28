@@ -62,7 +62,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_comment</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -75,17 +77,10 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_resource</string>
-                        <string>my_stop_date</string>
-                        <string>my_comment</string>
+                        <string>my_reference</string>
                         <string>my_source_reference</string>
-                        <string>your_modification_date</string>
-                        <string>my_resource_title</string>
                         <string>my_start_date</string>
-                        <string>your_simulation_state</string>
-                        <string>my_title</string>
-                        <string>your_state</string>
-                        <string>my_sync_flag</string>
+                        <string>my_stop_date</string>
                       </list>
                     </value>
                 </item>
@@ -104,7 +99,12 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_default_follow_up_title</string>
+                        <string>my_source_title</string>
+                        <string>my_translated_portal_type</string>
+                        <string>my_translated_simulation_state_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -118,7 +118,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>LeaveRequestRecord_viewAsJio</string> </value>
+            <value> <string>LeaveRequestRecord_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -146,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Expense Record</string> </value>
+            <value> <string>Leave Request Record</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

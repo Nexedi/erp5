@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>record_relative_url=""</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>LeaveRequestRecord_processDraftRecord</string> </value>
+            <value> <string>LeaveRequestPeriod_createRepresentativeRecord</string> </value>
         </item>
       </dictionary>
     </pickle>

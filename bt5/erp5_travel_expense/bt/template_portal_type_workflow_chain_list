@@ -9,12 +9,14 @@ Expense Validation Request | pricing_interaction_workflow
 Expense Validation Request | ticket_acceptance_simulation_workflow
 Expense Validation Request | ticket_interaction_workflow
 Expense Validation Request | ticket_record_interaction_workflow
+Leave Request Period | ticket_record_interaction_workflow
 Leave Request Record | document_conversion_interaction_workflow
 Leave Request Record | edit_workflow
 Leave Request Record | event_interaction_workflow
 Leave Request Record | event_simulation_workflow
 Leave Request Record | pricing_interaction_workflow
 Leave Request Record | validation_workflow
+Leave Request | ticket_record_interaction_workflow
 Record Module | edit_workflow
 Record Module | validation_workflow
 Travel Request Record | document_conversion_interaction_workflow
