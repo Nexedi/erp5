@@ -30,7 +30,9 @@ import sys
 import time
 
 import transaction
+from BTrees.OOBTree import OOBTree
 from zLOG import LOG, INFO, WARNING
+from ZODB.POSException import ConflictError
 
 try:
   from sklearn.externals.joblib import register_parallel_backend
@@ -43,12 +45,17 @@ except ImportError:
   LOG("CMFActivityBackend", WARNING, "CLASS NOT LOADED!!!")
   ENABLE_JOBLIB = False
 
+from Activity.SQLJoblib import MyBatchedSignature
+
 if ENABLE_JOBLIB:
   class MySafeFunction(SafeFunction):
     """Wrapper around a SafeFunction that catches any exception
   
     The exception can be handled in CMFActivityResult.get
     """
+    def __init__(self, *args, **kwargs):
+      super(MySafeFunction, self).__init__(*args, **kwargs)
+      self.batch = args[0]
     def __call__(self, *args, **kwargs):
       try:
         return super(MySafeFunction, self).__call__(*args, **kwargs)
@@ -56,10 +63,13 @@ if ENABLE_JOBLIB:
         return exc
 
   class CMFActivityResult(object):
-    def __init__(self, active_process, callback):
+    def __init__(self, active_process, active_process_sig, callback):
       self.active_process = active_process
+      self.active_process_sig = active_process_sig
       self.callback = callback
     def get(self, timeout=None):
+      
+      '''
       while not self.active_process.getResultList():
         time.sleep(1)
         if timeout is not None:
@@ -67,7 +77,12 @@ if ENABLE_JOBLIB:
           if timeout < 0:
             raise RuntimeError('Timeout reached')
         transaction.commit()
-      result = self.active_process.getResultList()[0].result
+      '''
+
+      if self.active_process.process_result_map[self.active_process_sig] is None:
+        raise ConflictError
+      result = self.active_process.process_result_map[self.active_process_sig]
+
       # TODO raise before or after the callback?
       if isinstance(result, Exception):
         raise result
@@ -77,33 +92,37 @@ if ENABLE_JOBLIB:
 
   class CMFActivityBackend(ParallelBackendBase):
     def __init__(self, *args, **kwargs):
-      self.zope_context = kwargs['zope_context']
+      self.count = 1
+      self.active_process = kwargs['active_process']
+      if not hasattr(self.active_process, 'process_result_map'):
+        self.active_process.process_result_map = OOBTree()
+      transaction.commit()
+ 
     def effective_n_jobs(self, n_jobs):
       """Dummy implementation to prevent n_jobs <=0
 
       and allow (sequential) n_jobs=1 and n_jobs != 1 (parallel) behaviour
       """
       if n_jobs == 0:
-          raise ValueError('n_jobs == 0 in Parallel has no meaning')
+        raise ValueError('n_jobs == 0 in Parallel has no meaning')
       return abs(n_jobs)
+
     def apply_async(self, batch, callback=None):
       """Schedule a func to be run"""
-      portal_activities = self.zope_context.portal_activities
-      
-      # the creation of activitiy process here, might be removed.
-      active_process = portal_activities.newActiveProcess()
-      
-      # SQLJoblib == JoblibActivity
-      joblib_result = portal_activities.activate(activity='SQLQueue',
-          active_process=active_process).Base_callSafeFunction(MySafeFunction(batch))
+      portal_activities = self.active_process.portal_activities
+      active_process_id = self.active_process.getId()
+      joblib_result = None
 
-      # While activate() don't return the joblib_result
+      sig = MyBatchedSignature(batch)
+      if not self.active_process.process_result_map.has_key(sig):
+        self.active_process.process_result_map.insert(sig, None)
+        joblib_result = portal_activities.activate(activity='SQLJoblib',
+          tag="joblib_%s" % active_process_id,
+          active_process=self.active_process).Base_callSafeFunction(MySafeFunction(batch))
       if joblib_result is None:
-        # Transaction commit, is a code crime.
-        transaction.commit()
-        joblib_result = CMFActivityResult(active_process, callback)
-        
+        joblib_result = CMFActivityResult(self.active_process, sig, callback)
       return joblib_result
+
     def configure(self, n_jobs=1, parallel=None, **backend_args):
       """Reconfigure the backend and return the number of workers. This
       makes it possible to reuse an existing backend instance for successive
@@ -115,8 +134,19 @@ if ENABLE_JOBLIB:
         raise FallbackToBackend(SequentialBackend())
 
       self.parallel = parallel
-      # self.zope_context = backend_args['zope_context']
       return self.effective_n_jobs(n_jobs)
+
+    def abort_everything(self, ensure_ready=True):
+      # All jobs will be aborted here while they are still processing our backend
+
+      # remove job with no results
+      #self.active_process.process_result_map = dict((k, v) 
+      #  for k, v in self.active_process.process_result_map.iteritems() if v)
+      transaction.commit()
+      if ensure_ready:
+        self.configure(n_jobs=self.parallel.n_jobs, parallel=self.parallel,
+                        **self.parallel._backend_args)
+      return
 
   register_parallel_backend('CMFActivity', CMFActivityBackend)
   

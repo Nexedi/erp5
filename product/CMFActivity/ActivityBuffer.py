@@ -48,7 +48,7 @@ class ActivityBuffer(TM):
   def getUidSet(self, activity):
     return self.uid_set_dict[activity]
 
-  def _register(self, activity_tool):
+  def register(self, activity_tool):
     TM._register(self)
     if self.activity_tool is None:
       self.activity_tool = activity_tool
@@ -70,9 +70,7 @@ class ActivityBuffer(TM):
       raise
 
   def deferredQueueMessage(self, activity_tool, activity, message):
-    self._register(activity_tool)
-    assert not message.is_registered, message
-    activity.registerMessage(self, activity_tool, message)
+    activity.register(self, activity_tool, message)
 
   def sortKey(self, *ignored):
     """Activities must be finished before databases commit transactions."""

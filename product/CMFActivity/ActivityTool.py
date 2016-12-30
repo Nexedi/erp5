@@ -177,6 +177,7 @@ class Message(BaseMessage):
     self.method_id = method_id
     self.args = args
     self.kw = kw
+    self.result = None
     if getattr(portal_activities, 'activity_creation_trace', False):
       # Save current traceback, to make it possible to tell where a message
       # was generated.
@@ -315,12 +316,12 @@ class Message(BaseMessage):
             result = method(*self.args, **self.kw)
         finally:
           setSecurityManager(old_security_manager)
-
         if method is not None:
           if self.active_process and result is not None:
             self.activateResult(
               activity_tool.unrestrictedTraverse(self.active_process),
               result, obj)
+          self.result = result
           self.setExecutionState(MESSAGE_EXECUTED)
     except:
       self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
@@ -503,6 +504,7 @@ class Method(object):
       request=self._request,
       portal_activities=portal_activities,
     )
+
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
@@ -1063,7 +1065,6 @@ class ActivityTool (Folder, UniqueObject):
         processing_node starts from 1 (there is not node 0)
       """
       global active_threads
-
       # return if the number of threads is too high
       # else, increase the number of active_threads and continue
       tic_lock.acquire()

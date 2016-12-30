@@ -63,7 +63,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
           </td>
         </dtml-if>
         <td align="left" valign="top"><dtml-var uid>
-          <dtml-var expr="{'SQLDict':'(dict)','SQLQueue':'(queue)'}[activity]">
+          <dtml-var expr="{'SQLDict':'(dict)','SQLQueue':'(queue)','SQLJoblib':'(Joblib)'}[activity]">
         </td>
         <td align="left" valign="top"><a href="<dtml-var expr="REQUEST.physicalPathToURL(path)">"><dtml-var path></a></td>
         <td align="left" valign="top"><dtml-var method_id></td>

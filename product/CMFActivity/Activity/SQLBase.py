@@ -116,6 +116,11 @@ class SQLBase(Queue):
           " The following added columns could not be initialized: %s"
           % (self.sql_table, ", ".join(column_list)))
 
+  def register(self, activity_buffer, activity_tool, message):
+    activity_buffer.register(activity_tool)
+    assert not message.is_registered, message
+    self.registerMessage(activity_buffer, activity_tool, message)
+    
   def prepareQueueMessageList(self, activity_tool, message_list):
     registered_message_list = [m for m in message_list if m.is_registered]
     portal = activity_tool.getPortalObject()
@@ -133,6 +138,7 @@ class SQLBase(Queue):
       serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
                                 for m in message_list]
       processing_node_list = []
+
       for m in message_list:
         m.order_validation_text = x = self.getOrderValidationText(m)
         processing_node_list.append(0 if x == 'none' else -1)

@@ -1,0 +1,39 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:1000
+max_cache:100
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>table
+uid
+path
+active_process_uid
+method_id
+message
+priority
+processing_node
+date
+group_method_id
+tag
+serialization_tag
+</params>
+INSERT INTO <dtml-var table>
+(uid, path, active_process_uid, date, method_id, processing_node, processing, priority, group_method_id, tag, serialization_tag, message)
+VALUES
+(
+<dtml-sqlvar expr="uid" type="int">,
+<dtml-sqlvar expr="path" type="string">,
+<dtml-sqlvar expr="active_process_uid" type="int" optional>,
+<dtml-if expr="date is not None"><dtml-if expr="date is not None"><dtml-sqlvar expr="date" type="datetime"><dtml-else>UTC_TIMESTAMP()</dtml-if><dtml-else>UTC_TIMESTAMP()</dtml-if>,
+<dtml-sqlvar expr="method_id" type="string">,
+<dtml-sqlvar expr="processing_node" type="int">,
+0,
+<dtml-sqlvar expr="priority" type="int">,
+<dtml-sqlvar expr="group_method_id" type="string">,
+<dtml-sqlvar expr="tag" type="string">,
+<dtml-sqlvar expr="serialization_tag" type="string">,
+<dtml-sqlvar expr="message" type="string">
+)
