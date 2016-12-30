@@ -155,14 +155,9 @@ class ERP5ExternalOauth2ExtractionPlugin:
         LOG(self.getId(), INFO, 'Hash %s not found' % cookie_hash)
         return DumbHTTPExtractor().extractCredentials(request)
 
-    creds = {}
     token = None
-    if request._auth is not None:
-      # 1st - try to fetch from Authorization header
-      if self.header_string.lower() in request._auth.lower():
-        l = request._auth.split()
-        if len(l) == 2:
-          token = l[1]
+    if "access_token" in user_dict:
+      token = user_dict["access_token"]
 
     if token is None:
       # no token
@@ -176,14 +171,13 @@ class ERP5ExternalOauth2ExtractionPlugin:
     except KeyError:
       user_entry = self.getUserEntry(token)
       if user_entry is not None:
-        user = user_entry['reference']
+        user = user_entry["reference"] = user_dict["login"]
 
     if user is None:
       # fallback to default way
       return DumbHTTPExtractor().extractCredentials(request)
 
     tag = '%s_user_creation_in_progress' % cookie_hash.encode('hex')
-
     if self.getPortalObject().portal_activities.countMessageWithTag(tag) > 0:
       self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
     else:
@@ -194,10 +188,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
           newSecurityManager(self, self.getUser(ERP5Security.SUPER_USER))
         try:
           self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
-          #if user_entry is None:
-          user_entry = self.getUserEntry(user_dict)
           user_entry["login_portal_type"] = creds["login_portal_type"]
-          user_entry["erp5_username"] = user_dict.get("erp5_username")
           try:
             Base_createOauth2User(tag, **user_entry)
           except Exception:
@@ -265,8 +256,11 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
   meta_type = "ERP5 Google Extraction Plugin"
   prefix = 'go_'
   header_string = 'google'
+  login_portal_type = "Google Login"
+  cookie_name = "__ac_google_hash"
+  cache_factory_name = "google_server_auth_token_cache_factory"
 
-  def getUserEntry(self, user_dict):
+  def getUserEntry(self, token):
     if httplib2 is None:
       LOG('ERP5GoogleExtractionPlugin', INFO,
         'No Google modules available, please install google-api-python-client '
@@ -276,7 +270,7 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
     try:
       # require really fast interaction
       socket.setdefaulttimeout(5)
-      http = oauth2client.client.AccessTokenCredentials(user_dict["access_token"],
+      http = oauth2client.client.AccessTokenCredentials(token,
                                                         'ERP5 Client'
         ).authorize(httplib2.Http())
       service = apiclient.discovery.build("oauth2", "v1", http=http)
@@ -297,7 +291,6 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
           user_entry[k[0]] = value
       except KeyError:
         user_entry = None
-    user_entry["reference"] = user_dict["login"]
     return user_entry
 
 #List implementation of class
