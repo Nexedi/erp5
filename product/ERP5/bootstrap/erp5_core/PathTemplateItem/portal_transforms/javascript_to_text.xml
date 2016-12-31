@@ -85,6 +85,7 @@
                 <string>text/x-rst</string>
                 <string>text/javascript</string>
                 <string>text/css</string>
+                <string>text/cache-manifest</string>
               </list>
             </value>
         </item>
@@ -122,6 +123,7 @@
                 <string>text/x-rst</string>
                 <string>text/javascript</string>
                 <string>text/css</string>
+                <string>text/cache-manifest</string>
               </list>
             </value>
         </item>
