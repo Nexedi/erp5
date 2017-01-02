@@ -286,7 +286,7 @@ class ERP5LoginUserManager(BasePlugin):
       # users so code checking if a user login exists before allowing it to be
       # reused, preventing misleading logins from being misused.
       result.append({
-        'id': None,
+        'id': special_user_name,
         'login': special_user_name,
         'pluginid': plugin_id,
 
