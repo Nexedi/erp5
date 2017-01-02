@@ -20,6 +20,9 @@ Leave Request Record | validation_workflow
 Leave Request | ticket_record_interaction_workflow
 Record Module | edit_workflow
 Record Module | validation_workflow
+Text Post | document_security_interaction_workflow
+Text Post | edit_workflow
+Text Post | post_message_workflow
 Travel Request Record | document_conversion_interaction_workflow
 Travel Request Record | edit_workflow
 Travel Request Record | event_interaction_workflow

@@ -1,13 +1,16 @@
 portal = context.getPortalObject()
 record = context
 
-if record.getDestinationReference() is not None:
-  ticket_brain_list = portal.portal_catalog(
-    portal_type="Expense Validation Request",
-    reference=record.getDestinationReference(),
-    )
-  if len(ticket_brain_list) != 1:
-    raise ValueError("Incorrect number of follow_up ticket found for the Record")
+
+ticket_brain_list = portal.portal_catalog(
+  portal_type="Expense Validation Request",
+  source_reference=record.getDestinationReference(),
+  )
+length = len(ticket_brain_list)
+if length > 1:
+  raise ValueError("Incorrect number of follow_up ticket found for the Record")
+
+if length == 1:
   ticket = ticket_brain_list[0].getObject()
 else:
   # No destination reference means no ticket to track it server side: Create a new one
@@ -16,8 +19,8 @@ else:
     follow_up_ticket_type="Expense Validation Request",
   )
   ticket = record.getFollowUpValue()
+  ticket.setSourceReference(record.getDestinationReference())
 
-record.setDestinationReference(ticket.getReference())
 
 record.setFollowUpValue(ticket)
 

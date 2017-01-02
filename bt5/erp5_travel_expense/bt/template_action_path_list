@@ -4,10 +4,14 @@ Expense Record Module | view
 Expense Record | jio_view
 Expense Record | view
 Expense Validation Request Module | view
+Expense Validation Request | add_comment
 Expense Validation Request | view
 Leave Request Record | jio_view
 Leave Request Record | view
+Post Message Module | view
 Record Module | view
+Text Post | jio_view
+Text Post | view
 Travel Request Module | view
 Travel Request Record | jio_view
 Travel Request Record | view

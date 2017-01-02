@@ -5,6 +5,9 @@
  <portal_type id="Expense Validation Request Module">
   <item>Expense Validation Request</item>
  </portal_type>
+ <portal_type id="Post Message Module">
+  <item>Text Post</item>
+ </portal_type>
  <portal_type id="Record Module">
   <item>Leave Request Record</item>
   <item>Travel Request Record</item>

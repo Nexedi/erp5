@@ -200,6 +200,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_login</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_logout</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -246,6 +266,14 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_login</string> </key>
+            <value> <string>connection/login_form{?came_from}</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_logout</string> </key>
+            <value> <string>connection/WebSite_logout{?came_from}</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>

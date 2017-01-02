@@ -5,8 +5,15 @@
  <portal_type id="Expense Validation Request Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Post Message Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Record Module">
   <item>business_application</item>
+ </portal_type>
+ <portal_type id="Text Post">
+  <item>contributor</item>
+  <item>source</item>
  </portal_type>
  <portal_type id="Travel Request Module">
   <item>business_application</item>

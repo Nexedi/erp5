@@ -24,6 +24,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Text Post</type>
+  <workflow>document_security_interaction_workflow, edit_workflow, post_message_workflow</workflow>
+ </chain>
+ <chain>
   <type>Travel Request</type>
   <workflow>edit_workflow, pricing_interaction_workflow, ticket_acceptance_simulation_workflow, ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
  </chain>

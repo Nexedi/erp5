@@ -94,6 +94,7 @@
                         <string>my_title</string>
                         <string>my_related_mission_url</string>
                         <string>my_related_mission</string>
+                        <string>my_destination_reference</string>
                       </list>
                     </value>
                 </item>

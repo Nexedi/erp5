@@ -18,7 +18,6 @@ else:
 new_record = record.Base_createCloneDocument(batch_mode=True)
 new_record.edit(
   title=context.getTitle(),
-  destination_reference=context.getReference(),
   date=context.getStartDate().Date().replace('/','-'),
 
   # Specific

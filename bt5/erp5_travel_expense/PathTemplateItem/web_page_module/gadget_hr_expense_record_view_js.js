@@ -24,6 +24,15 @@
       "ui-icon-warning ui-shadow-inset ui-input-clear ui-disabled";
 
 
+  function generateUUID() {
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
 
   function getData(gadget) {
     var form = gadget.props.element.querySelector('form');
@@ -58,7 +67,8 @@
           doc.simulation_state = 'draft';
           doc.portal_type = 'Expense Record'; // For to avoid sync
         }
-      doc.related_mission_url = gadget.props.related_mission_url;
+      doc.related_mission_url = gadget.props.related_mission_url || '';
+      doc.destination_reference = gadget.options.doc.destination_reference;
       return doc;
       });  
   }
@@ -160,6 +170,7 @@
           g.props.element = element;
           g.props.deferred = RSVP.defer();
           g.props.deferred1 = RSVP.defer();
+          
         });
     })
 
@@ -192,6 +203,12 @@
       gadget.options = options;
 
       return new RSVP.Queue()
+        .push(function () {
+          if (!options.doc.destination_reference) {
+            options.doc.destination_reference = generateUUID();
+            return gadget.put(options.jio_key, options.doc);
+          }
+        })
         .push(function () {
           if(options.came_from_jio_key) {
            gadget.props.related_mission_url = options.came_from_jio_key;
@@ -232,10 +249,10 @@
           }
           gadget.props.geoLocation = geoLocation;
           return gadget.allDocs({
-            query: 'portal_type:"Currency"',
-            select_list: ['relative_url', 'title'],
-            limit: [0, 100]
-          });
+              query: 'portal_type:"Currency"',
+              select_list: ['relative_url', 'title'],
+              limit: [0, 100]
+            });
         })
         .push(function (result) {
           var i = 0,
@@ -255,6 +272,7 @@
             }
             select_options.push(tmp);
           }
+         
           if (options.doc.sync_flag === '1') {
             sync_checked = 'checked';
           } else {
@@ -282,8 +300,31 @@
           return template(ops);
         })
         .push(function (html) {
+          var discussion_div;
           gadget.props.element.innerHTML = html;
-          
+          discussion_div = gadget.props.element.querySelector('.discussion');
+          return gadget.declareGadget('gadget_officejs_jio_text_post.html', {element: discussion_div})
+            .push(function (discussion_gadget) {
+              var query,
+                sync;
+              if (sync_state === 'Synced') {
+                query = 'portal_type:"Text Post" AND destination_reference: "' + options.doc.destination_reference + '"';
+                sync = true;
+              } else {
+                query = 'portal_type:"Text Post Tmp" AND destination_reference: "' + options.doc.destination_reference + '"';
+                sync = false;
+              }
+              gadget.discusison_gadget = discussion_gadget;
+              return discussion_gadget.render({
+                query: query ,
+                select_list: ['contributor_title', 'description', 'creation_date'],
+                destination_reference: options.doc.destination_reference,
+                title: options.doc.title,
+                sync: sync
+             });
+            });
+        })
+        .push(function () {
           return gadget.updateHeader({
             title: gadget.options.jio_key + " " + (gadget.options.doc.record_revision || 1),
             save_action: sync_state === 'Synced'? false: true
@@ -293,65 +334,6 @@
           gadget.props.deferred.resolve();
         });
     })
-
-    /////////////////////////////////////////
-    // New version of the the Expense Record
-    /////////////////////////////////////////
-    .declareService(function () {
-      /*
-      var gadget = this,
-        cloned_doc,
-        current_doc,
-        new_id;
-
-      if(gadget.props.element.querySelector('input[type=button][name=create_new_version]') == null){
-        return;
-      }
-
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
-        })
-        .push(function () {
-
-          return promiseEventListener(
-            gadget.props.element.querySelector('input[type=button][name=create_new_version]'),
-            'click',
-            false
-          );
-        })
-        .push(function () {
-          return gadget.get(gadget.options.jio_key);
-        })
-        .push(function (result) {
-          current_doc = result;
-          cloned_doc = JSON.parse(JSON.stringify(result));
-
-          // Do not sync the cloned document
-          cloned_doc.copy_of = gadget.options.jio_key;
-          cloned_doc.visible_in_html5_app_flag = 1;
-          delete cloned_doc.sync_flag;
-          cloned_doc.portal_type = 'Expense Record Temp';
-          cloned_doc.record_revision = (cloned_doc.record_revision || 1) + 1;
-
-          current_doc.visible_in_html5_app_flag = 0;
-
-          return gadget.post(cloned_doc);
-        })
-        .push(function (id) {
-          new_id = id;
-          // Hide the document at the end in order to still view it in case of issue
-          // Better have 2 docs than none visible
-          return gadget.put(gadget.options.jio_key, current_doc);
-        })
-        .push(function (response) {
-          return gadget.redirect({
-            jio_key: new_id,
-            page: "view"
-          });
-        });*/
-    })
-
 
     /////////////////////////////////////////
     // Form submit
@@ -391,6 +373,7 @@
     .declareService(function () {
       var gadget = this,
         sync,
+        title,
         form = gadget.props.element.querySelector('form.view-expense-record-form');
       return new RSVP.Queue()
         .push(function () {
@@ -407,7 +390,13 @@
                   if (doc.sync_flag === '1') {
                     sync = 1;
                   }
+                  title = doc.title;
                   return gadget.put(gadget.options.jio_key, doc);
+                })
+                .push(function () {
+                  if (sync) {
+                    return gadget.discusison_gadget.readyToSync({'title': title});
+                  }
                 })
                 .push(function () {
                   if (sync) {
@@ -475,28 +464,7 @@
           );
         });
     })
-    
-    /*
-    .declareService(function () {
-      var gadget = this;
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
-        })
-        .push(function () {
-          if (gadget.options.doc.sync_flag == "1"){
-            var element = gadget.props.element.querySelector("input[name='sync_flag'][value='1']");
-            element.setAttribute('checked', 'checked');
-            $(element).checkboxradio('refresh');
-          }else{
-            var element = gadget.props.element.querySelector("input[name='sync_flag'][value='']");
-            element.setAttribute('checked', 'checked');
-            $(element).checkboxradio('refresh');
-          }
-        })
-    })
-*/
     /////////////////////////////////////////
     // Preview clicked.
     /////////////////////////////////////////

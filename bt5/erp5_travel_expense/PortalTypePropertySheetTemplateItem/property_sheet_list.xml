@@ -1,12 +1,16 @@
 <property_sheet_list>
  <portal_type id="Expense Record">
   <item>ExpenseRecord</item>
+  <item>Reference</item>
  </portal_type>
  <portal_type id="Expense Validation Request">
   <item>ExpenseValidationRequest</item>
  </portal_type>
  <portal_type id="Leave Request Record">
   <item>LeaveRequestRecord</item>
+ </portal_type>
+ <portal_type id="Text Post">
+  <item>Reference</item>
  </portal_type>
  <portal_type id="Travel Request">
   <item>TravelRequest</item>

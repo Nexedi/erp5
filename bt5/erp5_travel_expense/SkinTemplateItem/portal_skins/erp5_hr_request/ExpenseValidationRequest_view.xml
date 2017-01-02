@@ -76,6 +76,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_comment</string>
                       </list>
                     </value>
                 </item>
@@ -95,6 +96,7 @@
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_destination_title</string>
                         <string>listbox_content</string>
+                        <string>my_source_reference</string>
                       </list>
                     </value>
                 </item>
