@@ -135,6 +135,29 @@ define("rsvp/async",
     var async;
     var local = (typeof global !== 'undefined') ? global : this;
 
+    function checkNativePromise() {
+      if (typeof Promise === "function" &&
+          typeof Promise.resolve === "function") {
+        try {
+          /* global Promise */
+          var promise = new Promise(function(){});
+          if ({}.toString.call(promise) === "[object Promise]") {
+            return true;
+          }
+        } catch (e) {}
+      }
+      return false;
+    }
+
+    function useNativePromise() {
+      var nativePromise = Promise.resolve();
+      return function(callback, arg) {
+        nativePromise.then(function () {
+          callback(arg);
+        });
+      };
+    }
+
     // old node
     function useNextTick() {
       return function(callback, arg) {
@@ -196,6 +219,8 @@ define("rsvp/async",
       async = useNextTick();
     } else if (BrowserMutationObserver) {
       async = useMutationObserver();
+    } else if (checkNativePromise()) {
+      async = useNativePromise();
     } else {
       async = useSetTimeout();
     }
