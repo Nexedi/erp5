@@ -884,13 +884,14 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting("selected_language"),
-            gadget.getSetting("default_selected_language")
+            gadget.getSetting("default_selected_language"),
+            gadget.getSetting("language_map")
           ]);
         })
         .push(function (results) {
-          if (results[1] !== results[0] && results[0]) {
+          if (results[1] !== results[0] && results[0] && JSON.parse(results[2]).hasOwnProperty(results[0])) {
             return gadget.redirect({
-              command: 'change_language',
+              command: COMMAND_CHANGE_LANGUAGE,
               options: {
                 language: results[0]
               }
