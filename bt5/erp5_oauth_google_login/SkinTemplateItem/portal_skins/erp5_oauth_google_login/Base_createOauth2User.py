@@ -20,7 +20,7 @@ assert login_portal_type in ("Google Login",), "Impossible to select a portal ty
 
 if erp5_username in ("Anonymous User", None):
   person = portal.person_module.newContent(portal_type='Person',
-                                           reference=reference,
+                                           user_id=reference,
                                            first_name=first_name,
                                            last_name=last_name,
                                            default_email_coordinate_text=email,
