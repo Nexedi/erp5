@@ -29,6 +29,7 @@ import json
 import httplib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.extension import GoogleLoginUtility
+from Products.ERP5.Document.Person import UserExistsError
 
 CLIENT_ID = "a1b2c3"
 SECRET_KEY = "3c2ba1"
@@ -108,6 +109,9 @@ class TestGoogleLogin(ERP5TypeTestCase):
     response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
     self.assertEqual(self.portal.absolute_url(), response)
 
+  def create_user_that_already_exists(self):
+    self.portal.person_module.newContent(portal_type="Person", user_id=CODE)
+
   def test_create_user_with_google_id(self):
     self.login()
     user_id = getUserId(None)
@@ -136,3 +140,5 @@ class TestGoogleLogin(ERP5TypeTestCase):
     self.assertEqual(user_id, person.getReference())
     self.assertEqual(user_entry["first_name"], person.getFirstName())
     self.assertEqual(user_entry["last_name"], person.getLastName())
+    self.login()
+    self.assertRaises(UserExistsError, self.create_user_that_already_exists)
