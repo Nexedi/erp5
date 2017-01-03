@@ -46,7 +46,7 @@ def getLeaveBlocAsDict(leave_period):
     bloc['S21.G00.60.005'] = formatDate(first_subrogation_day)
     # 3 months of subrogation, as defined in the collective agreement
     bloc['S21.G00.60.006'] = formatDate(addToDate(first_subrogation_day, month=3, days=-1))
-    bank_account = payment_transaction.getSourcePayment()
+    bank_account = payment_transaction.getSourcePaymentValue()
     bloc['S21.G00.60.007'] = bank_account.getIban()
     bloc['S21.G00.60.008'] = bank_account.getBicCode()
   else:
@@ -67,8 +67,8 @@ for period in leave_period_list:
     continue
   # Let's make a DSN Bloc for this leave period
   if period.getDestinationValue() in leave_dict.keys():
-    leave_dict[period.getDestinationValue()].append(getLeaveBlocAsDict(period))
+    leave_dict[period.getDestination()].append(getLeaveBlocAsDict(period))
   else:
-    leave_dict[period.getDestinationValue()] = [getLeaveBlocAsDict(period),]
+    leave_dict[period.getDestination()] = [getLeaveBlocAsDict(period),]
 
 return leave_dict

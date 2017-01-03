@@ -82,6 +82,7 @@
                         <string>my_career_stop_date</string>
                         <string>my_distribution_code</string>
                         <string>my_contract_type</string>
+                        <string>my_enrollment_causality</string>
                         <string>my_socioprofessional_category</string>
                         <string>my_conventional_status</string>
                         <string>my_expatriate_status</string>
@@ -98,11 +99,12 @@
                         <string>my_full_time_status</string>
                         <string>my_standard_working_unit</string>
                         <string>my_working_unit_quantity</string>
-                        <string>my_wage_measure</string>
                         <string>my_local_scheme</string>
                         <string>my_medical_scheme</string>
                         <string>my_retirement_scheme</string>
                         <string>my_civil_servant_status</string>
+                        <string>my_occupational_accident_risk_code</string>
+                        <string>my_occupational_accident_risk_rate</string>
                         <string>my_validation_state_title</string>
                       </list>
                     </value>

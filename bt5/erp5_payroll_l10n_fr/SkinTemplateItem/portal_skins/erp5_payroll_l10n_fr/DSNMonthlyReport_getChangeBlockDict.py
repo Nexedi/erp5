@@ -7,7 +7,7 @@ result_dict = {}
 change_list = context.objectValues(portal_type="DSN Change Block")
 
 for change in change_list:
-  source = change.getSourceValue()
+  source = change.getSource()
   date = formatDate(change.getReceivedDate())
   rubric = change.getUseValue().getCodification()
   rubric_root = rubric[:-4]

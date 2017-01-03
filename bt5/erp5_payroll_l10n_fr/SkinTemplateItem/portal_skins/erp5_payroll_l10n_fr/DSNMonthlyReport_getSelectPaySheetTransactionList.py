@@ -10,6 +10,7 @@ destination_section = portal.restrictedTraverse(destination_section_category)
 catalog_kw = {'query': ComplexQuery(Query(start_date=">=%s" % from_date.strftime("%Y/%m/%d")),
                                     Query(stop_date="<=%s" % to_date.strftime("%Y/%m/%d")),
                                     Query(destination_section_uid=Query(destination_section_uid=destination_section.getUid())),
+                                    Query(simulation_state='!=cancelled'),
                                     operator="AND")}
 
 paysheet_list = portal.accounting_module.searchFolder(portal_type="Pay Sheet Transaction", **catalog_kw)

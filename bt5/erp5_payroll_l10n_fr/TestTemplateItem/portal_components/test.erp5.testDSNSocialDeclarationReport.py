@@ -54,13 +54,6 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     self.dsn_module = self.portal.getDefaultModuleValue("DSN Monthly Report")
     self.pinDateTime(DateTime(2015, 12, 01))
 
-  def patchSomeDocumentDate(self):
-    """
-    Depending of the timezone, 
-    """
-    
-    date = self.portal.payroll_enrollment_record_module['28'].getCareerStopDate()
-
   def beforeTearDown(self):
     self.unpinDateTime()
 
@@ -70,7 +63,7 @@ class TestDSNSocialDeclarationReport(ERP5TypeTestCase):
     document is exactly the same as a previously computed one.
     """
     test_dsn = self.dsn_module['test_model']
-    test_dsn.DSNMonthlyReport_makeDSNPhaseTwo()
+    test_dsn.DSNMonthlyReport_makeReport()
     reference_DSN = getattr(self.portal.portal_skins.erp5_payroll_l10n_fr_test, "test_model.dsn").data
     diff_list = []
     for unit_diff in difflib.unified_diff(reference_DSN.split('\n'), test_dsn.getTextContent().split('\n')):
