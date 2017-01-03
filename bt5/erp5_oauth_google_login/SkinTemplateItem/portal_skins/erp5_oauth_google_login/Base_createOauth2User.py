@@ -48,7 +48,7 @@ if erp5_username in ("Anonymous User", None):
   assignment.open(activate_kw=activate_kw)
   person.setRoleList(assignment.getRoleList())
 else:
-  person = portal.ERP5Site_getAuthenticatedMemberPersonValue(erp5_username)
+  person = context.Base_getUserValueByUserId(erp5_username)
 
 login = person.newContent(portal_type=login_portal_type,
                           reference=reference)
