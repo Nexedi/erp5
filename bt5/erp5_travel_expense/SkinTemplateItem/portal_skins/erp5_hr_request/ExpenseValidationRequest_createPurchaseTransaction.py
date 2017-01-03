@@ -6,7 +6,7 @@ if (state not in ('accepted')):
 
 mission_account, debt_account = portal.ERP5Site_getPreferredExpenseAccountTuple()
 if not mission_account:
-  context.Base_redirect('view',
+  return context.Base_redirect('view',
     keep_items=dict(
       portal_status_message=portal.Base_translateString(
         "No Account has been defined for Expenses Transactions",
@@ -22,7 +22,8 @@ transaction =  portal.accounting_module.newContent(
   destination_section=context.getDestinationSection(),
   resource=context.getPriceCurrency(),
   created_by_builder=1,  # XXX this prevent init script from creating lines.
-  start_date=DateTime().earliestTime(),
+  start_date=context.getStartDate(),
+  causality=context.getRelativeUrl(),
 )
 
 transaction.newContent(
@@ -38,3 +39,5 @@ transaction.newContent(
 )
 
 transaction.stop()
+
+return transaction.getRelativeUrl()
