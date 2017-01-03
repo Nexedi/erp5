@@ -294,7 +294,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getContentType() and not here.getContentType().startswith("application/x-asc")</string> </value>
+            <value> <string>python: here.getContentType() and (not here.getContentType().startswith("application/x-asc") or (here.getData() and not here.getData()[3:7] == "Y;v2"))</string> </value>
         </item>
       </dictionary>
     </pickle>
