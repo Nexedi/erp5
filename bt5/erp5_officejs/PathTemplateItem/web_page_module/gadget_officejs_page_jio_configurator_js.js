@@ -24,7 +24,7 @@
         return gadget.setSetting('jio_storage_name', "LOCAL");
       })
       .push(function () {
-        return gadget.reload();
+        return gadget.setSetting('sync_reload', true);
       })
       .push(function () {
         return gadget.redirect({page: 'sync', auto_repair: 'true'});
