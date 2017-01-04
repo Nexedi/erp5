@@ -808,8 +808,12 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if erp5_action_key == 'object_jump':
           if 'Base_jumpToRelatedObject?' in view_action['url']:
             # Fetch the URL arguments
+            # XXX Correctly unquote arguments
             argument_dict = dict([x.split('=') for x in view_action['url'].split('?', 1)[1].split("&")])
-            final_argument_dict = {'portal_type': argument_dict.pop('portal_type', None)}
+            jump_portal_type = argument_dict.pop('portal_type', None)
+            if (jump_portal_type is not None):
+              jump_portal_type = jump_portal_type.replace('+', ' ')
+            final_argument_dict = {'portal_type': jump_portal_type}
             jump_related = argument_dict.pop('related', 1)
             if (jump_related):
               jump_related_suffix = ''
