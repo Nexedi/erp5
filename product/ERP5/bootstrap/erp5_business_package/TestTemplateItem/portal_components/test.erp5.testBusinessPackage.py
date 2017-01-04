@@ -25,10 +25,8 @@
 #
 ##############################################################################
 
-import tempfile
-
-from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+import time
 
 class TestBusinessPackage(ERP5TypeTestCase):
   """
@@ -62,7 +60,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     This is ran before anything, used to set the environment
     """
     # here, you can create the categories and objects your test will depend on
-    self.export_dir = tempfile.mkdtmp(dir=tests_home)
+    #self.export_dir = tempfile.mkdtmp(dir=tests_home)
     self.portal = self.getPortalObject()
     self.package = self._createBusinessPackage()
 
@@ -75,9 +73,10 @@ class TestBusinessPackage(ERP5TypeTestCase):
       pass
 
   def _createBusinessPackage(self):
-    package = self.portal.newContent(portal_type='Business Package')
-    self.assertTrue(package.getBuildingState() == 'draft')
-    self.assertTrue(package.getInstallationState() == 'not_installed')
+    new_id = 'package_%s'%str(time.time())
+    package = self.portal.newContent(id=new_id, portal_type='Business Package')
+    #self.assertTrue(package.getBuildingState() == 'draft')
+    #self.assertTrue(package.getInstallationState() == 'not_installed')
     package.edit(title ='test_package',
                   version='1.0',
                   description='package for live test')
@@ -128,7 +127,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.tic()
 
     # Test if the file is gone
-    self.assertIsNone(self.portal.restrictedTraverse(file_path))
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
 
     # Install package
     self._installBusinessPackage()
