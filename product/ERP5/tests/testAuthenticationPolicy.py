@@ -554,6 +554,48 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertFalse(login.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired_expire_date'])
 
+  def test_SystemRecoverExpiredPassword(self):
+    """
+      Test automatic system recover password
+    """
+    portal = self.portal
+    request = self.app.REQUEST
+
+    self.assertTrue(portal.portal_preferences.isAuthenticationPolicyEnabled())
+    preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
+                                                      title = 'Authentication',)
+    preference.setPreferredMaxPasswordLifetimeDuration(0) # password expire immediatly
+    preference.setPreferredSystemRecoverExpiredPassword(True)
+    self._clearCache()
+    self.tic()
+
+    person = self.createUser(self.id(), password='password')
+    assignment = person.newContent(portal_type = 'Assignment')
+    assignment.open()
+    login = person.objectValues(portal_type='ERP5 Login')[0]
+
+    self.tic()
+    self._clearCache()
+    time.sleep(1)
+    self.assertTrue(login.isPasswordExpired())
+
+    # User cannot login
+    path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s' % (
+      self.id(), 'password')
+    response = self.publish(path)
+    self.assertTrue(response.getHeader("Location").endswith("login_form"))
+    self.tic()
+
+    # and a credential recovery is created automatically
+    credential_recovery, = login.getDestinationDecisionRelatedValueList(
+        portal_type='Credential Recovery')
+
+    # trying to login again does not create a new credential recovery
+    response = self.publish(path)
+    self.tic()
+    credential_recovery, = login.getDestinationDecisionRelatedValueList(
+        portal_type='Credential Recovery')
+
   def test_HttpRequest(self):
     """
       Check HTTP responses
