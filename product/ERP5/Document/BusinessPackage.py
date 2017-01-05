@@ -27,16 +27,17 @@
 #
 ##############################################################################
 
-import fnmatch, re
+import fnmatch, re, gc
 import transaction
 from copy import deepcopy
 from collections import defaultdict
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.BusinessTemplate import ObjectTemplateItem
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 
 _MARKER = []
 
@@ -114,7 +115,7 @@ class BusinessPackage(XMLObject):
       """
       pass
 
-class PathTemplatePackageItem(ObjectTemplateItem):
+class PathTemplatePackageItem(Implicit, Persistent):
 
   def __init__(self, id_list, tool_id=None, **kw):
     self.__dict__.update(kw)
@@ -172,8 +173,6 @@ class PathTemplatePackageItem(ObjectTemplateItem):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
         if len(id_list) > 0:
-          if include_subobjects:
-            self.build_sub_objects(obj, id_list, relative_url)
           for id_ in list(id_list):
             _delObjectWithoutHook(obj, id_)
         if hasattr(aq_base(obj), 'groups'):
@@ -181,10 +180,117 @@ class PathTemplatePackageItem(ObjectTemplateItem):
         self._objects[relative_url] = obj
         obj.wl_clearLocks()
 
+  def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
+                               restricted=0):
+    """
+      Get the value without checking the security.
+      This method does not acquire the parent.
+    """
+    if isinstance(path, basestring):
+      stack = path.split('/')
+    else:
+      stack = list(path)
+    stack.reverse()
+    if stack:
+      if context is None:
+        portal = aq_inner(self.getPortalObject())
+        container = portal
+      else:
+        container = context
+
+      if restricted:
+        validate = getSecurityManager().validate
+
+      while stack:
+        key = stack.pop()
+        try:
+          value = container[key]
+        except KeyError:
+          LOG('BusinessTemplate', WARNING,
+              'Could not access object %s' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        if restricted:
+          try:
+            if not validate(container, container, key, value):
+              raise Unauthorized('unauthorized access to element %s' % key)
+          except Unauthorized:
+            LOG('BusinessTemplate', WARNING,
+                'access to %s is forbidden' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        container = value
+
+      return value
+    else:
+      return context
+
+  def _resetDynamicModules(self):
+    # before any import, flush all ZODB caches to force a DB reload
+    # otherwise we could have objects trying to get commited while
+    # holding reference to a class that is no longer the same one as
+    # the class in its import location and pickle doesn't tolerate it.
+    # First we do a savepoint to dump dirty objects to temporary
+    # storage, so that all references to them can be freed.
+    transaction.savepoint(optimistic=True)
+    # Then we need to flush from all caches, not only the one from this
+    # connection
+    portal = self.getPortalObject()
+    portal._p_jar.db().cacheMinimize()
+    synchronizeDynamicModules(portal, force=True)
+    gc.collect()
+
+  def fixBrokenObject(self, obj):
+    if isinstance(obj, ERP5BaseBroken):
+      self._resetDynamicModules()
+
+  def _getObjectKeyList(self):
+    # sort to add objects before their subobjects
+    keys = self._objects.keys()
+    keys.sort()
+    return keys
+
   def install(self, context, *args, **kw):
-    kw['object_to_update'] = {}
-    kw['force'] = 1
-    super(PathTemplatePackageItem, self).install(context, trashbin=None, *args, **kw)
+    force = 1
+    update_dict = {}
+    portal = context.getPortalObject()
+    object_key_list = self._getObjectKeyList()
+    for path in object_key_list:
+      __traceback_info__ = path
+      # We do not need to perform any backup because the object was
+      # created during the Business Template installation
+      if update_dict.get(path) == 'migrate':
+        continue
+
+      if update_dict.has_key(path) or force:
+        # get action for the oject
+        action = 'backup'
+        if not force:
+          action = update_dict[path]
+          if action == 'nothing':
+            continue
+        # get subobjects in path
+        path_list = path.split('/')
+        container_path = path_list[:-1]
+        object_id = path_list[-1]
+        try:
+          container = self.unrestrictedResolveValue(portal, container_path)
+        except KeyError:
+          # parent object can be set to nothing, in this case just go on
+          container_url = '/'.join(container_path)
+        old_obj = container._getOb(object_id, None)
+        # install object
+        obj = self._objects[path]
+        self.fixBrokenObject(obj)
+        obj = obj._getCopy(container)
+        #self.removeProperties(obj, 0)
+        __traceback_info__ = (container, object_id, obj)
+        container._setObject(object_id, obj)
+        obj = container._getOb(object_id)
 
     # Regenerate local roles for all paths in this business template
     p = context.getPortalObject()
