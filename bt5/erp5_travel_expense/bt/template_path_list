@@ -1,4 +1,6 @@
 portal_alarms/alarm_process_draft_record_list
+portal_categories/use/hr
+portal_categories/use/hr/**
 web_page_module/gadget_hr_*
 web_site_module/officejs_hr
 web_site_module/officejs_hr/**

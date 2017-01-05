@@ -86,6 +86,9 @@
               select: 'comment',
               title: 'Description'
             }, {
+              select: 'type_title',
+              title: 'Type'
+            }, {
               select: 'quantity',
               title: 'Total Price'
             }, {
@@ -104,9 +107,9 @@
             query: {
               query: 'portal_type:("Expense Record" OR "Expense Record Temp")',
               select_list: ['doc_id', 'quantity', 'resource_title',
-                            'comment', 'date', 'portal_type', 'sync_flag',
+                            'comment', 'date', 'type_title',
                             'state'],
-              sort_on: [["doc_id", "descending"]]
+              sort_on: [["modification_date", "descending"]]
             }
           });
         });

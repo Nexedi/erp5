@@ -59,6 +59,19 @@
             </select>
           </div>
 
+          <div class="ui-field-contain">
+            <label data-i18n="Type">Type</label>
+            <select class="new-performed-task" name="type"  required>
+            {{#each type_options}}
+                {{#if is_selected}}
+                  <option value={{value}} selected>{{title}}</option>
+                {{else}}
+                  <option value={{value}}>{{title}}</option>
+                {{/if}}
+            {{/each}}
+            </select>
+          </div>
+
            <div class="ui-field-contain">
               <label data-i18n="Photo">Photo</label>
               <input name="photo" type="file" accept="image/*" capture="camera">
@@ -126,6 +139,19 @@
             <label data-i18n="Currency">Currency</label>
             <select name="resource" readonly class='ui-state-readonly'>
             {{#each select_options}}
+                {{#if is_selected}}
+                  <option value={{value}} selected>{{title}}</option>
+                {{else}}
+                  <option value={{value}}>{{title}}</option>
+                {{/if}}
+            {{/each}}
+            </select>
+          </div>
+
+          <div class="ui-field-contain" class='ui-state-readonly'>
+            <label data-i18n="Type">Type</label>
+            <select name="type"  readonly class='ui-state-readonly'>
+            {{#each type_options}}
                 {{#if is_selected}}
                   <option value={{value}} selected>{{title}}</option>
                 {{else}}

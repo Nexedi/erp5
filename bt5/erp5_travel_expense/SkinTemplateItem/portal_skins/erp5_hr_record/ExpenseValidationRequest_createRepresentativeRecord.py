@@ -28,6 +28,8 @@ new_record.edit(
   comment=context.getDescription(),
   latitude=context.getLatitude(),
   longitude=context.getLongitude(),
+  type=context.getResource(),
+  type_title=context.getResourceTitle(),
   )
 new_record.setPhotoData(None)
 

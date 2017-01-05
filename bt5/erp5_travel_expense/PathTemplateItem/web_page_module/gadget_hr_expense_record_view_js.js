@@ -48,10 +48,12 @@
             if (form[i].name === "photo") {
               continue;
             }
-            doc[form[i].name] = form[i].value;
-            if (form[i].name === 'resource') {
-              doc.resource_title = form[i][form[i].selectedIndex].text;
+            if (form[i].nodeName === "SELECT"){
+              doc[form[i].name] = form[i].value;
+              doc[form[i].name + "_title"] =
+                form[i].options[form[i].selectedIndex].text;
             }
+            doc[form[i].name] = form[i].value;
           }
         }
         if (doc.sync_flag === "1"){
@@ -72,6 +74,34 @@
       sync_state = "Not Ready To Sync";
     }
     return sync_state;
+  }
+
+  function getTypeSelectList(gadget, doc) {
+    return new RSVP.Queue()
+      .push(function (){
+        return gadget.allDocs({
+          query: 'portal_type:"Service" AND use:"hr/expense_validation_request%"',
+          select_list: ['relative_url', 'title'],
+          limit: [0, 100]
+        });
+      })
+      .push(function (result) {
+        var i = 0,
+          tmp,
+          ops,
+          select_options = [];
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          tmp = {
+            title: result.data.rows[i].value.title,
+            value: result.data.rows[i].value.relative_url
+          };
+          if (doc.type === result.data.rows[i].value.relative_url) {
+            tmp.is_selected = true;
+          }
+          select_options.push(tmp);
+        }
+        return select_options;
+      });
   }
 
   function geoLocationPromise() {
@@ -231,17 +261,21 @@
             geoLocation = {coords: {latitude: "", longitude: ""}};
           }
           gadget.props.geoLocation = geoLocation;
-          return gadget.allDocs({
-            query: 'portal_type:"Currency"',
-            select_list: ['relative_url', 'title'],
-            limit: [0, 100]
-          });
+          return RSVP.all([
+            gadget.allDocs({
+              query: 'portal_type:"Currency"',
+              select_list: ['relative_url', 'title'],
+              limit: [0, 100]
+            }),
+            getTypeSelectList(gadget, options.doc)
+          ]);
         })
-        .push(function (result) {
+        .push(function (result_list) {
           var i = 0,
             tmp,
             ops,
-            select_options = [];
+            select_options = [],
+            result = result_list[0];
           if (options.doc.resource === undefined) {
             options.doc.resource = "currency_module/2";            
           }
@@ -269,6 +303,7 @@
             sync_checked:  sync_checked,
             not_sync_checked: not_sync_checked,
             select_options: select_options,
+            type_options: result_list[1],
             longitude: geoLocation.coords.longitude || "",
             latitude: geoLocation.coords.latitude || "",
             related_mission_url: related_mission_url || "",

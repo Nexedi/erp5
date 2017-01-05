@@ -18,7 +18,6 @@ else:
   ticket = record.getFollowUpValue()
 
 record.setDestinationReference(ticket.getReference())
-
 record.setFollowUpValue(ticket)
 
 related_mission_url = record.getRelatedMissionUrl()
@@ -29,7 +28,7 @@ else:
   source_project_url = ""
 ticket.edit(
   title=record.getTitle(),
-  #resource=record.getSource(),
+  resource=record.getType(),
   start_date=DateTime(record.getDate()),
   stop_date=DateTime(record.getDate()),
   # Specific
@@ -40,11 +39,24 @@ ticket.edit(
   description=record.getComment(),
   latitude=record.getLatitude(),
   longitude=record.getLongitude(),
-  source_project=source_project_url
+  source_project=source_project_url,
   )
+
+publication_section = portal.ERP5Site_getPreferredExpenseDocumentPublicationSectionValue()
 photo_data = record.getPhotoData()
 if photo_data:
-  ticket.setPhotoData(photo_data)
+  if "," in photo_data and ticket:
+    photo_data = photo_data.split(",")[1]
+    image = portal.portal_contributions.newContent(
+      data = photo_data.decode('base64'),
+      reference=ticket.getReference()+ "-justificatif",
+      title = ticket.getReference() + " Justificatif",
+      description = ticket.getDescription(),
+      filename="tmp.png",
+      follow_up=ticket.getRelativeUrl(),
+      publication_section=publication_section.getRelativeUrl(),
+    )
+    image.share()
 
 record.deliver()
 
