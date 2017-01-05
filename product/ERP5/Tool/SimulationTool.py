@@ -632,7 +632,16 @@ class SimulationTool(BaseTool):
         sql_kw['selection_domain_where_expression'] = None
       else:
         # Pre-render selection_domain, as it is easier done here than in DTML.
-        query_table_alias = 'node' # XXX: To be eventually made configurable
+        if isinstance(selection_domain, dict):
+          selection_domain_dict = selection_domain
+        else:
+          selection_domain_dict = selection_domain.asDomainDict()
+        if 'ledger' in selection_domain_dict:
+          # XXX: what if both 'node' and 'ledger' are present ?
+          # Finer configuration may be needed here.
+          query_table_alias = 'ledger'
+        else:
+          query_table_alias = 'node'
         selection_domain_sql_dict = self.getPortalObject().portal_catalog.buildSQLQuery(
           selection_domain=selection_domain,
           query_table_alias=query_table_alias,

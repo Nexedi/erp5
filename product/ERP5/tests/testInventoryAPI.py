@@ -1463,6 +1463,50 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEqual(1, len(site2_mvt_history_list))
     self.assertEqual(3, site2_mvt_history_list[0].total_quantity)
 
+  def test_get_inventory_list_with_selection_domain(self):
+    '''
+      check getInventoryList queries with selection_domain
+    '''
+    getInventoryList = self.getSimulationTool().getInventoryList
+    ledger_accounting_category = self.portal.portal_categories.ledger.accounting
+    self.node.setGroup('level1')
+    movement1 = self._makeMovement(
+      ledger_value=ledger_accounting_category.general,
+      destination_value=None,
+      quantity=2,
+    )
+    movement2 = self._makeMovement(
+      ledger_value=ledger_accounting_category.detailed,
+      destination_value=None,
+      source_value=self.node,
+      quantity=3,
+    )
+
+    # query without selection. Result should contain both movements
+    result_no_selection = getInventoryList()
+    self.assertEqual(len(result_no_selection), 2)
+    self.assertEqual(
+      sum([x.total_quantity for x in result_no_selection]),
+      -5.0
+    )
+    # query using ledger in the selection_domain (so ledger_uid).
+    # Check only the corresponding movement is found
+    result_ledger_accounting_general = getInventoryList(
+      selection_domain={'ledger': ('portal_categories', 'ledger/accounting/general')})
+    self.assertEqual(len(result_ledger_accounting_general), 1)
+    self.assertEqual(result_ledger_accounting_general[0].total_quantity, -2.0)
+    result_ledger_accounting_detailed = getInventoryList(
+      selection_domain={'ledger': ('portal_categories', 'ledger/accounting/detailed')})
+    self.assertEqual(len(result_ledger_accounting_detailed), 1)
+    self.assertEqual(result_ledger_accounting_detailed[0].total_quantity, -3.0)
+
+    # query using group in the selection_domain (so node_uid).
+    # Check only the corresponding movement is found
+    result_group1 = getInventoryList(
+      selection_domain={'group': ('portal_categories', 'group/level1')})
+    self.assertEqual(len(result_group1), 1)
+    self.assertEqual(result_group1[0].total_quantity, -3.0)
+
   def test_inventory_asset_price(self):
     # examples from http://accountinginfo.com/study/inventory/inventory-120.htm
     movement_list = [
@@ -1590,7 +1634,6 @@ class TestInventoryList(InventoryAPITestCase):
                   section_uid=self.section.getUid())
       self.assertTrue(result is not None)
       self.assertEqual(internal_data[cur]['after']['total_price'], round(result))
-
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
@@ -2509,6 +2552,50 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(1, len(site2_mvt_history_list))
     self.assertEqual(3, site2_mvt_history_list[0].total_quantity)
 
+  def test_get_movement_history_list_with_selection_domain(self):
+    '''
+      check getMovementHistoryList queries with selection_domain
+    '''
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    ledger_accounting_category = self.portal.portal_categories.ledger.accounting
+    self.node.setGroup('level1')
+    movement1 = self._makeMovement(
+      ledger_value=ledger_accounting_category.general,
+      destination_value=None,
+      quantity=2,
+    )
+    movement2 = self._makeMovement(
+      ledger_value=ledger_accounting_category.detailed,
+      destination_value=None,
+      source_value=self.node,
+      quantity=3,
+    )
+
+    # query without selection. Result should contain both movements
+    result_no_selection = getMovementHistoryList()
+    self.assertEqual(len(result_no_selection), 2)
+    self.assertEqual(
+      sum([x.total_quantity for x in result_no_selection]),
+      -5.0
+    )
+
+    # query using ledger in the selection_domain (so ledger_uid).
+    # Check only the corresponding movement is found
+    result_ledger_accounting_general = getMovementHistoryList(
+      selection_domain={'ledger': ('portal_categories', 'ledger/accounting/general')})
+    self.assertEqual(len(result_ledger_accounting_general), 1)
+    self.assertEqual(result_ledger_accounting_general[0].total_quantity, -2.0)
+    result_ledger_accounting_detailed = getMovementHistoryList(
+      selection_domain={'ledger': ('portal_categories', 'ledger/accounting/detailed')})
+    self.assertEqual(len(result_ledger_accounting_detailed), 1)
+    self.assertEqual(result_ledger_accounting_detailed[0].total_quantity, -3.0)
+
+    # query using group in the selection_domain (so node_uid).
+    # Check only the corresponding movement is found
+    result_group1 = getMovementHistoryList(
+      selection_domain={'group': ('portal_categories', 'group/level1')})
+    self.assertEqual(len(result_group1), 1)
+    self.assertEqual(result_group1[0].total_quantity, -3.0)
 
 class TestNextNegativeInventoryDate(InventoryAPITestCase):
   """Tests getInventory methods.
