@@ -52,6 +52,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
     """
     return (
       'erp5_base',
+      'erp5_core',
+      'erp5_property_sheets',
       'erp5_business_package',
       )
 
@@ -62,7 +64,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # here, you can create the categories and objects your test will depend on
     #self.export_dir = tempfile.mkdtmp(dir=tests_home)
     self.portal = self.getPortalObject()
-    self.package = self._createBusinessPackage()
 
   def beforeTearDown(self):
     try:
@@ -82,7 +83,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
                   description='package for live test')
     return package
 
-  def _buildAndExportBusinessPackage(self):
+  def _buildAndExportBusinessPackage(self, package):
     """
     Builds and exports Business Package to a given export directory
     """
@@ -90,24 +91,25 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Expected result should be while building the path object items
     # are going to be exported as XML(?)
     self.tic()
-    self.built_package = self.package.build()
+    package.build()
     self.tic()
 
     # Export package (not needed)
     #self.package.export(path=self.export_dir, local=True)
     #self.tic()
 
-  def _installBusinessPackage(self):
+  def _installBusinessPackage(self, package):
     """
     Install the package from its built version.
     Expected to install the PathTemplateObject items
     """
-    self.package.install()
+    package.install()
 
   def test_fileImportAndReinstallForDocument(self):
     """
     Test Business Package build and install with test document
     """
+    package = self._createBusinessPackage()
     document_file = self.portal.document_module.newContent(
                                     portal_type = 'File',
                                     title = 'Test Document',
@@ -117,10 +119,10 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.tic()
 
     file_path = document_file.getRelativeUrl()
-    self.package.edit(template_path_list=[file_path,])
+    package.edit(template_path_list=[file_path,])
 
     # Build package
-    self._buildAndExportBusinessPackage()
+    self._buildAndExportBusinessPackage(package)
 
     # Delete document from site
     self.portal.document_module.manage_delObjects([document_file.getId(),])
@@ -130,7 +132,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
 
     # Install package
-    self._installBusinessPackage()
+    self._installBusinessPackage(package)
 
     # Test if the file is back
     self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
