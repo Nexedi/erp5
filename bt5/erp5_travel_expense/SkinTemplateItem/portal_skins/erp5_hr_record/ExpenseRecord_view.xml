@@ -80,7 +80,6 @@
                       <list>
                         <string>my_reference</string>
                         <string>my_source_reference</string>
-                        <string>my_title</string>
                         <string>my_date</string>
                         <string>my_quantity</string>
                         <string>my_resource_title</string>

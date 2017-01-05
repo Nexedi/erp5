@@ -265,7 +265,6 @@
             preview: options.doc.photo_data,
             quantity: options.doc.quantity,
             date: options.doc.date || new Date().toISOString().slice(0,10),
-            title: options.doc.title,
             comment: options.doc.comment,
             sync_checked:  sync_checked,
             not_sync_checked: not_sync_checked,

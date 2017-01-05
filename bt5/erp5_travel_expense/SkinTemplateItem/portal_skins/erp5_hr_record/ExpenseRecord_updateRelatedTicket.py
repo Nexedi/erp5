@@ -12,7 +12,7 @@ if record.getDestinationReference() is not None:
 else:
   # No destination reference means no ticket to track it server side: Create a new one
   record.Event_createFollowUpTicket(
-    follow_up_ticket_title=record.getTitle(),
+    follow_up_ticket_title=record.getComment(),
     follow_up_ticket_type="Expense Validation Request",
   )
   ticket = record.getFollowUpValue()

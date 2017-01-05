@@ -83,8 +83,8 @@
             search_page: 'document_list',
             search: options.search,
             column_list: [{
-              select: 'title',
-              title: 'Title'
+              select: 'comment',
+              title: 'Description'
             }, {
               select: 'quantity',
               title: 'Total Price'
@@ -103,7 +103,7 @@
             }],
             query: {
               query: 'portal_type:("Expense Record" OR "Expense Record Temp")',
-              select_list: ['doc_id', 'quantity', 'resource_title', 'title',
+              select_list: ['doc_id', 'quantity', 'resource_title',
                             'comment', 'date', 'portal_type', 'sync_flag',
                             'state'],
               sort_on: [["doc_id", "descending"]]

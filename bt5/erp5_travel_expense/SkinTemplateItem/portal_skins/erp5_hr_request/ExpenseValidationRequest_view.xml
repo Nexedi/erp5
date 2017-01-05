@@ -95,6 +95,7 @@
                         <string>listbox_delivery_start_date</string>
                         <string>listbox_destination_title</string>
                         <string>listbox_content</string>
+                        <string>my_title</string>
                       </list>
                     </value>
                 </item>
@@ -102,7 +103,6 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_resource</string>
                         <string>my_destination_section_title</string>
