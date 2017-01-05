@@ -53,6 +53,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     return (
       'erp5_base',
       'erp5_core',
+      'erp5_dms',
       'erp5_property_sheets',
       'erp5_business_package',
       )
