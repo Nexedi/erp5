@@ -134,3 +134,5 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Test if the file is back
     self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
+    document = self.portal.restrictedTraverse(file_path)
+    self.assertEquals(document.title, 'Test Document')
