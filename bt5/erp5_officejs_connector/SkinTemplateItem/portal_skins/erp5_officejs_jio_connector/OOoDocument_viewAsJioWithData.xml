@@ -83,6 +83,8 @@ ooffice_view</string> </value>
                         <string>your_modification_date</string>
                         <string>my_content_type</string>
                         <string>my_filename</string>
+                        <string>my_data</string>
+                        <string>your_data</string>
                       </list>
                     </value>
                 </item>
@@ -97,7 +99,7 @@ ooffice_view</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OOoDocument_viewAsJio</string> </value>
+            <value> <string>OOoDocument_viewAsJioWithData</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jio_view</string> </value>
+            <value> <string>jio_view_attachment</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/OOoDocument_viewAsJioWithData</string> </value>
+            <value> <string>string:${object_url}/OOoDocument_viewAsJio</string> </value>
         </item>
       </dictionary>
     </pickle>
