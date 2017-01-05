@@ -26,7 +26,7 @@ kw = {'portal_type': 'Authentication Event',
 authentication_event_list = [x.getObject() for x in portal.portal_catalog(**kw)]
 
 for authentication_event in authentication_event_list:
-  authentication_event.activate().acknowledge(comment='User account unblocked.')
+  authentication_event.acknowledge(comment='User account unblocked.')
 
 if not batch_mode:
   message = context.Base_translateString('User Login unblocked.')
