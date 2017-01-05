@@ -30,6 +30,7 @@
 import fnmatch, re
 import transaction
 from copy import deepcopy
+from collections import defaultdict
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -82,7 +83,7 @@ class BusinessPackage(XMLObject):
                       )
 
     def _install(self):
-      pass
+      self._path_item.install(self)
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
@@ -93,8 +94,7 @@ class BusinessPackage(XMLObject):
       Should also export the objects from PathTemplateItem to their xml format
       """
       self.storePathData()
-      for item in self._path_item:
-        item.export()
+      self._path_item.build(self)
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
     def storePathData(self):
@@ -178,7 +178,9 @@ class PathTemplatePackageItem(ObjectTemplateItem):
         obj.wl_clearLocks()
 
   def install(self, context, *args, **kw):
-    super(PathTemplateItem, self).install(context, *args, **kw)
+    kw['object_to_update'] = {}
+    kw['force'] = 1
+    super(PathTemplatePackageItem, self).install(context, trashbin=None, *args, **kw)
 
     # Regenerate local roles for all paths in this business template
     p = context.getPortalObject()
