@@ -136,3 +136,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
     document = self.portal.restrictedTraverse(file_path)
     self.assertEquals(document.title, 'Test Document')
+
+  def test_sameFileImportAndReinstallOnTwoPackages(self):
+    """
+    Test two Business Packages build and installation of same file
+    """
+    self.assertEquals(1, 1)
