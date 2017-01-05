@@ -8,11 +8,11 @@ SET @running_total_quantity := <dtml-var initial_running_total_quantity>,
     @running_total_price := <dtml-var initial_running_total_price>;
 <dtml-var sql_delimiter>
 
-SELECT 
+SELECT
   q1.*,
-  @running_total_quantity := q1.total_quantity + 
+  @running_total_quantity := q1.total_quantity +
             @running_total_quantity AS running_total_quantity,
-  @running_total_price := IFNULL(q1.total_price, 0) + 
+  @running_total_price := IFNULL(q1.total_price, 0) +
             @running_total_price AS running_total_price
 FROM (
 SELECT
@@ -133,7 +133,7 @@ WHERE
 </dtml-if>
 
 <dtml-if selection_domain>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category', join_table='stock', join_column='node_uid')">
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category', join_table='stock', join_column=join_column)">
 </dtml-if>
 <dtml-if selection_report>
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, category_table_alias='report_category', strict_membership=1)">

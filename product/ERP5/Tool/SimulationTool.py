@@ -59,6 +59,7 @@ from warnings import warn
 from cPickle import loads, dumps
 from copy import deepcopy
 from sys import exc_info
+from Products.ERP5Form.Selection import DomainSelection
 
 MYSQL_MIN_DATETIME_RESOLUTION = 1/86400.
 
@@ -1187,6 +1188,12 @@ class SimulationTool(BaseTool):
           new_group_by_dict['group_by_resource'] = 1
       return new_group_by_dict
 
+    security.declarePrivate('_getJoinColumnForSelectionDomain')
+    def _getJoinColumnForSelectionDomain(self, selection_domain_dict):
+      if not selection_domain_dict:
+        return
+      return self.getPortalObject().Base_getJoinColumnForSelectionDomain(selection_domain_dict.keys()[0])
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
     def getInventoryList(self, src__=0, optimisation__=True,
@@ -1268,6 +1275,8 @@ class SimulationTool(BaseTool):
         sql_source_list = []
       # If no group at all, give a default sort group by
       kw.update(self._getDefaultGroupByParameters(**kw))
+      if isinstance(selection_domain, DomainSelection):
+        selection_domain = selection_domain.asDomainDict()
       base_inventory_kw = {
         'stock_table_id': default_stock_table,
         'src__': src__,
@@ -1276,6 +1285,7 @@ class SimulationTool(BaseTool):
         'omit_simulation': omit_simulation,
         'only_accountable': only_accountable,
         'selection_domain': selection_domain,
+        'join_column': self._getJoinColumnForSelectionDomain(selection_domain),
         'selection_report': selection_report,
         'precision': precision,
         'inventory_list': inventory_list,
@@ -1972,6 +1982,8 @@ class SimulationTool(BaseTool):
         for x in extra_column_set if not x.endswith('__score__'))
 
       sql_kw = self._generateSQLKeywordDict(**kw)
+      if isinstance(selection_domain, DomainSelection):
+        selection_domain = selection_domain.asDomainDict()
 
       return self.Resource_zGetMovementHistoryList(
                          src__=src__, ignore_variation=ignore_variation,
@@ -1982,6 +1994,7 @@ class SimulationTool(BaseTool):
                          omit_asset_increase=omit_asset_increase,
                          omit_asset_decrease=omit_asset_decrease,
                          selection_domain=selection_domain,
+                         join_column=self._getJoinColumnForSelectionDomain(selection_domain),
                          selection_report=selection_report,
                          initial_running_total_quantity=
                                   initial_running_total_quantity,

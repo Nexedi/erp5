@@ -63,7 +63,7 @@ FROM
   <dtml-var from_expression>
 <dtml-else>
   catalog
-<dtml-in prefix="table" expr="from_table_list"> 
+<dtml-in prefix="table" expr="from_table_list">
   <dtml-if expr="table_key not in ('catalog', stock_table_id)">
   , <dtml-var table_item> AS <dtml-var table_key>
   </dtml-if>
@@ -71,7 +71,7 @@ FROM
 , <dtml-var stock_table_id>
 </dtml-if>
 <dtml-if quantity_unit_uid> <dtml-comment>XXX quantity unit conversion will not work when using implict_join=False</dtml-comment>
-  LEFT JOIN quantity_unit_conversion ON 
+  LEFT JOIN quantity_unit_conversion ON
     (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid
     AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)
 </dtml-if>
@@ -103,7 +103,8 @@ WHERE
   AND <dtml-var stock_table_id>.is_accountable
 </dtml-if>
 <dtml-if selection_domain>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category', join_table=stock_table_id, join_column='node_uid')">
+  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category', join_table=stock_table_id, join_column=join_column)">
+
 </dtml-if>
 <dtml-if selection_report>
   AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, category_table_alias='report_category', strict_membership=1)">
