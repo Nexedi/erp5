@@ -34,7 +34,7 @@ from collections import defaultdict
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.BusinessTemplate import ObjectTemplateItem, BaseTemplateItem
+from Products.ERP5.Document.BusinessTemplate import ObjectTemplateItem
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 
@@ -117,7 +117,12 @@ class BusinessPackage(XMLObject):
 class PathTemplatePackageItem(ObjectTemplateItem):
 
   def __init__(self, id_list, tool_id=None, **kw):
-    BaseTemplateItem.__init__(self, id_list, tool_id=tool_id, **kw)
+    self.__dict__.update(kw)
+    self._archive = PersistentMapping()
+    self._objects = PersistentMapping()
+    for id in id_list:
+      if id is not None and id != '':
+        self._archive[id] = None
     id_list = self._archive.keys()
     self._archive.clear()
     self._path_archive = PersistentMapping()
@@ -150,7 +155,6 @@ class PathTemplatePackageItem(ObjectTemplateItem):
     return path_list
 
   def build(self, context, **kw):
-    BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     keys = self._path_archive.keys()
     keys.sort()
