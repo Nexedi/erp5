@@ -74,9 +74,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -91,9 +89,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_delivery_start_date</string>
-                        <string>listbox_destination_title</string>
-                        <string>listbox_content</string>
                         <string>my_quantity</string>
                         <string>my_quantity_unit</string>
                         <string>my_price</string>

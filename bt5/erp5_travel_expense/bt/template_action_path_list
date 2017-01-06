@@ -4,14 +4,17 @@ Expense Record Module | view
 Expense Record | jio_view
 Expense Record | view
 Expense Validation Request Module | view
+Expense Validation Request | records
 Expense Validation Request | transactions
 Expense Validation Request | view
 Leave Request Record | jio_view
 Leave Request Record | view
+Leave Request | records
 Record Module | view
 Service | jio_view
 System Preference | hr_preference
 Travel Request Module | view
 Travel Request Record | jio_view
 Travel Request Record | view
+Travel Request | records
 Travel Request | view
