@@ -27,6 +27,7 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import time
+from Products.ERP5.Document.BusinessPackage import InstallationTree, createInstallationData
 
 class TestBusinessPackage(ERP5TypeTestCase):
   """
@@ -65,6 +66,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # here, you can create the categories and objects your test will depend on
     #self.export_dir = tempfile.mkdtmp(dir=tests_home)
     self.portal = self.getPortalObject()
+    self.installation_tree = InstallationTree()
 
   def beforeTearDown(self):
     try:
@@ -108,7 +110,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
   def test_fileImportAndReinstallForDocument(self):
     """
-    Test Business Package build and install with test document
+    Test Business Package build and install with test document.
+
+    Expected result: Installs the exported object to the path expected on site.
     """
     package = self._createBusinessPackage()
     document_file = self.portal.document_module.newContent(
@@ -142,6 +146,48 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
   def test_sameFileImportAndReinstallOnTwoPackages(self):
     """
-    Test two Business Packages build and installation of same file
+    Test two Business Packages build and installation of same file.
+
+    Expected result: If we install same object from 2 different business packages,
+    then in that case the installation object should compare between the
+    state of OFS and installation and install accordingly.
     """
-    self.assertEquals(1, 1)
+
+    old_package = self._createBusinessPackage()
+    new_package = self._createBusinessPackage()
+
+    document_file = self.portal.document_module.newContent(
+                                    portal_type = 'File',
+                                    title = 'Test Document',
+                                    reference = 'erp5-package.Test.Document.Two.BP',
+                                    data = 'test file',
+                                    content_type = None)
+    self.tic()
+
+    file_path = document_file.getRelativeUrl()
+    old_package.edit(template_path_list=[file_path,])
+    new_package.edit(template_path_list=[file_path,])
+    self.tic()
+
+    # Build both the packages
+    self._buildAndExportBusinessPackage(old_package)
+    self._buildAndExportBusinessPackage(new_package)
+    self.tic()
+
+    # Get installation data from the list of packages which we want to install
+    package_list = [old_package, new_package]
+    data = createInstallationData(package_list)
+
+    # creat InstallationTree object
+    installation_tree = InstallationTree(data)
+
+    # Delete document from site
+    self.portal.document_module.manage_delObjects([document_file.getId(),])
+    self.tic()
+
+    # Test if the file doesn't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
+
+    # We try to install pakcages via mapping the installation tree to ZODB
+    # As both have exactly same document we expect that only one of them get installed
+    installation_tree.map()
