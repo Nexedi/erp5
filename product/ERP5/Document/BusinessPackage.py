@@ -328,3 +328,49 @@ class PathTemplatePackageItem(Implicit, Persistent):
                 "Updated Local Roles for '%s' (%s)"
                 % (portal_type, obj.getRelativeUrl()))
       transaction.get().addBeforeCommitHook(updateLocalRolesOnDocument)
+
+class InstallationState(object):
+  """
+  Tree implemetation to manage install/update/remove between states.
+
+  State Number:
+  1)  ERP5Site
+  2)  ERP5Site + BP1 : BP1 installed on ERP5Site
+  3)  Install state BP2 + BP3 on state 2
+
+  Initially:(Each node is a state)
+  Leaf node: OFS State(with some default BP installed)
+  Trying to install a new BT5 should be like adding new node to the tree
+
+  How to pickle:
+  http://stackoverflow.com/questions/2134706/hitting-maximum-recursion-depth-using-pythons-pickle-cpickle
+
+  How to version control the states:
+  https://github.com/gitpython-developers/GitPython/tree/master/git
+
+  """
+
+  def __init__(self, state):
+    """
+    """
+    self.root_status = False   # Installtion status of the combined packages
+    self.data_list = []        # To be installed/update/deleted list of packages
+    self.current_level = 1
+
+  def setNewState(self, state):
+    """
+    In tree language, should act as setNext node to the tree
+
+    This should  add package list after comparing the states of
+    packages with the installed state. So even if we try to install multiple
+    packages at a time, it should be counted as one state being implented on
+    another installed state, i.e, the state of ERP5Site
+    """
+    pass
+
+  def install_package_list(self, package_list):
+    """
+    Create a new state by comparing all BP combined built and the ERP5Site,
+    then calls setNewState to update the state
+    """
+    pass
