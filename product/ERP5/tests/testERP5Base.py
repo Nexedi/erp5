@@ -1411,6 +1411,46 @@ class TestERP5Base(ERP5TypeTestCase):
         self.portal.BankAccount_validateBIC(
         'X', request=None))
 
+  def test_user_title(self):
+    newContent = self.portal.person_module.newContent
+    login = super(TestERP5Base, self).login
+    # User 1 and 2 have the same title (picked from user 1's user id),
+    # hopefully not shared with other users.
+    # User 3 has a different title, also hopefully not shared.
+    user_1 = newContent(portal_type='Person')
+    common_user_title = user_1.Person_getUserId()
+    user_1.setTitle(common_user_title)
+    user_2 = newContent(portal_type='Person')
+    user_2.setTitle(common_user_title)
+    user_3 = newContent(portal_type='Person')
+    user_3.setTitle(user_3.Person_getUserId())
+    # any member can add persons
+    self.portal.person_module.manage_permission(
+      'Add portal content',
+      roles=['Member', 'Manager'],
+      acquire=0,
+    )
+    self.tic()
+    # Create whatever documents.
+    must_find_path_list = []
+    login(user_1.Person_getUserId())
+    must_find_path_list.append(newContent(portal_type='Person', title='Owned by user_1').getPath())
+    login(user_2.Person_getUserId())
+    must_find_path_list.append(newContent(portal_type='Person', title='Owned by user_2').getPath())
+    login(user_3.Person_getUserId())
+    newContent(portal_type='Person', title='Owned by user_3')
+    login()
+    self.tic()
+    self.assertItemsEqual(
+      must_find_path_list,
+      [
+        x.path
+        for x in self.portal.portal_catalog(
+          owner_title=common_user_title,
+          portal_type='Person',
+        )
+      ],
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
