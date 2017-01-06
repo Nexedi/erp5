@@ -28,6 +28,7 @@
 ##############################################################################
 
 import fnmatch, re, gc
+import hashlib
 import transaction
 from copy import deepcopy
 from collections import defaultdict
@@ -292,46 +293,53 @@ class PathTemplatePackageItem(Implicit, Persistent):
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
 
-    # Regenerate local roles for all paths in this business template
-    p = context.getPortalObject()
-    portal_type_role_list_len_dict = {}
-    update_dict = defaultdict(list)
-    for path in self._objects:
-      obj = p.unrestrictedTraverse(path, None)
-      # Ignore any object without PortalType (non-ERP5 objects)
-      try:
-        portal_type = aq_base(obj).getPortalType()
-      except Exception, e:
-        pass
+
+def createInstallationData(package_list):
+  """
+  Create installation object as well as adds new node on the installation tree
+  from the installed state
+  """
+  data = {}
+  path_list = []
+
+  # Create path_list to be installed by the installation
+  for package in package_list:
+    path_list.extend(package.getTemplatePathList())
+    path_list = list(set(path_list))
+
+  for package in package_list:
+    obj_dict = package._path_item._objects
+    for path in path_list:
+      if not data.has_key(path):
+        data[path] = [obj_dict[path]]
       else:
-        if portal_type not in p.portal_types:
-          LOG("BusinessTemplate", WARNING,
-              "Could not update Local Roles as Portal Type '%s' could not "
-              "be found" % portal_type)
+        data[path].append(obj_dict[path])
 
-          continue
+  # Compare the objects which are present in multiple numbers in data_list
+  for path, obj_list in data_list.iteritems():
+    # We use iteritems so that it'd be okay while we change the values
+    if len(obj_list) == 1:
+      data[path] = obj_list[0]
+    else:
+      hash_func = hashlib.sha1
+      hash_list = [hash_fuc(obj.asXML()).hexdigest() for obj in obj_list]
+      hash_list = set(hash_list)
+      if not len(hash_list) == 1:
+        raise ValueError('There is a conflict')
+      else:
+        data[path] = obj_list[0]
 
-        if portal_type not in portal_type_role_list_len_dict:
-          portal_type_role_list_len_dict[portal_type] = \
-              len(p.portal_types[portal_type].getRoleInformationList())
+  return data
 
-        if portal_type_role_list_len_dict[portal_type]:
-          update_dict[portal_type].append(obj)
-
-    if update_dict:
-      def updateLocalRolesOnDocument():
-        for portal_type, obj_list in update_dict.iteritems():
-          update = p.portal_types[portal_type].updateLocalRolesOnDocument
-          for obj in obj_list:
-            update(obj)
-            LOG("BusinessTemplate", INFO,
-                "Updated Local Roles for '%s' (%s)"
-                % (portal_type, obj.getRelativeUrl()))
-      transaction.get().addBeforeCommitHook(updateLocalRolesOnDocument)
-
-class InstallationState(object):
+class InstallationTree(object):
   """
   Tree implemetation to manage install/update/remove between states.
+  This is a very rough code to explain what can be achieved. In real case,
+  this class should be a well defined ERP5 object and most possibly act as a
+  portal tool, cause there should be one installation tree per site(agree ??)
+
+  Data at every node:
+  ('_path_item': PathTemplateItem, }
 
   State Number:
   1)  ERP5Site
@@ -342,6 +350,9 @@ class InstallationState(object):
   Leaf node: OFS State(with some default BP installed)
   Trying to install a new BT5 should be like adding new node to the tree
 
+  Will show if faced by any conflict between states, but mostly will try to
+  solve by itself
+
   How to pickle:
   http://stackoverflow.com/questions/2134706/hitting-maximum-recursion-depth-using-pythons-pickle-cpickle
 
@@ -350,27 +361,25 @@ class InstallationState(object):
 
   """
 
-  def __init__(self, state):
-    """
-    """
-    self.root_status = False   # Installtion status of the combined packages
-    self.data_list = []        # To be installed/update/deleted list of packages
-    self.current_level = 1
+  def __init__(self, data):
+    self.data = data          # To be installed/update/deleted list of packages
+    self.children = []        # List of child nodes
 
-  def setNewState(self, state):
+  def addNewState(self, state):
     """
-    In tree language, should act as setNext node to the tree
+    In tree language, should act as set next node to the tree
 
-    This should  add package list after comparing the states of
+    This should add package list after comparing the states of
     packages with the installed state. So even if we try to install multiple
     packages at a time, it should be counted as one state being implented on
     another installed state, i.e, the state of ERP5Site
     """
-    pass
+    self.children.append(state)
 
-  def install_package_list(self, package_list):
+  def mapToERP5Site(self):
     """
     Create a new state by comparing all BP combined built and the ERP5Site,
     then calls setNewState to update the state
     """
+    # No need to save sha here, save it in business package itself
     pass
