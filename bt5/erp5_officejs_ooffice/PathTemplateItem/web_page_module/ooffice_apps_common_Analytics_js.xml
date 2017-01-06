@@ -109,9 +109,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>onlyoffice</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>

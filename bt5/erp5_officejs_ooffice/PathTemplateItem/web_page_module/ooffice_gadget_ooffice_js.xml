@@ -109,6 +109,10 @@
             <value> <string>ooffice/gadget_ooffice.js</string> </value>
         </item>
         <item>
+            <key> <string>version</string> </key>
+            <value> <string>onlyoffice</string> </value>
+        </item>
+        <item>
             <key> <string>workflow_history</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
