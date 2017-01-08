@@ -14,6 +14,21 @@ var repair = false;
   });
 
   function createStorage(version) {
+    var i,
+      version_list,
+      version_query;
+    if (version.indexOf(",") !== -1) {
+      version_list = version.split(',');
+      version_query = [];
+      for (i = 1; i < version_list.length; i += 1) {
+        version_query.push('"' + version_list[i] + '"');
+      }
+      version_query.join(',');
+      version_query = '(version: "' + version_list[0] +
+        '" OR ((NOT url_string: "/") AND (version: (' + version_query + '))))';
+    } else {
+      version_query = 'version: "' + version + '"';
+    }
     return jIO.createJIO({
       type: "replicate",
       conflict_handling: 2,
@@ -25,7 +40,7 @@ var repair = false;
       query: {
         query: 'portal_type: ("Web Illustration",' +
           '"Web Manifest","Web Script","Web Style","Web Page")' +
-          'AND version:"' + version + '"',
+          'AND ' + version_query,
         "limit": [0, 27131],
         "select_list": ["url_string"]
       },
@@ -237,7 +252,7 @@ var repair = false;
                       url_list[i] !== "" &&
                       url_list[i].charAt(0) !== '#' &&
                       url_list[i].charAt(0) !== ' ') {
-                    url_list[i].replace("\r","");
+                    url_list[i].replace("\r", "");
                     gadget.props.cached_url.push(url_list[i]);
                   }
                   if (url_list[i].indexOf("CACHE:") >= 0) {
