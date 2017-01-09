@@ -108,10 +108,12 @@
             <value> <string>OfficeJS jIO DAV Configurator Page</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_page_jio_dav_configurator.html</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -238,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>946.59102.61985.50653</string> </value>
+                <value> <string>956.28769.1889.10871</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1446741062.96</float>
+                        <float>1483628088.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

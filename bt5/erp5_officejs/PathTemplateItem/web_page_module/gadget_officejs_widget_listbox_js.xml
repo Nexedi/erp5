@@ -104,10 +104,12 @@
             <value> <string>OfficeJS Widget Listbox JS</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_widget_listbox.js</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -234,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>948.5700.26625.14643</string> </value>
+                <value> <string>956.25822.27522.24797</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1451303858.2</float>
+                        <float>1483628006.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

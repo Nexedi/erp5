@@ -139,10 +139,12 @@
             <value> <string>OfficeJS Add Document JS</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_page_add_document.js</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -269,7 +271,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.60105.11993.14284</string> </value>
+                <value> <string>956.26376.10496.4795</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +289,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481576360.2</float>
+                        <float>1483632621.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

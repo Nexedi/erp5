@@ -108,10 +108,12 @@
             <value> <string>OfficeJS Jio Presentation View</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_jio_presentation_view.html</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>slideditor</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -238,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.27784.60600.0</string> </value>
+                <value> <string>956.26394.49249.46660</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478038687.39</float>
+                        <float>1483632396.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -143,10 +143,12 @@
             <value> <string>OfficeJS jIO ERP5 Configurator Page</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_page_jio_erp5_configurator.html</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -273,7 +275,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.38565.29657.34116</string> </value>
+                <value> <string>956.27563.2990.4386</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +293,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476436854.76</float>
+                        <float>1483628070.07</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

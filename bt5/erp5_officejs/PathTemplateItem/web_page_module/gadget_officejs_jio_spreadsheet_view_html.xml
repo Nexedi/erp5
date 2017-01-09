@@ -108,10 +108,12 @@
             <value> <string>OfficeJS Jio Spreadsheet View</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_jio_spreadsheet_view.html</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>celleditor</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -238,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.65212.25053.24302</string> </value>
+                <value> <string>955.56775.45620.18517</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478035340.36</float>
+                        <float>1483653180.85</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

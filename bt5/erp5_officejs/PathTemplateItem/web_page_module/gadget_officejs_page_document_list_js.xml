@@ -139,10 +139,12 @@
             <value> <string>OfficeJS Document List JS</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_page_document_list.js</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -249,7 +251,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -263,7 +265,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.28163.54980.41130</string> </value>
+                <value> <string>956.25810.13646.18739</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -281,7 +283,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464188897.32</float>
+                        <float>1483628099.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

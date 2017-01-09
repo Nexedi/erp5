@@ -106,8 +106,12 @@
             <value> <string>Gadget OfficeJS Header</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_header.html</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -220,7 +224,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -234,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>945.33687.51029.49834</string> </value>
+                <value> <string>956.28802.41687.7850</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,8 +256,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441358902.36</float>
-                        <string>GMT</string>
+                        <float>1483632657.44</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

@@ -102,8 +102,12 @@
             <value> <string>OfficeJS jIO Configurator Gadget JS</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_page_jio_configurator.js</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>officejs</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -230,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.38525.9614.27067</string> </value>
+                <value> <string>956.28800.18670.39628</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476437867.08</float>
+                        <float>1483631855.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
