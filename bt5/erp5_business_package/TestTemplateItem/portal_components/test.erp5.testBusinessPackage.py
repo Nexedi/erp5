@@ -201,3 +201,50 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
     document = self.portal.restrictedTraverse(file_path)
     self.assertEquals(document.title, document_file.title)
+
+  def test_AddConflictedFileAtSamePathViaTwoPackages(self):
+    """
+    Test the result of conflict of two files to be installed at same path
+    by two different Business Packages
+    """
+    old_package = self._createBusinessPackage()
+    new_package = self._createBusinessPackage()
+
+    document_file = self.portal.document_module.newContent(
+                                    portal_type = 'File',
+                                    title = 'Test Document',
+                                    reference = 'erp5-package.Test.Document.Two.BP',
+                                    data = 'test file',
+                                    content_type = None)
+    self.tic()
+
+    file_path = document_file.getRelativeUrl()
+    old_package.edit(template_path_list=[file_path,])
+
+    # Build the first package
+    self._buildAndExportBusinessPackage(old_package)
+    self.tic()
+
+    # Change something in the document file
+    document_file.edit(data='Voila, we place with conflict')
+    self.tic()
+    new_package.edit(template_path_list=[file_path,])
+
+    # Build the second package
+    self._buildAndExportBusinessPackage(new_package)
+    self.tic()
+
+    # Get installation data from the list of packages which we want to install
+    package_list = [old_package, new_package]
+
+    final_data, conflicted_data = createInstallationData(package_list)
+
+    # Delete document from site
+    self.portal.document_module.manage_delObjects([document_file.getId(),])
+    self.tic()
+
+    # Assert that the final data is empty and conflicted data contains \
+    # two different versions of the file
+    self.assertFalse(final_data)
+    self.assertTrue(conflicted_data)
+    self.assertEquals(len(conflicted_data[file_path]), 2)
