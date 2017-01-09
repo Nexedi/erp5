@@ -467,7 +467,7 @@ def createInstallationData(package_list):
         conflicted_data[path].append(object_metadata)
 
       # If the path is new, add the metadata to final_data
-      elif not data.has_key(path):
+      elif not final_data.has_key(path):
         final_data[path] = object_metadata
 
       # If the object is neither in conflicted_data already in final_data,
@@ -527,7 +527,7 @@ class InstallationTree(object):
     """
     self.children.append(state)
 
-  def mapToERP5Site(self):
+  def mapToERP5Site(self, context=None):
     """
     Create a new state by comparing all BP combined built and the ERP5Site,
     then calls setNewState to update the state
@@ -535,5 +535,21 @@ class InstallationTree(object):
     as ZODB. The Installation Tree should be smart enough to take us nearest to
     the installed state. If any conflict whatsoever arise, it should raise it.
     """
-    # No need to create sha here, save it in business package itself
-    pass
+    # Return if the context is None
+    if context is None:
+      return
+
+    for path, metadata in self.data.items():
+      obj = metadata['obj']
+      path_list = path.split('/')
+      container_path = path_list[:-1]
+      object_id = path_list[-1]
+      try:
+        container = context.unrestrictedTraverse(container_path)
+      except KeyError:
+        # parent object can be set to nothing, in this case just go on
+        container_url = '/'.join(container_path)
+      old_obj = container._getOb(object_id, None)
+      # install object
+      obj = obj._getCopy(container)
+      container._setObject(object_id, obj)
