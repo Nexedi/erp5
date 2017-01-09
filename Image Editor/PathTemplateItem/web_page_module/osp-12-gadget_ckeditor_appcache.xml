@@ -1,0 +1,663 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Manifest" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/3</string>
+                <string>contributor/person_module/1</string>
+                <string>contributor/person_module/4</string>
+                <string>follow_up/software_product_module/osp-12</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>gadget_ckeditor.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>osp-12-gadget_ckeditor_appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>revision</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\r\n
+# generated on Fri, 06 Feb 2015 15:31:33 +0000\r\n
+# XXX + fonts\r\n
+# images/ajax-loader.gif\r\n
+# XXX Adding gadget_ckeditor first is not a good idea\r\n
+# XXX Make sure to have ckeditor timestamp set to ""\r\n
+CACHE:\r\n
+gadget_ckeditor.html/renderjs.js\r\n
+gadget_ckeditor.html/rsvp.js\r\n
+gadget_ckeditor.html/gadget_ckeditor.js\r\n
+gadget_ckeditor.html/ckeditor/CHANGES.md\r\n
+gadget_ckeditor.html/ckeditor/LICENSE.md\r\n
+gadget_ckeditor.html/ckeditor/README.md\r\n
+gadget_ckeditor.html/ckeditor/adapters/jquery.js\r\n
+gadget_ckeditor.html/ckeditor/build-config.js\r\n
+gadget_ckeditor.html/ckeditor/ckeditor.js\r\n
+gadget_ckeditor.html/ckeditor/config.js\r\n
+gadget_ckeditor.html/ckeditor/contents.css\r\n
+gadget_ckeditor.html/ckeditor/lang/af.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ar.js\r\n
+gadget_ckeditor.html/ckeditor/lang/bg.js\r\n
+gadget_ckeditor.html/ckeditor/lang/bn.js\r\n
+gadget_ckeditor.html/ckeditor/lang/bs.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ca.js\r\n
+gadget_ckeditor.html/ckeditor/lang/cs.js\r\n
+gadget_ckeditor.html/ckeditor/lang/cy.js\r\n
+gadget_ckeditor.html/ckeditor/lang/da.js\r\n
+gadget_ckeditor.html/ckeditor/lang/de.js\r\n
+gadget_ckeditor.html/ckeditor/lang/el.js\r\n
+gadget_ckeditor.html/ckeditor/lang/en-au.js\r\n
+gadget_ckeditor.html/ckeditor/lang/en-ca.js\r\n
+gadget_ckeditor.html/ckeditor/lang/en-gb.js\r\n
+gadget_ckeditor.html/ckeditor/lang/en.js\r\n
+gadget_ckeditor.html/ckeditor/lang/eo.js\r\n
+gadget_ckeditor.html/ckeditor/lang/es.js\r\n
+gadget_ckeditor.html/ckeditor/lang/et.js\r\n
+gadget_ckeditor.html/ckeditor/lang/eu.js\r\n
+gadget_ckeditor.html/ckeditor/lang/fa.js\r\n
+gadget_ckeditor.html/ckeditor/lang/fi.js\r\n
+gadget_ckeditor.html/ckeditor/lang/fo.js\r\n
+gadget_ckeditor.html/ckeditor/lang/fr-ca.js\r\n
+gadget_ckeditor.html/ckeditor/lang/fr.js\r\n
+gadget_ckeditor.html/ckeditor/lang/gl.js\r\n
+gadget_ckeditor.html/ckeditor/lang/gu.js\r\n
+gadget_ckeditor.html/ckeditor/lang/he.js\r\n
+gadget_ckeditor.html/ckeditor/lang/hi.js\r\n
+gadget_ckeditor.html/ckeditor/lang/hr.js\r\n
+gadget_ckeditor.html/ckeditor/lang/hu.js\r\n
+gadget_ckeditor.html/ckeditor/lang/id.js\r\n
+gadget_ckeditor.html/ckeditor/lang/is.js\r\n
+gadget_ckeditor.html/ckeditor/lang/it.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ja.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ka.js\r\n
+gadget_ckeditor.html/ckeditor/lang/km.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ko.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ku.js\r\n
+gadget_ckeditor.html/ckeditor/lang/lt.js\r\n
+gadget_ckeditor.html/ckeditor/lang/lv.js\r\n
+gadget_ckeditor.html/ckeditor/lang/mk.js\r\n
+gadget_ckeditor.html/ckeditor/lang/mn.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ms.js\r\n
+gadget_ckeditor.html/ckeditor/lang/nb.js\r\n
+gadget_ckeditor.html/ckeditor/lang/nl.js\r\n
+gadget_ckeditor.html/ckeditor/lang/no.js\r\n
+gadget_ckeditor.html/ckeditor/lang/pl.js\r\n
+gadget_ckeditor.html/ckeditor/lang/pt-br.js\r\n
+gadget_ckeditor.html/ckeditor/lang/pt.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ro.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ru.js\r\n
+gadget_ckeditor.html/ckeditor/lang/si.js\r\n
+gadget_ckeditor.html/ckeditor/lang/sk.js\r\n
+gadget_ckeditor.html/ckeditor/lang/sl.js\r\n
+gadget_ckeditor.html/ckeditor/lang/sq.js\r\n
+gadget_ckeditor.html/ckeditor/lang/sr-latn.js\r\n
+gadget_ckeditor.html/ckeditor/lang/sr.js\r\n
+gadget_ckeditor.html/ckeditor/lang/sv.js\r\n
+gadget_ckeditor.html/ckeditor/lang/th.js\r\n
+gadget_ckeditor.html/ckeditor/lang/tr.js\r\n
+gadget_ckeditor.html/ckeditor/lang/tt.js\r\n
+gadget_ckeditor.html/ckeditor/lang/ug.js\r\n
+gadget_ckeditor.html/ckeditor/lang/uk.js\r\n
+gadget_ckeditor.html/ckeditor/lang/vi.js\r\n
+gadget_ckeditor.html/ckeditor/lang/zh-cn.js\r\n
+gadget_ckeditor.html/ckeditor/lang/zh.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/a11yhelp.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/af.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ar.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/bg.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ca.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/cs.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/cy.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/da.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/de.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/el.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/en-gb.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/en.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/eo.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/es.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/et.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/fa.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/fi.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/fo.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/fr-ca.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/fr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/gl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/gu.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/he.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/hi.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/hr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/hu.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/id.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/it.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ja.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/km.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ko.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ku.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/lt.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/lv.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/mk.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/mn.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/nb.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/nl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/no.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/pl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/pt-br.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/pt.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ro.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ru.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/si.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/sk.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/sl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/sq.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/sr-latn.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/sr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/sv.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/th.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/tr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/tt.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/ug.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/uk.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/vi.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/zh-cn.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/a11yhelp/dialogs/lang/zh.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/about/dialogs/about.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/about/dialogs/hidpi/logo_ckeditor.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/about/dialogs/logo_ckeditor.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/clipboard/dialogs/paste.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/colordialog/dialogs/colordialog.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/dialog/dialogDefinition.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/div/dialogs/div.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/find/dialogs/find.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/flash/dialogs/flash.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/flash/images/placeholder.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/button.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/checkbox.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/form.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/hiddenfield.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/radio.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/select.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/textarea.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/dialogs/textfield.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/forms/images/hiddenfield.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/icons.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/icons_hidpi.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/iframe/dialogs/iframe.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/iframe/images/placeholder.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/image/dialogs/image.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/image/images/noimage.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/link/dialogs/anchor.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/link/dialogs/link.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/link/images/anchor.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/link/images/hidpi/anchor.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/liststyle/dialogs/liststyle.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/magicline/images/hidpi/icon-rtl.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/magicline/images/hidpi/icon.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/magicline/images/icon-rtl.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/magicline/images/icon.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/pagebreak/images/pagebreak.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/pastefromword/filter/default.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/preview/preview.html\r\n
+gadget_ckeditor.html/ckeditor/plugins/scayt/LICENSE.md\r\n
+gadget_ckeditor.html/ckeditor/plugins/scayt/README.md\r\n
+gadget_ckeditor.html/ckeditor/plugins/scayt/dialogs/options.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/scayt/dialogs/toolbar.css\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_address.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_blockquote.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_div.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_h1.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_h2.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_h3.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_h4.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_h5.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_h6.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_p.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/showblocks/images/block_pre.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/dialogs/smiley.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/angel_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/angel_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/angry_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/angry_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/broken_heart.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/broken_heart.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/confused_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/confused_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/cry_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/cry_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/devil_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/devil_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/embaressed_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/embarrassed_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/embarrassed_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/envelope.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/envelope.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/heart.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/heart.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/kiss.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/kiss.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/lightbulb.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/lightbulb.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/omg_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/omg_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/regular_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/regular_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/sad_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/sad_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/shades_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/shades_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/teeth_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/teeth_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/thumbs_down.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/thumbs_down.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/thumbs_up.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/thumbs_up.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/tongue_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/tongue_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/tounge_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/whatchutalkingabout_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/whatchutalkingabout_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/wink_smile.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/smiley/images/wink_smile.png\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/af.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ar.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/bg.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ca.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/cs.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/cy.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/da.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/de.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/el.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/en-gb.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/en.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/eo.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/es.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/et.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/fa.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/fi.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/fr-ca.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/fr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/gl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/he.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/hr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/hu.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/id.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/it.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ja.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/km.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ko.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ku.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/lt.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/lv.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/nb.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/nl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/no.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/pl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/pt-br.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/pt.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ru.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/si.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/sk.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/sl.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/sq.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/sv.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/th.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/tr.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/tt.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/ug.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/uk.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/vi.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/zh-cn.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/lang/zh.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/specialchar/dialogs/specialchar.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/table/dialogs/table.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/tabletools/dialogs/tableCell.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/templates/dialogs/templates.css\r\n
+gadget_ckeditor.html/ckeditor/plugins/templates/dialogs/templates.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/templates/templates/default.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/templates/templates/images/template1.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/templates/templates/images/template2.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/templates/templates/images/template3.gif\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/LICENSE.md\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/README.md\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/dialogs/ciframe.html\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/dialogs/tmpFrameset.html\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/dialogs/wsc.css\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/dialogs/wsc.js\r\n
+gadget_ckeditor.html/ckeditor/plugins/wsc/dialogs/wsc_ie.js\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/dialog.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/dialog_ie.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/dialog_ie7.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/dialog_ie8.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/dialog_iequirks.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/editor.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/editor_gecko.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/editor_ie.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/editor_ie7.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/editor_ie8.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/editor_iequirks.css\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/icons.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/icons_hidpi.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/arrow.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/close.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/hidpi/close.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/hidpi/lock-open.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/hidpi/lock.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/hidpi/refresh.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/lock-open.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/lock.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/refresh.png\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/images/spinner.gif\r\n
+gadget_ckeditor.html/ckeditor/skins/moono/readme.md\r\n
+gadget_ckeditor.html/ckeditor/styles.js\r\n
+NETWORK:\r\n
+*</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CKEDITOR Gadget AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_ckeditor.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>OSP-12-dev</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>document_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supervincentb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1477643453.21</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superhardik</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>955.3625.35454.22016</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1478271942.17</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supervincentb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1477643453.21</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+</ZopeData>
