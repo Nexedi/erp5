@@ -66,7 +66,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # here, you can create the categories and objects your test will depend on
     #self.export_dir = tempfile.mkdtmp(dir=tests_home)
     self.portal = self.getPortalObject()
-    self.installation_tree = InstallationTree()
 
   def beforeTearDown(self):
     try:
@@ -84,6 +83,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package.edit(title ='test_package',
                   version='1.0',
                   description='package for live test')
+    self.tic()
     return package
 
   def _buildAndExportBusinessPackage(self, package):
@@ -148,6 +148,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
     """
     Test two Business Packages build and installation of same file.
 
+    Here we will be using Insatallation Tree to install in the two packages
+    all together, rather than doing installation one after another.
+
     Expected result: If we install same object from 2 different business packages,
     then in that case the installation object should compare between the
     state of OFS and installation and install accordingly.
@@ -190,4 +193,4 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # We try to install pakcages via mapping the installation tree to ZODB
     # As both have exactly same document we expect that only one of them get installed
-    installation_tree.map()
+    installation_tree.mapToERP5Site()
