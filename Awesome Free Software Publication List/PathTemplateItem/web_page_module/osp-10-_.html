@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html manifest="gadget_erp5_afs.appcache">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <title>Free Software Publisher Directory</title>
+
+    <link rel="stylesheet" href="gadget_erp5_nojqm.css">
+
+    <script data-renderjs-configuration="application_title" type="text/x-renderjs-configuration">Free Software Publisher Directory</script>
+    <script data-renderjs-configuration="panel_gadget" type="text/x-renderjs-configuration">gadget_erp5_afs_panel.html</script>
+    <script data-renderjs-configuration="action_view" type="text/x-renderjs-configuration">object_view</script>
+    <script data-renderjs-configuration="default_view_reference" type="text/x-renderjs-configuration">view</script>
+    <script data-renderjs-configuration="hateoas_url" type="text/x-renderjs-configuration">hateoas/</script>
+    <script data-renderjs-configuration="frontpage_gadget" type="text/x-renderjs-configuration">afs_directory</script>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="gadget_global.js" ></script>
+    <script src="erp5_launcher_nojqm.js"></script>
+
+  </head>
+
+  <body>
+    <div data-role="page">
+
+      <div data-gadget-url="gadget_jio.html"
+          data-gadget-scope="setting_gadget"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="gadget_erp5_afs_router.html"
+          data-gadget-scope="router"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="gadget_translation.html"
+          data-gadget-scope="translation_gadget"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="gadget_erp5_header.html"
+          data-gadget-scope="header"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="gadget_erp5_afs_jio.html"
+          data-gadget-scope="jio_gadget"
+          data-gadget-sandbox="public"></div>
+
+
+      <div data-gadget-url="gadget_erp5_editor_panel.html"
+          data-gadget-scope="editor_panel"
+          data-gadget-sandbox="public"></div>
+
+      <div data-gadget-url="gadget_erp5_afs_panel.html"
+          data-gadget-scope="panel"
+          data-gadget-sandbox="public"></div>
+
+      <div role="main" class="ui-content gadget-content"></div>
+    </div>
+
+  </body>
+</html>

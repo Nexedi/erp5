@@ -1,0 +1,39 @@
+{
+	"title": "MariaDB Corporation Ab",
+	"logo": "https://mariadb.com/sites/default/files/elfinder/1/MariaDB-reflex-blue-seal-blue-lettering-below-plainsvg-250px.png",
+	"country": "fi",
+	"presence": "worldwide",
+	"website": "https://www.mariadb.com",
+	"founded_year": "2010",
+	"free_software_list": [{
+		"title": "MariaDB 10.1",
+		"logo": "https://mariadb.org/wp-content/uploads/2010/10/mariadb-seal-shaded-browntext-alt.png",
+		"category_list": ["Database server", "GIS", "JSON"],
+		"source_code_download": "https://github.com/MariaDB/server/archive/10.1.zip",
+		"commercial_support": "https://mariadb.com/services/mariadb-mysql-subscription-services",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/MariaDB",
+		"success_case_list": [{
+			"title": "MariaDB Engineering Expertise Delivers Massive Performance Gains for High-End Flash Storage Provider",
+			"image": "https://mariadb.com/sites/default/files/fusionio-logo_0.png",
+			"customer": "Fusion-io",
+			"country": "us",
+			"language": "en",
+			"url": "https://mariadb.com/customer-success-stories/fusion-io"
+		}, {
+			"title": "Successful Migration from Oracle RAC to MariaDB Galera Cluster",
+			"image": "https://mariadb.com/sites/default/files/Greetztop_0.jpg",
+			"customer": "Greetz",
+			"country": ["eu", "na"],
+			"language": "en",
+			"url": "https://mariadb.com/customer-success-stories/greetz"
+		}]
+	}, {
+		"title": "MariaDB MaxScale",
+		"logo": "https://mariadb.org/wp-content/uploads/2010/10/mariadb-seal-shaded-browntext-alt.png",
+		"category_list": ["Gateway", "Application-to-database", "Pluggable architecture"],
+		"source_code_download": "https://github.com/mariadb-corporation/MaxScale/archive/develop.zip",
+		"commercial_support": "https://mariadb.com/services/mariadb-mysql-subscription-services",
+		"wikipedia_url": "",
+		"success_case_list": []
+	}]
+}

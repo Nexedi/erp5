@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story List</title>
+  
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_afs.css" />
+  
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+
+  <script src="gadget_erp5_page_afs_software.js"></script>
+  
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <ul class="grid-elements custom-software-profile">
+        <li>
+          {{#if logo}}
+            <div class="custom-software-profile-image-wrapper"><a href="{{website}}"><img src="{{logo}}"></a></div>
+          {{/if}}
+        </li>
+        <li>
+          <h1>{{title}}</h1>
+          <p>{{description}}</p>
+          {{#if wikipedia_url}}
+            <p><a href="{{wikipedia_url}}" class="">Read more on Wikipedia</a></p>
+          {{/if}}
+        </li>
+      </ul>
+      
+        
+      <section class="ui-content-header-plain ui-bar-c">
+        <h3>Software Spec</h3>
+      </section>
+      <ul class="grid-elements">
+        <li>Publisher: {{publisher}}</li>
+        <li>Website: <a href="{{website}}">{{website}}</a></li>
+        <li>Source Code: <a href="{{source_code_download}}">Download</a></li>
+        <li>Free software Commercial Support: 
+          {{#if commercial_support}}
+            <a href="{{commercial_support}}"> Yes</a>
+          {{else}}
+            No 
+          {{/if}}
+          <abbr title="{{commercial_support_description}}">(?)</abbr>
+        </li>
+      </ul>
+      
+      {{#if success_case_list}}
+        <section class="ui-content-header-plain ui-bar-c">
+          <h3>Success Stories</h3>
+        </section>
+        <ul class="grid-items custom-success-story-list">
+          {{#each success_case_list}}
+            <li>
+              {{#if image}}
+                <div class="custom-success-story-image-wrapper"><a href="{{url}}"><img src="{{image}}" alt></a></div>
+              {{else}}
+                <div>&nbsp;</div>
+              {{/if}}
+              <p class="custom-success-story-title">{{title}}</a></p>
+              <p class="custom-success-story-description">{{description}} <a href="{{url}}">Read more</a></p>
+              <p>Industry: {{industry}}</p>
+              <ul class="custom-success-story-category-list"><lh>Categories:</lh> 
+                {{#each ../category_list}}
+                  <li>{{this}}</li>
+                {{/each}}
+              </ul>
+              <p class="custom-success-story-client">Customer: <span>{{customer}}</span></p>
+              <p>Country: {{country}}</p>
+              <p>Language: {{language}}</p>
+            </li>
+          {{/each}}
+        </ul>
+      {{/if}}
+    </section>
+
+  </script>
+  </head>
+  <body>
+    <div class="display-widget"></div>
+  </body>
+</html>

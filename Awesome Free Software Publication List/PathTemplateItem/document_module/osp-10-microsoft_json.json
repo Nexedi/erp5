@@ -1,0 +1,24 @@
+{
+	"title": "Microsoft",
+	"logo": "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg",
+	"country": "us",
+	"presence": ["worldwide"],
+	"website": "https://www.microsoft.com/",
+	"founded_year": "1975",
+	"free_software_list": [{
+		"title": "Visual Studio Code",
+		"logo": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Visual_Studio_Code_0.10.1_icon.png",
+		"category_list": ["Source code editor"],
+		"source_code_download": "http://code.visualstudio.com/download#stable-downloads",
+		"commercial_support": "https://support.microsoft.com/en-us/assistedsupportproducts#gsproductselector",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Visual_Studio_Code",
+		"success_case_list": [{
+			"title": "Visual Studio - Use Multiple Visual Studio Project Types for Cloud Success",
+			"image": "https://i-msdn.sec.s-msft.com/dynimg/IC463250.jpg",
+			"customer": "patrick foley",
+			"country": "us",
+			"language": "en",
+			"url": "https://msdn.microsoft.com/en-us/magazine/gg535669.aspx"
+		}]
+	}]
+}
