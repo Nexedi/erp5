@@ -42,6 +42,34 @@ from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModule
 
 _MARKER = []
 
+SEPARATELY_EXPORTED_PROPERTY_DICT = {
+  # For objects whose class name is 'class_name', the 'property_name'
+  # attribute is removed from the XML export, and the value is exported in a
+  # separate file, with extension specified by 'extension'.
+  # 'extension' must be None for auto-detection.
+  #
+  # class_name: (extension, unicode_data, property_name),
+  "Document Component":  ("py",   0, "text_content"),
+  "DTMLDocument":        (None,   0, "raw"),
+  "DTMLMethod":          (None,   0, "raw"),
+  "Extension Component": ("py",   0, "text_content"),
+  "File":                (None,   0, "data"),
+  "Image":               (None,   0, "data"),
+  "OOoTemplate":         ("oot",  1, "_text"),
+  "PDF":                 ("pdf",  0, "data"),
+  "PDFForm":             ("pdf",  0, "data"),
+  "Python Script":       ("py",   0, "_body"),
+  "PythonScript":        ("py",   0, "_body"),
+  "Spreadsheet":         (None,   0, "data"),
+  "SQL":                 ("sql",  0, "src"),
+  "Test Component":      ("py",   0, "text_content"),
+  "Test Page":           (None,   0, "text_content"),
+  "Web Page":            (None,   0, "text_content"),
+  "Web Script":          (None,   0, "text_content"),
+  "Web Style":           (None,   0, "text_content"),
+  "ZopePageTemplate":    ("zpt",  1, "_text"),
+}
+
 def _delObjectWithoutHook(obj, id):
   """OFS.ObjectManager._delObject without calling manage_beforeDelete."""
   ob = obj._getOb(id)
@@ -97,6 +125,7 @@ class BusinessPackage(XMLObject):
       """
       self.storePathData()
       self._path_item.build(self)
+      #self.setBuildingState('built')
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
     def storePathData(self):
@@ -110,11 +139,57 @@ class BusinessPackage(XMLObject):
       return result
 
     security.declareProtected(Permissions.ManagePortal, 'export')
-    def export(self):
+    def export(self, path=None, local=0, bta=None):
       """
       Export the object
       """
-      pass
+      if not self.getBuildingState() == 'built':
+        raise BusinessPackageException, 'Package not built properly'
+      self._export(path, local, bta)
+
+    def _export(self, path=None, local=0, bta=None):
+      if bta is None:
+        if local:
+          # we export into a folder tree
+          bta = BusinessTemplateFolder(path, creation=1)
+        else:
+          # We export BT into a tarball file
+          if path is None:
+            path = self.getTitle()
+          bta = BusinessTemplateTarball(path, creation=1)
+
+      # export bt
+      for prop in self.propertyMap():
+        prop_type = prop['type']
+        id = prop['id']
+        if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'revision',
+                  'install_object_list_list', 'id_generator', 'bt_for_diff'):
+          continue
+        value = self.getProperty(id)
+        if not value:
+          continue
+        if prop_type in ('text', 'string', 'int', 'boolean'):
+          bta.addObject(str(value), name=id, path='bt', ext='')
+        elif prop_type in ('lines', 'tokens'):
+          bta.addObject('\n'.join(value), name=id, path='bt', ext='')
+
+      # Export each part
+      for item_name in item_name_list:
+        item = getattr(self, item_name, None)
+        if item is not None:
+          item.export(context=self, bta=bta)
+
+      self._setRevision(bta.getRevision())
+      return bta.finishCreation()
+
+class BusinessPackageException(Exception):
+  pass
+
+class BusinessPackageArchive():
+  """
+  Keep saved the exported objects in Business Package in an archive
+  """
+  pass
 
 class PathTemplatePackageItem(Implicit, Persistent):
 
@@ -122,6 +197,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
     self.__dict__.update(kw)
     self._archive = PersistentMapping()
     self._objects = PersistentMapping()
+    self._hash = PersistentMapping()
     for id in id_list:
       if id is not None and id != '':
         self._archive[id] = None
@@ -160,6 +236,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
     p = context.getPortalObject()
     keys = self._path_archive.keys()
     keys.sort()
+    hash_func = hashlib.sha1
     for path in keys:
       include_subobjects = 0
       if path.endswith("**"):
@@ -176,10 +253,76 @@ class PathTemplatePackageItem(Implicit, Persistent):
         if len(id_list) > 0:
           for id_ in list(id_list):
             _delObjectWithoutHook(obj, id_)
-        if hasattr(aq_base(obj), 'groups'):
-          obj.groups = groups
         self._objects[relative_url] = obj
+        self._hash[relative_url] = hash_func(obj.asXML()).hexdigest()
         obj.wl_clearLocks()
+
+  def export(self, context, bta, catalog_method_template_item = 0, **kw):
+    """
+      Export the business template : fill the BusinessTemplateArchive with
+      objects exported as XML, hierarchicaly organised.
+    """
+    if len(self._objects.keys()) == 0:
+      return
+    path = self.__class__.__name__ + '/'
+
+    # We now will add the XML object and its sha hash while exporting the object
+    # to Business package itself
+    for key, obj in self._objects.iteritems():
+      # Back compatibility with filesystem Documents
+      if isinstance(obj, str):
+        if not key.startswith(path):
+          key = path + key
+        bta.addObject(obj, name=key, ext='.py')
+      else:
+        try:
+          extension, unicode_data, record_id = \
+            SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
+        except KeyError:
+          pass
+        else:
+          while 1: # not a loop
+            obj = obj._getCopy(context)
+            data = getattr(aq_base(obj), record_id, None)
+            if unicode_data:
+              if type(data) is not unicode:
+                break
+              try:
+                data = data.encode(aq_base(obj).output_encoding)
+              except (AttributeError, UnicodeEncodeError):
+                break
+            elif type(data) is not bytes:
+              if not isinstance(data, Pdata):
+                break
+              data = bytes(data)
+            try:
+              # Delete this attribute from the object.
+              # in case the related Portal Type does not exist, the object may be broken.
+              # So we cannot delattr, but we can delete the key of its its broken state
+              if isinstance(obj, ERP5BaseBroken):
+                del obj.__Broken_state__[record_id]
+                obj._p_changed = 1
+              else:
+                delattr(obj, record_id)
+            except (AttributeError, KeyError):
+              # property was acquired on a class,
+              # do nothing, only .xml metadata will be exported
+              break
+            # export a separate file with the data
+            if not extension:
+              extension = self.guessExtensionOfDocument(obj, key,
+                data if record_id == 'data' else None)
+            bta.addObject(StringIO(data), key, path=path,
+              ext='._xml' if extension == 'xml' else '.' + extension)
+            break
+          # since we get the obj from context we should
+          # again remove useless properties
+          obj = self.removeProperties(obj, 1, keep_workflow_history = True)
+          transaction.savepoint(optimistic=True)
+
+        f = StringIO()
+        XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+        bta.addObject(f, key, path=path)
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
@@ -293,43 +436,51 @@ class PathTemplatePackageItem(Implicit, Persistent):
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
 
-
+# The reason to keep createInstallationData as separate function is to
+# not need to initialize an InstallationTree object everytime when we want
+# to create some installation data
 def createInstallationData(package_list):
   """
-  Create installation object as well as adds new node on the installation tree
+  Create installation object as well as add new node on the installation tree
   from the installed state
   """
-  data = {}
   path_list = []
+  final_data = {}
+  conflicted_data = {}
 
-  # Create path_list to be installed by the installation
+  # Create path_list of all the objects to be installed by the installation
   for package in package_list:
     path_list.extend(package.getTemplatePathList())
     path_list = list(set(path_list))
 
   for package in package_list:
     obj_dict = package._path_item._objects
+    hash_dict = package._path_item._hash
     for path in path_list:
-      if not data.has_key(path):
-        data[path] = [obj_dict[path]]
-      else:
-        data[path].append(obj_dict[path])
+      object_metadata = {}
+      object_metadata['obj'] = obj_dict[path]
+      object_metadata['sha'] = hash_dict[path]
 
-  # Compare the objects which are present in multiple numbers in data_list
-  for path, obj_list in data_list.iteritems():
-    # We use iteritems so that it'd be okay while we change the values
-    if len(obj_list) == 1:
-      data[path] = obj_list[0]
-    else:
-      hash_func = hashlib.sha1
-      hash_list = [hash_fuc(obj.asXML()).hexdigest() for obj in obj_list]
-      hash_list = set(hash_list)
-      if not len(hash_list) == 1:
-        raise ValueError('There is a conflict')
-      else:
-        data[path] = obj_list[0]
+      # If the path already exists in conflicted_data, add the metadata in the
+      # conflicted_data itself
+      if conflicted_data.has_key(path):
+        conflicted_data[path].append(object_metadata)
 
-  return data
+      # If the path is new, add the metadata to final_data
+      elif not data.has_key(path):
+        final_data[path] = object_metadata
+
+      # If the object is neither in conflicted_data already in final_data,
+      # compare hash of the objects
+      else:
+        # Leave the metadata in final_data in case the hash matches,
+        # else add it to conflicted_data
+        if final_data[path]['sha'] ==  object_metadata['sha']
+          continue
+        else:
+          conflicted_data[path] = [object_metadata]
+
+  return final_data, conflicted_data
 
 class InstallationTree(object):
   """
@@ -380,6 +531,9 @@ class InstallationTree(object):
     """
     Create a new state by comparing all BP combined built and the ERP5Site,
     then calls setNewState to update the state
+    While mapping we compare between installed_item of BT, if exisits as well
+    as ZODB. The Installation Tree should be smart enough to take us nearest to
+    the installed state. If any conflict whatsoever arise, it should raise it.
     """
-    # No need to save sha here, save it in business package itself
+    # No need to create sha here, save it in business package itself
     pass
