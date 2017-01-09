@@ -179,10 +179,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Get installation data from the list of packages which we want to install
     package_list = [old_package, new_package]
-    data = createInstallationData(package_list)
 
-    # creat InstallationTree object
-    installation_tree = InstallationTree(data)
+    final_data, conflicted_data = createInstallationData(package_list)
 
     # Delete document from site
     self.portal.document_module.manage_delObjects([document_file.getId(),])
@@ -191,6 +189,15 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Test if the file doesn't exist on site anymore
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
 
-    # We try to install pakcages via mapping the installation tree to ZODB
-    # As both have exactly same document we expect that only one of them get installed
-    installation_tree.mapToERP5Site()
+    if not conflicted_data:
+      # Create InstallationTree object
+      installation_tree = InstallationTree(final_data)
+      # We try to install pakcages via mapping the installation tree to ZODB
+      # As both have exactly same document we expect that only one of them get installed
+      installation_tree.mapToERP5Site(self.portal)
+
+
+    # Test if the file is back
+    self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
+    document = self.portal.restrictedTraverse(file_path)
+    self.assertEquals(document.title, document_file.title)
