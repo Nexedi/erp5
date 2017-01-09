@@ -1,0 +1,16 @@
+CACHE MANIFEST
+# generated on Fri, 09 Jun 2016 11:45:33 +0000
+# XXX + fonts
+# new One here
+# images/ajax-loader.gif
+CACHE:
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular
+favicon.ico
+handlebars.js
+NETWORK:
+*
