@@ -475,7 +475,7 @@ def createInstallationData(package_list):
       else:
         # Leave the metadata in final_data in case the hash matches,
         # else add it to conflicted_data
-        if final_data[path]['sha'] ==  object_metadata['sha']
+        if final_data[path]['sha'] ==  object_metadata['sha']:
           continue
         else:
           conflicted_data[path] = [object_metadata]
