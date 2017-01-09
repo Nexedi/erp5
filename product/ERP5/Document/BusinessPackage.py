@@ -452,7 +452,7 @@ def createInstallationData(package_list):
   for package in package_list:
     path_list.extend(package.getTemplatePathList())
     path_list = list(set(path_list))
-
+  import copy
   for package in package_list:
     obj_dict = package._path_item._objects
     hash_dict = package._path_item._hash
@@ -474,11 +474,14 @@ def createInstallationData(package_list):
       # compare hash of the objects
       else:
         # Leave the metadata in final_data in case the hash matches,
-        # else add it to conflicted_data
+        # else add it to conflicted_data and remove the older
         if final_data[path]['sha'] ==  object_metadata['sha']:
           continue
         else:
           conflicted_data[path] = [object_metadata]
+          conflict_object_metadata = copy.copy(final_data[path])
+          conflicted_data[path].append(conflict_object_metadata)
+          del final_data[path]
 
   return final_data, conflicted_data
 
