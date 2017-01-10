@@ -200,6 +200,12 @@ chartist.min.js\n
 chartist.min.css\n
 gadget_hr_jio.html\n
 gadget_hr_jio.js\n
+gadget_officejs_page_calendar.js\n
+gadget_officejs_page_calendar.html\n
+\n
+\n
+\n
+>>>>>>> e7eb1b5... erp5_travel_expense: add calendar gadget to display events in a person agenda
 NETWORK:\n
 *
 
@@ -338,7 +344,11 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
+<<<<<<< HEAD
                 <value> <string>955.64169.17995.61457</string> </value>
+=======
+                <value> <string>956.35741.51905.15616</string> </value>
+>>>>>>> e7eb1b5... erp5_travel_expense: add calendar gadget to display events in a person agenda
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -356,7 +366,11 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
+<<<<<<< HEAD
                         <float>1481818221.17</float>
+=======
+                        <float>1484044668.41</float>
+>>>>>>> e7eb1b5... erp5_travel_expense: add calendar gadget to display events in a person agenda
                         <string>UTC</string>
                       </tuple>
                     </state>
