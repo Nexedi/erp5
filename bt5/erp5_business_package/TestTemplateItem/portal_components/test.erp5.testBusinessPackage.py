@@ -248,3 +248,61 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertFalse(final_data)
     self.assertTrue(conflicted_data)
     self.assertEquals(len(conflicted_data[file_path]), 2)
+
+  def test_checkPathTemplatBuildForFolder(self):
+    """
+    This test should ensure that we are able to use folder as path for Business
+    Packages without the need to export every path inside it explicitly
+
+    In this test, we take the example to do this first with default catalog,
+    then with multiple catalogs
+    """
+
+    # With single catalog
+    folder_path = 'portal_catalog/erp5_mysql_innodb/**'
+    package = self._createBusinessPackage()
+    package.edit(template_path_list=[folder_path,])
+    self._buildAndExportBusinessPackage(package)
+    self.tic()
+
+    # Check for the presence of catalog objects/paths in the business package
+    built_package = self.portal._getOb(package.getId())
+    path_item = built_package._path_item
+
+    folder = self.portal.unrestrictedTraverse('portal_catalog/erp5_mysql_innodb')
+    folder_object_id_list = sorted([l for l in folder.objectIds()])
+    folder_object_count =  len(folder_object_id_list)
+
+    package_object_id_list = sorted([l.getId() for l in path_item._objects.values()])
+    package_object_count = len(package_object_id_list)
+
+    self.assertEquals(folder_object_count, package_object_count)
+    self.assertEquals(folder_object_id_list, package_object_id_list)
+
+    # With multiple catalogs
+    folder_path_list = [ 
+          'portal_catalog/erp5_mysql_innodb/**',
+          'portal_catalog/erp5_mysql_innodb100/**'
+          ]
+
+    package.edit(template_path_list=folder_path_list)
+    self.tic()
+    # XXX: Here, we are not exporting the package and its objects, just building
+    # and saving it inside the package for the tests.
+    self._buildAndExportBusinessPackage(package)
+    self.tic()
+
+    # Check for presence of catalog objects from all the catalogs mentioned in
+    # the folder path list
+    built_package = self.portal._getOb(package.getId())
+    path_item = built_package._path_item
+    new_folder = self.portal.unrestrictedTraverse('portal_catalog/erp5_mysql_innodb100')
+    new_folder_id_list = sorted([l for l in new_folder.objectIds()])
+    new_folder_object_count =  len(new_folder_id_list)
+
+    total_object_count  = new_folder_object_count + folder_object_count
+    package_object_id_list = sorted([l.getId() for l in path_item._objects.values()])
+    object_id_list = sorted(folder_object_id_list + new_folder_id_list) 
+    package_object_count = len(package_object_id_list)
+    self.assertEquals(total_object_count, package_object_count)
+    self.assertEquals(object_id_list, package_object_id_list)
