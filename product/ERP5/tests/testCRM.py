@@ -183,6 +183,41 @@ class TestCRM(BaseTestCRM):
                            title='New Title',
                            event_workflow_action='plan')
 
+  def test_Ticket_getArrowItemList(self):
+    # test Ticket_getArrowItemList script
+    pers1 = self.portal.person_module.newContent(
+      portal_type='Person', title='Person 1')
+    pers2 = self.portal.person_module.newContent(
+      portal_type='Person', title='Person 2')
+    ticket = self.portal.meeting_module.newContent(portal_type='Meeting')
+    ticket.setDestinationDecisionValue(pers1)
+    ticket.setSourceValue(pers1)
+
+    self.assertEqual(
+      [('', ''), ('Person 1', pers1.getRelativeUrl())],
+      ticket.Ticket_getArrowItemList())
+
+    # logged in user is also returned
+    user = self.createUser(
+      self.id(), person_kw={"first_name": "John", "last_name": "Doe"})
+    self.tic()
+    self.portal.acl_users.zodb_roles.assignRoleToPrincipal('Assignee', user.getUserId())
+    self.login(user.getUserId())
+    self.assertEqual(
+      [('', ''),
+       ('John Doe', user.getRelativeUrl()),
+       ('Person 1', pers1.getRelativeUrl())],
+      ticket.Ticket_getArrowItemList())
+
+    # multiple category value are supported
+    ticket.setSourceSectionValueList([user, pers2])
+    self.assertEqual(
+      [('', ''),
+       ('John Doe', user.getRelativeUrl()),
+       ('Person 1', pers1.getRelativeUrl()),
+       ('Person 2', pers2.getRelativeUrl())],
+      ticket.Ticket_getArrowItemList())
+
   def checkCreateRelatedEventSelectionParamsOnPersonModule(self, direction):
     # create related event from selected persons.
     person_module = self.portal.person_module
