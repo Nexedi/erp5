@@ -332,8 +332,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
-                <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/gadget_officejs_spreadsheet_editor_install_html</string>
               </tuple>
             </value>
         </item>
@@ -630,7 +629,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.56775.45620.18517</string> </value>
+                <value> <string>956.32125.13314.11946</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -648,7 +647,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481384398.06</float>
+                        <float>1483827722.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

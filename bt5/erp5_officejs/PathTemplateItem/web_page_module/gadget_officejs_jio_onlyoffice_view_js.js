@@ -203,7 +203,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "rjsunsafe/ooffice/gadget_ooffice.html",
+            "../../../web_site_module/officejs_gadget_onlyoffice/onlyoffice/ooffice/gadget_ooffice.html",
             {
               scope: "my_text_content",
               sandbox: "iframe",

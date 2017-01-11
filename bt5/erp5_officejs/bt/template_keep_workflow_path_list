@@ -1,3 +1,7 @@
+web_page_module/officejs_*
+web_page_module/celleditor_*
+web_page_module/slideditor_*
+web_page_module/wordeditor_*
 web_page_module/gadget_ckeditor_*
 web_page_module/gadget_devtool_*
 web_page_module/gadget_officejs_*
@@ -14,6 +18,8 @@ web_site_module/officejs_spreadsheet
 web_site_module/officejs_spreadsheet/**
 web_site_module/officejs_spreadsheet_landing
 web_site_module/officejs_spreadsheet_landing/**
+web_site_module/officejs_gadget_onlyoffice
+web_site_module/officejs_gadget_onlyoffice/**
 web_site_module/officejs_presentation
 web_site_module/officejs_presentation/**
 web_site_module/officejs_presentation_landing

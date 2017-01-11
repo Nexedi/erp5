@@ -332,8 +332,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
-                <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/gadget_officejs_presentation_install_html</string>
               </tuple>
             </value>
         </item>
@@ -620,9 +619,7 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>Deleted objects: []</string> </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -630,7 +627,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.56775.45620.18517</string> </value>
+                <value> <string>956.30246.32402.50176</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -648,7 +645,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481584147.72</float>
+                        <float>1483734939.38</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

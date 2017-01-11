@@ -106,8 +106,12 @@
             <value> <string>OfficeJS Text Router Gadget</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_officejs_text_router.html</string> </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value> <string>wordeditor</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -240,7 +244,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.56775.45620.18517</string> </value>
+                <value> <string>956.29225.43500.27033</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +262,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481574602.35</float>
+                        <float>1483654060.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
