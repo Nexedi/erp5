@@ -16,7 +16,7 @@
        url('roboto-condensed-light.woff2?portal_skin=CI_new') format('woff2'),
        url('roboto-condensed-light.woff?portal_skin=CI_new') format('woff'),
        url('roboto-condensed-light.ttf?portal_skin=CI_new') format('truetype');
-  font-weight: lighter;
+  font-weight: 100;
   font-style: normal;
 }
 @font-face {
