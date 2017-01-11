@@ -27,11 +27,14 @@
 #
 ##############################################################################
 
-import fnmatch, re, gc
+import fnmatch
+import re
+import gc
 import hashlib
 import transaction
 from copy import deepcopy
 from collections import defaultdict
+from lxml.etree import parse
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.XMLObject import XMLObject
@@ -114,6 +117,7 @@ class BusinessPackage(XMLObject):
 
     def _install(self):
       self._path_item.install(self)
+      self._object_property_item.install(self)
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
@@ -125,11 +129,21 @@ class BusinessPackage(XMLObject):
       """
       self.storePathData()
       self._path_item.build(self)
+      self._object_property_item.build(self)
       #self.setBuildingState('built')
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
     def storePathData(self):
       self._path_item = PathTemplatePackageItem(self._getTemplatePathList())
+      self._object_property_item = \
+          ObjectPropertyTemplatePackageItem(self._getTemplateObjectPropertyList())
+
+    security.declareProtected(Permissions.ManagePortal, 'getTemplatePathList')
+    def _getTemplateObjectPropertyList(self):
+      result = self.getTemplateObjectPropertyList()
+      if result is None:
+        result = ()
+      return tuple(result)
 
     security.declareProtected(Permissions.ManagePortal, 'getTemplatePathList')
     def _getTemplatePathList(self):
@@ -142,6 +156,8 @@ class BusinessPackage(XMLObject):
     def export(self, path=None, local=0, bta=None):
       """
       Export the object
+      XXX: Are we planning to use something like archive for saving the exported
+      objects inside a Business Package
       """
       if not self.getBuildingState() == 'built':
         raise BusinessPackageException, 'Package not built properly'
@@ -436,6 +452,90 @@ class PathTemplatePackageItem(Implicit, Persistent):
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
 
+class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
+
+  xml_tag = "object_property_list"
+
+  def __init__(self, id_list, tool_id=None, **kw):
+    self.__dict__.update(kw)
+    self._archive = PersistentMapping()
+    self._objects = PersistentMapping()
+    self._hash = PersistentMapping()
+    for id in id_list:
+      if id is not None and id != '':
+        self._archive[id] = None
+
+  def build(self, context, **kw):
+    p = context.getPortalObject()
+    for key in self._archive:
+      relative_url, property_name = key.split(' | ')
+      property_value = p.unrestrictedTraverse(relative_url) \
+                             .getProperty(property_name)
+      self._objects.setdefault(relative_url, {})[property_name] = property_value
+      self._hash[relative_url] = hashlib.sha1(self.generateXml(relative_url)).hexdigest()
+
+  def generateXml(self, path):
+    xml_data = '<%s>' % self.xml_tag
+    relative_url = path
+    xml_data += '\n  <object relative_url="%s">' % relative_url
+    for property_name, property_value in self._objects[relative_url].iteritems():
+      xml_data += '\n    <property name="%s">' % property_name.replace('_list', '')
+      if property_name.endswith('_list'):
+        for value in property_value:
+          xml_data += '\n      <item>%s</item>' % value
+      else:
+        xml_data += '\n      <item>%s</item>' % property_value
+      xml_data += '\n    </property>'
+    xml_data += '\n  </object>'
+    xml_data += '\n</%s>' % self.xml_tag
+    return xml_data
+
+  def export(self, context, bta, **kw):
+    path = self.__class__.__name__
+    if self._objects.keys():
+      xml_data = self.generateXml()
+      bta.addObject(xml_data, name=self.xml_tag, path=path)
+
+  def _importFile(self, file_name, file):
+    if not file_name.endswith('.xml'):
+      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
+      return
+    xml = parse(file)
+    object_list = xml.findall('object')
+    for obj in object_list:
+      for obj_property in obj.findall('property'):
+        item_list = []
+        for item in obj_property.findall('item'):
+          item_list.append(item.text)
+        property_name = obj_property.get('name') + ('' if len(item_list) <= 1 else '_list')
+        self._objects[obj.get('relative_url')] = {property_name: item_list}
+
+  def preinstall(self, context, installed_item, **kw):
+    modified_object_list = {}
+    for relative_url in self._objects:
+      new_object = self._objects[relative_url]
+      try:
+        old_object = installed_item._objects[relative_url]
+      except KeyError:
+        modified_object_list.update({relative_url : ['New', self.__class__.__name__[:-12]]})
+      else:
+        modified_object_list.update({relative_url : ['Modified', self.__class__.__name__[:-12]]})
+    return modified_object_list
+
+  def install(self, context, *args, **kw):
+    portal = context.getPortalObject()
+    for relative_url in self._objects:
+      obj = portal.unrestrictedTraverse(relative_url)
+      for property_name, property_value in self._objects[relative_url].iteritems():
+        obj.setProperty(property_name, property_value)
+
+  def uninstall(self, context, **kw):
+    portal = context.getPortalObject()
+    for relative_url in self._objects:
+      obj = portal.unrestrictedTraverse(relative_url)
+      for property_name in self._objects[relative_url]:
+        obj.setProperty(property_name, None)
+
 # The reason to keep createInstallationData as separate function is to
 # not need to initialize an InstallationTree object everytime when we want
 # to create some installation data
@@ -493,7 +593,7 @@ class InstallationTree(object):
   portal tool, cause there should be one installation tree per site(agree ??)
 
   Data at every node:
-  ('_path_item': PathTemplateItem, }
+  {'_path_item': PathTemplateItem, }
 
   State Number:
   1)  ERP5Site
@@ -517,7 +617,7 @@ class InstallationTree(object):
 
   def __init__(self, data):
     self.data = data          # To be installed/update/deleted list of packages
-    self.children = []        # List of child nodes
+    self.children = []
 
   def addNewState(self, state):
     """
