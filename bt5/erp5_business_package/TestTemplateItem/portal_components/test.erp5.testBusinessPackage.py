@@ -306,3 +306,34 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package_object_count = len(package_object_id_list)
     self.assertEquals(total_object_count, package_object_count)
     self.assertEquals(object_id_list, package_object_id_list)
+
+  def test_addObjectPropertyTemplateItemInPackage(self):
+    """
+    Add ObjectPropertyTemplateItem to Business Package with the hash
+    """
+    package = self._createBusinessPackage()
+    relative_url = 'portal_catalog/erp5_mysql_innodb'
+    file_path_list = [relative_url]
+
+    catalog_object = self.portal.unrestrictedTraverse(relative_url)
+    object_property_list = []
+    for property_id in catalog_object.propertyIds(): 
+      object_property_list.append('%s | %s'%(relative_url, property_id))
+
+    package.edit(template_path_list=file_path_list)
+    package.edit(template_object_property_list=object_property_list)
+    self.tic()
+
+    self._buildAndExportBusinessPackage(package)
+    self.tic()
+
+    # Check for presence of catalog objects from all the catalogs mentioned in
+    # the folder path list
+    built_package = self.portal._getOb(package.getId())
+
+  def test_udpateInstallationStateOnlyForBusinessPackage(self):
+    """
+    Updating Business Package with the changed installation state and trying
+    to show the diff between the two installation state
+    """
+    pass
