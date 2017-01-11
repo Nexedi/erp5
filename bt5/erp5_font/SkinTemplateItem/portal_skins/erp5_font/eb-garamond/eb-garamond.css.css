@@ -8,21 +8,21 @@ Copyright (c) 2010, 2011 Georg Duffner (http://www.georgduffner.at)
 */
 @font-face {
   font-family: 'Garamond';
-  src: url('eb-garamond-regular-12.eot');
-  src: url('eb-garamond-regular-12.eot#iefix') format('embedded-opentype'),
-       url('eb-garamond-regular-12.woff2') format('woff2'),
-       url('eb-garamond-regular-12.woff') format('woff'),
-       url('eb-garamond-regular-12.ttf') format('truetype');
+  src: url('eb-garamond/eb-garamond-regular-12.eot');
+  src: url('eb-garamond/eb-garamond-regular-12.eot#iefix') format('embedded-opentype'),
+       url('eb-garamond/eb-garamond-regular-12.woff2') format('woff2'),
+       url('eb-garamond/eb-garamond-regular-12.woff') format('woff'),
+       url('eb-garamond/eb-garamond-regular-12.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'Garamond';
-  src: url('eb-garamond-italic-12.eot');
-  src: url('eb-garamond-italic-12.eot#iefix') format('embedded-opentype'),
-       url('eb-garamond-italic-12.woff2') format('woff2'),
-       url('eb-garamond-italic-12.woff') format('woff'),
-       url('eb-garamond-italic-12.ttf') format('truetype');
+  src: url('eb-garamond/eb-garamond-italic-12.eot');
+  src: url('eb-garamond/eb-garamond-italic-12.eot#iefix') format('embedded-opentype'),
+       url('eb-garamond/eb-garamond-italic-12.woff2') format('woff2'),
+       url('eb-garamond/eb-garamond-italic-12.woff') format('woff'),
+       url('eb-garamond/eb-garamond-italic-12.ttf') format('truetype');
   font-weight: normal;
   font-style: italic;
 }
