@@ -315,10 +315,14 @@ class TestBusinessPackage(ERP5TypeTestCase):
     relative_url = 'portal_catalog/erp5_mysql_innodb'
     file_path_list = [relative_url]
 
+    portal_catalog = self.portal.portal_catalog
     catalog_object = self.portal.unrestrictedTraverse(relative_url)
     object_property_list = []
     for property_id in catalog_object.propertyIds(): 
       object_property_list.append('%s | %s'%(relative_url, property_id))
+
+    for property_id in portal_catalog.propertyIds():
+      object_property_list.append('%s | %s'%(portal_catalog.getRelativeUrl(), property_id))
 
     package.edit(template_path_list=file_path_list)
     package.edit(template_object_property_list=object_property_list)
@@ -330,6 +334,15 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Check for presence of catalog objects from all the catalogs mentioned in
     # the folder path list
     built_package = self.portal._getOb(package.getId())
+    object_property_item = built_package._object_property_item
+
+    property_object_path_list = sorted(object_property_item._objects.keys())
+    self.assertIn(relative_url, property_object_path_list)
+    self.assertIn(portal_catalog.getRelativeUrl(), property_object_path_list)
+
+    property_object_hash_list = sorted(object_property_item._hash.keys())
+    self.assertIn(relative_url, property_object_hash_list)
+    self.assertIn(portal_catalog.getRelativeUrl(), property_object_hash_list)
 
   def test_udpateInstallationStateOnlyForBusinessPackage(self):
     """
