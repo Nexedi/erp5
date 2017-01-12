@@ -531,17 +531,6 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()
     self.tic()
 
-    # emulate Anonymous User
-    self.logout()
-    request.set('field_user_login', login.getReference())
-    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abAB#12_%s' %person.getFirstName(), request) # contains name
-    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abAB#12_%s' %person.getLastName(), request) # contains name
-    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abAB#1', request) # too short
-    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'abABCDEFG', request) # too few groups
-    self.assertRaises(ValidationError,  login.Login_isPasswordValid, 'used_ALREADY_1234', request) # already used
-    self.assertEqual(1, login.Login_isPasswordValid('abAB#12_', request))
-    self.assertEqual(1, login.Login_isPasswordValid('not_used_ALREADY_1234', request))
-
   def test_PasswordExpire(self):
     """
       Test password expire.
