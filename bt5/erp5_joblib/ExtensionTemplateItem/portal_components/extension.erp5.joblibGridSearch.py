@@ -20,7 +20,8 @@ def test(self, active_process_path):
     'gamma': np.logspace(-10, 10, 3),
     'tol': [1e-4]
   }
-
+  X = np.ascontiguousarray(X)
+  y = np.ascontiguousarray(y)
   clf = GridSearchCV(SVC(), param_grid=param_grid, verbose=10)
   active_process = self.portal_activities.unrestrictedTraverse(active_process_path)
   with parallel_backend('CMFActivity', n_jobs=2, active_process=active_process):

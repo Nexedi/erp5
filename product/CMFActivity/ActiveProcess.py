@@ -32,6 +32,7 @@ from Products.CMFCore import permissions as CMFCorePermissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.ConflictFree import ConflictFreeLog
+from BTrees.LOBTree import LOBTree
 from BTrees.Length import Length
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from random import randrange
@@ -87,14 +88,31 @@ class ActiveProcess(Base):
     Base.__init__(self, *args, **kw)
     self.result_list = ConflictFreeLog()
 
+  security.declareProtected(CMFCorePermissions.ManagePortal, 'useBTree')
+  def useBTree(self):
+    # Use BTree instead of Linked List
+    # this is used by joblib Backend to store results in a dictionary with
+    # signature as key
+    self.use_btree = True
+    self.result_list = LOBTree()
+
   security.declareProtected(CMFCorePermissions.ManagePortal, 'postResult')
   def postResult(self, result):
     try:
       result_list = self.result_list
     except AttributeError:
       # BBB: self was created before implementation of __init__
-      self.result_list = result_list = ConflictFreeLog()
+      if self.use_btree:
+        self.result_list = result_list = LOBTree()
+      else:
+        self.result_list = result_list = ConflictFreeLog()
     else:
+      if self.use_btree:
+        if not hasattr(result, 'sig'):
+          result.sig = randrange(0, 10000 * (id(result) + 1))
+        result_list.insert(result.sig, result)
+        return
+
       if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
         # use a random id in order to store result in a way with
         # fewer conflict errors
@@ -104,7 +122,11 @@ class ActiveProcess(Base):
         result_list[random_id] = result
         self.result_len.change(1)
         return
-    result_list.append(result)
+
+    if self.use_btree:
+      result_list.insert(result.sig, result)
+    else:
+      result_list.append(result)
 
   security.declareProtected(CMFCorePermissions.ManagePortal, 'postActiveResult')
   def postActiveResult(self, *args, **kw):
@@ -124,6 +146,18 @@ class ActiveProcess(Base):
     if type(result_list) is not ConflictFreeLog: # BBB: result_list is IOBTree
       return result_list.values()
     return list(result_list)
+
+  security.declareProtected(CMFCorePermissions.ManagePortal, 'getResult')
+  def getResult(self, key, **kw):
+    """
+      Returns the result with requested key else None
+    """
+    try:
+      result_list = self.result_list
+      result = result_list[key]
+    except:
+      return None
+    return result
 
   security.declareProtected(CMFCorePermissions.ManagePortal, 'activateResult')
   def activateResult(self, result):

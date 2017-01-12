@@ -542,7 +542,8 @@ class SQLBase(Queue):
     return not message_list
 
   def finalizeMessageExecution(self, activity_tool, message_list,
-                               uid_to_duplicate_uid_list_dict=None):
+                               uid_to_duplicate_uid_list_dict=None,
+                               deletable_uid_list = []):
     """
       If everything was fine, delete all messages.
       If anything failed, make successful messages available (if any), and
@@ -553,7 +554,6 @@ class SQLBase(Queue):
           be put in a permanent-error state.
         - In all other cases, retry count is increased and message is delayed.
     """
-    deletable_uid_list = []
     delay_uid_list = []
     final_error_uid_list = []
     make_available_uid_list = []

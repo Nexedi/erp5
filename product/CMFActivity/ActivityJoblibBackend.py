@@ -26,11 +26,11 @@
 ##############################################################################
 ENABLE_JOBLIB = True
 
+import copy
+import hashlib
 import sys
 import time
 
-import transaction
-from BTrees.OOBTree import OOBTree
 from zLOG import LOG, INFO, WARNING
 from ZODB.POSException import ConflictError
 
@@ -45,9 +45,33 @@ except ImportError:
   LOG("CMFActivityBackend", WARNING, "CLASS NOT LOADED!!!")
   ENABLE_JOBLIB = False
 
-from Activity.SQLJoblib import MyBatchedSignature
-
 if ENABLE_JOBLIB:
+  
+  # this is improvisation of 
+  # http://stackoverflow.com/questions/5884066/hashing-a-python-dictionary/8714242#8714242
+  def make_hash(o):
+    """
+    Makes a hash from a dictionary, list, tuple or set to any level, that contains
+    only other hashable types (including any lists, tuples, sets, and
+    dictionaries).
+    """
+ 
+    if (callable(o) and o.__name__):
+      return hash(o.__name__)
+
+    if isinstance(o, (set, tuple, list)):
+      return hash(tuple([make_hash(e) for e in o]))
+  
+    elif not isinstance(o, dict):
+      try:
+        return hash(o)
+      except TypeError:
+        return hash(int(hashlib.md5(o).hexdigest(), 16))
+    new_o = copy.deepcopy(o)
+    for k, v in new_o.items():
+      new_o[k] = make_hash(v)
+    return hash(tuple(frozenset(sorted(new_o.items()))))
+
   class MySafeFunction(SafeFunction):
     """Wrapper around a SafeFunction that catches any exception
   
@@ -67,21 +91,11 @@ if ENABLE_JOBLIB:
       self.active_process = active_process
       self.active_process_sig = active_process_sig
       self.callback = callback
+ 
     def get(self, timeout=None):
-      
-      '''
-      while not self.active_process.getResultList():
-        time.sleep(1)
-        if timeout is not None:
-          timeout -= 1
-          if timeout < 0:
-            raise RuntimeError('Timeout reached')
-        transaction.commit()
-      '''
-
-      if self.active_process.process_result_map[self.active_process_sig] is None:
+      if self.active_process.getResult(self.active_process_sig) is None:
         raise ConflictError
-      result = self.active_process.process_result_map[self.active_process_sig]
+      result = self.active_process.getResult(self.active_process_sig).result
 
       # TODO raise before or after the callback?
       if isinstance(result, Exception):
@@ -94,10 +108,7 @@ if ENABLE_JOBLIB:
     def __init__(self, *args, **kwargs):
       self.count = 1
       self.active_process = kwargs['active_process']
-      if not hasattr(self.active_process, 'process_result_map'):
-        self.active_process.process_result_map = OOBTree()
-      transaction.commit()
- 
+
     def effective_n_jobs(self, n_jobs):
       """Dummy implementation to prevent n_jobs <=0
 
@@ -112,13 +123,13 @@ if ENABLE_JOBLIB:
       portal_activities = self.active_process.portal_activities
       active_process_id = self.active_process.getId()
       joblib_result = None
+      sig = make_hash(batch.items[0])
 
-      sig = MyBatchedSignature(batch)
-      if not self.active_process.process_result_map.has_key(sig):
-        self.active_process.process_result_map.insert(sig, None)
+      if not self.active_process.getResult(sig):
         joblib_result = portal_activities.activate(activity='SQLJoblib',
           tag="joblib_%s" % active_process_id,
-          active_process=self.active_process).Base_callSafeFunction(MySafeFunction(batch))
+          signature=sig,
+          active_process=self.active_process).Base_callSafeFunction(sig, MySafeFunction(batch))
       if joblib_result is None:
         joblib_result = CMFActivityResult(self.active_process, sig, callback)
       return joblib_result
@@ -138,11 +149,6 @@ if ENABLE_JOBLIB:
 
     def abort_everything(self, ensure_ready=True):
       # All jobs will be aborted here while they are still processing our backend
-
-      # remove job with no results
-      #self.active_process.process_result_map = dict((k, v) 
-      #  for k, v in self.active_process.process_result_map.iteritems() if v)
-      transaction.commit()
       if ensure_ready:
         self.configure(n_jobs=self.parallel.n_jobs, parallel=self.parallel,
                         **self.parallel._backend_args)

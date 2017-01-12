@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_function, REQUEST=None</string> </value>
+            <value> <string>hash, batch_function, REQUEST=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

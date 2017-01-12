@@ -26,12 +26,6 @@
 #
 ##############################################################################
 
-# XXX: Note from Rafael
-# only reimplment the minimal, and only custom the SQL that update this table.
-# Always check if things are there (ie.: If the connection, or the script are present).
-
-import copy
-import hashlib
 import sys
 import transaction
 from functools import total_ordering
@@ -54,29 +48,6 @@ READ_MESSAGE_LIMIT = 1000
 _DequeueMessageException = Exception()
 
 from SQLDict import SQLDict
-
-# this is improvisation of 
-# http://stackoverflow.com/questions/5884066/hashing-a-python-dictionary/8714242#8714242
-def make_hash(o):
-  """
-  Makes a hash from a dictionary, list, tuple or set to any level, that contains
-  only other hashable types (including any lists, tuples, sets, and
-  dictionaries).
-  """
-
-  if isinstance(o, (set, tuple, list)):
-    return hash(tuple([make_hash(e) for e in o]))
-
-  elif not isinstance(o, dict):
-    try:
-      return hash(o)
-    except TypeError:
-      return hash(int(hashlib.md5(o).hexdigest(), 16))
-  new_o = copy.deepcopy(o)
-  for k, v in new_o.items():
-    new_o[k] = make_hash(v)
-
-  return hash(tuple(frozenset(sorted(new_o.items()))))
 
 @total_ordering
 class MyBatchedSignature(object):
@@ -138,6 +109,7 @@ class SQLJoblib(SQLDict):
       uid = portal.portal_ids.generateNewIdList(self.uid_group,
         id_count=1, id_generator='uid')[0]
       #import pdb; pdb.set_trace()
+      LOG("CMFActivityBackendEntered", INFO, m.activity_kw.get('signature', 0))
       m.order_validation_text = x = self.getOrderValidationText(m)
       processing_node = (0 if x == 'none' else -1)
       portal.SQLJoblib_writeMessage(
@@ -151,82 +123,232 @@ class SQLJoblib(SQLDict):
         group_method_id=m.getGroupId(),
         date=m.activity_kw.get('at_date'),
         tag=m.activity_kw.get('tag', ''),
+        signature=m.activity_kw.get('signature', 0),
         processing_node=processing_node,
         serialization_tag=m.activity_kw.get('serialization_tag', ''))
 
-  # Queue semantic
-  def dequeueMessage(self, activity_tool, processing_node):
-    message_list, group_method_id, uid_to_duplicate_uid_list_dict = \
-      self.getProcessableMessageList(activity_tool, processing_node)
-    if message_list:
-      # Remove group_id parameter from group_method_id
-      if group_method_id is not None:
-        group_method_id = group_method_id.split('\0')[0]
-      if group_method_id not in (None, ""):
-        method  = activity_tool.invokeGroup
-        args = (group_method_id, message_list, self.__class__.__name__,
-                hasattr(self, 'generateMessageUID'))
-        activity_runtime_environment = ActivityRuntimeEnvironment(None)
+  def getProcessableMessageLoader(self, activity_tool, processing_node):
+    path_and_method_id_dict = {}
+    def load(line):
+      # getProcessableMessageList already fetch messages with the same
+      # group_method_id, so what remains to be filtered on are path, method_id
+      # and signature
+      # XXX: What about tag ?
+      path = line.path
+      method_id = line.method_id
+      key = path, method_id
+      uid = line.uid
+      signature = line.signature
+      original_uid = path_and_method_id_dict.get(key)
+      if original_uid is None:
+        m = Message.load(line.message, uid=uid, line=line, signature=signature)
+        try:
+          result = activity_tool.SQLJoblib_selectDuplicatedLineList(
+            path=path,
+            method_id=method_id,
+            group_method_id=line.group_method_id,
+            signature=signature)
+          reserve_uid_list = uid_list = [x.uid for x in result]
+          if reserve_uid_list:
+            LOG("CMFActivityBackendMarked", INFO, signature, uid_list)
+            activity_tool.SQLJoblib_reserveDuplicatedLineList(
+              processing_node=processing_node, uid=reserve_uid_list)
+        except:
+          self._log(WARNING, 'getDuplicateMessageUidList got an exception')
+          raise
+        if uid_list:
+          self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
+        path_and_method_id_dict[key] = uid
+        return m, uid, uid_list
+      # We know that original_uid != uid because caller skips lines we returned
+      # earlier.
+      return None, original_uid, [uid]
+    return load
+
+  def getProcessableMessageList(self, activity_tool, processing_node):
+    """
+      Always true:
+        For each reserved message, delete redundant messages when it gets
+        reserved (definitely lost, but they are expandable since redundant).
+
+      - reserve a message
+      - set reserved message to processing=1 state
+      - if this message has a group_method_id:
+        - reserve a bunch of messages
+        - until the total "cost" of the group goes over 1
+          - get one message from the reserved bunch (this messages will be
+            "needed")
+          - update the total cost
+        - set "needed" reserved messages to processing=1 state
+        - unreserve "unneeded" messages
+      - return still-reserved message list and a group_method_id
+
+      If any error happens in above described process, try to unreserve all
+      messages already reserved in that process.
+      If it fails, complain loudly that some messages might still be in an
+      unclean state.
+
+      Returned values:
+        4-tuple:
+          - list of messages
+          - group_method_id
+          - uid_to_duplicate_uid_list_dict
+    """
+    def getReservedMessageList(limit, group_method_id=None):
+      line_list = self.getReservedMessageList(activity_tool=activity_tool,
+                                              date=now_date,
+                                              processing_node=processing_node,
+                                              limit=limit,
+                                              group_method_id=group_method_id)
+      if line_list:
+        self._log(TRACE, 'Reserved messages: %r' % [x.uid for x in line_list])
+      return line_list
+    now_date = self.getNow(activity_tool)
+    uid_to_duplicate_uid_list_dict = {}
+    try:
+      result = getReservedMessageList(1)
+      if result:
+        load = self.getProcessableMessageLoader(activity_tool, processing_node)
+        m, uid, uid_list = load(result[0])
+        LOG("CMFActivityBackendExecuting", INFO, m.signature)
+        # This handles cases wehre the result has been already calculated
+        # but the duplicate message(s) somehow landed in the queue, 
+        # we should not execute these messages and its duplicates again
+        # hence just delete them.
+        active_process = activity_tool.unrestrictedTraverse(m.active_process)
+        if active_process.getResult(m.signature):
+          uid_list.append(uid)
+          LOG("CMFActivityBackendDeleting", INFO, m.signature)
+          self.finalizeMessageExecution(activity_tool, [], None, uid_list)
+          return [], None, []
+
+        message_list = [m]
+        uid_to_duplicate_uid_list_dict[uid] = uid_list
+        group_method_id = m.line.group_method_id
+        if group_method_id != '\0':
+          # Count the number of objects to prevent too many objects.
+          cost = m.activity_kw.get('group_method_cost', .01)
+          assert 0 < cost <= 1, (self.sql_table, uid)
+          count = m.getObjectCount(activity_tool)
+          # this is heuristic (messages with same group_method_id
+          # are likely to have the same group_method_cost)
+          limit = int(1. / cost + 1 - count)
+          if limit > 1: # <=> cost * count < 1
+            cost *= count
+            # Retrieve objects which have the same group method.
+            result = iter(getReservedMessageList(limit, group_method_id))
+            for line in result:
+              if line.uid in uid_to_duplicate_uid_list_dict:
+                continue
+              m, uid, uid_list = load(line)
+              if m is None:
+                uid_to_duplicate_uid_list_dict[uid] += uid_list
+                continue
+              uid_to_duplicate_uid_list_dict[uid] = uid_list
+              cost += m.getObjectCount(activity_tool) * \
+                      m.activity_kw.get('group_method_cost', .01)
+              message_list.append(m)
+              if cost >= 1:
+                # Unreserve extra messages as soon as possible.
+                self.makeMessageListAvailable(activity_tool=activity_tool,
+                  uid_list=[line.uid for line in result if line.uid != uid])
+        activity_tool.SQLBase_processMessage(table=self.sql_table,
+          uid=uid_to_duplicate_uid_list_dict.keys())
+        return message_list, group_method_id, uid_to_duplicate_uid_list_dict
+    except:
+      self._log(WARNING, 'Exception while reserving messages.')
+      if uid_to_duplicate_uid_list_dict:
+        to_free_uid_list = uid_to_duplicate_uid_list_dict.keys()
+        for uid_list in uid_to_duplicate_uid_list_dict.itervalues():
+          to_free_uid_list += uid_list
+        try:
+          self.makeMessageListAvailable(activity_tool=activity_tool,
+                                        uid_list=to_free_uid_list)
+        except:
+          self._log(ERROR, 'Failed to free messages: %r' % to_free_uid_list)
+        else:
+          if to_free_uid_list:
+            self._log(TRACE, 'Freed messages %r' % to_free_uid_list)
       else:
-        method = activity_tool.invoke
-        message = message_list[0]
-        args = (message, )
-        activity_runtime_environment = ActivityRuntimeEnvironment(message)
-      # Commit right before executing messages.
-      # As MySQL transaction does not start exactly at the same time as ZODB
-      # transactions but a bit later, messages available might be called
-      # on objects which are not available - or available in an old
-      # version - to ZODB connector.
-      # So all connectors must be committed now that we have selected
-      # everything needed from MySQL to get a fresh view of ZODB objects.
-      transaction.commit()
-      transaction.begin()
-      tv = getTransactionalVariable()
-      tv['activity_runtime_environment'] = activity_runtime_environment
-      # Try to invoke
-      try:
-        method(*args)
-        # Abort if at least 1 message failed. On next tic, only those that
-        # succeeded will be selected because their at_date won't have been
-        # increased.
-        for m in message_list:
-          if m.getExecutionState() == MESSAGE_NOT_EXECUTED:
-            raise _DequeueMessageException
+        self._log(TRACE, '(no message was reserved)')
+    return [], None, uid_to_duplicate_uid_list_dict
+
+  def generateMessageUID(self, m):
+    return (tuple(m.object_path), m.method_id, m.activity_kw.get('signature'),
+                  m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
+
+  def distribute(self, activity_tool, node_count):
+    offset = 0
+    assignMessage = getattr(activity_tool, 'SQLBase_assignMessage', None)
+    if assignMessage is not None:
+      now_date = self.getNow(activity_tool)
+      validated_count = 0
+      while 1:
+        result = self._getMessageList(activity_tool, processing_node=-1,
+                                      to_date=now_date,
+                                      offset=offset, count=READ_MESSAGE_LIMIT)
+        if not result:
+          return
         transaction.commit()
-        
-        for m in message_list:
-          if m.getExecutionState() == MESSAGE_EXECUTED:
-            transaction.begin()
-            # Create a signature and then store result into the dict
-            signature = MyBatchedSignature(m.args[0].batch)
-            # get active process
-            active_process = activity_tool.unrestrictedTraverse(m.active_process)
-            active_process.process_result_map.update({signature: m.result})
-            transaction.commit()
-      except:
-        exc_info = sys.exc_info()
-        if exc_info[1] is not _DequeueMessageException:
-          self._log(WARNING,
-            'Exception raised when invoking messages (uid, path, method_id) %r'
-            % [(m.uid, m.object_path, m.method_id) for m in message_list])
-          for m in message_list:
-            m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
-        self._abort()
-        exc_info = message_list[0].exc_info
-        if exc_info:
-          try:
-            # Register it again.
-            tv['activity_runtime_environment'] = activity_runtime_environment
-            cancel = message.on_error_callback(*exc_info)
-            del exc_info, message.exc_info
-            transaction.commit()
-            if cancel:
-              message.setExecutionState(MESSAGE_EXECUTED)
-          except:
-            self._log(WARNING, 'Exception raised when processing error callbacks')
-            message.setExecutionState(MESSAGE_NOT_EXECUTED)
-            self._abort()
-      self.finalizeMessageExecution(activity_tool, message_list,
-                                    uid_to_duplicate_uid_list_dict)
-    transaction.commit()
-    return not message_list
+
+        validation_text_dict = {'none': 1}
+        message_dict = {}
+        for line in result:
+          message = Message.load(line.message, uid=line.uid, line=line)
+          if not hasattr(message, 'order_validation_text'): # BBB
+            message.order_validation_text = self.getOrderValidationText(message)
+          self.getExecutableMessageList(activity_tool, message, message_dict,
+                                        validation_text_dict, now_date=now_date)
+
+        if message_dict:
+          message_unique_dict = {}
+          serialization_tag_dict = {}
+          distributable_uid_set = set()
+          deletable_uid_list = []
+
+          # remove duplicates
+          # SQLDict considers object_path, method_id, tag to unify activities,
+          # but ignores method arguments. They are outside of semantics.
+          for message in message_dict.itervalues():
+            message_unique_dict.setdefault(self.generateMessageUID(message),
+                                           []).append(message)
+
+          for message_list in message_unique_dict.itervalues():
+            if len(message_list) > 1:
+              # Sort list of duplicates to keep the message with highest score
+              message_list.sort(key=sort_message_key)
+              deletable_uid_list += [m.uid for m in message_list[1:]]
+            message = message_list[0]
+            serialization_tag = message.activity_kw.get('serialization_tag')
+            if serialization_tag is None:
+              distributable_uid_set.add(message.uid)
+            else:
+              serialization_tag_dict.setdefault(serialization_tag,
+                                                []).append(message)
+          # Don't let through if there is the same serialization tag in the
+          # message dict. If there is the same serialization tag, only one can
+          # be validated and others must wait.
+          # But messages with group_method_id are exceptions. serialization_tag
+          # does not stop validating together. Because those messages should
+          # be processed together at once.
+          for message_list in serialization_tag_dict.itervalues():
+            # Sort list of messages to validate the message with highest score
+            message_list.sort(key=sort_message_key)
+            distributable_uid_set.add(message_list[0].uid)
+            group_method_id = message_list[0].line.group_method_id
+            if group_method_id == '\0':
+              continue
+            for message in message_list[1:]:
+              if group_method_id == message.line.group_method_id:
+                distributable_uid_set.add(message.uid)
+          if deletable_uid_list:
+            activity_tool.SQLBase_delMessage(table=self.sql_table,
+                                             uid=deletable_uid_list)
+          distributable_count = len(distributable_uid_set)
+          if distributable_count:
+            assignMessage(table=self.sql_table,
+              processing_node=0, uid=tuple(distributable_uid_set))
+            validated_count += distributable_count
+            if validated_count >= MAX_VALIDATED_LIMIT:
+              return
+        offset += READ_MESSAGE_LIMIT

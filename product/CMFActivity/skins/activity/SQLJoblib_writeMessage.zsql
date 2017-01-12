@@ -18,10 +18,11 @@ processing_node
 date
 group_method_id
 tag
+signature
 serialization_tag
 </params>
 INSERT INTO <dtml-var table>
-(uid, path, active_process_uid, date, method_id, processing_node, processing, priority, group_method_id, tag, serialization_tag, message)
+(uid, path, active_process_uid, date, method_id, processing_node, processing, priority, group_method_id, tag, signature, serialization_tag, message)
 VALUES
 (
 <dtml-sqlvar expr="uid" type="int">,
@@ -34,6 +35,7 @@ VALUES
 <dtml-sqlvar expr="priority" type="int">,
 <dtml-sqlvar expr="group_method_id" type="string">,
 <dtml-sqlvar expr="tag" type="string">,
+<dtml-sqlvar expr="signature" type="int">,
 <dtml-sqlvar expr="serialization_tag" type="string">,
 <dtml-sqlvar expr="message" type="string">
 )
