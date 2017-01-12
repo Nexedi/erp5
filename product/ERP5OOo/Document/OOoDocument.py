@@ -392,8 +392,19 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     requires_pdf_first = 0
     original_format = format
     allowed_format_list = self.getTargetFormatList()
-    if format == 'base-data':
+
+    ##### BEGIN hack to get the base data value on ?format=... XXX##
+    portal_type = self.getPortalType()
+    if (format == 'base-data' or
+        (format, portal_type) in (
+         ("odt", "Text"),
+         ("ods", "Spreadsheet"),
+         ("odp", "Presentation"),
+        )):
       return self.getBaseContentType(), str(self.getBaseData())
+    #if format == 'base-data':
+    #  return self.getBaseContentType(), str(self.getBaseData())
+    ##### END hack to get the base data value on ?format=... #####
     if format == 'pdf':
       format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
