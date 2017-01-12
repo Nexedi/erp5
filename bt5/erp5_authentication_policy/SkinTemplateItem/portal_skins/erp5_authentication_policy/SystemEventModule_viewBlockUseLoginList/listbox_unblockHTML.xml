@@ -127,7 +127,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<a title="Click to unblock login" href="%s/Person_unblockLogin?cancel_url=%s"> Unblock </a>\' %(cell.url, here.absolute_url())
+python: \'<a title="Click to unblock login" href="%s/Login_unblockLogin?cancel_url=%s"> Unblock </a>\' %(cell.url, here.absolute_url())
 
 ]]></string> </value>
         </item>
