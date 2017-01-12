@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentTransactionGroup_countPaymentTransactionLine</string> </value>
+            <value> <string>PaymentTransactionGroup_countAccountingTransactionLine</string> </value>
         </item>
       </dictionary>
     </pickle>
