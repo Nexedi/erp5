@@ -229,6 +229,31 @@ class PasswordTool(BaseTool):
       if date < current_date:
         del password_request_dict[key]
 
+  security.declarePublic('analyzePassword')
+  def analyzePassword(self, password, password_key):
+    """Analyze password validity in the context of the login.
+
+    Returns a list of messages as returned by IEncryptedPassword.analyzePassword
+    """
+    portal = self.getPortalObject()
+    if not portal.portal_preferences.isAuthenticationPolicyEnabled():
+      return []
+    try:
+      register_user_login, expiration_date = self._password_request_dict[
+        password_key]
+    except KeyError:
+      return []
+    user_dict_list = portal.acl_users.searchUsers(
+      login=register_user_login,
+      exact_match=True,
+    )
+    if user_dict_list:
+      user_dict, = user_dict_list
+      login_dict, = user_dict['login_list']
+      login = portal.unrestrictedTraverse(login_dict['path'])
+      return login.analyzePassword(password)
+    return []
+
   security.declarePublic('changeUserPassword')
   def changeUserPassword(self, password, password_key, password_confirm=None,
                          user_login=None, REQUEST=None, **kw):
@@ -271,6 +296,7 @@ class PasswordTool(BaseTool):
     )
     login_dict, = user_dict['login_list']
     login = portal.unrestrictedTraverse(login_dict['path'])
+    login.checkPasswordValueAcceptable(password) # this will raise if password does not match policy
     login._forceSetPassword(password)
     login.reindexObject()
     return redirect(REQUEST, site_url,

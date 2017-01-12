@@ -742,6 +742,61 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                                                  default_destination_uid = login.getUid(),
                                                  validation_state = "expired")))
 
+  def test_PasswordTool_resetPassword_checks_policy(self):
+    person = self.createUser(
+      self.id(),
+      password='current',
+      person_kw={'first_name': 'Alice'})
+    person.newContent(portal_type = 'Assignment').open()
+    login = person.objectValues(portal_type='ERP5 Login')[0]
+    preference = self.portal.portal_catalog.getResultValue(
+      portal_type='System Preference',
+      title='Authentication',)
+    # Here we activate the "password should contain usename" policy
+    # as a way to check that password reset checks are done in the
+    # context of the login
+    preference.setPrefferedForceUsernameCheckInPassword(1)
+    self._clearCache()
+    self.tic()
+
+    reset_key = self.portal.portal_password.getResetPasswordKey(user_login=self.id())
+    ret = self.publish(
+      '%s/portal_password' % self.portal.getPath(),
+      stdin=StringIO(urllib.urlencode({
+        'Base_callDialogMethod:method': '',
+        'dialog_id': 'PasswordTool_viewResetPassword',
+        'dialog_method': 'PasswordTool_changeUserPassword',
+        'field_user_login': self.id(),
+        'field_your_password': 'alice',
+        'field_password_confirm': 'alice',
+        'field_your_password_key': reset_key,
+      })),
+      request_method="POST",
+      handle_errors=False)
+    self.assertEqual(httplib.OK, ret.getStatus())
+    self.assertIn(
+      '<span class="error">You can not use any parts of your '
+      'first and last name in password.</span>',
+      ret.getBody())
+
+    # now with a password complying to the policy
+    ret = self.publish(
+      '%s/portal_password' % self.portal.getPath(),
+      stdin=StringIO(urllib.urlencode({
+        'Base_callDialogMethod:method': '',
+        'dialog_id': 'PasswordTool_viewResetPassword',
+        'dialog_method': 'PasswordTool_changeUserPassword',
+        'field_user_login': self.id(),
+        'field_your_password': 'ok',
+        'field_password_confirm': 'ok',
+        'field_your_password_key': reset_key,
+      })),
+      request_method="POST",
+      handle_errors=False)
+    self.assertEqual(httplib.FOUND, ret.getStatus())
+    self.assertTrue(ret.getHeader('Location').endswith(
+    '/login_form?portal_status_message=Password+changed.'))
+
   def test_PreferenceTool_changePassword_checks_policy(self):
     person = self.createUser(self.id(), password='current')
     person.newContent(portal_type = 'Assignment').open()
