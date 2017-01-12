@@ -208,7 +208,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>PaymentTransactionGroup_countPaymentTransactionLine</string> </value>
+            <value> <string>PaymentTransactionGroup_countAccountingTransactionLine</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -221,7 +221,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>PaymentTransactionGroup_getPaymentTransactionLineList</string> </value>
+            <value> <string>PaymentTransactionGroup_getAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -234,7 +234,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>PaymentTransactionGroup_statPaymentTransactionLineList</string> </value>
+            <value> <string>PaymentTransactionGroup_statAccountingTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>
