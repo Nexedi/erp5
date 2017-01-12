@@ -10,7 +10,7 @@ Incorporated in the United States and/or other countries.
 @font-face {
   font-family: 'Source Serif Pro';
   src: url('source-serif-pro/source-serif-pro-regular.eot');
-  src: url('source-serif-pro/source-serif-pro-regular.eot#iefix') format('embedded-opentype'),
+  src: url('source-serif-pro/source-serif-pro-regular.eot?#iefix') format('embedded-opentype'),
        url('source-serif-pro/source-serif-pro-regular.woff2') format('woff2'),
        url('source-serif-pro/source-serif-pro-regular.woff') format('woff'),
        url('source-serif-pro/source-serif-pro-regular.ttf') format('truetype');
@@ -20,7 +20,7 @@ Incorporated in the United States and/or other countries.
 @font-face {
   font-family: 'Source Serif Pro';
   src: url('source-serif-pro/source-serif-pro-bold.eot');
-  src: url('source-serif-pro/source-serif-pro-bold.eot#iefix') format('embedded-opentype'),
+  src: url('source-serif-pro/source-serif-pro-bold.eot?#iefix') format('embedded-opentype'),
        url('source-serif-pro/source-serif-pro-bold.woff2') format('woff2'),
        url('source-serif-pro/source-serif-pro-bold.woff') format('woff'),
        url('source-serif-pro/source-serif-pro-bold.ttf') format('truetype');

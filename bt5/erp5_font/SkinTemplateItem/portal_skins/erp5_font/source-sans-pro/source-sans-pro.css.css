@@ -10,7 +10,7 @@ Adobe Systems Incorporated in the United States and/or other countries.
 @font-face {
   font-family: 'Source Sans Pro';
   src: url('source-sans-pro/source-sans-pro-regular.eot');
-  src: url('source-sans-pro/source-sans-pro-regular.eot#iefix') format('embedded-opentype'),
+  src: url('source-sans-pro/source-sans-pro-regular.eot?#iefix') format('embedded-opentype'),
        url('source-sans-pro/source-sans-pro-regular.woff2') format('woff2'),
        url('source-sans-pro/source-sans-pro-regular.woff') format('woff'),
        url('source-sans-pro/source-sans-pro-regular.ttf') format('truetype');
@@ -20,7 +20,7 @@ Adobe Systems Incorporated in the United States and/or other countries.
 @font-face {
   font-family: 'Source Sans Pro';
   src: url('source-sans-pro/source-sans-pro-light.eot');
-  src: url('source-sans-pro/source-sans-pro-light.eot#iefix') format('embedded-opentype'),
+  src: url('source-sans-pro/source-sans-pro-light.eot?#iefix') format('embedded-opentype'),
        url('source-sans-pro/source-sans-pro-light.woff2') format('woff2'),
        url('source-sans-pro/source-sans-pro-light.woff') format('woff'),
        url('source-sans-pro/source-sans-pro-light.ttf') format('truetype');
@@ -30,7 +30,7 @@ Adobe Systems Incorporated in the United States and/or other countries.
 @font-face {
   font-family: 'Source Sans Pro';
   src: url('source-sans-pro/source-sans-pro-italic.eot');
-  src: url('source-sans-pro/source-sans-pro-italic.eot#iefix') format('embedded-opentype'),
+  src: url('source-sans-pro/source-sans-pro-italic.eot?#iefix') format('embedded-opentype'),
        url('source-sans-pro/source-sans-pro-italic.woff2') format('woff2'),
        url('source-sans-pro/source-sans-pro-italic.woff') format('woff'),
        url('source-sans-pro/source-sans-pro-italic.ttf') format('truetype');
@@ -40,7 +40,7 @@ Adobe Systems Incorporated in the United States and/or other countries.
 @font-face {
   font-family: 'Source Sans Pro';
   src: url('source-sans-pro/source-sans-pro-bold.eot');
-  src: url('source-sans-pro/source-sans-pro-bold.eot#iefix') format('embedded-opentype'),
+  src: url('source-sans-pro/source-sans-pro-bold.eot?#iefix') format('embedded-opentype'),
        url('source-sans-pro/source-sans-pro-bold.woff2') format('woff2'),
        url('source-sans-pro/source-sans-pro-bold.woff') format('woff'),
        url('source-sans-pro/source-sans-pro-bold.ttf') format('truetype');
