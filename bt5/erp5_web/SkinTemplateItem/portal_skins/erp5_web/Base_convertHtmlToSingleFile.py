@@ -184,7 +184,7 @@ def handleHrefObject(obj, src, default_mimetype="text/html", default_data="<p>Li
     mime = obj.getContentType()
     if mime:
       if hasattr(obj, "data"):
-        data = obj.data or ""
+        data = str(obj.data or "")
       else:
         data = getattr(obj, "getData", lambda: str(obj))() or ""
       if isinstance(data, unicode):
