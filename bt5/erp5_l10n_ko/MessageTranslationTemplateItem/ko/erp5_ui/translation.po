@@ -7153,14 +7153,14 @@ msgstr "존재하지 않는 이용자: ${user}"
 msgid "User Account Workflow"
 msgstr "사용자 계정 워크플로우"
 
-msgid "User ID is not specified."
-msgstr "이용자 ID가 지정되지 않았습니다."
-
 msgid "User Interface"
 msgstr "이용자 인터페이스"
 
 msgid "User Login"
 msgstr "이용자 로그인"
+
+msgid "User Login is not specified."
+msgstr "이용자 로그인 가 지정되지 않았습니다."
 
 msgid "User Password"
 msgstr "이용자 패스워드"

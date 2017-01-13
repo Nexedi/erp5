@@ -85,14 +85,14 @@ class TestQueryModule(ERP5TypeTestCase):
   def test_reply_query_with_persons(self):
     owner_person = self.portal.person_module.newContent(
                     portal_type='Person',
-                    reference='owner_user',
+                    user_id='owner_user',
                     password='secret',
                     default_email_text='owner_user@example.invalid')
     assignment = owner_person.newContent(portal_type='Assignment')
     assignment.validate()
     question_person = self.portal.person_module.newContent(
                     portal_type='Person',
-                    reference='question_user',
+                    user_id='question_user',
                     password='secret',
                     default_email_text='question_user@example.invalid')
     assignment = question_person.newContent(portal_type='Assignment')

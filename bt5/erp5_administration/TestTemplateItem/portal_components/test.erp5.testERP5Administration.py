@@ -83,7 +83,9 @@ class TestERP5Administration(InventoryAPITestCase):
 
   def test_check_consistency_alarm(self):
     alarm = self.portal.portal_alarms.check_consistency
-    person = self.portal.person_module.newContent(portal_type='Person')
+    # Here we disable user_id so that Person_createUserPreference will not be called
+    # automatically.
+    person = self.portal.person_module.newContent(portal_type='Person', user_id=None)
     # this document will be non consistent, for PropertyTypeValidity
     person.title = 3
     # tic right now to make sure the person is indexed, indeed the alarm

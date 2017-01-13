@@ -1,0 +1,31 @@
+{
+	"title": "Alfresco",
+	"logo": "http://www.logosurfer.com/sites/default/files/alfresco-logo_0.png",
+	"country": "us",
+	"presence": ["us", "gb", "au", "de", "es", "fr", "in", "it", "be"],
+	"website": "https://www.alfresco.com",
+	"founded_year": "2005",
+	"free_software_list": [{
+		"title": "Enterprise Content Management Community Edition",
+		"logo": "http://ecmarchitect.com/wp-content/uploads/2013/10/Alfresco_Community_Logo_RGB_stacked2-300x103.png",
+		"category_list": ["ECM"],
+		"source_code_download": "https://svn.alfresco.com/repos/alfresco-open-mirror/alfresco/",
+		"commercial_support": "https://www.alfresco.com/support",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Alfresco_(software)",
+		"success_case_list": [{
+			"title": "City & County of Denver",
+			"image": "https://cdn-www.alfresco.com/sites/www.alfresco.com/files//styles/scaled_customers/public/customers/logos/denvergov.png?itok=np_pVzmC",
+			"customer": "The City and County of Denver",
+			"country": "us",
+			"language": "en",
+			"url": "https://www.alfresco.com/customers/city-county-denver"
+		}, {
+			"title": "PhenoPath Laboratories",
+			"image": "https://cdn-www.alfresco.com/sites/www.alfresco.com/files//styles/scaled_customers/public/customers/logos/phenopath.png?itok=cZeV6B8T",
+			"customer": "PhenoPath Laboratories, PLLC",
+			"country": "us",
+			"language": "en",
+			"url": "https://www.alfresco.com/customers/phenopath-laboratories"
+		}]
+	}]
+}

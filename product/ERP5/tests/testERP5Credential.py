@@ -303,8 +303,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login()
     self.tic()
-    person = portal_catalog.getResultValue(reference=reference,
-                                           portal_type="Person")
+    person = self.portal.acl_users.getUser(reference).getUserValue()
     assignment_list = person.objectValues(portal_type="Assignment")
     self.assertEqual(len(assignment_list), 1)
     assignment = assignment_list[0]
@@ -322,7 +321,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     from Products.PluggableAuthService.interfaces.plugins import\
                                                       IAuthenticationPlugin
     uf = self.getUserFolder()
-    self.assertNotEquals(uf.getUserById(login, None), None)
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
                                 IAuthenticationPlugin):
       if plugin.authenticateCredentials(
@@ -381,7 +379,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         last_name='Simpson', reference='homie')
     self.assertEqual(len(result), 1)
     sequence.edit(subscription_request=result[0],
-        person_reference=credential_reference)
+        login_reference=credential_reference)
 
   def stepAcceptSubscriptionRequest(self, sequence=None, sequence_list=None,
       **kw):
@@ -408,9 +406,9 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     # check homie can log in the system
     self._assertUserExists('homie', 'secret')
-    self.login('homie')
+    self.loginByUserName('homie')
     from AccessControl import getSecurityManager
-    self.assertEqual(str(getSecurityManager().getUser()), 'homie')
+    self.assertEqual(getSecurityManager().getUser().getUserName(), 'homie')
 
   def stepCreateCredentialUpdate(self, sequence=None, sequence_list=None, **kw):
     '''
@@ -419,10 +417,9 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     self.login()
     # get the 'homie' person object
-    person_module = self.portal.getDefaultModule('Person')
-    result = person_module.searchFolder(reference='homie')
+    result = self.portal.portal_catalog(portal_type='ERP5 Login', reference='homie')
     self.assertEqual(len(result), 1)
-    homie = result[0]
+    homie = result[0].getParentValue()
 
     # create a credential update
     credential_update_module = self.portal.getDefaultModule(\
@@ -430,6 +427,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_update = credential_update_module.newContent(\
         first_name='Homie',
         last_name='Simpsons', # add a 's' to the end of the last_name
+        reference='homie',
         password='new_password',
         default_email_text='homie.simpsons@fox.com',
         destination_decision=homie.getRelativeUrl())
@@ -453,9 +451,9 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     # check that informations on the person object have been updated
     person_module = self.portal.getDefaultModule('Person')
-    related_person_result = person_module.searchFolder(reference='homie')
-    self.assertEqual(len(related_person_result), 1)
-    related_person = related_person_result[0]
+    related_login_result = self.portal.portal_catalog(portal_type='ERP5 Login', reference='homie')
+    self.assertEqual(len(related_login_result), 1)
+    related_person = related_login_result[0].getParentValue()
     self.assertEqual(related_person.getLastName(), 'Simpsons')
     self.assertEqual(related_person.getDefaultEmailText(),
     'homie.simpsons@fox.com')
@@ -548,14 +546,21 @@ class TestERP5Credential(ERP5TypeTestCase):
     person_module = portal.getDefaultModule('Person')
     person = person_module.newContent(title='Barney',
                              reference='barney',
-                             password='secret',
                              start_date=DateTime('1970/01/01'),
                              default_email_text='barney@duff.com')
     # create an assignment
     assignment = person.newContent(portal_type='Assignment',
                       function='member')
     assignment.open()
+    # create a login
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference=person.getReference() + '-login',
+      password='secret',
+    )
+    login.validate()
     sequence.edit(person_reference=person.getReference(),
+                  login_reference=login.getReference(),
                   default_email_text=person.getDefaultEmailText())
 
   def stepCreateSameEmailPersonList(self, sequence=None, sequence_list=None,
@@ -572,12 +577,18 @@ class TestERP5Credential(ERP5TypeTestCase):
       person_module = portal.getDefaultModule('Person')
       person = person_module.newContent(title=reference,
                                reference=reference,
-                               password='secret',
                                default_email_text=default_email_text)
       # create an assignment
       assignment = person.newContent(portal_type='Assignment',
                         function='member')
       assignment.open()
+      # create a login
+      login = person.newContent(
+        portal_type='ERP5 Login',
+        reference=person.getReference() + '-login',
+        password='secret',
+      )
+      login.validate()
       person_list.append(person)
 
     sequence.edit(person_list=person_list,
@@ -590,14 +601,15 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     portal = self.getPortalObject()
     person_reference = sequence["person_reference"]
+    login_reference = sequence["login_reference"]
     person = portal.portal_catalog.getResultValue(portal_type="Person",
         reference=person_reference)
     sequence.edit(barney=person)
     # check barney can log in the system
-    self._assertUserExists('barney', 'secret')
-    self.login('barney')
+    self._assertUserExists('barney-login', 'secret')
+    self.loginByUserName('barney-login')
     from AccessControl import getSecurityManager
-    self.assertEqual(str(getSecurityManager().getUser()), 'barney')
+    self.assertEqual(getSecurityManager().getUser().getIdOrUserName(), person.Person_getUserId())
 
     self.login()
     # create a credential recovery
@@ -607,7 +619,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     # associate it with barney
     credential_recovery.setDestinationDecisionValue(person)
-    credential_recovery.setReference(person.getReference())
+    credential_recovery.setReference(login_reference)
     sequence.edit(credential_recovery=credential_recovery)
 
   def stepCreateCredentialRecoveryForUsername(self, sequence=None, sequence_list=None,
@@ -635,8 +647,8 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepRequestCredentialRecoveryWithERP5Site_newCredentialRecovery(self,
       sequence=None, sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
-    self.portal.ERP5Site_newCredentialRecovery(reference=person_reference)
+    login_reference = sequence["login_reference"]
+    self.portal.ERP5Site_newCredentialRecovery(reference=login_reference)
 
   def stepRequestCredentialRecoveryWithERP5Site_newCredentialRecoveryByEmail(
      self, sequence=None, sequence_list=None, **kw):
@@ -644,10 +656,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.ERP5Site_newCredentialRecovery(
                     default_email_text=default_email_text)
 
-  def stepLoginAsCurrentPersonReference(self, sequence=None,
+  def stepLoginAsCurrentLoginReference(self, sequence=None,
       sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
-    self.login(person_reference)
+    login_reference = sequence["login_reference"]
+    self.loginByUserName(login_reference)
 
   def stepCreateCredentialUpdateWithERP5Site_newCredentialUpdate(self,
       sequence=None, sequence_list=None, **kw):
@@ -656,9 +668,9 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepCreateCredentialRecoveryWithSensitiveAnswer(self, sequence=None,
       sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
+    login_reference = sequence["login_reference"]
     result = self.portal.ERP5Site_newCredentialRecovery(
-        reference=person_reference,
+        reference=login_reference,
         default_credential_question_question='credential/library_card_number',
         default_credential_question_answer='ABCDeF',
         )
@@ -667,7 +679,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.login()
     result_list = self.portal.portal_catalog(
-        portal_type='Credential Recovery', reference=person_reference)
+        portal_type='Credential Recovery', reference=login_reference)
     self.assertEqual(1, len(result_list))
     credential_recovery = result_list[0]
     sequence.edit(credential_recovery=credential_recovery)
@@ -681,9 +693,9 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepCheckCredentialRecoveryCreation(self, sequence=None,
       sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
+    login_reference = sequence["login_reference"]
     result_list = self.portal.portal_catalog(
-        portal_type='Credential Recovery', reference=person_reference)
+        portal_type='Credential Recovery', reference=login_reference)
     self.assertEqual(1, len(result_list))
     credential_recovery = result_list[0]
     person = credential_recovery.getDestinationDecisionValue()
@@ -775,8 +787,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertTrue('reset_key' in parameters)
     key = parameters['reset_key'][0]
     # before changing, check that the user exists with 'secret' password
-    self._assertUserExists('barney', 'secret')
-    self.portal.portal_password.changeUserPassword(user_login="barney",
+    self._assertUserExists('barney-login', 'secret')
+    self.portal.portal_password.changeUserPassword(user_login="barney-login",
                                                    password="new_password",
                                                    password_confirm="new_password",
                                                    password_key=key)
@@ -784,10 +796,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     # reset the cache
     self.portal.portal_caches.clearAllCache()
     # check we cannot login anymore with the previous password 'secret'
-    self._assertUserDoesNotExists('barney', 'secret')
+    self._assertUserDoesNotExists('barney-login', 'secret')
 
     # check we can now login with the new password 'new_password'
-    self._assertUserExists('barney', 'new_password')
+    self._assertUserExists('barney-login', 'new_password')
 
   def _createCredentialRequest(self, first_name="Barney",
                                last_name="Simpson",
@@ -833,14 +845,14 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepSetAssigneeRoleToCurrentPersonInCredentialUpdateModule(self,
       sequence=None, sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
-    self.portal.credential_update_module.manage_setLocalRoles(person_reference,
+    user, = self.portal.acl_users.searchUsers(login=sequence['login_reference'], exact_match=True)
+    self.portal.credential_update_module.manage_setLocalRoles(user['id'],
         ['Assignor',])
 
   def stepSetAssigneeRoleToCurrentPersonInCredentialRecoveryModule(self,
       sequence=None, sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
-    self.portal.credential_recovery_module.manage_setLocalRoles(person_reference,
+    user, = self.portal.acl_users.searchUsers(login=sequence['login_reference'], exact_match=True)
+    self.portal.credential_recovery_module.manage_setLocalRoles(user['id'],
         ['Assignor',])
 
   def stepLogin(self, sequence):
@@ -849,8 +861,7 @@ class TestERP5Credential(ERP5TypeTestCase):
   def stepCheckPersonAfterSubscriptionRequest(self, sequence=None,
       sequence_list=None, **kw):
     self.login()
-    person = self.portal.portal_catalog.getResultValue(
-      reference=sequence["person_reference"], portal_type="Person")
+    person = self.portal.acl_users.getUser(sequence['login_reference']).getUserValue()
     self.assertEqual("Homer", person.getFirstName())
     self.assertEqual("Simpson", person.getLastName())
     self.assertEqual("homer.simpson@fox.com", person.getDefaultEmailText())
@@ -859,17 +870,14 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def stepSetAuditorRoleToCurrentPerson(self, sequence=None,
       sequence_list=None, **kw):
-    person_reference = sequence["person_reference"]
     self.login()
-    person = self.portal.portal_catalog.getResultValue(portal_type="Person",
-        reference=person_reference)
-    person.manage_setLocalRoles(person_reference, ["Auditor"])
+    person = self.portal.acl_users.getUser(sequence['login_reference']).getUserValue()
+    person.manage_setLocalRoles(person.Person_getUserId(), ["Auditor"])
     self.logout()
 
   def stepCheckPersonAfterUpdatePerson(self, sequence=None,
       sequence_list=None, **kw):
-    person = self.portal.portal_catalog.getResultValue(
-      reference=sequence["person_reference"], portal_type="Person")
+    person = self.portal.acl_users.getUser(sequence['login_reference']).getUserValue()
     self.assertEqual("tom", person.getFirstName())
     self.assertEqual("Simpson", person.getLastName())
     self.assertEqual("tom@host.com", person.getDefaultEmailText())
@@ -1110,8 +1118,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login()
     self.tic()
-    person = portal_catalog.getResultValue(reference="barney",
-        portal_type="Person")
+    person = self.portal.acl_users.getUser('barney').getUserValue()
     assignment_list = person.objectValues(portal_type="Assignment")
     self.assertNotEquals(assignment_list, [])
     self.assertEqual(len(assignment_list), 1)
@@ -1220,7 +1227,7 @@ class TestERP5Credential(ERP5TypeTestCase):
            "stepCheckPersonAfterSubscriptionRequest " \
            "SetAuditorRoleToCurrentPerson " \
            "SetAssigneeRoleToCurrentPersonInCredentialUpdateModule Tic " \
-           "LoginAsCurrentPersonReference " \
+           "LoginAsCurrentLoginReference " \
            "CreateCredentialUpdateWithERP5Site_newCredentialUpdate Tic " \
            "SelectCredentialUpdate " \
            "AcceptCredentialUpdate Tic "\
@@ -1234,10 +1241,16 @@ class TestERP5Credential(ERP5TypeTestCase):
     reference = self.id()
     person = self.portal.person_module.newContent(portal_type='Person',
       reference=reference,
-      password='secret',
       role='internal')
     assignment = person.newContent(portal_type='Assignment', function='manager')
     assignment.open()
+    # create a login
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference=person.getReference() + '-login',
+      password='secret',
+    )
+    login.validate()
     self.commit()
     credential_update = self.portal.credential_update_module.newContent(
         portal_type='Credential Update',
@@ -1255,13 +1268,20 @@ class TestERP5Credential(ERP5TypeTestCase):
     person_module = self.portal.getDefaultModule('Person')
     person = person_module.newContent(title='Barney',
                              reference='barney',
-                             password='secret',
                              default_email_text='barney@duff.com')
     # create an assignment
     assignment = person.newContent(portal_type='Assignment',
                       function='member')
     assignment.open()
-    sequence.edit(person_reference=person.getReference())
+    # create a login
+    login = person.newContent(
+      portal_type='ERP5 Login',
+      reference=person.getReference() + '-login',
+      password='secret',
+    )
+    login.validate()
+    sequence.edit(person_reference=person.getReference(),
+                  login_reference=login.getReference())
 
   def test_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
@@ -1270,7 +1290,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     sequence_list = SequenceList()
     sequence_string = "CreatePersonWithQuestionUsingCamelCase Tic " \
-        "LoginAsCurrentPersonReference " \
+        "LoginAsCurrentLoginReference " \
         "CreateCredentialRecoveryWithSensitiveAnswer Tic " \
         "AcceptCredentialRecovery Tic " \
         "CheckEmailIsSent Tic "\

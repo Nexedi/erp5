@@ -8,6 +8,7 @@
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
@@ -133,7 +134,14 @@
                   )
                 ]);
               })
-              .push(form_gadget.notifySubmitted.bind(form_gadget))
+              .push(function (result_list) {
+                var message;
+                try {
+                  message = JSON.parse(result_list[1].target.responseText).portal_status_message;
+                } catch (ignore) {
+                }
+                return form_gadget.notifySubmitted(message);
+              })
               .push(function () {
                 return form_gadget.redirect({command: 'reload'});
               })
@@ -141,7 +149,10 @@
                 if ((error.target !== undefined) && (error.target.status === 400)) {
                   return form_gadget.notifySubmitted()
                     .push(function () {
-                      return form_gadget.notifyChange();
+                      return form_gadget.translate('Input data has errors');
+                    })
+                    .push(function (message) {
+                      return form_gadget.notifyChange(message + '.');
                     })
                     .push(function () {
                       return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));

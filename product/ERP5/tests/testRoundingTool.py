@@ -84,7 +84,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     """
     rounding_tool = self.portal.portal_roundings
 
-    self.login('assignor')
+    self.loginByUserName('assignor')
     sale_order = self.portal.sale_order_module.newContent(portal_type='Sale Order')
     sale_order_line = sale_order.newContent(portal_type='Sale Order Line')
 
@@ -98,7 +98,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(sale_order_line.getTotalPrice(), 0.0)
     self.assertEqual(sale_order_line.getProperty('total_price'), 0.0)
 
-    self.login('developer')
+    self.loginByUserName('developer')
     # rounding model dummy never match to sale order line
     rounding_model_dummy= rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_dummy.edit(decimal_rounding_option='ROUND_DOWN',
@@ -119,7 +119,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     rounding_model_1.setCriterion('portal_type', identity=['Sale Order Line'],
                                   min='', max='')
 
-    self.login('assignor')
+    self.loginByUserName('assignor')
     rounding_model_dummy.validate()
     rounding_model_1.validate()
 
@@ -164,7 +164,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
     # add a rounding model for quantity of any portal type
-    self.login('developer')
+    self.loginByUserName('developer')
     rounding_model_2 = rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_2.edit(decimal_rounding_option='ROUND_UP',
                           precision=0.1,
@@ -172,7 +172,7 @@ class TestRoundingTool(ERP5TypeTestCase):
 
     self.tic()
 
-    self.login('assignor')
+    self.loginByUserName('assignor')
 
     # check if price and quantity are rounded
     # if rounding model is not validated, then it is not applied
@@ -206,13 +206,13 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
     # add a rounding model for total price of any portal type
-    self.login('developer')
+    self.loginByUserName('developer')
     rounding_model_3 = rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_3.edit(decimal_rounding_option='ROUND_UP',
                           precision=10,
                           rounded_property_id_list=['total_price'])
 
-    self.login('assignor')
+    self.loginByUserName('assignor')
     rounding_model_3.validate()
 
     self.tic()

@@ -46,7 +46,7 @@ select_expression = {'date' : 'DATE_FORMAT(creation_date, "%s")'%sql_format, 'po
 group_by = ['DATE_FORMAT(creation_date, "%s")' % sql_format, 'portal_type']
 
 # count number of object created by the user for each type of document
-reference = kw.get('person_reference_list', context.getReference())
+reference = kw.get('person_reference_list', context.Person_getUserId())
 result_list = context.portal_catalog.countResults(select_expression=select_expression,
                                                   portal_type=portal_type_list,limit=None,
                                                   owner=reference,query=query,

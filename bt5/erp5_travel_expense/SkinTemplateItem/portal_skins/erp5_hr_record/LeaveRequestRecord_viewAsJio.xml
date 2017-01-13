@@ -76,19 +76,16 @@
                     <value>
                       <list>
                         <string>my_resource</string>
-                        <string>my_quantity</string>
                         <string>my_stop_date</string>
                         <string>my_comment</string>
-                        <string>my_sync_flag</string>
-                        <string>my_doc_id</string>
-                        <string>my_copy_of</string>
-                        <string>my_record_revision</string>
-                        <string>my_photo_data</string>
-                        <string>my_visible_in_html5_app_flag</string>
+                        <string>my_source_reference</string>
                         <string>your_modification_date</string>
                         <string>my_resource_title</string>
                         <string>my_start_date</string>
-                        <string>your_validation_state</string>
+                        <string>your_simulation_state</string>
+                        <string>my_title</string>
+                        <string>your_state</string>
+                        <string>my_sync_flag</string>
                       </list>
                     </value>
                 </item>

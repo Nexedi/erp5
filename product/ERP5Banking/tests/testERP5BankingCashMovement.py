@@ -144,7 +144,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.openCounterDate(site=self.paris)
     self.openCounterDate(site=self.madrid, id='counter_date_2')
 

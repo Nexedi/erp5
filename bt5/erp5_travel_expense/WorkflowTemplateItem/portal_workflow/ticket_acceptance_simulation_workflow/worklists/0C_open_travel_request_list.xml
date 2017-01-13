@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Travel Requests to Close (%(count)s)</string> </value>
+            <value> <string>Travel Requests to Accept (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>

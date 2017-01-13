@@ -91,7 +91,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.openCounterDate(site=self.france)
     self.openCounterDate(site=self.spain, id='counter_date_2')
 

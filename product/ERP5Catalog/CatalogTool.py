@@ -473,7 +473,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         getSecurityQuery instead
       """
       user = _getAuthenticatedUser(self)
-      user_str = str(user)
+      user_str = user.getIdOrUserName()
       user_is_superuser = (user == system_user) or (user_str == ERP5Security.SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
@@ -599,7 +599,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         catalogued with columns.
       """
       user = _getAuthenticatedUser(self)
-      user_str = str(user)
+      user_str = user.getIdOrUserName()
       user_is_superuser = (user == system_user) or (user_str == ERP5Security.SUPER_USER)
       if user_is_superuser:
         # We need no security check for super user.

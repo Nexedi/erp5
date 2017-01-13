@@ -37,11 +37,12 @@
         }
         result = this.declareGadget(url, {scope: 'sub'})
           .push(function (input) {
+            var child = element.firstChild;
             // Clear first to DOM, append after to reduce flickering/manip
-            while (element.firstChild) {
-              element.removeChild(element.firstChild);
+            while (child.firstChild) {
+              child.removeChild(child.firstChild);
             }
-            element.appendChild(input.element);
+            child.appendChild(input.element);
             return input;
           });
       } else {
@@ -61,13 +62,6 @@
           });
       }
       return {};
-    })
-
-    .declareMethod('getTextContent', function () {
-      return this.getDeclaredGadget('sub')
-        .push(function (gadget) {
-          return gadget.getTextContent();
-        });
     })
 
     .declareMethod('checkValidity', function () {

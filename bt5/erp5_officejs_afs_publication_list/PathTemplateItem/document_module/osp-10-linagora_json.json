@@ -1,0 +1,84 @@
+{
+	"title": "Linagora",
+	"logo": "https://www.erp5.com/NXD-Media.Logo.Partner.Linagora?quality=75.0&display=large&format=png",
+	"country": "fr",
+	"presence": ["fr", "ca", "be", "us", "tn", "vn"],
+	"website": "https://www.linagora.com",
+	"founded_year": "2000",
+	"free_software_list": [{
+		"title": "OBM",
+		"logo": "http://www.open-source-guide.com/var/site_smile/storage/images/guide-os/solutions/infrastructure/messagerie-emailing-groupware/obm/372202-41-fre-FR/OBM_logo_solution_categorie.png",
+		"category_list": ["Groupware", "Project management", "Email"],
+		"source_code_download": "https://github.com/linagora/OBM/archive/next.zip",
+		"commercial_support": "https://www.linagora.com/ossa",
+		"wikipedia_url": "https://fr.wikipedia.org/wiki/OBM",
+		"success_case_list": [{
+			"title": "SDIS 59-French fireman local antenna for Nord area",
+			"image": "https://www.linagora.com/sites/default/files/logo_sdis59.jpg",
+			"customer": "SDIS 59",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.linagora.com/story/improve-communication-save-people"
+		}]
+	}, {
+		"title": "LinShare",
+		"logo": "https://pbs.twimg.com/profile_images/2170539396/logo_linshare_web-1357d.png",
+		"category_list": ["Secure sharing solution", "Multi-domain", "Collaborative exchange"],
+		"source_code_download": "https://github.com/linagora/linshare/archive/master.zip",
+		"commercial_support": "https://www.linagora.com/ossa",
+		"wikipedia_url": "",
+		"success_case_list": [{
+			"title": "SDIS 59-French fireman local antenna for Nord area",
+			"image": "https://www.linagora.com/sites/default/files/logo_sdis59.jpg",
+			"customer": "SDIS 59",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.linagora.com/story/improve-communication-save-people"
+		}]
+	}, {
+		"title": "LinID",
+		"logo": "http://www.opensourcesummit.paris/exposant/produits/771.gif",
+		"category_list": ["IAM stack", "Workflow", "Orgcharts"],
+		"source_code_download": "http://www.linid.org/attachments/download/74/linid-dm-sample-dist.zip",
+		"commercial_support": "https://www.linagora.com/ossa",
+		"wikipedia_url": "",
+		"success_case_list": [{
+			"title": "SDIS 59-French fireman local antenna for Nord area",
+			"image": "https://www.linagora.com/sites/default/files/logo_sdis59.jpg",
+			"customer": "SDIS 59",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.linagora.com/story/improve-communication-save-people"
+		}]
+	}, {
+		"title": "Petals ESB",
+		"logo": "https://upload.wikimedia.org/wikipedia/en/5/5f/PEtALS_ESB_logo.png",
+		"category_list": ["Distributed ESB (Enterprise Service Bus)", "Java platform"],
+		"source_code_download": "https://github.com/petalslink/petals-studio/archive/master.zip",
+		"commercial_support": "https://www.linagora.com/ossa",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Petals_ESB",
+		"success_case_list": [{
+			"title": "Scalable infrastructure for content distribution",
+			"image": "https://www.linagora.com/sites/default/files/styles/landscape__800x400_/public/lideal_cinema-jacques_tati_daniche_-_la_salle.jpg?itok=AHzXnbzu",
+			"customer": "Orange",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.linagora.com/story/scalable-infrastructure-content-distribution"
+		}, {
+			"title": "Improve the collection and redistribution processes",
+			"image": "https://www.linagora.com/sites/default/files/logo_acoss.jpg",
+			"customer": "ACOSS",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.linagora.com/story/improve-collection-and-redistribution-processes"
+		}]
+	}, {
+		"title": "OpenPaas",
+		"logo": "http://www.linagora.fr/sites/default/files/logo_openpaas_a_modifier.png",
+		"category_list": ["CLOUD-READY PAAS", "Java platform"],
+		"source_code_download": "https://github.com/linagora/openpaas-esn/archive/master.zip",
+		"commercial_support": "https://www.linagora.com/openpaas#ecosystem",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Openpass",
+		"success_case_list": "N/A"
+	}]
+}

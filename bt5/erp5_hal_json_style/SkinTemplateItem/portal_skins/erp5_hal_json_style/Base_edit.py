@@ -262,23 +262,4 @@ if context.REQUEST.get('is_web_mode', False) and \
     not editable_mode:
   form_id = 'view'
 
-if not selection_index:
-  redirect_url = '%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s' % (
-                                  form_id,
-                                  ignore_layout,
-                                  editable_mode,
-                                  message)
-
-
-else:
-  redirect_url = '%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s' % (
-                              form_id,
-                              selection_index,
-                              selection_name,
-                              ignore_layout,
-                              editable_mode,
-                              message)
-
-
-if silent_mode: return result, 'redirect'
-return context.Base_redirect(redirect_url)
+return context.Base_redirect(keep_items={'portal_status_message': message})

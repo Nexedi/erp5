@@ -82,10 +82,11 @@ class TestAccounting_l10n_fr(AccountingTestCase):
                                         default_email_text=self.recipient_email_address)
       assignment = person.newContent(portal_type='Assignment')
       assignment.open()
+      person.newContent(portal_type='ERP5 Login', reference=self.username).validate()
     self.tic()
 
     uf = self.portal.acl_users
-    uf.zodb_roles.assignRoleToPrincipal('Assignor', self.username)
+    uf.zodb_roles.assignRoleToPrincipal('Assignor', person.Person_getUserId())
     user = uf.getUser(self.username).__of__(uf)
     newSecurityManager(None, user)
 

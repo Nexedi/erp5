@@ -1460,11 +1460,11 @@ class TestIngestion(ERP5TypeTestCase):
                                            dict(group='anybody',
                                                 function='musician/wind/saxophone',
                                                 site='arctic/spitsbergen'))
-    portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
+    portal.document_module.manage_setLocalRoles(user.Person_getUserId(), ['Assignor',])
     self.tic()
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
-    document.discoverMetadata(document.getFilename(), 'contributor1')
+    document.discoverMetadata(document.getFilename(), user.Person_getUserId())
     self.tic()
     self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
     self.assertEqual('anybody', document.getGroup())
@@ -1484,18 +1484,18 @@ class TestIngestion(ERP5TypeTestCase):
     self.createUserAssignment(other_user, dict(group='anybody/a1',))
     self.createUserAssignment(other_user, dict(group='anybody/a2',))
 
-    portal.document_module.manage_setLocalRoles('contributor2', ['Assignor',])
+    portal.document_module.manage_setLocalRoles(other_user.Person_getUserId(), ['Assignor',])
     self.tic()
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
 
     # We only consider the higher group of assignments
-    document.discoverMetadata(document.getFilename(), user.getReference())
+    document.discoverMetadata(document.getFilename(), user.Person_getUserId())
     self.tic()
     self.assertEqual(document.getFilename(), 'TEST-en-002.doc')
     self.assertEqual(['anybody'], document.getGroupList())
 
-    document.discoverMetadata(document.getFilename(), other_user.getReference())
+    document.discoverMetadata(document.getFilename(), other_user.Person_getUserId())
     self.assertEqual(['anybody/a1', 'anybody/a2'], document.getGroupList())
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase1(self):

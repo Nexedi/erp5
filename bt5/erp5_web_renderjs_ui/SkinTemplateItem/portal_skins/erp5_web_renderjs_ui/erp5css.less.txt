@@ -84,6 +84,8 @@
 @focus-border: @border-size @border-type @focus-border-color;
 @focus-box-shadow: 0 0 @double-margin-size @focus-border-color;
 
+@invalid-border: @border-size @border-type @coloraccent;
+@invalid-box-shadow: 0 0 @double-margin-size @coloraccent;
 
 @half-margin-size: 3pt;
 @margin-size: 6pt;
@@ -377,6 +379,12 @@ input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio])
   &:focus {
     border: @focus-border;
     box-shadow: @focus-box-shadow;
+  }
+  &:invalid {
+    border: @invalid-border;
+    &:focus {
+      box-shadow: @invalid-box-shadow;
+    }
   }
 }
 
@@ -959,6 +967,9 @@ div[data-gadget-scope='header'] .ui-header {
 * Gadget: main
 **********************************************/
 .gadget-content {
+  div[data-gadget-scope='m'] {
+    animation: fadein @transition-timing;
+  }
 
   input[type='submit'] {
     padding: @margin-size;
@@ -1126,10 +1137,41 @@ div[data-gadget-scope='header'] .ui-header {
 */
 
   /* form validation (assuming label>span is used) */
-  form label span {
-    color: red;
-  }
+  form label {
+    position: relative;
 
+    span span {
+      animation: fadein @transition-timing;
+
+      @media @desktop, @tablet {
+        background-color: @coloraccent;
+        color: @colorsubheaderlink;
+        left: 110%;
+        position: absolute;
+        bottom: 130%;
+        white-space: pre;
+        padding: @margin-size;
+        border-radius: @border-radius;
+        width: auto;
+        z-index: 1001;
+
+        &:before {
+          position: absolute;
+          top: 100%;
+          left: 2em;
+          display: inline-block;
+          border-right: @margin-size solid transparent;
+          border-top: @margin-size solid @coloraccent;
+          border-left: @margin-size solid transparent;
+          content: '';
+        }
+      }
+      @media @smartphone {
+        margin-left: @margin-size;
+        color: @coloraccent;
+      }
+    }
+  }
 }
 
 /**********************************************
@@ -1196,6 +1238,15 @@ div[data-gadget-scope='header'] .ui-header {
   }
   div[data-gadget-scope=SELECT] {
     flex: 1;
+  }
+}
+
+/**********************************************
+* Gadget: float/integer field
+**********************************************/
+.floatfield, .integerfield {
+  p, input {
+    text-align: right;
   }
 }
 
@@ -1287,6 +1338,7 @@ div[data-gadget-scope='erp5_searchfield'] {
     }
 
     tbody {
+      animation: fadein @transition-timing;
 
       tr {
         &:nth-child(even) {
@@ -1414,6 +1466,34 @@ div[data-gadget-scope='erp5_searchfield'] {
 }
 
 /**********************************************
+* Notification
+**********************************************/
+div[data-gadget-scope='notification'] {
+  position: fixed;
+  z-index: 99999;
+  bottom: @double-margin-size;
+
+  right: -@panelwidth - @double-margin-size;
+  transition: transform 200ms ease-out;
+  transform: translate3d(0, 0, 0);
+  &.visible {
+    transform: translate3d(-@panelwidth - @double-margin-size - @main-margin-size-desktop, 0, 0);
+    @media @smartphone {
+      transform: translate3d(-@panelwidth - @double-margin-size - @main-margin-size-smartphone, 0, 0);
+    }
+  }
+
+  button {
+    text-align: left;
+    width: @panelwidth;
+    padding: @double-margin-size;
+    background-color: @coloraccent;
+    color: @colorsubheaderlink;
+    border-radius: @border-radius;
+  }
+}
+
+/**********************************************
 * JQM
 **********************************************/
 .ui-disabled {
@@ -1427,11 +1507,27 @@ div[data-gadget-scope='erp5_searchfield'] {
 }
 
 /**********************************************
+* First loader
+**********************************************/
+.first-loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 300%;
+}
+
+/**********************************************
 * Keyframes
 **********************************************/
 @keyframes spin {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
+}
+
+@keyframes fadein {
+    from {opacity:0;}
+    to {opacity:1;}
 }
 
 /**********************************************

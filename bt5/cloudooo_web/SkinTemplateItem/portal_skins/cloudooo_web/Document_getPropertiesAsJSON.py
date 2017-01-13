@@ -3,7 +3,7 @@
 from Products.ERP5Type.JSONEncoder import encodeInJson as dumps
 
 portal = context.getPortalObject()
-reference = portal.portal_membership.getAuthenticatedMember().getUserName()
+reference = portal.portal_membership.getAuthenticatedMember().getIdOrUserName()
 processing = None
 
 if reference == "Anonymous User":

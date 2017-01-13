@@ -113,7 +113,7 @@ class TestBug(ERP5TypeTestCase):
     uf._doAddUser('mame', '', ['Assignor','Assignee'], [])
     if not uf.getUser('dummy'):
       uf._doAddUser('manager', '', ['Manager'], [])
-      self.login('manager')
+      self.loginByUserName('manager')
       person_module = portal.getDefaultModule(self.person_portal_type)
       person = person_module.newContent(id='dummy', title='dummy',
                                         reference='dummy')
@@ -126,6 +126,7 @@ class TestBug(ERP5TypeTestCase):
                                      start_date='1980-01-01',
                                      stop_date='2099-12-31')
       assignment.open()
+      person.newContent(portal_type='ERP5 Login', reference='dummy').validate()
       self.tic()
       portal_type_list = []
       for portal_type in (self.project_portal_type,
@@ -151,7 +152,7 @@ class TestBug(ERP5TypeTestCase):
       self.tic()
       portal.portal_caches.clearAllCache()
 
-    self.login('dummy')
+    self.loginByUserName('dummy')
 
 
   def stepCreateProject(self,sequence=None, sequence_list=None, \
@@ -588,7 +589,7 @@ class TestBug(ERP5TypeTestCase):
     verify that we can still resolve a bug with a
     deleted bug line
     """
-    self.login('mame')
+    self.loginByUserName('mame')
     bug_portal_type = 'Bug'
     bug_line_portal_type = 'Bug Line'
     module = self.portal.getDefaultModule(portal_type=bug_portal_type)

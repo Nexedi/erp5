@@ -1,0 +1,334 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test OfficeJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_bookmark_manager/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Local is Enough']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Local is Enough']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<!-- Save 1st bookmark -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>My cloud</td>
+  <td>title_1</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=cloud</td>
+  <td>url_1</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='title']</td>
+  <td>${title_1}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='url_string']</td>
+  <td>${url_1}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!-- Save 2nd Bookmark -->
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Bookmark List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Bookmark List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>My blog</td>
+  <td>title_2</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=blog</td>
+  <td>url_2</td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='title']</td>
+  <td>${title_2}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='url_string']</td>
+  <td>${url_2}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!-- Search With Dispatcher -->
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='search']</td>
+  <td>cloud</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]header-submit']</td>
+  <td></td>
+</tr>
+<!--- Verify Search --->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//table//tbody//tr//td</td>
+  <td></td>
+</tr>
+<!--- Set preferences --->
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Preferences']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Preferences']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='auto_redirect']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='auto_redirect']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='search_engine']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='search_engine']</td>
+  <td>${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!--- Do search and redirect on bookmark --->
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='search']</td>
+  <td>cloud</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]header-submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td>Title is : cloud</td>
+</tr>
+<!--- Do search and redirect on search engine --->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_bookmark_manager/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='search']</td>
+  <td>chocolate</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]header-submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td>Title is : chocolate</td>
+</tr>
+</tbody></table>
+</body>
+</html>

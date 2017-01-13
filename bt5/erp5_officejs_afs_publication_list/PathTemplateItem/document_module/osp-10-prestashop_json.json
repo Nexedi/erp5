@@ -1,0 +1,38 @@
+{
+	"title": "BlueMind",
+	"logo": "https://blog-centreon-wordpress.s3.amazonaws.com/wp-content/uploads/2013/09/logo_bluemind_1000px.jpg",
+	"country": "fr",
+	"presence": ["fr"],
+	"website": "https://www.bluemind.net/en/",
+	"founded_year": "2000",
+	"free_software_list": [{
+		"title": "BlueMind",
+		"logo": "https://blog-centreon-wordpress.s3.amazonaws.com/wp-content/uploads/2013/09/logo_bluemind_1000px.jpg",
+		"category_list": ["Webmail", "Calendars", "Contacts and address books", "Tasks", "Instant messaging", "Unified communications", "Admin console", "Security", "LDAP directory synchronization"],
+		"source_code_download": "http://git.blue-mind.net/gitlist/bluemind/tarball/release/3",
+		"commercial_support": "https://www.bluemind.net/en/purchasing-bluemind/",
+		"wikipedia_url": "https://fr.wikipedia.org/wiki/Blue_Mind_(logiciel)",
+		"success_case_list": [{
+			"title": "Migration to BlueMind at Saint-Ouen City Council",
+			"image": "https://www.bluemind.net/wp-content/uploads/2016/01/sto_quadri_base-300x209.jpg",
+			"customer": "Saint-Ouen City Council",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.bluemind.net/en/client-case-studies/saint-ouen-city-council/"
+		}, {
+			"title": "Migration to BlueMind at Groupe Gagneraud",
+			"image": "https://www.bluemind.net/wp-content/uploads/2016/03/Groupe-Gagneraud-1.jpg",
+			"customer": "Groupe Gagneraud",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.bluemind.net/en/client-case-studies/groupe-gagneraud/"
+		}, {
+			"title": "Migration to BlueMind at Centre Hospitalier des Pyrénées",
+			"image": "https://www.bluemind.net/wp-content/uploads/2016/03/logo-ch-pyr-1.jpg",
+			"customer": "Centre Hospitalier des Pyrénées",
+			"country": "fr",
+			"language": "en",
+			"url": "https://www.bluemind.net/en/client-case-studies/centre-hospitalier-des-pyrenees/"
+		}]
+	}]
+}

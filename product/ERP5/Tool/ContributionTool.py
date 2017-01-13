@@ -480,7 +480,7 @@ class ContributionTool(BaseTool):
       sm = getSecurityManager()
       user = sm.getUser()
       object_list = self.portal_catalog(portal_type=self.getPortalMyDocumentTypeList(),
-                                        owner=str(user))
+                                        owner=user.getIdOrUserName())
 
     def wrapper(o_list):
       for o in o_list:

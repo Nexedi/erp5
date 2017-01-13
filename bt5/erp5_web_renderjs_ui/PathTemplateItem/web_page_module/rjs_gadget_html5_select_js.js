@@ -109,11 +109,6 @@
       return result;
     })
 
-    .declareMethod('getTextContent', function () {
-      var select = this.element.querySelector('select');
-      return select.options[select.selectedIndex].text;
-    })
-
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
       var result = this.element.querySelector('select').checkValidity();

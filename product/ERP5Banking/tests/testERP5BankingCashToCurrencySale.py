@@ -83,7 +83,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       ],
     })
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     self.openCounterDate(site=counter)
     self.openCounter(site=counter)
 

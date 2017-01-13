@@ -4,7 +4,7 @@
 from Products.ERP5Type.Log import log
 
 portal = context.getPortalObject()
-reference = portal.portal_membership.getAuthenticatedMember().getUserName()
+reference = portal.portal_membership.getAuthenticatedMember().getId()
 kw = {'reference': reference}
 
 # XXX: This try except is used in case of connection refused

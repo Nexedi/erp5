@@ -60,6 +60,12 @@
                 <string>validate</string>
                 <string>suspend</string>
                 <string>invalidate</string>
+                <string>plan</string>
+                <string>confirm</string>
+                <string>reject</string>
+                <string>approve</string>
+                <string>accept</string>
+                <string>cancel</string>
               </list>
             </value>
         </item>
@@ -72,6 +78,8 @@
             <value>
               <list>
                 <string>Expense Validation Request</string>
+                <string>Leave Request</string>
+                <string>Leave Request Period</string>
                 <string>Travel Request</string>
               </list>
             </value>

@@ -60,10 +60,6 @@
       return {};
     })
 
-    .declareMethod('getTextContent', function () {
-      return "";
-    })
-
     .declareMethod('checkValidity', function () {
       if (this.state.editable) {
         return this.getDeclaredGadget('sub')

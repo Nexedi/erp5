@@ -369,10 +369,10 @@ class TestArchive(InventoryAPITestCase):
     person = self.portal.person_module.newContent(reference=login)
     try:
       self.tic()
-      PortalTestCase.login(self, login)
+      PortalTestCase.login(self, person.Person_getUserId())
       self.assertEqual(['green'], getSecurityManager().getUser().getGroups())
       self.portal.portal_caches.clearAllCache()
-      PortalTestCase.login(self, login)
+      PortalTestCase.login(self, person.Person_getUserId())
       unittest.expectedFailure(self.assertEqual)(
         ['green'], getSecurityManager().getUser().getGroups())
     finally:

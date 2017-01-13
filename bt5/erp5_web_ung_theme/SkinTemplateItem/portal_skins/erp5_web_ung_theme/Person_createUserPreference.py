@@ -8,8 +8,8 @@ if REQUEST is not None:
 
 portal = context.getPortalObject()
 
-if not context.getReference():
-  # noop in case if invoked on non loggable object
+if not context.Person_getUserId():
+  # noop in case if invoked on non-user object
   return
 
 from Products.ERP5Type.Message import translateString

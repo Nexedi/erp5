@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Success Story</title>
+  
+  <script src="rsvp.js"></script>
+  <script src="renderjs.js"></script>
+  <script src="handlebars.js"></script>
+  
+  <link type="text/css" rel="stylesheet" href="gadget_erp5_afs.css" />
+  
+  <script src="gadget_erp5_page_afs_success_case.js"></script>
+  
+  <script id="display-template" type="text/x-handlebars-template">
+    <section class="ui-grid-container ui-responsive">
+      <h1>{{title}}</h1>
+      {{#if image}}
+        <div class="custom-success-story-image-wrapper"><a href="{{url}}"><img src="{{image}}" alt></a></div>
+      {{else}}
+        <div>&nbsp;</div>
+      {{/if}}
+      
+      <p class="custom-success-story-description">{{description}} <a href="{{url}}">Read more</a></p>
+      <p>Industry: {{industry}}</p>
+      <ul class="custom-success-story-category-list"><lh>Categories:</lh> 
+        {{#each ../category_list}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
+      <p class="custom-success-story-client">Customer: <span>{{customer}}</span></p>
+      <p>Country: {{country}}</p>
+      <p>Language: {{language}}</p>
+      <p>Software: {{software}}</p>
+      <p>Publisher: {{publisher}}</p>
+
+    </section>
+  </script>
+  </head>
+  <body>
+    <div class="display-widget"></div>
+  </body>
+</html>

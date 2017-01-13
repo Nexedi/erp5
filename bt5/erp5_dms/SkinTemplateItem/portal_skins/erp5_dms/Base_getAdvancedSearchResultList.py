@@ -71,7 +71,7 @@ if len(where_expression_list):
 
 if parsed_search_string.get('mine', None) is not None:
   # user wants only his documents
-  query_kw['owner'] = str(portal.portal_membership.getAuthenticatedMember())
+  query_kw['owner'] = portal.portal_membership.getAuthenticatedMember().getId()
 
 # add contributor title
 contributor_title = parsed_search_string.get('contributor_title', None)

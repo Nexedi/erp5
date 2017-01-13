@@ -505,6 +505,8 @@ class ColumnMap(object):
     assert group in self.registry, (group, self.registry)
     assert column in self.registry[group], (column, group,
       self.registry[group])
+    assert table_name
+    assert column
     column_map_key = (group, column)
     column_map = self.column_map
     assert (group, table_name) in self.table_alias_dict, (group, table_name,

@@ -25,7 +25,7 @@
 <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">
 <li><a tal:attributes="href python:'%s/logout' % web_site_url">
     <tal:block i18n:translate="" i18n:domain="ui">Logout</tal:block>
-    (<tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getUserName()" />)</a></li>
+    (<tal:block tal:replace="python:here.portal_membership.getAuthenticatedMember().getId()" />)</a></li>
 </tal:block>
 </ul>
 </div>

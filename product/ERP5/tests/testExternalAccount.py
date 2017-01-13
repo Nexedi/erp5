@@ -56,7 +56,7 @@ class TestExternalAccount(ERP5TypeTestCase):
 
     uf = portal.acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    self.login(self.manager_username)
+    self.loginByUserName(self.manager_username)
 
     # Setup auth policy
     preference = portal.portal_preferences.newContent(

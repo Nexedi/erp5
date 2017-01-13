@@ -27,7 +27,7 @@ if not portal.person_module.has_key('test_webmaster'):
 else:
   person = portal.person_module.test_webmaster
 person.edit(first_name='Test', last_name='Webmaster',
-            reference='test_webmaster', password='test_webmaster')
+            reference='test_webmaster')
 person.setRole('internal')
 if not len(person.objectValues(portal_type='Assignment')):
   assignment = person.newContent(portal_type='Assignment')
@@ -36,6 +36,13 @@ if not len(person.objectValues(portal_type='Assignment')):
                   stop_date=DateTime('2990/12/31'))
   if assignment.getValidationState() != 'open':
     assignment.open()
+if not len(person.objectValues(portal_type='ERP5 Login')):
+  login = person.newContent(
+    portal_type='ERP5 Login',
+    reference='test_webmaster',
+    password='test_webmaster',
+  )
+  login.validate()
 if person.getValidationState() != 'validated':
   person.validate()
 

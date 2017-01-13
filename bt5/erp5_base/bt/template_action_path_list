@@ -32,6 +32,7 @@ Delivery Type | role_view
 Delivery Type | translation_view
 Delivery Type | update_local_roles
 Delivery Type | view
+ERP5 Login | view
 Email | change_function
 Email | view
 Embedded File | download
@@ -86,7 +87,9 @@ Person | financial_view
 Person | person_detailed_report
 Person | terminate_career
 Person | view
+Preference Tool | advanced
 Preference | base_preference
+Preference | change_password
 Previous Causality Movement Group | view
 Property Assignment Movement Group | view
 Property Grouping Movement Group | view

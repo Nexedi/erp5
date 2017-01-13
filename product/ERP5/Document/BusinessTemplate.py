@@ -3365,14 +3365,14 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
         prop_value = role.get(property)
         if prop_value:
           if isinstance(prop_value, str):
-            prop_value = prop_value.decode('utf-8')
+            prop_value = escape(prop_value.decode('utf-8'))
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
       for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
-            prop_value = prop_value.decode('utf-8')
+            prop_value = escape(prop_value.decode('utf-8'))
           xml_data += "\n   <multi_property "\
           "id='%s'>%s</multi_property>" % (property, prop_value)
       xml_data += "\n  </role>"

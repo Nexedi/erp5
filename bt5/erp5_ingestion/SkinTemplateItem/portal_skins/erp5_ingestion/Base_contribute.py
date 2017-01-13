@@ -18,7 +18,7 @@ if redirect_to_document is None:
   redirect_to_document = portal.portal_preferences.isPreferredRedirectToDocument(False)
 if user_login is None:
   # get current authenticated user
-  user_login = str(portal.portal_membership.getAuthenticatedMember())
+  user_login = portal.portal_membership.getAuthenticatedMember().getId()
 
 document_kw = {'user_login': user_login,
                'group': group,

@@ -112,7 +112,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       This user will be used to initialize data in the method afterSetup
     """
     self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
-    self.login('manager')
+    self.loginByUserName('manager')
 
   def createERP5Users(self, user_dict):
     """
@@ -137,7 +137,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                     )
       if self.PAS_installed and len(user_roles) > 0:
         # In the case of PAS, if we want global roles on user, we have to do it manually.
-        self.assignPASRolesToUser(user_login, user_roles)
+        self.assignPASRolesToUser(person.Person_getUserId(), user_roles)
       elif not self.PAS_installed:
         # The user_folder counterpart of the erp5 user must be
         #   created manually in the case of NuxUserGroup.
@@ -150,6 +150,10 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       #   by the assignment workflow when NuxUserGroup is used and
       #   by ERP5Security PAS plugins in the context of PAS use.
       assignment.open()
+      person.newContent(
+        portal_type='ERP5 Login',
+        reference=user_login,
+      ).validate()
 
     if self.PAS_installed:
       # reindexing is required for the security to work

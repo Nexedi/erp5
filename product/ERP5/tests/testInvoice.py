@@ -129,15 +129,15 @@ class TestInvoiceMixin(TestPackingListMixin):
                     ['Assignee', 'Assignor', 'Member',
                      'Associate', 'Auditor', 'Author'])
     self.createUser('manager', ['Manager'])
-    self.login('manager')
+    self.loginByUserName('manager')
     self.createCategories()
     self.validateRules()
     self.createBusinessProcess()
-    self.login('test_user')
+    self.loginByUserName('test_user')
 
   def beforeTearDown(self):
     self.abort()
-    self.login('manager')
+    self.loginByUserName('manager')
     super(TestInvoiceMixin, self).beforeTearDown()
     for folder in (self.portal.accounting_module,
                    self.portal.organisation_module,

@@ -42,14 +42,14 @@
     };
   }
 
-  function route(my_root_gadget, my_scope, my_method, my_param_list) {
+  function route(my_root_gadget, my_scope, my_method, argument_list) {
     return RSVP.Queue()
       .push(function () {
         return my_root_gadget.getDeclaredGadget(my_scope);
       })
       .push(function (my_gadget) {
-        if (my_param_list) {
-          return my_gadget[my_method].apply(my_gadget, my_param_list);
+        if (argument_list) {
+          return my_gadget[my_method].apply(my_gadget, argument_list);
         }
         return my_gadget[my_method]();
       });
@@ -296,14 +296,23 @@
 
     // XXX Those methods may be directly integrated into the header,
     // as it handles the submit triggering
-    .allowPublicAcquisition('notifySubmitting', function () {
-      return route(this, "header", 'notifySubmitting');
+    .allowPublicAcquisition('notifySubmitting', function (argument_list) {
+      return RSVP.all([
+        route(this, "header", 'notifySubmitting'),
+        route(this, "notification", 'notify', argument_list)
+      ]);
     })
-    .allowPublicAcquisition('notifySubmitted', function () {
-      return route(this, "header", "notifySubmitted");
+    .allowPublicAcquisition('notifySubmitted', function (argument_list) {
+      return RSVP.all([
+        route(this, "header", 'notifySubmitted'),
+        route(this, "notification", 'notify', argument_list)
+      ]);
     })
-    .allowPublicAcquisition('notifyChange', function () {
-      return route(this, "header", 'notifyChange');
+    .allowPublicAcquisition('notifyChange', function (argument_list) {
+      return RSVP.all([
+        route(this, "header", 'notifyChange'),
+        route(this, "notification", 'notify', argument_list)
+      ]);
     })
 
     .allowPublicAcquisition('refresh', function () {
@@ -491,7 +500,7 @@
         });
     })
     // Render the page
-    .declareMethod('render', function (route_result) {
+    .declareMethod('render', function (route_result, keep_message) {
       var gadget = this;
 
       // Reinitialize the loading counter
@@ -504,16 +513,14 @@
           return increaseLoadingCounter(gadget);
         })
         .push(function () {
-          return gadget.getDeclaredGadget('panel');
-        })
-        .push(function (panel_gadget) {
-          return panel_gadget.close();
-        })
-        .push(function () {
-          return gadget.getDeclaredGadget('editor_panel');
-        })
-        .push(function (editor_panel) {
-          return editor_panel.close();
+          var promise_list = [
+            route(gadget, 'panel', 'close'),
+            route(gadget, 'editor_panel', 'close')
+          ];
+          if (keep_message !== true) {
+            promise_list.push(route(gadget, 'notification', 'close'));
+          }
+          return RSVP.all(promise_list);
         })
         .push(function () {
           return gadget.changeState({url: route_result.url,

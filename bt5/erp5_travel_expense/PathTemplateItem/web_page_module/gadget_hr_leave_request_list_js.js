@@ -48,10 +48,8 @@
                 gadget.props.translation_dict["Not synced!"];
             } else {
               result.data.rows[i].value.state =
-                gadget.props.translation_dict[
-                  result.data.rows[i].value.local_state ||
-                    "Waiting for approval"
-                ];
+                result.data.rows[i].value.state || gadget.props.translation_dict[
+                  "Waiting for approval"];
             }
           }
           return result;

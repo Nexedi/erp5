@@ -5,7 +5,7 @@
 document_type_list = context.EGov_getAllowedFormTypeList()
 portal = context.getPortalObject()
 
-user_name = context.portal_membership.getAuthenticatedMember().getUserName()
+user_name = context.portal_membership.getAuthenticatedMember().getIdOrUserName()
 
 form_list = portal.portal_catalog(\
                                 portal_type=document_type_list, 

@@ -50,53 +50,55 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(portal_type='Person',
       reference=login, password=login)
     person.newContent(portal_type='Assignment').open()
+    person.newContent(portal_type='ERP5 Login', reference=login).validate()
     self.tic()
-    return login
+    return person.getUserId(), login
 
   def test_person_request_certificate(self):
-    login = self._createPerson()
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    user_id, login = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
     certificate = person.getCertificate()
-    self.assertTrue('CN=%s' % login in certificate['certificate'])
+    self.assertTrue('CN=%s' % user_id in certificate['certificate'])
 
   def test_person_revoke_certificate(self):
-    login = self._createPerson()
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    user_id, login = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
     self.assertRaises(ValueError, person.revokeCertificate)
 
   def test_person_request_revoke_certificate(self):
-    login = self._createPerson()
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    user_id, login = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
     certificate = person.getCertificate()
-    self.assertTrue('CN=%s' % login in certificate['certificate'])
+    self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     person.revokeCertificate()
 
   def test_person_request_certificate_twice(self):
-    login = self._createPerson()
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    user_id, login = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
     certificate = person.getCertificate()
-    self.assertTrue('CN=%s' % login in certificate['certificate'])
+    self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     self.assertRaises(ValueError, person.getCertificate)
 
   def test_person_request_certificate_for_another(self):
-    login = self._createPerson()
-    login2 = self._createPerson()
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login2)
+    user_id, login = self._createPerson()
+    user_id2, login2 = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    self.loginByUserName(login2)
     self.assertRaises(Unauthorized, person.getCertificate)
 
   def test_person_revoke_certificate_for_another(self):
-    login = self._createPerson()
-    login2 = self._createPerson()
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue(login)
-    self.login(login)
+    user_id, login = self._createPerson()
+    user_id2, login2 = self._createPerson()
+    self.loginByUserName(login)
+    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
     certificate = person.getCertificate()
-    self.assertTrue('CN=%s' % login in certificate['certificate'])
-    self.login(login2)
+    self.assertTrue('CN=%s' % user_id in certificate['certificate'])
+    self.loginByUserName(login2)
     self.assertRaises(Unauthorized, person.revokeCertificate)
 
 def test_suite():

@@ -121,7 +121,7 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
     # call method to create this user
     self.createERP5Users(user_dict)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
 
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',

@@ -359,13 +359,14 @@ function installDoubleSubmitDialogPrevention(confirmation_message) {
   /* Install an handler to prevent submitting a dialog twice. */
   $(document).ready( function() {
     $(".dialog_submit_button").on("click", function(e){
-      $(this).on("click.confirm", function(event) {
-        $(this).off(".confirm");
-        if (! confirm(confirmation_message) ) {
-          event.preventDefault();
-        }
-      });
+      if ($(this).val() != "Next") {
+        $(this).on("click.confirm", function(event) {
+          $(this).off(".confirm");
+          if (! confirm(confirmation_message) ) {
+            event.preventDefault();
+          }
+        });
+      }
     });
   });
 }
-

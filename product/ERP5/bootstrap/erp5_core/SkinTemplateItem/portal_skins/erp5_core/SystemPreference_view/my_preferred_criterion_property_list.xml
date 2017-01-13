@@ -10,10 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
-                <string>default</string>
                 <string>height</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -56,12 +55,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -71,6 +64,10 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -88,12 +85,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>List of criterion properties used for predicate</string> </value>
@@ -120,19 +111,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:here.getPreferredCriterionPropertyList() or preferences.getPreferredCriterionPropertyList()</string> </value>
         </item>
       </dictionary>
     </pickle>

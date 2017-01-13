@@ -34,14 +34,21 @@ from Products.ERP5.Document.Node import Node
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
 from Products.ERP5.mixin.login_account_provider import LoginAccountProviderMixin
+from Products.ERP5.mixin.erp5_user import ERP5UserMixin
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 
 try:
   from Products import PluggableAuthService
   from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+  from Products.ERP5Security.ERP5LoginUserManager import ERP5LoginUserManager
 except ImportError:
   PluggableAuthService = None
 
-class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
+class UserExistsError(ValidationFailed):
+  def __init__(self, user_id):
+    super(UserExistsError, self).__init__('user id %s already exists' % (user_id, ))
+
+class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin, ERP5UserMixin):
     """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,
@@ -121,6 +128,56 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
           self.hasMiddleName() or \
           self._baseHasTitle()
 
+    def __checkUserIdAvailability(self, pas_plugin_class, user_id=None, login=None):
+      # Encode reference to hex to prevent uppercase/lowercase conflict in
+      # activity table (when calling countMessageWithTag)
+      if user_id:
+        tag = 'set_userid_' + user_id.encode('hex')
+      else:
+        tag = 'set_login_' + login.encode('hex')
+      # Check that there no existing user
+      acl_users = getattr(self, 'acl_users', None)
+      if PluggableAuthService is not None and isinstance(acl_users,
+            PluggableAuthService.PluggableAuthService.PluggableAuthService):
+        plugin_name_set = {
+          plugin_name for plugin_name, plugin_value in acl_users.plugins.listPlugins(
+            PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin,
+          ) if isinstance(plugin_value, pas_plugin_class)
+        }
+        if plugin_name_set:
+          if any(
+            user['pluginid'] in plugin_name_set
+            for user in acl_users.searchUsers(
+              id=user_id,
+              login=login,
+              exact_match=True,
+            )
+          ):
+            raise UserExistsError(user_id)
+        else:
+          # PAS is used, without expected enumeration plugin: property has no
+          # effect on user enumeration, skip checks.
+          # XXX: what if desired plugin becomes active later ?
+          return
+      # Check that there is no reindexation related to reference indexation
+      if self.getPortalObject().portal_activities.countMessageWithTag(tag):
+        raise UserExistsError(user_id)
+
+      # Prevent concurrent transaction to set the same reference on 2
+      # different persons
+      # XXX: person_module is rather large because of all permission
+      # declarations, it would be better to find a smaller document to use
+      # here.
+      self.getParentValue().serialize()
+      # Prevent to set the same reference on 2 different persons during the
+      # same transaction
+      transactional_variable = getTransactionalVariable()
+      if tag in transactional_variable:
+        raise UserExistsError(user_id)
+      else:
+        transactional_variable[tag] = None
+      self.reindexObject(activate_kw={'tag': tag})
+
     def _setReference(self, value):
       """
         Set the user id. This method is defined explicitly, because:
@@ -130,45 +187,32 @@ class Person(Node, LoginAccountProviderMixin, EncryptedPasswordMixin):
         - we want to prevent duplicated user ids, but only when
           PAS _AND_ ERP5UserManager are used
       """
-      activate_kw = {}
-      portal = self.getPortalObject()
-      if value:
-        # Encode reference to hex to prevent uppercase/lowercase conflict in
-        # activity table (when calling countMessageWithTag)
-        activate_kw['tag'] = tag = 'Person_setReference_' + value.encode('hex')
-        # Check that there no existing user
-        acl_users = portal.acl_users
-        if PluggableAuthService is not None and isinstance(acl_users,
-              PluggableAuthService.PluggableAuthService.PluggableAuthService):
-          plugin_list = acl_users.plugins.listPlugins(
-              PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin)
-          for plugin_name, plugin_value in plugin_list:
-            if isinstance(plugin_value, ERP5UserManager):
-              user_list = acl_users.searchUsers(id=value,
-                                                exact_match=True)
-              if len(user_list) > 0:
-                raise RuntimeError, 'user id %s already exist' % (value,)
-              break
-        # Check that there is no reindexation related to reference indexation
-        if portal.portal_activities.countMessageWithTag(tag):
-          raise RuntimeError, 'user id %s already exist' % (value,)
+      if value != self.getUserId():
+        if value:
+          self.__checkUserIdAvailability(
+            pas_plugin_class=ERP5UserManager,
+            login=value,
+          )
+        self._baseSetReference(value)
+        # invalid the cache for ERP5Security
+        self.getPortalObject().portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
 
-        # Prevent concurrent transaction to set the same reference on 2
-        # different persons
-        self.getParentValue().serialize()
-        # Prevent to set the same reference on 2 different persons during the
-        # same transaction
-        transactional_variable = getTransactionalVariable()
-        if tag in transactional_variable:
-          raise RuntimeError, 'user id %s already exist' % (value,)
-        else:
-          transactional_variable[tag] = None
+    def _setUserId(self, value):
+      """
+        Set the user id. This method is defined explicitly, because:
 
-      self._baseSetReference(value)
-      self.reindexObject(activate_kw=activate_kw)
-      # invalid the cache for ERP5Security
-      portal_caches = portal.portal_caches
-      portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
+        - we want to apply a different permission
+
+        - we want to prevent duplicated user ids, but only when
+          PAS _AND_ ERP5LoginUserManager are used
+      """
+      if value != self.getUserId():
+        if value:
+          self.__checkUserIdAvailability(
+            pas_plugin_class=ERP5LoginUserManager,
+            user_id=value,
+          )
+        self._baseSetUserId(value)
 
     # Time management
     security.declareProtected(Permissions.AccessContentsInformation,

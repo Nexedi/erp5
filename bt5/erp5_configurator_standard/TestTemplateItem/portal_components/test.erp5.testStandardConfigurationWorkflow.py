@@ -225,7 +225,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                         person.getFirstName())
       self.assertEqual(user_info["field_your_last_name"],
                         person.getLastName())
-      self.assertNotEquals(person.getPassword(), None)
       self.assertEqual(user_info["field_your_function"],
                         person.getFunction())
       self.assertEqual(user_info["field_your_default_email_text"],
@@ -236,6 +235,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       assignment_list = person.contentValues(portal_type='Assignment')
       self.assertEqual(len(assignment_list), 1)
       self.assertEqual('my_group', assignment_list[0].getGroup())
+      login_list = person.contentValues(portal_type='ERP5 Login')
+      self.assertEqual(len(login_list), 1)
+      self.assertNotEquals(login_list[0].getPassword(), None)
 
   def stepCheckSocialTitleCategory(self, sequence=None,sequence_list=None, **kw):
     """Check that the social title category is configured.
@@ -406,18 +408,18 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
   def stepCheckEventResourceItemList(self, sequence=None, sequence_list=None):
     self.assertTrue(self.all_username_list)
-    for username in self.all_username_list:
+    for user_id in self._getUserIdList(self.all_username_list):
       for event_type in ('Visit', 'Web Message', 'Letter', 'Note',
                          'Phone Call', 'Mail Message', 'Fax Message'):
-        self._loginAsUser(username)
+        self._loginAsUser(user_id)
         event = self.portal.event_module.newContent(portal_type=event_type)
         self.assertTrue(('Complaint', 'service_module/event_complaint')
           in event.Event_getResourceItemList())
 
   def stepCheckTicketResourceItemList(self, sequence=None, sequence_list=None):
     self.assertTrue(self.all_username_list)
-    for username in self.all_username_list:
-      self._loginAsUser(username)
+    for user_id in self._getUserIdList(self.all_username_list):
+      self._loginAsUser(user_id)
       ticket = self.portal.support_request_module.newContent(
 					portal_type='Support Request')
       self.assertTrue(('Financial Support', 'service_module/support_financial')
@@ -765,9 +767,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual('2008', period.getShortTitle())
 
     # security on this period has been initialised
-    for username in self.accountant_username_list:
+    for user_id in self._getUserIdList(self.accountant_username_list):
       self.failUnlessUserCanPassWorkflowTransition(
-          username, 'cancel_action', period)
+          user_id, 'cancel_action', period)
 
   def stepCheckSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1000,7 +1002,8 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
 
     # stepPlanSaleOrders
     self.assertEqual(order.getSimulationState(), 'draft')
-    self._loginAsUser(self.sales_manager_reference)
+    sales_manager_id, = self._getUserIdList([self.sales_manager_reference])
+    self._loginAsUser(sales_manager_id)
     self.portal.portal_workflow.doActionFor(order, 'plan_action')
     self.tic()
     self.assertEqual(order.getSimulationState(), 'planned')

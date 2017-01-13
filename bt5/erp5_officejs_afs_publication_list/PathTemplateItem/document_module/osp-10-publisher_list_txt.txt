@@ -1,0 +1,16 @@
+apple.json
+bluemind.json
+commerceguys.json
+google.json
+linagora.json
+magento.json
+mariadb.json
+microsoft.json
+mongodb.json
+nexedi.json
+odoo.json
+pentaho.json
+prestashop.json
+sensiolabs.json
+talend.json
+xwiki.json

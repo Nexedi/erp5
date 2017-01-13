@@ -111,7 +111,7 @@ class TestERP5BankingCheckbookDeliveryMixin(TestERP5BankingMixin):
                                                  currency=self.currency_1,
                                                  amount=100000)
     self.logout()
-    self.login('super_user')
+    self.loginByUserName('super_user')
     # open counter date and counter
     self.openCounterDate(site=self.paris)
     # this is required in order to have some items

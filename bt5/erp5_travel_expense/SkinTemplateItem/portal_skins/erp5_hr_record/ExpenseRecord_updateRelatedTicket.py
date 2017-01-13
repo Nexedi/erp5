@@ -21,7 +21,12 @@ record.setDestinationReference(ticket.getReference())
 
 record.setFollowUpValue(ticket)
 
-
+related_mission_url = record.getRelatedMissionUrl()
+if related_mission_url:
+  travel_request = context.restrictedTraverse(related_mission_url)
+  source_project_url = travel_request.getFollowUp()
+else:
+  source_project_url = ""
 ticket.edit(
   title=record.getTitle(),
   #resource=record.getSource(),
@@ -35,6 +40,7 @@ ticket.edit(
   description=record.getComment(),
   latitude=record.getLatitude(),
   longitude=record.getLongitude(),
+  source_project=source_project_url
   )
 photo_data = record.getPhotoData()
 if photo_data:

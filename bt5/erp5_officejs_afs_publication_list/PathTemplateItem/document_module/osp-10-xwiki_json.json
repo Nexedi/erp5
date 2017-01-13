@@ -1,0 +1,74 @@
+{
+	"title": "Xwiki",
+	"logo": "https://www.erp5.com/NXD-Media.Logo.Partner.Xwiki?quality=75.0&display=large&format=png",
+	"country": "fr",
+	"presence": ["fr", "ro", "dz"],
+	"website": "www.xwiki.com",
+	"founded_year": "2004",
+	"free_software_list": [{
+		"title": "Xwiki Enterprise",
+		"logo": "https://www.erp5.com/NXD-Media.Logo.Partner.Xwiki?quality=75.0&display=large&format=png",
+		"category_list": ["Intranet", "KM", "Simple CMS"],
+		"source_code_download": "https://github.com/xwiki/xwiki-enterprise/archive/master.zip",
+		"commercial_support": "http://www.xwiki.com/en/products/pricing",
+		"wikipedia_url": "https://en.wikipedia.org/wiki/Wiki_software#Enterprise_wikis",
+		"success_case_list": [{
+			"title": "Aelia intranet",
+			"image": "http://www.xwiki.com/en/download/references/aelia/aelia.jpg",
+			"customer": "Aelia",
+			"country": ["fr", "gb", "pl"],
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/aelia"
+		}, {
+			"title": "AFP",
+			"image": "http://www.xwiki.com/en/download/references/afp/afp.jpg",
+			"customer": "AFP",
+			"country": "fr",
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/afp"
+		}, {
+			"title": "Insee",
+			"image": "http://www.xwiki.com/en/download/references/insee/insee.jpg",
+			"customer": "Insee",
+			"country": "fr",
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/insee"
+		}]
+	}, {
+		"title": "Xwiki Collaboration Suite",
+		"logo": "http://www.xwiki.com/en/download/Totem/XCS-BannerCollaborativeWork/xcs-logo.png",
+		"category_list": ["IM(information management)", "Collaborative intranet", "Business application"],
+		"source_code_download": "https://github.com/xwikisas/xcs/archive/master.zip",
+		"commercial_support": "http://www.xwiki.com/en/products/pricing",
+		"wikipedia_url": "",
+		"success_case_list": [{
+			"title": "Fidelia Assistance",
+			"image": "http://www.xwiki.com/en/download/references/fidelia-assistance/fidelia-assistance.jpg",
+			"customer": "Fidelia Assistance",
+			"country": "fr",
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/fidelia-assistance"
+		}, {
+			"title": "INRA",
+			"image": "http://www.xwiki.com/en/download/references/inra/inra.png",
+			"customer": "INRA",
+			"country": "fr",
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/inra"
+		}, {
+			"title": "Socomore",
+			"image": "http://www.xwiki.com/en/download/references/socomore/socomore.jpg",
+			"customer": "Socomore",
+			"country": "Worldwide",
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/socomore"
+		}, {
+			"title": "Expert et Finance",
+			"image": "http://www.xwiki.com/en/download/references/expert-et-finance/expert-finance.jpg",
+			"customer": "Expert et Finance",
+			"country": "fr",
+			"language": "en",
+			"url": "http://www.xwiki.com/en/references/expert-et-finance"
+		}]
+	}]
+}

@@ -64,16 +64,25 @@
           return gadget.getUrlFor({page: "add_travel_request_record"});
         })
         .push(function (url) {
-          return gadget.updateHeader({
-            title: gadget.props.document_title_plural,
-            add_url: url
-          });
+          var header = {
+            title: gadget.props.document_title_plural
+          };
+          if (!options.came_from_jio_key) {
+            header.add_url = url;
+          }
+          return gadget.updateHeader(header);
         })
         .push(function () {
           return gadget.getDeclaredGadget("listbox");
         })
         .push(function (listbox) {
+          var query;
+          query =  'portal_type:("' + gadget.props.portal_type + '")';
+          if (options.came_from_jio_key) {
+            query += ' AND state: "Accepted"';
+          }
           return listbox.render({
+            came_from_jio_key: options.came_from_jio_key,
             search_page: 'travel_request_record_list',
             search: options.search,
             column_list: [
@@ -97,7 +106,7 @@
               title: 'State'
             }],
             query: {
-              query: 'portal_type:("' + gadget.props.portal_type + '")',
+              query:  query,
               select_list: ['resource_title', 'title', 'destination_node_title',
                             'start_date', 'stop_date', 'state'],
               sort_on: [["start_date", "descending"]]

@@ -60,45 +60,15 @@
     gadget.props.listbox_uid_dict = {};
     gadget.props.cell_gadget_list = [];
     function renderSubCell(element, sub_field_json) {
-      var options = {},
-        queue;
       sub_field_json.editable = sub_field_json.editable && gadget.state.editable; // XXX 
-      queue = gadget.getFieldTypeGadgetUrl(sub_field_json.type);
-      queue
+      return gadget.getFieldTypeGadgetUrl(sub_field_json.type)
         .push(function (gadget_url) {
-          if (sub_field_json.editable) {
-            options = {
-              element: element
-            };
-          }
-          return gadget.declareGadget(gadget_url, options);
+          return gadget.declareGadget(gadget_url, {element: element});
         })
         .push(function (cell_gadget) {
-          if (sub_field_json.editable) {
-            gadget.props.cell_gadget_list.push(cell_gadget);
-          } else {
-            if (cell_gadget.getTextContent) {
-              queue
-                .push(function () {
-                  return cell_gadget.getTextContent();
-                })
-                .push(function (text_content) {
-                  var text = document.createTextNode(text_content);
-                  element.appendChild(text);
-                });
-            } else {
-              queue
-                .push(function () {
-                  return cell_gadget.getElement();
-                })
-                .push(function (cell_element) {
-                  element.appendChild(cell_element);
-                });
-            }
-          }
+          gadget.props.cell_gadget_list.push(cell_gadget);
           return cell_gadget.render({field_json: sub_field_json});
         });
-      return queue;
     }
     for (i = 0; i < element_list.length; i += 1) {
       column = element_list[i].getAttribute("column");

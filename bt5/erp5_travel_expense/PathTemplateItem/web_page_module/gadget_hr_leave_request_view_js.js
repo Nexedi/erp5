@@ -74,8 +74,8 @@
       date_text = date.getFullYear()+('0'+(date.getMonth()+1)).slice(-2)+('0'+date.getDate()).slice(-2);
     return new RSVP.Queue()
       .push(function () {
-        if (gadget.options.doc.doc_id) {
-          return gadget.options.doc.doc_id;
+        if (gadget.options.doc.source_reference) {
+          return gadget.options.doc.source_reference;
         } else {
           return new RSVP.Queue()
             .push(function () {
@@ -201,7 +201,7 @@
             not_sync_checked = 'checked';
           }
           ops = {
-            state: sync_state,
+            state: options.doc.state || sync_state,
             start_date: options.doc.start_date|| new Date().toISOString().slice(0,10),
             stop_date: options.doc.stop_date|| new Date().toISOString().slice(0,10),
             quantity: options.doc.quantity,
@@ -219,7 +219,7 @@
           gadget.props.element.innerHTML = html;
           
           return gadget.updateHeader({
-            title: gadget.options.jio_key + " " + (gadget.options.doc.record_revision || 1),
+            title: "Demande de congé",
             save_action: sync_state === 'Synced'? false: true
           });
         })
@@ -335,15 +335,13 @@
             'submit',
             false,
             function (submit_event) {
-              return getSequentialID(gadget, 'EXP')
-                .push(function (doc_id) {
+              return getSequentialID(gadget, 'LRR')
+                .push(function (source_reference) {
                   var i,
                     doc = {
                       parent_relative_url: "record_module",
                       portal_type: "Leave Request Record",
-                      doc_id: doc_id,
-                      visible_in_html5_app_flag: 1,
-                      record_revision: (gadget.options.doc.record_revision || 1),
+                      source_reference: source_reference,
                       modification_date: new Date().toISOString()
                     };
                   for (i = 0; i < submit_event.target.length; i += 1) {
@@ -364,7 +362,7 @@
                   }
                   if (doc.sync_flag === "1"){
                     sync = 1;
-                    doc.validation_state = 'draft'
+                    doc.simulation_state = 'draft'
                   }
                   return gadget.put(gadget.options.jio_key, doc);
                 })

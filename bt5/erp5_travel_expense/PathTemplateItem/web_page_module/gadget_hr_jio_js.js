@@ -269,10 +269,11 @@
             type: "replicate",
             // XXX This drop the signature lists...
             query: {
-              query: '(portal_type: "Expense Record" AND simulation_state:("draft","sent","stopped"))' +
+              query: '(portal_type: "Expense Record" AND simulation_state:("draft","sent","stopped")) ' +
                 'OR (portal_type: "Travel Request Record" AND simulation_state:("draft","sent","stopped")) ' +
-                'OR (portal_type: "Leave Request Record" AND validation_state:"draft") ' +
+                'OR (portal_type: "Leave Request Record" AND simulation_state:("draft","sent","stopped")) ' +
                 'OR (portal_type: "Currency" AND validation_state:"validated") ' +
+                'OR (portal_type: "Service" AND validation_state:"validated") ' +
                 'OR (portal_type: "Person" AND id: "' + me.split("/")[1] + '")',
               limit: [0, 1234567890]
             },

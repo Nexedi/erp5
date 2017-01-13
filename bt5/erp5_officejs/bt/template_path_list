@@ -10,6 +10,8 @@ web_page_module/slideditor_*
 web_page_module/wordeditor_*
 web_site_module/devtool
 web_site_module/devtool/**
+web_site_module/officejs_bookmark_manager
+web_site_module/officejs_bookmark_manager/**
 web_site_module/officejs_code_editor
 web_site_module/officejs_code_editor/**
 web_site_module/officejs_gadget_codemirror

@@ -70,7 +70,7 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
         bound_names['options'] = kw
 
         security=getSecurityManager()
-        bound_names['user'] = security.getUser()
+        bound_names['user'] = security.getUser().getIdOrUserName()
 
         # Retrieve the value from the cache.
         keyset = None

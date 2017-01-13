@@ -362,7 +362,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 # XXX we should also go up in some other cases....
                 # ie. when some documents act as categories
                 o = o.aq_parent # We want acquisition here without aq_inner
-                uid_set.add((o.getUid(), bo_uid, 0)) # Non Strict Membership
+                o_uid = o.getUid()
+                if o_uid == bo_uid:
+                  break
+                uid_set.add((o_uid, bo_uid, 0)) # Non Strict Membership
         except (KeyError, AttributeError):
           LOG('WARNING: CategoriesTool',0, 'Unable to find uid for %s' % path)
       return list(uid_set) # cast to list for <dtml-in>
@@ -1624,27 +1627,33 @@ class CategoryTool( UniqueObject, Folder, Base ):
       return result
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberValueList' )
-    def getCategoryMemberValueList(self, context, base_category = None,
-                                         spec = (), filter=None, portal_type=(), **kw):
+    def getCategoryMemberValueList(self, context, base_category=None,
+                                         portal_type=(), strict_membership=False, strict=False, **kw):
       """
       This returns a catalog_search resource with can then be used by getCategoryMemberItemList
       """
       if base_category is None:
-        if context.getPortalType() in ( "Base Category", "Category") :
-          base_category = context.getBaseCategoryId()
-        else:
-          raise CategoryError('getCategoryMemberValueList must know the base category')
-      strict_membership = kw.get('strict_membership', kw.get('strict', 0))
-
-      domain_dict = {base_category: ('portal_categories', context.getRelativeUrl())}
-      if strict_membership:
-        catalog_search = self.portal_catalog(portal_type = portal_type,
-                           selection_report = domain_dict)
+        base_category = context.getBaseCategoryId()
+      if context.portal_type == 'Base Category' and context.getId() == base_category:
+        # Looking for all documents which are member of context a
+        # (Base Category) via a relationship of its own type: assume this means
+        # caller wants to retrieve documents having any document related via a
+        # relationship of the type of context.
+        # XXX: ignoring "strict*" argument. It does not have much meaning in
+        # this case anyway.
+        key = 'category.base_category_uid'
       else:
-        catalog_search = self.portal_catalog(portal_type = portal_type,
-                           selection_domain = domain_dict)
-
-      return catalog_search
+        key = (
+          'strict_'
+          if strict_membership or strict else
+          'default_'
+        ) + base_category + '_uid'
+      sql_kw = {
+        key: context.getUid(),
+      }
+      if portal_type:
+        sql_kw['portal_type'] = portal_type
+      return self.getPortalObject().portal_catalog(**sql_kw)
 
     security.declareProtected( Permissions.AccessContentsInformation, 'getCategoryMemberItemList' )
     def getCategoryMemberItemList(self, context, **kw):

@@ -1,5 +1,5 @@
 annotation_list = context.getAnnotation().split('\n');
-user_name = context.getPortalObject().portal_membership.getAuthenticatedMember()
+user_name = context.getPortalObject().portal_membership.getAuthenticatedMember().getId()
 for uid in listbox_uid:
   i = int(uid)
   old_comment, locator, context_url, author, color = annotation_list[i][1:-1].split("},{");

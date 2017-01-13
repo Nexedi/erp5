@@ -62,10 +62,9 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
 
   def _checkConsistency(self, fixit=False, filter=None, **kw):
     error_list = []
-    person = self.portal_catalog.getResultValue(reference=self.getReference(),
-                                                portal_type="Person")
-    if person is None:
-      error_list.append("Person %s should be created" % self.getReference())
+    person_list = self.acl_users.searchUsers(id=self.Person_getUserId(), exact_match=True)
+    if not person_list:
+      error_list.append("Person %s should be created" % self.Person_getUserId())
       if fixit:
         person_module = self.getPortalObject().person_module
         person = person_module.newContent(portal_type="Person")
@@ -88,13 +87,16 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                       'career_function': self.getFunction(),
                       'last_name': self.getLastName(),
                       'reference': self.getReference(),
-                      'password': self.getPassword(),
                         })
 
         assignment = person.newContent(portal_type="Assignment",
                                       function = self.getFunction(),
                                       group = group_id,
                                       site = site_id)
+
+        login = person.newContent(portal_type='ERP5 Login',
+                                  reference=self.getReference(),
+                                  password=self.getPassword())
 
         # Set dates are required to create valid assigments.
         now = DateTime()
@@ -103,9 +105,10 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
         # Define valid for 10 years.
         assignment.setStopDate(now + (365*10))
 
-        # Validate the Person and Assigment
+        # Validate the Person, Assigment and Login
         person.validate(comment=translateString("Validated by Configurator"))
         assignment.open(comment=translateString("Open by Configuration"))
+        login.validate(comment=translateString("Validated by Configurator"))
 
         ## add to customer template
         business_configuration = self.getBusinessConfigurationValue()

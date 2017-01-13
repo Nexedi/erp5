@@ -119,14 +119,6 @@
       return final_result;
     })
 
-    /*
-    .declareMethod('getTextContent', function () {
-      // I don't know if a multilistfield was ever used in a listbox
-      // Skip for now
-      throw new Error('not implemented');
-    })
-    */
-
     .allowPublicAcquisition('notifyValid', function () {
       return;
     })

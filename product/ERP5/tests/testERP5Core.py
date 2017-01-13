@@ -250,7 +250,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.createUser('usual_member')
     self.logout()
     self.tic()
-    super(TestERP5Core, self).login('usual_member')
+    super(TestERP5Core, self).loginByUserName('usual_member')
     expected = {'folder': [],
                 'global': [],
                 'object': [],
@@ -632,6 +632,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     module = self.portal.newContent(portal_type='Folder', id='test_error_message')
     document_1 = module.newContent(portal_type='Folder', id='1')
+    self.tic()
 
     # Sanity check : can View document
     document_1.view()

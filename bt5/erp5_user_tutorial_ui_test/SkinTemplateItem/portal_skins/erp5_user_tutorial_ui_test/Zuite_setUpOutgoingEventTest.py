@@ -6,11 +6,10 @@ howto_dict = context.Zuite_getHowToInfo()
 isTransitionPossible = portal.portal_workflow.isTransitionPossible
 
 # in testExpressUserDocumentationOutgoingEvent we relly that loged in user is an ERP5 Person
-logged_in_user = str(context.portal_membership.getAuthenticatedMember())
-current_person = context.portal_catalog.getResultValue(portal_type='Person', 
-                                                       reference=logged_in_user)
+logged_in_user = context.portal_membership.getAuthenticatedMember()
+current_person = logged_in_user.getUserValue()
 if current_person is None:
-  return 'You need to be logged with an ERP5User for this test %s' %logged_in_user
+  return 'You need to be logged with an ERP5User for this test %s' % (logged_in_user.getId(), )
 
 # check if there is already the euro curency on the instance
 currency = context.portal_catalog.getResultValue(portal_type='Currency',

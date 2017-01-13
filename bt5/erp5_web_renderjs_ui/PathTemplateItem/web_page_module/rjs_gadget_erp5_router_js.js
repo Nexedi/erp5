@@ -836,6 +836,8 @@
 
     .declareMethod('redirect', function (options) {
       this.props.form_content = options.form_content;
+      // XXX Should we make it a second method parameter
+      this.props.keep_message = true;
       delete options.form_content;
       return this.getCommandUrlFor(options)
         .push(function (hash) {
@@ -867,7 +869,11 @@
         })
         .push(function (route_result) {
           if ((route_result !== undefined) && (route_result.url !== undefined)) {
-            return gadget.renderApplication(route_result);
+            return gadget.renderApplication(route_result, gadget.props.keep_message)
+              .push(function (result) {
+                gadget.props.keep_message = false;
+                return result;
+              });
           }
         });
     })
@@ -878,13 +884,14 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting("selected_language"),
-            gadget.getSetting("default_selected_language")
+            gadget.getSetting("default_selected_language"),
+            gadget.getSetting("language_map")
           ]);
         })
         .push(function (results) {
-          if (results[1] !== results[0] && results[0]) {
+          if (results[1] !== results[0] && results[0] && JSON.parse(results[2]).hasOwnProperty(results[0])) {
             return gadget.redirect({
-              command: 'change_language',
+              command: COMMAND_CHANGE_LANGUAGE,
               options: {
                 language: results[0]
               }

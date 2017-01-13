@@ -24,7 +24,7 @@
       var gadget = this,
         user = "Who are you?";
       return gadget.updateHeader({
-        page_title: 'Preference',
+        page_title: 'Preferences',
         save_action: true
       })
         .push(function () {

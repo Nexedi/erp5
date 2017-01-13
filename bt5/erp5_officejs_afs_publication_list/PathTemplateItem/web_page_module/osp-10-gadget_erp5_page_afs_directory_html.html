@@ -1,0 +1,49 @@
+<!-- FRONT PAGE free_software_publisher_directory -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Free Software Publisher Directory</title>
+
+    <link rel="stylesheet" href="gadget_erp5_afs.css" type="text/css" />
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_global.js" type="text/javascript"></script>
+    
+    <script src="gadget_erp5_page_afs_directory.js" type="text/javascript"></script>
+
+    
+    <!-- templates -->
+    <script id="frontpage-template" type="text/x-handlebars-template">
+      <ul class="grid-items">
+        {{#each this}}
+          <li>
+            {{>list-partial}}
+          </li>
+        {{/each}}
+      </ul>
+    </script>
+    
+    <script id="list-partial" type="text/x-handlebars-template">
+      <section class="ui-content-section ui-body-c">
+        <h1>{{category}}</h1>
+        <ul>
+          {{#each softwares}}
+            <li><a href="{{value.href}}">{{value.title}}</a></li>
+          {{/each}}
+        </ul>
+      </section>
+    </script>
+
+  </head>
+  <body>
+    <section class="ui-responsive body ui-masonry-container"></section>
+  </body>
+</html>

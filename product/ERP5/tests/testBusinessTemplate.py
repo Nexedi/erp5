@@ -3071,7 +3071,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     object_pt = pt._getOb(object_id)
     object_pt.newContent(portal_type='Role Information',
       title='Geek Role Definition',
-      description='A definition with non ascii chars éàè',
+      description='A definition with non ascii chars éàè & ampersand',
       role_name_list=('geek_role_definition',),
       role_category_list=('group/g1','function/f1'),
       role_base_category_script_id='Base Category Script',
@@ -3100,7 +3100,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     role, = pt[object_id].getRoleInformationList()
     self.assertEqual('Geek Role Definition', role.getTitle())
     self.assertEqual(['geek_role_definition'], role.getRoleNameList())
-    self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
+    self.assertEqual('A definition with non ascii chars éàè & ampersand', role.getDescription())
     self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
     self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
     self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())

@@ -91,8 +91,8 @@
  
   <tr>
    <td>verifyText</td>
-   <td>//a[@data-i18n="Preference"]</td>
-   <td>Preference</td>
+   <td>//a[@data-i18n="Preferences"]</td>
+   <td>Preferences</td>
  </tr>
  
  

@@ -150,8 +150,13 @@
         .push(function (evt) {
           var location = evt.target.getResponseHeader("X-Location"),
             jio_key,
-            list = [];
-          list.push(form_gadget.notifySubmitted());
+            list = [],
+            message;
+          try {
+            message = JSON.parse(evt.target.response).portal_status_message;
+          } catch (ignore) {
+          }
+          list.push(form_gadget.notifySubmitted(message));
 
           if (redirect_to_parent) {
             list.push(form_gadget.redirect({command: 'history_previous'}));
@@ -175,7 +180,10 @@
           if ((error.target !== undefined) && (error.target.status === 400)) {
             return form_gadget.notifySubmitted()
               .push(function () {
-                return form_gadget.notifyChange();
+                return form_gadget.translate('Input data has errors');
+              })
+              .push(function (message) {
+                return form_gadget.notifyChange(message + '.');
               })
               .push(function () {
                 return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));

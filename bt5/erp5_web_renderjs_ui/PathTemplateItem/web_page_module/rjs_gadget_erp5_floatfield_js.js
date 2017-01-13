@@ -12,8 +12,8 @@
 
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
+        value = field_json.value || field_json.default || "",
         state_dict = {
-          value: field_json.value || field_json.default || "",
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
@@ -21,12 +21,14 @@
           precision: field_json.precision,
           hidden: field_json.hidden
         };
-      state_dict.text_content = state_dict.value;
       if (field_json.precision) {
         state_dict.step = 1 / Math.pow(10, field_json.precision);
+        value = parseFloat(value || "0").toFixed(field_json.precision);
       } else {
         state_dict.step = 0.00000001;
       }
+      state_dict.value = value;
+      state_dict.text_content = value;
       return this.changeState(state_dict);
     })
 
@@ -43,11 +45,12 @@
         }
         result = this.declareGadget(url, {scope: 'sub'})
           .push(function (input) {
+            var child = element.firstChild;
             // Clear first to DOM, append after to reduce flickering/manip
-            while (element.firstChild) {
-              element.removeChild(element.firstChild);
+            while (child.firstChild) {
+              child.removeChild(child.firstChild);
             }
-            element.appendChild(input.element);
+            child.appendChild(input.element);
             return input;
           });
       } else {
@@ -67,13 +70,6 @@
           });
       }
       return {};
-    })
-
-    .declareMethod('getTextContent', function () {
-      return this.getDeclaredGadget('sub')
-        .push(function (gadget) {
-          return gadget.getTextContent();
-        });
     })
 
     .declareMethod('checkValidity', function () {

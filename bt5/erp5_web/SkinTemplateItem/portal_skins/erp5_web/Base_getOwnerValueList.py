@@ -13,13 +13,9 @@
     in erp5_base ?
 """
 from zExceptions import Unauthorized
-owner_value_list = []
+getUserValueByUserId = context.Base_getUserValueByUserId
 try:
-  owner_id_list = [i[0] for i in context.get_local_roles() if 'Owner' in i[1]]
+  owner_id_list = [getUserValueByUserId(i[0]) for i in context.get_local_roles() if 'Owner' in i[1]]
 except Unauthorized:
   owner_id_list = []
-
-if len(owner_id_list):
-  return context.portal_catalog(portal_type='Person', reference=owner_id_list)
-else:
-  return []
+return [x for x in owner_id_list if x is not None]

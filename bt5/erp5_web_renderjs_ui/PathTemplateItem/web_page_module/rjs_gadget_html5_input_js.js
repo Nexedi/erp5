@@ -117,24 +117,6 @@
       return result;
     })
 
-    .declareMethod('getTextContent', function () {
-      var result = '',
-        input = this.element.querySelector('input');
-      if (this.state.type === 'checkbox') {
-        result = (input.checked ? '✓' : '');
-      } else if (this.state.type === 'radio') {
-        if (input.checked) {
-          result = input.value;
-        }
-      } else {
-        result = input.value;
-        if (this.state.trim) {
-          result = result.trim();
-        }
-      }
-      return result;
-    })
-
     .declareAcquiredMethod("notifyValid", "notifyValid")
     .declareMethod('checkValidity', function () {
       var result = this.element.querySelector('input').checkValidity(),

@@ -6,7 +6,7 @@
   <pagetemplate startframe='content' id='FirstPage'>
     <static>
       <infostring align="left" x="1cm" y= "29cm" size="8" font="Helvetica" color="(0,0,0)"
-                  tal:content="python: here.Base_translateString('ui', 'Printed by %(user)s at %(date)s') % {'user':user.getUserName(), 'date':DateTime()}" >Printed by</infostring>
+                  tal:content="python: here.Base_translateString('ui', 'Printed by %(user)s at %(date)s') % {'user':user.getIdOrUserName(), 'date':DateTime()}" >Printed by</infostring>
       <infostring align="left" x="18cm" y= "0.5cm" size="10" font="Helvetica" color="(0,0,0)" >Page %(page)s</infostring>
     </static>
     <frame showBoundary='0' leftpadding='0.1cm' height='23.94cm' width='17.59cm' rightpadding='0.1cm' y='2cm' x='2cm' nextid='content' toppadding='0.2cm' id='content' bottompadding='0.5cm'/>

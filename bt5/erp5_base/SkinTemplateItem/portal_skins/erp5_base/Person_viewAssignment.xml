@@ -66,6 +66,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>login_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -89,7 +90,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
+                        <string>my_user_id</string>
                       </list>
                     </value>
                 </item>
