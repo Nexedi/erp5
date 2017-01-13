@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>OfficeJS Router Gadget</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_officejs_page_hr_front.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+
+    <article class="ui-body-c document-access">
+      <section class="">
+        <h3 class="ui-body-c">
+          <span class="ui-icon ui-icon-custom ui-icon-plus">&nbsp;</span>
+          Add
+        </h3>
+      </section>
+      <section class="ui-body-c ui-content-section">
+        <div class="ui-controlgroup ui-controlgroup-horizontal">
+          <div class="ui-grid-b ui-responsive">
+            <div class="ui-block-a">
+              <a class="ui-btn" href="#page=add_document" data-i18n="Expense">Expense</a>
+            </div>
+            <div class="ui-block-b">
+              <a class="ui-btn" href="#page=add_leave_request_record" data-i18n="Leave">Leave</a>
+            </div>
+            <div class="ui-block-c">
+              <a class="ui-btn" href="#page=add_travel_request_record" data-i18n="Mission">Mission</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="">
+        <h3 class="ui-body-c">
+          <span class="ui-icon ui-icon-custom ui-icon-exchange">&nbsp;</span>
+          Expenses to Answer
+        </h3>
+      </section>
+      <section class="ui-body-c ui-content-section">
+        <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox-suspended"></div>
+      </section>
+      <section class="">
+        <h3 class="ui-body-c">
+          <span class="ui-icon ui-icon-custom ui-icon-exchange">&nbsp;</span>
+          Expenses to Post
+        </h3>
+      </section>
+      <section class="ui-body-c ui-content-section">
+        <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox-draft"></div>
+      </section>
+    </article>
+
+  </body>
+</html>

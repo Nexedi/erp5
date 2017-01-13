@@ -5,7 +5,7 @@
 
   var gadget_klass = rJS(window),
     MAIN_PAGE_PREFIX = "gadget_officejs_",
-    DEFAULT_PAGE = "expense_record_list",
+    DEFAULT_PAGE = "hr_front",
     REDIRECT_TIMEOUT = 5000;
 
   function listenHashChange(gadget) {
@@ -95,7 +95,7 @@
         args = options.args;
       gadget.options = options;
       if (args.jio_key === undefined || args.jio_key === '') {
-        if (args.page === undefined || args.page === '' || args.page === "document_list") {
+        if (args.page === undefined || args.page === '' || args.page === "hr_front") {
           args.page = DEFAULT_PAGE;
         }
         return {
