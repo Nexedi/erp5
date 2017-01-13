@@ -185,10 +185,12 @@
       return gadget.getDeclaredGadget("setting_gadget")
         .push(function (result) {
           setting_gadget = result;
-          setting_gadget.createJio({
+          return setting_gadget.createJio({
             type: "indexeddb",
             database: "setting"
           });
+        })
+        .push(function () {
 
           return setting_gadget.get("setting")
             .push(undefined, function (error) {
@@ -230,7 +232,9 @@
         })
 
         .push(function (jio_gadget) {
-          jio_gadget.createJio(setting.jio_storage_description);
+          return jio_gadget.createJio(setting.jio_storage_description);
+        })
+        .push(function () {
 
           return gadget.getDeclaredGadget('panel');
         })
