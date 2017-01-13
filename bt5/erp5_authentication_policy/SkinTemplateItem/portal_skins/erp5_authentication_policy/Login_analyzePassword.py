@@ -5,20 +5,18 @@ from Products.ERP5Type.Message import translateString
 from DateTime import DateTime
 import re
 
-MARKER = ['', None]
 
 result_code_list = []
 def addError(error_message):
   result_code_list.append(translateString(error_message))
 
 portal = context.getPortalObject()
-request = context.REQUEST
 is_temp_object = context.isTempObject()
 min_password_length = portal.portal_preferences.getPreferredMinPasswordLength()
 
 if password is None:
-  # means simply that password will be reseted in this case 
-  # it's a valid value (i.e. it's job of form validation yo handle this in UI appropriately)
+  # means simply that password will be reseted in this case
+  # it's a valid value (i.e. it's job of form validation to handle this in UI appropriately)
   return []
 
 # not long enough
@@ -62,8 +60,7 @@ if not is_temp_object:
     addError('You have changed your password too recently.')
 
   # not already used before ?
-  preferred_number_of_last_password_to_check = portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck()
-  if preferred_number_of_last_password_to_check not in [None, 0]:
+  if portal.portal_preferences.getPreferredNumberOfLastPasswordToCheck():
     if context.isPasswordAlreadyUsed(password):
       addError('You have already used this password.')
 
@@ -79,13 +76,13 @@ if portal.portal_preferences.isPrefferedForceUsernameCheckInPassword():
     first_name = getattr(context, 'first_name', None)
     last_name = getattr(context, 'last_name', None)
 
-  if first_name not in MARKER:
+  if first_name:
     first_name = first_name.lower()
-  if last_name not in MARKER:
+  if last_name:
     last_name = last_name.lower()
 
-  if (first_name not in MARKER and first_name in lower_password) or \
-    (last_name not in MARKER  and last_name in lower_password):
+  if (first_name and first_name in lower_password) or \
+    (last_name and last_name in lower_password):
     # user's name must not be contained in password
     addError('You can not use any parts of your first and last name in password.')
 
