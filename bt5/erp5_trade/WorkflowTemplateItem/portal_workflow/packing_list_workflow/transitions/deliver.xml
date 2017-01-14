@@ -82,7 +82,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: user.has_permission("Modify portal content", here) or user.has_role(("Associate",), here)</string> </value>
+            <value> <string>python: user.has_permission("Modify portal content", here) or user.has_role(("Associate",), here) or user.portal_membership.checkPermission(\'Modify portal content\', here)</string> </value>
         </item>
       </dictionary>
     </pickle>
