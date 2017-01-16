@@ -200,7 +200,7 @@ class ERP5Catalog(Folder, Catalog):
         meta_types.append(meta_type)
     return meta_types
 
-  def getPropertyType(self, id, local_properties=False):
+  def getPropertyTypeTest(self, id, local_properties=False):
     """
     Overriding the function so as to maintain consistency
     between what is returned by 1 and 2
