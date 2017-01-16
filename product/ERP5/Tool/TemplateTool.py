@@ -101,7 +101,7 @@ class TemplateTool (BaseTool):
     title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
-    allowed_types = ('ERP5 Business Template', )
+    allowed_types = ('ERP5 Business Template', 'ERP5 Business Package')
 
     # This stores information on repositories.
     repository_dict = {}
@@ -321,9 +321,14 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
 
-    def _download_local(self, path, bt_id):
+    def _download_local(self, path, bt_id, isPackage=False):
       """Download Business Template from local directory or file
       """
+      if isPackage:
+        bp = self.newContent(bt_id, 'Business Package')
+        bp.importFile(path)
+        return bp
+
       bt = self.newContent(bt_id, 'Business Template')
       bt.importFile(path)
       return bt
@@ -353,7 +358,7 @@ class TemplateTool (BaseTool):
         shutil.rmtree(svn_checkout_tmp_dir)
 
     security.declareProtected( 'Import/Export objects', 'download' )
-    def download(self, url, id=None, REQUEST=None):
+    def download(self, url, id=None, REQUEST=None, isPackage=False):
       """
       Download Business Template from url, can be file or local directory
       """
@@ -361,7 +366,6 @@ class TemplateTool (BaseTool):
       # come from the management interface.
       if REQUEST is not None:
         return self.manage_download(url, id=id, REQUEST=REQUEST)
-
       if id is None:
         id = self.generateNewId()
 
@@ -378,8 +382,7 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
-        path = os.path.normpath(os.path.expanduser(path))
-        bt = self._download_local(path, id)
+        bt = self._download_local(os.path.normpath(name), id, isPackage)
 
       bt.build(no_action=True)
       return bt
