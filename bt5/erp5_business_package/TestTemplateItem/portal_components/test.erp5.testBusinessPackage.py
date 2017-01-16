@@ -27,7 +27,12 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import time
+import os
+from App.config import getConfiguration
+from urllib import pathname2url
+#import tempfile
 from Products.ERP5.Document.BusinessPackage import InstallationTree, createInstallationData
+#from Products.ERP5Type.tests.runUnitTest import tests_home
 
 class TestBusinessPackage(ERP5TypeTestCase):
   """
@@ -65,6 +70,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     """
     # here, you can create the categories and objects your test will depend on
     #self.export_dir = tempfile.mkdtmp(dir=tests_home)
+    self.export_dir = ''
     self.portal = self.getPortalObject()
 
   def beforeTearDown(self):
@@ -77,10 +83,10 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
   def _createBusinessPackage(self):
     new_id = 'package_%s'%str(time.time())
-    package = self.portal.newContent(id=new_id, portal_type='Business Package')
+    package = self.portal.portal_templates.newContent(id=new_id, portal_type='Business Package')
     #self.assertTrue(package.getBuildingState() == 'draft')
     #self.assertTrue(package.getInstallationState() == 'not_installed')
-    package.edit(title ='test_package',
+    package.edit(title = new_id,
                   version='1.0',
                   description='package for live test')
     self.tic()
@@ -97,9 +103,24 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package.build()
     self.tic()
 
+    cfg = getConfiguration()
+    bp_title = pathname2url(package.getTitle())
+    package_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bp_title,))
+
     # Export package (not needed)
-    #self.package.export(path=self.export_dir, local=True)
-    #self.tic()
+    package.export(path=package_path, local=True)
+    self.tic()
+    import_package = self.portal.portal_templates.download(url='file:'+package_path, id=package.id+'1' , isPackage=True)
+    import pdb; pdb.set_trace()
+    return import_package
+
+  def _importBusinessPackage(self, package):
+    self.portal.portal_templates.manage_delObjects(package.getId())
+    self.tic()
+    import_package = self.portal.portal_templates.download( \
+                                  url='file:'+self.export_dir,
+                                  id=package.getId())
+    return import_package
 
   def _installBusinessPackage(self, package):
     """
@@ -127,7 +148,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package.edit(template_path_list=[file_path,])
 
     # Build package
-    self._buildAndExportBusinessPackage(package)
+    import_package = self._buildAndExportBusinessPackage(package)
 
     # Delete document from site
     self.portal.document_module.manage_delObjects([document_file.getId(),])
@@ -135,9 +156,10 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Test if the file is gone
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
+    #import_package = self._importBusinessPackage(package)
 
     # Install package
-    self._installBusinessPackage(package)
+    self._installBusinessPackage(import_package)
 
     # Test if the file is back
     self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
@@ -226,7 +248,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.tic()
 
     # Change something in the document file
-    document_file.edit(data='Voila, we place with conflict')
+    document_file.edit(data='Voila, we play with conflict')
     self.tic()
     new_package.edit(template_path_list=[file_path,])
 
@@ -249,7 +271,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertTrue(conflicted_data)
     self.assertEquals(len(conflicted_data[file_path]), 2)
 
-  def test_checkPathTemplatBuildForFolder(self):
+  def test_checkPathTemplateBuildForFolder(self):
     """
     This test should ensure that we are able to use folder as path for Business
     Packages without the need to export every path inside it explicitly
