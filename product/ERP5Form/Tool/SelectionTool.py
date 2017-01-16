@@ -1890,7 +1890,7 @@ def createFolderMixInPageSelectionMethod(listbox_id):
         "DEPRECATED: %s_%s: The ListBox ID must not be contained anymore in the "
         "method name, but instead be in the 'value' attribute of the submit "
         "button and the method name should be 'listbox_%s'" %
-        (wrapper_listbox_id, wrapper_property_id, wrapper_method_id),
+        (wrapper_listbox_id, wrapper_property_id, wrapper_listbox_id),
         DeprecationWarning)
 
       portal_selection = getToolByName(self, 'portal_selections')
