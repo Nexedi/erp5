@@ -679,6 +679,58 @@ class TestTransactionValidation(AccountingTestCase):
     self.assertEqual([], accounting_transaction.checkConsistency())
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
+  def test_NonBalancedSourceAccountingTransactionNoAccountSourceAcquired(self):
+    # Accounting Transactions have to be balanced to be validated,
+    # the constraint should take care that the lines may acquire
+    # a source from the transaction
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               source_value=self.section,
+               resource='currency_module/yen',
+               lines=(dict(destination_value=self.account_module.payable,
+                           source_asset_debit=39,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_asset_credit=38.99,
+                           source_credit=500)))
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    for line in accounting_transaction.getMovementList():
+      if line.getSourceId() == 'receivable':
+        line.setSource(None)
+    # but if there are no accounts defined it's not a problem
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
+  def test_NonBalancedDestinationAccountingTransactionNoAccountDestinationAcquired(self):
+    # Accounting Transactions have to be balanced to be validated,
+    # the constraint should take care that the lines may acquire
+    # a destination from the transaction
+    accounting_transaction = self._makeOne(
+               portal_type='Accounting Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.organisation_module.client_1,
+               destination_value=self.organisation_module.client_1,
+               resource='currency_module/yen',
+               lines=(dict(source_value=self.account_module.payable,
+                           destination_asset_debit=39,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           destination_asset_credit=38.99,
+                           source_credit=500)))
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    for line in accounting_transaction.getMovementList():
+      if line.getDestinationId() == 'receivable':
+        line.setDestination(None)
+    # but if there are no accounts defined it's not a problem
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
   def test_AccountingTransactionValidationRefusedWithCategoriesAsSections(self):
     # Validating a transaction with categories as sections is refused.
     # See http://wiki.erp5.org/Discussion/AccountingProblems

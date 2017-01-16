@@ -53,11 +53,11 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
     destination_sum = {}
     for line in obj.getMovementList(
           portal_type=obj.getPortalAccountingMovementTypeList()):
-      if line.getSourceValue() is not None:
+      if line.getSourceValue(portal_type='Account') is not None:
         section = line.getSourceSectionValue()
         source_sum[section] = source_sum.get(section, 0) + \
             (line.getSourceInventoriatedTotalAssetPrice() or 0)
-      if line.getDestinationValue() is not None:
+      if line.getDestinationValue(portal_type='Account') is not None:
         section = line.getDestinationSectionValue()
         destination_sum[section] = destination_sum.get(section, 0) + \
           (line.getDestinationInventoriatedTotalAssetPrice() or 0)
