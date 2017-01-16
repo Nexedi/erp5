@@ -153,8 +153,10 @@ class BusinessPackage(XMLObject):
       """
       Should also export the objects from PathTemplateItem to their xml format
       """
-      self.storePathData()
-      self._path_item.build(self)
+      if not no_action:
+        self.storePathData()
+        self._path_item.build(self)
+      pass
       #self._object_property_item.build(self)
       #self.setBuildingState('built')
 
@@ -240,7 +242,6 @@ class BusinessPackage(XMLObject):
           elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = (value or '').splitlines()
       self._edit(**prop_dict)
-
       self.storePathData()
 
       item_name_list = ['_path_item',]
