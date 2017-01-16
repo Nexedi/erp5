@@ -30,11 +30,17 @@
 import fnmatch
 import re
 import gc
+import os
 import hashlib
+import posixpath
 import transaction
+import imghdr
 from copy import deepcopy
 from collections import defaultdict
+from cStringIO import StringIO
 from lxml.etree import parse
+from urllib import quote, unquote
+from OFS import SimpleItem, XMLExportImport
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.XMLObject import XMLObject
@@ -42,7 +48,23 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.patches.ppml import importXML
+customImporters={
+    XMLExportImport.magic: importXML,
+    }
 
+import threading
+CACHE_DATABASE_PATH = None
+try:
+  if int(os.getenv('ERP5_BT5_CACHE', 0)):
+    from App.config import getConfiguration
+    import gdbm
+    instancehome = getConfiguration().instancehome
+    CACHE_DATABASE_PATH = os.path.join(instancehome, 'bt5cache.db')
+except TypeError:
+  pass
+cache_database = threading.local()
 _MARKER = []
 
 SEPARATELY_EXPORTED_PROPERTY_DICT = {
@@ -115,28 +137,32 @@ class BusinessPackage(XMLObject):
                       , PropertySheet.BusinessPackage
                       )
 
-    def _install(self):
+    def _install(self, **kw):
       self._path_item.install(self)
-      self._object_property_item.install(self)
+      #self._object_property_item.install(self)
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
 
+    security.declareProtected(Permissions.ManagePortal, 'preinstall')
+    def preinstall(self, check_dependencies=1, **kw):
+      return {}
+
     security.declareProtected(Permissions.ManagePortal, 'build')
-    def build(self):
+    def build(self, no_action=False):
       """
       Should also export the objects from PathTemplateItem to their xml format
       """
       self.storePathData()
       self._path_item.build(self)
-      self._object_property_item.build(self)
+      #self._object_property_item.build(self)
       #self.setBuildingState('built')
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
     def storePathData(self):
       self._path_item = PathTemplatePackageItem(self._getTemplatePathList())
-      self._object_property_item = \
-          ObjectPropertyTemplatePackageItem(self._getTemplateObjectPropertyList())
+      #self._object_property_item = \
+      #    ObjectPropertyTemplatePackageItem(self._getTemplateObjectPropertyList())
 
     security.declareProtected(Permissions.ManagePortal, 'getTemplatePathList')
     def _getTemplateObjectPropertyList(self):
@@ -153,7 +179,7 @@ class BusinessPackage(XMLObject):
       return result
 
     security.declareProtected(Permissions.ManagePortal, 'export')
-    def export(self, path=None, local=0, bta=None):
+    def export(self, path=None, local=0, bpa=None):
       """
       Export the object
       XXX: Are we planning to use something like archive for saving the exported
@@ -161,18 +187,13 @@ class BusinessPackage(XMLObject):
       """
       if not self.getBuildingState() == 'built':
         raise BusinessPackageException, 'Package not built properly'
-      self._export(path, local, bta)
+      self._export(path, local, bpa)
 
-    def _export(self, path=None, local=0, bta=None):
-      if bta is None:
-        if local:
-          # we export into a folder tree
-          bta = BusinessTemplateFolder(path, creation=1)
-        else:
-          # We export BT into a tarball file
+    def _export(self, path=None, local=0, bpa=None):
+      if bpa is None:
           if path is None:
             path = self.getTitle()
-          bta = BusinessTemplateTarball(path, creation=1)
+          bpa = BusinessPackageFolder(path, creation=1)
 
       # export bt
       for prop in self.propertyMap():
@@ -185,27 +206,136 @@ class BusinessPackage(XMLObject):
         if not value:
           continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
-          bta.addObject(str(value), name=id, path='bt', ext='')
+          bpa.addObject(str(value), name=id, path='bt', ext='')
         elif prop_type in ('lines', 'tokens'):
-          bta.addObject('\n'.join(value), name=id, path='bt', ext='')
+          bpa.addObject('\n'.join(value), name=id, path='bt', ext='')
 
+      item_name_list = ['_path_item',]
       # Export each part
       for item_name in item_name_list:
         item = getattr(self, item_name, None)
         if item is not None:
-          item.export(context=self, bta=bta)
+          item.export(context=self, bpa=bpa)
 
-      self._setRevision(bta.getRevision())
-      return bta.finishCreation()
+      return bpa.finishCreation()
+
+    security.declareProtected(Permissions.ManagePortal, 'importFile')
+    def importFile(self, path):
+      """
+        Import all xml files in Business Template
+      """
+      bpa = BusinessPackageFolder(path, importing=1)
+      bp_item = bp()
+      bpa.importFiles(bp_item)
+      prop_dict = {}
+      for prop in self.propertyMap():
+        pid = prop['id']
+        if pid != 'id':
+          prop_type = prop['type']
+          value = bp_item.get(pid)
+          if prop_type in ('text', 'string'):
+            prop_dict[pid] = value or ''
+          elif prop_type in ('int', 'boolean'):
+            prop_dict[pid] = value or 0
+          elif prop_type in ('lines', 'tokens'):
+            prop_dict[pid[:-5]] = (value or '').splitlines()
+      self._edit(**prop_dict)
+
+      self.storePathData()
+
+      item_name_list = ['_path_item',]
+      for item_name in item_name_list:
+        item_object = getattr(self, item_name, None)
+        # this check is due to backwards compatability when there can be a
+        # difference between install erp5_property_sheets (esp. BusinessTemplate
+        # property sheet)
+        if item_object is not None:
+          item_object.importFile(bpa)
 
 class BusinessPackageException(Exception):
   pass
 
-class BusinessPackageArchive():
+class BusinessPackageArchive(object):
   """
-  Keep saved the exported objects in Business Package in an archive
+    This is the base class for all Business Template archives
   """
-  pass
+  def __init__(self, path, **kw):
+    self.path = path
+
+  def addObject(self, obj, name, path=None, ext='.xml'):
+    if path:
+      name = posixpath.join(path, name)
+    # XXX required due to overuse of os.path
+    name = name.replace('\\', '/').replace(':', '/')
+    name = quote(name + ext)
+    path = name.replace('/', os.sep)
+    try:
+      write = self._writeFile
+    except AttributeError:
+      if not isinstance(obj, str):
+        obj.seek(0)
+        obj = obj.read()
+      self._writeString(obj, path)
+    else:
+      if isinstance(obj, str):
+        obj = StringIO(obj)
+      else:
+        obj.seek(0)
+      write(obj, path)
+
+  def finishCreation(self):
+    pass
+
+class BusinessPackageFolder(BusinessPackageArchive):
+  """
+    Class archiving business template into a folder tree
+  """
+  def _writeString(self, obj, path):
+    object_path = os.path.join(self.path, path)
+    path = os.path.dirname(object_path)
+    os.path.exists(path) or os.makedirs(path)
+    f = open(object_path, 'wb')
+    try:
+      f.write(obj)
+    finally:
+      f.close()
+
+  def importFiles(self, item):
+    """
+      Import file from a local folder
+    """
+    join = os.path.join
+    item_name = item.__class__.__name__
+    root = join(os.path.normpath(self.path), item_name, '')
+    root_path_len = len(root)
+    if CACHE_DATABASE_PATH:
+      try:
+        cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'cf')
+      except gdbm.error:
+        cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'nf')
+    try:
+      for root, dirs, files in os.walk(root):
+        for file_name in files:
+          file_name = join(root, file_name)
+          with open(file_name, 'rb') as f:
+            file_name = posixpath.normpath(file_name[root_path_len:])
+            if '%' in file_name:
+              file_name = unquote(file_name)
+            elif item_name == 'bt' and file_name == 'revision':
+              continue
+            #self.revision.hash(item_name + '/' + file_name, f.read())
+            f.seek(0)
+            item._importFile(file_name, f)
+    finally:
+      if hasattr(cache_database, 'db'):
+        cache_database.db.close()
+        del cache_database.db
+
+class bp(dict):
+  """Fake 'bp' item to read bp/* files through BusinessPackageArchive"""
+
+  def _importFile(self, file_name, file):
+    self[file_name] = file.read()
 
 class PathTemplatePackageItem(Implicit, Persistent):
 
@@ -222,6 +352,84 @@ class PathTemplatePackageItem(Implicit, Persistent):
     self._path_archive = PersistentMapping()
     for id in id_list:
       self._path_archive[id] = None
+
+  def _guessFilename(self, document, key, data):
+    # Try to guess the extension based on the id of the document
+    yield key
+    document_base = aq_base(document)
+    # Try to guess the extension based on the reference of the document
+    if hasattr(document_base, 'getReference'):
+      yield document.getReference()
+    elif isinstance(document_base, ERP5BaseBroken):
+      yield getattr(document_base, "reference", None)
+    # Try to guess the extension based on the title of the document
+    yield getattr(document_base, "title", None)
+    # Try to guess from content
+    if data:
+      for test in imghdr.tests:
+        extension = test(data, None)
+        if extension:
+          yield 'x.' + extension
+
+  def guessExtensionOfDocument(self, document, key, data=None):
+    """Guesses and returns the extension of an ERP5 document.
+
+    The process followed is:
+    1. Try to guess extension by the id of the document
+    2. Try to guess extension by the title of the document
+    3. Try to guess extension by the reference of the document
+    4. Try to guess from content (only image data is tested)
+
+    If there's a content type, we only return an extension that matches.
+
+    In case everything fails then:
+    - '.bin' is returned for binary files
+    - '.txt' is returned for text
+    """
+    document_base = aq_base(document)
+    # XXX Zope items like DTMLMethod would not implement getContentType method
+    mime = None
+    if hasattr(document_base, 'getContentType'):
+      content_type = document.getContentType()
+    elif isinstance(document_base, ERP5BaseBroken):
+      content_type = getattr(document_base, "content_type", None)
+    else:
+      content_type = None
+    # For stable export, people must have a MimeTypes Registry, so do not
+    # fallback on mimetypes. We prefer the mimetypes_registry because there
+    # are more extensions and we can have preferred extensions.
+    # See also https://bugs.python.org/issue1043134
+    mimetypes_registry = self.getPortalObject()['mimetypes_registry']
+    if content_type:
+      try:
+        mime = mimetypes_registry.lookup(content_type)[0]
+      except (IndexError, MimeTypeException):
+        pass
+
+    for key in self._guessFilename(document, key, data):
+      if key:
+        ext = os.path.splitext(key)[1][1:].lower()
+        if ext and (mimetypes_registry.lookupExtension(ext) is mime if mime
+               else mimetypes_registry.lookupExtension(ext)):
+          return ext
+
+    if mime:
+      # return first registered extension (if any)
+      if mime.extensions:
+        return mime.extensions[0]
+      for ext in mime.globs:
+        if ext[0] == "*" and ext.count(".") == 1:
+          return ext[2:].encode("utf-8")
+
+    # in case we could not read binary flag from mimetypes_registry then return
+    # '.bin' for all the Portal Types where exported_property_type is data
+    # (File, Image, Spreadsheet). Otherwise, return .bin if binary was returned
+    # as 1.
+    binary = getattr(mime, 'binary', None)
+    if binary or binary is None is not data:
+      return 'bin'
+    # in all other cases return .txt
+    return 'txt'
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -273,7 +481,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
         self._hash[relative_url] = hash_func(obj.asXML()).hexdigest()
         obj.wl_clearLocks()
 
-  def export(self, context, bta, catalog_method_template_item = 0, **kw):
+  def export(self, context, bpa, catalog_method_template_item = 0, **kw):
     """
       Export the business template : fill the BusinessTemplateArchive with
       objects exported as XML, hierarchicaly organised.
@@ -289,7 +497,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
       if isinstance(obj, str):
         if not key.startswith(path):
           key = path + key
-        bta.addObject(obj, name=key, ext='.py')
+        bpa.addObject(obj, name=key, ext='.py')
       else:
         try:
           extension, unicode_data, record_id = \
@@ -328,17 +536,17 @@ class PathTemplatePackageItem(Implicit, Persistent):
             if not extension:
               extension = self.guessExtensionOfDocument(obj, key,
                 data if record_id == 'data' else None)
-            bta.addObject(StringIO(data), key, path=path,
+            bpa.addObject(StringIO(data), key, path=path,
               ext='._xml' if extension == 'xml' else '.' + extension)
             break
           # since we get the obj from context we should
           # again remove useless properties
-          obj = self.removeProperties(obj, 1, keep_workflow_history = True)
+          #obj = self.removeProperties(obj, 1, keep_workflow_history = True)
           transaction.savepoint(optimistic=True)
 
         f = StringIO()
         XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-        bta.addObject(f, key, path=path)
+        bpa.addObject(f, key, path=path)
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
@@ -452,6 +660,118 @@ class PathTemplatePackageItem(Implicit, Persistent):
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
 
+  def importFile(self, bta, **kw):
+    bta.importFiles(self)
+
+  def _importFile(self, file_name, file_obj, catalog_method_template_item = 0):
+    obj_key, file_ext = os.path.splitext(file_name)
+    # id() for installing several bt5 in the same transaction
+    transactional_variable_obj_key = "%s-%s" % (id(self), obj_key)
+    if file_ext != '.xml':
+        # For ZODB Components: if .xml have been processed before, set the
+        # source code property, otherwise store it in a transactional variable
+        # so that it can be set once the .xml has been processed
+        data = file_obj.read()
+        try:
+          obj = self._objects[obj_key]
+        except KeyError:
+          getTransactionalVariable()[transactional_variable_obj_key] = data
+        else:
+          self._restoreSeparatelyExportedProperty(obj, data)
+    else:
+      connection = self.getConnection(self.aq_parent)
+      __traceback_info__ = 'Importing %s' % file_name
+      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+        obj = connection.importFile(self._compileXML(file_obj))
+      else:
+        # FIXME: Why not use the importXML function directly? Are there any BT5s
+        # with actual .zexp files on the wild?
+        obj = connection.importFile(file_obj, customImporters=customImporters)
+      self._objects[obj_key] = obj
+
+      data = getTransactionalVariable().get(transactional_variable_obj_key)
+      if data is not None:
+        self._restoreSeparatelyExportedProperty(obj, data)
+
+  def _restoreSeparatelyExportedProperty(self, obj, data):
+    unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
+      obj.__class__.__name__][1:]
+    if unicode_data:
+      data = data.decode(obj.output_encoding)
+    try:
+      setattr(obj, property_name, data)
+    except BrokenModified:
+      obj.__Broken_state__[property_name] = data
+      obj._p_changed = 1
+
+  def getConnection(self, obj):
+    while True:
+      connection = obj._p_jar
+      if connection is not None:
+        return connection
+      obj = obj.aq_parent
+
+  def _compileXML(self, file):
+    # This method converts XML to ZEXP. Because the conversion
+    # is quite heavy, a persistent cache database is used to
+    # store ZEXP, so the second run wouldn't have to re-generate
+    # identical data again.
+    #
+    # For now, a pair of the path to an XML file and its modification time
+    # are used as a unique key. In theory, a checksum of the content could
+    # be used instead, and it could be more reliable, as modification time
+    # might not be updated in some insane filesystems correctly. However,
+    # in practice, checksums consume a lot of CPU time, so when the cache
+    # does not hit, the increased overhead is significant. In addition, it
+    # does rarely happen that two XML files in Business Templates contain
+    # the same data, so it may not be expected to have more cache hits
+    # with this approach.
+    #
+    # The disadvantage is that this wouldn't work with the archive format,
+    # because each entry in an archive does not have a mtime in itself.
+    # However, the plan is to have an archive to retain ZEXP directly
+    # instead of XML, so the idea of caching would be completely useless
+    # with the archive format.
+    name = file.name
+    mtime = os.path.getmtime(file.name)
+    key = '%s:%s' % (name, mtime)
+
+    try:
+      return StringIO(cache_database.db[key])
+    except:
+      pass
+
+    #LOG('Business Template', 0, 'Compiling %s...' % (name,))
+    from Shared.DC.xml import ppml
+    from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
+    import xml.parsers.expat
+    outfile=StringIO()
+    try:
+      data=file.read()
+      F=ppml.xmlPickler()
+      F.end_handlers['record'] = save_record
+      F.end_handlers['ZopeData'] = save_zopedata
+      F.start_handlers['ZopeData'] = start_zopedata
+      F.binary=1
+      F.file=outfile
+      p=xml.parsers.expat.ParserCreate('utf-8')
+      p.returns_unicode = False
+      p.CharacterDataHandler=F.handle_data
+      p.StartElementHandler=F.unknown_starttag
+      p.EndElementHandler=F.unknown_endtag
+      p.Parse(data)
+
+      try:
+        cache_database.db[key] = outfile.getvalue()
+      except:
+        pass
+
+      outfile.seek(0)
+      return outfile
+    except:
+      outfile.close()
+      raise
+
 class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
 
   xml_tag = "object_property_list"
@@ -490,11 +810,11 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
     xml_data += '\n</%s>' % self.xml_tag
     return xml_data
 
-  def export(self, context, bta, **kw):
+  def export(self, context, bpa, **kw):
     path = self.__class__.__name__
     if self._objects.keys():
       xml_data = self.generateXml()
-      bta.addObject(xml_data, name=self.xml_tag, path=path)
+      bpa.addObject(xml_data, name=self.xml_tag, path=path)
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
