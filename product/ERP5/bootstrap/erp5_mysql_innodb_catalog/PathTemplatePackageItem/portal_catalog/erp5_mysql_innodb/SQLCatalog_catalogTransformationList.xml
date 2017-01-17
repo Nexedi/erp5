@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Python Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">A/MNCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>zope</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAABIAAAANAAAAAwAA
+AHM4AQAAZAEAfQIAZwAAfQMAZAIAfQQAePEAdAMAdAQAfAAAgwEAgwEARF3dAHQDAAKDAQBcAgB9
+BwB9CAB8CAB0CABrCABySgBxJQBuAAB0CQB8CABkAwCDAgCDAAB9CwB0CwB8AQB8BwCDAgB9DQB0
+DgB8CACDAQB0DgB8DQCDAQAUfQ8AfA8AfAQAF3wCAGsAAHK/AHQJAHwDAGQEAIMCAHwLAHwNAGYC
+AIMBAAF0EABkBQB8BAB8DwCDAwB9BABuQwB8AwBy7QB0CQB0CQB0EQBkBgCDAgBkBwBkCACDAAFk
+CQCDAgB8AwCDAQABbgAAfAsAfA0AZgIAZwEAfQMAfA8AfQQAcSUAV3wDAHI0AXQJAHQJAHQRAGQG
+AIMCAGQHAGQIAIMAAWQJAIMCAHwDAIMBAAFuAABkAABTKAoAAABOaWQAAABpAAAAAHQOAAAAZ2V0
+UmVsYXRpdmVVcmx0BgAAAGFwcGVuZHMCAAAAKz10CAAAAGFjdGl2YXRldAgAAABhY3Rpdml0eXQI
+AAAAU1FMUXVldWV0IAAAAFNRTENhdGFsb2dfY2F0YWxvZ1RyYW5zZm9ybWF0aW9uKBIAAAB0CgAA
+AGJhdGNoX3NpemV0DQAAAGN1cnJlbnRfYmF0Y2h0DAAAAGN1cnJlbnRfc2l6ZXQJAAAAX2dldGl0
+ZXJfdAkAAABlbnVtZXJhdGV0JwAAAGdldERlZmF1bHRDb252ZXJzaW9uVHJhbnNmb3JtYXRpb25W
+YWx1ZXQBAAAAaXQOAAAAdHJhbnNmb3JtYXRpb250BAAAAE5vbmV0CQAAAF9nZXRhdHRyX3QbAAAA
+dHJhbnNmb3JtYXRpb25fcmVsYXRpdmVfdXJsdAkAAABfZ2V0aXRlbV90MgAAAGdldFRyYW5zZm9y
+bWF0aW9uVmFyaWF0aW9uQ2F0ZWdvcnlDYXJ0ZXNpYW5Qcm9kdWN0dBMAAAB2YXJpYXRpb25fbGlz
+dF9saXN0dAMAAABsZW50BAAAAHNpemV0DAAAAF9pbnBsYWNldmFyX3QHAAAAY29udGV4dCgSAAAA
+UgsAAABSEgAAAFIGAAAAUgcAAABSCAAAAFIJAAAAUgoAAABSDAAAAFINAAAAUg4AAABSDwAAAFIQ
+AAAAUhEAAABSEwAAAFIUAAAAUhUAAABSFgAAAFIXAAAAKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQ
+eXRob24pcyQAAABTUUxDYXRhbG9nX2NhdGFsb2dUcmFuc2Zvcm1hdGlvbkxpc3QBAAAAcyYAAAAA
+AwYBBgEGAhMAEwEMAQYBEgEPARYCEAEZARUCBgEoAQ8BCgMGASgBAAAAdCQAAABTUUxDYXRhbG9n
+X2NhdGFsb2dUcmFuc2Zvcm1hdGlvbkxpc3QoAQAAAFIYAAAAKAAAAAAoAAAAAHMPAAAAU2NyaXB0
+IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAAB0AAAAAA==</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_catalog/erp5_mysql_innodb/SQLCatalog_catalogTransformationList</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>getDefaultConversionTransformationValue, getTransformationVariationCategoryCartesianProduct</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>expression</string> </key>
+            <value> <string>python: context.isResourceType()</string> </value>
+        </item>
+        <item>
+            <key> <string>expression_cache_key</string> </key>
+            <value>
+              <tuple>
+                <string>portal_type</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>expression_instance</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>filtered</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>getDefaultConversionTransformationValue</string>
+                            <string>getTransformationVariationCategoryCartesianProduct</string>
+                            <string>batch_size</string>
+                            <string>current_batch</string>
+                            <string>current_size</string>
+                            <string>_getiter_</string>
+                            <string>enumerate</string>
+                            <string>i</string>
+                            <string>transformation</string>
+                            <string>None</string>
+                            <string>_getattr_</string>
+                            <string>transformation_relative_url</string>
+                            <string>_getitem_</string>
+                            <string>variation_list_list</string>
+                            <string>len</string>
+                            <string>size</string>
+                            <string>_inplacevar_</string>
+                            <string>context</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_catalogTransformationList</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Python Script</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Catalog the ways to produce all variations of a Resource</string> </value>
+        </item>
+        <item>
+            <key> <string>type</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: context.isResourceType()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
