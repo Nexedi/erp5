@@ -92,6 +92,8 @@
                         <string>my_site</string>
                         <string>my_destination_node_title</string>
                         <string>your_state</string>
+                        <string>my_transition_comment</string>
+                        <string>my_destination_reference</string>
                       </list>
                     </value>
                 </item>

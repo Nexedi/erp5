@@ -96,6 +96,8 @@
                         <string>my_related_mission</string>
                         <string>my_type</string>
                         <string>my_type_title</string>
+                        <string>my_transition_comment</string>
+                        <string>my_destination_reference</string>
                       </list>
                     </value>
                 </item>

@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,12 +78,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_travel_request_record_view.html</string> </value>
+            <value> <string>gadget_officejs_jio_text_post.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_mission_request_record_view_html</string> </value>
+            <value> <string>gadget_hr_add_comment_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -113,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Travel Request Record View</string> </value>
+            <value> <string>OfficeJS Jio Text Post Js</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -152,12 +148,6 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key> <string>processing_status_workflow</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -179,7 +169,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -201,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479985423.17</float>
+                        <float>1483631237.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -232,7 +222,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -246,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.38978.20050.22596</string> </value>
+                <value> <string>956.40065.53190.1553</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -264,64 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1484301861.21</float>
-                        <string>UTC</string>
-                      </tuple>
-                    </state>
-                  </object>
-                </value>
-            </item>
-          </dictionary>
-        </list>
-      </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <none/>
-        <list>
-          <dictionary>
-            <item>
-                <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
-            </item>
-            <item>
-                <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
-            </item>
-            <item>
-                <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
-            </item>
-            <item>
-                <key> <string>time</string> </key>
-                <value>
-                  <object>
-                    <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
-                    </klass>
-                    <tuple>
-                      <none/>
-                    </tuple>
-                    <state>
-                      <tuple>
-                        <float>1479982560.26</float>
+                        <float>1484312482.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -74,7 +74,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_comment</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -94,6 +96,7 @@
                         <string>my_price</string>
                         <string>my_price_currency</string>
                         <string>my_total_price</string>
+                        <string>listbox_comment_time</string>
                       </list>
                     </value>
                 </item>

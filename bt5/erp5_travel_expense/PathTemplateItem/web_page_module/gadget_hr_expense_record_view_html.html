@@ -35,12 +35,10 @@
            <div name="state">{{state}}</div>
          </div>
          {{#if not_readonly}}
-
-        <div class="ui-field-contain">
-          <label data-i18n="Description">Description</label>
-          <textarea name="comment">{{comment}}</textarea>
-        </div>
-
+           <div class="ui-field-contain">		 
+             <label data-i18n="Description">Description</label>		 
+             <textarea name="comment">{{comment}}</textarea>		 
+           </div>
           <div class="ui-field-contain">
             <label data-i18n="Total Price">Total Price</label>
             <input type="number" name="quantity" value="{{quantity}}" step="0.01" required>
@@ -123,7 +121,6 @@
               <label for="sync_flag_no" data-i18n="Do Not Sync">Do Not Sync</label>
             </div>
           </div>
-
          {{else}}
             <div class="ui-field-contain">
               <label data-i18n="Description">Description</label>
@@ -191,11 +188,14 @@
            </div>
           </div>
         </div>
-
-
          
          {{/if}}
-          
+
+           <div class="ui-field-contain">
+             <label data-i18n="Discussion">Discussion</label>
+             <div class='discussion'>
+             </div>
+           </div>
           <div id="myModal" class="modal">
             <span class="close">&times;</span>
             <img class="modal-content" id="img01" name="img01">

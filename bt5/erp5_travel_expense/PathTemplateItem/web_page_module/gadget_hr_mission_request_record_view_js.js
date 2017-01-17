@@ -178,6 +178,7 @@
           } else {
             not_sync_checked = 'checked';
           }
+
           ops = {
             select_options: select_options,
             title: options.doc.title,
@@ -198,8 +199,19 @@
           return template(ops);
         })
         .push(function (html) {
+          var discussion_div;
           gadget.props.element.innerHTML = html;
-          
+          discussion_div = gadget.props.element.querySelector('.discussion');
+          return gadget.declareGadget('gadget_officejs_jio_text_post.html', {element: discussion_div})
+            .push(function (discussion_gadget) {
+              options.page = 'travel_request_record_list';
+              if (["Closed", "Suspended"].indexOf(options.doc.state) !== -1) {
+                options.can_add_discussion = true;
+              }
+              return discussion_gadget.render(options);
+            });
+        })
+        .push(function () {
           return gadget.updateHeader({
             title: gadget.options.jio_key + " " + (gadget.options.doc.record_revision || 1),
             save_action: sync_state === 'Synced'? false: true

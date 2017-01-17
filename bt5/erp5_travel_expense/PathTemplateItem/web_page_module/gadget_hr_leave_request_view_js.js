@@ -217,7 +217,6 @@
         })
         .push(function (html) {
           gadget.props.element.innerHTML = html;
-          
           return gadget.updateHeader({
             title: "Demande de congé",
             save_action: sync_state === 'Synced'? false: true

@@ -11,6 +11,9 @@ if not record_relative_url:
   elif len(record_brain_list) == 0:
     return
   record= record_brain_list[0].getObject()
+  #XXX Record_archivePreviousVersions deliver this record, but may not index yet
+  if record.getSimulationState() != 'stopped':
+    return
   # XXX to be finished
 else:
   record = portal.restrictedTraverse(record_relative_url)
@@ -30,4 +33,5 @@ new_record.edit(
   
   )
 new_record.stop()
+new_record.setTransitionComment(context.Ticket_generateTransitionAndCommentList(listbox_view=False))
 new_record.Record_archivePreviousVersions()

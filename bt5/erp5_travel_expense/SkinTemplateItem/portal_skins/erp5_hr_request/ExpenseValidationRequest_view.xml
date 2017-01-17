@@ -75,7 +75,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
+                        <string>listbox_comment</string>
                       </list>
                     </value>
                 </item>
@@ -112,6 +112,7 @@
                         <string>my_source_project_title</string>
                         <string>my_destination_title</string>
                         <string>my_assessment_form_id</string>
+                        <string>listbox_comment_time</string>
                       </list>
                     </value>
                 </item>

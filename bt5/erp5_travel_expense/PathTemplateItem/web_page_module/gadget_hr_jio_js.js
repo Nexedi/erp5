@@ -97,7 +97,7 @@
       args = {};
     if (hash !== undefined) {
       split = hash.split('?');
-      query = split[1] || "";
+      query = split[0] || "";
     }
     subhashes = query.split('&');
     for (index in subhashes) {
@@ -130,20 +130,18 @@
             var regexp = /^X-Delegate uri="(http[s]*:\/\/[\/\-\[\]{}()*+:?.,\\\^$|#\s\w%]+)"$/
             var auth_page = error.target.getResponseHeader('WWW-Authenticate'),
               site;
-           if (! auth_page) {
-              auth_page = window.location.href + 'hateoas/connection/login_form';
-            }
-           /* if (regexp.test(auth_page)) {
+            
+            if (regexp.test(auth_page)) {
               site = UriTemplate.parse(
                 regexp.exec(auth_page)[1]
               ).expand({
-                came_from: window.location.href,
+                came_from: window.location.href + "#{&n.me}",
                 cors_origin: window.location.origin,
                 });
-            }*/
-    
-          if (auth_page) {
-            return gadget.redirect({ toExternal: true, url: auth_page});
+            }
+
+          if (site) {
+            return gadget.redirect({ toExternal: true, url: site});
           }
         }
        
@@ -242,10 +240,17 @@
 
     .declareMethod('createJio', function () {
       var gadget = this,
-        logout_url_template,
-        tmp;
-      //localStorage.clear();
+        tmp = hashParams(),
+        hateoas_url,
+        default_view,
+        me;
+      me = tmp['n.me'] || '';
       return new RSVP.Queue()
+        .push(function () {
+          if (me) {
+            return gadget.setSetting('me', me);
+          }
+        })
         .push(function () {
           return RSVP.all([
             gadget.getSetting('hateoas_url'),
@@ -254,15 +259,30 @@
           ]);
         })
         .push(function (setting_list) {
-          var me = setting_list[2],
-            current_date = new Date(),
+          var jio_storage;
+          hateoas_url = setting_list[0];
+          default_view = setting_list[1];
+          me = setting_list[2];
+          if (!me) {
+            jio_storage = jIO.createJIO({
+              type: "erp5",
+              url: setting_list[0],
+              default_view_reference: setting_list[1]
+            });
+            return wrapJioCall(gadget, 'getAttachment', ['acl_users', hateoas_url, {format: "json"}], jio_storage)
+              .push(function (result) {
+                me = result._links.me.href;
+                return gadget.setSetting('me', me);
+              });
+          }
+        })
+        .push(function () {
+          var current_date = new Date(),
             new_date = new Date(
               current_date.getFullYear(),
               current_date.getMonth(),
               current_date.getDate() - 60
             );
-          //office router can't handler me parameter
-          me = 'tmp';
           gadget.state_parameter_dict.me = me;
           //gadget.state_parameter_dict.authenticated = true;
           gadget.state_parameter_dict.jio_storage = jIO.createJIO({
@@ -291,14 +311,14 @@
                 type: "uuid",
                 sub_storage: {
                   type: "indexeddb",
-                  database: "mmr-erp5-" + me
+                  database: "mmr-erp5-tmp"
                 }
               }
             },
             remote_sub_storage: {
               type: "erp5",
-              url: setting_list[0],
-              default_view_reference: setting_list[1]
+              url: hateoas_url,
+              default_view_reference: default_view
             }
           });
           gadget.state_parameter_dict.jio_storage.__storage._signature_sub_storage = jIO.createJIO({
