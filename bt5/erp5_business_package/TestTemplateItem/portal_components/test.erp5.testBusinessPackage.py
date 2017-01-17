@@ -110,16 +110,20 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Export package (not needed)
     package.export(path=package_path, local=True)
     self.tic()
-    import_package = self.portal.portal_templates.download(url='file:'+package_path, id=package.id+'1' , isPackage=True)
-    import pdb; pdb.set_trace()
+    import_package = self.portal.portal_templates.download(
+                    url='file:'+package_path,
+                    id=package.id+'1',
+                    is_package=True)
+
     return import_package
 
   def _importBusinessPackage(self, package):
     self.portal.portal_templates.manage_delObjects(package.getId())
     self.tic()
-    import_package = self.portal.portal_templates.download( \
+    import_package = self.portal.portal_templates.download(
                                   url='file:'+self.export_dir,
-                                  id=package.getId())
+                                  id=package.getId(),
+                                  is_package=True)
     return import_package
 
   def _installBusinessPackage(self, package):
