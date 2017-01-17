@@ -2338,12 +2338,15 @@ class ERP5Generator(PortalGenerator):
     """
     template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage, 'erp5_jquery',
-                 'erp5_xhtml_style'):
+      for bt in ('erp5_property_sheets', 'erp5_core','erp5_business_package',
+                  p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style'):
         if not bt:
           continue
+        is_package = False
+        if bt == 'erp5_mysql_innodb_catalog':
+          is_package = True
         url = getBootstrapBusinessTemplateUrl(bt)
-        bt = template_tool.download(url)
+        bt = template_tool.download(url, is_package=is_package)
         bt.install(**kw)
 
   def setupERP5Promise(self,p,**kw):
