@@ -115,6 +115,7 @@
   <item>Applied Rule</item>
  </portal_type>
  <portal_type id="Template Tool">
+  <item>Business Package</item>
   <item>Business Template</item>
  </portal_type>
  <portal_type id="Trash Tool">
