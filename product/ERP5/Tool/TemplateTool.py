@@ -266,7 +266,7 @@ class TemplateTool (BaseTool):
         return REQUEST.RESPONSE.redirect( ret_url )
 
     security.declareProtected( 'Import/Export objects', 'export' )
-    def export(self, business_template, REQUEST=None, RESPONSE=None):
+    def export(self, business_template, REQUEST=None, RESPONSE=None, isPackage=False):
       """
         Export the Business Template as a bt5 file and offer the user to
         download it.
@@ -275,8 +275,12 @@ class TemplateTool (BaseTool):
       try:
         if RESPONSE is not None:
           RESPONSE.setHeader('Content-type','tar/x-gzip')
-          RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s-%s.bt5'
-            % (business_template.getTitle(), business_template.getVersion()))
+          if not isPackage:
+            RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s-%s.bt5'
+              % (business_template.getTitle(), business_template.getVersion()))
+          else:
+            RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s.bp5'
+            % business_template.getTitle())
         return export_string.getvalue()
       finally:
         export_string.close()
