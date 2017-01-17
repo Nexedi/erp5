@@ -119,6 +119,15 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   return serialized_result  
 
 
+def mergeTracebackListIntoResultDict(result_dict, error_result_dict_list):
+  if error_result_dict_list:
+    if result_dict['traceback'] is None:
+      result_dict['traceback'] = []
+    for error_result_dict in error_result_dict_list:
+      result_dict['traceback'].append(error_result_dict['traceback'])
+      result_dict['status'] = error_result_dict['status']
+  return result_dict
+
 def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   """
     Function to execute jupyter code and update the context dictionary.
@@ -178,7 +187,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   inject_variable_dict = {}
   current_var_dict = {}
   current_setup_dict = {}
-  
+  setup_error_return_dict_list = []
+
   # Execute only if jupyter_code is not empty
   if jupyter_code:
     # Create ast parse tree
@@ -305,14 +315,11 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         except Exception as e:
           if value['func_name'] in user_context:
             del user_context[value['func_name']]
-          error_return_dict =  getErrorMessageForException(self, e, notebook_context)
+          error_return_dict = getErrorMessageForException(self, e, notebook_context)
           additional_information = "An error happened when trying to run the one of your setup functions:"
           error_return_dict['traceback'].insert(0, additional_information)
-          # As in any other user's code execution, transaction needs to be 
-          # aborted.
-          transaction.abort()
-          return error_return_dict
-      
+          setup_error_return_dict_list.append(error_return_dict)
+
       # Iterating over envinronment.define calls captured by the environment collector
       # that are functions and saving them as setup functions.
       for func_name, data in current_setup_dict.iteritems():
@@ -350,7 +357,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
           transaction.abort()
-          return getErrorMessageForException(self, e, notebook_context)
+          return mergeTracebackListIntoResultDict(getErrorMessageForException(self, e, notebook_context),
+                                                  setup_error_return_dict_list)
 
       # Execute the interactive nodes with 'single' mode
       for node in to_run_interactive:
@@ -362,7 +370,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           # Abort the current transaction. As a consequence, the notebook lines
           # are not added if an exception occurs.
           transaction.abort()
-          return getErrorMessageForException(self, e, notebook_context)
+          return mergeTracebackListIntoResultDict(getErrorMessageForException(self, e, notebook_context),
+                                                  setup_error_return_dict_list)
 
       mime_type = display_data['mime_type'] or mime_type
       inject_variable_dict['_print'].write("\n".join(removed_setup_message_list) + display_data['result'])
@@ -403,7 +412,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     'evalue': evalue,
     'ename': ename,
     'traceback': tb_list}
-  return result
+  return mergeTracebackListIntoResultDict(result, setup_error_return_dict_list)
 
 
 class EnvironmentUndefineError(TypeError):
