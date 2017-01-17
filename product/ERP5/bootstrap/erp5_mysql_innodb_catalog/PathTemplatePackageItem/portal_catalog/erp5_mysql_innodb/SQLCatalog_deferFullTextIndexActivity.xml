@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Python Script" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">A/MNCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>__ac_local_roles__</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>zope</string> </key>
+                    <value>
+                      <list>
+                        <string>Owner</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAB8AAAAZAAAAAwAA
+AHNsAgAAZAEAZAIAbAAAbQEAfQIAAWQBAGQDAGwCAG0DAH0EAAFkAQBkBABsBABtBQB9BgABdAYA
+dAcAZAUAgwIAfQkAdAYAdAYAfAkAZAYAgwIAZAcAgwIAgwAAfQoAaQAAfQsAZwAAfQwAdAYAdAYA
+dAcAZAgAgwIAgwAAZAkAgwIAfQ0AeG8BdA0AfAAAgwEARF1hAX0PAHwPAAxyoQBxjgBuAAB8DQB8
+DwB0EACDAgB9EQB8EQB0EABrCABywgBxjgBuAAB5gwBpAAB9EgB4dgB0DQB8CgCDAQBEXWgAfRMA
+dBQAfBEAfBMAdBAAgwMAfRUAfBUAdBAAawkAbwUBdBYAfBUAgwEAchQBfBUAgwAAfRcAbhwAdBQA
+fBEAZAoAfAIAfBMAgwEAFoMCAIMAAH0XAHwXAHQYAHwSAIMBAHwTADxx2ABXV25SAAR8BABrCgBy
+WwEBAQGCAABulAAEfAYAawoAcm4BAQEBcY4AboEABHQZAGsKAHKZAQF9GgABfBoAfRsAdAYAfAwA
+ZAsAgwIAfA8AgwEAAW5WAFh4UgB0DQB0BgB8EgBkDACDAgCDAACDAQBEXTgAdA0AAoMBAFwCAH0T
+AH0XAHQGAHQGAHwLAGQNAIMCAHwTAGcAAIMCAGQLAIMCAHwXAIMBAAFxswFXcY4AV3QcAHwMAIMB
+AHJSAnQcAHwLAIMBAHI8AnQGAHQGAHQHAGQOAIMCAGQPAGQQAGQRAGQSAIMAAmQTAIMCAGQUAHwM
+AIMAAQFuEwB0HQBkFQB8GwB8DABmAgAWggIAbgAAfAsAcmgCdB4AfAkAfAsAjQEAU24AAGQAAFMo
+FgAAAE5p/////ygBAAAAcwkAAABVcHBlckNhc2UoAQAAAHMNAAAAQ29uZmxpY3RFcnJvcigBAAAA
+cwwAAABVbmF1dGhvcml6ZWR0FwAAAHpfY2F0YWxvZ19mdWxsdGV4dF9saXN0dA0AAABhcmd1bWVu
+dHNfc3JjdAUAAABzcGxpdHQPAAAAZ2V0UG9ydGFsT2JqZWN0dBIAAAByZXN0cmljdGVkVHJhdmVy
+c2VzBQAAAGdldCVzdAYAAABhcHBlbmR0BQAAAGl0ZW1zdAoAAABzZXRkZWZhdWx0dAgAAABhY3Rp
+dmF0ZXQIAAAAYWN0aXZpdHl0CAAAAFNRTFF1ZXVldAgAAABwcmlvcml0eWkFAAAAdCUAAABTUUxD
+YXRhbG9nX2RlZmVyRnVsbFRleHRJbmRleEFjdGl2aXR5dAkAAABwYXRoX2xpc3RzIgAAAGV4Y2Vw
+dGlvbiAlciByYWlzZWQgaW4gaW5kZXhpbmcgJXIoHwAAAHQXAAAAUHJvZHVjdHMuRVJQNVR5cGUu
+VXRpbHN0CQAAAFVwcGVyQ2FzZXQRAAAAWk9EQi5QT1NFeGNlcHRpb250DQAAAENvbmZsaWN0RXJy
+b3J0CwAAAHpFeGNlcHRpb25zdAwAAABVbmF1dGhvcml6ZWR0CQAAAF9nZXRhdHRyX3QHAAAAY29u
+dGV4dHQGAAAAbWV0aG9kdA0AAABwcm9wZXJ0eV9saXN0dA4AAABwYXJhbWV0ZXJfZGljdHQQAAAA
+ZmFpbGVkX3BhdGhfbGlzdFIEAAAAdAkAAABfZ2V0aXRlcl9SDQAAAHQEAAAAcGF0aHQEAAAATm9u
+ZXQDAAAAb2JqdAgAAAB0bXBfZGljdHQIAAAAcHJvcGVydHl0BwAAAGdldGF0dHJ0BgAAAGdldHRl
+cnQIAAAAY2FsbGFibGV0BQAAAHZhbHVldAcAAABfd3JpdGVfdAkAAABFeGNlcHRpb250AQAAAGV0
+CQAAAGV4Y2VwdGlvbnQDAAAAbGVudA4AAABBdHRyaWJ1dGVFcnJvcnQHAAAAX2FwcGx5XygfAAAA
+Ug0AAABSDgAAAFIPAAAAUhAAAABSEQAAAFISAAAAUhMAAABSFAAAAFIVAAAAUhYAAABSFwAAAFIY
+AAAAUhkAAABSBAAAAFIaAAAAUhsAAABSHAAAAFIdAAAAUh4AAABSHwAAAFIgAAAAUiEAAABSIgAA
+AFIjAAAAUiQAAABSJQAAAFImAAAAUicAAABSKAAAAFIpAAAAUioAAAAoAAAAACgAAAAAcw8AAABT
+Y3JpcHQgKFB5dGhvbilzJQAAAFNRTENhdGFsb2dfZGVmZXJGdWxsVGV4dEluZGV4QWN0aXZpdHkB
+AAAAc04AAAAQARABEAIPARsBBgEGARsBDQAGAQcBBgEPAQwBBgEDAQYBDQAGARIBGAEMAhwBGAEN
+AQYBDQEGAQ8BBgEXAhkAEwEtAgwBDAIxAxYCBgEoAQAAAFIMAAAAKAEAAABSDAAAACgAAAAAKAAA
+AABzDwAAAFNjcmlwdCAoUHl0aG9uKXMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
+        </item>
+        <item>
+            <key> <string>_filepath</string> </key>
+            <value> <string>Script (Python):/erp5/portal_catalog/erp5_mysql_innodb/SQLCatalog_deferFullTextIndexActivity</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>path_list</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>path_list</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>UpperCase</string>
+                            <string>ZODB.POSException</string>
+                            <string>ConflictError</string>
+                            <string>zExceptions</string>
+                            <string>Unauthorized</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>method</string>
+                            <string>property_list</string>
+                            <string>parameter_dict</string>
+                            <string>failed_path_list</string>
+                            <string>restrictedTraverse</string>
+                            <string>_getiter_</string>
+                            <string>path</string>
+                            <string>None</string>
+                            <string>obj</string>
+                            <string>tmp_dict</string>
+                            <string>property</string>
+                            <string>getattr</string>
+                            <string>getter</string>
+                            <string>callable</string>
+                            <string>value</string>
+                            <string>_write_</string>
+                            <string>Exception</string>
+                            <string>e</string>
+                            <string>exception</string>
+                            <string>len</string>
+                            <string>AttributeError</string>
+                            <string>_apply_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>SQLCatalog_deferFullTextIndexActivity</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Python Script</string> </value>
+        </item>
+        <item>
+            <key> <string>uid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
