@@ -386,6 +386,7 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
+        # XXX: Download only needed in case the file is in directory
         bt = self._download_local(os.path.normpath(name), id, is_package)
 
       bt.build(no_action=True)

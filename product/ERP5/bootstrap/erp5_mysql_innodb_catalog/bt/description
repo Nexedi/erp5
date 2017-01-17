@@ -1,3 +1,1 @@
-MySQL InnoDB
-
-Contains all the scripts & configuration required to use MySQL InnoDB tables as a catalog storage backend.
+package for live test
