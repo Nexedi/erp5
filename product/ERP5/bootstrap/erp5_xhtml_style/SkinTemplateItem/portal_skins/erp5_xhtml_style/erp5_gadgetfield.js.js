@@ -1,7 +1,8 @@
-/*global window, rJS, RSVP, document*/
+/*global window, rJS, RSVP, document, console*/
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (window, document, rJS, RSVP) {
+(function (window, rJS, RSVP, document, console) {
   "use strict";
+
   function promiseEventListener(target, type, useCapture) {
     //////////////////////////
     // Resolve the promise as soon as the event is triggered
@@ -27,143 +28,167 @@
     return new RSVP.Promise(resolver, canceller);
   }
 
+  function displayFieldError(error) {
+    console.warn(error);
+    // Display the error message in the portal_status location
+    // As renderJS does not report which element is failing while loading
+    // a gadget
+    var error_element = document.getElementById('transition_message');
+    error_element.textContent = error + '. ' + error_element.textContent;
+  }
+
+  function getGadgetContent(gadget) {
+    return gadget.getContent()
+      .push(undefined, function (error) {
+        // Do not crash if gadget getContent is wrongly implemented,
+        // ie, UI should work even if one gadget does not
+        displayFieldError(error);
+        return {};
+      });
+  }
+
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
+    .setState({
+      rejected_dict: {},
+      field_list: [],
+      gadget_list: []
     })
 
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
+    .allowPublicAcquisition('reportGadgetDeclarationError',
+                            function (argument_list, scope) {
+        // Do not crash the UI in case of wrongly configured gadget,
+        // bad network, loading bug.
+        this.state.rejected_dict[scope] = null;
+        return displayFieldError(argument_list[0]);
+      })
+
+
+    .allowPublicAcquisition('reportServiceError',
+                            function (argument_list) {
+        // Do not crash the UI in case of gadget service error.
+        return displayFieldError(argument_list[0]);
+      })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareService(function () {
-      var g = this,
-        i,
-        list_gadget = document.querySelectorAll("[data-gadget-url]"),
-        all_gadget,
-        list = [],
-        gadget_attributes = [],
-        url,
-        form = g.props.element.querySelector("form"),
-        scope,
-        value,
-        key,
-        tmp;
-      for (i = 0; i < list_gadget.length; i += 1) {
-        url = list_gadget[i].getAttribute("data-gadget-url");
-        key = list_gadget[i].getAttribute("data-gadget-editable");
-        value = list_gadget[i].getAttribute("data-gadget-value");
-        //renderable 
-        if (url !== undefined && url !== null) {
-          tmp = {};
-          scope = list_gadget[i].getAttribute("data-gadget-scope");
-          list.push(g.getDeclaredGadget(scope));
-          tmp.sandbox = list_gadget[i].getAttribute("data-gadget-sandbox");
-          tmp.editable = key;
-          tmp.key = key;
-          tmp.value = value;
-          gadget_attributes.push(tmp);
-        }
-      }
+      // Call render on all gadget fields
+      var gadget = this,
+        field_list = [],
+        i;
+
       return new RSVP.Queue()
         .push(function () {
-          return RSVP.all(list);
-        })
-        .push(function (results) {
-          all_gadget = results;
-          list = [];
-          for (i = 0; i < gadget_attributes.length; i += 1) {
-            if (gadget_attributes[i].sandbox === "iframe") {
-              list.push(all_gadget[i].getElement());
+          var field_element_list =
+            gadget.element.querySelectorAll("[data-gadget-url]"),
+            field_element,
+            field_scope,
+            field_url,
+            promise_list = [];
+
+          for (i = 0; i < field_element_list.length; i += 1) {
+            field_element = field_element_list[i];
+            field_url = field_element.getAttribute("data-gadget-url");
+            field_scope = field_element.getAttribute("data-gadget-scope");
+
+            // Renderable
+            if ((field_url !== undefined) && (field_url !== null) &&
+                (field_scope !== null) &&
+                (!gadget.state.rejected_dict.hasOwnProperty(field_scope))) {
+              field_list.push({
+                sandbox: field_element.getAttribute("data-gadget-sandbox"),
+                editable: field_element.getAttribute("data-gadget-editable"),
+                key: field_element.getAttribute("data-gadget-editable"),
+                value: field_element.getAttribute("data-gadget-value")
+              });
+              promise_list.push(gadget.getDeclaredGadget(field_scope));
             }
           }
-          return RSVP.all(list);
+          gadget.state.field_list = field_list;
+          return RSVP.all(promise_list);
         })
-        .push(function (elements) {
+        .push(function (result_list) {
+          gadget.state.gadget_list = result_list;
           var iframe,
-            j,
+            sub_element,
             sub_value,
-            sub_key;
-          list = [];
-          for (i = 0, j = 0; i < gadget_attributes.length; i += 1) {
-            if (all_gadget[i].render !== undefined) {
-              sub_value = gadget_attributes[i].value;
-              sub_key = gadget_attributes[i].key;
-              list.push(
-                all_gadget[i].render(
-                  {
-                    "key": sub_key,
-                    "value": sub_value
-                  }
-                ).push(undefined, function (error) {
-                  /* TODO: Highlight the gadget element with a small colored
-                   *       error message. Clicking on the element could unroll
-                   *       more information like the traceback. */
-                  console.log(error);
-                })
+            sub_key,
+            promise_list = [];
+          for (i = 0; i < field_list.length; i += 1) {
+            if (result_list[i].render !== undefined) {
+              sub_value = field_list[i].value;
+              sub_key = field_list[i].key;
+              promise_list.push(
+                result_list[i].render({key: sub_key, value: sub_value})
+                  .push(undefined, displayFieldError)
+                    /* XXX Highlight the gadget element with a small colored
+                     *       error message. Clicking on the element could unroll
+                     *       more information like the traceback. */
               );
             }
-            if (gadget_attributes[i].sandbox === "iframe") {
-              iframe = elements[j].querySelector('iframe');
+            if (field_list[i].sandbox === "iframe") {
+              sub_element = result_list[i].element;
+              iframe = sub_element.querySelector('iframe');
               //xxx input field
-              elements[j].parentNode.style.width = "100%";
-              elements[j].parentNode.style.height = "100%";
+              sub_element.parentNode.style.width = "100%";
+              sub_element.parentNode.style.height = "100%";
               //xxx section div
-              elements[j].style.width = "100%";
-              elements[j].style.height = "100%";
+              sub_element.style.width = "100%";
+              sub_element.style.height = "100%";
               iframe.style.width = "100%";
               iframe.style.height = "100%";
               iframe.allowFullscreen = true;
-              j += 1;
             }
           }
-          return RSVP.all(list);
-        })
+          return RSVP.all(promise_list);
+        });
+    })
+
+    .declareService(function () {
+      /*Do not use ajax call but submit an hidden form.
+        So in this way, we can use form submit mecanisme
+        provided by browser.
+        if use ajax, we should get the return page manually
+        which is difficult.
+        The new hidden fields have been added with the 
+        gadget values and the submit button which 
+        has been activated (relation field image, save button, etc).
+        This is done by listening the "click" event on the 
+        submit/image button.
+        After all, submit the form manually again.
+      */
+
+      var context = this,
+        form = this.element.querySelector("form");
+
+      return new RSVP.Queue()
         .push(function () {
-          /*Do not use ajax call but submit an hidden form.
-            So in this way, we can use form submit mecanisme
-            provided by browser.
-            if use ajax, we should get the return page manually
-            which is difficult.
-            The new hidden fields have been added with the 
-            gadget values and the submit button which 
-            has been activated (relation field image, save button, etc).
-            This is done by listening the "click" event on the 
-            submit/image button.
-            After all, submit the form manually again.
-          */
-          var input_images =
-            g.props.element.querySelectorAll("input[type='image']"),
-            input_submits =
-            g.props.element.querySelectorAll("button[type='submit']");
-          list = [];
-          if (input_images.length || input_submits.length) {
-            list.push(promiseEventListener(g.props.element, "submit", false));
-            for (i = 0; i < input_images.length; i += 1) {
-              list.push(promiseEventListener(input_images[i], "click", false));
-            }
-            for (i = 0; i < input_submits.length; i += 1) {
-              list.push(promiseEventListener(input_submits[i], "click", false));
-            }
-            return RSVP.any(list);
+          var image_list = context.element
+                                  .querySelectorAll("input[type='image']"),
+            submit_list = context.element
+                                 .querySelectorAll("button[type='submit']"),
+            i,
+            promise_list = [];
+
+          promise_list.push(promiseEventListener(context.element, "submit",
+                                                 false));
+          for (i = 0; i < image_list.length; i += 1) {
+            promise_list.push(promiseEventListener(image_list[i], "click",
+                                                   false));
           }
-          return promiseEventListener(g.props.element, "submit", false);
+          for (i = 0; i < submit_list.length; i += 1) {
+            promise_list.push(promiseEventListener(submit_list[i], "click",
+                                                   false));
+          }
+          return RSVP.any(promise_list);
         })
         .push(function (evt) {
           var input,
             hidden_button,
-            target;
-          list = [];
+            target,
+            i,
+            promise_list = [];
           if (evt.type === "click") {
             input = document.createElement("input");
             input.setAttribute("type", "hidden");
@@ -171,34 +196,34 @@
             input.setAttribute("name", target.getAttribute("name"));
             form.appendChild(input);
           } else {
-            hidden_button = g.props.element.querySelector(".hidden_button");
+            hidden_button = context.element.querySelector(".hidden_button");
             hidden_button.setAttribute("type", "hidden");
           }
-          for (i = 0; i < all_gadget.length; i += 1) {
-            if (all_gadget[i].getContent !== undefined &&
-                gadget_attributes[i].editable !== null) {
-              list.push(all_gadget[i].getContent());
+          for (i = 0; i < context.state.gadget_list.length; i += 1) {
+            if (context.state.gadget_list[i].getContent !== undefined &&
+                context.state.field_list[i].editable !== null) {
+              promise_list.push(getGadgetContent(context.state.gadget_list[i]));
             }
           }
-          return RSVP.all(list);
+          return RSVP.all(promise_list);
         })
-        .push(function (all_content) {
+        .push(function (content_list) {
           var input,
+            i,
             name;
-          for (i = 0; i < all_content.length; i += 1) {
-            for (name in all_content[i]) {
-              if (all_content[i].hasOwnProperty(name)) {
+          for (i = 0; i < content_list.length; i += 1) {
+            for (name in content_list[i]) {
+              if (content_list[i].hasOwnProperty(name)) {
                 input = document.createElement("input");
                 input.setAttribute("type", "hidden");
                 input.setAttribute("name", name);
-                input.setAttribute("value", all_content[i][name]);
+                input.setAttribute("value", content_list[i][name]);
                 form.appendChild(input);
               }
             }
           }
-        })
-        .push(function () {
-          form.submit();
+          return form.submit();
         });
     });
-}(window, document, rJS, RSVP));
+
+}(window, rJS, RSVP, document, console));
