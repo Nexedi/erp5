@@ -199,11 +199,13 @@ gadget_hr_jio.html\n
 gadget_hr_jio.js\n
 gadget_officejs_jio_text_post.html\n
 gadget_officejs_jio_text_post.js\n
-gadget_common.js\n
+\n
 gadget_officejs_page_calendar.js\n
 gadget_officejs_page_calendar.html\n
-gadget_hr_tool.js\n
-\n
+gadget_officejs_hr_tool.js\n
+gadget_hr_style.css\n
+gadget_officejs_page_hr_front.html\n
+gadget_officejs_page_hr_front.js\n
 NETWORK:\n
 *
 
@@ -342,7 +344,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.44619.55889.62941</string> </value>
+                <value> <string>956.46035.12915.63948</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +362,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1484577398.16</float>
+                        <float>1484662311.83</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
