@@ -35,6 +35,8 @@ import hashlib
 import posixpath
 import transaction
 import imghdr
+import tarfile
+import time
 from copy import deepcopy
 from collections import defaultdict
 from cStringIO import StringIO
@@ -189,13 +191,18 @@ class BusinessPackage(XMLObject):
       """
       if not self.getBuildingState() == 'built':
         raise BusinessPackageException, 'Package not built properly'
-      self._export(path, local, bpa)
+      return self._export(path, local, bpa)
 
     def _export(self, path=None, local=0, bpa=None):
       if bpa is None:
+        if local:
+          # we export into a folder tree
+          bpa = BusinessPackageFolder(path, creation=1)
+        else:
+          # We export BP into a tarball file
           if path is None:
             path = self.getTitle()
-          bpa = BusinessPackageFolder(path, creation=1)
+          bpa = BusinessPackageTarball(path, creation=1)
 
       # export bt
       for prop in self.propertyMap():
@@ -226,7 +233,8 @@ class BusinessPackage(XMLObject):
       """
         Import all xml files in Business Template
       """
-      bpa = BusinessPackageFolder(path, importing=1)
+      bpa = (BusinessPackageFolder if os.path.isdir(path) else
+          BusinessPackageTarball)(path, importing=1)
       bp_item = bp()
       bpa.importFiles(bp_item)
       prop_dict = {}
@@ -331,6 +339,57 @@ class BusinessPackageFolder(BusinessPackageArchive):
       if hasattr(cache_database, 'db'):
         cache_database.db.close()
         del cache_database.db
+
+class BusinessPackageTarball(BusinessPackageArchive):
+  """
+    Class archiving businnes package into a tarball file
+  """
+
+  def __init__(self, path, creation=0, importing=0, **kw):
+    super(BusinessPackageTarball, self).__init__(path, **kw)
+    if creation:
+      self.fobj = StringIO()
+      self.tar = tarfile.open('', 'w:gz', self.fobj)
+      self.time = time.time()
+    elif importing:
+      self.tar = tarfile.open(path, 'r:gz')
+      self.item_dict = item_dict = defaultdict(list)
+      for info in self.tar.getmembers():
+        if info.isreg():
+          path = info.name.split('/')
+          if path[0] == '.':
+            del path[0]
+          item_dict[path[1]].append(('/'.join(path[2:]), info))
+
+  def _writeFile(self, obj, path):
+    if self.path:
+      path = posixpath.join(self.path, path)
+    info = tarfile.TarInfo(path)
+    info.mtime = self.time
+    obj.seek(0, 2)
+    info.size = obj.tell()
+    obj.seek(0)
+    self.tar.addfile(info, obj)
+
+  def finishCreation(self):
+    self.tar.close()
+    return self.fobj
+
+  def importFiles(self, item):
+    """
+      Import all file from the archive to the site
+    """
+    extractfile = self.tar.extractfile
+    item_name = item.__class__.__name__
+    for file_name, info in self.item_dict.get(item_name, ()):
+      if '%' in file_name:
+        file_name = unquote(file_name)
+      elif item_name == 'bt' and file_name == 'revision':
+        continue
+      f = extractfile(info)
+      self.revision.hash(item_name + '/' + file_name, f.read())
+      f.seek(0)
+      item._importFile(file_name, f)
 
 class bp(dict):
   """Fake 'bp' item to read bp/* files through BusinessPackageArchive"""
