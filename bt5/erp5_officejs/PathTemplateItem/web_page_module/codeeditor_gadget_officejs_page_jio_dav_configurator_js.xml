@@ -74,12 +74,28 @@
             <value> <string>gadget_officejs_page_jio_dav_configurator.js</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>codeeditor_gadget_officejs_page_jio_dav_configurator_js</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>revision</string> </key>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -218,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55463.34187.48947</string> </value>
+                <value> <string>956.25809.26818.60245</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -236,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481295811.83</float>
+                        <float>1484644951.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

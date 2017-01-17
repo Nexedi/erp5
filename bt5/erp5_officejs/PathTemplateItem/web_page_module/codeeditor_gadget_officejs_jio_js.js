@@ -7,7 +7,7 @@
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.jio_storage;
     if (storage === undefined) {
-      return gadget.redirect({page: "jio_configurator"});
+      return gadget.redirect({page: "jio_code_editor_configurator"});
     }
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {

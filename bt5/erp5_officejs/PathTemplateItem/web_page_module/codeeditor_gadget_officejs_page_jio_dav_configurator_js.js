@@ -93,7 +93,7 @@
       var gadget = this;
       return gadget.updateHeader({
         title: "Connect To DAV Storage",
-        back_url: "#page=jio_configurator",
+        back_url: "#page=jio_code_editor_configurator",
         panel_action: false
       }).push(function () {
         return gadget.props.deferred.resolve();
