@@ -831,7 +831,7 @@
     <pickle>
       <global name="Length" module="BTrees.Length"/>
     </pickle>
-    <pickle> <int>240000</int> </pickle>
+    <pickle> <int>240600</int> </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
