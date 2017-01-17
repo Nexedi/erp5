@@ -16,7 +16,7 @@
             // XXX This drop the signature lists...
             query: {
               query: 'portal_type: ("Web Page","Web Script","Web Manifest","Web Style")',
-              limit: [0, 30],
+              limit: [0, 1234567890],
               sort_on: [["modification_date", "descending"]]
             },
             signature_storage: {
