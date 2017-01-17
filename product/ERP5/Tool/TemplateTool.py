@@ -266,7 +266,7 @@ class TemplateTool (BaseTool):
         return REQUEST.RESPONSE.redirect( ret_url )
 
     security.declareProtected( 'Import/Export objects', 'export' )
-    def export(self, business_template, REQUEST=None, RESPONSE=None, isPackage=False):
+    def export(self, business_template, REQUEST=None, RESPONSE=None, is_package=False):
       """
         Export the Business Template as a bt5 file and offer the user to
         download it.
@@ -275,7 +275,7 @@ class TemplateTool (BaseTool):
       try:
         if RESPONSE is not None:
           RESPONSE.setHeader('Content-type','tar/x-gzip')
-          if not isPackage:
+          if not is_package:
             RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s-%s.bt5'
               % (business_template.getTitle(), business_template.getVersion()))
           else:
@@ -325,10 +325,10 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
 
-    def _download_local(self, path, bt_id, isPackage=False):
+    def _download_local(self, path, bt_id, is_package=False):
       """Download Business Template from local directory or file
       """
-      if isPackage:
+      if is_package:
         bp = self.newContent(bt_id, 'Business Package')
         bp.importFile(path)
         return bp
@@ -362,7 +362,7 @@ class TemplateTool (BaseTool):
         shutil.rmtree(svn_checkout_tmp_dir)
 
     security.declareProtected( 'Import/Export objects', 'download' )
-    def download(self, url, id=None, REQUEST=None, isPackage=False):
+    def download(self, url, id=None, REQUEST=None, is_package=False):
       """
       Download Business Template from url, can be file or local directory
       """
@@ -386,7 +386,7 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
-        bt = self._download_local(os.path.normpath(name), id, isPackage)
+        bt = self._download_local(os.path.normpath(name), id, is_package)
 
       bt.build(no_action=True)
       return bt
