@@ -1,11 +1,11 @@
 @media only screen and (max-width: 45em){
-  html div.ui-content {
+  html div.gadget-content {
     padding: 1.3em 0.1em 0.1em 0.1em;
   }
 }
 
 @media (max-width: 62em) {
-  html .ui-content .custom-grid thead {
+  html .gadget-content .custom-grid thead {
     display: none;
   }
 }
