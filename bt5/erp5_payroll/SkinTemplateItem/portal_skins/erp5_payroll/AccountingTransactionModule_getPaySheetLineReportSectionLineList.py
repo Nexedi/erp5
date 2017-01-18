@@ -23,39 +23,33 @@ ledger = request.get('ledger', None)
 
 portal_simulation = context.getPortalObject().portal_simulation
 
-employee_params = {
+inventory_param_dict = {
     'group_by_node' : 1,
     'group_by_variation': 1,
     'section_uid' : section_uid_list,
-    'contribution_share_uid' : context.portal_categories.contribution_share.employee.getUid(),
     'at_date' : at_date,
     'from_date' : from_date,
     'simulation_state' : simulation_state,
     'precision' : precision,
     'resource' : resource,
     'ledger' : ledger,
-  }
+    'only_accountable': False,
+    'portal_type' : ('Pay Sheet Line', 'Pay Sheet Cell'),
+}
 
-employer_params = {
-    'group_by_node' : 1,
-    'group_by_variation': 1,
-    'section_uid' : section_uid_list,
-    'contribution_share_uid' : context.portal_categories.contribution_share.employer.getUid(),
-    'at_date' : at_date,
-    'from_date' : from_date,
-    'simulation_state' : simulation_state,
-    'precision' : precision,
-    'resource' : resource,
-    'ledger' : ledger,
-  }
+employee_param_dict = inventory_param_dict.copy()
+employee_param_dict['contribution_share_uid'] = context.portal_categories.contribution_share.employee.getUid()
+
+employer_param_dict = inventory_param_dict.copy()
+employer_param_dict['contribution_share_uid'] = context.portal_categories.contribution_share.employer.getUid()
 
 if request.get('mirror_section'):
   mirror_section = request['mirror_section']
-  employee_params['mirror_section'] = mirror_section
-  employer_params['mirror_section'] = mirror_section
+  employee_param_dict['mirror_section'] = mirror_section
+  employer_param_dict['mirror_section'] = mirror_section
 
-employee_inventory_list = portal_simulation.getInventoryList(**employee_params)
-employer_inventory_list = portal_simulation.getInventoryList(**employer_params)
+employee_inventory_list = portal_simulation.getInventoryList(**employee_param_dict)
+employer_inventory_list = portal_simulation.getInventoryList(**employer_param_dict)
 
 inventory_list = {}
 
