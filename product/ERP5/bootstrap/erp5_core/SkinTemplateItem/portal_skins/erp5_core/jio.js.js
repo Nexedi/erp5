@@ -7458,10 +7458,16 @@ return new Parser;
   };
 }(window, moment));
 ;/*global window, RSVP, Blob, XMLHttpRequest, QueryFactory, Query, atob,
-  FileReader, ArrayBuffer, Uint8Array */
+  FileReader, ArrayBuffer, Uint8Array, navigator */
 (function (window, RSVP, Blob, QueryFactory, Query, atob,
-           FileReader, ArrayBuffer, Uint8Array) {
+           FileReader, ArrayBuffer, Uint8Array, navigator) {
   "use strict";
+
+  if (window.openDatabase === undefined) {
+    window.openDatabase = function () {
+      throw new Error('WebSQL is not supported by ' + navigator.userAgent);
+    };
+  }
 
   var util = {},
     jIO;
@@ -7569,8 +7575,46 @@ return new Parser;
   }
   util.readBlobAsDataURL = readBlobAsDataURL;
 
+  function stringify(obj) {
+    // Implement a stable JSON.stringify
+    // Object's keys are alphabetically ordered
+    var key,
+      key_list,
+      i,
+      value,
+      result_list;
+    if (obj === undefined) {
+      return undefined;
+    }
+    if (obj.constructor === Object) {
+      key_list = Object.keys(obj).sort();
+      result_list = [];
+      for (i = 0; i < key_list.length; i += 1) {
+        key = key_list[i];
+        value = stringify(obj[key]);
+        if (value !== undefined) {
+          result_list.push(stringify(key) + ':' + value);
+        }
+      }
+      return '{' + result_list.join(',') + '}';
+    }
+    if (obj.constructor === Array) {
+      result_list = [];
+      for (i = 0; i < obj.length; i += 1) {
+        result_list.push(stringify(obj[i]));
+      }
+      return '[' + result_list.join(',') + ']';
+    }
+    return JSON.stringify(obj);
+  }
+  util.stringify = stringify;
+
+
   // https://gist.github.com/davoclavo/4424731
   function dataURItoBlob(dataURI) {
+    if (dataURI === 'data:') {
+      return new Blob();
+    }
     // convert base64 to raw binary data held in a string
     var byteString = atob(dataURI.split(',')[1]),
     // separate out the mime component
@@ -7931,7 +7975,7 @@ return new Parser;
   window.jIO = jIO;
 
 }(window, RSVP, Blob, QueryFactory, Query, atob,
-  FileReader, ArrayBuffer, Uint8Array));
+  FileReader, ArrayBuffer, Uint8Array, navigator));
 ;/*
  * Rusha, a JavaScript implementation of the Secure Hash Algorithm, SHA-1,
  * as defined in FIPS PUB 180-1, tuned for high performance with large inputs.
@@ -8158,7 +8202,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -8370,7 +8414,7 @@ return new Parser;
 /*jslint nomen: true*/
 /*global jIO, RSVP, Rusha*/
 
-(function (jIO, RSVP, Rusha) {
+(function (jIO, RSVP, Rusha, stringify) {
   "use strict";
 
   var rusha = new Rusha(),
@@ -8397,14 +8441,14 @@ return new Parser;
     this._remote_sub_storage = jIO.createJIO(spec.remote_sub_storage);
 
     this._signature_hash = "_replicate_" + generateHash(
-      JSON.stringify(spec.local_sub_storage) +
-        JSON.stringify(spec.remote_sub_storage) +
-        JSON.stringify(this._query_options)
+      stringify(spec.local_sub_storage) +
+        stringify(spec.remote_sub_storage) +
+        stringify(this._query_options)
     );
     this._signature_sub_storage = jIO.createJIO({
       type: "document",
       document_id: this._signature_hash,
-      sub_storage: spec.local_sub_storage
+      sub_storage: spec.signature_storage || spec.local_sub_storage
     });
 
     this._use_remote_post = spec.use_remote_post || false;
@@ -8540,40 +8584,45 @@ return new Parser;
         });
     }
 
-    function checkLocalCreation(queue, source, destination, id, options,
-                                getMethod) {
-      var remote_doc;
-      queue
+    function propagateDeletion(destination, id) {
+      return destination.remove(id)
         .push(function () {
-          return destination.get(id);
+          return context._signature_sub_storage.remove(id);
         })
-        .push(function (doc) {
-          remote_doc = doc;
+        .push(function () {
+          skip_document_dict[id] = null;
+        });
+    }
+
+    function checkAndPropagate(status_hash, local_hash, doc,
+                               source, destination, id,
+                               conflict_force, conflict_revert,
+                               conflict_ignore,
+                               options) {
+      return destination.get(id)
+        .push(function (remote_doc) {
+          return [remote_doc, generateHash(stringify(remote_doc))];
         }, function (error) {
           if ((error instanceof jIO.util.jIOError) &&
               (error.status_code === 404)) {
-            // This document was never synced.
-            // Push it to the remote storage and store sync information
-            return;
+            return [null, null];
           }
           throw error;
         })
-        .push(function () {
-          // This document was never synced.
-          // Push it to the remote storage and store sync information
-          return getMethod(id);
-        })
-        .push(function (doc) {
-          var local_hash = generateHash(JSON.stringify(doc)),
-            remote_hash;
-          if (remote_doc === undefined) {
-            return propagateModification(source, destination, doc, local_hash,
-                                         id, options);
-          }
+        .push(function (remote_list) {
+          var remote_doc = remote_list[0],
+            remote_hash = remote_list[1];
 
-          remote_hash = generateHash(JSON.stringify(remote_doc));
           if (local_hash === remote_hash) {
-            // Same document
+            // Same modifications on both side
+            if (local_hash === null) {
+              // Deleted on both side, drop signature
+              return context._signature_sub_storage.remove(id)
+                .push(function () {
+                  skip_document_dict[id] = null;
+                });
+            }
+
             return context._signature_sub_storage.put(id, {
               "hash": local_hash
             })
@@ -8581,50 +8630,58 @@ return new Parser;
                 skip_document_dict[id] = null;
               });
           }
-          if (options.conflict_ignore === true) {
+
+          if ((remote_hash === status_hash) || (conflict_force === true)) {
+            // Modified only locally. No conflict or force
+            if (local_hash === null) {
+              // Deleted locally
+              return propagateDeletion(destination, id);
+            }
+            return propagateModification(source, destination, doc,
+                                         local_hash, id,
+                                         {use_post: ((options.use_post) &&
+                                                     (remote_hash === null))});
+          }
+
+          // Conflict cases
+          if (conflict_ignore === true) {
             return;
           }
-          if (options.conflict_force === true) {
-            return propagateModification(source, destination, doc, local_hash,
-                                         id, options);
+
+          if ((conflict_revert === true) || (local_hash === null)) {
+            // Automatically resolve conflict or force revert
+            if (remote_hash === null) {
+              // Deleted remotely
+              return propagateDeletion(source, id);
+            }
+            return propagateModification(
+              destination,
+              source,
+              remote_doc,
+              remote_hash,
+              id,
+              {use_post: ((options.use_revert_post) &&
+                          (local_hash === null))}
+            );
           }
-          // Already exists on destination
+
+          // Minimize conflict if it can be resolved
+          if (remote_hash === null) {
+            // Copy remote modification remotely
+            return propagateModification(source, destination, doc,
+                                         local_hash, id,
+                                         {use_post: options.use_post});
+          }
           throw new jIO.util.jIOError("Conflict on '" + id + "': " +
-                                      JSON.stringify(doc) + " !== " +
-                                      JSON.stringify(remote_doc),
+                                      stringify(doc || '') + " !== " +
+                                      stringify(remote_doc || ''),
                                       409);
         });
     }
 
-    function checkBulkLocalCreation(queue, source, destination, id_list,
-                                    options) {
-      queue
-        .push(function () {
-          return source.bulk(id_list);
-        })
-        .push(function (result_list) {
-          var i,
-            sub_queue = new RSVP.Queue();
-
-          function getResult(j) {
-            return function (id) {
-              if (id !== id_list[j].parameter_list[0]) {
-                throw new Error("Does not access expected ID " + id);
-              }
-              return result_list[j];
-            };
-          }
-
-          for (i = 0; i < result_list.length; i += 1) {
-            checkLocalCreation(sub_queue, source, destination,
-                               id_list[i].parameter_list[0],
-                               options, getResult(i));
-          }
-          return sub_queue;
-        });
-    }
-
-    function checkLocalDeletion(queue, destination, id, source) {
+    function checkLocalDeletion(queue, destination, id, source,
+                                conflict_force, conflict_revert,
+                                conflict_ignore, options) {
       var status_hash;
       queue
         .push(function () {
@@ -8632,93 +8689,57 @@ return new Parser;
         })
         .push(function (result) {
           status_hash = result.hash;
-          return destination.get(id)
-            .push(function (doc) {
-              var remote_hash = generateHash(JSON.stringify(doc));
-              if (remote_hash === status_hash) {
-                return destination.remove(id)
-                  .push(function () {
-                    return context._signature_sub_storage.remove(id);
-                  })
-                  .push(function () {
-                    skip_document_dict[id] = null;
-                  });
-              }
-              // Modifications on remote side
-              // Push them locally
-              return propagateModification(destination, source, doc,
-                                           remote_hash, id);
-            }, function (error) {
-              if ((error instanceof jIO.util.jIOError) &&
-                  (error.status_code === 404)) {
-                return context._signature_sub_storage.remove(id)
-                  .push(function () {
-                    skip_document_dict[id] = null;
-                  });
-              }
-              throw error;
-            });
+          return checkAndPropagate(status_hash, null, null,
+                                   source, destination, id,
+                                   conflict_force, conflict_revert,
+                                   conflict_ignore,
+                                   options);
         });
     }
 
     function checkSignatureDifference(queue, source, destination, id,
-                                      conflict_force, conflict_ignore,
-                                      getMethod) {
+                                      conflict_force, conflict_revert,
+                                      conflict_ignore,
+                                      is_creation, is_modification,
+                                      getMethod, options) {
       queue
         .push(function () {
-          return RSVP.all([
-            getMethod(id),
-            context._signature_sub_storage.get(id)
-          ]);
+          // Optimisation to save a get call to signature storage
+          if (is_creation === true) {
+            return RSVP.all([
+              getMethod(id),
+              {hash: null}
+            ]);
+          }
+          if (is_modification === true) {
+            return RSVP.all([
+              getMethod(id),
+              context._signature_sub_storage.get(id)
+            ]);
+          }
+          throw new jIO.util.jIOError("Unexpected call of"
+                                      + " checkSignatureDifference",
+                                      409);
         })
         .push(function (result_list) {
           var doc = result_list[0],
-            local_hash = generateHash(JSON.stringify(doc)),
+            local_hash = generateHash(stringify(doc)),
             status_hash = result_list[1].hash;
 
           if (local_hash !== status_hash) {
-            // Local modifications
-            return destination.get(id)
-              .push(function (remote_doc) {
-                var remote_hash = generateHash(JSON.stringify(remote_doc));
-                if (remote_hash !== status_hash) {
-                  // Modifications on both sides
-                  if (local_hash === remote_hash) {
-                    // Same modifications on both side \o/
-                    return context._signature_sub_storage.put(id, {
-                      "hash": local_hash
-                    })
-                      .push(function () {
-                        skip_document_dict[id] = null;
-                      });
-                  }
-                  if (conflict_ignore === true) {
-                    return;
-                  }
-                  if (conflict_force !== true) {
-                    throw new jIO.util.jIOError("Conflict on '" + id + "': " +
-                                                JSON.stringify(doc) + " !== " +
-                                                JSON.stringify(remote_doc),
-                                                409);
-                  }
-                }
-                return propagateModification(source, destination, doc,
-                                             local_hash, id);
-              }, function (error) {
-                if ((error instanceof jIO.util.jIOError) &&
-                    (error.status_code === 404)) {
-                  // Document has been deleted remotely
-                  return propagateModification(source, destination, doc,
-                                               local_hash, id);
-                }
-                throw error;
-              });
+            return checkAndPropagate(status_hash, local_hash, doc,
+                                     source, destination, id,
+                                     conflict_force, conflict_revert,
+                                     conflict_ignore,
+                                     options);
           }
         });
     }
 
     function checkBulkSignatureDifference(queue, source, destination, id_list,
-                                          conflict_force, conflict_ignore) {
+                                          document_status_list, options,
+                                          conflict_force, conflict_revert,
+                                          conflict_ignore) {
       queue
         .push(function () {
           return source.bulk(id_list);
@@ -8739,8 +8760,11 @@ return new Parser;
           for (i = 0; i < result_list.length; i += 1) {
             checkSignatureDifference(sub_queue, source, destination,
                                id_list[i].parameter_list[0],
-                               conflict_force, conflict_ignore,
-                               getResult(i));
+                               conflict_force, conflict_revert,
+                               conflict_ignore,
+                               document_status_list[i].is_creation,
+                               document_status_list[i].is_modification,
+                               getResult(i), options);
           }
           return sub_queue;
         });
@@ -8750,6 +8774,9 @@ return new Parser;
       var queue = new RSVP.Queue();
       if (!options.hasOwnProperty("use_post")) {
         options.use_post = false;
+      }
+      if (!options.hasOwnProperty("use_revert_post")) {
+        options.use_revert_post = false;
       }
       return queue
         .push(function () {
@@ -8761,9 +8788,11 @@ return new Parser;
         .push(function (result_list) {
           var i,
             local_dict = {},
-            new_list = [],
-            change_list = [],
+            document_list = [],
+            document_status_list = [],
             signature_dict = {},
+            is_modification,
+            is_creation,
             key;
           for (i = 0; i < result_list[0].data.total_rows; i += 1) {
             if (!skip_document_dict.hasOwnProperty(
@@ -8779,55 +8808,53 @@ return new Parser;
               signature_dict[result_list[1].data.rows[i].id] = i;
             }
           }
-
-          if (options.check_creation === true) {
-            for (key in local_dict) {
-              if (local_dict.hasOwnProperty(key)) {
-                if (!signature_dict.hasOwnProperty(key)) {
-                  if (options.use_bulk_get === true) {
-                    new_list.push({
-                      method: "get",
-                      parameter_list: [key]
-                    });
-                  } else {
-                    checkLocalCreation(queue, source, destination, key,
-                                       options, source.get.bind(source));
-                  }
+          for (key in local_dict) {
+            if (local_dict.hasOwnProperty(key)) {
+              is_modification = signature_dict.hasOwnProperty(key)
+                && options.check_modification;
+              is_creation = !signature_dict.hasOwnProperty(key)
+                && options.check_creation;
+              if (is_modification === true || is_creation === true) {
+                if (options.use_bulk_get === true) {
+                  document_list.push({
+                    method: "get",
+                    parameter_list: [key]
+                  });
+                  document_status_list.push({
+                    is_creation: is_creation,
+                    is_modification: is_modification
+                  });
+                } else {
+                  checkSignatureDifference(queue, source, destination, key,
+                                           options.conflict_force,
+                                           options.conflict_revert,
+                                           options.conflict_ignore,
+                                           is_creation, is_modification,
+                                           source.get.bind(source),
+                                           options);
                 }
               }
             }
-            if ((options.use_bulk_get === true) && (new_list.length !== 0)) {
-              checkBulkLocalCreation(queue, source, destination, new_list,
+          }
+          if (options.check_deletion === true) {
+            for (key in signature_dict) {
+              if (signature_dict.hasOwnProperty(key)) {
+                if (!local_dict.hasOwnProperty(key)) {
+                  checkLocalDeletion(queue, destination, key, source,
+                                     options.conflict_force,
+                                     options.conflict_revert,
+                                     options.conflict_ignore,
                                      options);
-            }
-          }
-          for (key in signature_dict) {
-            if (signature_dict.hasOwnProperty(key)) {
-              if (local_dict.hasOwnProperty(key)) {
-                if (options.check_modification === true) {
-                  if (options.use_bulk_get === true) {
-                    change_list.push({
-                      method: "get",
-                      parameter_list: [key]
-                    });
-                  } else {
-                    checkSignatureDifference(queue, source, destination, key,
-                                             options.conflict_force,
-                                             options.conflict_ignore,
-                                             source.get.bind(source));
-                  }
-                }
-              } else {
-                if (options.check_deletion === true) {
-                  checkLocalDeletion(queue, destination, key, source);
                 }
               }
             }
           }
-          if ((options.use_bulk_get === true) && (change_list.length !== 0)) {
+          if ((options.use_bulk_get === true) && (document_list.length !== 0)) {
             checkBulkSignatureDifference(queue, source, destination,
-                                         change_list,
+                                         document_list, document_status_list,
+                                         options,
                                          options.conflict_force,
+                                         options.conflict_revert,
                                          options.conflict_ignore);
           }
         });
@@ -8879,10 +8906,10 @@ return new Parser;
               use_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_LOCAL),
-              conflict_ignore: ((context._conflict_handling ===
-                                 CONFLICT_CONTINUE) ||
-                                (context._conflict_handling ===
-                                 CONFLICT_KEEP_REMOTE)),
+              conflict_revert: (context._conflict_handling ===
+                                CONFLICT_KEEP_REMOTE),
+              conflict_ignore: (context._conflict_handling ===
+                                CONFLICT_CONTINUE),
               check_modification: context._check_local_modification,
               check_creation: context._check_local_creation,
               check_deletion: context._check_local_deletion
@@ -8907,8 +8934,11 @@ return new Parser;
           return pushStorage(context._remote_sub_storage,
                              context._local_sub_storage, {
               use_bulk_get: use_bulk_get,
+              use_revert_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_REMOTE),
+              conflict_revert: (context._conflict_handling ===
+                                CONFLICT_KEEP_LOCAL),
               conflict_ignore: (context._conflict_handling ===
                                 CONFLICT_CONTINUE),
               check_modification: context._check_remote_modification,
@@ -8921,7 +8951,7 @@ return new Parser;
 
   jIO.addStorage('replicate', ReplicateStorage);
 
-}(jIO, RSVP, Rusha));
+}(jIO, RSVP, Rusha, jIO.util.stringify));
 ;/*
  * Copyright 2015, Nexedi SA
  * Released under the LGPL license.
@@ -10898,7 +10928,7 @@ return new Parser;
           sub_query,
           result_list,
           local_roles,
-          tmp_list = [];
+          sort_list = [];
         if (options.query) {
           parsed_query = jIO.QueryFactory.create(options.query);
 
@@ -10942,9 +10972,8 @@ return new Parser;
 
         if (options.sort_on) {
           for (i = 0; i < options.sort_on.length; i += 1) {
-            tmp_list.push(JSON.stringify(options.sort_on[i]));
+            sort_list.push(JSON.stringify(options.sort_on[i]));
           }
-          options.sort_on = tmp_list;
         }
 
         return jIO.util.ajax({
@@ -10955,7 +10984,7 @@ return new Parser;
               // XXX Force erp5 to return embedded document
               select_list: options.select_list || ["title", "reference"],
               limit: options.limit,
-              sort_on: options.sort_on,
+              sort_on: sort_list,
               local_roles: local_roles
             }),
           "xhrFields": {
@@ -11827,9 +11856,11 @@ return new Parser;
  */
 
 /*jslint nomen: true */
-/*global indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange*/
+/*global indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest,
+        DOMError, Event*/
 
-(function (indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange) {
+(function (indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest,
+           DOMError) {
   "use strict";
 
   // Read only as changing it can lead to data corruption
@@ -11888,7 +11919,14 @@ return new Parser;
         if (request.result) {
           request.result.close();
         }
-        reject(error);
+        if ((error !== undefined) &&
+            (error.target instanceof IDBOpenDBRequest) &&
+            (error.target.error instanceof DOMError)) {
+          reject("Connection to: " + db_name + " failed: " +
+                 error.target.error.message);
+        } else {
+          reject(error);
+        }
       };
 
       request.onabort = function () {
@@ -12249,7 +12287,7 @@ return new Parser;
   };
 
   jIO.addStorage("indexeddb", IndexedDBStorage);
-}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange));
+}(indexedDB, jIO, RSVP, Blob, Math, IDBKeyRange, IDBOpenDBRequest, DOMError));
 ;/*
  * Copyright 2015, Nexedi SA
  * Released under the LGPL license.
