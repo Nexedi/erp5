@@ -118,6 +118,7 @@ class PDFDocument(Image):
     """
     Implementation of conversion for PDF files
     """
+    format = str(format).lower()
     if format == 'html':
       try:
         return self.getConversion(format=format)
@@ -134,7 +135,7 @@ class PDFDocument(Image):
         data = self._convertToText()
         self.setConversion(data, mime=mime, format='txt')
         return (mime, data)
-    elif format in ('djvu', 'DJVU'):
+    elif format == 'djvu':
       try:
         return self.getConversion(format='djvu')
       except KeyError:
@@ -145,13 +146,30 @@ class PDFDocument(Image):
     elif format in ('', None,) or format=='pdf':
       # return original content
       return self.getContentType(), self.getData()
-    else:
+    elif format in ('png', 'jpg', 'jpeg', 'tif', 'tiff', 'gif', 'bmp', 'ico', 'svg', 'ppm', 'pcx'):
       if kw.get('frame', None) is None:
         # when converting to image from PDF we care for first page only
         # this will make sure that only first page is used and not whole content of
         # PDF file read & converted which is a performance issue
         kw['frame'] = 0
       return Image._convert(self, format, **kw)
+    elif "/" in format:
+      data = self.getPortalObject().portal_transforms.convertToData(format, str(self.getData() or ""), context=self, mimetype=self.getContentType())
+      if data is None:
+        raise ConversionError('PDFDocument conversion error. '
+                              'portal_transforms failed to convert to %r: %r' % (format, self))
+      return format, data
+    else:
+      portal = self.getPortalObject()
+      mimetype = portal.mimetypes_registry.lookupExtension("a." + format)
+      if mimetype is None:
+        raise ConversionError('PDFDocument conversion error. '
+                              'mimetypes_registry failed to find mimetype of extension %r: %r' % (format, self))
+      data = portal.portal_transforms.convertToData(mimetype, str(self.getData() or ""), context=self, mimetype=self.getContentType())
+      if data is None:
+        raise ConversionError('PDFDocument conversion error. '
+                              'portal_transforms failed to convert to %r (%s): %r' % (format, mimetype, self))
+      return mimetype, data
 
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
   def populateContent(self):
