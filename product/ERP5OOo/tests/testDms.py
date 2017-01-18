@@ -1505,6 +1505,16 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
 
+  def test_canConvertToNewContent(self):
+    """Check if Base_convertToNewContent works
+    """
+    portal = self.getPortalObject()
+    module = portal.getDefaultModule("File")
+    file = module.newContent(portal_type="File", content_type="text/plain", data="Hello")
+    file2 = file.Base_convertToNewContent(destination_mimetype="application/pdf")
+    self.assertNotEquals(file2.getId(), file.getId())
+    self.assertEquals(file2.getParentValue().getId(), "document_module")
+
   def test_Base_contribute(self):
     """
       Test contributing a file and attaching it to context.
@@ -2650,6 +2660,16 @@ return 1
     self.assertFalse(document.hasBaseData())
     self.assertFalse(document.hasContentMd5())
     self.assertEqual(document.getExternalProcessingState(), 'empty')
+
+  def test_isOnlyOfficeDocumentBaseConvertable(self):
+    document = self.portal.document_module.newContent(
+      portal_type="Text",
+      data=makeFileUpload('TEST-en-002.docy'),
+      content_type="application/x-asc-text",
+    )
+    document.convertToBaseFormat()
+    self.tic()
+    document.convert(format="docy")
 
   def _test_document_publication_workflow(self, portal_type, transition):
     document = self.getDocumentModule().newContent(portal_type=portal_type)

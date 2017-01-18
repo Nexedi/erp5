@@ -30,6 +30,7 @@ from Products.PortalTransforms.transforms import initialize
 from Products.PortalTransforms.utils import log
 from Products.PortalTransforms.utils import TransformException
 from Products.PortalTransforms.utils import _www
+from Products.PortalTransforms.utils import parseContentType
 
 
 from ZODB.POSException import ConflictError
@@ -650,6 +651,45 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                 if input.startswith("text/") and input not in available_types:
                     available_types.append(input)
         return available_types
+
+    security.declarePublic('getAvailableTargetMimetypeList')
+    def getAvailableTargetMimetypeList(self, source_mimetype):
+        """
+          Returns a list of mimetypes that can be used as target for
+          `source_mimetype` conversion.
+        """
+
+        # clean up mimetype from its useless characters
+        source_mimetype = parseContentType(source_mimetype)
+        source_mimetype = ";".join([source_mimetype.gettype()] + source_mimetype.getplist())
+
+        # fill dict that will contain all possible conversion for each mimetype
+        input_output_dict = {} # {"application/pdf": set(["text/html", "application/msword", ...])}
+        for obj in self.objectValues():
+            for input_ in obj.inputs:
+                if input_ in input_output_dict:
+                    input_output_dict[input_].add(obj.output)
+                else:
+                    input_output_dict[input_] = set([obj.output])
+
+        # browse mimetypes to fill result_set of available target mimetypes
+        result_set = set([source_mimetype])
+        browsing_list = [source_mimetype]
+        input_output_items = input_output_dict.items()
+        while len(browsing_list):
+            browsing_mimetype = browsing_list.pop()
+            for mimetype, output_mimetype_set in input_output_items:
+                if (browsing_mimetype == mimetype or
+                    (mimetype.endswith("/*") and
+                     browsing_mimetype[:len(mimetype[:-1])] == mimetype[:-1])
+                        ):
+                    for output_mimetype in output_mimetype_set:
+                        if output_mimetype not in result_set:
+                            result_set.add(output_mimetype)
+                            browsing_list.append(output_mimetype)
+
+        result_set.remove(source_mimetype)
+        return list(result_set)
 
 InitializeClass(TransformTool)
 registerToolInterface('portal_transforms', IPortalTransformsTool)
