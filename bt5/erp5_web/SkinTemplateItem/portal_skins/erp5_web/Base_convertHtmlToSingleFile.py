@@ -167,10 +167,10 @@ def handleImageSourceObject(obj, src):
     format_kw = {}
     for key, value in search:
       if key == "format" and value is not None:
-        format_kw["format"] = value
+        format_kw["format"] = str(value)
       elif key == "display" and value is not None:
         format_kw.setdefault("format", "")
-        format_kw["display"] = value
+        format_kw["display"] = str(value)
     if format_kw:
       mime, data = obj.convert(**format_kw)
       return handleLinkedData(mime, str(data), src)
