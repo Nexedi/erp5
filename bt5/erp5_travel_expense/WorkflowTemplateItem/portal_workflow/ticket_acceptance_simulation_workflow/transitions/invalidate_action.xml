@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Close Ticket</string> </value>
+            <value> <string>Reject Ticket</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
