@@ -2573,6 +2573,7 @@ return 1
     previous_md5 = document.getContentMd5()
     previous_base_data = document.getBaseData()
 
+    # TRISTAN
     # Clone document: base_data must not be computed once again
     cloned_document = document.Base_createCloneDocument(batch_mode=True)
     self.assertEqual(previous_md5, cloned_document.getContentMd5())
@@ -2630,6 +2631,16 @@ return 1
     self.assertFalse(document.hasBaseData())
     self.assertFalse(document.hasContentMd5())
     self.assertEqual(document.getExternalProcessingState(), 'empty')
+
+  def test_isOnlyOfficeDocumentBaseConvertable(self):
+    document = self.portal.document_module.newContent(
+      portal_type="Text",
+      data=makeFileUpload('TEST-en-002.docy'),
+      content_type="application/x-asc-text",
+    )
+    self.tic()
+    document.convert(format="docy")
+    # TRISTAN
 
   def _test_document_publication_workflow(self, portal_type, transition):
     document = self.getDocumentModule().newContent(portal_type=portal_type)
