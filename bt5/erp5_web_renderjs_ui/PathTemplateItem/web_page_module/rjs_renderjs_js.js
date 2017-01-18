@@ -1081,19 +1081,32 @@ if (typeof document.contains !== 'function') {
     });
   }
 
-  function clearGadgetInternalParameters(g) {
-    g.__sub_gadget_dict = {};
-    createMonitor(g);
+  function clearGadgetInternalParameters() {
+    this.__sub_gadget_dict = {};
+    createMonitor(this);
   }
 
-  function loadSubGadgetDOMDeclaration(g) {
-    var element_list = g.element.querySelectorAll('[data-gadget-url]'),
+  function loadSubGadgetDOMDeclaration() {
+    var element_list = this.element.querySelectorAll('[data-gadget-url]'),
       element,
       promise_list = [],
       scope,
       url,
       sandbox,
-      i;
+      i,
+      context = this;
+
+    function prepareReportGadgetDeclarationError(scope) {
+      return function (error) {
+        var aq_dict = context.__acquired_method_dict || {},
+          method_name = 'reportGadgetDeclarationError';
+        if (aq_dict.hasOwnProperty(method_name)) {
+          return aq_dict[method_name].apply(context,
+                                            [arguments, scope]);
+        }
+        throw error;
+      };
+    }
 
     for (i = 0; i < element_list.length; i += 1) {
       element = element_list[i];
@@ -1101,11 +1114,14 @@ if (typeof document.contains !== 'function') {
       url = element.getAttribute("data-gadget-url");
       sandbox = element.getAttribute("data-gadget-sandbox");
       if (url !== null) {
-        promise_list.push(g.declareGadget(url, {
-          element: element,
-          scope: scope || undefined,
-          sandbox: sandbox || undefined
-        }));
+        promise_list.push(
+          context.declareGadget(url, {
+            element: element,
+            scope: scope || undefined,
+            sandbox: sandbox || undefined
+          })
+            .push(undefined, prepareReportGadgetDeclarationError(scope))
+        );
       }
     }
 
@@ -1120,9 +1136,10 @@ if (typeof document.contains !== 'function') {
   };
   RenderJSGadget.setState = function (state_dict) {
     var json_state = JSON.stringify(state_dict);
-    return this.ready(function () {
+    this.__ready_list.unshift(function () {
       this.state = JSON.parse(json_state);
     });
+    return this;
   };
   RenderJSGadget.onStateChange = function (callback) {
     this.prototype.__state_change_callback = callback;
@@ -1331,6 +1348,8 @@ if (typeof document.contains !== 'function') {
     };
   RenderJSGadget.declareAcquiredMethod("aq_reportServiceError",
                                        "reportServiceError");
+  RenderJSGadget.declareAcquiredMethod("aq_reportGadgetDeclarationError",
+                                       "reportGadgetDeclarationError");
 
   /////////////////////////////////////////////////////////////////
   // RenderJSGadget.allowPublicAcquisition
@@ -1461,6 +1480,17 @@ if (typeof document.contains !== 'function') {
     gadget_instance = new RenderJSIframeGadget();
     setAqParent(gadget_instance, parent_gadget);
     iframe = document.createElement("iframe");
+    iframe.addEventListener('error', function (error) {
+      iframe_loading_deferred.reject(error);
+    });
+    iframe.addEventListener('load', function () {
+      return RSVP.timeout(5000)
+        .fail(function () {
+          iframe_loading_deferred.reject(
+            new Error('Timeout while loading: ' + url)
+          );
+        });
+    });
 //    gadget_instance.element.setAttribute("seamless", "seamless");
     iframe.setAttribute("src", url);
     gadget_instance.__path = url;
@@ -1524,18 +1554,7 @@ if (typeof document.contains !== 'function') {
       trans.delayReturn(true);
     });
 
-    return RSVP.any([
-      iframe_loading_deferred.promise,
-      // Timeout to prevent non renderJS embeddable gadget
-      // XXX Maybe using iframe.onload/onerror would be safer?
-      new RSVP.Queue()
-        .push(function () {
-          return RSVP.timeout(5000);
-        })
-        .push(undefined, function () {
-          throw new Error('Timeout while loading: ' + url);
-        })
-    ]);
+    return iframe_loading_deferred.promise;
   }
 
   /////////////////////////////////////////////////////////////////
@@ -2283,8 +2302,8 @@ if (typeof document.contains !== 'function') {
             return fct.call(g, g);
           };
         }
-        TmpConstructor.ready(function (g) {
-          return startService(g);
+        TmpConstructor.ready(function () {
+          return startService(this);
         });
 
         loading_gadget_promise.push(ready_wrapper);
