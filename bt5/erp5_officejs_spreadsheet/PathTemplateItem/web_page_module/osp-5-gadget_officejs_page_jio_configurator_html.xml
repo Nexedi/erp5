@@ -63,9 +63,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>follow_up/software_product_module/osp-5</string>
                 <string>contributor/person_module/1</string>
-                <string>contributor/person_module/2</string>
+                <string>contributor/person_module/3</string>
+                <string>follow_up/software_product_module/osp-5</string>
               </tuple>
             </value>
         </item>
@@ -117,7 +117,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>OSP-5-dev</string> </value>
+            <value> <string>osp-5-dev</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>

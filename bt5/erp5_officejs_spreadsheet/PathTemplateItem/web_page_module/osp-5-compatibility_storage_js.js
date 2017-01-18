@@ -1,10 +1,45 @@
-/*globals jIO, Blob*/
+/*globals jIO, Blob, Rusha, RSVP, URI*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
-(function (jIO, Blob) {
+(function (jIO, Blob, Rusha, RSVP, URI) {
   "use strict";
+
+  var rusha = new Rusha(), stringify = jIO.util.stringify;
 
   function CompatibilityStorage(spec) {
     this._sub_storage = jIO.createJIO(spec.sub_storage);
+    var remote_storage = {
+      type: "mapping",
+      attachment_mapping_dict: {
+        "data": {
+          "get": {
+            "uri_template": (new URI("hateoas"))
+              .absoluteTo(spec.erp5_url)
+              .toString() + "/{+id}/Document_downloadForOnlyOfficeApp"
+          }
+        }
+      },
+      sub_storage: {
+        type: "erp5",
+        url: (new URI("hateoas"))
+              .absoluteTo(spec.erp5_url)
+              .toString(),
+        default_view_reference: "jio_view_attachment"
+      }
+    }, query = {
+      query: 'portal_type:"' + spec.portal_type + '" ',
+      sort_on: [["modification_date", "descending"]],
+      limit: [0, 30]
+    };
+    this._signature_hash = "_replicate_" + rusha.digestFromString(
+      stringify(spec) +
+        stringify(remote_storage) +
+        stringify(query)
+    );
+    this._signature_sub_storage = jIO.createJIO({
+      type: "document",
+      document_id: this._signature_hash,
+      sub_storage: spec.sub_storage
+    });
   }
 
   CompatibilityStorage.prototype.get = function () {
@@ -32,7 +67,59 @@
   };
 
   CompatibilityStorage.prototype.repair = function () {
-    return this._sub_storage.repair.apply(this._sub_storage, arguments);
+    var context = this;
+    // Here fix the local storage for some cases.
+
+    function checkSignature(doc) {
+      if (doc.doc.data === undefined) {
+        return context._sub_storage.getAttachment(doc.id, "data")
+          .push(undefined, function (error) {
+            if (error.status_code === 404) {
+              return context._signature_storage.get(doc.id)
+                .push(function (hash) {
+                  delete hash.attachments_hash.data;
+                  return context._signature_storage.put(doc.id, hash);
+                })
+                .push(undefined, function (error) {
+                  if (error.status_code !== 404) {
+                    throw error;
+                  }
+                  return;
+                });
+            }
+            throw error;
+          });
+      }
+    }
+
+    return context._sub_storage.get(context._signature_hash)
+      .push(function (signature) {
+        if (!signature.is_repair) {
+          return context._sub_storage.allDocs({include_doc: true})
+            .push(function (doc_list) {
+              var i, len = doc_list.length, promise_list = [];
+              for (i = 0; i < len; i += 1) {
+                promise_list.push(checkSignature(doc_list[i]));
+              }
+              return RSVP.all(promise_list);
+            })
+            .push(function () {
+              return context._sub_storage.put(
+                context._signature_hash,
+                {is_repair: true}
+              );
+            });
+        }
+      })
+      .push(undefined, function (error) {
+        if (error.status_code !== 404) {
+          throw error;
+        }
+        return;
+      })
+      .push(function () {
+        return context._sub_storage.repair.apply(context._sub_storage, arguments);
+      });
   };
 
   CompatibilityStorage.prototype.allAttachments = function (doc_id) {
@@ -110,4 +197,4 @@
 
   jIO.addStorage('compatibility', CompatibilityStorage);
 
-}(jIO, Blob));
+}(jIO, Blob, Rusha, RSVP, URI));

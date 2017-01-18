@@ -115,15 +115,9 @@
             </value>
         </item>
         <item>
-            <key> <string>_count</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -194,21 +188,17 @@
             </value>
         </item>
         <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>_tree</string> </key>
+            <key> <string>categories</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <tuple>
+                <string>caching_policy/hateoas</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -283,7 +273,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Hateoas</string> </value>
+            <value> <string>UnRestricted Hateoas</string> </value>
         </item>
         <item>
             <key> <string>view_action_category</string> </key>
@@ -296,7 +286,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -312,9 +302,18 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="Length" module="BTrees.Length"/>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
-    <pickle> <int>0</int> </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
@@ -333,37 +332,6 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
@@ -375,13 +343,13 @@
                 <item>
                     <key> <string>category_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -390,7 +358,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -407,7 +375,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supervincentb</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -429,7 +397,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482439194.62</float>
+                        <float>1467822917.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -445,7 +413,7 @@
       </tuple>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -460,12 +428,12 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supervincentb</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                  <none/>
                 </value>
             </item>
             <item>
@@ -474,7 +442,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>952.24643.19176.59392</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -492,7 +460,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482439194.65</float>
+                        <float>1467822955.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -502,38 +470,6 @@
           </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="11" aka="AAAAAAAAAAs=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_site_module/officejs_spreadsheet/hateoasnoauth</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>

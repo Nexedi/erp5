@@ -192,6 +192,16 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_document_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>configuration_cache_file</string> </value>
                   </item>
                   <item>
@@ -202,7 +212,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_sub_gadget_installer</string> </value>
+                      <value> <string>configuration_redirect_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -212,7 +222,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_latest_document_version</string> </value>
+                      <value> <string>configuration_sub_gadget_installer</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -267,15 +277,20 @@
         </item>
         <item>
             <key> <string>configuration_latest_document_version</string> </key>
-            <value> <string>b78bed1f46</string> </value>
+            <value> <string>osp-5-dev</string> </value>
         </item>
         <item>
             <key> <string>configuration_latest_version</string> </key>
-            <value> <string>1.1.4</string> </value>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_redirect_url</string> </key>
+            <value> <string>gadget_officejs_error_nosw.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_sub_gadget_installer</string> </key>
-            <value> <string>https://spreadsheet-gadget.app.officejs.com/</string> </value>
+            <value> <string>https://softinst62027.host.vifib.net/erp5/web_site_module/osp-6/,development\n
+https://softinst62027.host.vifib.net/erp5/web_site_module/osp-26/,development</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -319,7 +334,7 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1482364800.0</float>
+                    <float>1481673600.0</float>
                     <string>UTC</string>
                   </tuple>
                 </state>
@@ -525,7 +540,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482439446.14</float>
+                        <float>1481708041.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -570,7 +585,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.30020.52314.62532</string> </value>
+                <value> <string>956.37336.9012.7918</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -588,7 +603,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1483701413.01</float>
+                        <float>1484745426.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

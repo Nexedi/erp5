@@ -63,9 +63,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>follow_up/software_product_module/osp-5</string>
                 <string>contributor/person_module/1</string>
-                <string>contributor/person_module/2</string>
+                <string>contributor/person_module/3</string>
+                <string>follow_up/software_product_module/osp-5</string>
               </tuple>
             </value>
         </item>
@@ -144,7 +144,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>OSP-5-dev</string> </value>
+            <value> <string>osp-5-dev</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -273,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.8971.56758.49612</string> </value>
+                <value> <string>956.43951.39299.10581</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1483360788.94</float>
+                        <float>1484729871.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

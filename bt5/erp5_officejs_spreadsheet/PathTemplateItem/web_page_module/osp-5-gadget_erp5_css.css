@@ -311,7 +311,7 @@ html body .ui-content-maximize {
   left: 0 !important;
   z-index: 900 !important;
   overflow: hidden !important;
-  height: 100%;
+  height: 94%;
   width: 100%;}
 
 /*
@@ -4997,4 +4997,3 @@ html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {
 .ui-nosvg .ui-icon-user:after {
   background-image: url(images/icons-png/user-white.png);
 }
-

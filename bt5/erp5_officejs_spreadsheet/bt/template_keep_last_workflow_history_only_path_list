@@ -56,7 +56,8 @@ web_page_module/osp-5-gadget_officejs_appcache
 web_page_module/osp-5-gadget_erp5_field_listbox_js
 web_page_module/osp-5-gadget_erp5_router_js
 web_page_module/osp-5-compatibility_storage_js
-software_product_module/osp-5
+web_page_module/osp-5_gadget_developer_html
+web_page_module/osp-5_gadget_developer_js
 web_site_module/osp-5
 web_site_module/osp-5/development
 web_site_module/osp-5/development/**

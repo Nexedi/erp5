@@ -63,9 +63,9 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>follow_up/software_product_module/osp-5</string>
                 <string>contributor/person_module/1</string>
-                <string>contributor/person_module/2</string>
+                <string>contributor/person_module/3</string>
+                <string>follow_up/software_product_module/osp-5</string>
               </tuple>
             </value>
         </item>
@@ -74,6 +74,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -113,7 +117,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>OSP-5-dev</string> </value>
+            <value> <string>osp-5-dev</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -228,12 +232,12 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>supervincentb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                  <none/>
                 </value>
             </item>
             <item>
@@ -242,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>956.43951.44372.52309</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473258381.19</float>
+                        <float>1484729877.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -327,38 +331,6 @@
           </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_page_module/rjs_gadget_erp5_css</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>

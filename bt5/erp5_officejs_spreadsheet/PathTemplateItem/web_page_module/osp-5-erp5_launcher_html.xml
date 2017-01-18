@@ -64,9 +64,9 @@
             <value>
               <tuple>
                 <string>publication_section/application/landing_page</string>
-                <string>follow_up/software_product_module/osp-5</string>
                 <string>contributor/person_module/1</string>
-                <string>contributor/person_module/2</string>
+                <string>contributor/person_module/3</string>
+                <string>follow_up/software_product_module/osp-5</string>
               </tuple>
             </value>
         </item>
@@ -120,6 +120,10 @@
             <value> <string>Web Page</string> </value>
         </item>
         <item>
+            <key> <string>revision</string> </key>
+            <value> <string>5</string> </value>
+        </item>
+        <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>
@@ -139,7 +143,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>OSP-5-dev</string> </value>
+            <value> <string>osp-5-dev</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -254,7 +258,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>supervincentb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -268,7 +272,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.49698.36625.9881</string> </value>
+                <value> <string>956.47161.47329.40260</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +290,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473258399.83</float>
+                        <float>1484743980.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

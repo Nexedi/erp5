@@ -45,8 +45,15 @@
     .ready(function (g) {
       return g.translateHtml(panel_template_header() + panel_template_body())
         .push(function (my_translated_or_plain_html) {
+          var dev_link;
           g.props.jelement.html(my_translated_or_plain_html);
           g.props.jelement.trigger("create");
+          dev_link = g.props.element.querySelector(".develop_url");
+          dev_link.setAttribute("href", "https://softinst62027.host.vifib.net" +
+          "/erp5/web_site_module/osp-26/development/#" +
+          "app=" +  window.location.origin +
+          "&version=" + window.location.pathname.replace("/","") +
+          "&page=dev_initialisation");
         });
     })
 

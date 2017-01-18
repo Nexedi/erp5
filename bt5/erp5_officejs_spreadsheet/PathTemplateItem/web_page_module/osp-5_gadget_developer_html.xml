@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -63,7 +63,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>contributor/person_module/1</string>
                 <string>contributor/person_module/3</string>
                 <string>follow_up/software_product_module/osp-5</string>
               </tuple>
@@ -76,67 +75,40 @@
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jio.js</string> </value>
+            <value> <string>gadget_developer.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Jio access</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>osp-5-gadget_jio_js</string> </value>
+            <value> <string>osp-5_gadget_developer_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284358.02</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <key> <string>revision</string> </key>
+            <value> <string>5</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Jio Gadget JS</string> </value>
+            <value> <string>Developer Gadget</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>gadget_jio.js</string> </value>
+            <value> <string>gadget_developer.html</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -202,7 +174,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>supervincentb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -224,7 +196,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473258381.49</float>
+                        <float>1484743982.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -255,12 +227,12 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>supervincentb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                  <none/>
                 </value>
             </item>
             <item>
@@ -269,7 +241,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>956.47400.41035.34252</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +259,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473258381.5</float>
+                        <float>1484747049.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -310,11 +282,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>supervincentb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -326,7 +300,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -344,7 +318,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473258381.49</float>
+                        <float>1484743982.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -354,38 +328,6 @@
           </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_page_module/rjs_gadget_jio_js</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>

@@ -1,4 +1,3 @@
-software_product_module/osp-5
 web_page_module/osp-5-URI_js
 web_page_module/osp-5-compatibility_storage_js
 web_page_module/osp-5-dygraph_js
@@ -57,6 +56,8 @@ web_page_module/osp-5-jquerymobile_css
 web_page_module/osp-5-jquerymobile_js
 web_page_module/osp-5-renderjs_js
 web_page_module/osp-5-rsvp_js
+web_page_module/osp-5_gadget_developer_html
+web_page_module/osp-5_gadget_developer_js
 web_site_module/osp-5
 web_site_module/osp-5/development
 web_site_module/osp-5/development/**

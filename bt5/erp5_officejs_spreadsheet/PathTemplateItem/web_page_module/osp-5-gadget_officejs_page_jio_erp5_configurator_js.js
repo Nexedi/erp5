@@ -34,6 +34,8 @@
             attachment_list: ["data"],
             local_sub_storage: {
               type: "compatibility",
+              erp5_url: erp5_url,
+              portal_type: portal_type,
               sub_storage: {
                 type: "query",
                 sub_storage: {

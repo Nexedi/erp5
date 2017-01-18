@@ -290,6 +290,12 @@
           return router_gadget.start();
         });
     })
+    .ready(function (g) {
+      return g.getDeclaredGadget('develop_gadget')
+        .push(function (router_gadget) {
+          return router_gadget.start();
+        });
+    })
 
     //////////////////////////////////////////
     // Allow Acquisition

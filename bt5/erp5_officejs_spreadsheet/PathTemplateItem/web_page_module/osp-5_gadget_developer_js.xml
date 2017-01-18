@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Software Product" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -12,9 +12,8 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -24,7 +23,16 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Change_local_roles_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -35,8 +43,8 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,57 +54,67 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>__translation_dict</string> </key>
-            <value>
-              <dictionary/>
             </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>follow_up/web_site_module/osp-5</string>
+                <string>contributor/person_module/3</string>
+                <string>follow_up/software_product_module/osp-5</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
+            <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>OSP-5</string> </value>
+            <value> <string>gadget_developer.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Provides Advanced Spreadsheet edition.</string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>osp-5</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>id</string> </key>
+            <value> <string>osp-5_gadget_developer_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Software Product</string> </value>
+            <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>revision</string> </key>
+            <value> <string>9</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>SpreadSheet</string> </value>
+            <value> <string>Developer Gadget JS</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>gadget_developer.js</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>osp-5-dev</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -118,15 +136,21 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>edit_workflow</string> </key>
+                    <key> <string>document_publication_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>validation_workflow</string> </key>
+                    <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -146,29 +170,21 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>edit</string> </value>
-            </item>
-            <item>
-                <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
-            </item>
-            <item>
-                <key> <string>comment</string> </key>
                 <value>
                   <none/>
                 </value>
             </item>
             <item>
-                <key> <string>error_message</string> </key>
+                <key> <string>actor</string> </key>
+                <value> <string>supervincentb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
                 <value> <string></string> </value>
             </item>
             <item>
-                <key> <string>serial</string> </key>
-                <value> <string>952.24613.50192.63897</string> </value>
-            </item>
-            <item>
-                <key> <string>state</string> </key>
-                <value> <string>current</string> </value>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
             </item>
             <item>
                 <key> <string>time</string> </key>
@@ -182,12 +198,16 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467821166.59</float>
+                        <float>1484539466.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
                 </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -205,19 +225,29 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>validate</string> </value>
+                <value> <string>edit</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>supervincentb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
                 <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>956.47400.41035.34252</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
             </item>
             <item>
                 <key> <string>time</string> </key>
@@ -231,16 +261,71 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467883494.22</float>
+                        <float>1484747033.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
                 </value>
             </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
             <item>
-                <key> <string>validation_state</string> </key>
-                <value> <string>validated</string> </value>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>supervincentb</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1484539466.34</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
             </item>
           </dictionary>
         </list>

@@ -2,7 +2,8 @@
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, document, RSVP, rJS, Handlebars, loopEventListener, jIO) {
   "use strict";
-
+  var CONTENT_GADGET = "https://softinst62027.host.vifib.net/erp5/" +
+    "web_site_module/osp-6/";
   function this_func_link(name) {
     return function (opt) {
       return this[name].apply(this, opt);
@@ -11,14 +12,17 @@
 
   function renderOnlyOfficeGadget(gadget) {
     var text_gadget;
-    return gadget.declareGadget(
-      "https://spreadsheet-gadget.app.officejs.com/1.0/",
-      {
-        scope: "my_text_content",
-        sandbox: "iframe",
-        element: gadget.props.element.querySelector(".document-content")
-      }
-    )
+    return gadget.getSetting("sub_gadget_version", {})
+      .push(function (version_dict) {
+        return gadget.declareGadget(
+          CONTENT_GADGET + version_dict[CONTENT_GADGET] + "/",
+          {
+            scope: "my_text_content",
+            sandbox: "iframe",
+            element: gadget.props.element.querySelector(".document-content")
+          }
+        );
+    })
       .push(function (text_content_gadget) {
         text_gadget = text_content_gadget;
         gadget.setFillStyle();
