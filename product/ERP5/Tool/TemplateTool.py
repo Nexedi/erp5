@@ -325,10 +325,10 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
 
-    def _download_local(self, path, bt_id, is_package=False):
+    def _download_local(self, path, bt_id, format_version):
       """Download Business Template from local directory or file
       """
-      if is_package:
+      if format_version == 2:
         bp = self.newContent(bt_id, 'Business Package')
         bp.importFile(path)
         return bp
@@ -362,7 +362,7 @@ class TemplateTool (BaseTool):
         shutil.rmtree(svn_checkout_tmp_dir)
 
     security.declareProtected( 'Import/Export objects', 'download' )
-    def download(self, url, id=None, REQUEST=None, is_package=False):
+    def download(self, url, id=None, REQUEST=None):
       """
       Download Business Template from url, can be file or local directory
       """
@@ -386,8 +386,17 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
+        # Check the format version for the bt
+        format_version_path = name+'/bt/template_version_format'
+        try:
+          file = open(os.path.normpath(format_version_path))
+          format_version = int(file.read())
+          file.close()
+        except IOError:
+          format_version = 1
+
         # XXX: Download only needed in case the file is in directory
-        bt = self._download_local(os.path.normpath(name), id, is_package)
+        bt = self._download_local(os.path.normpath(name), id, format_version)
 
       bt.build(no_action=True)
       return bt
