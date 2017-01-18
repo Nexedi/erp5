@@ -9,25 +9,13 @@
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>extension_from_filename</string> </key>
-                    <value>
-                      <list>
-                        <string>ppt</string>
-                        <string>odp</string>
-                        <string>sxi</string>
-                        <string>pptx</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <dictionary/>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
@@ -63,6 +51,49 @@
         <item>
             <key> <string>title</string> </key>
             <value> <string>Presentation by extension</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>extension_from_filename</string> </key>
+                    <value>
+                      <list>
+                        <string>ppt</string>
+                        <string>odp</string>
+                        <string>sxi</string>
+                        <string>pptx</string>
+                        <string>ppty</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>

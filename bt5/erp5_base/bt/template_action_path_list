@@ -44,6 +44,7 @@ Embedded File | web_view
 Embedded Folder | view
 Fax | change_function
 Fax | view
+File | convert_to
 File | download
 File | update_content_from_url
 File | view
@@ -51,6 +52,7 @@ Geographical Area | view
 Geographical Location | go_to
 Geographical Location | view
 Image | change_function
+Image | convert_to
 Image | download
 Image | fullsize_view
 Image | update_content_from_url

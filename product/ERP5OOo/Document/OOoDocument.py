@@ -242,7 +242,13 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
              DeprecationWarning)
 
       # tuple order is reversed to be compatible with ERP5 Form
-      return [(y, x) for x, y in allowed]
+      return [(y, x) for x, y in allowed] + (
+        # XXX Hack to force cloudooo to say "I can convert odt to docy"
+        #     which should be portal transforms' job.
+        {"application/vnd.oasis.opendocument.text": [("OnlyOffice Text Document", "docy")],
+         "application/vnd.oasis.opendocument.spreadsheet": [("OnlyOffice Spreadsheet", "xlsy")],
+         "application/vnd.oasis.opendocument.presentation": [("OnlyOffice Presentation", "ppty")]}.get(content_type, [])
+      )
 
     # Cache valid format list
     cached_getTargetFormatItemList = CachingMethod(
@@ -272,6 +278,19 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return 'text/plain', s
     server_proxy = OOoServerProxy(self)
     orig_format = self.getBaseContentType()
+
+    # XXX hack to handle OnlyOffice yformats unless Cloudooo is able
+    #     to convert from "odt" to "docy" without two step conversion.
+    if format in ("docy", "application/x-asc-text+zip", "application/x-asc-text"):
+      encdata = server_proxy.convertFile(enc(str(self.getBaseData())), "odt", "docx")
+      return "application/x-asc-text", Pdata(dec(server_proxy.convertFile(encdata, "docx", "docy")))
+    if format in ("xsly", "application/x-asc-spreadsheet+zip", "application/x-asc-spreadsheet"):
+      encdata = server_proxy.convertFile(enc(str(self.getBaseData())), "ods", "xlsx")
+      return "application/x-asc-spreadsheet", Pdata(dec(server_proxy.convertFile(encdata, "xlsx", "xlsy")))
+    if format in ("ppty", "application/x-asc-presentation+zip", "application/x-asc-presentation"):
+      encdata = server_proxy.convertFile(enc(str(self.getBaseData())), "odp", "pptx")
+      return "application/x-asc-presentation", Pdata(dec(server_proxy.convertFile(encdata, "pptx", "ppty")))
+
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(str(self.getBaseData())),
                                        None,
@@ -446,12 +465,32 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       on the object. Update metadata information.
     """
     server_proxy = OOoServerProxy(self)
+
+    # XXX hack to handle OnlyOffice yformats unless Cloudooo is able
+    #     to convert from "docy" to "odt" without two step conversion.
+    content_type = self.getContentType()
+    filename = self.getFilename() or self.getId()
+    if content_type in ("application/x-asc-text+zip", "application/x-asc-text"):
+      encdata = server_proxy.convertFile(enc(str(self.getData())), "docy", "docx")
+      content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      filename += ".docx"
+    elif content_type in ("application/x-asc-spreadsheet+zip", "application/x-asc-spreadsheet"):
+      encdata = server_proxy.convertFile(enc(str(self.getData())), "xlsy", "xlsx")
+      content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      filename += ".xlsx"
+    elif content_type in ("application/x-asc-presentation+zip", "application/x-asc-presentation"):
+      encdata = server_proxy.convertFile(enc(str(self.getData())), "ppty", "pptx")
+      content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      filename += ".pptx"
+    else:
+      encdata = enc(str(self.getData()))
+
     response_code, response_dict, response_message = server_proxy.run_convert(
-                                      self.getFilename() or self.getId(),
-                                      enc(str(self.getData())),
+                                      filename,
+                                      encdata,
                                       None,
                                       None,
-                                      self.getContentType())
+                                      content_type)
     if response_code == 200:
       # sucessfully converted document
       self._setBaseData(dec(response_dict['data']))
