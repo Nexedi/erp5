@@ -2342,11 +2342,8 @@ class ERP5Generator(PortalGenerator):
                   p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style'):
         if not bt:
           continue
-        is_package = False
-        if bt == 'erp5_mysql_innodb_catalog':
-          is_package = True
         url = getBootstrapBusinessTemplateUrl(bt)
-        bt = template_tool.download(url, is_package=is_package)
+        bt = template_tool.download(url)
         bt.install(**kw)
 
   def setupERP5Promise(self,p,**kw):
