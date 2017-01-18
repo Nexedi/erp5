@@ -72,7 +72,7 @@ getQuantityUnitConversionDefinitionRowList\r\n
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>test_connection</string> </value>
+            <value> <string>erp5_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>expression</string> </key>
