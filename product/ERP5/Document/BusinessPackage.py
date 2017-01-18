@@ -52,6 +52,7 @@ from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.patches.ppml import importXML
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 customImporters={
     XMLExportImport.magic: importXML,
     }
@@ -719,6 +720,11 @@ class PathTemplatePackageItem(Implicit, Persistent):
         __traceback_info__ = (container, object_id, obj)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
+        obj.isIndexable = ConstantGetter('isIndexable', value=False)
+        aq_base(obj).uid = portal.portal_catalog.newUid()
+        del obj.isIndexable
+        if getattr(aq_base(obj), 'reindexObject', None) is not None:
+          obj.reindexObject()
 
   def importFile(self, bta, **kw):
     bta.importFiles(self)
