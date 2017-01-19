@@ -92,10 +92,6 @@ ZVRyYW5zbGF0ZWRUaXRsZVF1ZXJ5KAEAAABSGAAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0aG9u
 IFNjcmlwdHMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
         </item>
         <item>
-            <key> <string>_filepath</string> </key>
-            <value> <string>ERP5 Python Script:/erp5/portal_catalog/erp5_mysql_innodb/SQLCatalog_makeTranslatedTitleQuery</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
         </item>

@@ -69,19 +69,16 @@
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAHAAAAAwAA
-AHMwAAAAZAEAZAIAbAAAbQEAfQIAAXQCAHwCAGkAAARkAwB8AAADPI0BAH0EAHwEAFNkAABTKAQA
-AABOaf////8oAQAAAHMFAAAAUXVlcnlzGAAAAGZ1bGxfdGV4dC5TZWFyY2hhYmxlVGV4dCgFAAAA
-dB8AAABQcm9kdWN0cy5aU1FMQ2F0YWxvZy5TUUxDYXRhbG9ndAUAAABRdWVyeXQHAAAAX2FwcGx5
-X3QFAAAAdmFsdWV0BQAAAHF1ZXJ5KAUAAABSAwAAAFIAAAAAUgEAAABSAgAAAFIEAAAAKAAAAAAo
-AAAAAHMPAAAAU2NyaXB0IChQeXRob24pcxwAAABTUUxDYXRhbG9nX21ha2VGdWxsVGV4dFF1ZXJ5
-AQAAAHMGAAAAAAMQAhgBKAEAAAB0HAAAAFNRTENhdGFsb2dfbWFrZUZ1bGxUZXh0UXVlcnkoAQAA
-AFIFAAAAKAAAAAAoAAAAAHMPAAAAU2NyaXB0IChQeXRob24pcwgAAAA8bW9kdWxlPgEAAAB0AAAA
-AA==</string> </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_catalog/erp5_mysql_innodb/SQLCatalog_makeFullTextQuery</string> </value>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAGAAAAAwAA
+AHNPAAAAZAEAZAIAbAAAbQEAfQIAAWQBAGQDAGwAAG0CAH0DAAF8AgB8AwBkBAB8AACDAAF8AwBk
+BQB8AACDAAFkBgBkBwCDAgF9BAB8BABTZAAAUygIAAAATmn/////KAEAAABzDAAAAENvbXBsZXhR
+dWVyeSgBAAAAcwUAAABRdWVyeXQFAAAAdGl0bGV0CQAAAHJlZmVyZW5jZXQIAAAAb3BlcmF0b3J0
+AgAAAE9SKAUAAAB0HwAAAFByb2R1Y3RzLlpTUUxDYXRhbG9nLlNRTENhdGFsb2d0DAAAAENvbXBs
+ZXhRdWVyeXQFAAAAUXVlcnl0BQAAAHZhbHVldAUAAABxdWVyeSgFAAAAUgcAAABSBAAAAFIFAAAA
+UgYAAABSCAAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0aG9uIFNjcmlwdHMcAAAAU1FMQ2F0YWxv
+Z19tYWtlRnVsbFRleHRRdWVyeQEAAABzCgAAAAADEAEQAg8BGAIoAQAAAHQcAAAAU1FMQ2F0YWxv
+Z19tYWtlRnVsbFRleHRRdWVyeSgBAAAAUgkAAAAoAAAAACgAAAAAcxIAAABFUlA1IFB5dGhvbiBT
+Y3JpcHRzCAAAADxtb2R1bGU+AQAAAHQAAAAA</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -113,8 +110,8 @@ AA==</string> </value>
                           <tuple>
                             <string>value</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>ComplexQuery</string>
                             <string>Query</string>
-                            <string>_apply_</string>
                             <string>query</string>
                           </tuple>
                         </value>
@@ -137,6 +134,10 @@ AA==</string> </value>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Python Script</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

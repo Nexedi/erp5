@@ -90,10 +90,38 @@
             </value>
         </item>
         <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>id_group\r\n
 id_count:int=1\r\n
 default:int=1</string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -102,6 +130,14 @@ default:int=1</string> </value>
         <item>
             <key> <string>id</string> </key>
             <value> <string>z_portal_ids_generate_id</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -190,7 +226,7 @@ SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_portal_ids_generate_id</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

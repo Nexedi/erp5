@@ -142,7 +142,9 @@ limit_expression</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -331,7 +333,7 @@ LIMIT <dtml-var "limit_expression">\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_count_results</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
