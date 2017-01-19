@@ -98,6 +98,8 @@ class PropertyTypeValidity(Constraint):
       wrong_type = 0
       if property_type == 'tales':
         value = obj.getProperty(property_id, evaluate=0)
+      elif any(t in (list, tuple) for t in self._type_dict[property_type]):
+        value = obj.getPropertyList(property_id)
       else:
         value = obj.getProperty(property_id)
       if value is not None:
