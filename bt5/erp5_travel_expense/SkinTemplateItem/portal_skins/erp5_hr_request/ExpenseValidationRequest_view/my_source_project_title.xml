@@ -92,6 +92,10 @@
                           <string>Travel Request</string>
                           <string>Travel Request</string>
                         </tuple>
+                        <tuple>
+                          <string>Project</string>
+                          <string>Project</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

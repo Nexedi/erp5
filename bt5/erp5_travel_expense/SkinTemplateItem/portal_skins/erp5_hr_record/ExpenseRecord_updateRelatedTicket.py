@@ -82,6 +82,7 @@ if photo_data:
       filename="tmp.png",
       follow_up=ticket.getRelativeUrl(),
       publication_section=publication_section.getRelativeUrl(),
+      group=ticket.getDestinationDecisionValue().getGroup()
     )
     image.share()
 
