@@ -33,10 +33,12 @@
                 <string>source_section/organisation_module/urssaf</string>
                 <string>destination/account_module/securite_sociale</string>
                 <string>quantity_unit/time/month</string>
-                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_salariales</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/taxable_base/assiette_brute_plafonnee</string>
                 <string>base_contribution/base_amount/payroll/report/salary/net</string>
-                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_patronales</string>
                 <string>base_contribution/base_amount/payroll/base/income_tax</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_salariales</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/ctp/100P</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_patronales</string>
                 <string>base_application/base_amount/payroll/report/salary/gross</string>
                 <string>contribution_share/employee</string>
                 <string>contribution_share/employer</string>

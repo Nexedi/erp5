@@ -121,9 +121,7 @@
         </item>
         <item>
             <key> <string>corporate_name</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>URSSAF du Nord</string> </value>
         </item>
         <item>
             <key> <string>corporate_registration_code</string> </key>

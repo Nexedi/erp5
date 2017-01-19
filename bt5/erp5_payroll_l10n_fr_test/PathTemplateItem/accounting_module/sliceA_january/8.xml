@@ -33,7 +33,9 @@
                 <string>source_section/organisation_module/urssaf</string>
                 <string>destination/account_module/securite_sociale</string>
                 <string>quantity_unit/time/month</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/individual_contribution/assiette_du_versement_transport</string>
                 <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_patronales</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/ctp/900T</string>
                 <string>base_application/base_amount/payroll/report/salary/gross</string>
                 <string>contribution_share/employer</string>
               </tuple>

@@ -284,7 +284,7 @@
         </item>
         <item>
             <key> <string>civil_servant_status</string> </key>
-            <value> <string>05</string> </value>
+            <value> <string>99</string> </value>
         </item>
         <item>
             <key> <string>complementary_retirement_status</string> </key>
@@ -323,6 +323,14 @@
         <item>
             <key> <string>medical_scheme</string> </key>
             <value> <string>200</string> </value>
+        </item>
+        <item>
+            <key> <string>occupational_accident_risk_code</string> </key>
+            <value> <string>741GD</string> </value>
+        </item>
+        <item>
+            <key> <string>occupational_accident_risk_rate</string> </key>
+            <value> <float>1.1</float> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

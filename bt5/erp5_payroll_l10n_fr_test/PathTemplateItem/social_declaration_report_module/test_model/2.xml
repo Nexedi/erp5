@@ -10,8 +10,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>source/person_module/trainee</string>
                 <string>use/social_declaration/l10n/fr/dsn_change/ancien_motif_de_recours</string>
-                <string>source/person_module/35</string>
               </tuple>
             </value>
         </item>
@@ -40,7 +40,7 @@
                 <state>
                   <tuple>
                     <float>1420848000.0</float>
-                    <string>UTC</string>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>

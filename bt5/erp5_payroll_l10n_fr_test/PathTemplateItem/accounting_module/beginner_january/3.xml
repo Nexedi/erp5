@@ -12,19 +12,13 @@
               <tuple>
                 <string>destination/account_module/194</string>
                 <string>base_contribution/base_amount/payroll/report/salary/net</string>
-                <string>resource/service_module/2</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/other_income/participation_patronale_aux_frais_de_transports_publics</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
             <value> <string>remboursement_transport</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -41,25 +35,6 @@
         <item>
             <key> <string>quantity</string> </key>
             <value> <float>1.0</float> </value>
-        </item>
-        <item>
-            <key> <string>start_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1420848000.0</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

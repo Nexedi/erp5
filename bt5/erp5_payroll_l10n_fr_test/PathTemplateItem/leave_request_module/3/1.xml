@@ -11,7 +11,7 @@
             <value>
               <tuple>
                 <string>resource/calendar_period_type/social_declaration/l10n/fr/illness</string>
-                <string>aggregate/social_declaration_report_module/4</string>
+                <string>aggregate/social_declaration_report_module/test_model</string>
               </tuple>
             </value>
         </item>
@@ -33,8 +33,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1445212800.0</float>
-                    <string>UTC</string>
+                    <float>1421625600.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
@@ -64,8 +64,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1444435200.0</float>
-                    <string>UTC</string>
+                    <float>1420848000.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
@@ -81,8 +81,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1445126400.0</float>
-                    <string>UTC</string>
+                    <float>1421539200.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>

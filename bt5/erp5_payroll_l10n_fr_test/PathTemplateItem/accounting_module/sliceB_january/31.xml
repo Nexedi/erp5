@@ -30,10 +30,13 @@
               <tuple>
                 <string>resource/service_module/152</string>
                 <string>source/account_module/prevoyance</string>
-                <string>source_section/organisation_module/generali</string>
+                <string>source_section/organisation_module/organisation2</string>
                 <string>destination/account_module/310</string>
                 <string>quantity_unit/time/month</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/taxable_base/elements_de_cotisation_prevoyance_sante_retraite_supplementaire</string>
                 <string>base_contribution/base_amount/payroll/report/salary/net</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/individual_contribution/cotisation_individuelle_prevoyance_assurance_mutuelle</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/taxable_base_component/tranche_a_prevoyance</string>
                 <string>base_contribution/base_amount/payroll/base/income_tax</string>
                 <string>base_application/base_amount/payroll/report/salary/gross</string>
                 <string>contribution_share/employer</string>

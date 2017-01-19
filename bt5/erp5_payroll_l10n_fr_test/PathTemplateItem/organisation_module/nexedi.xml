@@ -108,8 +108,9 @@
                 <string>price_currency/currency_module/EUR</string>
                 <string>group/nexedi/hq</string>
                 <string>function/company</string>
+                <string>activity/industry/it/floss</string>
                 <string>role/internal</string>
-                <string>role/head_office</string>
+                <string>role/client</string>
               </tuple>
             </value>
         </item>
@@ -194,8 +195,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1007679600.0</float>
-                    <string>GMT+1</string>
+                    <float>1007683200.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>

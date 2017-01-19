@@ -23,6 +23,9 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -31,6 +34,9 @@
             <key> <string>_Delete_objects_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -39,6 +45,9 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -52,6 +61,7 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -78,12 +88,13 @@
             <value>
               <tuple>
                 <string>ledger/accounting/general</string>
-                <string>source_section/organisation_module/nexedi</string>
                 <string>resource/currency_module/EUR</string>
+                <string>source_section/organisation_module/nexedi</string>
                 <string>specialise/business_process_module/payroll_payment_simulation</string>
                 <string>destination_section/organisation_module/urssaf</string>
-                <string>causality/accounting_module/787</string>
+                <string>causality/accounting_module/1841</string>
                 <string>aggregate/social_declaration_report_module/test_model</string>
+                <string>payment_mode/direct_debit</string>
                 <string>source_payment/organisation_module/nexedi/nexedi_bank_account</string>
               </tuple>
             </value>
@@ -96,11 +107,11 @@
         </item>
         <item>
             <key> <string>default_destination_reference</string> </key>
-            <value> <string>2016-4</string> </value>
+            <value> <string>2017-37</string> </value>
         </item>
         <item>
             <key> <string>default_source_reference</string> </key>
-            <value> <string>2016-10</string> </value>
+            <value> <string>2017-84</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -127,15 +138,32 @@
             <value>
               <object>
                 <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
                 </klass>
                 <tuple>
                   <none/>
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1423958400.0</float>
-                    <string>UTC</string>
+                    <float>1420070400.0</float>
+                    <string>GMT</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>stop_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1422662400.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
@@ -143,7 +171,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payment to URSSAF January 2015</string> </value>
+            <value> <string>1845</string> </value>
         </item>
       </dictionary>
     </pickle>

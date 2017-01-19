@@ -77,23 +77,23 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>source_section/person_module/slicea</string>
+                <string>destination_section/organisation_module/nexedi</string>
+                <string>aggregate/social_declaration_report_module/test_model</string>
                 <string>price_currency/currency_module/EUR</string>
                 <string>ledger/accounting/general</string>
                 <string>resource/currency_module/EUR</string>
-                <string>destination_section/organisation_module/nexedi</string>
-                <string>source_section/person_module/28</string>
                 <string>specialise/paysheet_model_module/paysheet_model</string>
-                <string>aggregate/social_declaration_report_module/test_model</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_destination_reference</string> </key>
-            <value> <string>2015-1</string> </value>
+            <value> <string>2015-199</string> </value>
         </item>
         <item>
             <key> <string>default_source_reference</string> </key>
-            <value> <string>2015-24</string> </value>
+            <value> <string>2015-626</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -128,7 +128,7 @@
                 <state>
                   <tuple>
                     <float>1420070400.0</float>
-                    <string>UTC</string>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
@@ -145,7 +145,7 @@
                 <state>
                   <tuple>
                     <float>1422662400.0</float>
-                    <string>UTC</string>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
@@ -153,7 +153,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Usertest Slicea January 2015</string> </value>
+            <value> <string>January 2015 ForTests for Usertest Slicea</string> </value>
         </item>
       </dictionary>
     </pickle>

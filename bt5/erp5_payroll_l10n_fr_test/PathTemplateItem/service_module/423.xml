@@ -66,7 +66,14 @@
               <tuple>
                 <string>use/payroll/tax</string>
                 <string>quantity_unit/time/month</string>
+                <string>contribution_share/employer</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>
@@ -86,6 +93,14 @@
             </value>
         </item>
         <item>
+            <key> <string>optional_variation_base_category_list</string> </key>
+            <value>
+              <tuple>
+                <string>contribution_share</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Service</string> </value>
         </item>
@@ -96,10 +111,7 @@
         <item>
             <key> <string>variation_base_category_list</string> </key>
             <value>
-              <tuple>
-                <string>contribution_share</string>
-                <string>salary_range</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
       </dictionary>

@@ -30,14 +30,17 @@
               <tuple>
                 <string>resource/service_module/mutuellecic</string>
                 <string>source/account_module/mutuelle</string>
-                <string>source_section/organisation_module/assurance</string>
                 <string>destination/account_module/308</string>
                 <string>quantity_unit/time/month</string>
-                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_salariales</string>
-                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_patronales</string>
-                <string>base_contribution/base_amount/payroll/report/salary/net</string>
                 <string>base_application/base_amount/payroll/l10n/fr/base/mutuelle_fixe</string>
                 <string>contribution_share/employer</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_patronales</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_salariales</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/individual_contribution/cotisation_individuelle_prevoyance_assurance_mutuelle</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/taxable_base/elements_de_cotisation_prevoyance_sante_retraite_supplementaire</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/taxable_base_component/montant_forfaitaire_prevoyance</string>
+                <string>base_contribution/base_amount/payroll/report/salary/net</string>
+                <string>source_section/organisation_module/organisation1</string>
               </tuple>
             </value>
         </item>

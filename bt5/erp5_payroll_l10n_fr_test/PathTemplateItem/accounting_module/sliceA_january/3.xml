@@ -32,6 +32,7 @@
                 <string>contribution_share/employee</string>
                 <string>contribution_share/employer</string>
                 <string>base_contribution/base_amount/payroll/report/salary/net</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/other_income/participation_patronale_au_financement_des_titres_restaurant</string>
                 <string>destination/account_module/419</string>
                 <string>source_section/organisation_module/ticket_restaurant</string>
               </tuple>

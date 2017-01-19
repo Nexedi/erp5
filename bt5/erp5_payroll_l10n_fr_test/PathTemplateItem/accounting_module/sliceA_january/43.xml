@@ -10,14 +10,15 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source_section/organisation_module/urssaf</string>
-                <string>destination/account_module/cotisations_urssaf</string>
+                <string>source_section/organisation_module/arrco</string>
+                <string>destination/account_module/cotisation_caisses_retraites</string>
+                <string>destination_section/organisation_module/nexedi</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>grouping_reference</string> </key>
-            <value> <string>2015-33</string> </value>
+            <value> <string>2015-201</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -33,7 +34,7 @@
         </item>
         <item>
             <key> <string>quantity</string> </key>
-            <value> <float>1322.85</float> </value>
+            <value> <float>229.55</float> </value>
         </item>
       </dictionary>
     </pickle>

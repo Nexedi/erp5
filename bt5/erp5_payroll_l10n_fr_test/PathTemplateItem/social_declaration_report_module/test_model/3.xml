@@ -10,14 +10,14 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>use/social_declaration/l10n/fr/dsn_change/ancien_nom_de_famille</string>
-                <string>source/person_module/37</string>
+                <string>source/person_module/beginner</string>
+                <string>use/social_declaration/l10n/fr/dsn_change/ancienne_date_de_naissance</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>Beginnnner</string> </value>
+            <value> <string>07071950</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -39,8 +39,8 @@
                 </tuple>
                 <state>
                   <tuple>
-                    <float>1421020800.0</float>
-                    <string>UTC</string>
+                    <float>1420070400.0</float>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>

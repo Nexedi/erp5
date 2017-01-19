@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Accounting Transaction Line" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/account_module/310</string>
+                <string>destination_section/organisation_module/organisation2</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Accounting Transaction Line</string> </value>
+        </item>
+        <item>
+            <key> <string>price</string> </key>
+            <value> <float>1.0</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <float>-66.64</float> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -116,14 +116,57 @@
         <item>
             <key> <string>aggregate_related_title_list</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>/erp5/accounting_module/1838</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/accounting_module/1839</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/accounting_module/1840</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/accounting_module/1843</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/accounting_module/1844</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/accounting_module/1845</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/accounting_module/1847</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>source_administration/person_module/38</string>
+                <string>source_administration/person_module/contact</string>
               </tuple>
             </value>
         </item>
@@ -136,7 +179,26 @@
         <item>
             <key> <string>dsn_change_blocks</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>/erp5/social_declaration_report_module/test_model/1</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/social_declaration_report_module/test_model/2</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>/erp5/social_declaration_report_module/test_model/3</string> </key>
+                    <value>
+                      <dictionary/>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
         <item>
@@ -152,7 +214,7 @@
                 <state>
                   <tuple>
                     <float>1422230400.0</float>
-                    <string>UTC</string>
+                    <string>GMT</string>
                   </tuple>
                 </state>
               </object>
@@ -181,8 +243,14 @@
             <value> <float>3.0</float> </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>test model</string> </value>
+            <value> <string>test_model</string> </value>
         </item>
       </dictionary>
     </pickle>

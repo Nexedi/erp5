@@ -16,29 +16,6 @@
             </value>
         </item>
         <item>
-            <key> <string>grouping_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1423958400.0</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>grouping_reference</string> </key>
-            <value> <string>L</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>1</string> </value>
         </item>

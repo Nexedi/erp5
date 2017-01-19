@@ -34,6 +34,7 @@
                 <string>destination/account_module/caisse_retraite</string>
                 <string>quantity_unit/time/month</string>
                 <string>base_contribution/base_amount/payroll/l10n/fr/base/reduc_salariales</string>
+                <string>base_contribution/base_amount/payroll/l10n/fr/individual_contribution/reta_montant_de_cotisation_arrco</string>
                 <string>base_contribution/base_amount/payroll/report/salary/net</string>
                 <string>base_contribution/base_amount/payroll/base/income_tax</string>
                 <string>base_application/base_amount/payroll/report/salary/gross</string>

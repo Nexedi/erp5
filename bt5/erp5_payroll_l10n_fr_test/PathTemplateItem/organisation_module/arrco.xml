@@ -85,6 +85,10 @@
             </value>
         </item>
         <item>
+            <key> <string>corporate_registration_code</string> </key>
+            <value> <string>75320126800012</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Caisse de retraite vue comme un prestataire de service social dans le cadre du module de feuilles de paie</string> </value>
         </item>
