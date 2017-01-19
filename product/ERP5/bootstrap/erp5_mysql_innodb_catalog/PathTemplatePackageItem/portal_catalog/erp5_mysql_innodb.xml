@@ -106,6 +106,236 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
+                      <value> <string>SQLCatalog_deferFullTextIndex</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 Python Script</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>SQLCatalog_deferFullTextIndexActivity</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 Python Script</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_drop_catalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_drop_content_translation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_drop_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_uncatalog_catalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z0_uncatalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_catalog_catalog_fulltext_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_catalog_fulltext_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_create_catalog_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_create_content_translation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_create_fulltext</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>SQLCatalog_makeOwnerTitleSearchQuery</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 Python Script</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_child_address</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_child_telephone</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_default_email</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_destination_person</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_destination_person_full_text</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_resource_use</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_source_organisation</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_source_organisation_full_text</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_source_person</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>z_related_source_person_full_text</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta_type</string> </key>
+                      <value> <string>ERP5 SQL Method</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
                       <value> <string>z0_drop_accounting_transaction</string> </value>
                   </item>
                   <item>
@@ -436,9 +666,7 @@
             <value>
               <tuple>
                 <string>SQLCatalog_catalogTransformationList</string>
-                <string>SQLCatalog_deferFullTextIndex</string>
                 <string>z_catalog_alarm_list</string>
-                <string>z_catalog_catalog_fulltext_list</string>
                 <string>z_catalog_delivery_list</string>
                 <string>z_catalog_item_list</string>
                 <string>z_catalog_measure_list</string>
@@ -612,11 +840,8 @@
               <tuple>
                 <string>z0_drop_alarm</string>
                 <string>z0_drop_catalog</string>
-                <string>z0_drop_catalog_fulltext</string>
                 <string>z0_drop_category</string>
-                <string>z0_drop_content_translation</string>
                 <string>z0_drop_delivery</string>
-                <string>z0_drop_fulltext</string>
                 <string>z0_drop_item</string>
                 <string>z0_drop_measure</string>
                 <string>z0_drop_predicate</string>
@@ -631,11 +856,8 @@
                 <string>z0_drop_versioning</string>
                 <string>z_create_alarm</string>
                 <string>z_create_catalog</string>
-                <string>z_create_catalog_fulltext</string>
                 <string>z_create_category</string>
-                <string>z_create_content_translation</string>
                 <string>z_create_delivery</string>
-                <string>z_create_fulltext</string>
                 <string>z_create_item</string>
                 <string>z_create_measure</string>
                 <string>z_create_predicate</string>
@@ -725,9 +947,7 @@
             <value>
               <tuple>
                 <string>z0_uncatalog_alarm</string>
-                <string>z0_uncatalog_catalog_fulltext</string>
                 <string>z0_uncatalog_category</string>
-                <string>z0_uncatalog_fulltext</string>
                 <string>z0_uncatalog_item</string>
                 <string>z0_uncatalog_measure</string>
                 <string>z0_uncatalog_predicate</string>
@@ -831,7 +1051,7 @@
     <pickle>
       <global name="Length" module="BTrees.Length"/>
     </pickle>
-    <pickle> <int>240900</int> </pickle>
+    <pickle> <int>242100</int> </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>

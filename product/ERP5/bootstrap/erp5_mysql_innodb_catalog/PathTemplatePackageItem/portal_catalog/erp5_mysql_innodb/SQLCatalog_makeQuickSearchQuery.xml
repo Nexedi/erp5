@@ -76,14 +76,10 @@ a19zZWFyY2hfdGV4dCcgYW5kICdhZHZhbmNlZF9zZWFyY2hfdGV4dCcgc2NyaXB0YWJsZSBrZXlz
 IGFyZSBkZXByZWNhdGVkLiBVc2UgJ3NlYXJjaF90ZXh0JyBpbnN0ZWFkLnQLAAAAc2VhcmNoX3Rl
 eHQoBQAAAHQVAAAAUHJvZHVjdHMuRVJQNVR5cGUuTG9ndAMAAABsb2d0HwAAAFByb2R1Y3RzLlpT
 UUxDYXRhbG9nLlNRTENhdGFsb2d0BQAAAFF1ZXJ5dAUAAAB2YWx1ZSgFAAAAUgUAAABSAQAAAFIC
-AAAAUgMAAABSBAAAACgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0aG9uKXMfAAAAU1FMQ2F0YWxv
-Z19tYWtlUXVpY2tTZWFyY2hRdWVyeQEAAABzBgAAABABEAMKASgBAAAAdB8AAABTUUxDYXRhbG9n
-X21ha2VRdWlja1NlYXJjaFF1ZXJ5KAEAAABSBgAAACgAAAAAKAAAAABzDwAAAFNjcmlwdCAoUHl0
-aG9uKXMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value> <string>Script (Python):/erp5/portal_catalog/erp5_mysql_innodb/SQLCatalog_makeQuickSearchQuery</string> </value>
+AAAAUgMAAABSBAAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0aG9uIFNjcmlwdHMfAAAAU1FMQ2F0
+YWxvZ19tYWtlUXVpY2tTZWFyY2hRdWVyeQEAAABzBgAAABABEAMKASgBAAAAdB8AAABTUUxDYXRh
+bG9nX21ha2VRdWlja1NlYXJjaFF1ZXJ5KAEAAABSBgAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0
+aG9uIFNjcmlwdHMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -139,6 +135,10 @@ aG9uKXMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Python Script</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

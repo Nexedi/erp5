@@ -81,11 +81,15 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -186,7 +190,7 @@ AND <dtml-var table_0>.uid = <dtml-var table_1>.uid))\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_related_uid_or_parent_uid</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

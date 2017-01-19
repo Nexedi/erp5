@@ -97,11 +97,15 @@ getObject</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -284,7 +288,7 @@ REPLACE INTO predicate_category VALUES \n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_catalog_predicate_category_list</string> </value>
         </item>
         <item>
             <key> <string>type</string> </key>

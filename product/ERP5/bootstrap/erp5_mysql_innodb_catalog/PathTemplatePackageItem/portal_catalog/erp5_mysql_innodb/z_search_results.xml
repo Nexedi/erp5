@@ -331,7 +331,7 @@ LIMIT <dtml-var "limit_expression">\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_search_results</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

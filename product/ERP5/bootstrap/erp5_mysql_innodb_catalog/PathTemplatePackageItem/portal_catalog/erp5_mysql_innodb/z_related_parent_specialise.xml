@@ -107,11 +107,15 @@ query_table="catalog"</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -200,7 +204,7 @@ AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_related_parent_specialise</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

@@ -115,11 +115,15 @@ query_table="catalog"</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -214,7 +218,7 @@ AND <dtml-var table_0>.parent_uid = <dtml-var query_table>.uid
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_related_child_aggregate</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
