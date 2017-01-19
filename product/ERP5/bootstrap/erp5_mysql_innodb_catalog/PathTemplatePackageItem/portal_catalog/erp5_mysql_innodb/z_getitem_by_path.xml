@@ -97,7 +97,9 @@ uid_only</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -194,7 +196,7 @@ WHERE \n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_getitem_by_path</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

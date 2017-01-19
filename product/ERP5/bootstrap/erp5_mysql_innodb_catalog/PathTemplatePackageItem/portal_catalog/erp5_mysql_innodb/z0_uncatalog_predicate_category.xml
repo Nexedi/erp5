@@ -73,11 +73,15 @@
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -162,7 +166,7 @@ DELETE FROM predicate_category WHERE <dtml-sqltest uid op=eq type=int>\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z0_uncatalog_predicate_category</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>

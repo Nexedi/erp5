@@ -81,11 +81,15 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>class_file_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>class_name_</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
@@ -174,7 +178,7 @@ table_1</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>z_related_base_category_id</string> </value>
         </item>
         <item>
             <key> <string>uid</string> </key>
