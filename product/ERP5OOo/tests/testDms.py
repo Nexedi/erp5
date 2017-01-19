@@ -2638,6 +2638,7 @@ return 1
       data=makeFileUpload('TEST-en-002.docy'),
       content_type="application/x-asc-text",
     )
+    document.convertToBaseFormat()
     self.tic()
     document.convert(format="docy")
     # TRISTAN
