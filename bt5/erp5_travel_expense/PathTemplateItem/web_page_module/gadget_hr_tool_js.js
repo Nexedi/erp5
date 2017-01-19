@@ -15,7 +15,7 @@
     return sync_state;
   };
   
-  window.getLocationPromise = function() {
+  window.geoLocationPromise = function() {
     return new Promise(function (resolve, reject) {
       var err;
       if (navigator.geolocation) {
