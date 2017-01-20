@@ -10,6 +10,8 @@ Expense Validation Request | view
 Leave Request Record | jio_view
 Leave Request Record | view
 Leave Request | records
+Localisation Record | jio_view
+Localisation Record | view
 Person | jio_view
 Record Module | view
 Service | jio_view

@@ -20,6 +20,10 @@
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Localisation Record</type>
+  <workflow>edit_workflow, event_simulation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Record Module</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

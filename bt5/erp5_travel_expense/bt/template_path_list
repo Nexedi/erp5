@@ -1,3 +1,6 @@
+image_module/marker-icon
+image_module/marker-shadow
+portal_alarms/alarm_process_draft_localisation_record
 portal_alarms/alarm_process_draft_record_list
 portal_categories/use/hr
 portal_categories/use/hr/**

@@ -326,22 +326,17 @@
           return gadget.props.deferred.promise;
         })
         .push(function () {
-          alertify.log('searching GPS');
-          return geoLocationPromise();
+          return gadget.declareGadget('gadget_officejs_geoLocalisation.html');
         })
-        .push(function(result) {
-          alertify.success('GPS found');
-          return result;
-        }, function(err) {
-          alertify.error("GPS Localization Stopped");
-          console.log(err);
-          return  {coords: {latitude: "", longitude: ""}};
+        .push(function (geoGadget) {
+          gadget.props.deferred1.resolve();
+          gadget.props.geoGadget = geoGadget;
+          return geoGadget.getGeoLocation();
         })
         .push(function (result) {
           gadget.props.element.querySelector('input[name="longitude"]').value = result.coords.longitude;
           gadget.props.element.querySelector('input[name="latitude"]').value = result.coords.latitude;
           gadget.props.geoLocation = result;
-          gadget.props.deferred1.resolve();
         });
       
       
@@ -369,17 +364,26 @@
                 })
                 .push(function () {
                   if (sync) {
-                  return gadget.repair()
-                   .push(function () {
-                     return gadget.redirect({page: 'expense_record_list'});
-                   })
-                   .push(function () {
-                     alertify.success("Saved");
-                   });
-                  } else {
-                    alertify.success("Saved");
-                  }
-                });
+                    return new RSVP.Queue()
+                      .push(function () {
+                        return gadget.props.deferred1.promise;
+                      })
+                      .push(function () {
+                        return gadget.props.geoGadget.createGeoLocationRecord();
+                      })
+                      .push(function () {
+                        return gadget.repair();
+                      })
+                     .push(function () {
+                       return gadget.redirect({page: 'expense_record_list'});
+                     })
+                     .push(function () {
+                       alertify.success("Saved");
+                     });
+                    } else {
+                      alertify.success("Saved");
+                    }
+                  });
             }
           )
         })
@@ -433,28 +437,6 @@
           );
         });
     })
-    
-    /*
-    .declareService(function () {
-      var gadget = this;
-
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
-        })
-        .push(function () {
-          if (gadget.options.doc.sync_flag == "1"){
-            var element = gadget.props.element.querySelector("input[name='sync_flag'][value='1']");
-            element.setAttribute('checked', 'checked');
-            $(element).checkboxradio('refresh');
-          }else{
-            var element = gadget.props.element.querySelector("input[name='sync_flag'][value='']");
-            element.setAttribute('checked', 'checked');
-            $(element).checkboxradio('refresh');
-          }
-        })
-    })
-*/
     /////////////////////////////////////////
     // Preview clicked.
     /////////////////////////////////////////

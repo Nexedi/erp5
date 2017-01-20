@@ -8,6 +8,9 @@
  <portal_type id="Leave Request Record">
   <item>LeaveRequestRecord</item>
  </portal_type>
+ <portal_type id="Localisation Record">
+  <item>GeographicalPoint</item>
+ </portal_type>
  <portal_type id="Travel Request">
   <item>TravelRequest</item>
  </portal_type>
