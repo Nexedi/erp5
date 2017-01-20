@@ -89,9 +89,7 @@
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -105,13 +103,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Leaflet</string> </value>
+            <value> <string>leaflet.js</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>1.0.2</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -193,7 +189,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478771878.88</float>
+                        <float>1484752829.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -238,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.11957.64341.62498</string> </value>
+                <value> <string>956.50421.47378.55364</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478771890.56</float>
+                        <float>1484925504.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -315,7 +311,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478771844.78</float>
+                        <float>1484752801.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
