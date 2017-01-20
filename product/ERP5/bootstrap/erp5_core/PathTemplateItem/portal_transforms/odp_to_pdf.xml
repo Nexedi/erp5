@@ -52,23 +52,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>lynx_dump</string> </value>
+            <value> <string>odp_to_pdf</string> </value>
         </item>
         <item>
             <key> <string>inputs</string> </key>
             <value>
               <tuple>
-                <string>text/html</string>
+                <string>application/vnd.oasis.opendocument.presentation</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>module</string> </key>
-            <value> <string>Products.PortalTransforms.transforms.lynx_dump</string> </value>
+            <value> <string>erp5.component.document.TransformOdpToPdf</string> </value>
         </item>
         <item>
             <key> <string>output</string> </key>
-            <value> <string>text/plain</string> </value>
+            <value> <string>application/pdf</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

@@ -76,13 +76,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>css_to_text</string> </value>
+            <value> <string>rss_to_txt</string> </value>
         </item>
         <item>
             <key> <string>inputs</string> </key>
             <value>
               <list>
-                <string>text/css</string>
+                <string>application/rss+xml</string>
               </list>
             </value>
         </item>
@@ -117,7 +117,7 @@
             <key> <string>data</string> </key>
             <value>
               <list>
-                <string>text/css</string>
+                <string>application/rss+xml</string>
               </list>
             </value>
         </item>
