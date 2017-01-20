@@ -17,6 +17,18 @@ import Acquisition
 import astor
 from Products.ERP5Type.Log import log
 
+# Display matplotlib figure automatically like
+# the original python kernel
+import matplotlib
+import matplotlib.pyplot as plt
+from IPython.utils.decorators import flag_calls
+from IPython.core.pylabtools import print_figure
+from IPython.core.display import _pngxy
+from ipykernel.jsonutil import json_clean, encode_images
+import threading
+display_data_wrapper_lock = threading.Lock()
+plt.plot = flag_calls(plt.plot)
+
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
   # Check permissions for current user and display message to non-authorized user 
@@ -68,7 +80,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   
   # Pass all to code Base_runJupyter external function which would execute the code
   # and returns a dict of result
-  final_result = Base_runJupyterCode(self, python_expression, old_notebook_context)
+  final_result = displayDataWrapper(lambda:Base_runJupyterCode(self, python_expression, old_notebook_context))
     
   new_notebook_context = final_result['notebook_context']
   
@@ -78,7 +90,9 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
     u'evalue': final_result['evalue'],
     u'traceback': final_result['traceback'],
     u'status': final_result['status'],
-    u'mime_type': final_result['mime_type']}
+    u'mime_type': final_result['mime_type'],
+    u'extra_data_list': final_result['extra_data_list'],
+  }
   
   # Updates the context in the notebook with the resulting context of code 
   # execution.
@@ -127,6 +141,49 @@ def mergeTracebackListIntoResultDict(result_dict, error_result_dict_list):
       result_dict['traceback'].append(error_result_dict['traceback'])
       result_dict['status'] = error_result_dict['status']
   return result_dict
+
+
+def matplotlib_pre_run():
+  matplotlib.interactive(True)
+  rc = {'figure.figsize': (6.0,4.0),
+        'figure.facecolor': (1,1,1,0),
+        'figure.edgecolor': (1,1,1,0),
+        'font.size': 10,
+        'figure.dpi': 36,
+        'figure.subplot.bottom' : .125
+        }
+  for key, value in rc.items():
+    matplotlib.rcParams[key] = value
+  plt.gcf().clear()
+  plt.plot.called = False
+
+def matplotlib_post_run(data_list):
+  png_data = None
+  if plt.plot.called:
+    plt.plot.called = False
+    figure = plt.gcf()
+    png_data = print_figure(figure, fmt='png')
+    figure.clear()
+  if png_data is not None:
+    width, height = _pngxy(png_data)
+    data = encode_images({'image/png':png_data})
+    metadata = {'image/png':dict(width=width, height=height)}
+    data_list.append(json_clean(dict(data=data, metadata=metadata)))
+
+
+def displayDataWrapper(function):
+  with display_data_wrapper_lock:
+    # pre run
+    matplotlib_pre_run()
+
+    result = function()
+    extra_data_list = result.get('extra_data_list', [])
+
+    # post run
+    matplotlib_post_run(extra_data_list)
+
+  result['extra_data_list'] = extra_data_list
+  return result
 
 def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   """
@@ -403,7 +460,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     
     if inject_variable_dict.get('_print') is not None:
       output = inject_variable_dict['_print'].getCapturedOutputString()
-  
+
   result = {
     'result_string': output,
     'notebook_context': notebook_context,
@@ -1000,4 +1057,3 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
-
