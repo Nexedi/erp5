@@ -1,4 +1,4 @@
 portal_alarms/alarm_process_draft_records
 web_page_module/gadget_hr_*
-web_site_module/officejs_hr_psa
-web_site_module/officejs_hr_psa/**
+web_site_module/officejs_hr
+web_site_module/officejs_hr/**
