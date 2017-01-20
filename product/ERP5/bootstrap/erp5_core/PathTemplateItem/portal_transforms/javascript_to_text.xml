@@ -82,9 +82,7 @@
             <key> <string>inputs</string> </key>
             <value>
               <list>
-                <string>text/x-rst</string>
                 <string>text/javascript</string>
-                <string>text/css</string>
               </list>
             </value>
         </item>
@@ -119,9 +117,7 @@
             <key> <string>data</string> </key>
             <value>
               <list>
-                <string>text/x-rst</string>
                 <string>text/javascript</string>
-                <string>text/css</string>
               </list>
             </value>
         </item>
