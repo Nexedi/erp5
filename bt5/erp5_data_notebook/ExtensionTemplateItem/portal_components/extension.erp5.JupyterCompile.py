@@ -170,18 +170,30 @@ def matplotlib_post_run(data_list):
     metadata = {'image/png':dict(width=width, height=height)}
     data_list.append(json_clean(dict(data=data, metadata=metadata)))
 
+class Displayhook(object):
+  def hook(self, value):
+    self.result = repr(value)
+  def pre_run(self):
+    self.old_hook = sys.displayhook
+    sys.displayhook = self.hook
+    self.result = ''
+  def post_run(self):
+    sys.displayhook = self.old_hook
+displayhook = Displayhook()
 
 def displayDataWrapper(function):
   with display_data_wrapper_lock:
     # pre run
+    displayhook.pre_run()
     matplotlib_pre_run()
-
-    result = function()
-    extra_data_list = result.get('extra_data_list', [])
-
-    # post run
-    matplotlib_post_run(extra_data_list)
-
+    extra_data_list = []
+    try:
+      result = function()
+      extra_data_list = result.get('extra_data_list', [])
+    finally:
+      # post run
+      displayhook.post_run()
+      matplotlib_post_run(extra_data_list)
   result['extra_data_list'] = extra_data_list
   return result
 
@@ -348,6 +360,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           transaction.abort()
           result = {
             'result_string': "EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias,
+            'print_result': "EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias,
+            'displayhook_result': '',
             'notebook_context': notebook_context,
             'status': 'ok',
             'mime_type': 'text/plain',
@@ -463,6 +477,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
   result = {
     'result_string': output,
+    'print_result': output,
+    'displayhook_result': displayhook.result,
     'notebook_context': notebook_context,
     'status': status,
     'mime_type': mime_type,
