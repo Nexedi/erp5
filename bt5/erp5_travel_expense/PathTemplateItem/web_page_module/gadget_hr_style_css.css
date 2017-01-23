@@ -10,11 +10,11 @@
   }
 }
 
-html article section.ui-content-section form {
+html .document-access section.ui-content-section form:not(.synchro-form) {
   display: none;
 }
 
-html .ui-content-section {
+html .document-access .ui-content-section {
   box-shadow: none;
   border: none;
   margin: 0.1em auto;

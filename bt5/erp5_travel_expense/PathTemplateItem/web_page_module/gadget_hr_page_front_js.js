@@ -34,7 +34,10 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("repair", "jio_repair")
+    .declareAcquiredMethod("reload", "reload")
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
       return this.jio_allDocs.apply(this, param_list)
@@ -59,6 +62,10 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
+          return gadget.getSetting('last_sync_date');
+        })
+        .push(function (result) {
+          gadget.props.element.querySelector('.last_sync_date').innerHTML = result || 'not synchronize yet';
           gadget.props.portal_type = "Expense Record";
           gadget.props.document_title_plural = "Expense Requests";
           return RSVP.all([
@@ -133,6 +140,26 @@
           ]);
           
         });
+    })
+      .declareService(function () {
+        var gadget = this;
+        return new RSVP.Queue()
+         .push(function () {
+           return loopEventListener(
+             gadget.props.element.querySelector('form.synchro-form'),
+             'submit',
+             false,
+             function () {
+              gadget.props.element.querySelector("button").disabled = true;
+               return gadget.repair()
+                 .push(function () {
+                   return gadget.setSetting('last_sync_date',  new Date().toLocaleString());
+                 })
+                 .push(function () {
+                   return gadget.reload();
+                 });
+             });
+         });
     });
 
 }(window, RSVP, rJS));

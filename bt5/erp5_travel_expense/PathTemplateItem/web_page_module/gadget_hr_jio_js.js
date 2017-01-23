@@ -327,10 +327,6 @@
             database: gadget.state_parameter_dict.jio_storage.__storage._signature_hash
           });
           gadget.state_parameter_dict.jio_storage.__storage._signature_sub_storage.__storage._sub_storage = gadget.state_parameter_dict.jio_storage.__storage._local_sub_storage;
-          return gadget.setSetting('user_title', '')
-            .push(function () {
-              return wrapJioCall(gadget, 'repair');
-            });
         });
 
     })

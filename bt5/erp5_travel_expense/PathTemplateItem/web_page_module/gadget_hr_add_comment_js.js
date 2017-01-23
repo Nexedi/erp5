@@ -16,6 +16,9 @@
     .declareMethod("render", function (options) {
       var gadget = this;
       gadget.options = options;
+      if (!options.can_add_discussion) {
+        return;
+      }
       return gadget.allDocs({
         query: 'portal_type: Person' ,
         select_list: ['first_name', 'last_name'],
