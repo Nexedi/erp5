@@ -586,10 +586,55 @@ class TemplateTool (BaseTool):
       # so we need to add portal_catalog/erp5_mysql_innodb everytime we find
       # a bt5 making changes in any of these items.
 
+      portal_path = self.getPortalObject()
+      template_path_list = []
+
+      # For modules, we don't need to create path for the module
+      module_list = import_template.geTemplateModuleIdList()
+      template_path_list.extend(module_list)
+
+      # For categories, we create path for category objects as well as the subcategories
+      category_list = import_template.getTemplateCategoryList()
+      category_path_list = []
+      for base_category in category_list:
+        category_path_list.append(  'portal_categories/'+base_category,
+                                    'portal_categories/'+base_category+'/**',
+                                    )
+      template_path_list.extend(category_path_list)
+
+      # For portal_skins, we export the folder
+      portal_skin_list = import_template.getTempalteSkinIdList()
+      portal_skin_path_list = []
+      for skin in portal_skin_list:
+        portal_skin_path_list.append( 'portal_skins/'+skin,
+                                      'portal_skins/'+skin+'/**',
+                                      )
+      template_path_list.extend(portal_skin_path_list)
+
+      # For workflow chains,
+      # We have 2 objects in the Business Template design where we deal with
+      # workflow objects, we deal with the installation separately:
+      # 1. Workflow_id : We export the whole workflow objects in this case
+      # 2. Portal Workflow chain: It is already being exported via portal_types
+      # XXX: CHECK For 2, keeping in mind the migration of workflow would be merged
+      # before this part where we make workflow_list as property of portal_type
+      workflow_id_list = import_template.getTemplateWorkflowIdList()
+      workflow_path_list = []
+      for workflow in workflow_id_list:
+        workflow_path_list.append(  'portal_workflow/'+workflow,
+                                    'portal_workflow/'+workflow+'/**'
+                                  )
+      template_path_list.extend(workflow_path_list)
+
+      # For paths, we add them directly to the path list
+      template_path_list.extend(import_template.getTemplatePathList())
+
       # Create new objects for business package
-      template_path_list = import_template.getTemplatePathList()
       bp5_package = self.newContent(portal_type='Business Package')
       bp5_package.edit(template_path_list)
+      bp5_package.build(self)
+      # Export the newly built business package to the export directory
+      bp5_package.export(path=export_dir)
 
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
