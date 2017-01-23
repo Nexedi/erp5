@@ -551,6 +551,46 @@ class TemplateTool (BaseTool):
               self.activate(activity='SQLQueue').\
                 importAndReExportBusinessTemplateFromPath(template_path)
 
+    security.declareProtected( 'Import/Export objects', 'migrateBTToBP')
+    def migrateBTToBP(self, template_path, REQUEST=None, **kw):
+      """
+        Migrate business template repository to Business Package repo.
+        Business Package completely rely only on PathTemplateItem and to show
+        the difference between both of them
+
+        So, the steps should be:
+        1. Install the business template which is going to be migrated
+        2. Create a new Business Package with random id and title
+        3. Add the path, build and export the template
+        4. Remove the business template from the directory and add the business
+        package there instead
+        5. Change the ID and title of the business package
+      """
+      import_template = self.download(url=template_path)
+      export_dir = mkdtemp()
+
+      installed_bt_list = self.objectValues()
+      installed_bt_title_list = [bt.title for bt in installed_bt_list]
+
+      if import_template.getTitle() not in installed_bt_title_list:
+        # Install the business template
+        import_template.install(**kw)
+
+      # Make list of object paths which needs to be added in the bp5
+      # This can be decided by looping over every type of items we do have in
+      # bt5 and checking if there have been any changes being made to it via this
+      # bt5 installation or not.
+      # For ex:
+      # CatalogTempalteMethodItem, CatalogResultsKeyItem, etc. do make some
+      # changes in erp5_mysql_innodb(by adding properties, by adding sub-objects),
+      # so we need to add portal_catalog/erp5_mysql_innodb everytime we find
+      # a bt5 making changes in any of these items.
+
+      # Create new objects for business package
+      template_path_list = import_template.getTemplatePathList()
+      bp5_package = self.newContent(portal_type='Business Package')
+      bp5_package.edit(template_path_list)
+
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
       """
