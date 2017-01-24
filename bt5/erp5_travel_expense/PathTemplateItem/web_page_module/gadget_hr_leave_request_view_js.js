@@ -26,6 +26,34 @@
 
     };
 
+  function getResouceSelectList(gadget, doc) {
+    return new RSVP.Queue()
+      .push(function (){
+        return gadget.allDocs({
+          query: 'portal_type:"Service" AND use:"hr/leave%"',
+          select_list: ['relative_url', 'title'],
+          limit: [0, 100]
+        });
+      })
+      .push(function (result) {
+        var i = 0,
+          tmp,
+          ops,
+          select_options = [];
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          tmp = {
+            title: result.data.rows[i].value.title,
+            value: result.data.rows[i].value.relative_url
+          };
+          if (doc.resource === result.data.rows[i].value.relative_url) {
+            tmp.is_selected = true;
+          }
+          select_options.push(tmp);
+        }
+        return select_options;
+      });
+  }
+
   gadget_klass
     .ready(function (g) {
       return g.getElement()
@@ -64,48 +92,12 @@
 
       return new RSVP.Queue()
         .push (function () {
-          return {
-            data: {
-              total_rows: 14,
-              rows: [
-                {title: "Congés Payés Annuels", relative_url: "1"},
-                {title: "Congés d'ancienneté", relative_url: "2"},
-                {title: "Congé ancienneté demi journée", relative_url: "3"},
-                {title: "Congé RTT individuel", relative_url: "4"},
-                {title: "Congé révision examen apprenti", relative_url: "5"},
-                {title: "Congé naissance adoption", relative_url: "6"},
-                {title: "Congé déménagement personnel", relative_url: "7"},
-                {title: "Congé Mariage/PACS du salarié", relative_url: "8"},
-                {title: "Congé Mariage/PACS famille", relative_url: "9"},
-                {title: "Congé Maladie Enfant", relative_url: "10"},
-                {title: "Hospitalisation CONJ. Enfant", relative_url: "11"},
-                {title: "Amenag. Hor. PDT Grossesse", relative_url: "12"},
-                {title: "Congé décès Famille", relative_url: "13"},
-                {title: "Congé déménagement mutation", relative_url: "14"},
-                ]
-            }
-          }
-          /*gadget.allDocs({
-            query: 'portal_type:"Currency"',
-            select_list: ['relative_url', 'title'],
-            limit: [0, 100]
-          });*/
+          return getResouceSelectList(gadget, options.doc);
         })
-        .push(function (result) {
+        .push(function (select_options) {
           var i = 0,
             tmp,
-            ops,
-            select_options = [];
-          for (i = 0; i < result.data.total_rows; i += 1) {
-            tmp = {
-              title: result.data.rows[i].title,
-              value: result.data.rows[i].relative_url
-            };
-            if (options.doc.resource === result.data.rows[i].relative_url) {
-              tmp.is_selected = true;
-            }
-            select_options.push(tmp);
-          }
+            ops;
           if (options.doc.sync_flag === '1') {
             sync_checked = 'checked';
           } else {
@@ -260,9 +252,10 @@
                       if ((submit_event.target[i].type == "radio" || submit_event.target[i].type == "checkbox") && !submit_event.target[i].checked){
                         continue
                       }
-                      if (submit_event.target[i].name === "resource"){
+                      if (submit_event.target[i].nodeName === "SELECT"){
                         doc[submit_event.target[i].name] = submit_event.target[i].value;
-                        doc["resource_title"] = resource_type[submit_event.target[i].value].title;
+                        doc[submit_event.target[i].name + "_title"] =
+                          submit_event.target[i].options[submit_event.target[i].selectedIndex].text;
                       }
                       if (submit_event.target[i].name === "photo") {
                         continue

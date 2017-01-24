@@ -29,7 +29,8 @@ new_record.edit(
   start_date=line.getStartDate(),
   stop_date=line.getStopDate(),
   comment=context.getDescription(),
-  
+  resource=line.getResource(),
+  resource_tilte=line.getResourceTitle(),
   )
 new_record.stop()
 new_record.Record_archivePreviousVersions()

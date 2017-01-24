@@ -92,18 +92,20 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>right</string> </key>
-                    <value>
                       <list>
                         <string>my_preferred_expense_validation_request_use_list</string>
                         <string>my_preferred_expense_validation_request_resource</string>
                         <string>my_preferred_travel_request_use_list</string>
                         <string>my_preferred_travel_request_resource</string>
+                        <string>my_preferred_leave_request_period_use_list</string>
+                        <string>my_preferred_leave_request_period_resource</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
