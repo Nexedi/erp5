@@ -15,6 +15,7 @@ Person Module | leave_request_report
 Person Module | planning
 Person | jump_leave_requests
 Person | jump_presence_requests
+Person | leaves
 Person | planning
 Presence Request Module | view
 Presence Request Period | periodicity_view
