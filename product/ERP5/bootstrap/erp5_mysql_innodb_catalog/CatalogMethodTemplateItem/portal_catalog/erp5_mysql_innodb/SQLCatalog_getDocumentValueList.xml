@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>language=None, validation_state=None, all_languages=None, all_versions=None, effective_date=None, now=None, src__=0, **kw</string> </value>
+            <value> <string>search_context=None, language=None, all_languages=None, all_versions=None, now=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getDocumentValueListBase</string> </value>
+            <value> <string>SQLCatalog_getDocumentValueList</string> </value>
         </item>
       </dictionary>
     </pickle>

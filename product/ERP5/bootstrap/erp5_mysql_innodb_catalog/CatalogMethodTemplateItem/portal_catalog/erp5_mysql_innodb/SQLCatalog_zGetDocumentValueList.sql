@@ -1,7 +1,7 @@
-<dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), **kw)"
+<dtml-let query="getattr(search_context, 'buildSQLQuery', portal_catalog.buildSQLQuery)(query=portal_catalog.getSecurityQuery(**kw), **kw)"
           selection_domain="kw.get('selection_domain', None)"
           selection_report="kw.get('selection_report', None)"
-          optimizer_switch_key_list="portal_catalog.getSQLCatalog().getOptimizerSwitchKeyList()">
+          optimizer_switch_key_list="getOptimizerSwitchKeyList()">
 
   <dtml-comment>
     Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog
@@ -31,7 +31,7 @@
         CONCAT(CASE my_versioning.language
                    WHEN <dtml-sqlvar language type="string"> THEN '4'
                    WHEN '' THEN '3'
-                   WHEN 'en' THEN '2'
+                   WHEN <dtml-sqlvar expr="Localizer.get_default_language() or 'en'" type="string"> THEN '2'
                    ELSE '1' END,
                my_versioning.version) AS priority
         <dtml-if "query['select_expression']">,<dtml-var "query['select_expression']"></dtml-if>

@@ -360,7 +360,7 @@ Hé Hé Hé!""", page.asText().strip())
                       websection.getAggregateReferenceList())
     # even though we create many pages we should get only one
     # this is the most recent one since all share the same reference
-    self.assertEqual(1, len(websection.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(websection.getDocumentValueList()))
 
     # use already created few pages in different languages with same reference
     # and check that we always get the right one based on selected
@@ -483,7 +483,7 @@ Hé Hé Hé!""", page.asText().strip())
     base_url = base_list[0]
     self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), web_page_en.getReference()))
 
-  def test_07_WebSection_getDocumentValueList(self):
+  def test_07_getDocumentValueList(self):
     """ Check getting getDocumentValueList from Web Section.
     """
     portal = self.getPortal()
@@ -530,7 +530,7 @@ Hé Hé Hé!""", page.asText().strip())
     sequence_count = 0
     for sequence in [sequence_one, sequence_two, sequence_three]:
       sequence_count += 1
-      message = '\ntest_07_WebSection_getDocumentValueList (Sequence %s)' \
+      message = '\ntest_07_getDocumentValueList (Sequence %s)' \
                                                               % (sequence_count)
       ZopeTestCase._print(message)
 
@@ -603,7 +603,7 @@ Hé Hé Hé!""", page.asText().strip())
                            [w.getLanguage() for w in ja_document_value_list])
 
       # Tests for all_languages parameter (language parameter is simply ignored)
-      en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1)
+      en_document_value_list = websection.getDocumentValueList(all_languages=1)
       self.assertEqual(13, len(en_document_value_list))
       self.assertEqual(4, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'en']))
@@ -612,7 +612,7 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(4, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'ja']))
 
-      pt_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
+      pt_document_value_list = websection.getDocumentValueList(all_languages=1,
                                                                               language='pt')
       self.assertEqual(13, len(pt_document_value_list))
       self.assertEqual(4, len([w.getLanguage() for w in pt_document_value_list \
@@ -623,16 +623,16 @@ Hé Hé Hé!""", page.asText().strip())
                               if w.getLanguage() == 'ja']))
 
       # Tests for all_languages and all_versions
-      en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
-                                                                              all_versions=1)
+      en_document_value_list = websection.getDocumentValueList(all_languages=1,
+                                                               all_versions=1)
 
-      pt_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
-                                                                              all_versions=1,
-                                                                              language='pt')
+      pt_document_value_list = websection.getDocumentValueList(all_languages=1,
+                                                               all_versions=1,
+                                                               language='pt')
 
-      ja_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
-                                                                              all_versions=1,
-                                                                              language='ja')
+      ja_document_value_list = websection.getDocumentValueList(all_languages=1,
+                                                               all_versions=1,
+                                                               language='ja')
 
       for document_value_list in [en_document_value_list, pt_document_value_list,
                                    ja_document_value_list]:
@@ -664,22 +664,22 @@ Hé Hé Hé!""", page.asText().strip())
 
       self.assertEqual(['A', 'A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C', 'D', 'E', 'F'],
                        [w.getReference() for w in \
-                         websection.WebSection_getDocumentValueListBase(all_languages=1,
+                         websection.getDocumentValueList(all_languages=1,
                                             sort_on=[('reference', 'ASC')])])
 
       self.assertEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09', '11', '12', '13', '16'],
                        [w.getTitle() for w in \
-                         websection.WebSection_getDocumentValueListBase(all_languages=1,
+                         websection.getDocumentValueList(all_languages=1,
                                             sort_on=[('title', 'ASC')])])
 
       self.assertEqual(['F', 'E', 'D', 'C', 'C', 'C', 'B', 'B', 'B', 'A', 'A', 'A', 'A'],
                                               [w.getReference() for w in \
-                         websection.WebSection_getDocumentValueListBase(all_languages=1,
+                         websection.getDocumentValueList(all_languages=1,
                                             sort_on=[('reference', 'DESC')])])
 
       self.assertEqual(['16', '13', '12', '11', '09', '08', '07', '06', '05', '04', '03', '02', '01'],
                        [w.getTitle() for w in \
-                         websection.WebSection_getDocumentValueListBase(all_languages=1,
+                         websection.getDocumentValueList(all_languages=1,
                                             sort_on=[('title', 'DESC')])])
 
       self.web_page_module.manage_delObjects(list(self.web_page_module.objectIds()))
@@ -1568,7 +1568,7 @@ Hé Hé Hé!""", page.asText().strip())
       document = section.WebSection_getDocumentValue(reference, now=date)
       self.assertNotEqual(document, None)
       self.assertEqual(document.getPath(), expected_document.getPath())
-      document_list = section.WebSection_getDocumentValueList(now=date)
+      document_list = section.getDocumentValueList(now=date)
       self.assertEqual(len(document_list), 1)
       self.assertEqual(document_list[0].getPath(), expected_document.getPath())
     # document1 is visible & listed before date2
@@ -1701,8 +1701,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertSameSet((),
                        section.get_local_roles_for_userid(person_user_id))
 
-  def test_03_WebSection_getDocumentValueListSecurity(self):
-    """ Test WebSection_getDocumentValueList behaviour and security"""
+  def test_03_getDocumentValueListSecurity(self):
+    """ Test getDocumentValueList behaviour and security"""
     self.loginByUserName('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                       id='site')
@@ -1753,28 +1753,28 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
     self.portal.Localizer.changeLanguage('en')
 
-    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.getDocumentValueList()))
 
     self.loginByUserName('erp5user')
     page_en_0.publish()
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.getDocumentValueList()))
     self.assertEqual(page_en_0.getUid(),
-                      section.WebSection_getDocumentValueList()[0].getUid())
+                      section.getDocumentValueList()[0].getUid())
 
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.getDocumentValueList()))
     self.assertEqual(page_en_0.getUid(),
-                      section.WebSection_getDocumentValueList()[0].getUid())
+                      section.getDocumentValueList()[0].getUid())
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.getDocumentValueList()))
 
     # Second Object
     self.loginByUserName('erp5user')
@@ -1782,18 +1782,18 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.getDocumentValueList()))
     self.assertEqual(page_en_1.getUid(),
-                      section.WebSection_getDocumentValueList()[0].getUid())
+                      section.getDocumentValueList()[0].getUid())
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.getDocumentValueList()))
     self.assertEqual(page_en_1.getUid(),
-                      section.WebSection_getDocumentValueList()[0].getUid())
+                      section.getDocumentValueList()[0].getUid())
 
     # Trird Object
     self.loginByUserName('erp5user')
@@ -1801,16 +1801,16 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(0, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(0, len(section.getDocumentValueList()))
 
     # First Japanese Object
     self.loginByUserName('erp5user')
@@ -1818,18 +1818,18 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.tic()
 
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.getDocumentValueList()))
 
     # By Anonymous
     self.logout()
     self.portal.Localizer.changeLanguage('en')
-    self.assertEqual(2, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(2, len(section.getDocumentValueList()))
     self.portal.Localizer.changeLanguage('jp')
-    self.assertEqual(1, len(section.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(section.getDocumentValueList()))
     self.assertEqual(page_jp_0.getUid(),
-                      section.WebSection_getDocumentValueList()[0].getUid())
+                      section.getDocumentValueList()[0].getUid())
 
   def test_04_ExpireUserAction(self):
     """ Test the expire user action"""
@@ -2057,10 +2057,10 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     web_page_no_follow_up.publish()
     self.tic()
 
-    self.assertEqual(1, len(website.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(website.getDocumentValueList()))
 
     self.logout()
-    self.assertEqual(1, len(website.WebSection_getDocumentValueList()))
+    self.assertEqual(1, len(website.getDocumentValueList()))
 
   def test_WebSiteModuleDefaultSecurity(self):
     """
