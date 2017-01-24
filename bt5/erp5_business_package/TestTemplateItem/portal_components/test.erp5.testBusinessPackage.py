@@ -81,12 +81,15 @@ class TestBusinessPackage(ERP5TypeTestCase):
     except AttributeError:
       pass
 
-  def _createBusinessPackage(self):
-    new_id = 'package_%s'%str(time.time())
-    package = self.portal.portal_templates.newContent(id=new_id, portal_type='Business Package')
+  def _createBusinessPackage(self, bp_id=None, title=None):
+    if not bp_id:
+      bp_id = 'package_%s'%str(time.time())
+    if not title:
+      title = bp_id
+    package = self.portal.portal_templates.newContent(id=bp_id, portal_type='Business Package')
     #self.assertTrue(package.getBuildingState() == 'draft')
     #self.assertTrue(package.getInstallationState() == 'not_installed')
-    package.edit(title = new_id,
+    package.edit(title = bp_id,
                   version='1.0',
                   description='package for live test')
     self.tic()
@@ -95,10 +98,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
   def _buildAndExportBusinessPackage(self, package):
     """
     Builds and exports Business Package to a given export directory
+    Returns the path of export
     """
-    # Build Package
-    # Expected result should be while building the path object items
-    # are going to be exported as XML(?)
     self.tic()
     package.build()
     self.tic()
@@ -107,23 +108,24 @@ class TestBusinessPackage(ERP5TypeTestCase):
     bp_title = pathname2url(package.getTitle())
     package_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bp_title,))
 
-    # Export package (not needed)
+    # Export package at the package_path
     package.export(path=package_path, local=True)
     self.tic()
+
+    return package_path
+
+  def _importBusinessPackage(self, package, package_path):
+    """
+    Imports the package from the path where it had been exported.
+    """
+    self.portal.portal_templates.manage_delObjects(package.getId())
+
     import_package = self.portal.portal_templates.download(
                     url='file:'+package_path,
                     id=package.id+'1',
-                    is_package=True)
+                    )
 
-    return import_package
-
-  def _importBusinessPackage(self, package):
-    self.portal.portal_templates.manage_delObjects(package.getId())
     self.tic()
-    import_package = self.portal.portal_templates.download(
-                                  url='file:'+self.export_dir,
-                                  id=package.getId(),
-                                  is_package=True)
     return import_package
 
   def _installBusinessPackage(self, package):
@@ -132,6 +134,26 @@ class TestBusinessPackage(ERP5TypeTestCase):
     Expected to install the PathTemplateObject items
     """
     package.install()
+    self.tic()
+
+  def test_fileImportAndReinstallWithProperty(self):
+    """
+    Test Business Package for Path and ObjectProperty Items together.
+    Here we export path as well propertie(s) for different objects and check
+    if we are able to install them back using Business Package
+    """
+    package = self._createBusinessPackage(bp_id='erp5_export_path_and_property')
+    file_path_list = ['portal_catalog/erp5_mysql_innodb',]
+    property_list = ['portal_catalog | default_erp5_catalog_id']
+    package.edit(
+                  template_path_list=file_path_list,
+                  template_object_property_list=property_list
+                  )
+    self.tic()
+
+    package_path = self._buildAndExportBusinessPackage(package)
+    import_package = self._importBusinessPackage(package, package_path)
+    self._installBusinessPackage(import_package)
 
   def test_fileImportAndReinstallForDocument(self):
     """
@@ -139,7 +161,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     Expected result: Installs the exported object to the path expected on site.
     """
-    package = self._createBusinessPackage()
+    package = self._createBusinessPackage(bp_id='erp5_mysql_innodb_catalog_1')
     document_file = self.portal.document_module.newContent(
                                     portal_type = 'File',
                                     title = 'Test Document',
@@ -149,18 +171,19 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.tic()
 
     file_path = document_file.getRelativeUrl()
-    package.edit(template_path_list=[file_path,])
-
-    # Build package
-    import_package = self._buildAndExportBusinessPackage(package)
-
-    # Delete document from site
-    self.portal.document_module.manage_delObjects([document_file.getId(),])
+    package.edit(template_path_list=file_path)
     self.tic()
 
-    # Test if the file is gone
+    # Build package
+    package_path = self._buildAndExportBusinessPackage(package)
+
+    # Delete the document
+    self.portal.document_module.manage_delObjects([document_file.getID(),])
+    self.tic()
+    # Assert that the file is gone
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
-    #import_package = self._importBusinessPackage(package)
+
+    import_package = self._importBusinessPackage(package, package_path)
 
     # Install package
     self._installBusinessPackage(import_package)
@@ -170,7 +193,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     document = self.portal.restrictedTraverse(file_path)
     self.assertEquals(document.title, 'Test Document')
 
-  def test_sameFileImportAndReinstallOnTwoPackages(self):
+  def _sameFileImportAndReinstallOnTwoPackages(self):
     """
     Test two Business Packages build and installation of same file.
 
@@ -228,7 +251,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     document = self.portal.restrictedTraverse(file_path)
     self.assertEquals(document.title, document_file.title)
 
-  def test_AddConflictedFileAtSamePathViaTwoPackages(self):
+  def _AddConflictedFileAtSamePathViaTwoPackages(self):
     """
     Test the result of conflict of two files to be installed at same path
     by two different Business Packages
@@ -275,7 +298,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertTrue(conflicted_data)
     self.assertEquals(len(conflicted_data[file_path]), 2)
 
-  def test_checkPathTemplateBuildForFolder(self):
+  def _checkPathTemplateBuildForFolder(self):
     """
     This test should ensure that we are able to use folder as path for Business
     Packages without the need to export every path inside it explicitly
@@ -333,7 +356,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertEquals(total_object_count, package_object_count)
     self.assertEquals(object_id_list, package_object_id_list)
 
-  def test_addObjectPropertyTemplateItemInPackage(self):
+  def _addObjectPropertyTemplateItemInPackage(self):
     """
     Add ObjectPropertyTemplateItem to Business Package with the hash
     """
@@ -370,7 +393,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertIn(relative_url, property_object_hash_list)
     self.assertIn(portal_catalog.getRelativeUrl(), property_object_hash_list)
 
-  def test_udpateInstallationStateOnlyForBusinessPackage(self):
+  def _udpateInstallationStateOnlyForBusinessPackage(self):
     """
     Updating Business Package with the changed installation state and trying
     to show the diff between the two installation state
