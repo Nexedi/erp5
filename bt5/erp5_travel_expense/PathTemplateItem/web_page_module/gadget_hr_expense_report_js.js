@@ -2,6 +2,13 @@
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, document, RSVP, rJS, Handlebars, promiseEventListener, loopEventListener, $) {
   "use strict";
+  function zeroFill( number, width ){
+    width -= number.toString().length;
+    if ( width > 0 ){
+      return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
+    }
+    return number + "";
+  }
 
   var gadget_klass = rJS(window),
     source = gadget_klass.__template_element
@@ -26,18 +33,14 @@
     .declareAcquiredMethod('allDocs', 'jio_allDocs')
 
     .declareMethod("render", function (options) {
-      var gadget = this;
+      var gadget = this,
+         bar_data = [],
+         currency_list = [],
+         currency_dict = {};
       gadget.options = options;
-      var bar_data = [];
-      var currency_list = [];
-      return new RSVP.Queue()
-        .push(function (result_list) {
-          return gadget.translateHtml(template({}));
-        })
+      return gadget.translateHtml(template({}))
         .push(function (html) {
           gadget.props.element.innerHTML = html;
-
-          var currency_dict = {};
           return gadget.allDocs({
             query: 'portal_type: "Currency" AND validation_state: "validated"',
             select_list: ["title", "relative_url"],
@@ -47,23 +50,14 @@
             for (var i = 0; i < result.data.total_rows; i += 1) {
               currency_dict[result.data.rows[i].value.relative_url] = result.data.rows[i].value.title;
             }
-            return new RSVP.Queue();
-          })
-          .push(function(){
             return gadget.allDocs({
             query: 'portal_type:("Expense Record")',
             select_list: ["date", "resource", "quantity"],
             limit: [0, 1234567890]
-            })
+            });
           })
           .push(function(result){
-            function zeroFill( number, width ){
-              width -= number.toString().length;
-              if ( width > 0 ){
-                return new Array( width + (/\./.test( number ) ? 2 : 1) ).join( '0' ) + number;
-              }
-              return number + "";
-            }
+            
             var currency_path, date, quantity;
             var temp_dict = {};
             for (var i=0; i<result.data.total_rows; i++) {
@@ -109,13 +103,10 @@
                                {seriesBarDistance: 10,
                                 axisX: {offset: 60},
                                });
-            return new RSVP.Queue();
+            return gadget.updateHeader({
+              title: "Report"
+            });
           })
-        })
-        .push(function(){
-          return gadget.updateHeader({
-            title: "Report"
-          });
         })
         .push(function () {
           gadget.props.deferred.resolve();
@@ -149,14 +140,11 @@
                 for (var i = 0; i < result.data.total_rows; i += 1) {
                   currency_dict[result.data.rows[i].value.relative_url] = result.data.rows[i].value.title;
                 }
-                return new RSVP.Queue();
-              })
-              .push(function(){
                 return gadget.allDocs({
                 query: 'portal_type:("Expense Record")',
                 select_list: ["date", "resource", "quantity", "comment"],
                 limit: [0, 1234567890]
-                })
+                });
               })
               .push(function(result){
                 var data_list = [];
@@ -168,12 +156,16 @@
                   data_list.push({currency:currency, date:date, quantity:quantity, comment:comment||""})
                 }
                 data_list.sort(function(a, b){if(a.date>b.date){return 1;}else if(a.date<b.date){return -1;}else{return 0;}})
-                var table = $("<table><thead><tr><th>date</th><th>comment</th><th>currency</th><th>quantity</th></tr></thead><tbody></tbody></table>");
+                var table = $("<table><thead><tr><th>Date</th><th>Description</th><th>Currency</th><th>Total price</th></tr></thead><tbody></tbody></table>");
                 for(var data of data_list){
                   table.find('tbody').append('<tr><td>'+data.date+'</td><td>'+data.comment+'</td><td>'+data.currency+'</td><td>'+data.quantity+'</td></tr>');
                 }
                 table.tableExport({bootstrap: false, formats: ["xlsx"], fileName:"travel_expense"});
                 var obj = table.find('button.xlsx').data('fileblob');
+                //xxxx .data may overwrite special character
+                for (i = 1; i < obj.data.length; i += 1) {
+                  obj.data[i][1] = data_list[i-1].comment; 
+                }
                 TableExport.prototype.export2file(obj.data, obj.mimeType, obj.fileName, obj.fileExtension);
 
                 //ExcellentExport.excel(gadget.props.element.querySelector('a[name="hidden_download_xls"]'), table[0], 'Travel Expense');
