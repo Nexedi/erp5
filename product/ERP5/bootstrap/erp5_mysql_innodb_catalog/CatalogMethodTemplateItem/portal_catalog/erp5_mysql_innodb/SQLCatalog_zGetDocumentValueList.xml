@@ -22,7 +22,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>language\r\n
+            <value> <string>search_context\r\n
+language\r\n
 all_languages\r\n
 kw</string> </value>
         </item>
@@ -50,7 +51,7 @@ kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_zGetDocumentValueList</string> </value>
+            <value> <string>SQLCatalog_zGetDocumentValueList</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>

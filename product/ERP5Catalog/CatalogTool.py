@@ -1243,5 +1243,21 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             db.query(r)
       return src
 
+    # XXX which permission ?
+    # XXX API parameters should be explicitly defined in interface
+    # instead of **kw
+    def getDocumentValueList(self, **kw):
+      """
+        Return the list of documents which belong to the
+        current section. The API is designed to
+        support additional parameters so that it is possible
+        to group documents by reference, version, language, etc.
+        or to implement filtering of documents.
+
+        This method must be implemented through a
+        catalog method script :
+          SQLCatalog_getDocumentValueList
+      """
+      return self.getSQLCatalog().SQLCatalog_getDocumentValueList(**kw)
 
 InitializeClass(CatalogTool)
