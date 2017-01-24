@@ -142,7 +142,7 @@ class BusinessPackage(XMLObject):
 
     def _install(self, **kw):
       self._path_item.install(self)
-      #self._object_property_item.install(self)
+      self._object_property_item.install(self)
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
@@ -158,16 +158,16 @@ class BusinessPackage(XMLObject):
       """
       if not no_action:
         self.storePathData()
+        # XXX: Explicitly calling build for items. Needs to be changed
         self._path_item.build(self)
+        self._object_property_item.build(self)
       pass
-      #self._object_property_item.build(self)
-      #self.setBuildingState('built')
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
     def storePathData(self):
       self._path_item = PathTemplatePackageItem(self._getTemplatePathList())
-      #self._object_property_item = \
-      #    ObjectPropertyTemplatePackageItem(self._getTemplateObjectPropertyList())
+      self._object_property_item = \
+          ObjectPropertyTemplatePackageItem(self._getTemplateObjectPropertyList())
 
     security.declareProtected(Permissions.ManagePortal, 'getTemplatePathList')
     def _getTemplateObjectPropertyList(self):
@@ -220,7 +220,7 @@ class BusinessPackage(XMLObject):
         elif prop_type in ('lines', 'tokens'):
           bpa.addObject('\n'.join(value), name=id, path='bt', ext='')
 
-      item_name_list = ['_path_item',]
+      item_name_list = ['_path_item', '_object_property_item']
       # Export each part
       for item_name in item_name_list:
         item = getattr(self, item_name, None)
@@ -250,10 +250,12 @@ class BusinessPackage(XMLObject):
             prop_dict[pid] = value or 0
           elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = (value or '').splitlines()
+      # XXX: This is not working, needs to be fixed so as it copies all the
+      # properties from BPA to the newly created Business Package
       self._edit(**prop_dict)
       self.storePathData()
 
-      item_name_list = ['_path_item',]
+      item_name_list = ['_path_item', '_object_property_item']
       for item_name in item_name_list:
         item_object = getattr(self, item_name, None)
         # this check is due to backwards compatability when there can be a
@@ -726,8 +728,8 @@ class PathTemplatePackageItem(Implicit, Persistent):
         if getattr(aq_base(obj), 'reindexObject', None) is not None:
           obj.reindexObject()
 
-  def importFile(self, bta, **kw):
-    bta.importFiles(self)
+  def importFile(self, bpa, **kw):
+    bpa.importFiles(self)
 
   def _importFile(self, file_name, file_obj, catalog_method_template_item = 0):
     obj_key, file_ext = os.path.splitext(file_name)
@@ -881,6 +883,9 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
     if self._objects.keys():
       xml_data = self.generateXml()
       bpa.addObject(xml_data, name=self.xml_tag, path=path)
+
+  def importFile(self, bpa, **kw):
+    bpa.importFiles(self)
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
