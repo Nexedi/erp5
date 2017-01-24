@@ -2,6 +2,7 @@ service_module/hr_achat
 service_module/hr_autre
 service_module/hr_essence
 service_module/hr_hotel
+service_module/hr_leave_standard
 service_module/hr_marketing
 service_module/hr_occasionnelle
 service_module/hr_restaurant
