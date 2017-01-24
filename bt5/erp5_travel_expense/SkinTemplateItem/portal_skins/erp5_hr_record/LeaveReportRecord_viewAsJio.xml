@@ -7,27 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_bind_names</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>_asgns</string> </key>
-                        <value>
-                          <dictionary/>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>_objects</string> </key>
             <value>
               <tuple/>
@@ -64,6 +43,9 @@
                 <string>center</string>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>price (Price)</string>
+                <string>supplier (Supplier)</string>
+                <string>product (Product)</string>
               </list>
             </value>
         </item>
@@ -93,15 +75,34 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_preferred_expense_validation_request_use_list</string>
-                        <string>my_preferred_expense_validation_request_resource</string>
-                        <string>my_preferred_travel_request_use_list</string>
-                        <string>my_preferred_travel_request_resource</string>
+                        <string>my_source_title</string>
+                        <string>my_creation_date</string>
+                        <string>your_simulation_state</string>
+                        <string>your_total_leaves_days_confirmed</string>
+                        <string>your_total_leaves_days_planned</string>
                       </list>
                     </value>
                 </item>
                 <item>
+                    <key> <string>price (Price)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>product (Product)</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>right</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>supplier (Supplier)</string> </key>
                     <value>
                       <list/>
                     </value>
@@ -111,7 +112,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SystemPreference_viewHumanResource</string> </value>
+            <value> <string>LeaveReportRecord_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +120,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Preference_viewCRM</string> </value>
+            <value> <string>Localisation_view</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>ERP5 Form</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -135,7 +140,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>HR</string> </value>
+            <value> <string>Leave Report Record</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

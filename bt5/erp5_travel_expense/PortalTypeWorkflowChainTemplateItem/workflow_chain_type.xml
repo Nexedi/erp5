@@ -8,6 +8,10 @@
   <workflow>edit_workflow, expense_validation_request_interaction_workflow, pricing_interaction_workflow, ticket_acceptance_simulation_workflow, ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Leave Report Record</type>
+  <workflow>edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Leave Request</type>
   <workflow>ticket_record_interaction_workflow</workflow>
  </chain>
@@ -17,7 +21,7 @@
  </chain>
  <chain>
   <type>Leave Request Record</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow, validation_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Localisation Record</type>

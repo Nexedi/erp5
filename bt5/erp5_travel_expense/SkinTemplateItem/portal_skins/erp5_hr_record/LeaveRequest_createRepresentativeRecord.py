@@ -34,3 +34,5 @@ new_record.edit(
   )
 new_record.stop()
 new_record.Record_archivePreviousVersions()
+
+context.LeaveRequest_createPersonLeaveReport()

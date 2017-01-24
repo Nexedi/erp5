@@ -6,6 +6,7 @@
   <item>Expense Validation Request</item>
  </portal_type>
  <portal_type id="Record Module">
+  <item>Leave Report Record</item>
   <item>Leave Request Record</item>
   <item>Localisation Record</item>
   <item>Travel Request Record</item>
