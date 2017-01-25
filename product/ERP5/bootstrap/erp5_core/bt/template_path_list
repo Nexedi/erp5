@@ -23,7 +23,6 @@ portal_categories/constraint_type/pre_upgrade
 portal_categories/constraint_type/upgrader
 portal_categories/elementary_type/**
 portal_contribution_registry/default_predicate
-portal_contribution_registry/image_extension
 portal_domains/base_day_domain
 portal_domains/base_month_domain
 portal_domains/base_week_domain
