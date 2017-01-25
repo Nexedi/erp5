@@ -593,6 +593,15 @@ class TemplateTool (BaseTool):
       module_list = import_template.geTemplateModuleIdList()
       template_path_list.extend(module_list)
 
+      # For portal_types, we have to add path and subobjetcs
+      portal_type_id_list = import_template.getTemplatePortalTypeIdList()
+      portal_type_path_list = []
+      for id in portal_type_list:
+        portal_type_path_list.append( 'portal_types/'+id,
+                                      'portal_types/'+id+'/**',
+                                      )
+      template_path_list.extend(portal_type_path_list)
+
       # For categories, we create path for category objects as well as the subcategories
       category_list = import_template.getTemplateCategoryList()
       category_path_list = []
@@ -628,6 +637,30 @@ class TemplateTool (BaseTool):
 
       # For paths, we add them directly to the path list
       template_path_list.extend(import_template.getTemplatePathList())
+
+      # Catalog methods would be added as sub objects
+      catalog_method_item_list = self.getTemplateCatalogMethodIdList()
+
+      # For catalog objects, we check if there is any catalog object, and then
+      # add portal_catalog/erp5_mysql_innodb in the path if there is
+      template_catalog_datetime_key   = self.getTemplateCatalogDatetimeKeyList()
+      template_catalog_full_text_key  = self.getTemplateCatalogFullTextKeyList()
+      template_catalog_keyword_key    = self.getTemplateCatalogKeywordKeyList()
+      template_catalog_local_role_key = self.getCatalogLocalRoleKeyList()
+      template_catalog_method_id      = self.getTemplateCatalogMethodIdList()
+      template_catalog_multivalue_key = self.getTempalteCatalogMultiValueKeyList()
+      template_catalog_related_key    = self.getTemplateCatalogRelatedKeyList()
+      template_catalog_request_key    = self.getTemplateCatalogRequestKeyList()
+      template_catalog_result_key     = self.getTemplateCatalogResultKeyList()
+      template_catalog_result_table   = self.getTempalteCatalogResultTableList()
+      template_catalog_role_key       = self.getTemplateCatalogRoleKeyList()
+      template_catalog_scriptable_key = self.getTemplateCatalogScriptableKeyList()
+      template_catalog_search_key     = self.getTemplateCatalogSearchKeyList()
+      template_catalog_security_uid_column = self.getTemplateCatalogSecurityUidColumnList()
+      template_catalog_topic_key      = self.getTemplateCatalogTopicKeyList()
+
+      # Check if any catalog property exists and if yes, then we export the
+      # erp5_mysql_innodb object and use it for installation
 
       # Create new objects for business package
       bp5_package = self.newContent(portal_type='Business Package')
