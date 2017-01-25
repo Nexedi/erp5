@@ -343,7 +343,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' http://*.tile.osm.org data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+            <value> <string>default-src \'none\'; img-src \'self\' https://*.tile.openstreetmap.org data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -565,7 +565,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.47571.26328.47974</string> </value>
+                <value> <string>956.57506.23984.60142</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -583,7 +583,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1484755498.8</float>
+                        <float>1485350678.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
