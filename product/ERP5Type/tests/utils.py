@@ -145,6 +145,9 @@ class DummyLocalizer:
   and erp5_content message catalogs. It's a list.
   """
   __allow_access_to_unprotected_subobjects__ = 1
+
+  _default_language = 'en'
+
   def __init__(self):
     self.erp5_ui = self.ui = DummyMessageCatalog()
     self.erp5_content = self.content = DummyMessageCatalog()
@@ -155,6 +158,9 @@ class DummyLocalizer:
     if hasattr(self, key):
       return getattr(self, key)
     raise KeyError, key
+
+  def get_default_language(self):
+    return self._default_language
 
   def get_selected_language(self):
     return self.lang
