@@ -8,4 +8,5 @@ portal_categories/divergence_scope/category
 portal_categories/divergence_scope/property
 portal_categories/divergence_scope/quantity
 portal_contribution_registry/image_extension
+portal_contribution_registry/image_mimetype
 portal_memcached/persistent_memcached_plugin
