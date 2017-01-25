@@ -1288,6 +1288,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         'portal_updatable_amortisation_transaction_state_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalFrozenCausalityStateList')
+  def getPortalFrozenCausalityStateList(self):
+    """
+      Return all causality states where the document is no longer simulated.
+    """
+    return self._getPortalConfiguration('portal_frozen_causality_state_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalGroupedSimulationStateList')
   def getPortalGroupedSimulationStateList(self):
     """

@@ -28,6 +28,7 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>freeze</string>
                 <string>start_building</string>
               </tuple>
             </value>

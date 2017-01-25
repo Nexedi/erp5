@@ -224,3 +224,4 @@ portal_current_inventory_state_list = ('delivered', 'started', 'stopped', 'invoi
 
 portal_updatable_amortisation_transaction_state_list = ('draft',)
 
+portal_frozen_causality_state_list = ('frozen',)
