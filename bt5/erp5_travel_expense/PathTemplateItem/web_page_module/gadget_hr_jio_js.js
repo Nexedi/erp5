@@ -291,6 +291,7 @@
             query: {
               query: '(portal_type: "Expense Record" AND simulation_state:("draft","sent","stopped")) ' +
                 'OR (portal_type: "Travel Request Record" AND simulation_state:("draft","sent","stopped")) ' +
+                'OR (portal_type: "Leave Report Record" AND simulation_state:"stopped") ' +
                 'OR (portal_type: "Leave Request Record" AND simulation_state:("draft","sent","stopped")) ' +
                 'OR (portal_type: "Localisation Record" AND simulation_state:("draft","stopped")) ' +
                 'OR (portal_type: "Currency" AND validation_state:"validated") ' +

@@ -80,6 +80,7 @@
                         <string>your_simulation_state</string>
                         <string>your_total_leaves_days_confirmed</string>
                         <string>your_total_leaves_days_planned</string>
+                        <string>your_confirmed_leaves_days_left</string>
                       </list>
                     </value>
                 </item>
