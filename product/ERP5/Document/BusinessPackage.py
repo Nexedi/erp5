@@ -47,6 +47,7 @@ from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.PythonScripts.PythonScript import PythonScript
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
@@ -494,6 +495,52 @@ class PathTemplatePackageItem(Implicit, Persistent):
     # in all other cases return .txt
     return 'txt'
 
+  def removeProperties(self,
+                       obj,
+                       export,
+                       keep_workflow_history=False,
+                       keep_workflow_history_last_history_only=False):
+    """
+    Remove unneeded properties for export
+    """
+    obj._p_activate()
+    klass = obj.__class__
+    classname = klass.__name__
+
+    attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
+                'last_id', 'uid',
+                '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+    if export:
+      if keep_workflow_history_last_history_only:
+        self._removeAllButLastWorkflowHistory(obj)
+      elif not keep_workflow_history:
+        attr_set.add('workflow_history')
+      # PythonScript covers both Zope Python scripts
+      # and ERP5 Python Scripts
+      if isinstance(obj, PythonScript):
+        attr_set.update(('func_code', 'func_defaults', '_code',
+                         '_lazy_compilation', 'Python_magic'))
+        for attr in 'errors', 'warnings', '_proxy_roles':
+          if not obj.__dict__.get(attr, 1):
+            delattr(obj, attr)
+      elif classname in ('File', 'Image'):
+        attr_set.update(('_EtagSupport__etag', 'size'))
+      elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods.SQL':
+        attr_set.update(('_arg', 'template'))
+      elif interfaces.IIdGenerator.providedBy(obj):
+        attr_set.update(('last_max_id_dict', 'last_id_dict'))
+      elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+        attr_set.add('type_provider_list')
+
+    for attr in obj.__dict__.keys():
+      if attr in attr_set or attr.startswith('_cache_cookie_'):
+        delattr(obj, attr)
+
+    if classname == 'PDFForm':
+      if not obj.getProperty('business_template_include_content', 1):
+        obj.deletePdfContent()
+    return obj
+
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
       This method calls itself recursively.
@@ -534,6 +581,8 @@ class PathTemplatePackageItem(Implicit, Persistent):
         obj = obj.__of__(context)
         _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
+        # XXX: This doesn't take care of workflow objects
+        obj = self.removeProperties(obj, 1)
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
@@ -604,7 +653,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
             break
           # since we get the obj from context we should
           # again remove useless properties
-          #obj = self.removeProperties(obj, 1, keep_workflow_history = True)
+          obj = self.removeProperties(obj, 1, keep_workflow_history = True)
           transaction.savepoint(optimistic=True)
 
         f = StringIO()
@@ -718,7 +767,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
         obj = self._objects[path]
         self.fixBrokenObject(obj)
         obj = obj._getCopy(container)
-        #self.removeProperties(obj, 0)
+        self.removeProperties(obj, 0)
         __traceback_info__ = (container, object_id, obj)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
@@ -771,6 +820,13 @@ class PathTemplatePackageItem(Implicit, Persistent):
     except BrokenModified:
       obj.__Broken_state__[property_name] = data
       obj._p_changed = 1
+    else:
+      # Revert any work done by __setstate__.
+      # XXX: This is enough for all objects we currently split in 2 files,
+      #      but __setstate__ could behave badly with the missing attribute
+      #      and newly added types may require more than this.
+      self.removeProperties(obj, 1, keep_workflow_history=True)
+
 
   def getConnection(self, obj):
     while True:
