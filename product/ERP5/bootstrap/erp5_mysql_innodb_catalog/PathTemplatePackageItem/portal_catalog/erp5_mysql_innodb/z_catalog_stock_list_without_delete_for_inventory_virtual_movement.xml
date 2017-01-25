@@ -7,21 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>zope</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -609,12 +594,6 @@ VALUES\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>z_catalog_stock_list_without_delete_for_inventory_virtual_movement</string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
       </dictionary>
     </pickle>

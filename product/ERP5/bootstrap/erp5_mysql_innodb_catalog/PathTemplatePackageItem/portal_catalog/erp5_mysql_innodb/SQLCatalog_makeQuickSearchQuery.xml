@@ -7,27 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">A/MNCg==</string> </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>zope</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -68,65 +49,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAEAAAAAwAA
-AHM7AAAAZAEAZAIAbAAAbQEAfQIAAWQBAGQDAGwCAG0DAH0EAAF8AgBkBACDAQABfAQAZAUAfAAA
-gwABU2QAAFMoBgAAAE5p/////ygBAAAAcwMAAABsb2coAQAAAHMFAAAAUXVlcnlzaQAAACdxdWlj
-a19zZWFyY2hfdGV4dCcgYW5kICdhZHZhbmNlZF9zZWFyY2hfdGV4dCcgc2NyaXB0YWJsZSBrZXlz
-IGFyZSBkZXByZWNhdGVkLiBVc2UgJ3NlYXJjaF90ZXh0JyBpbnN0ZWFkLnQLAAAAc2VhcmNoX3Rl
-eHQoBQAAAHQVAAAAUHJvZHVjdHMuRVJQNVR5cGUuTG9ndAMAAABsb2d0HwAAAFByb2R1Y3RzLlpT
-UUxDYXRhbG9nLlNRTENhdGFsb2d0BQAAAFF1ZXJ5dAUAAAB2YWx1ZSgFAAAAUgUAAABSAQAAAFIC
-AAAAUgMAAABSBAAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0aG9uIFNjcmlwdHMfAAAAU1FMQ2F0
-YWxvZ19tYWtlUXVpY2tTZWFyY2hRdWVyeQEAAABzBgAAABABEAMKASgBAAAAdB8AAABTUUxDYXRh
-bG9nX21ha2VRdWlja1NlYXJjaFF1ZXJ5KAEAAABSBgAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0
-aG9uIFNjcmlwdHMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>value</string>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -139,18 +63,6 @@ aG9uIFNjcmlwdHMIAAAAPG1vZHVsZT4BAAAAdAAAAAA=</string> </value>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
