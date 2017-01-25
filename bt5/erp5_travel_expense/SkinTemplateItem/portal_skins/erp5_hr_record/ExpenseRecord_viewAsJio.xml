@@ -79,7 +79,7 @@
                         <string>my_quantity</string>
                         <string>my_date</string>
                         <string>my_comment</string>
-                        <string>my_sync_flag</string>
+                        <string>your_sync_flag</string>
                         <string>my_source_reference</string>
                         <string>my_copy_of</string>
                         <string>my_record_revision</string>

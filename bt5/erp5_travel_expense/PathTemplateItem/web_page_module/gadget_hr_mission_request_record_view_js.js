@@ -277,6 +277,9 @@
                 })
                 .push(function () {
                   alertify.success("Saved");
+                  if (sync) {
+                    return gadget.redirect();
+                  }
                 });
             }
           )

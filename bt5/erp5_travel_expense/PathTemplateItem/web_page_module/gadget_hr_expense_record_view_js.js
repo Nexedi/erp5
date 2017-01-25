@@ -359,7 +359,7 @@
               return getData(gadget)
                 .push(function (doc) {
                   var key;
-                  if (doc.sync_flag === '1') {
+                  if (doc.sync_flag === '1' && doc.simulation_state === "draft") {
                     sync = 1;
                   }
                   return gadget.put(gadget.options.jio_key, doc);
@@ -372,6 +372,9 @@
                       })
                       .push(function () {
                         return gadget.props.geoGadget.createGeoLocationRecord();
+                      })
+                      .push(function () {
+                        return gadget.redirect();
                       });
                   }
                 })

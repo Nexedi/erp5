@@ -268,6 +268,9 @@
                 })
                 .push(function () {
                   alertify.success("Saved");
+                  if (sync === 1) {
+                    return gadget.redirect();
+                  }
                 });
             }
           )

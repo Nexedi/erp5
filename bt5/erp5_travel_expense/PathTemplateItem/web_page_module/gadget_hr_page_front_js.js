@@ -97,7 +97,7 @@
                 title: 'State'
               }],
               query: {
-                query: 'portal_type:("' + gadget.props.portal_type + '") AND state:"Suspended"',
+                query: 'portal_type:("% Record") AND state:"Suspended"',
                 select_list: ['doc_id', 'quantity', 'resource_title',
                               'comment', 'date', 'type_title',
                               'state'],
@@ -109,29 +109,15 @@
                 select: 'comment',
                 title: 'Description'
               }, {
-                select: 'type_title',
+                select: 'portal_type',
                 title: 'Type'
-              }, {
-                select: 'quantity',
-                title: 'Total Price'
-              }, {
-                select: 'resource_title',
-                title: 'Currency'
-              }, {
-                select: 'date',
-                title: 'Input Date'
-              }, {
-                select: 'doc_id',
-                title: 'ID'
               }, {
                 select: 'state',
                 title: 'State'
               }],
               query: {
-                query: 'portal_type:("' + gadget.props.portal_type + '" OR "Expense Record Temp") AND sync_flag:"0"',
-                select_list: ['doc_id', 'quantity', 'resource_title',
-                              'comment', 'date', 'type_title',
-                              'state'],
+                query: '(simulation_state:"draft" OR sync_flag:"0")',
+                select_list: ['comment', 'portal_type', 'state'],
                 sort_on: [["modification_date", "descending"]]
               }
             })
