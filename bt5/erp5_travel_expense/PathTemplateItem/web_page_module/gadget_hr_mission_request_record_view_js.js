@@ -64,8 +64,7 @@
     .declareAcquiredMethod('jio_remove', 'jio_remove')
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('setSetting', 'setSetting')
-    .declareAcquiredMethod("repair", "jio_repair")
-    
+
     
     .declareMethod('triggerSubmit', function () {
       return this.props.element.querySelector('button').click();
@@ -74,7 +73,7 @@
     .declareMethod("render", function (options) {
       var gadget = this,
        sync_checked,
-       sync_state = getWorkflowState(options.jio_key, options.doc.sync_flag),
+       state = getWorkflowState(options),
        not_sync_checked;
       gadget.options = options;
 
@@ -95,17 +94,19 @@
             title: options.doc.title,
             destination_node_title: options.doc.destination_node_title,
             site: options.doc.site,
-            state: options.doc.state || sync_state,
-            is_synced: sync_state === "Synced",
+            is_synced: state.sync_state === "Synced",
             start_date: options.doc.start_date|| new Date().toISOString().slice(0,10),
             stop_date: options.doc.stop_date|| new Date().toISOString().slice(0,10),
             quantity: options.doc.quantity,
             comment: options.doc.comment,
             sync_checked:  sync_checked,
             not_sync_checked: not_sync_checked,
+            not_readonly: !state.readonly
           };
-          if (sync_state !== 'Synced') {
-            ops.not_readonly = true;
+          if (state.sync_state === 'Synced') {
+            ops.state = options.doc.state || state.sync_state;
+          } else {
+            ops.state = state.sync_state;
           }
           return template(ops);
         })
@@ -125,7 +126,7 @@
         .push(function () {
           return gadget.updateHeader({
             title: gadget.options.jio_key + " " + (gadget.options.doc.record_revision || 1),
-            save_action: sync_state === 'Synced'? false: true
+            save_action: !state.readonly
           });
         })
         .push(function () {
@@ -275,17 +276,7 @@
                   return gadget.put(gadget.options.jio_key, doc);
                 })
                 .push(function () {
-                  if (sync === 1) {
-                  return gadget.repair()
-                   .push(function () {
-                     return gadget.redirect({page: 'travel_request_record_list'});
-                   })
-                   .push(function () {
-                     alertify.success("Saved");
-                   });
-                  } else {
-                    alertify.success("Saved");
-                  }
+                  alertify.success("Saved");
                 });
             }
           )

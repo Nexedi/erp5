@@ -116,7 +116,6 @@
     .declareAcquiredMethod('jio_remove', 'jio_remove')
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('setSetting', 'setSetting')
-    .declareAcquiredMethod("repair", "jio_repair")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     
     .declareMethod('triggerSubmit', function () {
@@ -126,7 +125,7 @@
     .declareMethod("render", function (options) {
       var gadget = this,
        sync_checked,
-       sync_state = getWorkflowState(options.jio_key, options.doc.sync_flag),
+       state = getWorkflowState(options),
        geoLocation,
        related_mission_class,
        related_mission_url,
@@ -168,7 +167,7 @@
         })
         .push (function (url) {
           related_mission_url = url;
-          if (sync_state === 'Synced') {
+          if (state.readonly) {
             geoLocation= {coords: {latitude: options.doc.latitude, longitude: options.doc.longitude}};
           } else {
             geoLocation = {coords: {latitude: "", longitude: ""}};
@@ -208,7 +207,6 @@
             not_sync_checked = 'checked';
           }
           ops = {
-            state: options.doc.state || sync_state,
             preview: options.doc.photo_data,
             quantity: options.doc.quantity,
             date: options.doc.date || new Date().toISOString().slice(0,10),
@@ -221,10 +219,13 @@
             latitude: geoLocation.coords.latitude || "",
             related_mission_url: related_mission_url || "",
             related_mission_class: related_mission_class,
-            related_mission: related_mission
+            related_mission: related_mission,
+            not_readonly: !state.readonly
           };
-          if (sync_state !== 'Synced') {
-            ops.not_readonly = true;
+          if (state.sync_state === 'Synced') {
+            ops.state = options.doc.state || state.sync_state;
+          } else {
+            ops.state = state.sync_state;
           }
           return template(ops);
         })
@@ -244,7 +245,7 @@
         .push(function () {
           return gadget.updateHeader({
             title: gadget.options.jio_key + " " + (gadget.options.doc.record_revision || 1),
-            save_action: sync_state === 'Synced'? false: true
+            save_action: !state.readonly
           });
         })
         .push(function () {
@@ -316,8 +317,8 @@
     /////////////////////////////////////////
     .declareService(function () {
       var gadget = this,
-       state = getWorkflowState(gadget.options.jio_key, gadget.options.doc.sync_flag);
-      if (state === 'Synced') {
+       state = getWorkflowState(gadget.options);
+      if (state.readonly) {
         gadget.props.deferred1.resolve();
         return;
       }
@@ -357,6 +358,7 @@
             function () {
               return getData(gadget)
                 .push(function (doc) {
+                  var key;
                   if (doc.sync_flag === '1') {
                     sync = 1;
                   }
@@ -370,20 +372,12 @@
                       })
                       .push(function () {
                         return gadget.props.geoGadget.createGeoLocationRecord();
-                      })
-                      .push(function () {
-                        return gadget.repair();
-                      })
-                     .push(function () {
-                       return gadget.redirect({page: 'expense_record_list'});
-                     })
-                     .push(function () {
-                       alertify.success("Saved");
-                     });
-                    } else {
-                      alertify.success("Saved");
-                    }
-                  });
+                      });
+                  }
+                })
+                .push(function () {
+                  alertify.success("Saved");
+                })
             }
           )
         })

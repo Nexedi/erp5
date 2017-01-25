@@ -34,10 +34,8 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('getSetting', 'getSetting')
-    .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
-    .declareAcquiredMethod("repair", "jio_repair")
-    .declareAcquiredMethod("reload", "reload")
+    .declareAcquiredMethod("redirect", "redirect")
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
       return this.jio_allDocs.apply(this, param_list)
@@ -151,13 +149,10 @@
              false,
              function () {
               gadget.props.element.querySelector("button").disabled = true;
-               return gadget.repair()
-                 .push(function () {
-                   return gadget.setSetting('last_sync_date',  new Date().toLocaleString());
-                 })
-                 .push(function () {
-                   return gadget.reload();
-                 });
+              return gadget.redirect({
+                page: 'sync',
+                auto_repair: true
+              });
              });
          });
     });

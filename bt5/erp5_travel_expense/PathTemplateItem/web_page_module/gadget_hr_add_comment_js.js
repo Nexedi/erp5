@@ -9,14 +9,13 @@
   gadget_klass
     .declareAcquiredMethod('post', 'jio_post')
     .declareAcquiredMethod('put', 'jio_put')
-    .declareAcquiredMethod("repair", "jio_repair")
     .declareAcquiredMethod("allDocs", "jio_allDocs")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("remove", "jio_remove")
     .declareMethod("render", function (options) {
       var gadget = this;
       gadget.options = options;
-      if (!options.can_add_discussion) {
+      if (!options.can_add_discussion && !options.doc.transition_comment) {
         return;
       }
       return gadget.allDocs({
@@ -77,9 +76,6 @@
                 */
                 return gadget.remove(gadget.options.jio_key);
               })
-             .push(function () {
-               return gadget.repair();
-             })
              .push(function () {
                return gadget.redirect({page: gadget.options.page});
              });

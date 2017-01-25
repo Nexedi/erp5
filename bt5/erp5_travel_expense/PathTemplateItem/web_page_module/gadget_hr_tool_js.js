@@ -3,16 +3,21 @@
 (function (window, RSVP) {
   "use strict";
 
-  window.getWorkflowState = function (id, sync_flag)  {
-    var sync_state;
-    if(id.indexOf("_module/") > 0){
+  window.getWorkflowState = function (options)  {
+    var sync_state,
+      readonly = false;
+    if(options.jio_key.indexOf("_module/") > 0){
       sync_state = "Synced";
-    }else if(sync_flag){
+      readonly = true;
+    }else if(options.doc.sync_flag){
       sync_state = "Not Synced";
+      if (options.doc.state) {
+        readonly = true;
+      }
     }else{
       sync_state = "Not Ready To Sync";
     }
-    return sync_state;
+    return {sync_state: sync_state, readonly: readonly};
   };
   
   window.geoLocationPromise = function() {

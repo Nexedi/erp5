@@ -76,8 +76,7 @@
     .declareAcquiredMethod('jio_remove', 'jio_remove')
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('setSetting', 'setSetting')
-    .declareAcquiredMethod("repair", "jio_repair")
-    
+
     
     .declareMethod('triggerSubmit', function () {
       return this.props.element.querySelector('button').click();
@@ -86,7 +85,7 @@
     .declareMethod("render", function (options) {
       var gadget = this,
        sync_checked,
-       sync_state = getWorkflowState(options.jio_key, options.doc.sync_flag),
+       state = getWorkflowState(options),
        not_sync_checked;
       gadget.options = options;
 
@@ -104,7 +103,7 @@
             not_sync_checked = 'checked';
           }
           ops = {
-            state: options.doc.state || sync_state,
+            state: options.doc.state || state.sync_state,
             start_date: options.doc.start_date|| new Date().toISOString().slice(0,10),
             stop_date: options.doc.stop_date|| new Date().toISOString().slice(0,10),
             quantity: options.doc.quantity,
@@ -112,17 +111,15 @@
             sync_checked:  sync_checked,
             not_sync_checked: not_sync_checked,
             select_options: select_options,
+            not_readonly: !state.readonly
           };
-          if (sync_state !== 'Synced') {
-            ops.not_readonly = true;
-          }
           return template(ops);
         })
         .push(function (html) {
           gadget.props.element.innerHTML = html;
           return gadget.updateHeader({
             title: "Demande de congé",
-            save_action: sync_state === 'Synced'? false: true
+            save_action: !state.readonly
           });
         })
         .push(function () {
@@ -270,17 +267,7 @@
                   return gadget.put(gadget.options.jio_key, doc);
                 })
                 .push(function () {
-                  if (sync === 1) {
-                  return gadget.repair()
-                   .push(function () {
-                     return gadget.redirect({page: 'leave_request_record_list'});
-                   })
-                   .push(function () {
-                     alertify.success("Saved");
-                   });
-                  } else {
-                    alertify.success("Saved");
-                  }
+                  alertify.success("Saved");
                 });
             }
           )

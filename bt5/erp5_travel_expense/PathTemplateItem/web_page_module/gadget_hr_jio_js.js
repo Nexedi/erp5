@@ -354,6 +354,9 @@
       return wrapJioCall(this, 'repair', arguments)
         .push(function () {
           return setUserTitle(gadget);
+        })
+        .push(function () {
+          return gadget.setSetting('last_sync_date', new Date().toLocaleString());
         });
     })
     .declareMethod('allDocs', function () {
