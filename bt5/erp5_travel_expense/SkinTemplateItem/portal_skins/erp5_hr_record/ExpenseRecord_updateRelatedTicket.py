@@ -67,6 +67,7 @@ ticket.edit(
   latitude=record.getLatitude(),
   longitude=record.getLongitude(),
   source_project=source_project_url,
+  source_section=record.getSourceValue().getCareerSubordination()
   )
 
 publication_section = portal.ERP5Site_getPreferredExpenseDocumentPublicationSectionValue()
