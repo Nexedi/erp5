@@ -7,27 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">A/MNCg==</string> </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>zope</string> </key>
-                    <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
-                    </value>
-                </item>
-              </dictionary>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -68,64 +49,8 @@
             </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAQAAAAUAAAAGAAAAAwAA
-AHNPAAAAZAEAZAIAbAAAbQEAfQIAAWQBAGQDAGwAAG0CAH0DAAF8AgB8AwBkBAB8AACDAAF8AwBk
-BQB8AACDAAFkBgBkBwCDAgF9BAB8BABTZAAAUygIAAAATmn/////KAEAAABzDAAAAENvbXBsZXhR
-dWVyeSgBAAAAcwUAAABRdWVyeXQFAAAAdGl0bGV0CQAAAHJlZmVyZW5jZXQIAAAAb3BlcmF0b3J0
-AgAAAE9SKAUAAAB0HwAAAFByb2R1Y3RzLlpTUUxDYXRhbG9nLlNRTENhdGFsb2d0DAAAAENvbXBs
-ZXhRdWVyeXQFAAAAUXVlcnl0BQAAAHZhbHVldAUAAABxdWVyeSgFAAAAUgcAAABSBAAAAFIFAAAA
-UgYAAABSCAAAACgAAAAAKAAAAABzEgAAAEVSUDUgUHl0aG9uIFNjcmlwdHMcAAAAU1FMQ2F0YWxv
-Z19tYWtlRnVsbFRleHRRdWVyeQEAAABzCgAAAAADEAEQAg8BGAIoAQAAAHQcAAAAU1FMQ2F0YWxv
-Z19tYWtlRnVsbFRleHRRdWVyeSgBAAAAUgkAAAAoAAAAACgAAAAAcxIAAABFUlA1IFB5dGhvbiBT
-Y3JpcHRzCAAAADxtb2R1bGU+AQAAAHQAAAAA</string> </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>value</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>value</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>ComplexQuery</string>
-                            <string>Query</string>
-                            <string>query</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -138,18 +63,6 @@ Y3JpcHRzCAAAADxtb2R1bGU+AQAAAHQAAAAA</string> </value>
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>uid</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>
