@@ -22,6 +22,7 @@ Leave Request Record | event_simulation_workflow
 Leave Request Record | pricing_interaction_workflow
 Leave Request | ticket_record_interaction_workflow
 Localisation Record | edit_workflow
+Localisation Record | event_interaction_workflow
 Localisation Record | event_simulation_workflow
 Record Module | edit_workflow
 Record Module | validation_workflow
