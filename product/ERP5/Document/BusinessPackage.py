@@ -211,15 +211,15 @@ class BusinessPackage(XMLObject):
         prop_type = prop['type']
         id = prop['id']
         if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'revision',
-                  'install_object_list_list', 'id_generator', 'bt_for_diff'):
+                  'install_object_list_list', 'id_generator', 'bp_for_diff'):
           continue
         value = self.getProperty(id)
         if not value:
           continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
-          bpa.addObject(str(value), name=id, path='bt', ext='')
+          bpa.addObject(str(value), name=id, path='bp', ext='')
         elif prop_type in ('lines', 'tokens'):
-          bpa.addObject('\n'.join(value), name=id, path='bt', ext='')
+          bpa.addObject('\n'.join(value), name=id, path='bp', ext='')
 
       item_name_list = ['_path_item', '_object_property_item']
       # Export each part
@@ -334,7 +334,7 @@ class BusinessPackageFolder(BusinessPackageArchive):
             file_name = posixpath.normpath(file_name[root_path_len:])
             if '%' in file_name:
               file_name = unquote(file_name)
-            elif item_name == 'bt' and file_name == 'revision':
+            elif item_name == 'bp' and file_name == 'revision':
               continue
             #self.revision.hash(item_name + '/' + file_name, f.read())
             f.seek(0)
@@ -388,7 +388,7 @@ class BusinessPackageTarball(BusinessPackageArchive):
     for file_name, info in self.item_dict.get(item_name, ()):
       if '%' in file_name:
         file_name = unquote(file_name)
-      elif item_name == 'bt' and file_name == 'revision':
+      elif item_name == 'bp' and file_name == 'revision':
         continue
       f = extractfile(info)
       self.revision.hash(item_name + '/' + file_name, f.read())
@@ -916,6 +916,7 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
       property_value = p.unrestrictedTraverse(relative_url) \
                              .getProperty(property_name)
       self._objects.setdefault(relative_url, {})[property_name] = property_value
+      # XXX: Add property_type in the xml generated for the objects
       self._hash[relative_url] = hashlib.sha1(self.generateXml(relative_url)).hexdigest()
 
   def generateXml(self, path):
@@ -923,6 +924,7 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
     relative_url = path
     xml_data += '\n  <object relative_url="%s">' % relative_url
     for property_name, property_value in self._objects[relative_url].iteritems():
+      # XXX: Replacing '_list' is not very safely handled for exceptional cases
       xml_data += '\n    <property name="%s">' % property_name.replace('_list', '')
       if property_name.endswith('_list'):
         for value in property_value:
@@ -935,10 +937,12 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
     return xml_data
 
   def export(self, context, bpa, **kw):
-    path = self.__class__.__name__
+    path = self.__class__.__name__ + '/'
     if self._objects.keys():
-      xml_data = self.generateXml()
-      bpa.addObject(xml_data, name=self.xml_tag, path=path)
+      for relative_url in self._objects.keys():
+        xml_data = self.generateXml(relative_url)
+        obj_path = path + relative_url
+        bpa.addObject(xml_data, name=self.xml_tag, path=obj_path)
 
   def importFile(self, bpa, **kw):
     bpa.importFiles(self)
