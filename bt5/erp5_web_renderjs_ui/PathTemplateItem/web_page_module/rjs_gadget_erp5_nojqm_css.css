@@ -337,10 +337,19 @@ textarea {
   white-space: normal;
   vertical-align: top;
   transition: height 0.2s ease-out;
-  height: 4em;
 }
-textarea:focus {
-  height: 20em;
+@media only screen and (max-width: 45em) {
+  textarea {
+    height: 4em;
+  }
+  textarea:focus {
+    height: 20em;
+  }
+}
+@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (min-width: 90em) {
+  textarea {
+    min-height: 10em;
+  }
 }
 ::-webkit-input-placeholder {
   color: #575757;
