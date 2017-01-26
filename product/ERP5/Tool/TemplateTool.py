@@ -387,7 +387,7 @@ class TemplateTool (BaseTool):
         bt = self._download_url(url, id)
       else:
         # Check the format version for the bt
-        format_version_path = name+'/bt/template_format_version'
+        format_version_path = name+'/bp/template_format_version'
         try:
           file = open(os.path.normpath(format_version_path))
           format_version = int(file.read())
