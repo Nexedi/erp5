@@ -565,8 +565,14 @@ class TemplateTool (BaseTool):
         4. Remove the business template from the directory and add the business
         package there instead
         5. Change the ID and title of the business package
+        6. Export the business package to the directory, leaving anything in
+        the installed erp5 unchanged
       """
       import_template = self.download(url=template_path)
+      if import_template.getPortalType == 'Business Package':
+        LOG(import_template.getTitle(),0,'Already migrated')
+        return
+
       export_dir = mkdtemp()
 
       installed_bt_list = self.objectValues()
@@ -590,34 +596,31 @@ class TemplateTool (BaseTool):
       template_path_list = []
 
       # For modules, we don't need to create path for the module
-      module_list = import_template.geTemplateModuleIdList()
+      module_list = import_template.getTemplateModuleIdList()
       template_path_list.extend(module_list)
 
       # For portal_types, we have to add path and subobjetcs
       portal_type_id_list = import_template.getTemplatePortalTypeIdList()
       portal_type_path_list = []
-      for id in portal_type_list:
-        portal_type_path_list.append( 'portal_types/'+id,
-                                      'portal_types/'+id+'/**',
-                                      )
+      for id in portal_type_id_list:
+        portal_type_path_list.append('portal_types/'+id)
+        portal_type_path_list.append('portal_types/'+id+'/**')
       template_path_list.extend(portal_type_path_list)
 
       # For categories, we create path for category objects as well as the subcategories
-      category_list = import_template.getTemplateCategoryList()
+      category_list = import_template.getTemplateBaseCategoryList()
       category_path_list = []
       for base_category in category_list:
-        category_path_list.append(  'portal_categories/'+base_category,
-                                    'portal_categories/'+base_category+'/**',
-                                    )
+        category_path_list.append('portal_categories/'+base_category)
+        category_path_list.append('portal_categories/'+base_category+'/**')
       template_path_list.extend(category_path_list)
 
       # For portal_skins, we export the folder
-      portal_skin_list = import_template.getTempalteSkinIdList()
+      portal_skin_list = import_template.getTemplateSkinIdList()
       portal_skin_path_list = []
       for skin in portal_skin_list:
-        portal_skin_path_list.append( 'portal_skins/'+skin,
-                                      'portal_skins/'+skin+'/**',
-                                      )
+        portal_skin_path_list.append('portal_skins/'+skin)
+        portal_skin_path_list.append('portal_skins/'+skin+'/**')
       template_path_list.extend(portal_skin_path_list)
 
       # For workflow chains,
@@ -630,34 +633,43 @@ class TemplateTool (BaseTool):
       workflow_id_list = import_template.getTemplateWorkflowIdList()
       workflow_path_list = []
       for workflow in workflow_id_list:
-        workflow_path_list.append(  'portal_workflow/'+workflow,
-                                    'portal_workflow/'+workflow+'/**'
-                                  )
+        workflow_path_list.append('portal_workflow/' + workflow)
+        workflow_path_list.append('portal_workflow/' + workflow + '/**')
       template_path_list.extend(workflow_path_list)
 
       # For paths, we add them directly to the path list
       template_path_list.extend(import_template.getTemplatePathList())
 
       # Catalog methods would be added as sub objects
-      catalog_method_item_list = self.getTemplateCatalogMethodIdList()
+      catalog_method_item_list = import_template.getTemplateCatalogMethodIdList()
+      catalog_method_path_list = []
+      for method in catalog_method_item_list:
+        catalog_method_path_list.append('portal_catalog' + method)
+      template_path_list.extend(catalog_method_path_list)
 
       # For catalog objects, we check if there is any catalog object, and then
       # add portal_catalog/erp5_mysql_innodb in the path if there is
-      template_catalog_datetime_key   = self.getTemplateCatalogDatetimeKeyList()
-      template_catalog_full_text_key  = self.getTemplateCatalogFullTextKeyList()
-      template_catalog_keyword_key    = self.getTemplateCatalogKeywordKeyList()
-      template_catalog_local_role_key = self.getCatalogLocalRoleKeyList()
-      template_catalog_method_id      = self.getTemplateCatalogMethodIdList()
-      template_catalog_multivalue_key = self.getTempalteCatalogMultiValueKeyList()
-      template_catalog_related_key    = self.getTemplateCatalogRelatedKeyList()
-      template_catalog_request_key    = self.getTemplateCatalogRequestKeyList()
-      template_catalog_result_key     = self.getTemplateCatalogResultKeyList()
-      template_catalog_result_table   = self.getTempalteCatalogResultTableList()
-      template_catalog_role_key       = self.getTemplateCatalogRoleKeyList()
-      template_catalog_scriptable_key = self.getTemplateCatalogScriptableKeyList()
-      template_catalog_search_key     = self.getTemplateCatalogSearchKeyList()
-      template_catalog_security_uid_column = self.getTemplateCatalogSecurityUidColumnList()
-      template_catalog_topic_key      = self.getTemplateCatalogTopicKeyList()
+      template_catalog_datetime_key   = import_template.getTemplateCatalogDatetimeKeyList()
+      template_catalog_full_text_key  = import_template.getTemplateCatalogFullTextKeyList()
+      template_catalog_keyword_key    = import_template.getTemplateCatalogKeywordKeyList()
+      template_catalog_local_role_key = import_template.getTemplateCatalogLocalRoleKeyList()
+      template_catalog_method_id      = import_template.getTemplateCatalogMethodIdList()
+      template_catalog_multivalue_key = import_template.getTemplateCatalogMultivalueKeyList()
+      template_catalog_related_key    = import_template.getTemplateCatalogRelatedKeyList()
+      template_catalog_request_key    = import_template.getTemplateCatalogRequestKeyList()
+      template_catalog_result_key     = import_template.getTemplateCatalogResultKeyList()
+      template_catalog_result_table   = import_template.getTemplateCatalogResultTableList()
+      template_catalog_role_key       = import_template.getTemplateCatalogRoleKeyList()
+      template_catalog_scriptable_key = import_template.getTemplateCatalogScriptableKeyList()
+      template_catalog_search_key     = import_template.getTemplateCatalogSearchKeyList()
+      template_catalog_security_uid_column = import_template.getTemplateCatalogSecurityUidColumnList()
+      template_catalog_topic_key      = import_template.getTemplateCatalogTopicKeyList()
+
+      # Add these catalog items in the object_property instead of adding
+      # dummy path item for them
+      property_path_list = []
+      if import_template.getTitle() == 'erp5_mysql_innodb_catalog':
+        template_path_list.extend('portal_catalog/erp5_mysql_innodb')
 
       # Check if any catalog property exists and if yes, then we export the
       # erp5_mysql_innodb object and use it for installation
@@ -668,6 +680,37 @@ class TemplateTool (BaseTool):
       bp5_package.build(self)
       # Export the newly built business package to the export directory
       bp5_package.export(path=export_dir)
+
+    security.declareProtected( 'Import/Export objects', 'migrateBTListToBP')
+    def migrateBTListToBP(self, repository_list, REQUEST=None, **kw):
+      """
+      Run migration for BT5 one by one in a given repository. This will be done
+      via activities.
+      """
+      repository_list = filter(bool, repository_list)
+
+      if REQUEST is None:
+        REQUEST = getattr(self, 'REQUEST', None)
+
+      if len(repository_list) == 0 and REQUEST:
+        ret_url = self.absolute_url()
+        REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
+                                  % (ret_url, 'No repository was defined'))
+
+      for repository in repository_list:
+        repository = repository.rstrip('\n')
+        repository = repository.rstrip('\r')
+        for business_template_id in os.listdir(repository):
+          template_path = os.path.join(repository, business_template_id)
+          if os.path.isfile(template_path):
+            LOG(business_template_id,0,'is file, so it is skipped')
+          else:
+            if not os.path.exists((os.path.join(template_path, 'bt'))):
+              LOG(business_template_id,0,'has no bt sub-folder, so it is skipped')
+            else:
+              self.migrateBTToBP(template_path)
+              #self.activate(activity='SQLQueue').\
+              #  migrateBTToBP(template_path)
 
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
