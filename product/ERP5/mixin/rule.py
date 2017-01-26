@@ -495,7 +495,7 @@ class SimulableMixin(Base):
 
     See _updateSimulation for accepted parameters.
     """
-    if self.getCausalityState() == self.getPortalFrozenCausalityStateList():
+    if self.getCausalityState() in self.getPortalFrozenCausalityStateList():
       return
     tv = getTransactionalVariable()
     key = 'SimulableMixin.updateSimulation', self.getUid()
