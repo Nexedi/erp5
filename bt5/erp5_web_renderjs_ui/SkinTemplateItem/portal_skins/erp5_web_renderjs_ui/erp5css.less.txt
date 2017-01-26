@@ -420,9 +420,19 @@ textarea {
   vertical-align: top;
 
   transition: height @transition-timing;
-  height: 4em;
-  &:focus {
-    height: 20em;
+
+  // On smartphone, display the textarea small
+  // and increase its size when focused
+  // This behaviour should not be activated on bigscreen,
+  // as it make it unusable (difficult to search text for example)
+  @media @smartphone {
+    height: 4em;
+    &:focus {
+      height: 20em;
+    }
+  }
+  @media @tablet, @desktop {
+    min-height: 10em;
   }
 }
 
