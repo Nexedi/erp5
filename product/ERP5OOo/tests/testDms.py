@@ -1505,6 +1505,16 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEqual('converted', document.getExternalProcessingState())
 
+  def test_canConvertToNewContent(self):
+    """Check if Base_convertToNewContent works
+    """
+    portal = self.getPortalObject()
+    module = portal.getDefaultModule("File")
+    file = module.newContent(portal_type="File", content_type="text/plain", data="Hello")
+    file2 = file.Base_convertToNewContent(destination_mimetype="application/pdf")
+    self.assertNotEquals(file2.getId(), file.getId())
+    self.assertEquals(file2.getParentValue().getId(), "document_module")
+
   def test_Base_contribute(self):
     """
       Test contributing a file and attaching it to context.
