@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Leave Request</type>
-  <workflow>ticket_record_interaction_workflow</workflow>
+  <workflow>ticket_interaction_workflow, ticket_record_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Leave Request Period</type>
