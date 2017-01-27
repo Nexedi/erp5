@@ -1425,6 +1425,26 @@ class TestDocument(TestDocumentMixin):
     self.assertNotEqual(original_document.getData(),
       watermarked_document.getData())
 
+  def test_checkVisibleTextInPresentationToImageConversion(self):
+    odp = makeFileUpload("XXX-Hello.odp")
+    presentation = self.portal.document_module.newContent(
+      portal_type="Presentation",
+      data=odp,
+      content_type="application/vnd.oasis.opendocument.presentation",
+    )
+    self.tic()
+    content_type, png = presentation.convert(format="png")
+    self.assertEquals(content_type, "image/png")
+    image = self.portal.image_module.newContent(
+      portal_type="Image",
+      data=png,
+      content_type=content_type,
+    )
+    self.tic()
+    content_type, txt = image.convert(format="txt")
+    self.assertEquals(content_type, "text/plain")
+    self.assertIn("Hello", txt)
+
   def test_Document_getStandardFilename(self):
     upload_file = makeFileUpload('metadata.pdf')
     document = self.portal.document_module.newContent(portal_type='PDF')
