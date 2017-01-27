@@ -4,40 +4,23 @@
 """
 from Products.ERP5Type.Cache import CachingMethod
 
-def contentTypeMatch(content_type, glob):
-  if '*' == glob[-1]:
-    # 'image/png' must match 'image/*'
-    index = glob.index('*')
-    return content_type[:index] == glob[:index]
-  else:
-    return content_type == glob
-
 portal = context.getPortalObject()
 content_type = context.getContentType()
 
 def getTargetFormatItemList(content_type):
-  # without content type no wayto determine target format
+  # returns [(title, extension), ...]
   if content_type is None:
     return []
   format_list = []
-  output_content_type_list = []
-  for obj in portal.portal_transforms.objectValues():
-    for input in obj.inputs:
-      if contentTypeMatch(content_type, input) and \
-        obj.output not in output_content_type_list and\
-        obj.output!=content_type:
-        output_content_type_list.append(obj.output)
-
-  for output_content_type in output_content_type_list:
-    mimetypes_registry_extension_list = portal.mimetypes_registry.lookup(output_content_type)
-    for mimetypes_registry_extension in mimetypes_registry_extension_list:
-      title = mimetypes_registry_extension.name()
+  available_mimetype_list = portal.portal_transforms.getAvailableTargetMimetypeList(content_type)
+  mimetype_registry = portal.mimetypes_registry
+  for available_mimetype in available_mimetype_list:
+    mimetype_info_list = mimetype_registry.lookup(available_mimetype)
+    for mimetype_info in mimetype_info_list:
       try:
-        format = mimetypes_registry_extension.extensions[0]
+        format_list.append((mimetype_info.name(), mimetype_info.extensions[0]))
       except IndexError:
-        format = None
-      if format is not None and format not in format_list:
-        format_list.append((title, format,))
+        pass
   return format_list
 
 getTargetFormatItemList = CachingMethod(getTargetFormatItemList,
