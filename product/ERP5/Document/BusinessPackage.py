@@ -40,6 +40,7 @@ import time
 from copy import deepcopy
 from collections import defaultdict
 from cStringIO import StringIO
+from OFS.Image import Pdata
 from lxml.etree import parse
 from urllib import quote, unquote
 from OFS import SimpleItem, XMLExportImport
@@ -590,7 +591,6 @@ class PathTemplatePackageItem(Implicit, Persistent):
           for id_ in list(id_list):
             _delObjectWithoutHook(obj, id_)
         self._objects[relative_url] = obj
-        self._hash[relative_url] = hash_func(obj.asXML()).hexdigest()
         obj.wl_clearLocks()
 
   def export(self, context, bpa, catalog_method_template_item = 0, **kw):
