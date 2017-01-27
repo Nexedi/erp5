@@ -15,6 +15,9 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>where_expression\r\n
+            <value> <string>selection_domain\r\n
+selection_report\r\n
+where_expression\r\n
 select_expression\r\n
 group_by_expression\r\n
 from_table_list:list\r\n

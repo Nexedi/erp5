@@ -1,5 +1,9 @@
 DELETE FROM `measure` WHERE
+<<<<<<< HEAD
   <dtml-sqltest uid column="resource_uid" type="int" multiple>
+=======
+  <dtml-sqltest uid column="resource_uid" type="int" multiple>;
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 
 <dtml-let measure_list="[]">
   <dtml-in getMeasureRowList prefix="loop">
@@ -9,7 +13,11 @@ DELETE FROM `measure` WHERE
   <dtml-if measure_list>
     <dtml-var sql_delimiter>
 
+<<<<<<< HEAD
 INSERT INTO `measure`
+=======
+REPLACE INTO `measure`
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 VALUES
     <dtml-in measure_list prefix="loop">
 (

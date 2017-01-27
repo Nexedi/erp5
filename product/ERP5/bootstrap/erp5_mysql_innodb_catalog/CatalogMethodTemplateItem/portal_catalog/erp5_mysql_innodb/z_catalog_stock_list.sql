@@ -1,10 +1,19 @@
 DELETE FROM
   stock
 WHERE
+<<<<<<< HEAD
 <dtml-sqltest uid type="int" multiple>
 
 <dtml-var sql_delimiter>
 
+=======
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+
+<dtml-var "'\0'">
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 <dtml-let row_list="[]" uid_dict="{}">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">
@@ -72,7 +81,11 @@ WHERE
   </dtml-in>
 
   <dtml-if "row_list">
+<<<<<<< HEAD
 INSERT INTO
+=======
+REPLACE INTO
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
   stock
 (
   `uid`,

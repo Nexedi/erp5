@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 DELETE FROM
   predicate
 WHERE
@@ -5,6 +6,8 @@ WHERE
 
 <dtml-var sql_delimiter>
 
+=======
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 <dtml-let predicate_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isPredicate[loop_item]">
@@ -14,7 +17,11 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(predicate_list) > 0">
+<<<<<<< HEAD
 INSERT INTO predicate VALUES
+=======
+REPLACE INTO predicate VALUES 
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
     <dtml-in prefix="loop" expr="predicate_list">
       <dtml-if sequence-start><dtml-else>,</dtml-if>
 ( 
