@@ -1,7 +1,10 @@
 erp5_mysql_innodb/SQLCatalog_catalogTransformation
 erp5_mysql_innodb/SQLCatalog_catalogTransformationList
+<<<<<<< HEAD
 erp5_mysql_innodb/SQLCatalog_getDocumentValueList
 erp5_mysql_innodb/SQLCatalog_zGetDocumentValueList
+=======
+>>>>>>> a495dd1... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 erp5_mysql_innodb/SQLCatalog_makeFullTextQuery
 erp5_mysql_innodb/SQLCatalog_makeQuickSearchQuery
 erp5_mysql_innodb/SQLCatalog_makeSearchTextQuery

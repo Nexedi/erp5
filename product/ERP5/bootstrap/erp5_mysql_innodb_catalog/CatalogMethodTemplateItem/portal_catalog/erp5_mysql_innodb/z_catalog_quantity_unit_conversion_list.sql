@@ -13,7 +13,12 @@
 
 <dtml-if quantity_unit_conversion_dict>
 DELETE FROM `quantity_unit_conversion` WHERE
+<<<<<<< HEAD
   <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>
+=======
+  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>;
+
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 
   <dtml-var sql_delimiter>
 
@@ -21,7 +26,12 @@ DELETE FROM `quantity_unit_conversion` WHERE
   <dtml-call "value_list.extend(loop_item.values())">
 </dtml-in>
 
+<<<<<<< HEAD
 INSERT INTO `quantity_unit_conversion` VALUES
+=======
+REPLACE INTO `quantity_unit_conversion`
+VALUES
+>>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
     <dtml-in "value_list" prefix="loop">
 (
   <dtml-sqlvar expr="loop_item['uid']" type="int" optional>,
