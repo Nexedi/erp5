@@ -154,15 +154,18 @@ class BusinessPackage(XMLObject):
       return {}
 
     security.declareProtected(Permissions.ManagePortal, 'build')
-    def build(self, no_action=False):
+    def build(self, no_action=False, **kw):
       """
       Should also export the objects from PathTemplateItem to their xml format
       """
       if not no_action:
         self.storePathData()
         # XXX: Explicitly calling build for items. Needs to be changed
-        self._path_item.build(self)
-        self._object_property_item.build(self)
+        self._path_item.build(self, **kw)
+        try:
+          self._object_property_item.build(self)
+        except Exception:
+          import pdb; pdb.set_trace()
       pass
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
@@ -186,7 +189,7 @@ class BusinessPackage(XMLObject):
       return result
 
     security.declareProtected(Permissions.ManagePortal, 'export')
-    def export(self, path=None, local=0, bpa=None):
+    def export(self, path=None, local=0, bpa=None, **kw):
       """
       Export the object
       XXX: Are we planning to use something like archive for saving the exported
@@ -194,9 +197,9 @@ class BusinessPackage(XMLObject):
       """
       if not self.getBuildingState() == 'built':
         raise BusinessPackageException, 'Package not built properly'
-      return self._export(path, local, bpa)
+      return self._export(path, local, bpa, **kw)
 
-    def _export(self, path=None, local=0, bpa=None):
+    def _export(self, path=None, local=0, bpa=None, **kw):
       if bpa is None:
         if local:
           # we export into a folder tree
@@ -227,7 +230,7 @@ class BusinessPackage(XMLObject):
       for item_name in item_name_list:
         item = getattr(self, item_name, None)
         if item is not None:
-          item.export(context=self, bpa=bpa)
+          item.export(context=self, bpa=bpa, **kw)
 
       return bpa.finishCreation()
 
@@ -499,6 +502,7 @@ class PathTemplatePackageItem(Implicit, Persistent):
   def removeProperties(self,
                        obj,
                        export,
+                       properties=[],
                        keep_workflow_history=False,
                        keep_workflow_history_last_history_only=False):
     """
@@ -507,10 +511,14 @@ class PathTemplatePackageItem(Implicit, Persistent):
     obj._p_activate()
     klass = obj.__class__
     classname = klass.__name__
-
     attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
                 'last_id', 'uid',
                 '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+    if properties:
+      for prop in properties:
+        if prop.endswith('_list'):
+          prop = prop[:-5]
+        attr_set.add(prop)
     if export:
       if keep_workflow_history_last_history_only:
         self._removeAllButLastWorkflowHistory(obj)
@@ -572,6 +580,9 @@ class PathTemplatePackageItem(Implicit, Persistent):
     keys = self._path_archive.keys()
     keys.sort()
     hash_func = hashlib.sha1
+    # Check for properties_removed in kwargs
+    removable_property_dict = kw.get('removable_property', {})
+    removable_property_obj_list = removable_property_dict.keys()
     for path in keys:
       include_subobjects = 0
       if path.endswith("**"):
@@ -582,8 +593,12 @@ class PathTemplatePackageItem(Implicit, Persistent):
         obj = obj.__of__(context)
         _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
+        # Create list of properties which needed to be removed before export
+        removable_property_list = []
+        if path in removable_property_obj_list:
+          removable_property_list = removable_property_dict.get(path)
         # XXX: This doesn't take care of workflow objects
-        obj = self.removeProperties(obj, 1)
+        obj = self.removeProperties(obj, 1, properties=removable_property_list)
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)

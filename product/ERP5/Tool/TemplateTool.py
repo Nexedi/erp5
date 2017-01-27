@@ -596,6 +596,7 @@ class TemplateTool (BaseTool):
 
       portal_path = self.getPortalObject()
       template_path_list = []
+      property_path_list = []
 
       # For modules, we don't need to create path for the module
       module_list = import_template.getTemplateModuleIdList()
@@ -666,26 +667,83 @@ class TemplateTool (BaseTool):
       template_catalog_security_uid_column = import_template.getTemplateCatalogSecurityUidColumnList()
       template_catalog_topic_key      = import_template.getTemplateCatalogTopicKeyList()
 
+      catalog_property_list = [
+        template_catalog_datetime_key,
+        template_catalog_full_text_key,
+        template_catalog_keyword_key,
+        template_catalog_local_role_key,
+        template_catalog_multivalue_key,
+        template_catalog_related_key,
+        template_catalog_request_key,
+        template_catalog_result_key,
+        template_catalog_result_table,
+        template_catalog_role_key,
+        template_catalog_scriptable_key,
+        template_catalog_search_key,
+        template_catalog_security_uid_column,
+        template_catalog_topic_key,
+        ]
+      is_property_added = any(catalog_property_list)
+
+      properties_removed = [
+        'sql_catalog_datetime_search_keys_list',
+        'sql_catalog_full_text_search_keys_list',
+        'sql_catalog_keyword_search_keys_list',
+        'sql_catalog_local_role_keys_list',
+        'sql_catalog_multivalue_keys_list',
+        'sql_catalog_related_keys_list',
+        'sql_catalog_request_keys_list',
+        'sql_search_result_keys_list',
+        'sql_search_tables_list',
+        'sql_catalog_role_keys_list',
+        'sql_catalog_scriptable_keys_list',
+        'sql_catalog_search_keys_list',
+        'sql_catalog_security_uid_columns_list',
+        'sql_catalog_topic_search_keys_list'
+        ]
+
+      removable_property = {}
+
+      if is_property_added:
+        if catalog_method_path_list:
+          catalog_path = catalog_method_path_list[0].rsplit('/', 1)[0]
+        else:
+          catalog_path = 'portal_catalog/erp5_mysql_innodb'
+        template_path_list.append(catalog_path)
+        removable_property[catalog_path] = properties_removed
+        for prop in properties_removed:
+            property_path_list.append(catalog_path + ' | ' + prop)
+
       # Add these catalog items in the object_property instead of adding
       # dummy path item for them
-      property_path_list = []
       if import_template.getTitle() == 'erp5_mysql_innodb_catalog':
         template_path_list.extend('portal_catalog/erp5_mysql_innodb')
 
-      # Check if any catalog property exists and if yes, then we export the
-      # erp5_mysql_innodb object and use it for installation
+      # Add portal_property_sheets
+      property_sheet_id_list = import_template.getTemplatePropertySheetIdList()
+      property_sheet_path_list = []
+      for property_sheet in property_sheet_id_list:
+        property_sheet_path_list.append('portal_property_sheets/' + property_sheet)
+        property_sheet_path_list.append('portal_property_sheets/' + property_sheet + '/**')
+      template_path_list.extend(property_sheet_path_list)
 
       # Create new objects for business package
       bp5_package = self.newContent(
                                     portal_type='Business Package',
-                                    title=import_package.getTitle()
+                                    title=import_template.getTitle()
                                     )
-      bp5_package.edit(template_path_list=template_path_list)
-      bp5_package.build()
+
+      bp5_package.edit(
+        template_path_list=template_path_list,
+        template_object_property_list=property_path_list
+        )
+
+      kw['removable_property'] = removable_property
+      bp5_package.build(**kw)
       # Export the newly built business package to the export directory
       bp5_package.export(path=export_dir, local=True)
       if is_installed:
-        import_package.uninstall()
+        import_template.uninstall()
 
     security.declareProtected( 'Import/Export objects', 'migrateBTListToBP')
     def migrateBTListToBP(self, repository_list, REQUEST=None, **kw):
