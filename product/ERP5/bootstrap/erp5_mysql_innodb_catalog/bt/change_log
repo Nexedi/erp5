@@ -1,0 +1,108 @@
+2013-05-30 yusei
+* Fix an inventory bug. When there are more than 300 inventories which are cancelled by inventory document, inventory document creates wrong stock records.
+
+2013-05-08 arnaud.fontaine
+* Prevent order_id column value to overflow following changes in Inventory (cf53db4).
+
+2011-04-14 yusei
+* Add datetime key to effective_date and expiration_date on versioning table. They were missing.
+
+2011-02-28 Ivan
+* Deprecate 'advanced_search_text' &'quick_search_text' scriptable key
+* Add 'search_text' scriptable key
+
+2011-02-04 Nicolas
+* add children_reference related column
+
+2010-11-08 Kazuhiko
+* support cataloging multiple subjects.
+* subject related tables are moved from erp5_ingestion_mysql_innodb_catalog.
+
+2010-11-05 Kazuhiko
+* remove 'z_related_security' method and 'allowedRolesAndUsers' related key, that are not used because of the conflict with existing 'allowedRolesAndUsers' column.
+
+2010-09-28 yusei
+* Add grand_grand_grand_grand_parent_specialise_portal_type and grand_grand_grand_grand_parent_specialise_reference.
+
+2010-08-20 tatuya
+* Add grand_parent_delivery_portal_type, and grand_grand_grand_parent_delivery_portal_type related keys so that we will select the delivery portal type of a simulation movement.
+
+2010-06-08 Kazuhiko
+* Add portal_type column in translation table and use it in several related keys to avoid unexpected verbose results of translated state search.
+
+2010-06-08 yusei
+* Add predicate category related keys.
+* Update predicate category indexing method to support "no-left-join" version of predicate search.
+* Use erp5_core revision 1601 or higher.
+
+2010-05-24 tatuya
+* Add parent_specialise_reference related key to select simulation movements by the applied rule reference.
+
+2010-03-15 yusei
+* Add grand_grand_grand_grand_grand_parent related key.
+
+2010-03-03 yusuke
+* Remove unused script.
+
+2010-03-02 yusei
+* Remove short title.
+
+2010-03-02 Nicolas Dumazet
+* Catalog transformations
+
+2010-02-05 aurel
+* add more columns into versioning table in order to use frequency_index
+
+2010-01-07 Kazuhiko
+* increase the size of the language column in the versioning table from 2 to 5.
+
+2009-11-20 Yusuke
+* Relation bug is fixed.
+
+2009-04-18 Kazuhiko
+* Version 5.4.1
+
+2009-04-16 Kazuhiko
+* Use versioning table only for documents having getVersion.
+
+2009-04-15 Kazuhiko
+* Add effective_date and expiration_date in versioning table.
+
+2009-04-01 vincentd
+* Move here versioning table from erp5_dms_mysql_innodb_catalog.
+
+2008/11/13 yusei
+* Start to develop version 5.4.
+
+2008-10-14 yusei
+* Start to develop version 5.3.
+
+2008-09-24 yusei
+* Update xml format.
+
+2008-06-27 yusei
+* Start to develop version 5.2.
+
+2008-06-26 yusei
+* Revise version to 5.1.
+
+2008-05-22 yusei
+* Change viewable_owner and owner columns of catalog table from varchar(32) to varbinary(255).
+
+2008-04-17 yusei
+* Revise version to 5.0.
+
+2008-03-25 aurel
+* z_count_results must retrieve all rows by default as limit is explicitly given by catalog
+
+2007-06-22 yo
+* Remove keyword keys, because there is no way to disable them later.
+
+2007-04-05 Aurel
+* fix index for category table
+
+2007-02-01 Romain
+* Add mirror_date column to the stock table.
+
+2006-12-27 vincent
+* Move catalog related things from erp5_core into this new BT.
