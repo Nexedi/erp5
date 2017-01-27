@@ -676,7 +676,10 @@ class TemplateTool (BaseTool):
       # erp5_mysql_innodb object and use it for installation
 
       # Create new objects for business package
-      bp5_package = self.newContent(portal_type='Business Package')
+      bp5_package = self.newContent(
+                                    portal_type='Business Package',
+                                    title=import_package.getTitle()
+                                    )
       bp5_package.edit(template_path_list=template_path_list)
       bp5_package.build()
       # Export the newly built business package to the export directory
