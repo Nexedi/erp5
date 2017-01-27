@@ -575,12 +575,14 @@ class TemplateTool (BaseTool):
 
       export_dir = mkdtemp()
 
-      installed_bt_list = self.objectValues()
+      installed_bt_list = self.getInstalledBusinessTemplatesList()
       installed_bt_title_list = [bt.title for bt in installed_bt_list]
 
+      is_installed = False
       if import_template.getTitle() not in installed_bt_title_list:
         # Install the business template
         import_template.install(**kw)
+        is_installed = True
 
       # Make list of object paths which needs to be added in the bp5
       # This can be decided by looping over every type of items we do have in
@@ -644,16 +646,15 @@ class TemplateTool (BaseTool):
       catalog_method_item_list = import_template.getTemplateCatalogMethodIdList()
       catalog_method_path_list = []
       for method in catalog_method_item_list:
-        catalog_method_path_list.append('portal_catalog' + method)
+        catalog_method_path_list.append('portal_catalog/' + method)
       template_path_list.extend(catalog_method_path_list)
 
       # For catalog objects, we check if there is any catalog object, and then
-      # add portal_catalog/erp5_mysql_innodb in the path if there is
+      # add catalog object also in the path if there is
       template_catalog_datetime_key   = import_template.getTemplateCatalogDatetimeKeyList()
       template_catalog_full_text_key  = import_template.getTemplateCatalogFullTextKeyList()
       template_catalog_keyword_key    = import_template.getTemplateCatalogKeywordKeyList()
       template_catalog_local_role_key = import_template.getTemplateCatalogLocalRoleKeyList()
-      template_catalog_method_id      = import_template.getTemplateCatalogMethodIdList()
       template_catalog_multivalue_key = import_template.getTemplateCatalogMultivalueKeyList()
       template_catalog_related_key    = import_template.getTemplateCatalogRelatedKeyList()
       template_catalog_request_key    = import_template.getTemplateCatalogRequestKeyList()
@@ -676,10 +677,12 @@ class TemplateTool (BaseTool):
 
       # Create new objects for business package
       bp5_package = self.newContent(portal_type='Business Package')
-      bp5_package.edit(template_path_list)
-      bp5_package.build(self)
+      bp5_package.edit(template_path_list=template_path_list)
+      bp5_package.build()
       # Export the newly built business package to the export directory
-      bp5_package.export(path=export_dir)
+      bp5_package.export(path=export_dir, local=True)
+      if is_installed:
+        import_package.uninstall()
 
     security.declareProtected( 'Import/Export objects', 'migrateBTListToBP')
     def migrateBTListToBP(self, repository_list, REQUEST=None, **kw):
