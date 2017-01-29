@@ -94,6 +94,10 @@
             <value> <string>Web Script</string> </value>
         </item>
         <item>
+            <key> <string>revision</string> </key>
+            <value> <string>31</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Code Mirror Editor Gadget JS</string> </value>
         </item>
@@ -230,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55531.65356.52462</string> </value>
+                <value> <string>956.63666.53306.36966</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481330224.45</float>
+                        <float>1485722100.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

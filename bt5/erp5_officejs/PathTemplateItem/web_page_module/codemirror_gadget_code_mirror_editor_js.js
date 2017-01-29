@@ -36,10 +36,38 @@
 
           g.props.editor = CodeMirror.fromTextArea(g.props.element.querySelector("textarea"), {
             lineNumbers: true,
-            mode: "text/html", 
+            styleActiveLine: true,
+            showTrailingSpace: true,
+            mode: "text/html",
             matchBrackets: true,
+            tabSize: 2,
+            indentWithTabs: false,
             showCursorWhenSelecting: true,
-            extraKeys: {"Alt-F": "findPersistent"}
+            continueComments: true,
+            foldGutter: true,
+            lineWrapping: true,
+            gutters: ["CodeMirror-lint-markers",
+                      "CodeMirror-linenumbers",
+                      "CodeMirror-foldgutter"],
+            lint: true,
+            extraKeys: {
+              "Ctrl-Space": "autocomplete",
+              "Alt-Space": "autocomplete",
+              "Ctrl-Q": function (cm) {cm.foldCode(cm.getCursor()); },
+              "Tab": function (cm) {
+                // We want to insert spaces, not tab, and we also want to keep the behaviour of indenting selection.
+                if (cm.getSelection()) {
+                  return cm.execCommand("defaultTab");
+                }
+                var spaces = new Array(cm.getOption("indentUnit") + 1).join(" ");
+                cm.replaceSelection(spaces);
+              },
+              "Ctrl-I": "indentAuto",
+              "Shift-Tab": "indentLess",
+              'Alt-F': 'findPersistent',
+              'Cmd-/': 'toggleComment',
+              'Ctrl-/': 'toggleComment'
+            }
           });
       // XXX custom styling for CribJS, should be put somewhere else-
           g.props.element.querySelector('.CodeMirror').setAttribute('style', 'min-height: 800px;');

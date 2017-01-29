@@ -74,12 +74,28 @@
             <value> <string>gadget_code_mirror_editor.html</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>codemirror_gadget_code_mirror_editor_html</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>revision</string> </key>
+            <value> <string>27</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -218,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55456.978.40106</string> </value>
+                <value> <string>956.63666.51974.1638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -236,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481295361.6</float>
+                        <float>1485722098.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
