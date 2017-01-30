@@ -970,15 +970,16 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
+    multiple_type = ('lines', 'selection', 'multiple selection')
     object_list = xml.findall('object')
     for obj in object_list:
       for obj_property in obj.findall('property'):
         item_list = []
         for item in obj_property.findall('item'):
           item_list.append(item.text)
-        property_name = obj_property.find('name').text + ('' if len(item_list) <= 1 else '_list')
+        property_name = obj_property.find('name').text
         property_type = obj_property.find('type').text
-        if property_type not in ('lines', 'selection', 'multiple selection'):
+        if property_type not in multiple_type:
           try:
             item_list = item_list[0]
           except IndexError:
