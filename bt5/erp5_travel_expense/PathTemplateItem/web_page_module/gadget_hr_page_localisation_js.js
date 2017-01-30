@@ -26,11 +26,11 @@
         myIcon = L.icon({
          iconUrl: 'image_module/marker-icon?format=png',
          iconSize: [35, 50],
-         iconAnchor: [22, 94],
-         popupAnchor: [-3, -76],
+         iconAnchor:  [23, 47],
+         popupAnchor: [-3, -44],
          shadowUrl: 'image_module/marker-shadow?format=png',
          shadowSize: [65, 50],
-         shadowAnchor: [22, 94]
+         shadowAnchor: [23, 47]
       });
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
