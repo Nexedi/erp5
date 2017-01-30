@@ -479,7 +479,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJSVersionning</string> </value>
+            <value> <string>RJSVersioning</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -672,7 +672,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64547.1035.31863</string> </value>
+                <value> <string>956.64862.48802.40994</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -690,7 +690,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485773650.59</float>
+                        <float>1485791952.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

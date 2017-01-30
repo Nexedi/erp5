@@ -136,7 +136,7 @@ var repair = false;
       element.className = "presentation";
       gadget.element.insertBefore(element, gadget.element.firstChild);
       return gadget.declareGadget(
-        "gadget_officejs_install_presentation.html",
+        "gadget_officejs_bootloader_presentation.html",
         {"scope": "presentation", "element": element}
       )
         .push(function (presentation_gadget) {
