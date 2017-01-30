@@ -66,7 +66,7 @@
         key,
         value,
         i,
-        queue = gadget.translateHtml(panel_template_header() + panel_template_body());
+        queue = gadget.translateHtml(panel_template_header() + panel_template_body({"location": window.location.origin + window.location.pathname}));
 
       queue
         .push(function (my_translated_or_plain_html) {

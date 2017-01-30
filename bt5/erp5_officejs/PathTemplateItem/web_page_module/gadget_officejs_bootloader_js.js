@@ -13,7 +13,14 @@ var repair = false;
     }
   });
 
-  function createStorage(version, version_url) {
+  var remote_storage = {
+    type: "erp5",
+    url: window.location.origin +
+      window.location.pathname + "hateoasnoauth",
+    default_view_reference: "jio_view"
+  };
+
+  function createStorage(query, version_url, version) {
     return jIO.createJIO({
       type: "replicate",
       conflict_handling: 2,
@@ -24,8 +31,8 @@ var repair = false;
       check_local_modification: false,
       query: {
         query: 'portal_type: ("Web Illustration",' +
-          '"Web Manifest","Web Script","Web Style","Web Page")' +
-          'AND version:"' + version + '"',
+          '"Web Manifest","Web Script","Web Style","Web Page") AND version: "' +
+            version + '" ' + query,
         "limit": [0, 27131]
       },
       signature_storage: {
@@ -40,7 +47,7 @@ var repair = false;
         no_sub_query_id: true,
         id: ["equalSubProperty", "relative_url"],
         property: {
-          "url_string": ["equalSubId"]
+          "reference": ["equalSubId"]
         },
         sub_storage: {
           type: "query",
@@ -54,12 +61,7 @@ var repair = false;
           }
         }
       },
-      remote_sub_storage: {
-        type: "erp5",
-        url: window.location.origin +
-          window.location.pathname + "hateoasnoauth",
-        default_view_reference: "jio_view"
-      }
+      remote_sub_storage: remote_storage
     });
   }
 
@@ -91,6 +93,7 @@ var repair = false;
       gadget.props = {};
       gadget.props.cached_url = [];
       gadget.gadget_list = [];
+      gadget.props.query_list = [];
 
       function pushGadget(url, i) {
         var element = document.createElement("div");
@@ -136,7 +139,7 @@ var repair = false;
       element.className = "presentation";
       gadget.element.insertBefore(element, gadget.element.firstChild);
       return gadget.declareGadget(
-        "gadget_officejs_install_presentation.html",
+        "gadget_officejs_bootloader_presentation.html",
         {"scope": "presentation", "element": element}
       )
         .push(function (presentation_gadget) {
@@ -200,57 +203,55 @@ var repair = false;
       return serviceWorker_setting_storage.put(
         window.location.origin + window.location.pathname +
           gadget.props.version_url,
-        {"version": gadget.props.document_version}
+        {
+          "version": gadget.props.document_version, 
+          "landing_page": gadget.props.landing_page
+        }
       )
         .push(function () {
-          gadget.props.storage = createStorage(
-            gadget.props.document_version,
-            gadget.props.version_url
-          );
-          return gadget.props.storage.repair();
-        })
-        .push(function () {
           // transform a cache to url_list
-          if (gadget.props.cache_file && gadget.props.cache_file !== "") {
-            gadget.props.storage = jIO.createJIO({
-              type: "query",
-              sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: window.location.origin + window.location.pathname +
-                    gadget.props.version_url
+          gadget.props.storage = jIO.createJIO({
+            type: "mapping",
+            id: ["equalSubProperty", "reference"],
+            sub_storage: remote_storage
+          });
+          return gadget.props.storage.get(gadget.props.cache_file)
+            .push(function (doc) {
+              var url_list = doc.text_content.split('\r\n'),
+                i,
+                take = false;
+              if (url_list.length === 1) {
+                url_list = doc.text_content.split('\n');
+              }
+              if (url_list.length === 1) {
+                url_list = doc.text_content.split('\r');
+              }
+              for (i = 0; i < url_list.length; i += 1) {
+                if (url_list[i].indexOf("NETWORK:") >= 0) {
+                  take = false;
+                }
+                if (take &&
+                    url_list[i] !== "" &&
+                    url_list[i].charAt(0) !== '#' &&
+                    url_list[i].charAt(0) !== ' ') {
+                  url_list[i].replace("\r","");
+                  gadget.props.cached_url.push(url_list[i]);
+                  gadget.props.query_list.push('( reference: "' + url_list[i] +'" )');
+                }
+                if (url_list[i].indexOf("CACHE:") >= 0) {
+                  take = true;
                 }
               }
             });
-            return gadget.props.storage.get(gadget.props.cache_file)
-              .push(function (doc) {
-                var url_list = doc.text_content.split('\r\n'),
-                  i,
-                  take = false;
-                if (url_list.length === 1) {
-                  url_list = doc.text_content.split('\n');
-                }
-                if (url_list.length === 1) {
-                  url_list = doc.text_content.split('\r');
-                }
-                for (i = 0; i < url_list.length; i += 1) {
-                  if (url_list[i].indexOf("NETWORK:") >= 0) {
-                    take = false;
-                  }
-                  if (take &&
-                      url_list[i] !== "" &&
-                      url_list[i].charAt(0) !== '#' &&
-                      url_list[i].charAt(0) !== ' ') {
-                    url_list[i].replace("\r","");
-                    gadget.props.cached_url.push(url_list[i]);
-                  }
-                  if (url_list[i].indexOf("CACHE:") >= 0) {
-                    take = true;
-                  }
-                }
-              });
-          }
+        })
+        .push(function () {
+          var query = " AND (" + gadget.props.query_list.join(' OR ') + ')';
+          gadget.props.storage = createStorage(
+            query,
+            gadget.props.version_url,
+            gadget.props.document_version
+          );
+          return gadget.props.storage.repair();
         })
         .push(function () {
           // remove base if present
@@ -260,7 +261,7 @@ var repair = false;
             );
           }
           return navigator.serviceWorker.register(
-            "gadget_bootloader_serviceworker.js",
+            "gadget_officejs_bootloader_serviceworker.js",
             {"scope": gadget.props.version_url }
           );
         })
@@ -278,8 +279,7 @@ var repair = false;
             gadget,
             {
               "action": "install",
-              "url_list": gadget.props.cached_url,
-              "version": gadget.props.document_version
+              "url_list": gadget.props.cached_url
             }
           );
         });

@@ -141,6 +141,12 @@
             <value> <string>OfficeJS Application Panel Gadget</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value> <string>001</string> </value>
         </item>
@@ -269,7 +275,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.26769.37270.921</string> </value>
+                <value> <string>956.64903.6566.48281</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +293,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1483018311.81</float>
+                        <float>1485866827.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

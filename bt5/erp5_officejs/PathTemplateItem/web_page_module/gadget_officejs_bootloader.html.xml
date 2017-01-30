@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -111,7 +108,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>gadget_officejs_bootloader.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -171,7 +170,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -197,7 +196,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485781629.97</float>
+                        <float>1485866868.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -206,7 +205,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -242,7 +241,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64504.24248.28774</string> </value>
+                <value> <string>957.575.53432.14745</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +259,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485771436.94</float>
+                        <float>1485955861.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
