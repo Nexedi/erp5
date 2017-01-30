@@ -7583,9 +7583,6 @@ return new Parser;
       i,
       value,
       result_list;
-    if (obj === undefined) {
-      return undefined;
-    }
     if (obj.constructor === Object) {
       key_list = Object.keys(obj).sort();
       result_list = [];
@@ -7863,17 +7860,22 @@ return new Parser;
   };
 
   JioProxyStorage.prototype.hasCapacity = function (name) {
-    var storage_method = this.__storage.hasCapacity,
-      capacity_method = this.__storage[name];
-    if (capacity_method !== undefined) {
-      return true;
-    }
+    var storage_method = this.__storage.hasCapacity;
     if ((storage_method === undefined) ||
         !storage_method.apply(this.__storage, arguments)) {
       throw new jIO.util.jIOError(
         "Capacity '" + name + "' is not implemented on '" + this.__type + "'",
         501
       );
+    }
+    return true;
+  };
+
+  JioProxyStorage.prototype.hasCapacityMethod = function () {
+    var storage_method = this.__storage.hasCapacityMethod;
+    if ((storage_method === undefined) ||
+        !storage_method.apply(this.__storage, arguments)) {
+      return false;
     }
     return true;
   };
@@ -8584,104 +8586,7 @@ return new Parser;
         });
     }
 
-    function propagateDeletion(destination, id) {
-      return destination.remove(id)
-        .push(function () {
-          return context._signature_sub_storage.remove(id);
-        })
-        .push(function () {
-          skip_document_dict[id] = null;
-        });
-    }
-
-    function checkAndPropagate(status_hash, local_hash, doc,
-                               source, destination, id,
-                               conflict_force, conflict_revert,
-                               conflict_ignore,
-                               options) {
-      return destination.get(id)
-        .push(function (remote_doc) {
-          return [remote_doc, generateHash(stringify(remote_doc))];
-        }, function (error) {
-          if ((error instanceof jIO.util.jIOError) &&
-              (error.status_code === 404)) {
-            return [null, null];
-          }
-          throw error;
-        })
-        .push(function (remote_list) {
-          var remote_doc = remote_list[0],
-            remote_hash = remote_list[1];
-
-          if (local_hash === remote_hash) {
-            // Same modifications on both side
-            if (local_hash === null) {
-              // Deleted on both side, drop signature
-              return context._signature_sub_storage.remove(id)
-                .push(function () {
-                  skip_document_dict[id] = null;
-                });
-            }
-
-            return context._signature_sub_storage.put(id, {
-              "hash": local_hash
-            })
-              .push(function () {
-                skip_document_dict[id] = null;
-              });
-          }
-
-          if ((remote_hash === status_hash) || (conflict_force === true)) {
-            // Modified only locally. No conflict or force
-            if (local_hash === null) {
-              // Deleted locally
-              return propagateDeletion(destination, id);
-            }
-            return propagateModification(source, destination, doc,
-                                         local_hash, id,
-                                         {use_post: ((options.use_post) &&
-                                                     (remote_hash === null))});
-          }
-
-          // Conflict cases
-          if (conflict_ignore === true) {
-            return;
-          }
-
-          if ((conflict_revert === true) || (local_hash === null)) {
-            // Automatically resolve conflict or force revert
-            if (remote_hash === null) {
-              // Deleted remotely
-              return propagateDeletion(source, id);
-            }
-            return propagateModification(
-              destination,
-              source,
-              remote_doc,
-              remote_hash,
-              id,
-              {use_post: ((options.use_revert_post) &&
-                          (local_hash === null))}
-            );
-          }
-
-          // Minimize conflict if it can be resolved
-          if (remote_hash === null) {
-            // Copy remote modification remotely
-            return propagateModification(source, destination, doc,
-                                         local_hash, id,
-                                         {use_post: options.use_post});
-          }
-          throw new jIO.util.jIOError("Conflict on '" + id + "': " +
-                                      stringify(doc || '') + " !== " +
-                                      stringify(remote_doc || ''),
-                                      409);
-        });
-    }
-
-    function checkLocalDeletion(queue, destination, id, source,
-                                conflict_force, conflict_revert,
-                                conflict_ignore, options) {
+    function checkLocalDeletion(queue, destination, id, source) {
       var status_hash;
       queue
         .push(function () {
@@ -8689,17 +8594,37 @@ return new Parser;
         })
         .push(function (result) {
           status_hash = result.hash;
-          return checkAndPropagate(status_hash, null, null,
-                                   source, destination, id,
-                                   conflict_force, conflict_revert,
-                                   conflict_ignore,
-                                   options);
+          return destination.get(id)
+            .push(function (doc) {
+              var remote_hash = generateHash(stringify(doc));
+              if (remote_hash === status_hash) {
+                return destination.remove(id)
+                  .push(function () {
+                    return context._signature_sub_storage.remove(id);
+                  })
+                  .push(function () {
+                    skip_document_dict[id] = null;
+                  });
+              }
+              // Modifications on remote side
+              // Push them locally
+              return propagateModification(destination, source, doc,
+                                           remote_hash, id);
+            }, function (error) {
+              if ((error instanceof jIO.util.jIOError) &&
+                  (error.status_code === 404)) {
+                return context._signature_sub_storage.remove(id)
+                  .push(function () {
+                    skip_document_dict[id] = null;
+                  });
+              }
+              throw error;
+            });
         });
     }
 
     function checkSignatureDifference(queue, source, destination, id,
-                                      conflict_force, conflict_revert,
-                                      conflict_ignore,
+                                      conflict_force, conflict_ignore,
                                       is_creation, is_modification,
                                       getMethod, options) {
       queue
@@ -8708,7 +8633,7 @@ return new Parser;
           if (is_creation === true) {
             return RSVP.all([
               getMethod(id),
-              {hash: null}
+              {hash: undefined}
             ]);
           }
           if (is_modification === true) {
@@ -8727,19 +8652,59 @@ return new Parser;
             status_hash = result_list[1].hash;
 
           if (local_hash !== status_hash) {
-            return checkAndPropagate(status_hash, local_hash, doc,
-                                     source, destination, id,
-                                     conflict_force, conflict_revert,
-                                     conflict_ignore,
-                                     options);
+            // Local modifications
+            return destination.get(id)
+              .push(function (remote_doc) {
+                var remote_hash = generateHash(stringify(remote_doc));
+                if (remote_hash !== status_hash) {
+                  // Modifications on both sides
+                  if (local_hash === remote_hash) {
+                    // Same modifications on both side \o/
+                    return context._signature_sub_storage.put(id, {
+                      "hash": local_hash
+                    })
+                      .push(function () {
+                        skip_document_dict[id] = null;
+                      });
+                  }
+                  if (conflict_ignore === true) {
+                    return;
+                  }
+                  if (conflict_force !== true) {
+                    throw new jIO.util.jIOError("Conflict on '" + id + "': " +
+                                                stringify(doc) + " !== " +
+                                                stringify(remote_doc),
+                                                409);
+                  }
+                }
+                return propagateModification(source, destination, doc,
+                                             local_hash, id);
+              }, function (error) {
+                var use_post;
+                if ((error instanceof jIO.util.jIOError) &&
+                    (error.status_code === 404)) {
+                  if (is_creation) {
+                    // Remote document does not exists, create it following
+                    // provided options
+                    use_post = options.use_post;
+                  } else {
+                    // Remote document has been erased, put it to save
+                    // modification
+                    use_post = false;
+                  }
+                  return propagateModification(source, destination, doc,
+                                               local_hash, id,
+                                               {use_post: use_post});
+                }
+                throw error;
+              });
           }
         });
     }
 
     function checkBulkSignatureDifference(queue, source, destination, id_list,
                                           document_status_list, options,
-                                          conflict_force, conflict_revert,
-                                          conflict_ignore) {
+                                          conflict_force, conflict_ignore) {
       queue
         .push(function () {
           return source.bulk(id_list);
@@ -8760,8 +8725,7 @@ return new Parser;
           for (i = 0; i < result_list.length; i += 1) {
             checkSignatureDifference(sub_queue, source, destination,
                                id_list[i].parameter_list[0],
-                               conflict_force, conflict_revert,
-                               conflict_ignore,
+                               conflict_force, conflict_ignore,
                                document_status_list[i].is_creation,
                                document_status_list[i].is_modification,
                                getResult(i), options);
@@ -8774,9 +8738,6 @@ return new Parser;
       var queue = new RSVP.Queue();
       if (!options.hasOwnProperty("use_post")) {
         options.use_post = false;
-      }
-      if (!options.hasOwnProperty("use_revert_post")) {
-        options.use_revert_post = false;
       }
       return queue
         .push(function () {
@@ -8827,7 +8788,6 @@ return new Parser;
                 } else {
                   checkSignatureDifference(queue, source, destination, key,
                                            options.conflict_force,
-                                           options.conflict_revert,
                                            options.conflict_ignore,
                                            is_creation, is_modification,
                                            source.get.bind(source),
@@ -8840,11 +8800,7 @@ return new Parser;
             for (key in signature_dict) {
               if (signature_dict.hasOwnProperty(key)) {
                 if (!local_dict.hasOwnProperty(key)) {
-                  checkLocalDeletion(queue, destination, key, source,
-                                     options.conflict_force,
-                                     options.conflict_revert,
-                                     options.conflict_ignore,
-                                     options);
+                  checkLocalDeletion(queue, destination, key, source);
                 }
               }
             }
@@ -8854,7 +8810,6 @@ return new Parser;
                                          document_list, document_status_list,
                                          options,
                                          options.conflict_force,
-                                         options.conflict_revert,
                                          options.conflict_ignore);
           }
         });
@@ -8906,10 +8861,10 @@ return new Parser;
               use_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_LOCAL),
-              conflict_revert: (context._conflict_handling ===
-                                CONFLICT_KEEP_REMOTE),
-              conflict_ignore: (context._conflict_handling ===
-                                CONFLICT_CONTINUE),
+              conflict_ignore: ((context._conflict_handling ===
+                                 CONFLICT_CONTINUE) ||
+                                (context._conflict_handling ===
+                                 CONFLICT_KEEP_REMOTE)),
               check_modification: context._check_local_modification,
               check_creation: context._check_local_creation,
               check_deletion: context._check_local_deletion
@@ -8921,7 +8876,7 @@ return new Parser;
         // Keep it like this until the bulk API is stabilized
         var use_bulk_get = false;
         try {
-          use_bulk_get = context._remote_sub_storage.hasCapacity("bulk");
+          use_bulk_get = context._remote_sub_storage.hasCapacityMethod("bulk");
         } catch (error) {
           if (!((error instanceof jIO.util.jIOError) &&
                (error.status_code === 501))) {
@@ -8934,11 +8889,8 @@ return new Parser;
           return pushStorage(context._remote_sub_storage,
                              context._local_sub_storage, {
               use_bulk_get: use_bulk_get,
-              use_revert_post: context._use_remote_post,
               conflict_force: (context._conflict_handling ===
                                CONFLICT_KEEP_REMOTE),
-              conflict_revert: (context._conflict_handling ===
-                                CONFLICT_KEEP_LOCAL),
               conflict_ignore: (context._conflict_handling ===
                                 CONFLICT_CONTINUE),
               check_modification: context._check_remote_modification,
@@ -10882,6 +10834,10 @@ return new Parser;
             (name === "sort"));
   };
 
+  ERP5Storage.prototype.hasCapacityMethod = function (name) {
+    return (name === "bulk");
+  };
+
   function isSingleLocalRoles(parsed_query) {
     if ((parsed_query instanceof SimpleQuery) &&
         (parsed_query.key === 'local_roles')) {
@@ -11247,6 +11203,7 @@ return new Parser;
   function FileSystemBridgeStorage(spec) {
     this._sub_storage = jIO.createJIO(spec.sub_storage);
   }
+
   var DOCUMENT_EXTENSION = ".json",
     DOCUMENT_KEY = "/.jio_documents/",
     ROOT = "/";
@@ -11264,6 +11221,7 @@ return new Parser;
       .push(function () {
         // First get the document itself if it exists
         return context._sub_storage.getAttachment(
+
           DOCUMENT_KEY,
           id + DOCUMENT_EXTENSION,
           {format: "json"}
@@ -11276,6 +11234,7 @@ return new Parser;
           // Second, try to get default attachment
           return context._sub_storage.allAttachments(ROOT)
             .push(function (attachment_dict) {
+              // Creae a refrence document
               if (attachment_dict.hasOwnProperty(id)) {
                 return {};
               }
@@ -11482,9 +11441,90 @@ return new Parser;
     return this._sub_storage.removeAttachment(ROOT, id);
   };
 
+  function post_jio_documents(context, options) {
+    return context._sub_storage.getAttachment(ROOT,
+                                                options.title)
+      .push(function (result) {
+        return jIO.util.readBlobAsText(result);
+      })
+      .push(function (text) {
+        options.text_content = text.target.result;
+        return options;
+      })
+      .push(function (options) {
+        return context._sub_storage.putAttachment(
+          DOCUMENT_KEY,
+          options.title + DOCUMENT_EXTENSION,
+          new Blob([JSON.stringify(options)],
+                   {type: "application/json"})
+        );
+      });
+  }
+
   FileSystemBridgeStorage.prototype.repair = function () {
-    return this._sub_storage.repair.apply(this._sub_storage, arguments);
+    var context = this,
+      attachment_dict = {},
+      document_dict = {};
+    return this._sub_storage.repair.apply(this._sub_storage, arguments)
+      .push(function () {
+        return context._sub_storage.allAttachments(ROOT)
+          .push(function (result_dict) {
+            var key;
+            for (key in result_dict) {
+              if (result_dict.hasOwnProperty(key)) {
+                if (key !== undefined) {
+                  attachment_dict[key] = null;
+                }
+              }
+            }
+          })
+          .push(function () {
+            return context._sub_storage.allAttachments(DOCUMENT_KEY);
+          })
+          .push(undefined, function (error) {
+            if ((error instanceof jIO.util.jIOError) &&
+                (error.status_code === 404)) {
+              return context._sub_storage.put(DOCUMENT_KEY, {})
+                .push(function () {
+                  return {};
+                });
+            }
+            throw error;
+          })
+          .push(function (result_dict) {
+            var key,
+              att,
+              ext,
+              promise_list = [],
+              options = {};
+
+            for (key in result_dict) {
+              if (result_dict.hasOwnProperty(key)) {
+                if (key !== undefined) {
+                  document_dict[key] = null;
+                }
+              }
+            }
+
+            for (att in attachment_dict) {
+              if (attachment_dict.hasOwnProperty(att)) {
+                ext = att.slice((Math.max(0, att.lastIndexOf("."))
+                                 || Infinity) + 1);
+
+                options.type = ext;
+                options.title = att;
+
+                if (!document_dict.hasOwnProperty(att + '.json')) {
+                  promise_list.push(post_jio_documents(context, options));
+                }
+                options = {};
+              }
+            }
+            return RSVP.all(promise_list);
+          });
+      });
   };
+
 
   jIO.addStorage('drivetojiomapping', FileSystemBridgeStorage);
 
@@ -12840,3 +12880,577 @@ return new Parser;
   jIO.addStorage('websql', WebSQLStorage);
 
 }(jIO, RSVP, Blob, openDatabase));
+;/*jslint indent:2, maxlen: 80, nomen: true */
+/*global jIO, RSVP, UriTemplate, SimpleQuery, ComplexQuery, QueryFactory,
+  Query*/
+(function (jIO, RSVP, UriTemplate, SimpleQuery, ComplexQuery, QueryFactory,
+  Query) {
+  "use strict";
+
+  function getSubIdEqualSubProperty(storage, value, key) {
+    var query;
+    if (storage._no_sub_query_id) {
+      throw new jIO.util.jIOError('no sub query id active', 404);
+    }
+    query = new SimpleQuery({
+      key: key,
+      value: value,
+      type: "simple"
+    });
+    if (storage._query.query !== undefined) {
+      query = new ComplexQuery({
+        operator: "AND",
+        query_list: [query, storage._query.query],
+        type: "complex"
+      });
+    }
+    query = Query.objectToSearchText(query);
+    return storage._sub_storage.allDocs({
+      "query": query,
+      "sort_on": storage._query.sort_on,
+      "select_list": storage._query.select_list,
+      "limit": storage._query.limit
+    })
+      .push(function (data) {
+        if (data.data.rows.length === 0) {
+          throw new jIO.util.jIOError(
+            "Can not find id",
+            404
+          );
+        }
+        if (data.data.rows.length > 1) {
+          throw new TypeError("id must be unique field: " + key
+            + ", result:" + data.data.rows.toString());
+        }
+        return data.data.rows[0].id;
+      });
+  }
+
+  /*jslint unparam: true*/
+  var mapping_function = {
+    "equalSubProperty": {
+      "mapToSubProperty": function (property, sub_doc, doc, args, id) {
+        sub_doc[args] = doc[property];
+        return args;
+      },
+      "mapToMainProperty": function (property, sub_doc, doc, args, sub_id) {
+        if (sub_doc.hasOwnProperty(args)) {
+          doc[property] = sub_doc[args];
+        }
+        return args;
+      },
+      "mapToSubId": function (storage, doc, id, args) {
+        if (doc !== undefined) {
+          if (storage._property_for_sub_id &&
+              doc.hasOwnProperty(storage._property_for_sub_id)) {
+            return doc[storage._property_for_sub_id];
+          }
+        }
+        return getSubIdEqualSubProperty(storage, id, storage._map_id[1]);
+      },
+      "mapToId": function (storage, sub_doc, sub_id, args) {
+        return sub_doc[args];
+      }
+    },
+    "equalValue": {
+      "mapToSubProperty": function (property, sub_doc, doc, args) {
+        sub_doc[property] = args;
+        return property;
+      },
+      "mapToMainProperty": function (property) {
+        return property;
+      }
+    },
+    "ignore": {
+      "mapToSubProperty": function () {
+        return false;
+      },
+      "mapToMainProperty": function (property) {
+        return property;
+      }
+    },
+    "equalSubId": {
+      "mapToSubProperty": function (property, sub_doc, doc) {
+        sub_doc[property] = doc[property];
+        return property;
+      },
+      "mapToMainProperty": function (property, sub_doc, doc, args, sub_id) {
+        if (sub_id === undefined && sub_doc.hasOwnProperty(property)) {
+          doc[property] = sub_doc[property];
+        } else {
+          doc[property] = sub_id;
+        }
+        return property;
+      },
+      "mapToSubId": function (storage, doc, id, args) {
+        return id;
+      },
+      "mapToId": function (storage, sub_doc, sub_id) {
+        return sub_id;
+      }
+    },
+    "keep": {
+      "mapToSubProperty": function (property, sub_doc, doc) {
+        sub_doc[property] = doc[property];
+        return property;
+      },
+      "mapToMainProperty": function (property, sub_doc, doc) {
+        doc[property] = sub_doc[property];
+        return property;
+      }
+    },
+    "switchPropertyValue": {
+      "mapToSubProperty": function (property, sub_doc, doc, args) {
+        sub_doc[args[0]] = args[1][doc[property]];
+        return args[0];
+      },
+      "mapToMainProperty": function (property, sub_doc, doc, args) {
+        var subvalue, value = sub_doc[args[0]];
+        for (subvalue in args[1]) {
+          if (args[1].hasOwnProperty(subvalue)) {
+            if (value === args[1][subvalue]) {
+              doc[property] = subvalue;
+              return property;
+            }
+          }
+        }
+      }
+    }
+  };
+  /*jslint unparam: false*/
+
+  function initializeQueryAndDefaultMapping(storage) {
+    var property, query_list = [];
+    for (property in storage._mapping_dict) {
+      if (storage._mapping_dict.hasOwnProperty(property)) {
+        if (storage._mapping_dict[property][0] === "equalValue") {
+          if (storage._mapping_dict[property][1] === undefined) {
+            throw new jIO.util.jIOError("equalValue has not parameter", 400);
+          }
+          storage._default_mapping[property] =
+            storage._mapping_dict[property][1];
+          query_list.push(new SimpleQuery({
+            key: property,
+            value: storage._mapping_dict[property][1],
+            type: "simple"
+          }));
+        }
+        if (storage._mapping_dict[property][0] === "equalSubId") {
+          if (storage._property_for_sub_id !== undefined) {
+            throw new jIO.util.jIOError(
+              "equalSubId can be defined one time",
+              400
+            );
+          }
+          storage._property_for_sub_id = property;
+        }
+      }
+    }
+    if (storage._query.query !== undefined) {
+      query_list.push(QueryFactory.create(storage._query.query));
+    }
+    if (query_list.length > 1) {
+      storage._query.query = new ComplexQuery({
+        type: "complex",
+        query_list: query_list,
+        operator: "AND"
+      });
+    } else if (query_list.length === 1) {
+      storage._query.query = query_list[0];
+    }
+  }
+
+  function MappingStorage(spec) {
+    this._mapping_dict = spec.property || {};
+    this._sub_storage = jIO.createJIO(spec.sub_storage);
+    this._map_all_property = spec.map_all_property !== undefined ?
+        spec.map_all_property : true;
+    this._no_sub_query_id = spec.no_sub_query_id;
+    this._attachment_mapping_dict = spec.attachment || {};
+    this._query = spec.query || {};
+    this._map_id = spec.id || ["equalSubId"];
+    this._id_mapped = (spec.id !== undefined) ? spec.id[1] : false;
+
+    if (this._query.query !== undefined) {
+      this._query.query = QueryFactory.create(this._query.query);
+    }
+    this._default_mapping = {};
+
+    initializeQueryAndDefaultMapping(this);
+  }
+
+  function getAttachmentId(storage, sub_id, attachment_id, method) {
+    var mapping_dict = storage._attachment_mapping_dict;
+    if (mapping_dict !== undefined
+        && mapping_dict[attachment_id] !== undefined
+        && mapping_dict[attachment_id][method] !== undefined
+        && mapping_dict[attachment_id][method].uri_template !== undefined) {
+      return UriTemplate.parse(
+        mapping_dict[attachment_id][method].uri_template
+      ).expand({id: sub_id});
+    }
+    return attachment_id;
+  }
+
+  function getSubStorageId(storage, id, doc) {
+    return new RSVP.Queue()
+      .push(function () {
+        var map_info = storage._map_id || ["equalSubId"];
+        if (storage._property_for_sub_id && doc !== undefined &&
+            doc.hasOwnProperty(storage._property_for_sub_id)) {
+          return doc[storage._property_for_sub_id];
+        }
+        return mapping_function[map_info[0]].mapToSubId(
+          storage,
+          doc,
+          id,
+          map_info[1]
+        );
+      });
+  }
+
+  function mapToSubProperty(storage, property, sub_doc, doc, id) {
+    var mapping_info = storage._mapping_dict[property] || ["keep"];
+    return mapping_function[mapping_info[0]].mapToSubProperty(
+      property,
+      sub_doc,
+      doc,
+      mapping_info[1],
+      id
+    );
+  }
+
+  function mapToMainProperty(storage, property, sub_doc, doc, sub_id) {
+    var mapping_info = storage._mapping_dict[property] || ["keep"];
+    return mapping_function[mapping_info[0]].mapToMainProperty(
+      property,
+      sub_doc,
+      doc,
+      mapping_info[1],
+      sub_id
+    );
+  }
+
+  function mapToMainDocument(storage, sub_doc, sub_id) {
+    var doc = {},
+      property,
+      property_list = [storage._id_mapped];
+    for (property in storage._mapping_dict) {
+      if (storage._mapping_dict.hasOwnProperty(property)) {
+        property_list.push(mapToMainProperty(
+          storage,
+          property,
+          sub_doc,
+          doc,
+          sub_id
+        ));
+      }
+    }
+    if (storage._map_all_property) {
+      for (property in sub_doc) {
+        if (sub_doc.hasOwnProperty(property)) {
+          if (property_list.indexOf(property) < 0) {
+            doc[property] = sub_doc[property];
+          }
+        }
+      }
+    }
+    if (storage._map_for_sub_storage_id !== undefined) {
+      doc[storage._map_for_sub_storage_id] = sub_id;
+    }
+    return doc;
+  }
+
+  function mapToSubstorageDocument(storage, doc, id) {
+    var sub_doc = {}, property;
+
+    for (property in doc) {
+      if (doc.hasOwnProperty(property)) {
+        mapToSubProperty(storage, property, sub_doc, doc, id);
+      }
+    }
+    for (property in storage._default_mapping) {
+      if (storage._default_mapping.hasOwnProperty(property)) {
+        sub_doc[property] = storage._default_mapping[property];
+      }
+    }
+    if (storage._map_id[0] === "equalSubProperty" && id !== undefined) {
+      sub_doc[storage._map_id[1]] = id;
+    }
+    return sub_doc;
+  }
+
+  function handleAttachment(storage, argument_list, method) {
+    return getSubStorageId(storage, argument_list[0])
+      .push(function (sub_id) {
+        argument_list[0] = sub_id;
+        argument_list[1] = getAttachmentId(
+          storage,
+          sub_id,
+          argument_list[1],
+          method
+        );
+        return storage._sub_storage[method + "Attachment"].apply(
+          storage._sub_storage,
+          argument_list
+        );
+      });
+  }
+
+  MappingStorage.prototype.get = function (id) {
+    var storage = this;
+    return getSubStorageId(this, id)
+      .push(function (sub_id) {
+        return storage._sub_storage.get(sub_id)
+          .push(function (sub_doc) {
+            return mapToMainDocument(storage, sub_doc, sub_id);
+          });
+      });
+  };
+
+  MappingStorage.prototype.post = function (doc) {
+    var sub_doc = mapToSubstorageDocument(
+      this,
+      doc
+    ),
+      id = doc[this._property_for_sub_id];
+    if (this._property_for_sub_id && id !== undefined) {
+      return this._sub_storage.put(id, sub_doc);
+    }
+    if (!this._id_mapped || doc[this._id_mapped] !== undefined) {
+      return this._sub_storage.post(sub_doc);
+    }
+    throw new jIO.util.jIOError(
+      "post is not supported with id mapped",
+      400
+    );
+  };
+
+  MappingStorage.prototype.put = function (id, doc) {
+    var storage = this,
+      sub_doc = mapToSubstorageDocument(this, doc, id);
+    return getSubStorageId(this, id, doc)
+      .push(function (sub_id) {
+        return storage._sub_storage.put(sub_id, sub_doc);
+      })
+      .push(undefined, function (error) {
+        if (error instanceof jIO.util.jIOError && error.status_code === 404) {
+          return storage._sub_storage.post(sub_doc);
+        }
+        throw error;
+      })
+      .push(function () {
+        return id;
+      });
+  };
+
+  MappingStorage.prototype.remove = function (id) {
+    var storage = this;
+    return getSubStorageId(this, id)
+      .push(function (sub_id) {
+        return storage._sub_storage.remove(sub_id);
+      })
+      .push(function () {
+        return id;
+      });
+  };
+
+  MappingStorage.prototype.putAttachment = function (id, attachment_id) {
+    return handleAttachment(this, arguments, "put", id)
+      .push(function () {
+        return attachment_id;
+      });
+  };
+
+  MappingStorage.prototype.getAttachment = function () {
+    return handleAttachment(this, arguments, "get");
+  };
+
+  MappingStorage.prototype.removeAttachment = function (id, attachment_id) {
+    return handleAttachment(this, arguments, "remove", id)
+      .push(function () {
+        return attachment_id;
+      });
+  };
+
+  MappingStorage.prototype.allAttachments = function (id) {
+    var storage = this, sub_id;
+    return getSubStorageId(storage, id)
+      .push(function (sub_id_result) {
+        sub_id = sub_id_result;
+        return storage._sub_storage.allAttachments(sub_id);
+      })
+      .push(function (result) {
+        var attachment_id,
+          attachments = {},
+          mapping_dict = {};
+        for (attachment_id in storage._attachment_mapping_dict) {
+          if (storage._attachment_mapping_dict.hasOwnProperty(attachment_id)) {
+            mapping_dict[getAttachmentId(storage, sub_id, attachment_id, "get")]
+              = attachment_id;
+          }
+        }
+        for (attachment_id in result) {
+          if (result.hasOwnProperty(attachment_id)) {
+            if (mapping_dict.hasOwnProperty(attachment_id)) {
+              attachments[mapping_dict[attachment_id]] = {};
+            } else {
+              attachments[attachment_id] = {};
+            }
+          }
+        }
+        return attachments;
+      });
+  };
+
+  MappingStorage.prototype.hasCapacity = function (name) {
+    return this._sub_storage.hasCapacity(name);
+  };
+
+  MappingStorage.prototype.repair = function () {
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);
+  };
+
+  MappingStorage.prototype.bulk = function (id_list) {
+    var storage = this;
+
+    function mapId(parameter) {
+      return getSubStorageId(storage, parameter.parameter_list[0])
+        .push(function (id) {
+          return {"method": parameter.method, "parameter_list": [id]};
+        });
+    }
+
+    return new RSVP.Queue()
+      .push(function () {
+        var promise_list = id_list.map(mapId);
+        return RSVP.all(promise_list);
+      })
+      .push(function (id_list_mapped) {
+        return storage._sub_storage.bulk(id_list_mapped);
+      })
+      .push(function (result) {
+        var mapped_result = [], i;
+        for (i = 0; i < result.length; i += 1) {
+          mapped_result.push(mapToMainDocument(
+            storage,
+            result[i]
+          ));
+        }
+        return mapped_result;
+      });
+  };
+
+  MappingStorage.prototype.buildQuery = function (option) {
+    var storage = this,
+      i,
+      query,
+      property,
+      select_list = [],
+      sort_on = [];
+
+    function mapQuery(one_query) {
+      var j, query_list = [], key, sub_query;
+      if (one_query.type === "complex") {
+        for (j = 0; j < one_query.query_list.length; j += 1) {
+          sub_query = mapQuery(one_query.query_list[j]);
+          if (sub_query) {
+            query_list.push(sub_query);
+          }
+        }
+        one_query.query_list = query_list;
+        return one_query;
+      }
+      key = mapToMainProperty(storage, one_query.key, {}, {});
+      if (key) {
+        one_query.key = key;
+        return one_query;
+      }
+      return false;
+    }
+
+    if (option.sort_on !== undefined) {
+      for (i = 0; i < option.sort_on.length; i += 1) {
+        property = mapToMainProperty(this, option.sort_on[i][0], {}, {});
+        if (property && sort_on.indexOf(property) < 0) {
+          sort_on.push([property, option.sort_on[i][1]]);
+        }
+      }
+    }
+    if (this._query.sort_on !== undefined) {
+      for (i = 0; i < this._query.sort_on.length; i += 1) {
+        property = mapToMainProperty(this, this._query.sort_on[i], {}, {});
+        if (sort_on.indexOf(property) < 0) {
+          sort_on.push([property, option.sort_on[i][1]]);
+        }
+      }
+    }
+    if (option.select_list !== undefined) {
+      for (i = 0; i < option.select_list.length; i += 1) {
+        property = mapToMainProperty(this, option.select_list[i], {}, {});
+        if (property && select_list.indexOf(property) < 0) {
+          select_list.push(property);
+        }
+      }
+    }
+    if (this._query.select_list !== undefined) {
+      for (i = 0; i < this._query.select_list; i += 1) {
+        property = this._query.select_list[i];
+        if (select_list.indexOf(property) < 0) {
+          select_list.push(property);
+        }
+      }
+    }
+    if (this._id_mapped) {
+      // modify here for future way to map id
+      select_list.push(this._id_mapped);
+    }
+    if (option.query !== undefined) {
+      query = mapQuery(QueryFactory.create(option.query));
+    }
+
+    if (this._query.query !== undefined) {
+      if (query === undefined) {
+        query = this._query.query;
+      }
+      query = new ComplexQuery({
+        operator: "AND",
+        query_list: [query, this._query.query],
+        type: "complex"
+      });
+    }
+
+    if (query !== undefined) {
+      query = Query.objectToSearchText(query);
+    }
+    return this._sub_storage.allDocs(
+      {
+        query: query,
+        select_list: select_list,
+        sort_on: sort_on,
+        limit: option.limit
+      }
+    )
+      .push(function (result) {
+        var sub_doc, map_info = storage._map_id || ["equalSubId"];
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          sub_doc = result.data.rows[i].value;
+          result.data.rows[i].id =
+            mapping_function[map_info[0]].mapToId(
+              storage,
+              sub_doc,
+              result.data.rows[i].id,
+              map_info[1]
+            );
+          result.data.rows[i].value =
+            mapToMainDocument(
+              storage,
+              sub_doc
+            );
+        }
+        return result.data.rows;
+      });
+  };
+
+  jIO.addStorage('mapping', MappingStorage);
+}(jIO, RSVP, UriTemplate, SimpleQuery, ComplexQuery, QueryFactory, Query));
