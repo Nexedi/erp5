@@ -162,10 +162,7 @@ class BusinessPackage(XMLObject):
         self.storePathData()
         # XXX: Explicitly calling build for items. Needs to be changed
         self._path_item.build(self, **kw)
-        try:
-          self._object_property_item.build(self)
-        except Exception:
-          import pdb; pdb.set_trace()
+        self._object_property_item.build(self)
       pass
 
     security.declareProtected(Permissions.ManagePortal, 'storePathData')
@@ -928,24 +925,30 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
     p = context.getPortalObject()
     for key in self._archive:
       relative_url, property_name = key.split(' | ')
-      property_value = p.unrestrictedTraverse(relative_url) \
-                             .getProperty(property_name)
-      self._objects.setdefault(relative_url, {})[property_name] = property_value
-      # XXX: Add property_type in the xml generated for the objects
-      self._hash[relative_url] = hashlib.sha1(self.generateXml(relative_url)).hexdigest()
+      obj = p.unrestrictedTraverse(relative_url)
+      property_value = obj.getProperty(property_name)
+      property_type = obj.getPropertyType(property_name)
+      property_dict = {
+        'id' :  property_name,
+        'value' : property_value,
+        'type' : property_type,
+        }
+      self._objects.setdefault(relative_url, []).append(property_dict)
 
   def generateXml(self, path):
     xml_data = '<%s>' % self.xml_tag
     relative_url = path
     xml_data += '\n  <object relative_url="%s">' % relative_url
-    for property_name, property_value in self._objects[relative_url].iteritems():
+    for property_dict in self._objects[relative_url]:
       # XXX: Replacing '_list' is not very safely handled for exceptional cases
-      xml_data += '\n    <property name="%s">' % property_name.replace('_list', '')
-      if property_name.endswith('_list'):
-        for value in property_value:
+      xml_data += '\n    <property>'
+      xml_data += '\n       <name>%s</name>' % property_dict['id'].replace('_list', '')
+      xml_data += '\n       <type>%s</type>' % property_dict['type']
+      if property_dict['id'].endswith('_list'):
+        for value in property_dict['value']:
           xml_data += '\n      <item>%s</item>' % value
       else:
-        xml_data += '\n      <item>%s</item>' % property_value
+        xml_data += '\n      <item>%s</item>' % property_dict['value']
       xml_data += '\n    </property>'
     xml_data += '\n  </object>'
     xml_data += '\n</%s>' % self.xml_tag
@@ -973,8 +976,19 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
         item_list = []
         for item in obj_property.findall('item'):
           item_list.append(item.text)
-        property_name = obj_property.get('name') + ('' if len(item_list) <= 1 else '_list')
-        self._objects[obj.get('relative_url')] = {property_name: item_list}
+        property_name = obj_property.find('name').text + ('' if len(item_list) <= 1 else '_list')
+        property_type = obj_property.find('type').text
+        if property_type not in ('lines', 'selection', 'multiple selection'):
+          try:
+            item_list = item_list[0]
+          except IndexError:
+            item_list = ''
+        property_dict = {
+        'id' :  property_name,
+        'value' : item_list,
+        'type' : property_type,
+        }
+        self._objects.setdefault(obj.get('relative_url'), []).append(property_dict)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
@@ -992,15 +1006,15 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
     portal = context.getPortalObject()
     for relative_url in self._objects:
       obj = portal.unrestrictedTraverse(relative_url)
-      for property_name, property_value in self._objects[relative_url].iteritems():
-        obj.setProperty(property_name, property_value)
+      for property_dict in self._objects[relative_url]:
+        obj.setProperty(property_dict['id'], property_dict['value'], property_dict['type'])
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
     for relative_url in self._objects:
       obj = portal.unrestrictedTraverse(relative_url)
-      for property_name in self._objects[relative_url]:
-        obj.setProperty(property_name, None)
+      for property_dict in self._objects[relative_url]:
+        obj.setProperty(property_dict['name'], None)
 
 # The reason to keep createInstallationData as separate function is to
 # not need to initialize an InstallationTree object everytime when we want
