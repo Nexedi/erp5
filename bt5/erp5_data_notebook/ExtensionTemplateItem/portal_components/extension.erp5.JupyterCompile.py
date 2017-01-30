@@ -15,6 +15,7 @@ import json
 import transaction
 import Acquisition
 import astor
+import importlib
 from Products.ERP5Type.Log import log
 
 def Base_executeJupyter(self, python_expression=None, reference=None, \
@@ -68,6 +69,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   
   # Pass all to code Base_runJupyter external function which would execute the code
   # and returns a dict of result
+  # log('Python expression: %s')
   final_result = Base_runJupyterCode(self, python_expression, old_notebook_context)
     
   new_notebook_context = final_result['notebook_context']
@@ -668,35 +670,68 @@ class ImportFixer(ast.NodeTransformer):
     and environment function which setups the module and return it to be merged
     with the user context.
     """
+
     module_name = node.names[0].name
     
     test_import_string = None
+    star_module_names = None
+    useAsName = False
+
     if getattr(node, "module", None) is not None:
       # case when 'from <module_name> import <something>'
-      test_import_string = "from %s import %s" %(node.module, module_name)
-      # XXX: handle sub case when "from <module_name> import *"
-      #if module_name == '*':
-      #  module_name = '%s_ALL' %(node.module)
-      #else:
-      #  module_name = '%s_%s' %(node.module, module_name)
       
     if getattr(node.names[0], 'asname'):
+        # case when 'from <module_name> import <something> as <something else>'
+        module_name = node.names[0].asname
+        test_import_string = "from %s import %s as %s" %(node.module,
+          node.names[0].name, module_name)
+        useAsName = True
+      elif module_name != '*':
+        # case when 'from <module_name> import <something>, <something else>...'
+        all_module_names = ''
+        for name in node.names:
+          all_module_names += name.name + ', '
+        all_module_names = all_module_names[:-2]
+        test_import_string = "from %s import %s" %(node.module,
+          all_module_names)
+      else:
+        # case when 'from <module_name> import *'
+        mod = importlib.import_module(node.module)
+        tmp_dict = mod.__dict__
+        star_module_names = []
+
+        for name in tmp_dict.keys():
+          if (name[:1] != '_'):
+            star_module_names.append(name)
+
+        test_import_string = "from %s import *" %(node.module)
+        module_name = "%s_ALL" %(node.module)
+
+
+
+    elif getattr(node.names[0], 'asname'):
       # case when 'import <module_name> as <name>'
       module_name = node.names[0].asname
       test_import_string = "import %s as %s" %(node.names[0].name, module_name)
+      useAsName = True
 
     if test_import_string is None:
       # case 'import <module_name>
       test_import_string = "import %s" %node.names[0].name
 
-    #log('%s : %s' %(module_name, test_import_string))
     if not self.import_func_dict.get(module_name):
       # try to import module before it is added to environment
       # this way if user tries to import non existent module Exception
       # is immediately raised and doesn't block next Jupyter cell execution
+      log (test_import_string)
       exec(test_import_string)
       empty_function = self.newEmptyFunction("%s_setup" % module_name)
-      return_dict = self.newReturnDict(module_name)
+      return_dict = None
+      if (star_module_names == None):
+        return_dict = self.newReturnDict(node.names, useAsName)
+      else:
+        return_dict = self.newStarReturnDict(star_module_names)
+
       empty_function.body = [node, return_dict]
       environment_set = self.newEnvironmentSetCall("%s_setup" % module_name)
       warning = self.newImportWarningCall(module_name)
@@ -712,13 +747,34 @@ class ImportFixer(ast.NodeTransformer):
     func_body = "def %s(): pass" % func_name
     return ast.parse(func_body).body[0]
 
-  def newReturnDict(self, module_name):
+  def newReturnDict(self, module_names, useAsName):
     """
-      Return an AST.Expr representing a returned dict with one single key named
-      `'module_name'` (as string) which returns the variable `module_name` (as 
-      expression).
+      Return an AST.Expr representing a returned dict with multiple keys from
+      `'module_names'` (as string) which returns the variable `module_names` (as
+      an expression). The return_dict uses "asname"s instead of names if
+      useAsName is triggered.
     """
-    return_dict = "return {'%s': %s}" % (module_name, module_name)
+    return_dict = "return {"
+    if useAsName:
+      for name in module_names:
+        return_dict = return_dict + "'%s': %s, " % (name.asname, name.asname)
+    else:
+      for name in module_names:
+        return_dict = return_dict + "'%s': %s, " % (name.name, name.name)
+    return_dict = return_dict + '}'
+    return ast.parse(return_dict).body[0]
+
+  def newStarReturnDict(self, star_module_names):
+    """
+      Special case for newReturnDict for when "from a import *" is called. Does
+      the same as newReturnDict, but works with a list of strings instead of the
+      objects in module_names.
+    """
+    # return_dict = "return {'%s': %s}" % (module_name, module_name)
+    return_dict = "return {"
+    for name in star_module_names:
+      return_dict = return_dict + "'%s': %s, " % (name, name)
+    return_dict = return_dict + '}'
     return ast.parse(return_dict).body[0]
 
   def newEnvironmentSetCall(self, func_name):
@@ -991,4 +1047,3 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
-
