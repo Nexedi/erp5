@@ -71,11 +71,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_add_bookmark.js</string> </value>
+            <value> <string>gadget_officejs_liberator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_page_add_bookmark_js</string> </value>
+            <value> <string>gadget_officejs_liberator_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -98,8 +98,14 @@
             <value> <string>Web Script</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Add Bookmark JS</string> </value>
+            <value> <string>Liberator Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -185,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485780820.98</float>
+                        <float>1485781694.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -230,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64652.42771.37444</string> </value>
+                <value> <string>956.64692.55224.61132</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485780817.22</float>
+                        <float>1485781806.83</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -307,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485779318.49</float>
+                        <float>1485779370.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -1,17 +1,15 @@
 <!doctype html>
 <html>
   <head>
-<base href="https://texteditor.app.officejs.com/1.0.4/gadget_officejs_page_jio_erp5_configurator.html/" />
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>OfficeJS jIO ERP5 Configurator Page</title>
+    <title>OfficeJS jIO Dropbox Configurator Page</title>
 
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
 
-    <script src="gadget_officejs_page_jio_erp5_configurator.js"></script>
+    <script src="gadget_officejs_page_jio_dropbox_configurator.js"></script>
 
   </head>
 
@@ -20,30 +18,11 @@
       <section class="ui-content-header-plain">
         <h3 class="ui-content-title ui-body-c">
           <span class="ui-icon ui-icon-custom ui-icon-database">&nbsp;</span>
-          Your ERP5 Connection parameters
+          Your Dropbox Connection parameters
         </h3>
       </section>
       <section class="ui-content-header-plain">
-        <p>You have to be logged in this ERP5 prior to synchronising</p>
-      </section>
-      <section class="ui-body-c ui-content-section">
-        <form class="erp5-configuration-form">
-
-          <div class="ui-form">
-            <div class="ui-field-contain">
-              <label data-i18n="Connection URL:">Connection URL:</label>
-              <input type="url" name="erp5_url" class="ui-focus" required disabled/>
-            </div>
-          <div class="select-storage ui-controlgroup ui-controlgroup-horizontal">
-            <div class="ui-grid-b ui-responsive">
-              <div class="ui-block-a"></div>
-              <div class="ui-block-b"></div>
-              <div class="ui-block-c">
-                <button type="submit" data-i18n="Connect" class="ui-btn-btn-right">Connect</button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <p>Connecting to Dropbox</p>
       </section>
     </article>
     <article class="ui-content ui-body-c document-access">
@@ -58,7 +37,7 @@
         <div class="ui-controlgroup ui-controlgroup-horizontal">
           <div class="ui-grid-a ui-responsive">
             <div class="ui-block-a">
-              <a class="ui-btn" href="#page=sync&auto_repair=true" data-i18n="Synchronize">Synchronize</a>
+              <a class="ui-btn" href="#page=sync" data-i18n="Synchronize">Synchronize</a>
             </div>
             <div class="ui-block-b">
               <a class="ui-btn" href="#page=document_list" data-i18n="Go to document List">Access document List</a>

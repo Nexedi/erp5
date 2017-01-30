@@ -1,0 +1,138 @@
+/*global window, rJS, RSVP, URI, location,
+    loopEventListener, btoa */
+/*jslint nomen: true, indent: 2, maxerr: 3*/
+(function (window, rJS, RSVP) {
+  "use strict";
+
+  function setDropboxConfiguration(gadget) {
+    return gadget.getSetting("portal_type")
+      .push(function (portal_type) {
+        var old_date = new Date(),
+          configuration = {};
+        // We are looking for documents modified in the past 3 month
+        old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);
+        configuration = {
+          type: "replicate",
+          // XXX This drop the signature lists...
+          query: {
+            query: 'portal_type:"' + portal_type + '" ',
+            // XX Synchonizing the whole module is too much, here is a way to start quietly
+            // Supsended until modification_date is handled for synchronization
+            limit: [0, 1234567890]
+          },
+          use_remote_post: false,
+          conflict_handling: 2,
+          check_local_modification: true,
+          check_local_creation: true,
+          check_local_deletion: false,
+          check_remote_modification: true,
+          check_remote_creation: true,
+          check_remote_deletion: true,
+          local_sub_storage: {
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
+            sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-dropbox"
+                }
+              }
+            }
+          },
+          remote_sub_storage: {
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
+            mapping_dict: {
+              "portal_type": ["equalSubProperty", "type"]
+            },
+            sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "drivetojiomapping",
+                sub_storage: {
+                  type: "dropbox",
+                  access_token: gadget.props.access_token,
+                  root: "sandbox"
+                }
+              }
+            }
+          }
+        };
+        return gadget.setSetting('jio_storage_description', configuration);
+      })
+      .push(function () {
+        return gadget.setSetting('jio_storage_name', "DROPBOX");
+      })
+      .push(function () {
+        return gadget.setSetting('sync_reload', true);
+      })
+      .push(function () {
+        return gadget.redirect({page: 'sync', auto_repair: 'true'});
+      });
+  }
+
+  var gadget_klass = rJS(window);
+
+  gadget_klass
+    .ready(function (g) {
+      g.props = {};
+      return g.getElement()
+        .push(function (element) {
+          g.props.element = element;
+          g.props.deferred = RSVP.defer();
+        });
+    })
+    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("reload", "reload")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareMethod("getGlobalSetting", function (key) {
+      var gadget = this;
+      return gadget.getDeclaredGadget("global_setting_gadget")
+        .push(function (global_setting_gadget) {
+          return global_setting_gadget.getSetting(key);
+        });
+    })
+    .declareMethod("setGlobalSetting", function (key, value) {
+      var gadget = this;
+      return gadget.getDeclaredGadget("global_setting_gadget")
+        .push(function (global_setting_gadget) {
+          return global_setting_gadget.setSetting(key, value);
+        });
+    })
+    .declareMethod("render", function (options) {
+      var gadget = this;
+      return gadget.updateHeader({
+        title: "Connect To Drobox Storage",
+        back_url: "#page=jio_configurator",
+        panel_action: false
+      })
+        .push(function (options) {
+          return gadget.getSetting('jio_storage_name');
+        })
+        .push(function (jio_storage_name) {
+          if (!jio_storage_name) {
+            gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
+          }
+        })
+        .push(function () {
+          gadget.props.access_token = options.token;
+          return setDropboxConfiguration(gadget);
+        });
+    });
+
+}(window, rJS, RSVP));
