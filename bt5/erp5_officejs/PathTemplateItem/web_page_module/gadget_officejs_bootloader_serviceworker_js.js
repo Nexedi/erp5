@@ -25,6 +25,8 @@ var global = self, window = self;
       }
     });
   }
+  
+  self.setting_storage = createStorage("serviceWorker_settings");
 
   self.addEventListener("message", function (event) {
 
@@ -34,7 +36,7 @@ var global = self, window = self;
 
         if (data.action === "install" &&
             data.url_list !== undefined) {
-
+          
           self.storage = createStorage(self.registration.scope);
           return new self.RSVP.Queue()
             .push(function () {
@@ -89,18 +91,31 @@ var global = self, window = self;
               event.ports[0].postMessage("success");
             });
         }
-      }));
+      })
+      .push(undefined, console.log));
+  });
+
+  self.addEventListener('install', function(event) {
+    event.waitUntil(self.skipWaiting());
+  });
+  self.addEventListener('activate', function(event) {
+    event.waitUntil(self.clients.claim());
   });
 
   self.addEventListener("fetch", function (event) {
     var relative_url = event.request.url.replace(self.registration.scope, "")
       .replace(self.version_url, "");
-    if (relative_url === "") {
-      relative_url = "/";
-    }
 
     event.respondWith(
       new self.RSVP.Queue()
+        .push(function () {
+          if (relative_url === "") {
+            return self.setting_storage.get(self.registration.scope)
+              .push(function (doc) {
+                relative_url = doc.landing_page || "/";
+              });
+          }
+        })
         .push(function () {
           if (self.storage.get === undefined) {
             self.storage = createStorage(self.registration.scope);

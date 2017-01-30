@@ -63,7 +63,7 @@
         .push(function () {
           return RSVP.all([
             gadget.getSetting("portal_type"),
-            gadget.getSetting("bookmark_title_plural")
+            gadget.getSetting("document_title_plural")
           ]);
         })
         .push(function (answer_list) {
