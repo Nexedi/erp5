@@ -51,7 +51,7 @@
                 url: (new URI("hateoas"))
                       .absoluteTo(erp5_url)
                       .toString(),
-                default_view_reference: "jio_view"
+                default_view_reference: "jio_view_attachment"
               }
             }
           }
