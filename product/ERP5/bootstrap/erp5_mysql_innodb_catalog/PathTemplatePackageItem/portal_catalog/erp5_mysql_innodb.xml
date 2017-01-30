@@ -1,0 +1,494 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Catalog" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filter_dict</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="_dt_reconstructor" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <global name="FilterDict" module="Products.ERP5Catalog.Document.ERP5Catalog"/>
+                  <global name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_catalog</string> </key>
+                        <value>
+                          <persistent> <string encoding="base64">AAAAAAAAAAE=</string> </persistent>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>erp5_mysql_innodb</string> </value>
+        </item>
+        <item>
+            <key> <string>indexes</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>names</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Catalog</string> </value>
+        </item>
+        <item>
+            <key> <string>schema</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_clear_reserved</string> </key>
+            <value> <string>z_clear_reserved</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_datetime_search_keys</string> </key>
+            <value>
+              <list>
+                <string>alarm.alarm_date</string>
+                <string>alarm_date</string>
+                <string>catalog.creation_date</string>
+                <string>catalog.grouping_date</string>
+                <string>catalog.modification_date</string>
+                <string>creation_date</string>
+                <string>date</string>
+                <string>delivery.start_date</string>
+                <string>delivery.start_date_range_max</string>
+                <string>delivery.start_date_range_min</string>
+                <string>delivery.stop_date</string>
+                <string>delivery.stop_date_range_max</string>
+                <string>delivery.stop_date_range_min</string>
+                <string>effective_date</string>
+                <string>expiration_date</string>
+                <string>grouping_date</string>
+                <string>item.date</string>
+                <string>mirror_date</string>
+                <string>modification_date</string>
+                <string>predicate.start_date</string>
+                <string>predicate.start_date_range_max</string>
+                <string>predicate.start_date_range_min</string>
+                <string>start_date</string>
+                <string>start_date_range_max</string>
+                <string>start_date_range_min</string>
+                <string>stock.date</string>
+                <string>stock.mirror_date</string>
+                <string>stop_date</string>
+                <string>stop_date_range_max</string>
+                <string>stop_date_range_min</string>
+                <string>versioning.effective_date</string>
+                <string>versioning.expiration_date</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_delete_uid</string> </key>
+            <value> <string>z_delete_uid</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_full_text_search_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_index</string> </key>
+            <value> <string>z_show_index</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_keyword_search_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_local_role_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_multi_schema</string> </key>
+            <value> <string>z_get_table_schema</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_multivalue_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_object_list</string> </key>
+            <value>
+              <tuple>
+                <string>SQLCatalog_catalogTransformationList</string>
+                <string>z_catalog_alarm_list</string>
+                <string>z_catalog_delivery_list</string>
+                <string>z_catalog_item_list</string>
+                <string>z_catalog_measure_list</string>
+                <string>z_catalog_movement_category_list</string>
+                <string>z_catalog_non_movement_category_list</string>
+                <string>z_catalog_object_list</string>
+                <string>z_catalog_predicate_category_list</string>
+                <string>z_catalog_predicate_list</string>
+                <string>z_catalog_quantity_unit_conversion_list</string>
+                <string>z_catalog_roles_and_users_list</string>
+                <string>z_catalog_stock_list</string>
+                <string>z_catalog_subject_list</string>
+                <string>z_catalog_user_list</string>
+                <string>z_catalog_versioning_list</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_paths</string> </key>
+            <value> <string>z_catalog_paths</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_produce_reserved</string> </key>
+            <value> <string>z_produce_reserved_uid_list</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_related_keys</string> </key>
+            <value>
+              <list>
+                <string>base_category_id | category,catalog/id/z_related_base_category_id</string>
+                <string>career_skill_id | category,catalog,catalog/id/z_related_career_skill</string>
+                <string>career_skill_title | category,catalog,catalog/title/z_related_career_skill</string>
+                <string>causality_translated_portal_type | category,catalog,translation/translated_message/z_related_translated_causality_portal_type</string>
+                <string>child_aggregate_relative_url | catalog,category,catalog/relative_url/z_related_child_aggregate</string>
+                <string>children_reference | catalog/reference/z_related_children</string>
+                <string>deliveryLineType | stock,catalog/portal_type/z_related_uid_or_parent_uid</string>
+                <string>explanation_portal_type | stock,catalog/portal_type/z_related_explanation</string>
+                <string>explanation_simulation_state | stock,catalog/simulation_state/z_related_explanation</string>
+                <string>grand_parent_portal_type | catalog,catalog/portal_type/z_related_grand_parent</string>
+                <string>grand_parent_simulation_state | catalog,catalog/simulation_state/z_related_grand_parent</string>
+                <string>item_node_category_uid | category/category_uid/z_related_node_uid_from_item</string>
+                <string>item_resource_category_uid | category/category_uid/z_related_resource_uid_from_item</string>
+                <string>item_section_category_uid | category/category_uid/z_related_section_uid_from_item</string>
+                <string>metric_type_uid | measure/metric_type_uid/z_related_metric_type</string>
+                <string>parent_description | catalog/description/z_related_parent</string>
+                <string>parent_float_index | catalog/float_index/z_related_parent</string>
+                <string>parent_int_index | catalog/int_index/z_related_parent</string>
+                <string>parent_portal_type | catalog/portal_type/z_related_parent</string>
+                <string>parent_reference | catalog/reference/z_related_parent</string>
+                <string>parent_relative_url | catalog/relative_url/z_related_parent</string>
+                <string>parent_string_index | catalog/string_index/z_related_parent</string>
+                <string>parent_title | catalog/title/z_related_parent</string>
+                <string>predicate_category_base_category_uid | predicate_category/base_category_uid/z_related_predicate_category</string>
+                <string>predicate_category_category_strict_membership | predicate_category/category_strict_membership/z_related_predicate_category</string>
+                <string>predicate_category_category_uid | predicate_category/category_uid/z_related_predicate_category</string>
+                <string>predicate_uid | predicate/uid/z_related_predicate</string>
+                <string>related_resource_from_use_category_uid | category,category/category_uid/z_related_resource_from_use</string>
+                <string>resourceType | catalog/portal_type/z_related_resource_uid_from_stock</string>
+                <string>stock_explanation_portal_type | catalog/portal_type/z_related_explanation_from_stock</string>
+                <string>stock_explanation_reference | catalog/reference/z_related_explanation_from_stock</string>
+                <string>stock_explanation_simulation_state | catalog/simulation_state/z_related_explanation_from_stock</string>
+                <string>stock_explanation_title | catalog/title/z_related_explanation_from_stock</string>
+                <string>stock_explanation_translated_portal_type | catalog,translation/translated_message/z_related_explanation_translated_portal_type_from_stock</string>
+                <string>stock_function_category_strict_membership_uid | category/category_uid/z_related_strict_membership_function_uid_from_stock</string>
+                <string>stock_function_category_uid | category/category_uid/z_related_function_uid_from_stock</string>
+                <string>stock_funding_category_strict_membership_uid | category/category_uid/z_related_strict_membership_funding_uid_from_stock</string>
+                <string>stock_funding_category_uid | category/category_uid/z_related_funding_uid_from_stock</string>
+                <string>stock_ledger_category_strict_membership_uid | category/category_uid/z_related_strict_membership_ledger_uid_from_stock</string>
+                <string>stock_ledger_category_uid | category/category_uid/z_related_ledger_uid_from_stock</string>
+                <string>stock_mirror_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_mirror_section_uid_from_stock</string>
+                <string>stock_mirror_section_category_uid | category/category_uid/z_related_mirror_section_uid_from_stock</string>
+                <string>stock_mirror_section_title | catalog/title/z_related_mirror_section_uid_from_stock</string>
+                <string>stock_node_category_strict_membership_uid | category/category_uid/z_related_strict_membership_node_uid_from_stock</string>
+                <string>stock_node_category_uid | category/category_uid/z_related_node_uid_from_stock</string>
+                <string>stock_node_title | catalog/title/z_related_node_uid_from_stock</string>
+                <string>stock_payment_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_uid_from_stock</string>
+                <string>stock_payment_category_uid | category/category_uid/z_related_payment_uid_from_stock</string>
+                <string>stock_payment_request_category_strict_membership_uid | category/category_uid/z_related_strict_membership_payment_request_uid_from_stock</string>
+                <string>stock_payment_request_category_uid | category/category_uid/z_related_payment_request_uid_from_stock</string>
+                <string>stock_project_category_strict_membership_uid | category/category_uid/z_related_strict_membership_project_uid_from_stock</string>
+                <string>stock_project_category_uid | category/category_uid/z_related_project_uid_from_stock</string>
+                <string>stock_resource_category_strict_membership_uid | category/category_uid/z_related_strict_membership_resource_uid_from_stock</string>
+                <string>stock_resource_category_uid | category/category_uid/z_related_resource_uid_from_stock</string>
+                <string>stock_section_category_strict_membership_uid | category/category_uid/z_related_strict_membership_section_uid_from_stock</string>
+                <string>stock_section_category_uid | category/category_uid/z_related_section_uid_from_stock</string>
+                <string>subject | versioning,subject/subject/z_related_subject</string>
+                <string>translated_causality_state | translation/translated_message/z_related_translated_causality_state</string>
+                <string>translated_causality_state_title | translation/translated_message/z_related_translated_causality_state_title</string>
+                <string>translated_opportunity_state | translation/translated_message/z_related_translated_opportunity_state</string>
+                <string>translated_opportunity_state_title | translation/translated_message/z_related_translated_opportunity_state_title</string>
+                <string>translated_portal_type | translation/translated_message/z_related_translated_portal_type</string>
+                <string>translated_simulation_state | translation/translated_message/z_related_translated_simulation_state</string>
+                <string>translated_simulation_state_title | translation/translated_message/z_related_translated_simulation_state_title</string>
+                <string>translated_validation_state | translation/translated_message/z_related_translated_validation_state</string>
+                <string>translated_validation_state_title | translation/translated_message/z_related_translated_validation_state_title</string>
+                <string>variationCategory | category/category_uid/z_related_uid</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_request_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_reserve_uid</string> </key>
+            <value> <string>z_reserve_uid</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_role_keys</string> </key>
+            <value>
+              <list>
+                <string>Owner | viewable_owner</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_schema</string> </key>
+            <value> <string>z_show_columns</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_scriptable_keys</string> </key>
+            <value>
+              <list>
+                <string>advanced_search_text | SQLCatalog_makeQuickSearchQuery</string>
+                <string>full_text | SQLCatalog_makeFullTextQuery</string>
+                <string>quick_search_text | SQLCatalog_makeQuickSearchQuery</string>
+                <string>search_text | SQLCatalog_makeSearchTextQuery</string>
+                <string>translated_title | SQLCatalog_makeTranslatedTitleQuery</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_search_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_security_uid_columns</string> </key>
+            <value>
+              <list>
+                <string> | security_uid</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_topic_search_keys</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_catalog_translation_list</string> </key>
+            <value> <string>z_catalog_translation_list</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_clear_catalog</string> </key>
+            <value>
+              <tuple>
+                <string>z0_drop_alarm</string>
+                <string>z0_drop_catalog</string>
+                <string>z0_drop_category</string>
+                <string>z0_drop_delivery</string>
+                <string>z0_drop_item</string>
+                <string>z0_drop_measure</string>
+                <string>z0_drop_predicate</string>
+                <string>z0_drop_predicate_category</string>
+                <string>z0_drop_quantity_unit_conversion</string>
+                <string>z0_drop_record</string>
+                <string>z0_drop_roles_and_users</string>
+                <string>z0_drop_stock</string>
+                <string>z0_drop_subject</string>
+                <string>z0_drop_transformation</string>
+                <string>z0_drop_translation</string>
+                <string>z0_drop_user</string>
+                <string>z0_drop_versioning</string>
+                <string>z_create_alarm</string>
+                <string>z_create_catalog</string>
+                <string>z_create_category</string>
+                <string>z_create_delivery</string>
+                <string>z_create_item</string>
+                <string>z_create_measure</string>
+                <string>z_create_predicate</string>
+                <string>z_create_predicate_category</string>
+                <string>z_create_quantity_unit_conversion</string>
+                <string>z_create_record</string>
+                <string>z_create_roles_and_users</string>
+                <string>z_create_stock</string>
+                <string>z_create_subject</string>
+                <string>z_create_transformation</string>
+                <string>z_create_translation</string>
+                <string>z_create_user</string>
+                <string>z_create_versioning</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_count_results</string> </key>
+            <value> <string>z_count_results</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_delete_recorded_object_list</string> </key>
+            <value> <string>z_delete_recorded_object_list</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_delete_translation_list</string> </key>
+            <value> <string>z_delete_translation_list</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_getitem_by_path</string> </key>
+            <value> <string>z_getitem_by_path</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_getitem_by_uid</string> </key>
+            <value> <string>z_getitem_by_uid</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_optimizer_switch</string> </key>
+            <value> <string>z_select_optimizer_switch</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_read_recorded_object_list</string> </key>
+            <value> <string>z_read_recorded_object_list</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_record_object_list</string> </key>
+            <value> <string>z_record_object_list</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_search_result_keys</string> </key>
+            <value>
+              <list>
+                <string>catalog.path</string>
+                <string>catalog.uid</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_search_results</string> </key>
+            <value> <string>z_search_results</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_search_security</string> </key>
+            <value> <string>z_search_security</string> </value>
+        </item>
+        <item>
+            <key> <string>sql_search_tables</string> </key>
+            <value>
+              <list>
+                <string>catalog</string>
+                <string>alarm</string>
+                <string>category</string>
+                <string>delivery</string>
+                <string>item</string>
+                <string>predicate</string>
+                <string>predicate_category</string>
+                <string>roles_and_users</string>
+                <string>stock</string>
+                <string>subject</string>
+                <string>user</string>
+                <string>versioning</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_uncatalog_object</string> </key>
+            <value>
+              <tuple>
+                <string>z0_uncatalog_alarm</string>
+                <string>z0_uncatalog_category</string>
+                <string>z0_uncatalog_item</string>
+                <string>z0_uncatalog_measure</string>
+                <string>z0_uncatalog_predicate</string>
+                <string>z0_uncatalog_predicate_category</string>
+                <string>z0_uncatalog_quantity_unit_conversion</string>
+                <string>z0_uncatalog_stock</string>
+                <string>z0_uncatalog_transformation</string>
+                <string>z0_uncatalog_user</string>
+                <string>z0_uncatalog_versioning</string>
+                <string>z_uncatalog_delivery</string>
+                <string>z_uncatalog_object</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>sql_unique_values</string> </key>
+            <value> <string>z_unique_values</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>erp5_mysql_innodb</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>
