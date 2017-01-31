@@ -29,7 +29,6 @@
         .push(function (element) {
           g.props.element = element;
           g.props.jelement = $(element.querySelector("div"));
-          g.props.render_deferred = RSVP.defer();
         });
     })
 
@@ -72,6 +71,16 @@
         .push(function (my_translated_or_plain_html) {
           gadget.props.jelement.html(my_translated_or_plain_html);
           gadget.props.jelement.trigger("create");
+        })
+        .push(function () {
+          return gadget.getSetting('application_title');
+        })
+        .push(function (app_title) {
+          gadget.props.element.querySelector('[data-i18n="Edit Me"]').setAttribute(
+            "href",
+            "https://www.cribjs.com/#page=jio_crib_configurator&application_name=" + app_title + "&communication_gadget=" +
+              window.location.origin + window.location.pathname + "gadget_crib_bridge.html"
+          );
         });
       function push(a, b) {
         queue.push(function () {
@@ -84,49 +93,41 @@
         value = element_list[i].textContent;
         push(key, value);
       }
-      return queue
-        .push(function () {
-          return gadget.props.render_deferred.resolve();
-        });
+      return queue;
     })
 
     /////////////////////////////////////////////////////////////////
     // declared services
     /////////////////////////////////////////////////////////////////
     .declareService(function () {
-      var panel_gadget = this;
+      var panel_gadget,
+        form_list,
+        event_list,
+        i,
+        len;
+
+
+      function formSubmit() {
+        panel_gadget.toggle();
+      }
+
+      panel_gadget = this;
+      form_list = panel_gadget.props.element.querySelectorAll('form');
+      event_list = [];
+
+      // XXX: not robust - Will break when search field is active
+      for (i = 0, len = form_list.length; i < len; i += 1) {
+        event_list[i] = loopEventListener(
+          form_list[i],
+          'submit',
+          false,
+          formSubmit
+        );
+      }
+
       return new RSVP.Queue()
         .push(function () {
-          return panel_gadget.props.render_deferred.promise;
-        })
-        .push(function () {
-          var form_list,
-            event_list,
-            i,
-            len;
-
-
-          function formSubmit() {
-            panel_gadget.toggle();
-          }
-
-          form_list = panel_gadget.props.element.querySelectorAll('form');
-          event_list = [];
-
-          // XXX: not robust - Will break when search field is active
-          for (i = 0, len = form_list.length; i < len; i += 1) {
-            event_list[i] = loopEventListener(
-              form_list[i],
-              'submit',
-              false,
-              formSubmit
-            );
-          }
-
-          return new RSVP.Queue()
-            .push(function () {
-              return RSVP.all(event_list);
-            });
+          return RSVP.all(event_list);
         });
     });
 
