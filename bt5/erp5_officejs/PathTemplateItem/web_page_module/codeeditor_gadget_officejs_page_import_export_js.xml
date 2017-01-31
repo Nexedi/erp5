@@ -95,7 +95,7 @@
         </item>
         <item>
             <key> <string>revision</string> </key>
-            <value> <string>23</string> </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.63546.2887.36539</string> </value>
+                <value> <string>957.565.52763.13875</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485715004.23</float>
+                        <float>1485883064.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -128,10 +128,13 @@
   }
 
   function importAllDocs(gadget) {
-    var files = gadget.props.files_preloaded_for_import;
+    var files = gadget.props.files_preloaded_for_import,
+      element = gadget.props.element;
     if (gadget.props.files_preloaded_for_import.lenght === 0) {
       return;
     }
+    element.querySelector("form.import-form button").disabled = true;
+    element.querySelector("form.import-form input").disabled = true;
     return new RSVP.Queue()
       .push(function () {
         return gadget.getGlobalSetting('document_version');
@@ -177,6 +180,9 @@
               return gadget.jio_put(file.id, obj);
             });
         }));
+      })
+      .push(function (result) {
+        return gadget.redirect({});
       });
   }
 
@@ -202,6 +208,7 @@
     .declareAcquiredMethod("jio_get", "jio_get")
     .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("redirect", "redirect")
     .declareMethod("allDocsArchived", function (opt) {
       var gadget = this,
           file_storage = jIO.createJIO(opt);
