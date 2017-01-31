@@ -65,22 +65,12 @@
         key,
         value,
         i,
-        queue = gadget.translateHtml(panel_template_header() + panel_template_body());
+        queue = gadget.translateHtml(panel_template_header() + panel_template_body({"location": window.location.origin + window.location.pathname}));
 
       queue
         .push(function (my_translated_or_plain_html) {
           gadget.props.jelement.html(my_translated_or_plain_html);
           gadget.props.jelement.trigger("create");
-        })
-        .push(function () {
-          return gadget.getSetting('application_title');
-        })
-        .push(function (app_title) {
-          gadget.props.element.querySelector('[data-i18n="Edit Me"]').setAttribute(
-            "href",
-            "https://www.cribjs.com/#page=jio_crib_configurator&application_name=" + app_title + "&communication_gadget=" +
-              window.location.origin + window.location.pathname + "gadget_crib_bridge.html"
-          );
         });
       function push(a, b) {
         queue.push(function () {
