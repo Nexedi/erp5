@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -91,13 +91,95 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Manifest</string> </value>
+        </item>
+        <item>
+            <key> <string>revision</string> </key>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\r\n
+# generated on Fri, 09 Jun 2016 11:45:33 +0000\r\n
+# XXX + fonts\r\n
+# new One here\r\n
+# images/ajax-loader.gif\r\n
+CACHE:\r\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\r\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\r\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\r\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\r\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\r\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\r\n
+favicon.ico\r\n
+codemirror-landingpage.html\r\n
+URI.js\r\n
+dygraph.js\r\n
+gadget_erp5.css\r\n
+gadget_global.js\r\n
+gadget_jio.html\r\n
+gadget_jio.js\r\n
+gadget_translate.html\r\n
+gadget_translate.js\r\n
+handlebars.js\r\n
+i18next.js\r\n
+jiodev.js\r\n
+jquery.js\r\n
+jquerymobile.css\r\n
+jquerymobile.js\r\n
+renderjs.js\r\n
+rsvp.js\r\n
+gadget_officejs_header.html\r\n
+gadget_officejs_jio.html\r\n
+gadget_officejs_page_add_document.html\r\n
+gadget_officejs_page_jio_code_editor_configurator.html\r\n
+gadget_officejs_page_jio_dav_configurator.html\r\n
+gadget_officejs_page_jio_erp5_code_editor_configurator.html\r\n
+gadget_officejs_page_login.html\r\n
+gadget_officejs_page_logout.html\r\n
+gadget_officejs_page_share_webrtc_jio.html\r\n
+gadget_officejs_page_sync.html\r\n
+gadget_officejs_page_document_list.html\r\n
+gadget_officejs_code_editor_panel.html\r\n
+gadget_translation.html\r\n
+gadget_officejs_webrtc_jio.html\r\n
+gadget_officejs_widget_listbox.html\r\n
+gadget_erp5_editor_panel.html\r\n
+gadget_erp5_editor_panel.js\r\n
+gadget_officejs_header.js\r\n
+gadget_officejs_jio.js\r\n
+gadget_officejs_page_add_document.js\r\n
+gadget_officejs_page_jio_code_editor_configurator.js\r\n
+gadget_officejs_page_jio_dav_configurator.js\r\n
+gadget_officejs_page_jio_erp5_code_editor_configurator.js\r\n
+gadget_officejs_page_login.js\r\n
+gadget_officejs_page_logout.js\r\n
+gadget_officejs_page_share_webrtc_jio.js\r\n
+gadget_officejs_page_sync.js\r\n
+gadget_officejs_page_document_list.js\r\n
+gadget_officejs_router.js\r\n
+gadget_officejs_application_panel.js\r\n
+gadget_translation.js\r\n
+gadget_translation_data.js\r\n
+gadget_officejs_webrtc_jio.js\r\n
+gadget_officejs_widget_listbox.js\r\n
+erp5_launcher.js\r\n
+erp5_launcher.html\r\n
+gadget_officejs_text_editor_router.html\r\n
+gadget_officejs_jio_web_page_view.html\r\n
+gadget_officejs_jio_web_page_view.js\r\n
+NETWORK:\r\n
+*
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -193,7 +275,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482489225.03</float>
+                        <float>1485874361.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -238,7 +320,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.25809.26818.60245</string> </value>
+                <value> <string>957.711.9032.11451</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +338,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485527180.58</float>
+                        <float>1485875072.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -279,9 +361,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -297,7 +377,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -315,7 +395,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482489225.03</float>
+                        <float>1485874361.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
