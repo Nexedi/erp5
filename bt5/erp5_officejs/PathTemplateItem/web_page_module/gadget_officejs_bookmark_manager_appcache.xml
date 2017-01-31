@@ -158,6 +158,8 @@ gadget_officejs_widget_listbox.js\n
 gadget_translation_data.js\n
 gadget_translation.html\n
 gadget_translation.js\n
+gadget_officejs_liberator.html\n
+gadget_officejs_liberator.js\n
 handlebars.js\n
 jiodev.js\n
 jquery.js\n
@@ -307,7 +309,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.374.49029.36642</string> </value>
+                <value> <string>957.375.54495.17288</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -325,7 +327,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485854869.83</float>
+                        <float>1485867293.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
