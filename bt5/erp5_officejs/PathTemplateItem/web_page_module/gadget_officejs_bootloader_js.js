@@ -40,7 +40,7 @@ var repair = false;
         no_sub_query_id: true,
         id: ["equalSubProperty", "relative_url"],
         property: {
-          "url_string": ["equalSubId"]
+          "reference": ["equalSubId"]
         },
         sub_storage: {
           type: "query",
@@ -260,7 +260,7 @@ var repair = false;
             );
           }
           return navigator.serviceWorker.register(
-            "gadget_bootloader_serviceworker.js",
+            "gadget_officejs_bootloader_serviceworker.js",
             {"scope": gadget.props.version_url }
           );
         })

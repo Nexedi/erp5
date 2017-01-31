@@ -103,7 +103,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>gadget_officejs_bootloader.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -234,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64691.10381.836</string> </value>
+                <value> <string>956.64903.37420.26402</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485792595.72</float>
+                        <float>1485851918.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
