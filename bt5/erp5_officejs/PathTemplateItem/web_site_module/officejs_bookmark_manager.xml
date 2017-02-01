@@ -329,6 +329,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_redirect_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_landing_page</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -404,6 +424,10 @@
             <value> <string>gadget_officejs_jio.html</string> </value>
         </item>
         <item>
+            <key> <string>configuration_landing_page</string> </key>
+            <value> <string>bookmark_manager_landing_page.html</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_latest_document_version</string> </key>
             <value> <string>001</string> </value>
         </item>
@@ -418,6 +442,10 @@
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
             <value> <string>gadget_officejs_bookmark_manager_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_redirect_url</string> </key>
+            <value> <string>development</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -672,7 +700,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64862.48802.40994</string> </value>
+                <value> <string>957.2063.41353.16093</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -690,7 +718,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485791952.94</float>
+                        <float>1485956631.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -116,7 +116,7 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
 erp5_launcher.js\n
-/\n
+bookmark_manager_landing_page.html\n
 gadget_erp5.css\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
@@ -309,7 +309,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.375.54495.17288</string> </value>
+                <value> <string>957.582.58715.54766</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -327,7 +327,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485867293.69</float>
+                        <float>1485955757.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

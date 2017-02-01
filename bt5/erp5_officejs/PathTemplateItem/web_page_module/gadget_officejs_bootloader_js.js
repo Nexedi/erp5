@@ -20,7 +20,7 @@ var repair = false;
     default_view_reference: "jio_view"
   };
 
-  function createStorage(query, version_url) {
+  function createStorage(query, version_url, version) {
     return jIO.createJIO({
       type: "replicate",
       conflict_handling: 2,
@@ -31,7 +31,8 @@ var repair = false;
       check_local_modification: false,
       query: {
         query: 'portal_type: ("Web Illustration",' +
-          '"Web Manifest","Web Script","Web Style","Web Page")' + query,
+          '"Web Manifest","Web Script","Web Style","Web Page") AND version: "' +
+            version + '" ' + query,
         "limit": [0, 27131]
       },
       signature_storage: {
@@ -202,7 +203,10 @@ var repair = false;
       return serviceWorker_setting_storage.put(
         window.location.origin + window.location.pathname +
           gadget.props.version_url,
-        {"version": gadget.props.document_version}
+        {
+          "version": gadget.props.document_version, 
+          "landing_page": gadget.props.landing_page
+        }
       )
         .push(function () {
           // transform a cache to url_list
@@ -244,7 +248,8 @@ var repair = false;
           var query = " AND (" + gadget.props.query_list.join(' OR ') + ')';
           gadget.props.storage = createStorage(
             query,
-            gadget.props.version_url
+            gadget.props.version_url,
+            gadget.props.document_version
           );
           return gadget.props.storage.repair();
         })
@@ -274,8 +279,7 @@ var repair = false;
             gadget,
             {
               "action": "install",
-              "url_list": gadget.props.cached_url,
-              "version": gadget.props.document_version
+              "url_list": gadget.props.cached_url
             }
           );
         });
