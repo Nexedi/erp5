@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>destination_section_category=None, from_date=None, to_date=None, **kw</string> </value>
+            <value> <string>destination_trade_category=None, from_date=None, to_date=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

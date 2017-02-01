@@ -5,11 +5,11 @@ from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, Query
 
 portal = context.getPortalObject()
 
-destination_section = portal.restrictedTraverse(destination_section_category)
+destination_trade = portal.restrictedTraverse(destination_trade_category)
 
 catalog_kw = {'query': ComplexQuery(Query(start_date=">=%s" % from_date.strftime("%Y/%m/%d")),
                                     Query(stop_date="<=%s" % to_date.strftime("%Y/%m/%d")),
-                                    Query(destination_section_uid=Query(destination_section_uid=destination_section.getUid())),
+                                    Query(destination_trade_uid=Query(destination_trade_uid=destination_trade.getUid())),
                                     Query(simulation_state='!=cancelled'),
                                     operator="AND")}
 

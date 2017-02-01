@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_destination_section_category</string> </value>
+            <value> <string>your_destination_trade_category</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -112,7 +112,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Establishment</string> </value>
+                    <value> <string>Employer</string> </value>
                 </item>
               </dictionary>
             </value>
