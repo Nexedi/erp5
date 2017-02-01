@@ -325,7 +325,7 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
 
-    def _download_local(self, path, bt_id, format_version):
+    def _download_local(self, path, bt_id, format_version=1):
       """Download Business Template from local directory or file
       """
       if format_version == 2:
