@@ -884,7 +884,11 @@ define([
                 Common.Gateway.on('processrightschange',    _.bind(me.onProcessRightsChange, me));
                 Common.Gateway.on('processmouse',           _.bind(me.onProcessMouse, me));
                 Common.Gateway.on('refreshhistory',         _.bind(me.onRefreshHistory, me));
-                Common.Gateway.on('save',                   _.bind(me.api.asc_Save, me.api));
+                Common.Gateway.on('save', function () {
+                    if (me.api.isDocumentModified()) {
+                        me.api.asc_Save();
+                    }
+                });
                 Common.Gateway.on('downloadas',             _.bind(me.onDownloadAs, me));
 
                 Common.Gateway.sendInfo({mode:me.appOptions.isEdit?'edit':'view'});
