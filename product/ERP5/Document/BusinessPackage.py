@@ -47,6 +47,7 @@ from OFS import SimpleItem, XMLExportImport
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.PythonScripts.PythonScript import PythonScript
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
@@ -139,15 +140,44 @@ class BusinessPackage(XMLObject):
                       , PropertySheet.XMLObject
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
+                      , PropertySheet.Version
                       , PropertySheet.BusinessPackage
                       )
+
+    def __init__(self, *args, **kw):
+      XMLObject.__init__(self, *args, **kw)
+
+    security.declarePrivate('manage_afterAdd')
+    def manage_afterAdd(self, item, container):
+      """
+        This is called when a new business package is added or imported.
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      if portal_workflow is not None:
+        # Make sure that the installation state is "not installed".
+        if portal_workflow.getStatusOf(
+                'business_package_installation_workflow', self) is not None:
+          # XXX Not good to access the attribute directly,
+          # but there is no API for clearing the history.
+          self.workflow_history[
+                            'business_package_installation_workflow'] = None
 
     def _install(self, **kw):
       self._path_item.install(self)
       self._object_property_item.install(self)
+      workflow_tool = self.getPortalObject().portal_workflow
+      workflow_tool.business_package_installation_workflow.notifyWorkflowMethod(
+          self, 'install', kw={'comment': 'Installed'})
 
     security.declareProtected(Permissions.ManagePortal, 'install')
     install = _install
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getShortRevision')
+    def getShortRevision(self):
+      """Returned a shortened revision"""
+      r = self.getRevision()
+      return r and r[:5]
 
     security.declareProtected(Permissions.ManagePortal, 'preinstall')
     def preinstall(self, check_dependencies=1, **kw):
@@ -257,6 +287,10 @@ class BusinessPackage(XMLObject):
       self._edit(**prop_dict)
       self.storePathData()
 
+      workflow_tool = self.getPortalObject().portal_workflow
+      workflow_tool.business_package_building_workflow.notifyWorkflowMethod(
+          self, 'edit', kw={'comment': 'Downloaded'})
+
       item_name_list = ['_path_item', '_object_property_item']
       for item_name in item_name_list:
         item_object = getattr(self, item_name, None)
@@ -265,6 +299,26 @@ class BusinessPackage(XMLObject):
         # property sheet)
         if item_object is not None:
           item_object.importFile(bpa)
+
+    def getBuildingState(self, default=None, id_only=1):
+      """
+        Returns the current state in building
+      """
+      portal_workflow = getToolByName(self, 'portal_workflow')
+      wf = portal_workflow.getWorkflowById(
+                          'business_package_building_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstallationState')
+    def getInstallationState(self, default=None, id_only=1):
+      """
+        Returns the current state in installation
+      """
+      portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
+      wf = portal_workflow.getWorkflowById(
+                           'business_package_installation_workflow')
+      return wf._getWorkflowStateOf(self, id_only=id_only )
 
 class BusinessPackageException(Exception):
   pass
