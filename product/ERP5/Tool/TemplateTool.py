@@ -128,7 +128,7 @@ class TemplateTool (BaseTool):
       # potential danger because business templates may exchange catalog
       # methods, so the database could be broken temporarily.
       last_bt = last_time = None
-      for bt in self.objectValues(portal_type='Business Template'):
+      for bt in self.objectValues(portal_type=['Business Template', 'Business Package']):
         if bt.getTitle() == title or title in bt.getProvisionList():
           state = bt.getInstallationState()
           if state == 'installed':
@@ -161,7 +161,7 @@ class TemplateTool (BaseTool):
       """Get the list of installed business templates.
       """
       installed_bts = []
-      for bt in self.contentValues(portal_type='Business Template'):
+      for bt in self.contentValues(portal_type=['Business Template', 'Business Package']):
         if bt.getInstallationState() == 'installed':
           bt5 = bt
           if only_title:
@@ -917,6 +917,22 @@ class TemplateTool (BaseTool):
             doc.unlink()
         finally:
           f.close()
+
+        #XXX: Hardcoding 'erp5_mysql_innodb_catalog' BP in the list
+        bp_dict ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_mysql_innodb_catalog',
+          'license': 'GPL',
+          'provision_list': ['erp5_catalog'],
+          'revision': '',
+          'test_dependency_list': [],
+          'title': 'erp5_mysql_innodb_catalog',
+          'version': '1.0'}
+        if repository.endswith('/bt5'):
+          property_dict_list.append(bp_dict)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
