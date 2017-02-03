@@ -1,8 +1,8 @@
-/*globals window, document, RSVP, rJS, navigator, jIO, MessageChannel, ProgressEvent*/
+/*globals window, document, RSVP, rJS, navigator, jIO, MessageChannel, ProgressEvent, console*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
 var repair = false;
 (function (window, document, RSVP, rJS, jIO, navigator, MessageChannel,
-  ProgressEvent) {
+  ProgressEvent, console) {
   "use strict";
 
   var serviceWorker_setting_storage = jIO.createJIO({
@@ -11,9 +11,7 @@ var repair = false;
       type: "indexeddb",
       database: "serviceWorker_settings"
     }
-  });
-
-  var remote_storage = {
+  }), remote_storage = {
     type: "erp5",
     url: window.location.origin +
       window.location.pathname + "hateoasnoauth",
@@ -204,9 +202,9 @@ var repair = false;
         window.location.origin + window.location.pathname +
           gadget.props.version_url,
         {
-          "version": gadget.props.document_version, 
-          "landing_page": gadget.props.landing_page
-        }
+            "version": gadget.props.document_version,
+            "landing_page": gadget.props.landing_page
+          }
       )
         .push(function () {
           // transform a cache to url_list
@@ -234,9 +232,10 @@ var repair = false;
                     url_list[i] !== "" &&
                     url_list[i].charAt(0) !== '#' &&
                     url_list[i].charAt(0) !== ' ') {
-                  url_list[i].replace("\r","");
+                  url_list[i].replace("\r", "");
                   gadget.props.cached_url.push(url_list[i]);
-                  gadget.props.query_list.push('( reference: "' + url_list[i] +'" )');
+                  gadget.props.query_list.push('( reference: "' +
+                    url_list[i] + '" )');
                 }
                 if (url_list[i].indexOf("CACHE:") >= 0) {
                   take = true;
@@ -253,6 +252,9 @@ var repair = false;
           );
           return gadget.props.storage.repair();
         })
+        .push(undefined, function (error) {
+          console.log(error);
+        }) // Here For Url too long: ex officejs_ckeditor_gadget
         .push(function () {
           // remove base if present
           if (document.querySelector("base")) {
@@ -292,7 +294,7 @@ var repair = false;
         window.location.href = gadget.props.redirect_url;
       }
 
-      if (!("serviceWorker" in navigator)) {
+      if (navigator.serviceWorker === undefined) {
         window.applicationCache.addEventListener("cached", redirect);
         window.applicationCache.addEventListener('noupdate', redirect);
         window.setTimeout(redirect, 10000);
@@ -302,4 +304,5 @@ var repair = false;
     });
 
 
-}(window, document, RSVP, rJS, jIO, navigator, MessageChannel, ProgressEvent));
+}(window, document, RSVP, rJS, jIO, navigator, MessageChannel, ProgressEvent,
+  console));

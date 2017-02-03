@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -27,6 +24,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +44,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -53,11 +52,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -70,8 +66,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_bootloader.js</string> </value>
+            <value> <string>text_editor_landing_page.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_bootloader_js</string> </value>
+            <value> <string>gadget_officejs_text_editor_landing_page_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs BootLoader Gadget JS</string> </value>
+            <value> <string>Text Editor Landing Page</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -165,7 +165,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -191,7 +193,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485781629.44</float>
+                        <float>1486127072.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -200,7 +202,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -236,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.8963.33851.29696</string> </value>
+                <value> <string>957.4912.62822.47906</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486370183.72</float>
+                        <float>1486127115.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485769967.8</float>
+                        <float>1486127072.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

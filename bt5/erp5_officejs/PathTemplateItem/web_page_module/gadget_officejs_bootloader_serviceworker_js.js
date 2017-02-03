@@ -1,8 +1,8 @@
 /*jslint indent: 2*/
-/*global self, fetch, Request, Response, console */
+/*global self, fetch, Request, Response */
 var global = self, window = self;
 
-(function (self, fetch, Request, Response, console) {
+(function (self, fetch, Request, Response) {
   "use strict";
 
   self.DOMParser = {};
@@ -25,7 +25,7 @@ var global = self, window = self;
       }
     });
   }
-  
+
   self.setting_storage = createStorage("serviceWorker_settings");
 
   self.addEventListener("message", function (event) {
@@ -36,7 +36,7 @@ var global = self, window = self;
 
         if (data.action === "install" &&
             data.url_list !== undefined) {
-          
+
           self.storage = createStorage(self.registration.scope);
           return new self.RSVP.Queue()
             .push(function () {
@@ -72,10 +72,10 @@ var global = self, window = self;
                           );
                         })
                         .push(function () {
-                          console.log("Saved: ", url);
+                          self.console.log("Saved: ", url);
                         })
                         .push(undefined, function (error) {
-                          console.log(
+                          self.console.log(
                             "error on",
                             url,
                             "cause: ",
@@ -91,14 +91,13 @@ var global = self, window = self;
               event.ports[0].postMessage("success");
             });
         }
-      })
-      .push(undefined, console.log));
+      }));
   });
 
-  self.addEventListener('install', function(event) {
+  self.addEventListener('install', function (event) {
     event.waitUntil(self.skipWaiting());
   });
-  self.addEventListener('activate', function(event) {
+  self.addEventListener('activate', function (event) {
     event.waitUntil(self.clients.claim());
   });
 
@@ -140,7 +139,7 @@ var global = self, window = self;
             });
         })
         .push(undefined, function (error) {
-          console.log(
+          self.cconsole.log(
             "Relative_Url: ",
             relative_url,
             "\nCause: ",
@@ -151,4 +150,4 @@ var global = self, window = self;
     );
   });
 
-}(self, fetch, Request, Response, console));
+}(self, fetch, Request, Response));
