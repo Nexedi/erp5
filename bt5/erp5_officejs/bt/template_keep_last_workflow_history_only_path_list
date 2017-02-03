@@ -9,3 +9,5 @@ web_site_module/officejs_spreadsheet
 web_site_module/officejs_spreadsheet/**
 web_site_module/officejs_setting_gadget
 web_site_module/officejs_setting_gadget/**
+web_site_module/officejs_ckeditor_gadget
+web_site_module/officejs_ckeditor_gadget/**
