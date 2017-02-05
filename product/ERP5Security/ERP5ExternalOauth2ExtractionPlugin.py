@@ -189,9 +189,9 @@ class ERP5ExternalOauth2ExtractionPlugin:
         try:
           self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
           user_entry["login_portal_type"] = creds["login_portal_type"]
-          # erp5_username is optional.
+          # user_id is optional.
           # It is only used to create Google Login under a pre-existing person
-          user_entry["erp5_username"] = user_dict.get("erp5_username")
+          user_entry["user_id"] = user_dict.get("user_id")
           try:
             Base_createOauth2User(tag, **user_entry)
           except Exception:
