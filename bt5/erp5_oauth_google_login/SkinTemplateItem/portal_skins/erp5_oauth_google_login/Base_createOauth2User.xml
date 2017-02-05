@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>tag, first_name, last_name, reference, email, login_portal_type, erp5_username=None</string> </value>
+            <value> <string>tag, first_name, last_name, reference, email, login_portal_type, user_id=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

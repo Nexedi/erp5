@@ -20,7 +20,7 @@ activate_kw = {'tag': tag}
 # to support Facebook login
 assert login_portal_type in ("Google Login",), "Impossible to select a portal type"
 
-if erp5_username in ("Anonymous User", None):
+if user_id in ("Anonymous User", None):
   person = portal.person_module.newContent(portal_type='Person',
                                            user_id=reference,
                                            first_name=first_name,
@@ -50,7 +50,7 @@ if erp5_username in ("Anonymous User", None):
   assignment.open(activate_kw=activate_kw)
   person.setDefaultCareerRoleList(assignment.getRoleList())
 else:
-  person = context.Base_getUserValueByUserId(erp5_username)
+  person = context.Base_getUserValueByUserId(user_id)
 
 login = person.newContent(portal_type=login_portal_type,
                           reference=reference)
