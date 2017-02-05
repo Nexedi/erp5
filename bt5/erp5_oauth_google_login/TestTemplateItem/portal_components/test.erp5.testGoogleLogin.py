@@ -142,7 +142,7 @@ class TestGoogleLogin(ERP5TypeTestCase):
                   "reference": user_id,
                   "email": 'example@email.com',
                   "login_portal_type": "Google Login",
-                  "erp5_username": self.dummy_user_id
+                  "user_id": self.dummy_user_id
                  }
     # We are using superuser to avoid Unauthorized error
     # The goal of this test to check if Google Login is created
@@ -164,7 +164,7 @@ class TestGoogleLogin(ERP5TypeTestCase):
                   "reference": user_id,
                   "email": 'example@email.com',
                   "login_portal_type": "Google Login",
-                  "erp5_username": 'Anonymous User'
+                  "user_id": 'Anonymous User'
                  }
     self.portal.Base_createOauth2User(**user_entry)
     self.tic()
