@@ -54,9 +54,9 @@ class GadgetWidget(Widget.Widget):
        return []
      return result
 
-class GadgetFieldValidator(Validator.Validator):
+class GadgetFieldValidator(Validator.TextValidator):
 
-    property_names = Validator.Validator.property_names + ['data_url']
+    property_names = Validator.TextValidator.property_names + ['data_url']
 
     data_url = fields.CheckBoxField('data_url',
                                 title='Data Url',
@@ -65,7 +65,7 @@ class GadgetFieldValidator(Validator.Validator):
                                 default=0)
 
     def validate(self, field, key, REQUEST):
-        value = REQUEST.get(key, None)
+        value = Validator.TextValidator.validate(self, field, key, REQUEST)
         if value is not None:
           if field.get_value('data_url'):
             value=value.split(",")[1]
