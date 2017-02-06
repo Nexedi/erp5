@@ -127,19 +127,6 @@
                      *       more information like the traceback. */
               );
             }
-            if (field_list[i].sandbox === "iframe") {
-              sub_element = result_list[i].element;
-              iframe = sub_element.querySelector('iframe');
-              //xxx input field
-              sub_element.parentNode.style.width = "100%";
-              sub_element.parentNode.style.height = "100%";
-              //xxx section div
-              sub_element.style.width = "100%";
-              sub_element.style.height = "100%";
-              iframe.style.width = "100%";
-              iframe.style.height = "100%";
-              iframe.allowFullscreen = true;
-            }
           }
           return RSVP.all(promise_list);
         });
