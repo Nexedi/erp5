@@ -45,7 +45,7 @@ class MonthlyRangeMovementGroup(MovementGroup):
     """Gather start_date and stop_date, converge them to the end of month.
     """
     property_dict = {}
-    for property_name in ('start_date', 'stop_date'):
+    for property_name in self.getTestedPropertyList() or ('start_date', 'stop_date'):
       date = movement.getProperty(property_name, None)
       if date is not None:
         end_of_month = atTheEndOfPeriod(date, 'month')-1
@@ -53,20 +53,14 @@ class MonthlyRangeMovementGroup(MovementGroup):
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
-    start_date = property_dict.get('start_date', None)
-    stop_date = property_dict.get('stop_date', None)
-    if start_date is None or stop_date is None:
-      return False, property_dict
-
-    target_start_date = document.getProperty('start_date', None)
-    target_stop_date = document.getProperty('stop_date', None)
-    if target_start_date is None or target_stop_date is None:
-      return False, property_dict
-
-    if (start_date.year()==target_start_date.year() and
-        start_date.month()==target_start_date.month() and
-        stop_date.year()==target_stop_date.year() and
-        stop_date.month()==target_stop_date.month()):
-      return True, property_dict
-    else:
-      return False, property_dict
+    for property_name in self.getTestedPropertyList() or ('start_date', 'stop_date'):
+      date = property_dict.get(property_name, None)
+      if date is None:
+        return False, property_dict
+      target_date = document.getProperty(property_name, None)
+      if target_date is None:
+        return False, property_dict
+      if date.year() != target_date.year() or \
+        date.month() != target_date.month():
+        return False, property_dict
+    return True, property_dict
