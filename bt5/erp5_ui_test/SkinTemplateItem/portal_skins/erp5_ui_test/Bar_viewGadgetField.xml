@@ -67,7 +67,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>textarea_validator</string>
+                        <string>stringfield_validator</string>
+                      </list>
                     </value>
                 </item>
                 <item>

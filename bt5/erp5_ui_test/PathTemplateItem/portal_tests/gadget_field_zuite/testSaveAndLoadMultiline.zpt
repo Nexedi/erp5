@@ -65,7 +65,8 @@
 <tr>
   <td>type</td>
   <td>//textarea[@title='field_my_description']</td>
-  <td>123</td>
+  <td>123
+456</td>
 </tr>
 
 
@@ -92,9 +93,21 @@
 <tr>
   <td>verifyValue</td>
   <td>//textarea[@title='field_my_description']</td>
-  <td>123</td>
+  <td>123
+456</td>
 </tr>
 
+ <tr>
+   <td>open</td>
+   <td>${base_url}/bar_module/0/Bar_representDescription</td>
+   <td></td>
+</tr>
+    
+<tr>
+  <td>assertTextPresent</td>
+  <td>'123\n456'</td>
+   <td></td>
+</tr>
 
 
 </tbody></table>

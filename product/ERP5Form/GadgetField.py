@@ -28,7 +28,7 @@ class GadgetWidget(Widget.Widget):
                           required=0)
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
-      return self.render_view(field, value, REQUEST, render_prefix, key)
+    return self.render_view(field, value, REQUEST, render_prefix, key)
 
   def render_view(self, field, value, REQUEST=None, render_prefix=None, key=None):
     kw = {
@@ -56,7 +56,10 @@ class GadgetWidget(Widget.Widget):
 
 class GadgetFieldValidator(Validator.Validator):
 
-    property_names = Validator.Validator.property_names + ['data_url']
+    property_names = Validator.Validator.property_names + [
+      'data_url',
+      'validator_field_id'
+    ]
 
     data_url = fields.CheckBoxField('data_url',
                                 title='Data Url',
@@ -64,8 +67,38 @@ class GadgetFieldValidator(Validator.Validator):
                                   "Checked if gadget return data url."),
                                 default=0)
 
+    validator_field_id = fields.StringField(
+      'validator_field_id',
+      title='Field ID',
+      description= "Field used to validate REQUEST form data.",
+      default="",
+      display_width=40,
+      required=0
+    )
+
+    message_names = Validator.Validator.message_names + ['no_validator']
+
+    no_validator = 'Does not support this operation.'
+
+    def getValidatorField(self, field):
+      """Get an external validator field located in the same form.
+      """
+      field_id = field.id
+      validator_field_id = field.get_value('validator_field_id')
+      if validator_field_id:
+        if field.aq_parent.has_field(validator_field_id,
+                                     include_disabled=1):
+          return field.aq_parent.get_field(validator_field_id,
+                                           include_disabled=1)
+      return None
+
     def validate(self, field, key, REQUEST):
-        value = REQUEST.get(key, None)
+      validator_field = self.getValidatorField(field)
+      if validator_field is None:
+        # not editable if no validator
+        self.raise_error('no_validator', field)
+      else:
+        value = validator_field._validate_helper(key, REQUEST)
         if value is not None:
           if field.get_value('data_url'):
             value=value.split(",")[1]

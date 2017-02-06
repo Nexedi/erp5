@@ -117,7 +117,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td></td>
 </tr>
 
@@ -129,7 +129,7 @@
 
 <tr>
   <td>type</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td>relationFieldTest</td>
 </tr>
 
@@ -149,7 +149,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td></td>
 </tr>
 
@@ -161,14 +161,14 @@
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td>relationFieldTest</td>
 </tr>
 
 
 <tr>
   <td>type</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td>relationFieldTestSuite</td>
 </tr>
 
@@ -199,7 +199,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td></td>
 </tr>
 
@@ -211,7 +211,7 @@
 
 <tr>
   <td>verifyValue</td>
-  <td>//input[@title='field_my_description']</td>
+  <td>//textarea[@title='field_my_description']</td>
   <td>relationFieldTestSuite</td>
 </tr>
 
