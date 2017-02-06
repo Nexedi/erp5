@@ -94,15 +94,11 @@
               }
               bar_data.push(value_list);
             }
-            var data = {
+            gadget.props.data = {
               labels: label_list,
               series: bar_data,
             };
-            new Chartist.Bar(gadget.props.element.querySelector('.ct-chart'),
-                               data,
-                               {seriesBarDistance: 10,
-                                axisX: {offset: 60},
-                               });
+            
             return gadget.updateHeader({
               title: "Report"
             });
@@ -119,7 +115,11 @@
     /////////////////////////////////////////
     .declareService(function () {
       var gadget = this;
-
+      new Chartist.Bar(gadget.props.element.querySelector('.ct-chart'),
+                               gadget.props.data,
+                               {seriesBarDistance: 10,
+                                axisX: {offset: 60},
+                               });
       return new RSVP.Queue()
         .push(function () {
           return gadget.props.deferred.promise;
