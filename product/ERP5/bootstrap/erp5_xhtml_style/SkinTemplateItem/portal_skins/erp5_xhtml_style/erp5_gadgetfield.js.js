@@ -70,6 +70,19 @@
       })
 
     /////////////////////////////////////////////////////////////////
+    // Support some methods used in ERP5JS
+    /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition('notifyChange',
+                            function () {
+        return;
+      })
+
+    .allowPublicAcquisition('notifyValid',
+                            function () {
+        return;
+      })
+
+    /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareService(function () {
