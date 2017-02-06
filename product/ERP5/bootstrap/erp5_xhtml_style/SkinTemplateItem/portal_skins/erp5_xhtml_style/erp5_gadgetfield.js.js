@@ -98,7 +98,7 @@
                 (!gadget.state.rejected_dict.hasOwnProperty(field_scope))) {
               field_list.push({
                 sandbox: field_element.getAttribute("data-gadget-sandbox"),
-                editable: field_element.getAttribute("data-gadget-editable"),
+                editable: (field_element.getAttribute("data-gadget-editable") !== null),
                 key: field_element.getAttribute("data-gadget-editable"),
                 value: field_element.getAttribute("data-gadget-value")
               });
@@ -120,7 +120,7 @@
               sub_value = field_list[i].value;
               sub_key = field_list[i].key;
               promise_list.push(
-                result_list[i].render({key: sub_key, value: sub_value})
+                result_list[i].render({key: sub_key, value: sub_value, editable: field_list[i].editable})
                   .push(undefined, displayFieldError)
                     /* XXX Highlight the gadget element with a small colored
                      *       error message. Clicking on the element could unroll
