@@ -26,6 +26,11 @@ input, textarea, select, button, body, div, span, fieldset {
   padding: 0;
 }
 
+iframe {
+  width: 100%;
+  height: 50vh;
+}
+
 div.input > select, div.input > input, div.listbox select {
   max-width:320px;
 }
