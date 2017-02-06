@@ -206,6 +206,12 @@ gadget_officejs_hr_tool.js\n
 gadget_hr_style.css\n
 gadget_officejs_page_hr_front.html\n
 gadget_officejs_page_hr_front.js\n
+gadget_officejs_geoLocalisation.html\n
+gadget_officejs_geoLocalisation.js\n
+gadget_officejs_page_localisation.html\n
+gadget_officejs_page_localisation.js\n
+leaflet.css\n
+leaflet.js\n
 NETWORK:\n
 *
 
@@ -344,7 +350,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.46035.12915.63948</string> </value>
+                <value> <string>956.54357.20081.48708</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +368,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1484662311.83</float>
+                        <float>1485185223.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
