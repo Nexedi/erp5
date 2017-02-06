@@ -81,7 +81,7 @@
       return new RSVP.Queue()
         .push(function () {
           var field_element_list =
-            gadget.element.querySelectorAll("[data-gadget-url]"),
+            gadget.element.querySelectorAll("[data-gadget-value]"),
             field_element,
             field_scope,
             field_url,
