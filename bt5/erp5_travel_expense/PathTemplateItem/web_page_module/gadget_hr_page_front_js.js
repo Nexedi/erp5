@@ -2,8 +2,12 @@
 /*jslint indent: 2, nomen: true, maxlen: 80*/
 (function (window, RSVP, rJS) {
   "use strict";
-
-  rJS(window)
+   var gadget_klass = rJS(window),
+    source = gadget_klass.__template_element
+                              .querySelector(".front-template")
+                              .innerHTML,
+    template = Handlebars.compile(source);
+   gadget_klass
     .ready(function (g) {
       g.props = {};
       return g.getElement()
@@ -31,6 +35,7 @@
         });
     })
     .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('getSetting', 'getSetting')
@@ -60,6 +65,10 @@
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
+          return gadget.translateHtml(template());
+        })
+        .push(function (html) {
+          gadget.props.element.innerHTML = html;
           return gadget.getSetting('last_sync_date');
         })
         .push(function (result) {
@@ -67,8 +76,8 @@
           gadget.props.portal_type = "Expense Record";
           gadget.props.document_title_plural = "Expense Requests";
           return RSVP.all([
-            gadget.getDeclaredGadget("listbox-suspended"),
-            gadget.getDeclaredGadget("listbox-draft")
+            gadget.declareGadget("gadget_officejs_widget_listbox.html", {element: gadget.props.element.querySelector(".listbox-suspended")}),
+            gadget.declareGadget("gadget_officejs_widget_listbox.html", {element: gadget.props.element.querySelector(".listbox-draft")})
             ]);
         })
         .push(function (listbox_gadget_list) {

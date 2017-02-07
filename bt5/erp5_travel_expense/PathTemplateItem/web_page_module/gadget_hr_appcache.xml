@@ -125,8 +125,6 @@ gadget_erp5.css\n
 gadget_global.js\n
 gadget_jio.html\n
 gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
 handlebars.js\n
 jiodev.js\n
 jquery.js\n
@@ -140,7 +138,7 @@ gadget_officejs_page_add_document.html\n
 gadget_officejs_page_login.html\n
 gadget_officejs_page_logout.html\n
 gadget_officejs_page_sync.html\n
-gadget_translation.html\n
+gadget_hr_translation.html\n
 gadget_officejs_widget_listbox.html\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
@@ -151,8 +149,8 @@ gadget_officejs_page_login.js\n
 gadget_officejs_page_logout.js\n
 gadget_officejs_page_sync.js\n
 gadget_officejs_router.js\n
-gadget_translation.js\n
-gadget_translation_data.js\n
+gadget_hr_translation.js\n
+gadget_hr_translation_data.js\n
 gadget_officejs_widget_listbox.js\n
 erp5_launcher.js\n
 erp5_launcher.html\n
@@ -350,7 +348,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.54357.20081.48708</string> </value>
+                <value> <string>956.54751.3513.37683</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +366,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485185223.06</float>
+                        <float>1486474400.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -227,7 +227,7 @@
           } else {
             ops.state = state.sync_state;
           }
-          return template(ops);
+          return gadget.translateHtml(template(ops));
         })
         .push(function (html) {
           var discussion_div;

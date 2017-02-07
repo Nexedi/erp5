@@ -379,7 +379,7 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
+            <value> <string>gadget_hr_translation.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
@@ -565,7 +565,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.57506.23984.60142</string> </value>
+                <value> <string>957.10753.62758.1638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -583,7 +583,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485350678.17</float>
+                        <float>1486477789.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

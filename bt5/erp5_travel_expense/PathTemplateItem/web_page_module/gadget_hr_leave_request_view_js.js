@@ -113,7 +113,7 @@
             select_options: select_options,
             not_readonly: !state.readonly
           };
-          return template(ops);
+          return gadget.translateHtml(template(ops));
         })
         .push(function (html) {
           gadget.props.element.innerHTML = html;

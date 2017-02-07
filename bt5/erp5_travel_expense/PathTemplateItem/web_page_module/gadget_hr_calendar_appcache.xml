@@ -114,6 +114,7 @@ gadget_officejs_calendar.html/renderjs.js\n
 gadget_officejs_calendar.html/jquery.js\n
 gadget_officejs_calendar.html/fullcalendar.min.js\n
 gadget_officejs_calendar.html/fullcalendar.min.css\n
+gadget_officejs_calendar.html/locale-all.js\n
 \n
 NETWORK:\n
 *</string> </value>
@@ -251,7 +252,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.35742.5405.23739</string> </value>
+                <value> <string>956.44329.14852.21316</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -269,7 +270,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1484044752.92</float>
+                        <float>1486481468.06</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

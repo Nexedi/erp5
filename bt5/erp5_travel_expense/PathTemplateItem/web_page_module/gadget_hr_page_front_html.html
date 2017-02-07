@@ -8,21 +8,20 @@
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
 
     <!-- custom script -->
     <script src="gadget_officejs_page_hr_front.js" type="text/javascript"></script>
-
-  </head>
-  <body>
-
-    <article class="ui-body-c document-access">
+    
+    <script class="front-template" type="text/x-handlebars-template">
+      <article class="ui-body-c document-access">
       <section class="ui-body-c ui-content-section">
           <div class="ui-controlgroup ui-controlgroup-horizontal">
             <div class="ui-grid-b ui-responsive">
               <div class="ui-block-a">
                 <form class="synchro-form view-web-page-form">
                   <button type="submit" data-i18n="Send & Receive" data-theme="c" class=" ui-btn ui-btn-c ui-shadow ui-corner-all">Send & Receive</button>
-                  <span>Last Synchronization Date:</span>
+                  <span data-i18n='Last Synchronization Date:'>Last Synchronization Date:</span>
                   <span class="last_sync_date" style='color: red;'></span>
                 </form>
               </div>
@@ -33,7 +32,7 @@
       <section class="">
         <h3 class="ui-body-c">
           <span class="ui-icon ui-icon-custom ui-icon-plus">&nbsp;</span>
-          Add
+          <span data-i18n='Add'>Add</span>
         </h3>
       </section>
       <section class="ui-body-c ui-content-section">
@@ -54,22 +53,26 @@
       <section class="">
         <h3 class="ui-body-c">
           <span class="ui-icon ui-icon-custom ui-icon-exchange">&nbsp;</span>
-          Elements to Answer
+          <span data-i18n='Elements to Answer'>Elements to Answer</span>
         </h3>
       </section>
       <section class="ui-body-c ui-content-section">
-        <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox-suspended"></div>
+        <div class="listbox-suspended"></div>
       </section>
       <section class="">
         <h3 class="ui-body-c">
           <span class="ui-icon ui-icon-custom ui-icon-exchange">&nbsp;</span>
-          Elements to Post
+          <span data-i18n='Elements to Post'>Elements to Post</span>
         </h3>
       </section>
       <section class="ui-body-c ui-content-section">
-        <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox-draft"></div>
+        <div class="listbox-draft"></div>
       </section>
     </article>
+    </script>
+  </head>
 
+
+  <body>
   </body>
 </html>

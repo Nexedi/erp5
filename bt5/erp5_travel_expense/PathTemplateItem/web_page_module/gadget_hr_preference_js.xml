@@ -64,28 +64,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/2</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>contributors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_travel_request_record_view.js</string> </value>
+            <value> <string>gadget_officejs_page_preference.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -95,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_hr_mission_request_record_view_js</string> </value>
+            <value> <string>gadget_hr_preference_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -113,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Travel Request Record View JS</string> </value>
+            <value> <string>Gadget Officejs Preference JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -177,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -199,7 +185,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479985416.55</float>
+                        <float>1486390274.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -244,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.58658.21925.32853</string> </value>
+                <value> <string>957.10553.57885.16657</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -262,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486473814.12</float>
+                        <float>1486465848.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -289,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -319,7 +305,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479982558.86</float>
+                        <float>1486390247.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
