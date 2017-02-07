@@ -45,16 +45,28 @@
     })
 
     .declareMethod('render', function (options) {
+      var mode;
+      if (options.portal_type === 'Web Page') {
+        mode = 'htmlmixed';
+      } else if (options.portal_type === 'Web Script') {
+        mode = 'javascript';
+      } else if (options.portal_type === 'Web Style') {
+        mode = 'css';
+      }
       return this.changeState({
         key: options.key,
         value: options.value || "",
-        editable: options.editable === undefined ? true : options.editable
+        editable: options.editable === undefined ? true : options.editable,
+        mode: mode
       });
     })
 
     .onStateChange(function (modification_dict) {
       if (modification_dict.hasOwnProperty('value')) {
         this.editor.setValue(this.state.value);
+      }
+      if (modification_dict.hasOwnProperty('mode')) {
+        this.editor.setOption("mode", this.state.mode);
       }
     })
 
