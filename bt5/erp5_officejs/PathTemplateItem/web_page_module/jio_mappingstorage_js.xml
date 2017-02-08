@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -27,6 +24,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +44,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -53,11 +52,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -66,9 +62,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -78,20 +72,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_bookmark_manager_panel.html</string> </value>
+            <value> <string>jio_mappingstorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -101,34 +83,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_bookmark_manager_panel_html</string> </value>
+            <value> <string>jio_mappingstorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
             <value> <string>en</string> </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.46</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -138,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Application Panel Gadget</string> </value>
+            <value> <string>jio_mappingstorage.js</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -204,7 +167,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -230,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478174871.97</float>
+                        <float>1486542996.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -239,7 +204,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -275,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.575.7829.27238</string> </value>
+                <value> <string>957.11845.19520.59426</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -293,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486556932.46</float>
+                        <float>1486546931.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -350,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468083818.99</float>
+                        <float>1486542996.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

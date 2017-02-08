@@ -66,9 +66,20 @@
         key,
         value,
         i,
-        queue = gadget.translateHtml(panel_template_header() + panel_template_body({"location": window.location.origin + window.location.pathname}));
-
-      queue
+        queue = new RSVP.Queue()
+        .push(function () {
+          return gadget.getSetting("application_title", "");
+        })
+        .push(function (application_name) {
+          return gadget.translateHtml(
+            panel_template_header() + panel_template_body(
+              {
+                "location": window.location.origin + window.location.pathname,
+                "app_name": application_name
+              }
+            )
+          );
+        })
         .push(function (my_translated_or_plain_html) {
           gadget.props.jelement.html(my_translated_or_plain_html);
           gadget.props.jelement.trigger("create");

@@ -75,12 +75,7 @@ var global = self, window = self;
                           self.console.log("Saved: ", url);
                         })
                         .push(undefined, function (error) {
-                          self.console.log(
-                            "error on",
-                            url,
-                            "cause: ",
-                            error.message
-                          );
+                          event.ports[0].postMessage(error);
                         });
                     })
                 );
@@ -139,7 +134,7 @@ var global = self, window = self;
             });
         })
         .push(undefined, function (error) {
-          self.cconsole.log(
+          self.console.log(
             "Relative_Url: ",
             relative_url,
             "\nCause: ",

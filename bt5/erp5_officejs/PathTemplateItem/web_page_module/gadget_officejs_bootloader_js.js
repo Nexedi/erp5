@@ -22,7 +22,7 @@ var repair = false;
     return jIO.createJIO({
       type: "replicate",
       conflict_handling: 2,
-      check_remote_modification: true,
+      check_remote_modification: true, // put false for prod
       check_remote_deletion: false,
       check_local_creation: false,
       check_local_deletion: false,
@@ -177,6 +177,7 @@ var repair = false;
           }
         })
         .push(undefined, function (error) {
+          console.log(error);
           if (error instanceof ProgressEvent) {
             if (gadget.props.sub === undefined) {
               window.location.pathname += gadget.props.version_url;
@@ -262,6 +263,9 @@ var repair = false;
               document.querySelector("base")
             );
           }
+          navigator.serviceWorker.onerror = function (event) {
+            console.log(event);
+          };
           return navigator.serviceWorker.register(
             "gadget_officejs_bootloader_serviceworker.js",
             {"scope": gadget.props.version_url }
