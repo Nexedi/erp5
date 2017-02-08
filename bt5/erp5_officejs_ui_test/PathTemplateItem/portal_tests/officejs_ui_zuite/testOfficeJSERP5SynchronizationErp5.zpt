@@ -64,12 +64,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//form[@class='erp5-configuration-form']//button</td>
+  <td>//form[@class='erp5-configuration-form']</td>
   <td></td>
 </tr>
 <tr>
   <td>pause</td>
-  <td>3000</td>
+  <td>6000</td>
   <td></td>
 </tr>
 <tr>
