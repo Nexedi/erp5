@@ -9,11 +9,17 @@
 
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
     <script src="gadget_officejs_page_leave_request_record_list.js"></script>
 
-  </head>
+    <script class="page-template" type="text/x-handlebars-template">
+      {{#if day_left}}
+        <p data-i18n="Leaves days left: ">Leaves days left: <span>{{day_left}}</span></p>
+      {{/if}}
+      <div class="leave_request_listbox"></div>
+    </script>
 
+  </head>
   <body>
-    <div data-gadget-url="gadget_officejs_widget_listbox.html" data-gadget-scope="listbox"></div>
   </body>
 </html>
