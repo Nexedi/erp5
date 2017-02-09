@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Variable" module="erp5.portal_type"/>
+      <global name="Workflow Variable" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -39,12 +39,12 @@
             <value> <string>43</string> </value>
         </item>
         <item>
-            <key> <string>initial_value</string> </key>
+            <key> <string>variable_value</string> </key>
             <value> <string>python: object.getDateTime()</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Variable</string> </value>
+            <value> <string>Workflow Variable</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
