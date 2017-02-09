@@ -6,10 +6,19 @@
 
   function setjIOERP5Configuration(gadget) {
     var erp5_url = gadget.props.element.querySelector("input[name='erp5_url']").value;
-    return gadget.getSetting("portal_type")
-      .push(function (portal_type) {
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("portal_type"),
+          gadget.getSetting("erp5_attachment_synchro", undefined)
+        ]);
+      })
+      .push(function (result) {
         var old_date = new Date(),
-          configuration = {};
+          configuration = {},
+          portal_type = result[0],
+          attachment_synchro = result[1] !== undefined,
+          extended_attachment_url = result[1];
         // We are looking for documents modified in the past 3 month
         old_date = new Date(old_date.getFullYear(), old_date.getMonth(), old_date.getDate() - 15);
         configuration = {
@@ -25,6 +34,11 @@
           },
           use_remote_post: true,
           conflict_handling: 1,
+          check_local_attachment_modification: attachment_synchro,
+          check_local_attachment_creation: attachment_synchro,
+          check_remote_attachment_modification: attachment_synchro,
+          check_remote_attachment_creation: attachment_synchro,
+          check_remote_attachment_deletion: attachment_synchro,
           check_local_modification: true,
           check_local_creation: true,
           check_local_deletion: false,
@@ -42,11 +56,28 @@
             }
           },
           remote_sub_storage: {
-            type: "erp5",
-            url: (new URI("hateoas"))
-                  .absoluteTo(erp5_url)
-                  .toString(),
-            default_view_reference: "jio_view"
+            type: "mapping",
+            attachment_list: ["data"],
+            attachment: {
+              "data": {
+                "get": {
+                  "uri_template": (new URI("hateoas"))
+                                 .absoluteTo(erp5_url)
+                                 .toString() + extended_attachment_url
+                },
+                "put": {
+                  "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
+                    .toString() + "/{+id}/Base_edit"
+                }
+              }
+            },
+            sub_storage: {
+              type: "erp5",
+              url: (new URI("hateoas"))
+                    .absoluteTo(erp5_url)
+                    .toString(),
+              default_view_reference: "jio_view"
+            }
           }
         };
         return gadget.setSetting('jio_storage_description', configuration);
