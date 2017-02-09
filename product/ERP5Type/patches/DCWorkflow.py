@@ -51,6 +51,8 @@ from lxml.etree import Element, SubElement
 
 ACTIVITY_GROUPING_COUNT = 100
 
+_marker = ''
+
 def WorkflowUIMixin_setProperties( self, title
                                  , description='' # the only addition to WorkflowUIMixin.setProperties
                                  , manager_bypass=0, props=None, REQUEST=None):
@@ -70,7 +72,6 @@ def WorkflowUIMixin_setProperties( self, title
 
 WorkflowUIMixin_class.setProperties = WorkflowUIMixin_setProperties
 WorkflowUIMixin_class.manage_properties = DTMLFile('workflow_properties', _dtmldir)
-
 
 def Guard_checkWithoutRoles(self, sm, wf_def, ob, **kw):
     """Checks conditions in this guard.
@@ -276,13 +277,8 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
   portal = self.getPortalObject()
   def getPortalTypeListForWorkflow(workflow_id):
       workflow_tool = portal.portal_workflow
-      result = []
-      append = result.append
-      for type_info in workflow_tool._listTypeInfo():
-        portal_type = type_info.id
-        if workflow_id in workflow_tool.getChainFor(portal_type):
-          append(portal_type)
-      return result
+      return [type_info.id for type_info in workflow_tool._listTypeInfo()
+              if workflow_id in type_info.getTypeWorkflowList()]
 
   _getPortalTypeListForWorkflow = CachingMethod(getPortalTypeListForWorkflow,
                             id='_getPortalTypeListForWorkflow', cache_factory = 'erp5_ui_long')
@@ -348,6 +344,25 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
 
 DCWorkflowDefinition.security.declarePrivate('getWorklistVariableMatchDict')
 DCWorkflowDefinition.getWorklistVariableMatchDict = DCWorkflowDefinition_getWorklistVariableMatchDict
+
+def DCWorkflowDefinition_isWorkflowMethodSupported(self, ob, method_id, state=None):
+    '''
+    Returns a true value if the given workflow method
+    is supported in the current state.
+    '''
+    if state is None:
+      state = self._getWorkflowStateOf(ob)
+    if state is None:
+        return False
+    if method_id in state.transitions:
+        tdef = self.transitions.get(method_id, None)
+        if (tdef is not None and
+            tdef.trigger_type == TRIGGER_WORKFLOW_METHOD and
+            self._checkTransitionGuard(tdef, ob)):
+            return True
+    return False
+DCWorkflowDefinition.security.declarePrivate('isWorkflowMethodSupported')
+DCWorkflowDefinition.isWorkflowMethodSupported = DCWorkflowDefinition_isWorkflowMethodSupported
 
 TransitionDefinition__init__orig = TransitionDefinition.__init__
 def TransitionDefinition__init__(self, *args, **kw):
@@ -612,6 +627,20 @@ def DCWorkflowDefinition_wrapWorkflowMethod(self, ob, method_id, func, args, kw)
 
 DCWorkflowDefinition.wrapWorkflowMethod = DCWorkflowDefinition_wrapWorkflowMethod
 
+def StateDefinition_getStatePermissionRolesDict(self):
+  return self.permission_roles
+
+def StateDefinition_getAcquirePermissionList(self):
+  return _marker
+
+def DCWorkflowDefinition_getWorkflowManagedPermissionList(self):
+  permission_list = self.permissions
+  if permission_list:
+    permission_list = permission_list if isinstance(permission_list, list) else list(permission_list)
+  else:
+    permission_list = []
+  return permission_list
+DCWorkflowDefinition.getWorkflowManagedPermissionList = DCWorkflowDefinition_getWorkflowManagedPermissionList
 
 # Patch updateRoleMappingsFor so that if 2 workflows define security, then we
 # should do an AND operation between each permission
@@ -625,11 +654,11 @@ def updateRoleMappingsFor(self, ob):
 
     tool = aq_parent(aq_inner(self))
     other_workflow_list = \
-       [x for x in tool.getWorkflowsFor(ob) if x.id != self.id and isinstance(x,DCWorkflowDefinition)]
+       [x for x in tool.getWorkflowsFor(ob) if x.id != self.id and x.getPortalType() in ('DCWorkflowDefinition', 'Workflow')]
     other_data_list = []
     for other_workflow in other_workflow_list:
       other_sdef = other_workflow._getWorkflowStateOf(ob)
-      if other_sdef is not None and other_sdef.permission_roles is not None:
+      if other_sdef is not None and other_sdef.getStatePermissionRolesDict() is not None:
         other_data_list.append((other_workflow,other_sdef))
     # Be carefull, permissions_roles should not change
     # from list to tuple or vice-versa. (in modifyRolesForPermission,
@@ -648,12 +677,14 @@ def updateRoleMappingsFor(self, ob):
             # We will check that each role is activated
             # in each DCWorkflow
             for other_workflow,other_sdef in other_data_list:
-              if p in other_workflow.permissions:
-                other_roles = other_sdef.permission_roles.get(p, [])
-                if type(other_roles) is type(()) :
-                  other_role_type_list.append('tuple')
-                else:
-                  other_role_type_list.append('list')
+              if p in other_workflow.getWorkflowManagedPermissionList():
+                other_roles = other_sdef.getStatePermissionRolesDict().get(p, [])
+                acquire_permission_list = other_sdef.getAcquirePermissionList()
+                if acquire_permission_list is _marker: # DC Workflow
+                  other_role_type = 'tuple' if type(other_roles) is type(()) else 'list'
+                else: # ERP5 Workflow
+                  other_role_type = 'list' if p in acquire_permission_list else 'tuple'
+                other_role_type_list.append(other_role_type)
                 for role in roles:
                   if role not in other_roles :
                     refused_roles.append(role)
@@ -676,22 +707,17 @@ def updateRoleMappings(self, REQUEST=None):
   Changes permissions of all objects related to this workflow
   """
   wf_tool = aq_parent(aq_inner(self))
-  chain_by_type = wf_tool._chains_by_type
   type_info_list = wf_tool._listTypeInfo()
   wf_id = self.id
   portal_type_list = []
   # get the list of portal types to update
   if wf_id in wf_tool._default_chain:
-    include_default = 1
+    include_default = True
   else:
-    include_default = 0
+    include_default = False
   for type_info in type_info_list:
-    tid = type_info.getId()
-    if chain_by_type.has_key(tid):
-      if wf_id in chain_by_type[tid]:
-        portal_type_list.append(tid)
-    elif include_default == 1:
-      portal_type_list.append(tid)
+    if wf_id in type_info.getTypeWorkflowList() or include_default:
+        portal_type_list.append(type_info.getId())
   if portal_type_list:
     object_list = self.portal_catalog(portal_type=portal_type_list, limit=None)
     object_list_len = len(object_list)
@@ -802,50 +828,76 @@ def DCWorkflowDefinition_notifySuccess(self, ob, transition_list, result, args=N
     '''
     pass
 
-# following 15 patches are required for the new workflow tool compatibility.
-def DCWorkflowDefinition_getVariableValueList(self):
+# following patches are required for the new workflow tool compatibility.
+def DCWorkflowDefinition_getVariableValueDict(self):
   if self.variables is not None:
     return self.variables
   return {}
+def DCWorkflowDefinition_getVariableValueById(self, variable_id):
+  if self.variables is not None:
+    return self.variables.get(variable_id, None)
+  return None
 def DCWorkflowDefinition_getVariableIdList(self):
   if self.variables is not None:
     return self.variables.objectIds()
   return []
 def DCWorkflowDefinition_getStateVariable(self):
   return self.state_var
+def DCWorkflowDefinition_getStateValueById(self, state_id):
+  if self.states is not None:
+    return self.states.get(state_id, None)
+  return None
 def DCWorkflowDefinition_getStateValueList(self):
   if self.states is not None:
-    return self.states
-  return {}
+    return self.states.values()
+  return []
 def DCWorkflowDefinition_getStateIdList(self):
   if self.states is not None:
     return self.states.objectIds()
   return []
+def DCWorkflowDefinition_getTransitionValueById(self, transition_id):
+  if self.transitions is not None:
+    return self.transitions.get(transition_id, None)
+  return None
 def DCWorkflowDefinition_getTransitionValueList(self):
   if self.transitions is not None:
-    return self.transitions
+    return self.transitions.values()
   else:
-    return {}
+    return []
+def DCWorkflowDefinition_getTransitionIdByReference(self, reference):
+  return reference
 def DCWorkflowDefinition_getTransitionIdList(self):
   if self.transitions is not None:
     return self.transitions.objectIds()
   return []
+def DCWorkflowDefinition_getWorklistValueById(self, worklist_id):
+  if self.worklists is not None:
+    return self.worklists.get(worklist_id, None)
+  return None
 def DCWorkflowDefinition_getWorklistValueList(self):
   if self.worklists is not None:
-    return self.worklists
-  return {}
+    return self.worklists.values()
+  return []
 def DCWorkflowDefinition_getWorklistIdList(self):
   if self.worklists is not None:
     return self.worklists.objectIds()
   return []
 def DCWorkflowDefinition_propertyIds(self):
   return sorted(self.__dict__.keys())
+def DCWorkflowDefinition_getScriptIdByReference(self, reference):
+  return reference
+def DCWorkflowDefinition_getScriptValueById(self, script_id):
+  if self.scripts is not None:
+    return self.scripts.get(script_id, None)
+  return None
 def DCWorkflowDefinition_getScriptValueList(self):
   if self.scripts is not None:
-    return self.scripts
-  return {}
+    return self.scripts.values()
+  return []
 def StateDefinition_getDestinationIdList(self):
   return self.transitions
+def StateDefinition_getStateTypeList(self):
+  return getattr(self, 'type_list', ())
 def DCWorkflowDefinition_getPortalType(self):
   return self.__class__.__name__
 def method_getReference(self):
@@ -971,7 +1023,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   for vid in variable_id_list:
     vdef = self.variables[vid]
     variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference(),
-          portal_type='Variable'))
+          portal_type='Workflow Variable'))
     for property_id in sorted(variable_prop_id_to_show):
       if property_id == 'default_expr':
         expression = getattr(vdef, property_id, None)
@@ -1073,7 +1125,7 @@ def DCWorkflowDefinition_showAsXML(self, root=None):
   return etree.tostring(root, encoding='utf-8',
                         xml_declaration=True, pretty_print=True)
 
-def TransitionDefinition_getParentWorkflowValue(self):
+def TransitionDefinition_getParentValue(self):
   return self.aq_parent.aq_parent
 
 def DCWorkflowDefinition_getSourceValue(self):
@@ -1088,6 +1140,13 @@ def DCWorkflowDefinition_addTransition(self, name):
 def DCWorkflowDefinition_deleteTransitions(self, name):
   self.transitions.deleteTransitions(name)
 
+def WorklistDefinition_getGuardRoleList(self):
+  return self.getGuard().getRolesText().split(';')
+
+def method_isGuarded(self):
+  guard = getattr(self, 'guard', None)
+  return guard is not None
+
 DCWorkflowDefinition.addTransition = DCWorkflowDefinition_addTransition
 DCWorkflowDefinition.deleteTransitions = DCWorkflowDefinition_deleteTransitions
 DCWorkflowDefinition.getReference = method_getReference
@@ -1095,11 +1154,16 @@ DCWorkflowDefinition.getSourceValue = DCWorkflowDefinition_getSourceValue
 DCWorkflowDefinition.notifyWorkflowMethod = DCWorkflowDefinition_notifyWorkflowMethod
 DCWorkflowDefinition.notifyBefore = DCWorkflowDefinition_notifyBefore
 DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
-DCWorkflowDefinition.getVariableValueList = DCWorkflowDefinition_getVariableValueList
+DCWorkflowDefinition.getVariableValueDict = DCWorkflowDefinition_getVariableValueDict
+DCWorkflowDefinition.getVariableValueById = DCWorkflowDefinition_getVariableValueById
+DCWorkflowDefinition.getStateValueById = DCWorkflowDefinition_getStateValueById
 DCWorkflowDefinition.getStateValueList = DCWorkflowDefinition_getStateValueList
+DCWorkflowDefinition.getTransitionValueById = DCWorkflowDefinition_getTransitionValueById
 DCWorkflowDefinition.getTransitionValueList = DCWorkflowDefinition_getTransitionValueList
+DCWorkflowDefinition.getWorklistValueById = DCWorkflowDefinition_getWorklistValueById
 DCWorkflowDefinition.getWorklistValueList = DCWorkflowDefinition_getWorklistValueList
 DCWorkflowDefinition.getScriptValueList = DCWorkflowDefinition_getScriptValueList
+DCWorkflowDefinition.getScriptValueById = DCWorkflowDefinition_getScriptValueById
 DCWorkflowDefinition.getVariableIdList = DCWorkflowDefinition_getVariableIdList
 DCWorkflowDefinition.getStateIdList = DCWorkflowDefinition_getStateIdList
 DCWorkflowDefinition.getTransitionIdList = DCWorkflowDefinition_getTransitionIdList
@@ -1110,17 +1174,24 @@ DCWorkflowDefinition.showDict = DCWorkflowDefinition_showDict
 DCWorkflowDefinition.propertyIds = DCWorkflowDefinition_propertyIds
 DCWorkflowDefinition.getStateVariable = DCWorkflowDefinition_getStateVariable
 DCWorkflowDefinition.getPortalType = DCWorkflowDefinition_getPortalType
+DCWorkflowDefinition.getScriptIdByReference = DCWorkflowDefinition_getScriptIdByReference
+DCWorkflowDefinition.getTransitionIdByReference = DCWorkflowDefinition_getTransitionIdByReference
 StateDefinition.getReference = method_getReference
 StateDefinition.getDestinationIdList = StateDefinition_getDestinationIdList
 StateDefinition.getDestinationReferenceList = StateDefinition_getDestinationIdList
 StateDefinition.showDict = DCWorkflowDefinition_showDict
-TransitionDefinition.getParentWorkflowValue = TransitionDefinition_getParentWorkflowValue
+StateDefinition.getStateTypeList = StateDefinition_getStateTypeList
+StateDefinition.getStatePermissionRolesDict = StateDefinition_getStatePermissionRolesDict
+StateDefinition.getAcquirePermissionList = StateDefinition_getAcquirePermissionList
+TransitionDefinition.getParentValue = TransitionDefinition_getParentValue
 TransitionDefinition.getReference = method_getReference
 TransitionDefinition.showDict = DCWorkflowDefinition_showDict
+TransitionDefinition.isGuarded = method_isGuarded
 VariableDefinition.getReference = method_getReference
 VariableDefinition.showDict = DCWorkflowDefinition_showDict
 WorklistDefinition.getReference = method_getReference
 WorklistDefinition.showDict = DCWorkflowDefinition_showDict
+WorklistDefinition.getGuardRoleList = WorklistDefinition_getGuardRoleList
 
 # This patch allows to use workflowmethod as an after_script
 # However, the right way of doing would be to have a combined state of TRIGGER_USER_ACTION and TRIGGER_WORKFLOW_METHOD

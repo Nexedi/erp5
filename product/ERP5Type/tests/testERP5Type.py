@@ -129,11 +129,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.login()
       # all those tests does strange things with Person type, so we won't
       # filter content types to add inside Person.
-      self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+      person_type_object = self.getTypesTool().getTypeInfo('Person')
+      person_type_object.filter_content_types = 0
       self.commit()
 
       # save workflow chain for Person type
-      self.person_chain = self.getWorkflowTool().getChainFor('Person')
+      self.person_workflow_list = person_type_object.getTypeWorkflowList()
 
     def beforeTearDown(self):
       self.abort()
@@ -144,14 +145,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                       self.getCategoryTool().region ]:
         module.manage_delObjects(list(module.objectIds()))
 
+      person_type_object = self.getTypesTool().getTypeInfo('Person')
       # set Person.acquire_local_roles back.
       if getattr(self, 'person_acquire_local_roles', None) is not None:
-        self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
+        person_type_object.acquire_local_roles = self.person_acquire_local_roles
         self.portal.portal_caches.clearAllCache()
 
       # restore workflows for other tests
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], self.person_chain)
+      person_type_object.setTypeWorkflowList(self.person_workflow_list)
 
       super(TestERP5Type, self).beforeTearDown()
 
@@ -973,7 +974,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         self.getWorkflowTool().getWorkflowValueListFor('Person'))
       self.assertEqual('validation_state', wf.getStateVariable())
       initial_state = wf.getSourceValue()
-      other_state = wf.getStateValueList()['validated']
+      other_state = wf.getStateValueById('validated')
 
       self.assertTrue(hasattr(person, 'getValidationState'))
       self.assertTrue(hasattr(person, 'getValidationStateTitle'))
@@ -2462,22 +2463,23 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.commit()
         self.assertFalse(hasattr(doc, 'getDestination'))
 
-    def test_aq_reset_on_workflow_chain_change(self):
+    def test_aq_reset_on_type_workflow_list_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
       self.assertFalse(hasattr(doc, 'getCausalityState'))
       # chain the portal type with a workflow that has 'causality_state' as
       # state variable name, this should regenerate the getCausalityState
       # accessor. This test might have to be updated whenever
       # delivery_causality_workflow changes.
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], ('delivery_causality_workflow'))
+      person_type_object = self.getTypesTool().getTypeInfo('Person')
+      person_type_object.setTypeWorkflowList(['delivery_causality_workflow'])
 
       self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
 
     def test_aq_reset_on_workflow_method_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      self.portal.portal_workflow.addWorkflowToType(self.portal.portal_types._getOb('Person'), ('delivery_causality_workflow',))
+      person_type_object = self.portal.portal_types._getOb('Person')
+      person_type_object.setTypeWorkflowList(person_type_object.getTypeWorkflowList() + ['delivery_causality_workflow'])
       self.commit()
       self.assertTrue(hasattr(doc, 'diverge'))
 
@@ -2500,7 +2502,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def test_aq_reset_on_workflow_state_variable_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      self.portal.portal_workflow.addWorkflowToType(self.portal.portal_types._getOb('Person'), ('delivery_causality_workflow',))
+      person_type_object = self.portal.portal_types._getOb('Person')
+      person_type_object.setTypeWorkflowList(person_type_object.getTypeWorkflowList() + ['delivery_causality_workflow'])
       self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
       wf = self.portal.portal_workflow._getOb('delivery_causality_workflow')

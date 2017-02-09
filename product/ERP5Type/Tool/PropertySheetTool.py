@@ -69,6 +69,12 @@ class PropertySheetTool(BaseTool):
       'SimpleItem',
       'Version',
       'Comment',
+      # for workflow:
+      'Workflow',
+      'Variable',
+      'WorkflowVariable',
+      'Transition',
+      'State',
       # the following ones are required to upgrade an existing site
       'Reference',
       'BaseCategory',

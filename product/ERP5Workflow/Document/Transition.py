@@ -31,10 +31,7 @@ import sys
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from copy import deepcopy
-from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved
-from Products.DCWorkflow.Guard import Guard
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Base import _evaluateTales
 from Products.ERP5Type.Globals import PersistentMapping
@@ -43,13 +40,15 @@ from Products.ERP5Type.patches.DCWorkflow import ValidationFailed
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Workflow.mixin.guardable import GuardableMixin
 from zLOG import LOG, ERROR, DEBUG, WARNING
 
 TRIGGER_AUTOMATIC = 0
 TRIGGER_USER_ACTION = 1
 TRIGGER_WORKFLOW_METHOD = 2
 
-class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
+class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject,
+                 GuardableMixin):
   """
   A ERP5 Transition.
   """
@@ -60,11 +59,6 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
   isPortalContent = 1
   isRADContent = 1
   trigger_type = TRIGGER_USER_ACTION #zwj: type is int 0, 1, 2
-  guard = None
-  actbox_name = ''
-  actbox_url = ''
-  actbox_icon = ''
-  actbox_category = 'workflow'
   var_exprs = None  # A mapping.
   default_reference = ''
   # Declarative security
@@ -79,34 +73,92 @@ class Transition(IdAsReferenceMixin("transition_", "prefix"), XMLObject):
              PropertySheet.DublinCore,
              PropertySheet.Reference,
              PropertySheet.Transition,
+             PropertySheet.Guard,
+             PropertySheet.ActionInformation,
   )
 
-  def getGuardSummary(self):
-    res = None
-    if self.getGuard() is not None:
-      res = self.guard.getSummary()
-    return res
+  # following getters are redefined for performance improvements
+  # they use the categories paths directly and string operations
+  # instead of traversing from the portal to get the objects
+  # in order to have their id or value
 
-  def getGuard(self):
-    self.generateGuard()
-    if not self.guard.roles or self.guard.roles == []:
-      reasonable_roles = self.getParent().getManagedRoleList()
-      # Make sure we do not give rights to anonymous users when no guard is defined
-      #reasonable_roles.remove('Anonymous')
-      self.guard.roles = reasonable_roles
-    return self.guard
+  # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActionType')
+  def getActionType(self):
+    prefix_length = len('action_type/')
+    action_type_list = [path[prefix_length:] for path in self.getCategoryList()
+                        if path.startswith('action_type/')]
+    return action_type_list[0]
 
-  def generateGuard(self):
-    if self.guard is None:
-      self.guard = Guard()
-    if self.getRoleList() is not None:
-      self.guard.roles = self.getRoleList()
-    if self.getPermissionList() is not None:
-      self.guard.permissions = self.getPermissionList()
-    if self.getGroupList() is not None:
-      self.guard.groups = self.getGroupList()
-    if self.getExpression() is not None:
-      self.guard.expr = Expression(self.getExpression())
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeScriptList')
+  def getBeforeScriptList(self):
+    """
+    returns the list of before script
+    """
+    prefix_length = len('before_script/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('before_script/')]
 
-  def getParentWorkflowValue(self):
-    return self.getParent()
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAfterScriptList')
+  def getAfterScriptList(self):
+    """
+    returns the list of after script
+    """
+    prefix_length = len('after_script/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('after_script/')]
+
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeScriptIdList')
+  def getBeforeScriptIdList(self):
+    """
+    returns the list of before script ids
+    """
+    return [path.split('/')[-1] for path in self.getBeforeScriptList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeScriptValueList')
+  def getBeforeScriptValueList(self):
+    """
+    returns the list of before script values
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(transition_id) for transition_id
+            in self.getBeforeScriptIdList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAfterScriptIdList')
+  def getAfterScriptIdList(self):
+    """
+    returns the list of after script ids
+    """
+    return [path.split('/')[-1] for path in self.getAfterScriptList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAfterScriptValueList')
+  def getAfterScriptValueList(self):
+    """
+    returns the list of after script values
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(transition_id) for transition_id
+            in self.getAfterScriptIdList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationValue')
+  def getDestinationValue(self):
+    """
+    returns the destination object
+    """
+
+    destination_path_list = [path for path in self.getCategoryList()
+                             if path.startswith('destination/')]
+    if destination_path_list:
+      destination_id = destination_path_list[0].split('/')[-1]
+      parent = self.getParentValue()
+      return parent._getOb(destination_id)
+    return None

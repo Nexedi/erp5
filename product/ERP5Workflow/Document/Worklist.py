@@ -32,16 +32,16 @@ import re
 from AccessControl import ClassSecurityInfo
 from Persistence import PersistentMapping
 from Products.CMFCore.Expression import Expression
-from Products.DCWorkflow.Guard import Guard
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 from Products.ERP5Type.XMLObject import XMLObject
-
+from Products.ERP5Workflow.mixin.guardable import GuardableMixin
 from zLOG import LOG, WARNING
 
 tales_re = re.compile(r'(\w+:)?(.*)')
 
-class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
+class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject,
+               GuardableMixin):
     """
     A ERP5 Worklist.
     Four Variable: portal_type; simulation_state; validation_state; causality_state
@@ -57,11 +57,6 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
     description = ''
     var_matches = []  # Compared with catalog when set.
     matched_portal_type = ''
-    actbox_name = ''
-    actbox_url = ''
-    actbox_icon = ''
-    actbox_category = 'global'
-    guard = None
     default_reference = ''
     # Declarative security
     security = ClassSecurityInfo()
@@ -75,52 +70,25 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
                PropertySheet.DublinCore,
                PropertySheet.Reference,
                PropertySheet.Worklist,
+               PropertySheet.Guard,
+               PropertySheet.ActionInformation,
     )
 
-    def getGuardSummary(self):
-      res = None
-      if self.getGuard() is not None:
-        res = self.guard.getSummary()
-      return res
-
-    def getGuard(self):
-      if self.getRoleList() is None and\
-          self.getPermissionList() is None and\
-          self.getGroupList() is None and\
-          self.getExpression() is None and\
-          self.guard is None:
-        return Guard().__of__(self)
-      elif self.guard is None:
-        self.generateGuard()
-      return self.guard
-
-    def generateGuard(self):
-      self.guard = Guard()
-      if self.getRoleList() is not None:
-        self.guard.roles = self.getRoleList()
-      if self.getPermissionList() is not None:
-        self.guard.permissions = self.getPermissionList()
-      if self.getGroupList() is not None:
-        self.guard.groups = self.getGroupList()
-      if self.getExpression() is not None:
-        self.guard.expr = Expression(self.getExpression())
-
     def getAvailableCatalogVars(self):
-        res = []
-        res.append(self.getParentValue().getStateVariable())
-        for vdef in self.getParentValue().contentValues(portal_type="Variable"):
-            if vdef.getForCatalog():
-                res.append(vdef.getId())
-        for vdef in self.objectValues():
-          res.append(vdef.getId())
-        res.sort()
-        return res
+      parent = self.getParentValue()
+      res = [parent.getStateVariable()]
+      res += [variable.getId() for variable in self.objectValues()]
+      res += [variable for variable in
+              parent.contentValues(portal_type="Workflow Variable")
+              if variable.getForCatalog()]
+      res.sort()
+      return res
 
     def updateDynamicVariable(self):
       # Keep worklist variables updating, correspond to workflow variables.
       # In the new workflow, we may not need this function for the moment.
       res = []
-
+      # XXX(WORKFLOW): is there a reason not to return self.objectValues() here?
       for worklist_variable_value in self.objectValues():
         res.append(worklist_variable_value)
       return res
@@ -133,51 +101,55 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
         'variable_comment', 'variable_error_message', 'variable_history',\
         'variable_portal_type', 'variable_time']
 
-      """
-      Check workflow variables:
-      """
-      for variable_value in self.getParentValue().objectValues(portal_type="Variable"):
+      # Check workflow variables:
+      for variable_value in self.getParentValue().objectValues(portal_type="Workflow Variable"):
         variable_id = variable_value.getId()
         workflow_variable_id_list.append(variable_id)
         worklist_variable_value = self._getOb(variable_id, None)
-        if worklist_variable_value is None and variable_value.getForCatalog() == 1 and variable_id not in default_variable_id_list:
+        if (worklist_variable_value is None
+            and variable_value.getForCatalog() == 1
+            and variable_id not in default_variable_id_list):
           variable_value_ref = variable_value.getReference()
           worklist_variable_value = self.newContent(portal_type='Worklist Variable')
           worklist_variable_value.setReference(variable_value_ref)
-          worklist_variable_value.setDefaultExpr(variable_value.getDefaultExpr())
-          worklist_variable_value.setInitialValue(variable_value.getInitialValue())
+          worklist_variable_value.setVariableExpression(variable_value.getVariableExpression())
+          worklist_variable_value.setVariableValue(variable_value.getVariableValue())
           res.append(worklist_variable_value)
-        if worklist_variable_value and worklist_variable_value not in res and variable_value.getForCatalog() == 1:
+        if (worklist_variable_value and worklist_variable_value not in res
+            and variable_value.getForCatalog() == 1):
           res.append(worklist_variable_value)
-        if worklist_variable_value in res and variable_value.getForCatalog() == 0:
+        if (worklist_variable_value in res
+            and variable_value.getForCatalog() == 0):
           self._delObject(variable_id)
           res.remove(worklist_variable_value)
 
-      """
-      Append user created worklist variables.
-      """
+      # Append user created worklist variables.
       for worklist_variable_value in self.objectValues():
         if worklist_variable_value.getId() not in workflow_variable_id_list:
           res.append(worklist_variable_value)
           workflow_variable_id_list.append(worklist_variable_value.getId())
-      LOG(" worklist '%s' has variable '%s'"%(self.getId(),workflow_variable_id_list ),0, " in Worklist.py 159")
       return res
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVarMatchKeys')
     def getVarMatchKeys(self):
         key_list = []
-        if self.getMatchedPortalTypeList() is not None:
+        if self.getMatchedPortalTypeList():
           key_list.append('portal_type')
-        if self.getMatchedSimulationStateList() is not None:
+        if self.getMatchedSimulationStateList():
           key_list.append('simulation_state')
-        if self.getMatchedValidationStateList() is not None:
+        if self.getMatchedValidationStateList():
           key_list.append('validation_state')
-        if self.getMatchedCausalityState() is not None:
+        if self.getMatchedCausalityState():
           key_list.append('causality_state')
-        for dynamic_variable in self.objectValues():
-          if dynamic_variable.getInitialValue() or dynamic_variable.getDefaultExpr():
-            key_list.append(dynamic_variable.getReference())
+        
+        key_list += [dynamic_variable.getReference() for dynamic_variable in self.objectValues()
+         if dynamic_variable.getVariableValue() or dynamic_variable.getVariableExpression()]
+
         return key_list
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVarMatch')
     def getVarMatch(self, id):
         """ return value of matched keys"""
         matches = None
@@ -191,25 +163,30 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
           elif id == 'simulation_state':
             matches_id_list = self.getMatchedSimulationStateList()
           # Get workflow state's reference:
+          parent = self.getParentValue()
           for state_id in matches_id_list:
-            if hasattr(self.getParent(), state_id):
-              matches_ref_list.append(self.getParent()._getOb(state_id).getReference())
+            state = getattr(parent, state_id, None)
+            if state is not None:
+              matches_ref_list.append(state.getReference())
             else: matches_ref_list = matches_id_list
           matches = tuple(matches_ref_list)
         elif id == 'causality_state':
           matches_id = self.getMatchedCausalityState()
           matches_ref_list.append(matches_id)
           matches = tuple(matches_ref_list)
-        else:
+        elif id:
           # Local dynamic variable:
-          dynamic_varible = self._getOb('variable_'+id)
-          if dynamic_varible.getInitialValue():
-            matches = [dynamic_varible.getInitialValue()]
+          dynamic_variable = self._getOb('variable_'+id)
+          dynamic_variable_value = dynamic_variable.getVariableValue()
+          if dynamic_variable_value:
+            matches = [dynamic_variable_value]
           # Override initial value if expression set:
-          if dynamic_varible.getDefaultExpr():
-            matches = Expression(dynamic_varible.getDefaultExpr())
+          dynamic_variable_expression_text = dynamic_variable\
+              .getVariableExpression()
+          if dynamic_variable_expression_text:
+            matches = dynamic_variable_expression_text
 
-        if matches is not [] and matches is not None:
+        if matches not in ([], None):
           if not isinstance(matches, (tuple, Expression)):
             # Old version, convert it.
             matches = tuple(matches)
@@ -217,8 +194,23 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject):
         else:
           return ()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getVarMatchText')
     def getVarMatchText(self, id):
         values = self.getVarMatch(id)
         if isinstance(values, Expression):
             return values.text
         return '; '.join(values)
+
+    # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getActionType')
+    def getActionType(self):
+      prefix_length = len('action_type/')
+      action_type_list = [path[prefix_length:] for path in self.getCategoryList()
+                          if path.startswith('action_type/')]
+      try:
+        return action_type_list[0]
+      except IndexError:
+        return None

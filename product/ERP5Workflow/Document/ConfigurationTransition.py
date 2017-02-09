@@ -53,7 +53,8 @@ class ConfigurationTransition(XMLObject):
              PropertySheet.XMLObject,
              PropertySheet.CategoryCore,
              PropertySheet.DublinCore,
-             PropertySheet.Transition,
+             PropertySheet.ConfiguratorTransition,
+             PropertySheet.Guard,
   )
 
   def execute(self, document, form_kw=None):
@@ -79,7 +80,7 @@ class ConfigurationTransition(XMLObject):
     object = workflow.getStateChangeInformation(document, state_object, transition=self)
 
     # Update all variables
-    for variable in workflow.contentValues(portal_type='Variable'):
+    for variable in workflow.contentValues(portal_type='Workflow Variable'):
       if variable.getAutomaticUpdate():
         # if we have it in form get it from there
         # otherwise use default
@@ -87,13 +88,13 @@ class ConfigurationTransition(XMLObject):
         if variable_title in form_kw:
            status_dict[variable_title] = form_kw[variable_title]
         else:
-          status_dict[variable_title] = variable.getInitialValue(object=object)
+          status_dict[variable_title] = variable.getVariableValue(object=object)
 
     # Update all transition variables
     if form_kw is not None:
       object.REQUEST.other.update(form_kw)
     for variable in self.contentValues(portal_type='Transition Variable'):
-      status_dict[variable.getCausalityTitle()] = variable.getInitialValue(object=object)
+      status_dict[variable.getCausalityTitle()] = variable.getVariableValue(object=object)
 
     workflow._updateWorkflowHistory(document, status_dict)
 

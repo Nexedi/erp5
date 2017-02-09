@@ -9,7 +9,6 @@ can_view_history = getSecurityManager().getUser().has_permission('View History',
 
 marker = []
 result = []
-i = 1
 portal_object = context.getPortalObject()
 portal_workflow = portal_object.portal_workflow
 workflow_id_list = [x for x, y in context.getWorkflowStateItemList()]
@@ -28,62 +27,53 @@ def getActorName(actor):
       actor_name_cache[actor] = person.getTitle()
     return actor_name_cache[actor]
 
-
-
 # Get history
-# XXX Compatibility
-for history_name in ['history', 'building_history', 'installation_history']:
-  workflow_item_list = portal_workflow.getInfoFor(ob=context, 
-                                          name='history', wf_id=workflow_id)
-  if workflow_item_list != []:
-    break
+workflow_item_list = portal_workflow.getInfoFor(ob=context, name='history',
+                                                wf_id=workflow_id)
 
 workflow = getattr(portal_workflow, workflow_id)
-wf_state_var = workflow.getStateVariable()
-wf_states = workflow.getStateValueList()
-wf_transitions = workflow.getTransitionValueList()
+wf_state_variable = workflow.getStateVariable()
 
 next_serial = None
 previous_obj = None
-for workflow_item in workflow_item_list:
+for position, workflow_item in enumerate(workflow_item_list):
   # XXX removing str method generate a strange bug
-  o = newTempBase(portal_object, str(i))
-  i += 1
+  current_object = newTempBase(portal_object, str(position + 1))
   for key, value in workflow_item.items():
     if key == 'serial' and not can_view_history:
       continue
-    # XXX Compatibility
-    for compatibility_name in ['building_', 'installation_']:
-      if key.startswith(compatibility_name):
-        # Display the workflow state in the state columns
-        key = key[len(compatibility_name):]
-    if key == wf_state_var: 
+    if key == wf_state_variable:
+      state = workflow.getStateValueById(value)
       # Store locally the id of state, usefull for merging action and transition
-      state_id = wf_states.get(value, marker) and wf_states[value].getReference()
-      o.setProperty('state_id', state_id)
+      state_id = marker if not state else value
+      current_object.setProperty('state_id', state_id)
 
       key = 'state'
       if display:
-        value = wf_states.get(value, marker) and wf_states[value].title
+        value = marker if not state else state.title
       else:
         value = state_id
     if key == 'action':
       # Store locally the id of action, usefull for merging action and transition
-      o.setProperty('action_id', value)
+      current_object.setProperty('action_id', value)
       if value != '' and value is not None:
         if value == "'edit'":
           value = "edit"
-        if display:
-          value = wf_transitions.get(value, marker) and (wf_transitions[value].title or wf_transitions[value].actbox_name) or value
-        else:
-          value = wf_transitions.get(value, marker) and (wf_transitions[value].getReference() or wf_transitions[value].actbox_name) or value
+        transition = workflow.getTransitionValueById(value)
+        if transition:
+          if display:
+            value = transition.title or transition.actbox_name or value
+          else:
+            value = transition.getReference() or transition.actbox_name or value
     if display:
-      if key == 'error_message' and same_type(value, ''):
-        value = context.Localizer.erp5_ui.gettext(value)    
-      elif key == 'error_message' and same_type(value, []):
-        value = '. '.join(['%s' % x for x in value])
-      elif key == 'error_message':
-        value = '%s' % value
+      if key == 'error_message':
+        if same_type(value, ''):
+          value = context.Localizer.erp5_ui.gettext(value)
+        if same_type(value, []):
+          value = '. '.join(['%s' % x for x in value])
+        else:
+          value = '%s' % value
+
       elif key == 'actor':
         value = getActorName(value)
       elif same_type(value, '') and key == 'state':
@@ -92,13 +82,13 @@ for workflow_item in workflow_item_list:
         value = getTranslationStringWithContext(context, value, 'transition', workflow_id)
     if value is marker:
       value = 'Does not exist'
-    o.setProperty(key, value)
- 
+    current_object.setProperty(key, value)
+
   # record current serial as "next serial" for the previous revision
   if next_serial is not None and can_view_history:
-    previous_obj.setProperty('next_serial', o.serial)
-  next_serial = getattr(o, 'serial', None)
-  previous_obj = o
-  result.append(o)
+    previous_obj.setProperty('next_serial', current_object.serial)
+  next_serial = getattr(current_object, 'serial', None)
+  previous_obj = current_object
+  result.append(current_object)
 
 return result

@@ -866,12 +866,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           except ValueError:
             pass
 
-      # install erp5_workflow to allow early stage workflow migration.
-      if 'erp5_base' in template_list:
-        template_list.insert(template_list.index('erp5_base')+1, 'erp5_workflow')
-      else:
-        template_list.append('erp5_workflow')
-
       self.setUpERP5Site(business_template_list=template_list,
                          light_install=light_install,
                          create_activities=create_activities,
@@ -1061,18 +1055,19 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       if workflow_tool:
         for workflow_id in workflow_tool.objectIds():
           # Do not convert workflow's live test related workflows.
-          if workflow_id in ['testing_workflow', 'testing_interaction_workflow',\
-            'testing_workflow_backup', 'testing_interaction_workflow_backup']:
+          if workflow_id in ['testing_initial_dc_interaction_workflow', 'testing_initial_dc_workflow']:
             continue
           workflow = workflow_tool._getOb(workflow_id)
           if workflow.getPortalType() not in ['Workflow', 'Interaction Workflow', 'Configuration Workflow']:
-            new_workflow = workflow_tool.dc_workflow_asERP5Object(workflow_tool, workflow, temp=0)
+            new_workflow = workflow_tool.dc_workflow_asERP5Object(workflow, is_temporary=False)
             workflow_tool.reassignWorkflow(workflow_id)
+            self.commit()
         # force convert edit_workflow: Why have to load edit_workflow this way?
         edit_workflow = workflow_tool._getOb('edit_workflow', None)
         if edit_workflow is not None:
-          new_workflow = workflow_tool.dc_workflow_asERP5Object(workflow_tool, edit_workflow, temp=0)
+          new_workflow = workflow_tool.dc_workflow_asERP5Object(edit_workflow, is_temporary=False)
           workflow_tool.reassignWorkflow('edit_workflow')
+          self.commit()
         # Reset the original workflows assignement order.
         for type_value in sorted(type_tool.objectValues()):
           type_value.workflow_list = tuple(reversed(type_value.workflow_list))

@@ -3,7 +3,6 @@
 #
 # Copyright (c) 2002-2003 Nexedi SARL and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#               2014 Wenjie Zheng <wenjie.zheng@tiolive.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -176,7 +175,6 @@ class WorkflowMethod(Method):
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
     once_transition_dict = {}
-
     for wf_id, transition_list in invoke_once_dict.iteritems():
       valid_transition_list = []
       for transition_id in transition_list:
@@ -205,8 +203,14 @@ class WorkflowMethod(Method):
     for wf_id, transition_list in candidate_transition_item_list:
       candidate_workflow = wf[wf_id]
       valid_list = []
+      state = candidate_workflow._getWorkflowStateOf(instance, id_only=0)
       for transition_id in transition_list:
-        if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
+        # cannot pass state parameter to an interaction workflow's
+        # isWorkflowMethodSupported method
+        is_supported_kw = {} if state is None else {'state': state}
+
+        is_workflow_method_supported = candidate_workflow.isWorkflowMethodSupported(instance, transition_id, **is_supported_kw)
+        if is_workflow_method_supported:
           valid_list.append(transition_id)
           once_transition_key = once_transition_dict.get((wf_id, transition_id))
           if once_transition_key:
@@ -219,8 +223,7 @@ class WorkflowMethod(Method):
           #     the previous line.
           LOG("WorkflowMethod.__call__", ERROR,
               "Transition %s/%s on %r is ignored. Current state is %r."
-              % (wf_id, transition_id, instance,
-                 candidate_workflow._getWorkflowStateOf(instance, id_only=1)))
+              % (wf_id, transition_id, instance, state))
       if valid_list:
         valid_transition_item_list.append((wf_id, valid_list))
 
@@ -486,11 +489,11 @@ def getClassPropertyList(klass):
 def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   """We should now make sure workflow methods are defined
   and also make sure simulation state is defined."""
+
   # aq_inner is required to prevent extra name lookups from happening
   # infinitely. For instance, if a workflow is missing, and the acquisition
   # wrapper contains an object with _aq_dynamic defined, the workflow id
   # is looked up with _aq_dynamic, thus causes infinite recursions.
-
   portal_workflow = aq_inner(portal_workflow)
   portal_type = ptype_klass.__name__
 
@@ -519,10 +522,8 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
                                        Permissions.AccessContentsInformation)
 
       storage = workflow_dict
-      transitions = wf.getTransitionValueList()
     elif wf_type in ['InteractionWorkflowDefinition', 'Interaction Workflow']:
       storage = interaction_workflow_dict
-      transitions = wf.getTransitionValueList()
     else:
       continue
 
@@ -531,7 +532,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
 
     trigger_dict = {}
     for tr_id in transition_id_set:
-      tdef = transitions[tr_id]
+      tdef = wf.getTransitionValueById(tr_id)
       if tdef.trigger_type == TRIGGER_WORKFLOW_METHOD:
         trigger_dict[tr_id] = tdef
 
@@ -581,7 +582,6 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
   for wf_id, v in interaction_workflow_dict.iteritems():
     transition_id_set, trigger_dict = v
     for tr_id, tdef in trigger_dict.iteritems():
-
       # Check portal type filter
       if (tdef.portal_type_filter is not None and \
           portal_type not in tdef.portal_type_filter):
@@ -604,7 +604,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           interaction_queue.append((wf_id,
                                     tr_id,
                                     transition_id_set,
-                                    tdef.once_per_transaction,
+                                    tdef.getTriggerOncePerTransaction(),
                                     method_id_matcher))
 
           # XXX - class stuff is missing here
@@ -623,7 +623,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
               ptype_klass.security.declareProtected(
                   Permissions.AccessContentsInformation, method_id)
             ptype_klass.registerWorkflowMethod(method_id, wf_id, tr_id,
-                                               tdef.once_per_transaction)
+                                               tdef.getTriggerOncePerTransaction())
             continue
 
           # Wrap method
@@ -646,7 +646,7 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
             transition_id = method.getTransitionId()
             if transition_id in transition_id_set:
               method.registerTransitionAlways(portal_type, wf_id, transition_id)
-          if tdef.once_per_transaction:
+          if tdef.getTriggerOncePerTransaction():
             method.registerTransitionOncePerTransaction(portal_type, wf_id, tr_id)
           else:
             method.registerTransitionAlways(portal_type, wf_id, tr_id)
@@ -1767,7 +1767,7 @@ class Base( CopyContainer,
     """
       Returns the list of workflows
     """
-    return self.getPortalObject().portal_workflow.getWorkflowIds()
+    return self.portal_workflow.getWorkflowIds()
 
   # Object Database Management
   security.declareProtected( Permissions.ManagePortal, 'upgrade' )

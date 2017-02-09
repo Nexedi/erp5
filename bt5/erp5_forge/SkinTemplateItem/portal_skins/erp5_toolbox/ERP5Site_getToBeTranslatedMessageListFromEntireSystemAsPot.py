@@ -40,8 +40,7 @@ iterate(context.portal_skins)
 
 # Collect python script from workflow objects.
 for workflow in context.portal_workflow.objectValues():
-  script_value_dict = workflow.getScriptValueList()
-  for i_id, i in script_value_dict.items():
+  for i in workflow.getScriptValueDict().values():
     if i.meta_type=='Script (Python)':
       python_script_list.append(i)
 
@@ -108,22 +107,21 @@ for i in page_template_list:
 s_title_list = []
 for i in context.portal_workflow.objectValues():
   add_message(i.title_or_id(), portal_url.getRelativeContentURL(i))
-  state_value_dict = i.getStateValueList()
-  if not state_value_dict:
+  state_value_list = i.getStateValueList()
+  if not state_value_list:
     continue
-  for s_id, s in state_value_dict.items():
-    s_title = s.title
-    if s_title:
+  for s in state_value_list:
+    if s.title:
       # adding a context in msg_id for more precise translation
-      msg_id = getMessageIdWithContext(s_title,'state',i.id)
+      msg_id = getMessageIdWithContext(s.title,'state',i.id)
       add_message(msg_id, portal_url.getRelativeContentURL(s))
       # also use state title as msg_id for compatibility
-      add_message(s_title, portal_url.getRelativeContentURL(s))
+      add_message(s.title, portal_url.getRelativeContentURL(s))
 
-  transition_value_dict = i.getTransitionValueList()
-  if not transition_value_dict:
+  transition_value_list = i.getTransitionValueList()
+  if not transition_value_list:
     continue
-  for t_id, t in transition_value_dict.items():
+  for t in transition_value_list:
     if t.actbox_name:
       #adding a context in msg_id for more precise translation
       msg_id = getMessageIdWithContext(t.actbox_name,'transition',i.id)
@@ -136,7 +134,7 @@ for i in context.portal_workflow.objectValues():
       add_message(msg_id, portal_url.getRelativeContentURL(t))
       # also use transition title as msg_id for compatibility
       add_message(t.title, portal_url.getRelativeContentURL(t))
-  for worklist_id, worklist in i.getWorklistValueList().items():
+  for worklist in i.getWorklistValueList():
     add_message(worklist.actbox_name, portal_url.getRelativeContentURL(worklist))
 
 

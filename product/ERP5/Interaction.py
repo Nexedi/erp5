@@ -109,6 +109,9 @@ class InteractionDefinition (SimpleItem):
     def getTriggerMethodIdList(self):
       return self.method_id
 
+    def getTriggerOncePerTransaction(self):
+      return self.once_per_transaction
+
     _properties_form = DTMLFile('interaction_properties', _dtmldir)
 
     def manage_properties(self, REQUEST, manage_tabs_message=None):

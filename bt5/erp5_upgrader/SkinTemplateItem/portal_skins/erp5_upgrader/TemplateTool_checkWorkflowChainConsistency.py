@@ -1,5 +1,6 @@
 import re
 template_tool = context
+portal = context.getPortalObject()
 
 bt5_per_title_dict = {}
 bt5_list = [i.getTitle() for i in \
@@ -39,19 +40,15 @@ for _, bt5_id in resolved_list:
 
 error_list = []
 workflow_chain_by_portal_type_dict = context.ERP5Site_dumpWorkflowChainByPortalType()
-new_workflow_chain_dict = {'chain_%s' % portal_type : ','.join(chain) \
-  for portal_type, chain in workflow_chain_by_portal_type_dict.iteritems()}
 
 for portal_type, workflow_chain in portal_type_dict.iteritems():
   workflow_chain_list = list(workflow_chain_by_portal_type_dict.get(portal_type, []))
+  portal_type_document = portal.portal_types.getTypeInfo(portal_type)
+  workflow_chain_list = portal_type_document.getTypeWorkflowList()
   expected_workflow_chain = sorted(workflow_chain)
   if sorted(workflow_chain_list) != expected_workflow_chain:
-    error_list.append("%s - Expected: %s <> Found: %s" % (portal_type, ', '.join(workflow_chain), ', '.join(workflow_chain_list)))
+    error_list.append("%r - Expected: %s <> Found: %r" % (portal_type, workflow_chain, workflow_chain_list))
     if fixit:
-      new_workflow_chain_dict["chain_%s" % portal_type] = ','.join(expected_workflow_chain)
-
-if fixit and new_workflow_chain_dict:
-  portal_workflow = context.getPortalObject().portal_workflow
-  portal_workflow.manage_changeWorkflows(default_chain="", props=new_workflow_chain_dict)
+      portal_type_document.setTypeWorkflowList(expected_workflow_chain)
 
 return error_list

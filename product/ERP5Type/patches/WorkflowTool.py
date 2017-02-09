@@ -390,10 +390,9 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
 
 # following 2 functions are necessary for workflow tool dynamic migration
 def WorkflowTool_isBootstrapRequired(self):
-  # migration requires the installation of tempalte erp5_workflow;
-  if self.getPortalObject().portal_types._getOb('Workflow Tool', None) is not None:
-    return True
-  return False
+  # migration is required if the tool is not the new one from ERP5 Workflow
+  # in case of old workflow tool, it acquires the portal type from ERP5 Site
+  return self.getPortalType() != "Workflow Tool"
 
 def WorkflowTool_bootstrap(self):
   self.getPortalObject().migrateToPortalWorkflowClass()
@@ -803,20 +802,6 @@ def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
 
 security.declarePublic('isTransitionPossible')
 WorkflowTool.isTransitionPossible = WorkflowTool_isTransitionPossible
-
-def WorkflowTool_getWorkflowChainDict(self, sorted=True):
-  """Returns workflow chain compatible with workflow_chain_dict signature"""
-  chain = self._chains_by_type.copy()
-  return_dict = {}
-  for portal_type, workflow_id_list in chain.iteritems():
-    if sorted:
-      workflow_id_list = list(workflow_id_list)
-      workflow_id_list.sort()
-    return_dict['chain_%s' % portal_type] = ', '.join(workflow_id_list)
-  return return_dict
-
-security.declareProtected(Permissions.ManagePortal, 'getWorkflowChainDict')
-WorkflowTool.getWorkflowChainDict = WorkflowTool_getWorkflowChainDict
 
 WorkflowTool._reindexWorkflowVariables = lambda self, ob: \
   hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()

@@ -101,8 +101,8 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
         preference = self.getPortal().portal_preferences.default_site_preference
         preference.setPriority(1)
         if preference.getPreferenceState() == 'disabled':
-          self.getWorkflowTool().doActionFor(ob=preference,
-                                            action='enable_action',
+          self.getWorkflowTool().doActionFor(preference, # object
+                                            'enable_action', # action
                                             wf_id='preference_workflow')
 
       self.validator = Validator()

@@ -43,7 +43,7 @@ class PermissionRoles(XMLObject):
   portal_type = 'PermissionRoles'
   add_permission = Permissions.AddPortalContent
   isIndexable = ConstantGetter('isIndexable', value=False)
-  is_selected = 0 # for checkerbox (True 1 /False 0)
+  selected = 0 # checkerbox
 
   isPortalContent = 1
   isRADContent = 1
@@ -63,12 +63,12 @@ class PermissionRoles(XMLObject):
   def getPermissionRole(self):
     permission = 'None'
     role = 'None'
-    if self.is_selected == 1:
+    if self.selected == 1:
       permission_id = int(self.id.split('_')[1])
       role_id = int(self.id.split('_')[2])
       # zwj: make sure here gets the right coordinates
-      workflow = self.getParent().getParent()
-      permission_list = sorted(workflow.getManagedPermissionList())
+      workflow = self.getParentValue().getParentValue()
+      permission_list = sorted(workflow.getWorkflowManagedPermissionList())
       role_list = workflow.getManagedRoleList()
       permission = permission_list[permission_id]
       role = role_list[role_id]
@@ -76,3 +76,53 @@ class PermissionRoles(XMLObject):
     if role == 'None':
       role = ['Manager']
     return permission, role
+
+  def _getPermissionIndex(self):
+    return int(self.id[len(self.base_id+'_'):].split('_')[0])
+
+  def _getRoleIndex(self):
+    return int(self.id[len(self.base_id+'_'):].split('_')[1])
+
+  def _getPermissionOrRole(self, is_role=False):
+    # we want to get the permission or role from its index,
+    # so we want the retrieve the key of the dict which is like:
+    # self.index[cell_prefix][index] = {'Some Role Or Permission': 1,
+    #                                   'Some Other One': 0, ...}
+    if is_role:
+      cell_permission_or_role_index = self._getRoleIndex()
+    else:
+      cell_permission_or_role_index = self._getPermissionIndex()
+    index = int(is_role)
+    for key, value in self.index[self.base_id][index].items():
+      if cell_permission_or_role_index == value:
+        return key
+    raise ValueError('No key found for value %s.' % value)
+
+  def _getPermission(self):
+    return self._getPermissionOrRole(is_role=False)
+
+  def _getRole(self):
+    return self._getPermissionOrRole(is_role=True)
+
+  def _setSelected(self, value):
+    """
+    edit the parent state's permission/role dict to reflect current cell selection (selected) status
+    """
+
+    state = self.getParentValue()
+    cell_range = state.getCellRange()
+
+    cell_permission = self._getPermission()
+    cell_role = self._getRole()
+
+    # update the state permission structure to take into account
+    # the selection/non-selection of this cell
+    roles = state.getStatePermissionRolesDict()[cell_permission]
+    acquired = isinstance(roles, tuple)
+    roles = list(set(roles))
+    if value and (cell_role not in roles):
+      roles.append(cell_role)
+      state.setPermission(cell_permission, acquired, roles)
+    if (not value) and (cell_role in roles):
+      roles.remove(cell_role)
+      state.setPermission(cell_permission, acquired, roles)

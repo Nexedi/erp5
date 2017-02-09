@@ -444,14 +444,6 @@ class TestERP5SyncMLMixin(TestMixin):
       else:
         identity = False
         break
-    if 'edit_workflow' in object_sub.getTypeInfo().getTypeWorkflowList() and\
-        'edit_workflow' in object_pub.getTypeInfo().getTypeWorkflowList():
-      # edit workflow has a known bug, that may generate 2 times of history for
-      # a single action like "edit". Until we find out the bug, we may reactivate this
-      # part. In new workflow, on object_pub side it still generated 2 times of history
-      # for a sigle action "edit", but on the object_sub side, it only generated
-      # once, which it should have been.
-      identity = True
     if not identity:
       self.fail('diff between pub:%s and sub:%s \n%s' % (object_pub.getPath(),
                                                          object_sub.getPath(),

@@ -50,13 +50,15 @@ from MethodObject import Method
 from MySQLdb import ProgrammingError, OperationalError
 from Persistence import Persistent
 from Products.CMFActivity.ActiveResult import ActiveResult
+from Products.CMFCore.interfaces import IWorkflowDefinition
 from Products.CMFCore.utils import Message as _
-from Products.CMFCore.utils import getToolByName, _getAuthenticatedUser
+from Products.CMFCore.utils import _getAuthenticatedUser
 from Products.CMFCore.WorkflowTool import WorkflowTool as OriginalWorkflowTool
 from Products.CMFCore.WorkflowCore import ObjectMoved, ObjectDeleted,\
                                           WorkflowException
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Expression import Expression
+from Products.DCWorkflow.permissions import ManagePortal
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
@@ -81,16 +83,17 @@ from webdav.client import Resource
 from zLOG import LOG, INFO, WARNING
 
 """
-Most of the codes in this file are copy-pasted from patches/WorkflowTool.py.
+Most of the code in this file has been taken from patches/WorkflowTool.py.
 """
 
 _marker = []  # Create a new marker object.
+
 
 class WorkflowTool(BaseTool, OriginalWorkflowTool):
   """
   A new container for DC workflow and workflow;
   inherits methods from original WorkflowTool.py;
-  contains patches from ERP5Type/pateches/WorkflowTool.py.
+  contains patches from ERP5Type/patches/WorkflowTool.py.
   """
 
   id            = 'portal_workflow'
@@ -105,16 +108,17 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
 
   # Declarative Security
   security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   _product_interfaces = OriginalWorkflowTool._product_interfaces
   _chains_by_type = OriginalWorkflowTool._chains_by_type
-  _default_chain = OriginalWorkflowTool._default_chain
+  _default_chain = ''
   _default_cataloging = OriginalWorkflowTool._default_cataloging
   manage_options = OriginalWorkflowTool.manage_options
   manage_overview = OriginalWorkflowTool.manage_overview
   _manage_selectWorkflows = OriginalWorkflowTool._manage_selectWorkflows
   manage_selectWorkflows = OriginalWorkflowTool.manage_selectWorkflows
-  manage_changeWorkflows = OriginalWorkflowTool.manage_changeWorkflows
+
   # Declarative properties
   property_sheets = (
     PropertySheet.Base,
@@ -166,34 +170,77 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           return True
     return False
 
-  def doActionFor(self, ob, action, wf_id=None, *args, **kw):
-    workflow_list = self.getWorkflowsFor(ob.getPortalType())
-    action_ref = action
-    if wf_id is None:
+  security.declareProtected(Permissions.ModifyPortalContent, 'copyWorkflow')
+  def copyWorkflow(self, old_workflow_id, new_workflow_id):
+    """
+      Create a copy of old_workflow_id workflow
+      (overwrites existing object with new_workflow_id ID if any)
+    """
+
+    # Copy old_workflow_id
+    copy = self.manage_copyObjects(ids=[old_workflow_id])
+    pasted = self.manage_pasteObjects(copy)
+    pasted_workflow_id = pasted[0]['new_id']
+
+    # Delete possibly existing object with new_workflow_id ID
+    if getattr(self, new_workflow_id, None):
+      self.manage_delObjects(new_workflow_id)
+
+    self.manage_renameObjects(ids=[pasted_workflow_id,],
+                              new_ids=[new_workflow_id,])
+
+  security.declarePrivate('getCatalogVariablesFor')
+  def getCatalogVariablesFor(self, ob):
+    """ Get a mapping of "workflow-relevant" attributes.
+        original code from zope CMFCore/WorkflowTool.py
+    """
+    wfs = self.getWorkflowsFor(ob)
+    if wfs is None:
+      return None
+    # Iterate through the workflows backwards so that
+    # earlier workflows can override later workflows.
+    wfs.reverse()
+    vars = {}
+    for wf in wfs:
+      v = wf.getCatalogVariablesFor(ob)
+      if v is not None:
+        vars.update(v)
+    return vars
+
+  security.declarePublic('doActionFor')
+  def doActionFor(self, current_object, action_reference,
+                  wf_id=None, *args, **kw):
+    workflow_id = wf_id
+    workflow_list = self.getWorkflowsFor(current_object.getPortalType())
+    action_id = ''
+    if workflow_id is None:
       if workflow_list == []:
         raise WorkflowException(_(u'No workflows found.'))
-      found = 0
-      for wf in workflow_list:
-        if wf.getPortalType() == 'Workflow':
-          # workflow compatibility
-          action = 'transition_' + action_ref
-        else: action = action_ref
-        if wf.isActionSupported(ob, action, **kw):
-          found = 1
+      found = False
+      for workflow in workflow_list:
+        action_id = workflow.getTransitionIdByReference(action_reference)
+        is_action_supported = workflow.isActionSupported(current_object, action_id, **kw)
+        if is_action_supported:
+          found = True
           break
-      if not found:
-        msg = _(u"No workflow provides the '${action_id}' action.",mapping={'action_id': action})
-        raise WorkflowException(msg)
-    else:
-      wf = self.getWorkflowById(wf_id)
-      if wf is None:
-        raise WorkflowException(_(u'Requested workflow definition not found.'))
-      if wf.getPortalType() == 'Workflow':
-        # workflow compatibility
-        action = 'transition_' + action_ref
-    return self._invokeWithNotification(
-      workflow_list, ob, action, wf.doActionFor, (ob, action) + args, kw)
 
+      if found:
+        result = workflow.doActionFor(current_object, action_id,
+                                      is_action_supported=is_action_supported,
+                                      **kw)
+      else:
+        message = "No workflow provides the %s action." % action_reference
+        raise WorkflowException(message)
+    else:
+      workflow = self.getWorkflowById(workflow_id)
+      if workflow is None:
+        raise WorkflowException(_(u'Requested workflow not found.'))
+      action_id = workflow.getTransitionIdByReference(action_reference)
+      result = workflow.doActionFor(current_object, action_id, **kw)
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorkflowValueListFor')
   def getWorkflowValueListFor(self, ob):
     """ Return a list of workflows bound to selected object, this workflow
         list may contain both DC Workflow and Workflow.
@@ -201,23 +248,28 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     workflow_list = []
 
     if isinstance(ob, basestring):
-        portal_type = self.getPortalObject().portal_types._getOb(ob, None)
+        portal_type = self.getPortalObject().portal_types.getTypeInfo(ob)
     elif hasattr(aq_base(ob), 'getTypeInfo'):
         portal_type = ob.getTypeInfo()
     else:
         portal_type = None
 
-    # Workflow assignment:
+    portal_type_workflow_list = tuple()
     if portal_type is not None:
-      for workflow_id in portal_type.getTypeWorkflowList():
-        workflow_list.append(self._getOb(workflow_id))
-    # DCWorkflow assignment
-    for wf_id in self.getChainFor(ob):
-      if portal_type is not None and wf_id in portal_type.getTypeWorkflowList():
-        continue
-      wf = self.getWorkflowById(wf_id)
-      if wf is not None:
-        workflow_list.append(wf)
+      portal_type_workflow_list = portal_type.getTypeWorkflowList()
+
+      # get workflow assigned in portal types:
+      for workflow_id in portal_type_workflow_list:
+        workflow_value = self._getOb(workflow_id, None)
+        if workflow_value is not None:
+          workflow_list.append(workflow_value)
+        else:
+          LOG(
+            "getWorkflowValueListFor:", WARNING,
+            "workflow %s declared on  portal_type %s does not exist" %
+            (workflow_id, portal_type.id)
+          )
+
     return workflow_list
 
   getWorkflowsFor = getWorkflowValueListFor
@@ -226,140 +278,162 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
       """ Get the history of an object for a given workflow.
       """
       if hasattr(aq_base(ob), 'workflow_history'):
-          wfh = ob.workflow_history
-          return wfh.get(wf_id, None)
+          return ob.workflow_history.get(wf_id, None)
       return ()
 
-  def decodeWorkflowUid(self, uid):
-    return cPickle.loads(b64decode(uid))
-
-  def encodeWorkflowUid(self, id):
+  def _encodeWorkflowUid(self, id):
     return b64encode(cPickle.dumps(id))
 
-  def getObjectFromPath(self, path):
-    return self.unrestrictedTraverse(path)
-
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorkflowTempObjectList')
   def getWorkflowTempObjectList(self, temp_obj=1):
     """ Return a list of converted temporary workflows. Only necessary in
         Workflow Tool to get temporarilly converted DCWorkflow.
     """
     temp_workflow_list = []
-    temp_workflow_id_list = []
-    for dc_workflow in self.getPortalObject().portal_workflow.objectValues():
+    for dc_workflow in self.objectValues():
       workflow_type = dc_workflow.__class__.__name__
       if workflow_type in ['Workflow', 'Interaction Workflow', 'Configuration Workflow']:
         continue
-      temp_workflow = self.dc_workflow_asERP5Object(self, dc_workflow, temp_obj)
+      temp_workflow = self.dc_workflow_asERP5Object(dc_workflow, is_temporary=temp_obj)
       temp_workflow_list.append(temp_workflow)
-      temp_workflow_id_list.append(temp_workflow.getTitle())
     return temp_workflow_list
 
-  def dc_workflow_asERP5Object(self, container, dc_workflow, temp):
-    # convert DC Workflow to New Workflow
+  def getScriptPathList(self, workflow, initial_script_name_list):
+    if not initial_script_name_list:
+      return []
+
+    script_path_list = []
+    if isinstance(initial_script_name_list, str):
+      initial_script_name_list = [initial_script_name_list]
+    for script_name in initial_script_name_list:
+      if script_name:
+        script = getattr(workflow, workflow.getScriptIdByReference(script_name), None) or \
+                 getattr(workflow, workflow.getTransitionIdByReference(script_name), None)
+        script_path = script.getRelativeUrl()
+        script_path_list.append(script_path)
+    return script_path_list
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'dc_workflow_asERP5Object')
+  def dc_workflow_asERP5Object(self, dc_workflow, is_temporary=False):
+    """ convert DC Workflow to New Workflow """
+
     workflow_type_id = dc_workflow.__class__.__name__
     if workflow_type_id in ['DCWorkflowDefinition', 'InteractionWorkflowDefinition']:
       # Only convert old workflow objects.
+      if is_temporary:
+        new_id = dc_workflow.id
+      else:
+        new_id = 'converting_' + dc_workflow.id
+      uid = self._encodeWorkflowUid(new_id)
+      portal_type = ('Workflow' if workflow_type_id == 'DCWorkflowDefinition' else 'Interaction Workflow')
+      workflow = self.newContent(id=new_id, temp_object=is_temporary,
+                                 portal_type=portal_type)
       if workflow_type_id == 'DCWorkflowDefinition':
-        if temp == 0:
-          new_id = 'converting_'+dc_workflow.id
-        else:
-          new_id = dc_workflow.id
-        uid = self.encodeWorkflowUid(new_id)
-        workflow = container.newContent(id=new_id, portal_type='Workflow', temp_object=temp)
         workflow.setStateVariable(dc_workflow.state_var)
         workflow.setWorkflowManagedPermission(dc_workflow.permissions)
         workflow.setManagerBypass(dc_workflow.manager_bypass)
-      elif workflow_type_id == 'InteractionWorkflowDefinition':
-        if temp == 0:
-          new_id = 'converting_'+dc_workflow.id
-        else:
-          new_id = dc_workflow.id
-        uid = self.encodeWorkflowUid(new_id)
-        workflow = container.newContent(id=new_id, portal_type='Interaction Workflow', temp_object=temp)
 
-      if temp == 1:
+      if is_temporary:
         # give temp workflow an uid for form_dialog.
         workflow.uid = uid
       workflow.default_reference = dc_workflow.id
       workflow.setTitle(dc_workflow.title)
       workflow.setDescription(dc_workflow.description)
 
-      if temp == 0:
-        # create transitions
+      if not is_temporary:
+        # create state and transitions (Workflow)
+        # or interactions (Interaction Workflow)
+
+        # create scripts (portal_type = Workflow Script)
+        dc_workflow_script_list = dc_workflow.scripts
+        for script_id in dc_workflow_script_list:
+          script = dc_workflow_script_list.get(script_id)
+          # add a prefix if there is a script & method conflict
+          workflow_script = workflow.newContent(id=workflow.getScriptIdByReference(script_id),
+                                                portal_type='Workflow Script',
+                                                temp_object=is_temporary)
+          workflow_script.setTitle(script.title)
+          workflow_script.default_reference = script_id
+          workflow_script.setParameterSignature(script._params)
+          #workflow_script.setCallableType(script.callable_type)# not defined in python script?
+          workflow_script.setBody(script._body)
+          workflow_script.setProxyRole(script._proxy_roles)
+
         if workflow_type_id == 'DCWorkflowDefinition':
           # remove default state and variables
-          for def_var in workflow.objectValues(portal_type='Variable'):
+          for def_var in workflow.objectValues(portal_type='Workflow Variable'):
             workflow._delObject(def_var.getId())
           workflow._delObject('state_draft')
           dc_workflow_transition_value_list = dc_workflow.transitions
           dc_workflow_transition_id_list = dc_workflow_transition_value_list.objectIds()
+
           # create transition (portal_type = Transition)
           for tid in dc_workflow_transition_value_list:
             tdef = dc_workflow_transition_value_list.get(tid)
-            transition = workflow.newContent(portal_type='Transition', temp_object=temp)
+            transition = workflow.newContent(portal_type='Transition', temp_object=is_temporary)
             if tdef.title == '' or tdef.title is None:
               tdef.title = UpperCase(tdef.id)
             transition.setTitle(tdef.title)
             transition.setReference(tdef.id)
             transition.setTriggerType(tdef.trigger_type)
-            transition.setActboxCategory(tdef.actbox_category)
-            transition.setActboxIcon(tdef.actbox_icon)
-            transition.setActboxName(tdef.actbox_name)
-            transition.setActboxUrl(tdef.actbox_url)
+            transition.setActionType(tdef.actbox_category)
+            transition.setIcon(tdef.actbox_icon)
+            transition.setActionName(tdef.actbox_name)
+            transition.setAction(tdef.actbox_url)
             transition.setDescription(tdef.description)
-            if tdef.after_script_name is not None:
-              # check after script is a Transion or a Script:
-              if tdef.after_script_name in dc_workflow_transition_id_list:
-                transition.setAfterScriptId('transition_'+tdef.after_script_name)
-              elif tdef.after_script_name in dc_workflow.scripts.objectIds():
-                # add a prefix if there is a script & method conflict
-                if hasattr(workflow, tdef.after_script_name):
-                  transition.setAfterScriptId('ScriptPrefix_'+tdef.after_script_name)
-                else:
-                  transition.setAfterScriptId(tdef.after_script_name)
-            if tdef.script_name is not None:
-              # check before script is a Transion or a Script:
-              if tdef.script_name in dc_workflow_transition_id_list:
-                transition.setBeforeScriptId('transition_'+tdef.script_name)
-              elif tdef.script_name in dc_workflow.scripts.objectIds():
-                if hasattr(workflow, tdef.script_name):
-                  # add a prefix if there is a script & method conflict
-                  transition.setBeforeScriptId('ScriptPrefix_'+tdef.script_name)
-                else:
-                  transition.setBeforeScriptId(tdef.script_name)
+
             # configure guard
             if tdef.guard:
-              transition.guard = tdef.guard
-              transition.setRoleList(tdef.guard.roles)
-              transition.setPermissionList(tdef.guard.permissions)
-              transition.setGroupList(tdef.guard.groups)
+              transition.setGuardRoleList(tdef.guard.roles)
+              transition.setGuardPermissionList(tdef.guard.permissions)
+              transition.setGuardGroupList(tdef.guard.groups)
               if tdef.guard.expr is not None:
-                transition.setExpression(tdef.guard.expr.text)
+                transition.setGuardExpression(tdef.guard.expr.text)
+
+          for transition in workflow.objectValues(portal_type='Transition'):
+            # configure after/before scripts
+            # we have to loop again over transitions because some
+            # before/after/... scripts are transitions and obviously, all of
+            # them were not defined on the new workflow in the previous loop
+            old_transition = dc_workflow_transition_value_list.get(transition.getReference())
+            script_path_list = self.getScriptPathList(workflow,
+                                                      old_transition.script_name)
+            transition.setBeforeScriptValueList(script_path_list)
+
+            script_path_list = self.getScriptPathList(workflow,
+                                                      old_transition.after_script_name)
+            transition.setAfterScriptValueList(script_path_list)
+
           # create states (portal_type = State)
+          workflow_managed_role_list = workflow.getManagedRoleList()
           for sid in dc_workflow.states:
             sdef = dc_workflow.states.get(sid)
-            state = workflow.newContent(portal_type='State', temp_object=temp)
+            state = workflow.newContent(portal_type='State', temp_object=is_temporary)
             if sdef.title == '' or sdef.title is None:
               sdef.title = UpperCase(sdef.id)
             if hasattr(sdef, 'type_list'): state.setStateType(sdef.type_list)
             state.setTitle(sdef.title)
             state.setReference(sdef.id)
             state.setDescription(sdef.description)
-            permission_roles = sdef.permission_roles
-            state.setStatePermissionRoles(permission_roles)
-            if sdef.permission_roles is not None:
-              state.setCellRange(sorted(sdef.permission_roles.keys()),
-                    sorted(workflow.getManagedRoleList()),
-                    base_id='cell')
-              i = -1
-              for permission in sorted(workflow.getWorkflowManagedPermissionList()):
-                i = i + 1
-                j = -1
-                for role in workflow.getManagedRoleList():
-                  j = j + 1
-                  pr_cell = state.newContent(id='cell_%s_%s'%(i,j), portal_type='PermissionRoles')
-                  if permission in permission_roles and role in permission_roles[permission]:
-                    pr_cell.is_selected = 1
+
+            acquire_permission_list = []
+            permission_roles_dict = {}
+            if sdef.permission_roles:
+              for (permission, roles) in sdef.permission_roles.items():
+                if permission in dc_workflow.permissions:
+                  if isinstance(roles, list): # type 'list' means acquisition
+                    acquire_permission_list.append(permission)
+                  permission_roles_dict[permission] = list(roles)
+
+            state.setAcquirePermission(acquire_permission_list)
+            state.setStatePermissionRolesDict(permission_roles_dict)
+
+            state.setCellRange(sorted(permission_roles_dict.keys()),
+                  sorted(workflow_managed_role_list),
+                  base_id='cell')
+
           # default state using category setter
           state_path = getattr(workflow, 'state_'+dc_workflow.initial_state).getPath()
           state_path = 'source/' + '/'.join(state_path.split('/')[2:])
@@ -372,17 +446,16 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               sdef.addPossibleTransition(transition_id)
           # set transition's destination state:
           for tid in dc_workflow_transition_value_list:
-            tdef = workflow._getOb('transition_'+tid)
+            tdef = workflow.getTransitionValueById(tid)
             state = getattr(workflow, 'state_'+dc_workflow_transition_value_list.get(tid).new_state_id, None)
             if state is None:
               # it's a remain in state transition.
               continue
             state_path = 'destination/' + '/'.join(state.getPath().split('/')[2:])
-            tdef.setCategoryList([state_path])
+            tdef.setCategoryList(tdef.getCategoryList() + [state_path])
           # worklists (portal_type = Worklist)
-          for qid in dc_workflow.worklists:
-            qdef = dc_workflow.worklists.get(qid)
-            worklist = workflow.newContent(portal_type='Worklist', temp_object=temp)
+          for qid, qdef in dc_workflow.worklists.items():
+            worklist = workflow.newContent(portal_type='Worklist', temp_object=is_temporary)
             worklist.setTitle(qdef.title)
             worklist.setReference(qdef.id)
             worklist.setDescription(qdef.description)
@@ -408,67 +481,57 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
                 worklist.setMatchedCausalityState(state_id)
               else:
                 # dynamic variable.
-                worklist_variable_value = worklist.newContent(portal_type='Worklist Variable')
-                worklist_variable_value.setReference(key)
+                worklist_variable_value = worklist.newContent(portal_type='Worklist Variable',
+                                                              reference=key)
                 if isinstance(values, Expression):
-                  worklist_variable_value.setDefaultExpr(values.text)
+                  worklist_variable_value.setVariableExpression(values)
                 else:
-                  worklist_variable_value.InitialValue(value)
-            worklist.setActboxUrl(qdef.actbox_url)
-            worklist.setActboxCategory(qdef.actbox_category)
-            worklist.setActboxIcon(qdef.actbox_icon)
-            worklist.setActboxName(qdef.actbox_name)
+                  worklist_variable_value.setVariableValue(values[0]) #XXX(WORKFLOW): to be changed
+
+            worklist.setAction(qdef.actbox_url)
+            worklist.setActionType(qdef.actbox_category)
+            worklist.setIcon(qdef.actbox_icon)
+            worklist.setActionName(qdef.actbox_name)
             # configure guard
             if qdef.guard:
-              worklist.guard = qdef.guard
-              worklist.setRoleList(qdef.guard.roles)
-              worklist.setPermissionList(qdef.guard.permissions)
-              worklist.setGroupList(qdef.guard.groups)
+              worklist.setGuardRoleList(qdef.guard.roles)
+              worklist.setGuardPermissionList(qdef.guard.permissions)
+              worklist.setGuardGroupList(qdef.guard.groups)
               if qdef.guard.expr is not None:
-                worklist.setExpression(qdef.guard.expr.text)
+                worklist.setGuardExpression(qdef.guard.expr.text)
         elif workflow_type_id == 'InteractionWorkflowDefinition':
-          dc_workflow_interaction_value_list = dc_workflow.interactions
+          dc_workflow_interaction_value_dict = dc_workflow.interactions
           # create interactions (portal_type = Interaction)
-          for tid in dc_workflow_interaction_value_list:
-            interaction = workflow.newContent(portal_type='Interaction', temp_object=temp)
-            tdef = dc_workflow_interaction_value_list.get(tid)
+          for tid in dc_workflow_interaction_value_dict:
+            interaction = workflow.newContent(portal_type='Interaction', temp_object=is_temporary)
+            tdef = dc_workflow_interaction_value_dict.get(tid)
             if tdef.title:
               interaction.setTitle(tdef.title)
             interaction.setReference(tdef.id)
-            script_list = []
-            for script_name in tdef.activate_script_name:
-              # Add a prefix iif there is a conflict (script and accessor).
-              if hasattr(workflow, script_name):
-                script_name = 'ScriptPrefix_' + script_name
-              script_list.append(script_name)
-            interaction.setActivateScriptNameList(tuple(script_list))
-            script_list = []
-            for script_name in tdef.after_script_name:
-              if hasattr(workflow, script_name):
-                script_name = 'ScriptPrefix_' + script_name
-              script_list.append(script_name)
-            interaction.setAfterScriptNameList(tuple(script_list))
-            script_list = []
-            for script_name in tdef.before_commit_script_name:
-              if hasattr(workflow, script_name):
-                script_name = 'ScriptPrefix_' + script_name
-              script_list.append(script_name)
-            interaction.setBeforeCommitScriptNameList(tuple(script_list))
-            script_list = []
-            for script_name in tdef.script_name:
-              if hasattr(workflow, script_name):
-                script_name = 'ScriptPrefix_' + script_name
-              script_list.append(script_name)
-            interaction.setBeforeScriptNameList(tuple(script_list))
+
+            # configure after/before/before commit/activate scripts
+            # no need to loop again over interactions as made for transitions
+            # because interactions xxx_script are not interactions
+            script_path_list = self.getScriptPathList(workflow, tdef.script_name)
+            interaction.setBeforeScriptValueList(script_path_list)
+
+            script_path_list = self.getScriptPathList(workflow, tdef.after_script_name)
+            interaction.setAfterScriptValueList(script_path_list)
+
+            script_path_list = self.getScriptPathList(workflow, tdef.activate_script_name)
+            interaction.setActivateScriptValueList(script_path_list)
+
+            script_path_list = self.getScriptPathList(workflow, tdef.before_commit_script_name)
+            interaction.setBeforeCommitScriptValueList(script_path_list)
+
             # configure guard
             if tdef.guard:
-              interaction.guard = tdef.guard
-              interaction.setRoleList(tdef.guard.roles)
-              interaction.setPermissionList(tdef.guard.permissions)
-              interaction.setGroupList(tdef.guard.groups)
+              interaction.setGuardRoleList(tdef.guard.roles)
+              interaction.setGuardPermissionList(tdef.guard.permissions)
+              interaction.setGuardGroupList(tdef.guard.groups)
               if tdef.guard.expr is not None:
                 # Here add expression text, convert to expression in getMatchVar.
-                interaction.setExpression(tdef.guard.expr.text)
+                interaction.setGuardExpression(tdef.guard.expr.text)
             interaction.setPortalTypeFilter(tdef.portal_type_filter)
             interaction.setPortalTypeGroupFilter(tdef.portal_type_group_filter)
             if interaction.portal_type_filter == ():
@@ -482,60 +545,50 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             interaction.setTriggerOncePerTransaction(tdef.once_per_transaction)
             interaction.setTriggerType(tdef.trigger_type)
             interaction.setDescription(tdef.description)
-        # create scripts (portal_type = Workflow Script)
-        dc_workflow_script_list = dc_workflow.scripts
-        for script_id in dc_workflow_script_list:
-          script = dc_workflow_script_list.get(script_id)
-          # add a prefix if there is a script & method conflict
-          if hasattr(workflow, script_id):
-            workflow_script = workflow.newContent(id='ScriptPrefix_'+script_id, portal_type='Workflow Script', temp_object=temp)
-          else:
-            workflow_script = workflow.newContent(id=script_id ,portal_type='Workflow Script', temp_object=temp)
-          workflow_script.setTitle(script.title)
-          workflow_script.default_reference = script_id
-          workflow_script.setParameterSignature(script._params)
-          #workflow_script.setCallableType(script.callable_type)# not defined in python script?
-          workflow_script.setBody(script._body)
-          workflow_script.setProxyRole(script._proxy_roles)
-        # create variables (portal_type = Variable)
-        dc_workflow_variable_list = dc_workflow.variables
-        for vid in dc_workflow_variable_list:
-          vdef = dc_workflow_variable_list.get(vid)
-          variable = workflow.newContent(portal_type='Variable', temp_object=temp)
-          variable.setTitle(vdef.title)
-          variable.setReference(vdef.id)
-          variable.setAutomaticUpdate(vdef.update_always)
-          if getattr(vdef, 'default_expr', None) is not None:
+
+        # create variables (portal_type = Workflow Variable)
+        for variable_id, variable_definition in dc_workflow.variables.items():
+          variable = workflow.newContent(portal_type='Workflow Variable', temp_object=is_temporary)
+          variable.setTitle(variable_definition.title)
+          variable.setReference(variable_id)
+          variable.setAutomaticUpdate(variable_definition.update_always)
+          if getattr(variable_definition, 'default_expr', None) is not None:
             # for a very specific case, action return the reference of transition
             # in order to generation correct workflow history.
-            if vid == 'action':
-              variable.setDefaultExpr('transition/getReference|nothing')
-            else: variable.setDefaultExpr(vdef.default_expr.text)
-          if vdef.info_guard:
-            variable.info_guard = vdef.info_guard
-            variable.setRoleList(vdef.info_guard.roles)
-            variable.setPermissionList(vdef.info_guard.permissions)
-            variable.setGroupList(vdef.info_guard.groups)
-            if vdef.info_guard.expr is not None:
+            if variable_id == 'action':
+              variable.setVariableExpression(Expression('transition/getReference|nothing'))
+            else:
+              variable.setVariableExpression(variable_definition.default_expr)
+          if variable_definition.info_guard:
+            variable.info_guard = variable_definition.info_guard
+            variable.setGuardRoleList(variable_definition.info_guard.roles)
+            variable.setGuardPermissionList(variable_definition.info_guard.permissions)
+            variable.setGuardGroupList(variable_definition.info_guard.groups)
+            if variable_definition.info_guard.expr is not None:
               # Here add expression text, convert to expression in getMatchVar.
-              variable.setExpression(tdef.info_guard.expr.text)
-          variable.setForCatalog(vdef.for_catalog)
-          variable.setForStatus(vdef.for_status)
-          variable.setInitialValue(vdef.default_value)
-          variable.setDescription(vdef.description)
+              variable.setGuardExpression(tdef.info_guard.expr.text)
+          variable.setForCatalog(variable_definition.for_catalog)
+          variable.setStatusIncluded(variable_definition.for_status)
+          # setVariableValue sets the value to None if the parameter is an empty
+          # string. This change the expected behaviour.
+          # XXX(WORKFLOW): you need to be aware that if someone saves a variable
+          # without editing this field, variable_value may be None again
+          if variable_definition.default_value:
+            variable.setVariableValue(variable_definition.default_value)
+          variable.setDescription(variable_definition.description)
         # Configure transition variable:
         if getattr(dc_workflow, 'transitions', None) is not None:
           dc_workflow_transition_value_list = dc_workflow.transitions
           for tid in dc_workflow_transition_value_list:
             origin_tdef = dc_workflow_transition_value_list[tid]
-            transition = workflow._getOb('transition_'+tid)
+            transition = workflow.getTransitionValueById(tid)
             new_category = []
             if origin_tdef.var_exprs is None:
               var_exprs = {}
             else: var_exprs = origin_tdef.var_exprs
             for key in var_exprs:
-              tr_var = transition.newContent(portal_type='Transition Variable', temp_object=temp)
-              tr_var.setDefaultExpr(var_exprs[key].text)
+              tr_var = transition.newContent(portal_type='Transition Variable', temp_object=is_temporary)
+              tr_var.setVariableExpression(var_exprs[key])
               tr_var_path = getattr(workflow, 'variable_'+key).getPath()
               tr_var_path = '/'.join(tr_var_path.split('/')[2:])
               new_category.append(tr_var_path)
@@ -551,8 +604,8 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
               var_exprs = {}
             else: var_exprs = origin_tdef.var_exprs
             for key in var_exprs:
-              tr_var = interaction.newContent(portal_type='Transition Variable', temp_object=temp)
-              tr_var.setDefaultExpr(var_exprs[key].text)
+              tr_var = interaction.newContent(portal_type='Transition Variable', temp_object=is_temporary)
+              tr_var.setVariableExpression(var_exprs[key])
               tr_var_path = getattr(workflow, 'variable_'+key).getPath()
               tr_var_path = '/'.join(tr_var_path.split('/')[2:])
               new_category.append(tr_var_path)
@@ -561,24 +614,51 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         self._finalizeWorkflowConversion(dc_workflow)
         # override temporary id:
         workflow.setId(workflow.default_reference)
+      if not is_temporary:
+        # update translation so that the catalog contains translated states, ...
+        self.getPortalObject().ERP5Site_updateTranslationTable()
       return workflow
+
+  def getChainsByType(self):
+    # XXX(WORKFLOW): compatibility code
+    # get old workflow tool's chains_by_type
+    chains_by_type = self._chains_by_type or {}
+    type_workflow_dict = {}
+    for type_id, workflow_id_list in chains_by_type.iteritems():
+        type_workflow_dict.setdefault(type_id, ())
+        type_workflow_dict[type_id] = type_workflow_dict[type_id] + workflow_id_list
+    return type_workflow_dict
+
+  # XXX(WORKFLOW): remove?
+  # For Chains By Type Repair Tool:
+  def addTypeCBT(self, pt, wf_id):
+    self._chains_by_type[pt] = self._chains_by_type[pt] + (wf_id, )
+
+  def delTypeCBT(self, pt, wf_id):
+    self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf!=wf_id)
 
   def reassignWorkflow(self, workflow_id):
     # type-workflow reassignment
     type_workflow_dict = self.getChainsByType()
     type_tool = self.getPortalObject().portal_types
-    for ptype_id in type_workflow_dict:
-      ptype = type_tool._getOb(ptype_id, None)
-      if ptype is not None and workflow_id in type_workflow_dict[ptype_id]:
-        # 1. clean DC workflow assignement:
-        self.delTypeCBT(ptype_id, workflow_id)
-        # 2. assign ERP5 Workflow to portal type:
-        if workflow_id not in ptype.getTypeWorkflowList():
-          ptype.addTypeWorkflowList(workflow_id)
+
+    for portal_type_id in type_workflow_dict:
+      # getTypeInfo takes care of solver, whereas _getOb on Types Tool don't
+      portal_type = type_tool.getTypeInfo(portal_type_id)
+      if portal_type is not None and workflow_id in type_workflow_dict[portal_type_id]:
+        # 1. clean DC workflow tool "chain by type" assignement:
+        self.delTypeCBT(portal_type_id, workflow_id)
+        # 2. assign workflow to portal type:
+        type_workflow_list = portal_type.getTypeWorkflowList()
+        if workflow_id not in type_workflow_list:
+          portal_type.setTypeWorkflowList(
+            type_workflow_list + [workflow_id]
+          )
 
   def reassignWorkflowWithoutConversion(self):
     # This function should be called when a new template installed and add
-    # portal_types assignment with converted workflows in to _chain_by_type.
+    # portal_types assignment with converted and non-converted workflows into
+    # portal_type's workflow list.
     # This function only synchronize assignment information to new added portal
     # type's TypeWorkflowList.
 
@@ -587,44 +667,23 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     # be done, just go back to whatever you are doing.
     type_workflow_dict = self.getChainsByType()
     type_tool = self.getPortalObject().portal_types
-    for ptype_id in type_workflow_dict:
-      ptype = type_tool._getOb(ptype_id, None)
-      if ptype is not None:
-        for workflow_id in type_workflow_dict[ptype_id]:
+    for portal_type_id in type_workflow_dict:
+      portal_type = type_tool.getTypeInfo(portal_type_id)
+      if portal_type is not None:
+        for workflow_id in type_workflow_dict[portal_type_id]:
           workflow = getattr(self, workflow_id, None)
-          if workflow and workflow.getPortalType() in ['Workflow', 'Interaction Workflow']:
-            # 1. clean DC workflow assignement:
-            self.delTypeCBT(ptype.id, workflow.id)
-            # 2. assign ERP5 Workflow to portal type:
-            type_workflow_list = ptype.getTypeWorkflowList()
+          if workflow and workflow.getPortalType() in ['Workflow', 'Interaction Workflow', 'DCWorkflowDefinition', 'InteractionWorkflowDefinition']:
+            # 1. clean DC workflow tool "chain by type" assignement:
+            self.delTypeCBT(portal_type.id, workflow.id)
+            # 2. assign workflow to portal type:
+            type_workflow_list = portal_type.getTypeWorkflowList()
             if workflow_id not in type_workflow_list:
-              ptype.addTypeWorkflowList(workflow_id)
-
-  def getChainDict(self):
-      chain_dict = {}
-      for portal_type, wf_id_list in self._chains_by_type.iteritems():
-          for wf_id in wf_id_list:
-              chain_dict.setdefault(wf_id, []).append(portal_type)
-      return chain_dict
+              portal_type.setTypeWorkflowList(
+                type_workflow_list + [workflow_id]
+              )
 
   _reindexWorkflowVariables = lambda self, ob: \
   hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()
-
-  def getWorkflowChainDict(self, sorted=True):
-    """Returns workflow chain compatible with workflow_chain_dict signature"""
-    # add new workflow compatibility;
-    chain = self._chains_by_type.copy()
-    return_dict = {}
-    for portal_type, dc_workflow_id_list in chain.iteritems():
-      if sorted:
-        dc_workflow_id_list = list(dc_workflow_id_list)
-        dc_workflow_id_list.sort()
-        portal_type_value = self.getPortalObject().portal_types._getOb(portal_type)
-        workflow_id_list = portal_type_value.getTypeWorkflowList()
-        workflow_id_list.extend(dc_workflow_id_list)
-      return_dict['chain_%s' % portal_type] = ', '.join(workflow_id_list)
-
-    return return_dict
 
   def isTransitionPossible(self, ob, transition_id, wf_id=None):
     """Test if the given transition exist from the current state.
@@ -632,11 +691,21 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     for workflow in (wf_id and (self[wf_id],) or self.getWorkflowsFor(ob)):
       state = workflow._getWorkflowStateOf(ob)
       if state and transition_id in state.getDestinationReferenceList():
-        return 1
-    return 0
+        return True
+    return False
 
   getFutureStateSetFor = lambda self, wf_id, *args, **kw: \
     self[wf_id].getFutureStateSet(*args, **kw)
+
+  security.declarePrivate('getStatusOf')
+  def getStatusOf(self, workflow_id, current_object):
+    # code taken from CMFCore
+    """ Get the last element of a workflow history for a given workflow.
+    """
+    workflow_history = self.getHistoryOf(workflow_id, current_object)
+    if workflow_history:
+        return workflow_history[-1]
+    return None
 
   def setStatusOf(self, wf_id, ob, status):
     """ Append an entry to the workflow history.
@@ -659,7 +728,16 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
         ob.workflow_history[wf_id] = wfh
     wfh.append(status)
 
-  getWorkflowIds = OriginalWorkflowTool.getWorkflowIds
+  security.declarePrivate('getWorkflowIds')
+  def getWorkflowIds(self):
+
+      """ Return the list of workflow ids.
+      """
+      wf_ids = [obj_name for obj_name, obj in self.objectItems()
+                if IWorkflowDefinition.providedBy(obj) or
+                getattr(obj, '_isAWorkflow', 0)]
+
+      return tuple(wf_ids)
 
   def refreshWorklistCache(self):
     """
@@ -698,7 +776,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
             if error_value[0] != 1146:
               raise
             self.Base_zCreateWorklistTable()
-        portal_catalog = getToolByName(self, 'portal_catalog')
+        portal_catalog = self.getPortalObject().portal_catalog
         search_result = portal_catalog.unrestrictedSearchResults
         sql_catalog = portal_catalog.getSQLCatalog()
         table_column_id_set = ImmutableSet(
@@ -765,20 +843,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     return getattr(self,
       'Base_getWorklistIgnoredSecurityColumnSet', lambda: ())()
 
-  def getChainsByType(self):
-    type_workflow_dict = {}
-    for type_id, workflow_id_list in self._chains_by_type.iteritems():
-        type_workflow_dict.setdefault(type_id, ())
-        type_workflow_dict[type_id] = type_workflow_dict[type_id] + workflow_id_list
-    return type_workflow_dict
-
-  # For Chains By Type Repair Tool:
-  def addTypeCBT(self, pt, wf_id):
-    self._chains_by_type[pt] = self._chains_by_type[pt] + (wf_id, )
-
-  def delTypeCBT(self, pt, wf_id):
-    self._chains_by_type[pt] = tuple(wf for wf in self._chains_by_type[pt] if wf!=wf_id)
-
   def listActions(self, info=None, object=None, src__=False):
     """
       Returns a list of actions to be displayed to the user.
@@ -794,8 +858,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     """
     if object is not None or info is None:
       info = self._getOAI(object)
-    chain = self.getChainFor(info.object)
-    did = {}
+    workflow_list = []
     actions = []
     worklist_dict = {}
 
@@ -807,7 +870,6 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     if document_pt is not None:
       workflow_list = document_pt.getTypeWorkflowList()
       for wf_id in workflow_list:
-        did[wf_id] = None
         wf = self._getOb(wf_id, None)
         if wf is not None:
           a = wf.listObjectActions(info)
@@ -817,28 +879,14 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           if a is not None:
             worklist_dict[wf_id] = a
 
-    for wf_id in chain:
-      # check if the workflow has been checked.
-      if not did.has_key(wf_id):
-        did[wf_id] = None
-        wf = self.getWorkflowById(wf_id)
-        if wf is not None:
-          a = wf.listObjectActions(info)
-          if a is not None:
-            actions.extend(a)
-          a = wf.getWorklistVariableMatchDict(info)
-          if a is not None:
-            worklist_dict[wf_id] = a
-
     wf_ids = self.getWorkflowIds()
     for wf_id in wf_ids:
-      if not did.has_key(wf_id):
+      if wf_id not in workflow_list:
         wf = self.getWorkflowById(wf_id)
         if wf is not None:
-          a = wf.getWorklistVariableMatchDict(info)
-          if a is not None:
-            worklist_dict[wf_id] = a
-
+          worklist_variable_dict = wf.getWorklistVariableMatchDict(info)
+          if worklist_variable_dict is not None:
+            worklist_dict[wf_id] = worklist_variable_dict
     if worklist_dict:
       portal = self.getPortalObject()
       portal_url = portal.portal_url()
@@ -953,7 +1001,7 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
           )
         return action_list
 
-      user = str(_getAuthenticatedUser(self))
+      user = _getAuthenticatedUser(self).getIdOrUserName()
       if src__:
         actions = _getWorklistActionList()
       else:
@@ -967,22 +1015,10 @@ class WorkflowTool(BaseTool, OriginalWorkflowTool):
     trash_tool = getattr(self.getPortalObject(), 'portal_trash', None)
     if trash_tool is not None:
       # move old workflow to trash tool;
-      LOG(" | Move old workflow '%s' into a trash bin"%dc_wf.id, 0, " in WorkflowTool.py 908.")
+      LOG(" | Move old workflow '%s' into a trash bin", 0, dc_wf.id)
       self._delOb(dc_wf.id)
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(dc_wf.id)
       trashbin._setOb(dc_wf.id, dc_wf)
-
-  def addWorkflowToType(self, type_value, wf_id_list):
-    # assign workflow(s) to a type
-    dc_wf_id_list = []
-    for wf_id in wf_id_list:
-      wf_value = self._getOb(wf_id)
-      if self._getOb(wf_id).__class__.__name__ in ('DCWorkflowDefinition', 'InteractionWorkflowDefinition'):
-        dc_wf_id_list.append(wf_id)
-      else:
-        type_value.addTypeWorkflowList(wf_id)
-    if dc_wf_id_list != []:
-      self.setChainForPortalTypes([type_value.id], tuple(dc_wf_id_list))
 
 InitializeClass(WorkflowTool)
 
@@ -1011,7 +1047,7 @@ class WorkflowMethod( Method ):
 
         """ Invoke the wrapped method, and deal with the results.
         """
-        wf = getToolByName(instance, 'portal_workflow', None)
+        wf = self.getPortalObject()._getOb('portal_workflow', None)
         if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
             # No workflow tool found.
             try:
@@ -1101,8 +1137,10 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog, getSecurityUidDictA
   # One entry per worklist group, based on filter criterions.
   worklist_set_dict = {}
   metadata_dict = {}
+
   for workflow_id, worklist in worklist_dict.iteritems():
     for worklist_id, worklist_match_dict in worklist.iteritems():
+      # creates keys for new 'metadata' dict
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
       if getSecurityUidDictAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
@@ -1157,6 +1195,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog, getSecurityUidDictA
             worklist_set_dict=worklist_set_dict,
             workflow_worklist_key=workflow_worklist_key,
             valid_criterion_dict=valid_criterion_dict)
+
   return worklist_set_dict.values(), metadata_dict
 
 def generateNestedQuery(getQuery, priority_list, criterion_dict, possible_worklist_id_dict=None):
@@ -1271,14 +1310,17 @@ def generateActionList(worklist_metadata, worklist_result, portal_url):
   """
   action_list = []
   append = action_list.append
+
   for key, metadata in worklist_metadata.iteritems():
     document_count = worklist_result.get(key, 0)
     if document_count:
       format_data = metadata['format_data']
       format_data._push({'count': document_count})
       append({'name': metadata['worklist_title'] % format_data,
-              'url': '%s/%s' % (portal_url, metadata['action_box_url'] % \
-                                            format_data),
+              'url': (portal_url if not metadata['action_box_url'] else #in DCWorkflow: metadata['action_box_url] = 'None' (string)
+                      '%s/%s' % (portal_url,
+                                 metadata['action_box_url'] % format_data)
+                     ),
               'worklist_id': metadata['worklist_id'],
               'workflow_title': metadata['workflow_title'],
               'workflow_id': metadata['workflow_id'],

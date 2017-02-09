@@ -1537,8 +1537,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     if portal_type is not None:
       if isinstance(portal_type, str):
         portal_type = (portal_type,)
-      object_list = filter(lambda x: x.getPortalType() in portal_type,
-                           object_list)
+      object_list = [o for o in object_list if o.getPortalType() in portal_type]
     if checked_permission is not None:
       checkPermission = getSecurityManager().checkPermission
       object_list = [o for o in object_list

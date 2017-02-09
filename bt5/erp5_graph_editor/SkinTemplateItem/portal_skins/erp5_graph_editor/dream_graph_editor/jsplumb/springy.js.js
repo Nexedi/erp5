@@ -24,6 +24,13 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
+ 
+// Nexedi patch: use seedrandom instead of Math.random to always get the same
+// graph representation this will in order to be able to use seed and thus
+// get the same set of random number, used to set the place of the graph nodes
+var seeded_random = new Math.seedrandom('Using seedrandom for getting same set'
+                                        + 'of pseudorandom numbers.');
+
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -343,8 +350,7 @@
 			var mass = (node.data.mass !== undefined) ? node.data.mass : 1.0;
 			this.nodePoints[node.id] = new Layout.ForceDirected.Point(Vector.random(), mass);
 		}
-
-		return this.nodePoints[node.id];
+    return this.nodePoints[node.id];
 	};
 
 	Layout.ForceDirected.prototype.spring = function(edge) {
@@ -576,8 +582,8 @@
 		this.y = y;
 	};
 
-	Vector.random = function() {
-		return new Vector(10.0 * (Math.random() - 0.5), 10.0 * (Math.random() - 0.5));
+	Vector.random = function(){
+		return new Vector(10.0 * (seeded_random() - 0.5), 10.0 * (seeded_random() - 0.5));
 	};
 
 	Vector.prototype.add = function(v2) {

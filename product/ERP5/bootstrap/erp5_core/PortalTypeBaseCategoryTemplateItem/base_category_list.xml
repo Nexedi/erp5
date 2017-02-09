@@ -5,6 +5,9 @@
  <portal_type id="Conceptual Id Generator">
   <item>specialise</item>
  </portal_type>
+ <portal_type id="Transition Variable">
+  <item>causality</item>
+ </portal_type>
  <portal_type id="Trash Bin">
   <item>causality</item>
  </portal_type>

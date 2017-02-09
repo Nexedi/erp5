@@ -399,9 +399,17 @@
         timer = 0;
       }
       timer = window.setTimeout(function() {
+        var data = {code: ace_editor.getSession().getValue()}
+        // workflow script: try to get parameters
+        $.ajax({type: 'GET',
+                async: false,
+                url: 'getScriptParameterList',
+                success: function(text){
+                  data['bound_names'] = text.split(',');
+                  data['params'] = []
+                }});
         $.post('${portal_url}/ERP5Site_checkPythonSourceCodeAsJSON',
-          {'data': JSON.stringify(
-          { code: ace_editor.getSession().getValue() })},
+          {'data': JSON.stringify(data)},
           function(data){
             ace_editor.getSession().setAnnotations(data.annotations);
           }

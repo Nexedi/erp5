@@ -29,19 +29,14 @@
 import transaction
 
 from AccessControl import getSecurityManager, ClassSecurityInfo
-from Acquisition import aq_inner, aq_parent
-from Products.CMFCore.Expression import Expression
-from Products.DCWorkflow.Guard import Guard
-from Products.ERP5Type import Globals, Permissions, PropertySheet
-from Products.ERP5Type.Globals import PersistentMapping
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
-from Products.ERP5Type.Permissions import ManagePortal
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD,\
-                                                      TRIGGER_USER_ACTION
-from zLOG import LOG, INFO, ERROR, WARNING
+from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
+from Products.ERP5Workflow.mixin.guardable import GuardableMixin
 
-class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
+class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject,
+                  GuardableMixin):
 
   """
   An ERP5 Interaction.
@@ -55,23 +50,16 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
 
   managed_permission_list = ()
   managed_role = ()
-  erp5_permission_roles = {} # { permission: [role] or (role,) }
+  state_permission_roles = {} # { permission: [role] or (role,) }
   manager_bypass = 0
-  method_id = None
+  trigger_method_id = None
   trigger_type = TRIGGER_WORKFLOW_METHOD
   portal_type_filter = None
   portal_type_group_filter = None
-  once_per_transaction = False
+  trigger_once_per_transaction = False
   temporary_document_disallowed = False
   var_exprs = None  # A mapping.
-  guard = None
   default_reference = ''
-
-  # these attributes are definded in old interaction but no evidence that
-  # they are in use
-  actbox_name = ''
-  actbox_url = ''
-  actbox_category = 'workflow'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -85,32 +73,67 @@ class Interaction(IdAsReferenceMixin('interaction_', "prefix"), XMLObject):
     PropertySheet.DublinCore,
     PropertySheet.Reference,
     PropertySheet.Interaction,
+    PropertySheet.Guard,
   )
 
-  def getGuardSummary(self):
-    res = None
-    if self.getGuard() is not None:
-      res = self.guard.getSummary()
-    return res
+  # following getters are redefined for performance improvements
+  # they use the categories paths directly and string operations
+  # instead of traversing from the portal to get the objects
+  # in order to have their id or value
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeCommitScriptIdList')
+  def getBeforeCommitScriptIdList(self):
+    """
+    returns the list of before commit script ids
+    """
+    return [path.split('/')[-1] for path in self.getBeforeCommitScriptList()]
 
-  def getGuard(self):
-    if self.getRoleList() is None and\
-        self.getPermissionList() is None and\
-        self.getGroupList() is None and\
-        self.getExpression() is None and\
-        self.guard is None:
-      return Guard().__of__(self)
-    elif self.guard is None:
-      self.generateGuard()
-    return self.guard
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeCommitScriptValueList')
+  def getBeforeCommitScriptValueList(self):
+    """
+    returns the list of before commit script values
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(transition_id) for transition_id
+            in self.getBeforeCommitScriptIdList()]
 
-  def generateGuard(self):
-    self.guard = Guard()
-    if self.getRoleList() is not None:
-      self.guard.roles = self.getRoleList()
-    if self.getPermissionList() is not None:
-      self.guard.permissions = self.getPermissionList()
-    if self.getGroupList() is not None:
-      self.guard.groups = self.getGroupList()
-    if self.getExpression() is not None:
-      self.guard.expr = Expression(self.getExpression())
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActivateScriptIdList')
+  def getActivateScriptIdList(self):
+    """
+    returns the list of activate script ids
+    """
+    return [path.split('/')[-1] for path in self.getActivateScriptList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActivateScriptValueList')
+  def getActivateScriptValueList(self):
+    """
+    returns the list of activate script values
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(transition_id) for transition_id
+            in self.getActivateScriptIdList()]
+
+  # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getActivateScriptList')
+  def getActivateScriptList(self):
+    """
+    returns the list of activate script
+    """
+    prefix_length = len('activate_script/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('activate_script/')]
+
+  # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBeforeCommitScriptList')
+  def getBeforeCommitScriptList(self):
+    """
+    returns the list of before commit script
+    """
+    prefix_length = len('before_commit_script/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('before_commit_script/')]
