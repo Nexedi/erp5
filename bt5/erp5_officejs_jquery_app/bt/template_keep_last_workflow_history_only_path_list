@@ -1,0 +1,5 @@
+web_page_module/gadget_image_editor_*
+web_site_module/officejs_image_editor
+web_site_module/officejs_image_editor/**
+web_site_module/officejs_image_editor_gadget
+web_site_module/officejs_image_editor_gadget/**
