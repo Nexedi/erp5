@@ -431,7 +431,7 @@ class ERP5TypeInformation(XMLObject,
       import erp5.portal_type as module
       return getattr(module, self.getId())
 
-    # The following 2 methods are needed before there are generated.
+    # The following methods are needed before there are generated.
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypePropertySheetList')
@@ -451,13 +451,11 @@ class ERP5TypeInformation(XMLObject,
       """Getter for 'type_workflow' property"""
       return list(self.workflow_list)
 
-    def delTypeWorkflowList(self, wf_id):
-      """ allow to modify workflow assignment from script. """
-      self.workflow_list = tuple(wf for wf in self.workflow_list if wf != wf_id)
-
-    def addTypeWorkflowList(self, wf_id):
-      """ allow to modify workflow assignment from script. """
-      self.workflow_list = self.workflow_list + (wf_id, )
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'setTypeWorkflowList')
+    def setTypeWorkflowList(self, type_workflow_list):
+      """Setter for 'type_workflow' property"""
+      self.workflow_list = type_workflow_list
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()

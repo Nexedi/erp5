@@ -36,7 +36,8 @@ def _createExprContext(sci):
     '''
     ob = sci.object
     wf = sci.workflow
-    scripts = wf.getScriptValueList()
+    script_dict = {script.getReference(): script
+                   for script in wf.getScriptValueList()}
     container = aq_parent(aq_inner(ob))
     data = {
         'here':         ob,
@@ -53,7 +54,7 @@ def _createExprContext(sci):
         'status':       sci.status,
         'kwargs':       sci.kwargs,
         'workflow':     wf,
-        'scripts':      scripts,
+        'scripts':      script_dict,
         }
     return getEngine().getContext(data)
 

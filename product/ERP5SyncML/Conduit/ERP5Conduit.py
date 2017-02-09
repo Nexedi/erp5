@@ -902,7 +902,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     addable = WORKFLOW_ACTION_ADDABLE
     time = status.get('time')
     for action in action_list:
-      this_one = WORKFLOW_ACTION_ADDABLE
+      this_one = True
       if time <= action.get('time'):
         # action in the past are not appended
         addable = WORKFLOW_ACTION_INSERTABLE
@@ -910,7 +910,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       key_list.remove("time")
       for key in key_list:
         if status[key] != action[key]:
-          this_one = WORKFLOW_ACTION_NOT_ADDABLE
+          this_one = False
           break
       if this_one:
         addable = WORKFLOW_ACTION_NOT_ADDABLE

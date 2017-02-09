@@ -51,8 +51,20 @@
             <value> <string>Base Type</string> </value>
         </item>
         <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+                <string>description</string>
+                <string>comment</string>
+                <string>reference</string>
+                <string>short_title</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>type_class</string> </key>
-            <value> <string>XMLObject</string> </value>
+            <value> <string>TextDocument</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
@@ -70,8 +82,9 @@
             <key> <string>workflow_list</string> </key>
             <value>
               <tuple>
-                <string>testing_workflow</string>
-                <string>testing_interaction_workflow</string>
+                <string>testing_erp5_workflow</string>
+                <string>testing_erp5_interaction_workflow</string>
+                <string>edit_workflow</string>
               </tuple>
             </value>
         </item>

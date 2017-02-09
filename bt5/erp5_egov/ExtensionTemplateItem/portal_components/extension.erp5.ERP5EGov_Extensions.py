@@ -1,22 +1,6 @@
 from zLOG import LOG
 from Products.CMFCore.utils import getToolByName
 
-def getPoralTypeListForWorkflow(self, workflow):
-  '''
-    return a list of portal_types that use workflow
-  '''
-  pw = self.portal_workflow
-  cbt = pw._chains_by_type
-  ti = pw._listTypeInfo()
-
-  portal_type_list = []
-  for t in ti:
-    id = t.getId()
-    if cbt is not None and cbt.has_key(id) and workflow in cbt[id]:
-      portal_type_list.append(id)
-
-  return portal_type_list
-
 def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
   """
     return a dict containing portal_type and all informations about work_list
@@ -38,14 +22,18 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
   """
   portal_type_worklist_dict = {}
   portal_workflow = self.getPortalObject().portal_workflow
+  types_tool = self.getPortalObject().portal_types
 
   if not isinstance(workflow_list, list):
     workflow = [workflow_list]
 
   for workflow in workflow_list:
 
-    portal_type_list = self.getPoralTypeListForWorkflow(self, 
-        workflow=workflow)
+    portal_type_list = [
+      type_object.id for type_object in types_tool.listTypeInfo()
+      if workflow in type_object.getTypeWorkflowList()
+    ]
+
     workflow = getattr(portal_workflow, workflow, None)
 
     if workflow is not None:
@@ -97,6 +85,7 @@ def gessPortalType(self, attachment):
     return portal_contributions._guessPortalType(filename, mime_type, data)
 
 def setWorkflowList(self, portal_type_name, workflow_list=()):
-  portal_workflow = self.portal_workflow
-  portal_workflow._chains_by_type[portal_type_name] = workflow_list
+  types_tool = self.getPortalObject().portal_types
+  type_object = types_tool.getTypeInfo(portal_type_name)
+  type_object.setTypeWorkflowList(list(workflow_list))
 

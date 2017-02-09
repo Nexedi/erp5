@@ -33,8 +33,7 @@ from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type import Permissions
 
 # show as xml library
-from lxml import etree
-from lxml.etree import Element, SubElement
+from lxml.etree import Element, SubElement, tostring
 
 _MARKER = []
 
@@ -118,18 +117,6 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     self._addObject(Worklists('worklists'))
     from Products.DCWorkflow.Scripts import Scripts
     self._addObject(Scripts('scripts'))
-
-  security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
-  def getChainedPortalTypeList(self):
-    """Returns the list of portal types that are chained to this
-    interaction workflow."""
-    chained_ptype_list = []
-    wf_tool = getToolByName(self, 'portal_workflow')
-    types_tool = getToolByName(self, 'portal_types')
-    for ptype in types_tool.objectIds():
-      if self.getId() in wf_tool._chains_by_type.get(ptype, []) :
-        chained_ptype_list.append(ptype)
-    return chained_ptype_list
 
   security.declarePrivate('listObjectActions')
   def listObjectActions(self, info):
@@ -352,15 +339,20 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
   def getReference(self):
     return self.id
 
+  def getTransitionValueById(self, transition_id):
+    if self.interactions is not None:
+      return self.interactions.get(transition_id, None)
+    return None
+
   def getTransitionValueList(self):
     if self.interactions is not None:
-      return self.interactions
-    return None
+      return self.interactions.values()
+    return []
 
   def getTransitionIdList(self):
     if self.interactions is not None:
       return self.interactions.objectIds()
-    return None
+    return []
 
   def getPortalType(self):
     return self.__class__.__name__
@@ -454,7 +446,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     for vid in variable_id_list:
       vdef = self.variables[vid]
       variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference(),
-            portal_type='Variable'))
+            portal_type='Workflow Variable'))
       for property_id in sorted(variable_prop_id_to_show):
         if property_id == 'default_expr':
           expression = getattr(vdef, property_id, None)
@@ -501,7 +493,7 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     # return xml object
     if return_as_object:
       return root
-    return etree.tostring(root, encoding='utf-8',
+    return tostring(root, encoding='utf-8',
                           xml_declaration=True, pretty_print=True)
 
 Globals.InitializeClass(InteractionWorkflowDefinition)

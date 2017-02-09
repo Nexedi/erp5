@@ -26,34 +26,18 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from Products.CMFCore.Expression import Expression
-from Products.DCWorkflow.Guard import Guard
-from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Workflow.Document.WorkflowVariable import WorkflowVariable
+from Products.ERP5Type import PropertySheet
 
-class WorklistVariable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
+class WorklistVariable(WorkflowVariable):
     """
     A ERP5 Worklist Variable which serves as dynamic variable of Worklist.
-    This type of object has 3 values: 
+    This type of object has 3 values:
       - reference as Title;
-      - default_value;
-      - default_expr which will override default when it's set.
+      - variable_value;
+      - variable_expression which will override default when it's set.
     """
 
-    meta_type = 'ERP5 Variable'
-    portal_type = 'Worklist Variable'
-    add_permission = Permissions.AddPortalContent
-    isPortalContent = 1
-    isRADContent = 1
-
-    default_value = ''
-    default_expr = None  # Overrides default_value if set
-    default_reference = ''
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
     property_sheets = (
@@ -63,11 +47,5 @@ class WorklistVariable(IdAsReferenceMixin("variable_", "prefix"), XMLObject):
                PropertySheet.DublinCore,
                PropertySheet.Reference,
                PropertySheet.Variable,
+               PropertySheet.Guard,
     )
-
-    def getDefaultExprText(self):
-        default_expr = self.getDefaultExpr()
-        if not default_expr:
-            return ''
-        else:
-            return default_expr

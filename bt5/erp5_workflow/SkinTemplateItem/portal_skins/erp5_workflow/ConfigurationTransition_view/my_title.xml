@@ -81,7 +81,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseWorkflow_FieldLibrary</string> </value>
+                    <value> <string>Workflow_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>

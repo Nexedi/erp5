@@ -61,6 +61,7 @@
                 <string>_setTypeInterface.*</string>
                 <string>_setTypePropertySheet.*</string>
                 <string>_setTypeBaseCategory.*</string>
+                <string>_setTypeWorkflow.*</string>
               </list>
             </value>
         </item>
@@ -80,6 +81,12 @@
               <list>
                 <string>type_definition</string>
               </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
+            <value>
+              <none/>
             </value>
         </item>
         <item>

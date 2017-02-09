@@ -241,16 +241,20 @@ class BusinessConfiguration(Item):
     """ Render previous form using workflow history. """
     workflow_history = self.getCurrentStateValue().getWorkflowHistory(self, remove_undo=1)
     workflow_history.reverse()
-    for wh in workflow_history:
+    for history_line in workflow_history:
       ## go one step back
       current_state = self.getCurrentStateValue()
       current_state.undoTransition(self)
-      transition = self.unrestrictedTraverse(wh['transition'])
-      conf_save = self.unrestrictedTraverse(wh['configuration_save_url'])
+      if not history_line['transition']:
+        raise ValueError("Empty URL for transition in workflow history.")
+      transition = self.unrestrictedTraverse(history_line['transition'])
+      configuration_save = self.unrestrictedTraverse(
+        history_line['configuration_save_url']
+      )
       ## check if this transition can be shown to user ...
       if transition._checkPermission(self) and \
-           transition.getTransitionFormId() is not None:
-        return  self._displayNextForm(context=conf_save, transition=transition)
+         transition.getTransitionFormId() is not None:
+        return  self._displayNextForm(context=configuration_save, transition=transition)
 
   security.declarePrivate('_validateNextForm')
   def _validateNextForm(self, **kw):

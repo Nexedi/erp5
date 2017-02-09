@@ -1248,15 +1248,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     portal_activities = self.getActivityTool()
     for i in range(0,100):
-      message_list = portal_activities.getMessageList()
+      message_list = portal_activities.getMessageList(method_id=method_id_list, count=None)
       for message in message_list:
         #if message.method_id=='_setHotReindexingState':
         #  import pdb;pdb.set_trace()
-        if message.method_id in method_id_list:
-          try:
-            portal_activities.manageInvoke(message.object_path,message.method_id)
-          except ActivityFlushError,m:
-            pass
+        try:
+          portal_activities.manageInvoke(message.object_path,message.method_id)
+        except ActivityFlushError,m:
+          pass
       self.commit()
 
   def test_48_ERP5Site_hotReindexAll(self):
@@ -1375,11 +1374,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                          'immediateReindexObject',
                          'Folder_reindexObjectList',
                          'unindexObject',
+                         'SQLCatalog_deferFullTextIndexActivity',
                          'recursiveImmediateReindexObject'))
     # try to delete objects in double indexing state
     module.manage_delObjects(ids=[self.organisation2.getId()])
     self.playActivityList(('immediateReindexObject',
                          'unindexObject',
+                         'SQLCatalog_deferFullTextIndexActivity',
                          'recursiveImmediateReindexObject',
                          'playBackRecordedObjectList',
                          'getId',

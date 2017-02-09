@@ -35,11 +35,14 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class WorkflowScript(PythonScript, IdAsReferenceMixin("", "prefix")):
+SCRIPT_PREFIX = 'script_'
+
+class WorkflowScript(PythonScript, IdAsReferenceMixin("script_", "prefix")):
   meta_type = 'ERP5 Python Script'
   portal_type = 'Workflow Script'
   add_permission = Permissions.AddPortalContent
   default_reference = ''
+  _params = ''
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -49,9 +52,16 @@ class WorkflowScript(PythonScript, IdAsReferenceMixin("", "prefix")):
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
                       , PropertySheet.Reference
-                      , PropertySheet.WorkflowScript
+                      , PropertySheet.PythonScript
                       )
 
+  security.declarePublic("execute")
   execute = PythonScript.__call__
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getScriptParameterList')
+  def getScriptParameterList(self):
+    ''' returns script's parameter for use by Pylint '''
+    return self._params
 
 InitializeClass(WorkflowScript)

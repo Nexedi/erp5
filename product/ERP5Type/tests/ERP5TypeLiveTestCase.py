@@ -69,6 +69,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       defined.
     """
     portal = None
+    _added_property_sheets = {}
 
     def getPortalName(self):
       """ Return the default ERP5 site id.

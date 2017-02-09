@@ -12,8 +12,8 @@ for portal_type in context.allowedContentTypes():
   portal_type_id = portal_type.getId()
   portal_type_translated_title_dict[portal_type_id] = translateString(portal_type.getTitle())
   for workflow in getWorkflowsFor(portal_type_id):
-    state_container = workflow.getStateValueList()
-    if state_container is not None and len(state_container) > 1:
+    state_list = workflow.getStateValueList()
+    if state_list is not None and len(state_list) > 1:
       state_var = workflow.getStateVariable()
       if state_var is None:
         state_var = 'state'
@@ -22,8 +22,9 @@ for portal_type in context.allowedContentTypes():
       type_state_variable_workflow_dict[(portal_type_id, state_var)] = workflow_id
       state_count_dict = type_workflow_state_count_dict_dict.setdefault((portal_type_id, workflow_id), {})
       translated_state_title_dict = workflow_translated_state_title_dict.setdefault(workflow_id, {})
-      for state_id, state in state_container.items():
+      for state in state_list:
         # TODO: support workflow-specific translations
+        state_id = state.getReference()
         translated_state_title_dict[state_id] = translateString(state.title)
         state_count_dict[state_id] = 0
       add(state_var)

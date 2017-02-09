@@ -29,7 +29,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Workflow.Document.Workflow import Workflow
 from Products.ERP5Type.Globals import PersistentMapping
 
 from tempfile import mktemp
@@ -41,7 +41,7 @@ from Acquisition import aq_base
 
 from DateTime import DateTime
 
-class ConfigurationWorkflow(XMLObject):
+class ConfigurationWorkflow(Workflow):
   """
   A Business Configuration Workflow.
   """
@@ -76,9 +76,9 @@ class ConfigurationWorkflow(XMLObject):
 
     # Initialize workflow history
     status_dict = {state_bc_id: self.getSource()}
-    variable_list = self.contentValues(portal_type='Variable')
+    variable_list = self.contentValues(portal_type='Workflow Variable')
     for variable in variable_list:
-      status_dict[variable.getTitle()] = variable.getInitialValue(object=object)
+      status_dict[variable.getTitle()] = variable.getVariableValue(object=object)
     self._updateWorkflowHistory(document, status_dict)
 
   def _generateHistoryKey(self):
@@ -119,25 +119,6 @@ class ConfigurationWorkflow(XMLObject):
     # Copy is requested
     result = document.workflow_history[workflow_key][-1].copy()
     return result
-
-  def getDateTime(self):
-    """
-    Return current date time.
-    """
-    return DateTime()
-
-  def getStateChangeInformation(self, document, state, transition=None):
-    """
-    Return an object used for variable tales expression.
-    """
-    if transition is None:
-      transition_url = None
-    else:
-      transition_url = transition.getRelativeUrl()
-    return self.asContext(document=document,
-                          transition=transition,
-                          transition_url=transition_url,
-                          state=state)
 
   def _getWorkflowStateOf(self, ob, id_only=0):
       tool = self.getPortalObject().portal_workflow

@@ -41,7 +41,21 @@ class StateError(Exception):
   """
   pass
 
-class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
+# Prototype of a mixin allowing to have custom storage for matrix
+class CustomStorageMatrixMixin(XMLMatrix):
+
+  def newCellContent(self, cell_id, **kw):
+    """
+    Creates a new content as a matrix box cell.
+    """
+    cell = self.newContent(id=cell_id, temp_object=True, **kw)
+    self.updateCellFromCustomStorage(cell)
+    return cell
+
+  def getCell(self, *kw , **kwd):
+    return self.newCell(*kw , **kwd)
+
+class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, CustomStorageMatrixMixin):
   """
   A ERP5 State.
   """
@@ -50,9 +64,11 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
   add_permission = Permissions.AddPortalContent
   isPortalContent = 1
   isRADContent = 1
-  erp5_permission_roles = {} # { permission: [role] or (role,) }
   default_reference = ''
-  type_list = ()
+  state_type = ()
+  acquire_permission = []
+  state_permission_roles_dict = {}
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -68,38 +84,89 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
 
   def addPossibleTransition(self, tr_ref):
     possible_transition_list = self.getCategoryList()
-    transition = self.getParent()._getOb('transition_'+tr_ref, None)
+    transition = self.getParentValue()._getOb('transition_'+tr_ref, None)
     if transition is not None:
       tr_path = 'destination/' + '/'.join(transition.getPath().split('/')[2:])
       possible_transition_list.append(tr_path)
       self.setCategoryList(possible_transition_list)
 
-  def getTransitions(self):
-    # return possible transition id list:
-    return self.getDestinationIdList()
 
+  # XXX(PERF): hack to see Category Tool responsability in new workflow slowness
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationList')
+  def getDestinationList(self):
+    """
+    this getter is redefined to improve performance:
+    instead of getting all the transition objects from the destination list
+    to then use their ids, extract the information from the string
+    """
+    prefix_length = len('destination/')
+    return [path[prefix_length:] for path in self.getCategoryList()
+            if path.startswith('destination/')]
+
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationIdList')
+  def getDestinationIdList(self):
+    """
+    this getter is redefined to improve performance:
+    instead of getting all the transition objects from the destination list
+    to then use their ids, extract the information from the string
+    """
+    return [path.split('/')[-1] for path in self.getCategoryList()
+            if path.startswith('destination/')]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDestinationValueList')
+  def getDestinationValueList(self):
+    """
+    this getter is redefined to improve performance:
+    instead of getting all the transition objects from the destination list
+    to then use their ids, extract the information from the string
+    """
+    parent = self.getParentValue()
+    return [parent._getOb(destination_id) for destination_id in
+            self.getDestinationIdList()]
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTransitions')
+  getTransitions = getDestinationIdList
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'setStatePermissionRolesDict')
+  def setStatePermissionRolesDict(self, permission_roles):
+    """
+    create a dict containing the state's permission (as key) and its
+    associated role list (value)
+    use a PersistentMapping so that the ZODB is updated
+    when this dict is changed
+    """
+    self.state_permission_roles_dict = PersistentMapping(permission_roles)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'getStatePermissionRolesDict')
+  def getStatePermissionRolesDict(self):
+    """
+    return the permission/roles dict
+    """
+    if self.state_permission_roles_dict is None:
+      return {}
+    return self.state_permission_roles_dict
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setPermission')
   def setPermission(self, permission, acquired, roles, REQUEST=None):
-      """Set a permission for this State."""
-      permission_role = self.erp5_permission_roles
-      if permission_role is None:
-          self.erp5_permission_roles = permission_role = PersistentMapping()
-      if acquired:
-          roles = list(roles)
-      else:
-          roles = tuple(roles)
-      permission_role[permission] = roles
+    """
+    Set a permission for this State.
+    """
+    self.state_permission_roles_dict[permission] = list(roles)
 
-  def getPermissionRoleList(self):
-    return self.erp5_permission_roles
-
-  def getDestinationReferenceList(self):
-    ref_list = []
-    for tr in self.getDestinationValueList():
-      ref_list.append(tr.getReference())
-    return ref_list
-
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAvailableTypeList')
   def getAvailableTypeList(self):
-    """This is a method specific to ERP5. This returns a list of state types, which are used for portal methods.
+    """
+    This is a method specific to ERP5. This returns a list of state types,
+    which are used for portal methods.
     """
     return (
             'draft_order',
@@ -109,3 +176,13 @@ class State(IdAsReferenceMixin("state_", "prefix"), XMLObject, XMLMatrix):
             'transit_inventory',
             'current_inventory',
             )
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'updateCellFromCustomStorage')
+  def updateCellFromCustomStorage(self, cell, **kw):
+    """
+    Creates a new content as a matrix box cell.
+    """
+    cell_permission = cell._getPermission()
+    cell_role = cell._getRole()
+    cell.selected = cell_role in self.getStatePermissionRolesDict()[cell_permission]

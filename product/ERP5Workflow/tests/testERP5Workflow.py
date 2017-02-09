@@ -61,51 +61,51 @@ class TestERP5Workflow(ERP5TypeTestCase):
     workflow.setReference('wf')
     # state variable
     workflow.setStateVariable('current_state')
-    s1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='State',
                              title='State 1')
-    s2 = workflow.newContent(portal_type='State',
+    state2 = workflow.newContent(portal_type='State',
                              title='State 2')
-    s1.setReference('s1')
-    s2.setReference('s2')
-    t1 = workflow.newContent(portal_type='Transition',
-                             title='Transition 1',
-                             )
-    t1.setReference('t1')
-    s1.setDestinationValue(t1)
-    t1.setDestinationValue(s2)
+    state1.setReference('state1')
+    state2.setReference('state2')
+    transition1 = workflow.newContent(portal_type='Transition',
+                             title='Transition 1')
+    transition1.setReference('transition1')
+    state1.setDestinationValue(transition1)
+    transition1.setDestinationValue(state2)
     # set initial state
-    workflow.setSourceValue(s1)
+    workflow.setSourceValue(state1)
     # create a document and associate it to this workflow
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('wf'))
+    self.getPortalObject().portal_types._getOb('Folder')\
+      .edit(type_workflow_list=('wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
-    self.assertEqual('s1', workflow._getWorkflowStateOf(doc, id_only=1))
+    self.assertEqual('state1', workflow._getWorkflowStateOf(doc, id_only=1))
 
     # pass a transition
-    workflow._executeTransition(doc, t1)
-    self.assertEqual('s2', workflow._getWorkflowStateOf(doc, id_only=1))
+    workflow._executeTransition(doc, transition1)
+    self.assertEqual('state2', workflow._getWorkflowStateOf(doc, id_only=1))
 
 
   def test_getAvailableTransitionList(self):
-    workflow = self.workflow_module.newContent(
-                                portal_type='Workflow')
+    workflow = self.workflow_module.newContent(portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    s1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='State',
                              title='State 1')
-    s1.setReference('s1')
-    workflow.setSourceValue(s1)
-    t1 = workflow.newContent(portal_type='Transition',
+    state1.setReference('state1')
+    workflow.setSourceValue(state1)
+    transition1 = workflow.newContent(portal_type='Transition',
                              title='Transition 1')
-    t1.setReference('t1')
-    t2 = workflow.newContent(portal_type='Transition',
+    transition1.setReference('transition1')
+    transition2 = workflow.newContent(portal_type='Transition',
                              title='Transition 2',
                              guard_expression='python: False')
-    t2.setReference('t2')
-    s1.setDestinationValueList([t1, t2])
+    transition2.setReference('transition2')
+    state1.setDestinationValueList([transition1, transition2])
 
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('wf'))
+    self.getPortalObject().portal_types._getOb('Folder')\
+      .edit(type_workflow_list=('wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
-    self.assertEqual([t1, t2], s1.getDestinationValueList())
+    self.assertEqual([transition1, transition2], state1.getDestinationValueList())
 
 
   def test_WorkflowVariables(self):
@@ -113,93 +113,137 @@ class TestERP5Workflow(ERP5TypeTestCase):
                                 portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    s1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='State',
                              title='State 1')
-    s1.setReference('s1')
-    workflow.setSourceValue(s1)
-    t1 = workflow.newContent(portal_type='Transition',
+    state1.setReference('state1')
+    workflow.setSourceValue(state1)
+    transition1 = workflow.newContent(portal_type='Transition',
                              title='Transition 1',
-                             destination_value=s1)
-    t1.setReference('t1')
-    s1.setDestinationValue(t1)
+                             destination_value=state1)
+    transition1.setReference('transition1')
+    state1.setDestinationValue(transition1)
 
-    v1 = workflow.newContent(portal_type='Variable',
+    variable1 = workflow.newContent(portal_type='Workflow Variable',
                              title='actor')
-    v1.setReference('actor')
-    v1.default_expr = 'user/getUserName'
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('wf'))
+    variable1.setReference('actor')
+    variable1.setVariableExpression('user/getUserName')
+    self.getPortalObject().portal_types._getOb('Folder')\
+      .edit(type_workflow_list=('wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
-    workflow._executeTransition(doc,t1)
+    workflow._executeTransition(doc,transition1)
     current_state = workflow.getCurrentStatusDict(doc)
     self.assertTrue(isinstance(current_state, dict))
-    self.assertEqual(s1.getReference(), current_state.get('current_state'))
+    self.assertEqual(state1.getReference(), current_state.get('current_state'))
     self.assertEqual('ERP5TypeTestCase', current_state.get('actor'))
 
     history = doc.workflow_history['wf']
-    self.assertEqual(len(history), 2)# create, t1
+    self.assertEqual(len(history), 2)# create, transition1
 
 
   def test_afterScript(self):
     workflow = self.workflow_module.newContent(
-                                portal_type='Workflow',
-                                state_base_category='current_state')
+      portal_type='Workflow',
+      state_base_category='current_state'
+    )
     workflow.setReference('wf')
-    s1 = workflow.newContent(portal_type='State',
+    state1 = workflow.newContent(portal_type='State',
                              title='State 1')
-    s2 = workflow.newContent(portal_type='State',
+    state2 = workflow.newContent(portal_type='State',
                              title='State 2')
-    s1.setReference('s1')
-    s2.setReference('s2')
-    t1 = workflow.newContent(portal_type='Transition',
-                             title='Transition 1',
-                             after_script_id='Document_testAfterScript',
-                             )
-    t1.setReference('t1')
-    s1.setDestinationValue(t1)
-    t1.setDestinationValue(s2)
-    workflow.setSourceValue(s1)
-    script = workflow.newContent(portal_type='Workflow Script', id='Document_testAfterScript')
+    state1.setReference('state1')
+    state2.setReference('state2')
+    transition1 = workflow.newContent(portal_type='Transition',
+                                      title='Transition 1')
+    transition1.setReference('transition1')
+    state1.setDestinationValue(transition1)
+    transition1.setDestinationValue(state2)
+    workflow.setSourceValue(state1)
+    script = workflow.newContent(portal_type='Workflow Script',
+                                 id='Document_testAfterScript')
     script.setParameterSignature("state_change")
     script.setParameterSignature("state_change")
-    script.setBody("state_change['object'].setDescription('After script was executed.')")
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('wf'))
+    script.setBody("state_change['object'].setDescription('After script was " +
+                   "executed.')")
+    transition1.setCategoryList(transition1.getCategoryList() +
+                       ['after_script/' + script.getRelativeUrl()])
+
+    self.getPortalObject().portal_types._getOb('Folder')\
+      .edit(type_workflow_list=('wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
 
-    workflow._executeTransition(doc, t1)
+    workflow._executeTransition(doc, transition1)
     self.assertEqual('After script was executed.', doc.getDescription())
     # FIXME: not passing parameter to an after script is probably too
     # restrictive
 
-  def test_BeforeScript(self):
-    workflow = self.workflow_module.newContent(
-                                portal_type='Workflow')
+  def test_beforeScript(self):
+    workflow = self.workflow_module.newContent(portal_type='Workflow')
     workflow.setReference('wf')
     workflow.setStateVariable('current_state')
-    s1 = workflow.newContent(portal_type='State',
-                             title='State 1')
-    s2 = workflow.newContent(portal_type='State',
-                             title='State 2')
-    s1.setReference('s1')
-    s2.setReference('s2')
-    t1 = workflow.newContent(portal_type='Transition',
-                             title='Transition 1',
-                             before_script_id='Document_testBeforeScript',
-                             )
-    t1.setReference('t1')
-    s1.setDestinationValue(t1)
-    t1.setDestinationValue(s2)
-    workflow.setSourceValue(s1)
-    script = workflow.newContent(portal_type='Workflow Script', id='Document_testBeforeScript')
+    state1 = workflow.newContent(portal_type='State', title='State 1')
+    state2 = workflow.newContent(portal_type='State', title='State 2')
+    state1.setReference('state1')
+    state2.setReference('state2')
+    transition1 = workflow.newContent(portal_type='Transition', title='Transition 1')
+    transition1.setReference('transition1')
+    state1.setDestinationValue(transition1)
+    transition1.setDestinationValue(state2)
+    workflow.setSourceValue(state1)
+    script = workflow.newContent(portal_type='Workflow Script',
+                                 id='Document_testBeforeScript')
     script.setParameterSignature("state_change")
-    script.setBody("state_change['object'].setDescription('Before script was executed.')")
-
-    self.getPortalObject().portal_types._getOb('Folder').edit(type_workflow_list=('wf'))
+    script.setBody("state_change['object'].setDescription('Before script was " +
+                   "executed.')")
+    transition1.setCategoryList(transition1.getCategoryList() +
+                       ['before_script/' + script.getRelativeUrl()])
+    self.getPortalObject().portal_types._getOb('Folder')\
+      .edit(type_workflow_list=('wf'))
     doc = self.portal.newContent(portal_type='Folder', id='test_doc')
 
-    workflow._executeTransition(doc, t1)
+    workflow._executeTransition(doc, transition1)
     self.assertEqual('Before script was executed.', doc.getDescription())
     # FIXME: not passing parameter to an before script is probably too
     # restrictive
+
+  def test_TransitionGuards(self, transition_type='Transition'):
+    workflow_type = 'Workflow' if transition_type == 'Transition' else \
+                    'Interaction Workflow'
+    workflow = self.workflow_module.newContent(portal_type=workflow_type)
+    transition = workflow.newContent(portal_type=transition_type)
+    # roles
+    transition.setGuardRoleList([])
+    self.assertEqual(transition.guard_role, ())
+    transition.setGuardRoleList(['Assignor', 'Assignee'])
+    self.assertEqual(('Assignor', 'Assignee'), transition.guard_role)
+    # permissions
+    transition.setGuardPermissionList([])
+    self.assertEqual(transition.guard_permission, ())
+    transition.setGuardPermissionList(['Modify portal content'])
+    self.assertEqual(('Modify portal content',), transition.guard_permission)
+    # groups
+    transition.setGuardGroupList([])
+    self.assertEqual(transition.guard_group, ())
+    transition.setGuardGroupList(['Group1', 'Group2'])
+    self.assertEqual(transition.guard_group, ('Group1', 'Group2'))
+    # expression
+    transition.setGuardExpression('python: "Hello, world"')
+    self.assertEqual(transition.guard_expression.text, 'python: "Hello, world"')
+
+  def test_InteractionGuards(self):
+    self.test_TransitionGuards(transition_type='Interaction')
+
+  def test_Base_viewDict(self):
+    """
+    verify that Base_viewDict view can be accessed
+    """
+    workflow = self.workflow_module.newContent(portal_type='Workflow')
+    state = workflow.newContent(portal_type='State', title='Some State')
+    transition = workflow.newContent(portal_type='Transition',
+                                     title='Some Transition')
+    transition.setReference('change_something')
+    transition.setGuardRoleList(['Assignee', 'Assignor'])
+    transition.setCategoryList('destination/' + transition.getPath())
+    transition.Base_viewDict()
 
   def test_WorkflowSecurity(self):
     """
@@ -217,10 +261,9 @@ class TestERP5Workflow(ERP5TypeTestCase):
     # Anonymous User must not be able to access workflow module
     # or workflow instances
     self.changeToAnonymous()
-    #self.assertRaises(Unauthorized, workflow_module.view)
-    #self.assertRaises(Unauthorized, createWorkflowInstance)
-    #self.assertRaises(Unauthorized, lambda: workflow_instance.view())
-
+    self.assertRaises(Unauthorized, workflow_module.view)
+    self.assertRaises(Unauthorized, createWorkflowInstance)
+    self.assertRaises(Unauthorized, lambda: workflow_instance.view())
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -34,7 +34,6 @@ from AccessControl.SecurityManagement import setSecurityManager
 from Acquisition import aq_base
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.CMFCore.Expression import Expression
-from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 from Products.DCWorkflow.Expression import StateChangeInfo
 from Products.ERP5Type import Permissions, PropertySheet, Globals
@@ -45,6 +44,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Workflow import addWorkflowFactory
 from Products.ERP5Workflow.Document.Transition import TRIGGER_WORKFLOW_METHOD
 from Products.ERP5Workflow.Document.Workflow import Workflow
+from Products.ERP5Workflow.Document.WorkflowScript import SCRIPT_PREFIX
 from types import StringTypes
 from zLOG import LOG, INFO, WARNING
 
@@ -66,7 +66,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
   isRADContent = 1
   id = ''
   default_reference = ''
-  managed_permission_list = ()
   managed_role = ()
 
   intaractions = None
@@ -83,7 +82,6 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
     PropertySheet.CategoryCore,
     PropertySheet.DublinCore,
     PropertySheet.Reference,
-    PropertySheet.InteractionWorkflow,
   )
 
 
@@ -94,13 +92,15 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
   def getChainedPortalTypeList(self):
     """Returns the list of portal types that are chained to this
     interaction workflow."""
-    chained_ptype_list = []
-    wf_tool = getToolByName(self, 'portal_workflow')
-    types_tool = getToolByName(self, 'portal_types')
-    for ptype in types_tool.objectValues():
-      if self.getId() in ptype.getTypeWorkflowList():
-        chained_ptype_list.append(ptype.getId())
-    return chained_ptype_list
+    wf_tool = self.getParentValue()
+    type_list = wf_tool._listTypeInfo()
+    interaction_workflow_id = self.getId()
+
+    portal_type_list = [
+      portal_type.getId() for portal_type in type_list
+      if interaction_workflow_id in portal_type.getTypeWorkflowList()
+    ]
+    return portal_type_list
 
   security.declarePrivate('listObjectActions')
   def listObjectActions(self, info):
@@ -118,7 +118,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
     '''
     Returns a true value if the given info name is supported.
     '''
-    vdef = self.getVariableValueList().get(name, None)
+    vdef = self.getVariableValueDict().get(name, None)
     if vdef is None:
         return 0
     return 1
@@ -130,25 +130,24 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
     workflow.  This method must perform its own security checks.
     '''
     vdef = getattr(self, name, _MARKER)
-    for x in self.objectValues(portal_type='Variable'):
+    for x in self.objectValues(portal_type='Workflow Variable'):
       if x.getReference() == name:
         vdef = x
         break
     if vdef is _MARKER:
       return default
-    if vdef.getInfoGuard() is not None and not vdef.getInfoGuard().check(
-      getSecurityManager(), self, ob):
+    if not vdef.checkGuard(getSecurityManager(), self, ob):
       return default
     status = self._getStatusOf(ob)
-    default_expr = vdef.getDefaultExpr()
+    variable_expression = vdef.getVariableExpression()
     if status is not None and name in status:
       value = status[name]
     # Not set yet.  Use a default.
-    elif default_expr is not None:
+    elif variable_expression is not None:
       ec = createExprContext(StateChangeInfo(ob, self, status))
-      value = Expression(default_expr)(ec)
+      value = variable_expression(ec)
     else:
-      value = vdef.getInitialValue()
+      value = vdef.getVariableValue()
 
     return value
 
@@ -171,7 +170,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
 
   security.declarePrivate('getValidRoleList')
   def getValidRoleList(self):
-    return sorted(self.getPortalObject().getDefaultModule('acl_users').valid_roles())
+    return sorted(self.getPortalObject().acl_users.valid_roles())
 
   security.declarePrivate('_updateWorkflowHistory')
   def _updateWorkflowHistory(self, document, status_dict):
@@ -189,24 +188,27 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
 
   security.declarePrivate('getScriptValueList')
   def getScriptValueList(self):
-    scripts = {}
-    for script in self.objectValues(portal_type='Workflow Script'):
-      scripts[script.getReference()] = script
-    return scripts
+    return self.objectValues(portal_type='Workflow Script')
+
+  security.declarePrivate('getTransitionValueById')
+  def getTransitionValueById(self, transition_id):
+      return self._getOb('interaction_' + transition_id, default=None)
 
   security.declarePrivate('getTransitionValueList')
   def getTransitionValueList(self):
-    interaction_dict = {}
-    for tdef in self.objectValues(portal_type="Interaction"):
-      interaction_dict[tdef.getReference()] = tdef
-    return interaction_dict
+    return self.objectValues(portal_type="Interaction")
+
+  security.declarePrivate('getTransitionValueById')
+  def getTransitionValueById(self, transition_id):
+      return self._getOb('interaction_' + transition_id, default=None)
+
+  security.declarePrivate('getTransitionValueList')
+  def getTransitionValueList(self):
+    return self.objectValues(portal_type="Interaction")
 
   security.declarePrivate('getTransitionIdList')
   def getTransitionIdList(self):
-    id_list = []
-    for ob in self.objectValues(portal_type="Interaction"):
-      id_list.append(ob.getReference())
-    return id_list
+    return [ob.getReference() for ob in self.objectValues(portal_type="Interaction")]
 
   security.declarePrivate('notifyWorkflowMethod')
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
@@ -225,21 +227,23 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       kw = kw.copy()
       kw['workflow_method_args'] = args
     filtered_transition_list = []
-
+    append = filtered_transition_list.append
     for t_id in transition_list:
       tdef = self._getOb('interaction_' + t_id )
       assert tdef.getTriggerType() == TRIGGER_WORKFLOW_METHOD
-      filtered_transition_list.append(tdef.getId())
+      append(tdef.getId())
       former_status = {}
 
       sci = StateChangeInfo(
       ob, self, former_status, tdef, None, None, kwargs=kw)
 
-      before_script_list = tdef.getBeforeScriptNameList()
-      if before_script_list != [] and before_script_list is not None:
-        for script_name in before_script_list:
-          script = self._getOb(script_name, None)
-          if script: script(sci)
+      script_value_list = tdef.getBeforeScriptValueList()
+      if script_value_list:
+        script_context = self._asScriptContext()
+      for script in script_value_list:
+        if script:
+          script = getattr(script_context, script.id)
+          script(sci)  # May throw an exception.
     return filtered_transition_list
 
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
@@ -257,6 +261,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       kw['workflow_method_args'] = args
       kw['workflow_method_result'] = result
 
+    workflow_variable_list = self.objectValues(portal_type='Workflow Variable')
     for t_id in transition_list:
       tdef = self._getOb('interaction_' + t_id )
       assert tdef.getTriggerType() == TRIGGER_WORKFLOW_METHOD
@@ -269,23 +274,23 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       if tdef_exprs is None: tdef_exprs = {}
       status = {}
 
-      for vdef in self.objectValues(portal_type='Variable'):
+      for vdef in workflow_variable_list:
         id = vdef.getId()
-        if not vdef.getForStatus():
+        if not vdef.getStatusIncluded():
           continue
-        expr = None
+        expression = None
         if id in tdef_exprs:
-          expr = tdef_exprs[id]
+          expression = tdef_exprs[id]
         elif not vdef.getAutomaticUpdate() and id in former_status:
           # Preserve former value
           value = former_status[id]
         else:
-          default_expr = vdef.getDefaultExpr()
-          if default_expr is not None:
-            expr = Expression(default_expr)
+          variable_expression = vdef.getVariableExpression()
+          if variable_expression is not None:
+            expression = variable_expression
           else:
-            value = vdef.getInitialValue()
-        if expr is not None:
+            value = vdef.getVariableValue()
+        if expression is not None:
           # Evaluate an expression.
           if econtext is None:
             # Lazily create the expression context.
@@ -294,36 +299,33 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
                   ob, self, former_status, tdef,
                   None, None, None)
             econtext = createExprContext(sci)
-          value = expr(econtext)
+          value = expression(econtext)
         status[id] = value
 
       sci = StateChangeInfo(
             ob, self, former_status, tdef, None, None, kwargs=kw)
 
       # Execute the "after" script.
-      after_script_list = tdef.getAfterScriptNameList()
-      if after_script_list != [] and after_script_list is not None:
-        for script_name in after_script_list:
-          # try to get the script without calling it.
-          script = self._getOb(script_name, None)
-          # Pass lots of info to the script in a single parameter.
-          if script: script(sci)  # May throw an exception
+      after_script_value_list = tdef.getAfterScriptValueList()
+      if after_script_value_list:
+        script_context = self._asScriptContext()
+      for script in after_script_value_list:
+        if script:
+          script = getattr(script_context, script.id)
+          script(sci)  # May throw an exception.
 
       # Queue the "Before Commit" scripts
       sm = getSecurityManager()
-      before_commit_script_list = tdef.getBeforeCommitScriptNameList()
-      if before_commit_script_list != [] and before_commit_script_list is not None:
-        for script_name in before_commit_script_list:
-          transaction.get().addBeforeCommitHook(self._before_commit,
-                                                (sci, script_name, sm))
+      before_commit_script_list = tdef.getBeforeCommitScriptValueList()
+      for script in before_commit_script_list:
+        transaction.get().addBeforeCommitHook(self._before_commit,
+                                                (sci, script.id, sm))
 
       # Execute "activity" scripts
-      activity_script_list = tdef.getActivateScriptNameList()
-      if activity_script_list != [] and activity_script_list is not None:
-        for script_name in activity_script_list:
-          self.activate(activity='SQLQueue')\
-              .activeScript(script_name, ob.getRelativeUrl(),
-                            status, tdef.getId())
+      activity_script_list = tdef.getActivateScriptValueList()
+      for script in activity_script_list:
+        self.activate(activity='SQLQueue')\
+            .activeScript(script.id, ob.getRelativeUrl(), status, tdef.getId())
 
   def _before_commit(self, sci, script_name, security_manager):
     # check the object still exists before calling the script
@@ -342,8 +344,10 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       finally:
         setSecurityManager(current_security_manager)
 
-  def activeScript(self, script_name, ob_url, former_status, tdef_id):
-    script = self._getOb(script_name)
+  def activeScript(self, script_name, ob_url, former_status, tdef_id,
+                   script_context=None):
+    script_context = self._asScriptContext()
+    script = getattr(script_context, script_name)
     ob = self.unrestrictedTraverse(ob_url)
     tdef = self._getOb(tdef_id)
     sci = StateChangeInfo(
@@ -367,8 +371,11 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
         return 1
     return 0
 
+  def getStateValueById(self, reference):
+    return None
+
   def getStateValueList(self):
-    return {}
+    return []
 
   def showAsXML(self, root=None):
     if root is None:
@@ -396,10 +403,10 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
     # 1. Interaction as XML
     interaction_reference_list = []
     interaction_list = self.objectValues(portal_type='Interaction')
-    interaction_prop_id_to_show = sorted(['actbox_category', 'actbox_url', 'actbox_name',
-    'activate_script_name', 'after_script_name', 'before_commit_script_name',
-    'description', 'groups', 'roles', 'expr', 'permissions', 'method_id',
-    'once_per_transaction', 'portal_type_filter', 'portal_type_group_filter',
+    interaction_prop_id_to_show = sorted(['activate_script_name',
+    'after_script_name', 'before_commit_script_name', 'description',
+    'groups', 'roles', 'expr', 'permissions', 'trigger_method_id',
+    'trigger_once_per_transaction', 'portal_type_filter', 'portal_type_group_filter',
     'script_name', 'temporary_document_disallowed', 'trigger_type'])
     for tdef in interaction_list:
       interaction_reference_list.append(tdef.getReference())
@@ -421,19 +428,20 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
             property_value = tuple(property_value)
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         elif property_id == 'expr':
-          property_value = tdef.getExpression()
+          property_value = tdef.getGuardExpression()
           sub_object = SubElement(guard, property_id, attrib=dict(type='guard configuration'))
         # no-property definded action box configuration
-        elif property_id in ['actbox_name', 'actbox_url', 'actbox_category', 'trigger_type']:
+        elif property_id == 'trigger_type':
           property_value = getattr(tdef, property_id, None)
           sub_object = SubElement(interaction, property_id, attrib=dict(type='string'))
-        elif property_id in ['activate_script_name', 'after_script_name', 'before_commit_script_name',
-              'method_id', 'once_per_transaction', 'portal_type_filter', 'portal_type_group_filter',
-              'script_name', 'temporary_document_disallowed']:
+        elif property_id in ['activate_script_name', 'after_script_name',
+              'before_commit_script_name', 'portal_type_filter', 'trigger_method_id', 'method_id',
+              'portal_type_group_filter', 'script_name', 'once_per_transaction',
+              'temporary_document_disallowed']:
           if property_id == 'activate_script_name': prop_id = 'activate_script_name_list'
           if property_id == 'after_script_name': prop_id = 'after_script_name_list'
           if property_id == 'before_commit_script_name': prop_id = 'before_commit_script_name_list'
-          if property_id == 'method_id': prop_id = 'trigger_method_id_list'
+          if property_id in ('method_id', 'trigger_method_id'): prop_id = 'trigger_method_id_list'
           if property_id == 'once_per_transaction': prop_id = 'trigger_once_per_transaction'
           if property_id == 'portal_type_filter': prop_id = 'portal_type_filter_list'
           if property_id == 'portal_type_group_filter': prop_id = 'portal_type_group_filter_list'
@@ -458,9 +466,9 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
 
     # 2. Variable as XML
     variable_reference_list = []
-    variable_list = self.objectValues(portal_type='Variable')
-    variable_prop_id_to_show = ['description', 'default_expr',
-          'for_catalog', 'for_status', 'update_always']
+    variable_list = self.objectValues(portal_type='Workflow Variable')
+    variable_prop_id_to_show = ['description', 'variable_expression',
+          'for_catalog', 'for_status', 'automatic_update']
     for vdef in variable_list:
       variable_reference_list.append(vdef.getReference())
     variables = SubElement(interaction_workflow, 'variables', attrib=dict(variable_list=str(variable_reference_list),
@@ -469,13 +477,11 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       variable = SubElement(variables, 'variable', attrib=dict(reference=vdef.getReference(),
             portal_type=vdef.getPortalType()))
       for property_id in sorted(variable_prop_id_to_show):
-        if property_id == 'update_always':
+        if property_id == 'automatic_update':
           property_value = vdef.getAutomaticUpdate()
           sub_object = SubElement(variable, property_id, attrib=dict(type='int'))
-        elif property_id == 'default_value':
-          property_value = vdef.getInitialValue()
-          if vdef.getInitialValue() is not None:
-            property_value = vdef.getInitialValue()
+        elif property_id == 'variable_value':
+          property_value = vdef.getVariableValue()
           sub_object = SubElement(variable, property_id, attrib=dict(type='string'))
         else:
           property_value = vdef.getProperty(property_id)

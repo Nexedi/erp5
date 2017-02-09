@@ -210,7 +210,7 @@ def getPossibleWorkflowActionItemList(self, brain, **kw):
   for action in portal.portal_actions.listFilteredActionsFor(brain).get('workflow', []):
     transition = action.get('transition', None)
     if transition is not None:
-      workflow_id = action['transition'].getParentWorkflowValue().getId()
+      workflow_id = action['transition'].getParentValue().getId()
       if workflow_id == brain.workflow_id:
         dialog_id = action['url'].split('?', 1)[0].split('/')[-1]
         dialog_object = getattr(portal, dialog_id, None)

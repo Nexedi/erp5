@@ -328,8 +328,10 @@ def synchronizeDynamicModules(context, force=False):
       from Products.ERP5Type.Tool.TypesTool import TypesTool
       from Products.ERP5Type.Tool.ComponentTool import ComponentTool
       from Products.ERP5Workflow.Tool.WorkflowTool import WorkflowTool
+
       try:
-        for tool_class in TypesTool, PropertySheetTool, ComponentTool, WorkflowTool:
+        # migration of tools leading to call of migrateToPortalTypeClass
+        for tool_class in TypesTool, PropertySheetTool, ComponentTool:
           # if the instance has no property sheet tool, or incomplete
           # property sheets, we need to import some data to bootstrap
           # (only likely to happen on the first run ever)
@@ -364,6 +366,14 @@ def synchronizeDynamicModules(context, force=False):
               ' business templates')
         else:
           _bootstrapped.add(portal.id)
+
+        # migration of other tools
+        for tool_class in (WorkflowTool,):
+          tool = getattr(portal, tool_class.id, None)
+          if tool is not None and tool._isBootstrapRequired():
+            tool._bootstrap()
+            tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
+
       except:
         # Required because the exception may be silently dropped by the caller.
         transaction.doom()

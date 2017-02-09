@@ -87,7 +87,7 @@
                           <string>Causality</string>
                         </tuple>
                         <tuple>
-                          <string>Variable_getNonEvaluatedInitialValue</string>
+                          <string>Variable_getNonEvaluatedVariableValue</string>
                           <string>Value</string>
                         </tuple>
                       </list>

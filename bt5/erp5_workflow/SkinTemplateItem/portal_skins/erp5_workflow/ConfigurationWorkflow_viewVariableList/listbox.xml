@@ -90,7 +90,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>Variable_getNonEvaluatedInitialValue</string>
+                          <string>Variable_getNonEvaluatedVariableValue</string>
                           <string>Initial Value</string>
                         </tuple>
                         <tuple>
@@ -102,7 +102,7 @@
                           <string>Available for Catalog</string>
                         </tuple>
                         <tuple>
-                          <string>default_expr</string>
+                          <string>variable_expression</string>
                           <string>Expression</string>
                         </tuple>
                       </list>
@@ -138,8 +138,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Variable</string>
-                          <string>Variable</string>
+                          <string>Workflow Variable</string>
+                          <string>Workflow Variable</string>
                         </tuple>
                       </list>
                     </value>

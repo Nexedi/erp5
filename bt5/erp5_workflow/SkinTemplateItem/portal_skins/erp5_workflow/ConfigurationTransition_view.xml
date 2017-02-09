@@ -98,8 +98,8 @@
                     <value>
                       <list>
                         <string>my_transition_form_id</string>
-                        <string>my_before_script_id</string>
-                        <string>my_after_script_id</string>
+                        <string>my_before_script_list</string>
+                        <string>my_after_script_list</string>
                       </list>
                     </value>
                 </item>

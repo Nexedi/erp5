@@ -36,7 +36,7 @@ from Acquisition import aq_base
 
 def IdAsReferenceMixin(extra_string, string_type="suffix"):
 
-  extra_string_index = -len(extra_string)
+  extra_string_index = len(extra_string)
 
   class IdAsReferenceMixin(object):
     # Declarative security
@@ -56,8 +56,8 @@ def IdAsReferenceMixin(extra_string, string_type="suffix"):
     def getReference(self, *args):
       id = self.id
       if string_type == "suffix":
-        if id[extra_string_index:] == extra_string:
-          return id[:extra_string_index]
+        if id[-extra_string_index:] == extra_string:
+          return id[:-extra_string_index]
         try:
           return self._baseGetReference(*args)
         except AttributeError:
@@ -73,6 +73,8 @@ def IdAsReferenceMixin(extra_string, string_type="suffix"):
     def _setReference(self, value):
       parent = self.getParentValue()
       self.__dict__.pop('default_reference', None)
+      if value is None:
+        raise ValueError('Reference is not set.')
       if string_type == "prefix":
         new_id = extra_string + value
       elif string_type == "suffix":
