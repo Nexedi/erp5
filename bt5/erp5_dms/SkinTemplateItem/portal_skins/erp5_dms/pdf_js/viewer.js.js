@@ -35,8 +35,8 @@ var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 25000;
 
 function configure(PDFJS) {
   PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = './build/pdf.worker.js';
-  PDFJS.cMapUrl = './cmaps/';
+  PDFJS.workerSrc = './pdf_js/build/pdf.worker.js';
+  PDFJS.cMapUrl = './web/cmaps/';
   PDFJS.cMapPacked = true;
 }
 
