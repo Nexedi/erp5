@@ -6,6 +6,10 @@ web_site_module/officejs_bookmark_manager
 web_site_module/officejs_bookmark_manager/**
 web_site_module/officejs_ckeditor_gadget
 web_site_module/officejs_ckeditor_gadget/**
+web_site_module/officejs_pdf_viewer
+web_site_module/officejs_pdf_viewer/**
+web_site_module/officejs_pdf_viewer_gadget
+web_site_module/officejs_pdf_viewer_gadget/**
 web_site_module/officejs_setting_gadget
 web_site_module/officejs_setting_gadget/**
 web_site_module/officejs_spreadsheet
