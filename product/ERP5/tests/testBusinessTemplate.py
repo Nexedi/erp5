@@ -139,7 +139,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       workflow_list = type_object.getTypeWorkflowList()
       if 'geek_workflow' in workflow_list:
         workflow_set = set(workflow_list) - {'geek_workflow'}
-        type_object.setTypeWorkflowList(sorted(workflow_set))
+        type_object.setTypeWorkflowList(workflow_set)
 
     if 'erp5_geek' in self.getSkinsTool().objectIds():
       self.getSkinsTool().manage_delObjects(['erp5_geek'])
@@ -1407,7 +1407,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       workflow_list = type_object.getTypeWorkflowList()
       if wf_id in workflow_list:
         workflow_set = set(workflow_list) - {wf_id}
-        type_object.setTypeWorkflowList(sorted(workflow_set))
+        type_object.setTypeWorkflowList(workflow_set)
 
   def stepCheckWorkflowExists(self, sequence=None, **kw):
     """

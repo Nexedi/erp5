@@ -455,7 +455,14 @@ class ERP5TypeInformation(XMLObject,
                               'setTypeWorkflowList')
     def setTypeWorkflowList(self, type_workflow_list):
       """Setter for 'type_workflow' property"""
-      self.workflow_list = type_workflow_list
+      # We use 'sorted' below to keep an order in the workflow list. Without
+      # this line, the actions can have different order depending on the order
+      # set during the installation or later. This is bad!
+      # It might not be the ideal solution, if you need to have the workflow
+      # defined in a specific order. Then, your new implementation should use
+      # indexes on workflows as in portal types action's priority.
+      # Note: 'sorted' also convert a tuple or a set to a list
+      self.workflow_list = sorted(type_workflow_list)
 
     def getTypePropertySheetValueList(self):
       type_property_sheet_list = self.getTypePropertySheetList()

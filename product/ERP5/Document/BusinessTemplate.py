@@ -1406,7 +1406,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if portal_type_dict:
           # set workflow chain
           workflow_list = portal_type_dict.pop('workflow_chain')
-          obj.setTypeWorkflowList(sorted(workflow_list))
+          obj.setTypeWorkflowList(workflow_list)
           # restore some other properties
           obj.__dict__.update(portal_type_dict)
         # import sub objects if there is
@@ -2299,7 +2299,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
     for portal_type in types_tool.listTypeInfo():
       workflow_set = set(portal_type.getTypeWorkflowList()) - \
                       removed_workflow_id_list
-      portal_type.setTypeWorkflowList(sorted(workflow_set))
+      portal_type.setTypeWorkflowList(workflow_set)
     ObjectTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeTemplateItem(ObjectTemplateItem):
@@ -2377,11 +2377,11 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
             continue
         portal_type = obj.id
         if self._workflow_chain_archive.has_key(portal_type):
-          obj.setTypeWorkflowList(sorted([
+          obj.setTypeWorkflowList([
             w.strip() for w in
             self._workflow_chain_archive[portal_type].split(',')
             if w.strip() not in ('', '(Default)')
-          ]))
+          ])
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
   def _importFile(self, file_name, file):
@@ -2533,7 +2533,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
               workflow_id_set.add(wf_id)
 
             changed = not(workflow_id_set == old_workflow_id_set)
-            type_object.setTypeWorkflowList(sorted(workflow_id_set))
+            type_object.setTypeWorkflowList(workflow_id_set)
 
           if not workflow_id_list:
             # Check if it has normally to remove a workflow chain, in order to
@@ -2543,7 +2543,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                 raise ValueError, '"%s" is not a workflow ID for %s' % \
                                   (wf_id, portal_type)
             changed = not(workflow_id_set == old_workflow_id_set)
-            type_object.setTypeWorkflowList(sorted(workflow_id_set))
+            type_object.setTypeWorkflowList(workflow_id_set)
         else:
           raise ValueError('Cannot chain workflow %r to non existing '
                          'portal type %r' % (self._chain_string_separator\
@@ -2571,7 +2571,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         old_workflow_id_list = type_object.getTypeWorkflowList()
         workflow_id_list = [workflow_id for workflow_id in old_workflow_id_list
                             if workflow_id not in removed_workflow_id_list]
-        type_object.setTypeWorkflowList(sorted(workflow_id_list))
+        type_object.setTypeWorkflowList(workflow_id_list)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
