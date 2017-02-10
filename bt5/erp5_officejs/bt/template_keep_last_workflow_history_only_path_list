@@ -16,3 +16,5 @@ web_site_module/officejs_svg_editor
 web_site_module/officejs_svg_editor/**
 web_site_module/officejs_svg_editor_gadget
 web_site_module/officejs_svg_editor_gadget/**
+web_site_module/officejs_pdf_viewer_gadget
+web_site_module/officejs_pdf_viewer_gadget/**
