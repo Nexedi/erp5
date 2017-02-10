@@ -2,3 +2,5 @@ erp5_officejs_jio_connector | RJSVersioning
 erp5_web_renderjs_ui | RJSVersioning
 erp5_web_renderjs_ui_unsafe | RJSUnsafe
 erp5_web_versioning | RJSVersioning
+erp5_xhtml_style | RJS
+erp5_xhtml_style | RJSVersioning
