@@ -969,24 +969,24 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       wf = self.getWorkflowTool().validation_workflow
       # those are assumptions for this test.
-      self.assertTrue(wf.getId() in
-                        self.getWorkflowTool().getChainFor('Person'))
-      self.assertEqual('validation_state', wf.variables.getStateVar())
-      initial_state = wf.states[wf.initial_state]
-      other_state = wf.states['validated']
+      self.assertTrue(wf in
+                        self.getWorkflowTool().getWorkflowValueListFor('Person'))
+      self.assertEqual('validation_state', wf.getStateVariable())
+      initial_state = wf.getSourceValue()
+      other_state = wf.getStateValueList()['validated']
 
       self.assertTrue(hasattr(person, 'getValidationState'))
       self.assertTrue(hasattr(person, 'getValidationStateTitle'))
       self.assertTrue(hasattr(person, 'getTranslatedValidationStateTitle'))
 
-      self.assertEqual(initial_state.getId(), person.getValidationState())
+      self.assertEqual(initial_state.getReference(), person.getValidationState())
       self.assertEqual(initial_state.title,
                         person.getValidationStateTitle())
       self.assertEqual(initial_state.title,
                         person.getTranslatedValidationStateTitle())
       self.assertTrue([initial_state.title], message_catalog._translated)
 
-      self.assertEqual(initial_state.getId(),
+      self.assertEqual(initial_state.getReference(),
                         person.getProperty('validation_state'))
       self.assertEqual(initial_state.title,
                         person.getProperty('validation_state_title'))
@@ -996,7 +996,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue([initial_state.title], message_catalog._translated)
 
       # default parameter is accepted by getProperty for compatibility
-      self.assertEqual(initial_state.getId(),
+      self.assertEqual(initial_state.getReference(),
                         person.getProperty('validation_state', 'default'))
       self.assertEqual(initial_state.title,
                         person.getProperty('validation_state_title', 'default'))
@@ -1008,12 +1008,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # pass a transition and check accessors again.
       person.validate()
-      self.assertEqual(other_state.getId(), person.getValidationState())
+      self.assertEqual(other_state.getReference(), person.getValidationState())
       self.assertEqual(other_state.title,
                         person.getValidationStateTitle())
       self.assertEqual(other_state.title,
                         person.getTranslatedValidationStateTitle())
-      self.assertEqual(other_state.getId(),
+      self.assertEqual(other_state.getReference(),
                         person.getProperty('validation_state'))
       self.assertEqual(other_state.title,
                         person.getProperty('validation_state_title'))
@@ -2477,36 +2477,37 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
     def test_aq_reset_on_workflow_method_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], ('delivery_causality_workflow'))
-
+      self.portal.portal_workflow.addWorkflowToType(self.portal.portal_types._getOb('Person'), ('delivery_causality_workflow',))
       self.commit()
       self.assertTrue(hasattr(doc, 'diverge'))
 
       wf = self.portal.portal_workflow.delivery_causality_workflow
-      wf.transitions.addTransition('dummy_workflow_method')
+      wf.addTransition('dummy_workflow_method')
+
       from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
-      wf.transitions.dummy_workflow_method.setProperties(
+      if wf.getPortalType() == 'Workflow':
+        wf._getOb('transition_dummy_workflow_method')._edit(trigger_type=TRIGGER_WORKFLOW_METHOD)
+      else:
+        wf.transitions.dummy_workflow_method.setProperties(
           title='', new_state_id='', trigger_type=TRIGGER_WORKFLOW_METHOD)
 
       self.commit()
       self.assertTrue(hasattr(doc, 'dummyWorkflowMethod'))
 
-      wf.transitions.deleteTransitions(['dummy_workflow_method'])
-
+      wf.deleteTransitions(['dummy_workflow_method'])
       self.commit()
       self.assertFalse(hasattr(doc, 'dummyWorkflowMethod'))
 
     def test_aq_reset_on_workflow_state_variable_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      self.getWorkflowTool().setChainForPortalTypes(
-        ['Person'], ('delivery_causality_workflow'))
-
+      self.portal.portal_workflow.addWorkflowToType(self.portal.portal_types._getOb('Person'), ('delivery_causality_workflow',))
       self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
-      wf = self.portal.portal_workflow.delivery_causality_workflow
-      wf.variables.setStateVar('dummy_state')
-
+      wf = self.portal.portal_workflow._getOb('delivery_causality_workflow')
+      if wf.getPortalType() == 'Workflow':
+        wf._edit(state_variable='dummy_state')
+      else:
+        wf.setStateVariable('dummy_state')
       self.commit()
       self.assertTrue(hasattr(doc, 'getDummyState'))
 

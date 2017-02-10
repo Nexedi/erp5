@@ -9,7 +9,10 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>description</string>
+                <string>title</string>
+              </list>
             </value>
         </item>
         <item>
@@ -70,6 +73,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>The ID of a document in ERP5</string> </value>
+                </item>
+                <item>
                     <key> <string>extra_context</string> </key>
                     <value>
                       <list/>
@@ -82,6 +89,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>BaseWorkflow_FieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Title</string> </value>
                 </item>
               </dictionary>
             </value>

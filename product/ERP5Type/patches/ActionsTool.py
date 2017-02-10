@@ -58,9 +58,11 @@ def listFilteredActionsFor(self, object=None):
     invokes the migration of their actions to portal_actions
     """
     actions = []
-
+    listActionProviderlist = list(self.listActionProviders())
+    if 'portal_workflow' not in listActionProviderlist:
+      listActionProviderlist.append('portal_workflow')
+    for provider_name in listActionProviderlist:
     # Include actions from specific tools.
-    for provider_name in self.listActionProviders():
         provider = getattr(self, provider_name)
         if hasattr(provider, 'getActionListFor'):
             from Products.ERP5Type.Utils import createExpressionContext

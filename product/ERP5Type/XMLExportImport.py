@@ -125,7 +125,10 @@ def Base_asXML(object, root=None):
             for word in value]
         sub_object.append(marshaller(value))
       elif prop_type in ('text', 'string',):
-        sub_object.text = unicode(escape(value), 'utf-8')
+        if type(value) in (tuple, list, dict):
+          sub_object.text = str(value)
+        else:
+          sub_object.text = unicode(escape(value), 'utf-8')
       elif prop_type != 'None':
         sub_object.text = str(value)
 

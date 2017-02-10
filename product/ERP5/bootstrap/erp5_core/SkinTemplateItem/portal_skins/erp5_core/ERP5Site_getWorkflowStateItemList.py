@@ -34,18 +34,19 @@ for portal_type in portal_type:
     workflow = workflow_tool[workflow_id]
     
     # skip interaction workflows or workflows with only one state (such as edit_workflow)
-    if workflow.states is None or len(workflow.states.objectIds()) <= 1:
+    if workflow.getStateValueList() is None or len(workflow.getStateIdList()) <= 1:
       continue
     
     # skip workflows using another state variable
-    if state_var not in (None, workflow.variables.getStateVar()):
+    if state_var not in (None, workflow.getStateVariable()):
       continue
     
-    for state in workflow.states.objectValues():
-      if state.id in state_set:
+    for state_id in workflow.getStateValueList():
+      state =  workflow.getStateValueList().get(state_id)
+      if state_id in state_set:
         continue
-      state_set.add(state.id)
+      state_set.add(state_id)
       
-      result_list.append((str(translateString(state.title)), state.id))
+      result_list.append((str(translateString(state.title)), state_id))
 
 return result_list

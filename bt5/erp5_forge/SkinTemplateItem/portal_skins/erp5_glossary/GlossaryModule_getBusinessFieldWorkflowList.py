@@ -26,9 +26,9 @@ def get_obj_and_reference_list(business_field):
     wf = getattr(portal_workflow, wf_id)
     if getattr(wf, "interactions", marker) is marker: # only way to make sure it is not an interaction workflow ?
       result.append((wf, wf_id, 'workflow'))
-      for state_id, state in wf.states.items():
+      for state_id, state in wf.getStateValueList().items():
         result.append((state, state_id, 'state'))
-      for trans_id, trans in wf.transitions.items():
+      for trans_id, trans in wf.getTransitionValueList().items():
         result.append((trans, trans_id, 'transition'))
         if trans.trigger_type == 1 and trans.actbox_name: # 1 == TRIGGER_USER_ACTION
           result.append((trans, "%s_actbox_name" % trans_id, 'action'))

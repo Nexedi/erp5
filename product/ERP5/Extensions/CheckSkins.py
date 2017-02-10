@@ -310,8 +310,8 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
   # Workflows.
   for wf in self.portal_workflow.objectValues():
     # Transitions.
-    for id in wf.transitions.objectIds():
-      transition = wf.transitions._getOb(id)
+    Transition_value_dict = wf.getTransitionValueList()
+    for id, transition in Transition_value_dict.items():
       text = transition.actbox_url
       for info in info_list:
         if info.regexp.search(text) is not None:
@@ -323,8 +323,8 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
             transition.actbox_url = text
           break
     # Worklists.
-    for id in wf.worklists.objectIds():
-      worklist = wf.worklists._getOb(id)
+    worklist_value_dict = wf.getWorklistValueList()
+    for id, worklist  in worklist_value_dict.items():
       text = worklist.actbox_url
       for info in info_list:
         if info.regexp.search(text) is not None:
@@ -336,8 +336,8 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
             worklist.actbox_url = text
           break
     # Scripts.
-    for id in wf.scripts.objectIds():
-      script = wf.scripts._getOb(id)
+    script_value_dict = wf.getScriptValueList()
+    for id, script in script_value_dict.items():
       text = script.manage_FTPget()
       name_list = []
       for info in info_list:
