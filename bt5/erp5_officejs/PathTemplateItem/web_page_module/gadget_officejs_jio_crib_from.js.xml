@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -70,30 +67,26 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_liberator.html</string> </value>
+            <value> <string>gadget_officejs_jio_crib_from.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Jio access</string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_liberator_html</string> </value>
-        </item>
-        <item>
-            <key> <string>language</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget_officejs_jio_crib_from.js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>en</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,13 +96,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Liberator Gadget</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Jio Cribjs Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -169,7 +156,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -195,7 +182,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485781795.26</float>
+                        <float>1486738086.23</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -204,7 +191,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -240,7 +227,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.595.54010.19848</string> </value>
+                <value> <string>957.15056.45748.50824</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +245,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486738936.31</float>
+                        <float>1486735732.81</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,9 +268,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -299,7 +284,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -317,7 +302,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485779372.4</float>
+                        <float>1486735668.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

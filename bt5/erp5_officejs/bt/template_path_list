@@ -8,6 +8,8 @@ web_site_module/officejs_ckeditor_gadget
 web_site_module/officejs_ckeditor_gadget/**
 web_site_module/officejs_codemirror
 web_site_module/officejs_codemirror/**
+web_site_module/officejs_cribjs
+web_site_module/officejs_cribjs/**
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
 web_site_module/officejs_pdf_viewer_gadget
