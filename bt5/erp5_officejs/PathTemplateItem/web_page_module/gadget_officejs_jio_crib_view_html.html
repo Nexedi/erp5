@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>OfficeJS Jio Web Page View</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+
+    <script class="view-web-page-template" type="text/x-handlebars-template">
+
+        <form class="view-web-page-form">
+          <div class="center">
+              <div class="ui-field-contain">
+                <label data-i18n="Title:">Title:</label>
+                <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
+                  <input type="text" name="title" value="{{title}}">
+                </div>
+              </div>
+              <button type="submit" data-i18n="Save" style="display:none;">Save</button>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Reference:">Reference</label>
+                <input type="text" name="reference" value="{{reference}}" required>
+              </div>
+
+              <div class="ui-field-contain">
+                <label data-i18n="Content Type:">Content Type:</label>
+                <input type="text" name="content_type" value="{{content_type}}">
+              </div>
+
+              <div class='document-content'></div>
+            </div>
+          </div>
+        </form>
+
+    </script>
+
+    <script src="gadget_officejs_jio_crib_view.js"></script>
+
+  </head>
+
+  <body>
+  </body>
+</html>
