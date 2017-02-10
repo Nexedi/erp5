@@ -58,7 +58,6 @@ Property Sheet | String Attribute Match Constraint
 Property Sheet | TALES Constraint
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
-State | PermissionRoles
 Template Tool | Business Template
 Transition | Transition Variable
 Trash Tool | Trash Bin

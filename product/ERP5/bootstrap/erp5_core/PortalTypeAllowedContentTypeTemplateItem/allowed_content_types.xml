@@ -111,9 +111,6 @@
  <portal_type id="Simulation Tool">
   <item>Applied Rule</item>
  </portal_type>
- <portal_type id="State">
-  <item>PermissionRoles</item>
- </portal_type>
  <portal_type id="Template Tool">
   <item>Business Template</item>
  </portal_type>
