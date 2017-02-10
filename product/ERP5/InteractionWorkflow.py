@@ -336,27 +336,33 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
 
     return DCWorkflowDefinition._checkTransitionGuard(self, t, ob, **kw)
 
+  security.declarePrivate('getReference')
   def getReference(self):
     return self.id
 
+  security.declarePrivate('getTransitionValueById')
   def getTransitionValueById(self, transition_id):
     if self.interactions is not None:
       return self.interactions.get(transition_id, None)
     return None
 
+  security.declarePrivate('getTransitionValueList')
   def getTransitionValueList(self):
     if self.interactions is not None:
       return self.interactions.values()
     return []
 
+  security.declarePrivate('getTransitionIdList')
   def getTransitionIdList(self):
     if self.interactions is not None:
       return self.interactions.objectIds()
     return []
 
+  security.declarePrivate('getPortalType')
   def getPortalType(self):
     return self.__class__.__name__
 
+  security.declarePrivate('showAsXML')
   def showAsXML(self, root=None):
     if root is None:
       root = Element('erp5')

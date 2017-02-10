@@ -150,6 +150,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     PropertySheet.Workflow,
   )
 
+  security.declarePrivate('notifyCreated')
   def notifyCreated(self, document):
     """
     Notifies this workflow after an object has been created and added.
@@ -160,8 +161,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         # Swallow.
         pass
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'initializeDocument')
+  security.declarePrivate('initializeDocument')
   initializeDocument = notifyCreated
 
   def _generateHistoryKey(self):
@@ -358,6 +358,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
   # This method allows to update all objects using one workflow, for example
   # after the permissions per state for this workflow were modified
+  security.declareProtected(Permissions.ModifyPortalContent, 'updateRoleMappings')
   def updateRoleMappings(self, REQUEST=None):
     """
     Changes permissions of all objects related to this workflow
@@ -454,6 +455,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         # Re-raise.
       raise moved_exc
 
+  security.declarePrivate('listObjectActions')
   def listObjectActions(self, info):
       fmt_data = None
       document = info.object
@@ -485,6 +487,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
 
       return [ result[1] for result in object_action_list ]
 
+  security.declarePrivate('getWorklistVariableMatchDict')
   def getWorklistVariableMatchDict(self, info, check_guard=True):
     """
       Return a dict which has an entry per worklist definition
@@ -640,62 +643,98 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
       else:
           return state
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariableValueDict')
   def getVariableValueDict(self):
     return {variable.getReference(): variable
             for variable in self.objectValues(portal_type="Workflow Variable")}
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCurrentStatusDict')
+  security.declarePrivate('listObjectActions')
   def getVariableValueList(self):
     return self.objectValues(portal_type="Workflow Variable")
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariableIdList')
   def getVariableIdList(self):
     return [variable.getReference()
             for variable in self.objectValues(portal_type="Workflow Variable")]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVariableValueById')
   def getVariableValueById(self, variable_id):
     return self._getOb('variable_' + variable_id, default=None)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getStateValueById')
   def getStateValueById(self, stated_id):
     return self._getOb('state_' + stated_id, default=None)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getStateValueList')
   def getStateValueList(self):
     return self.objectValues(portal_type="State")
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getStateIdList')
   def getStateIdList(self):
     return [state.getReference()
             for state in self.objectValues(portal_type="State")]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorklistValueList')
   def getWorklistValueList(self):
     return self.objectValues(portal_type="Worklist")
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorklistIdList')
   def getWorklistIdList():
     return [worklist.getReference()
             for worklist in self.objectValues(portal_type="Worklist")]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTransitionIdByReference')
   def getTransitionIdByReference(self, transition_reference):
     return 'transition_' + transition_reference
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getScriptIdByReference')
   def getScriptIdByReference(self, script_reference):
     return SCRIPT_PREFIX + script_reference
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getScriptValueById')
   def getScriptValueById(self, script_id):
     return self._getOb(script_id, default=None)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getWorklistValueById')
   def getWorklistValueById(self, worklist_reference):
     return self._getOb('worklist_' + worklist_reference, None)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTransitionValueById')
   def getTransitionValueById(self, transition_reference):
     return self._getOb('transition_' + transition_reference, None)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTransitionValueList')
   def getTransitionValueList(self):
     return self.objectValues(portal_type="Transition")
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTransitionIdList')
   def getTransitionIdList(self):
     return [transition.getReference() for transition
             in self.objectValues(portal_type="Transition")]
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getScriptValueList')
   def getScriptValueList(self):
     return self.objectValues(portal_type='Workflow Script')
 
+  security.declarePrivate('notifyWorkflowMethod')
   def notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     """ Execute workflow methods.
     """
@@ -726,12 +765,15 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
         activate_kw = {}
       ob.reindexObject(activate_kw=activate_kw)
 
+  security.declarePrivate('notifyBefore')
   def notifyBefore(self, ob, transition_list, args=None, kw=None):
     pass
 
+  security.declarePrivate('notifySuccess')
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     pass
 
+  security.declarePrivate('notifyException')
   def notifyException(self, ob, action, exc):
       '''
       Notifies this workflow that an action failed.
@@ -905,7 +947,7 @@ class Workflow(IdAsReferenceMixin("", "prefix"), XMLObject):
     else:
         return new_state
 
-  security.declarePublic('wrapWorkflowMethod')
+  security.declarePrivate('wrapWorkflowMethod')
   def wrapWorkflowMethod(self, ob, method_id, func, args, kw):
     '''
     Allows the user to request a workflow action.  This method
