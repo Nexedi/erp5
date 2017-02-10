@@ -60,6 +60,7 @@ class PermissionRoles(XMLObject):
              PropertySheet.DublinCore,
              PropertySheet.State,)
 
+  security.declarePrivate('getPermissionRole')
   def getPermissionRole(self):
     permission = 'None'
     role = 'None'

@@ -84,11 +84,12 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
     PropertySheet.Reference,
   )
 
-
+  security.declarePrivate('notifyCreated')
   def notifyCreated(self, document):
     pass
 
-  security.declareProtected(Permissions.View, 'getChainedPortalTypeList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+    'getChainedPortalTypeList')
   def getChainedPortalTypeList(self):
     """Returns the list of portal types that are chained to this
     interaction workflow."""
@@ -246,6 +247,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
           script(sci)  # May throw an exception.
     return filtered_transition_list
 
+  security.declarePrivate('notifySuccess')
   def notifySuccess(self, ob, transition_list, result, args=None, kw=None):
     """
     Notifies this workflow that an action has taken place.
@@ -344,6 +346,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
       finally:
         setSecurityManager(current_security_manager)
 
+  security.declarePrivate('activeScript')
   def activeScript(self, script_name, ob_url, former_status, tdef_id,
                    script_context=None):
     script_context = self._asScriptContext()
@@ -354,6 +357,7 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
           ob, self, former_status, tdef, None, None, None)
     script(sci)
 
+  security.declarePrivate('isActionSupported')
   def isActionSupported(self, document, action, **kw):
     '''
     Returns a true value if the given action name
@@ -371,12 +375,17 @@ class InteractionWorkflow(IdAsReferenceMixin("", "prefix"), Workflow):
         return 1
     return 0
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+    'getStateValueById')
   def getStateValueById(self, reference):
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+    'getStateValueList')
   def getStateValueList(self):
     return []
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'showAsXML')
   def showAsXML(self, root=None):
     if root is None:
       root = Element('erp5')
