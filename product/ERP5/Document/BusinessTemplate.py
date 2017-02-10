@@ -2409,7 +2409,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # if nothing or +, chain is added to the existing one
     # if - chain is removed from the exisiting one
     # if = chain replaced the existing one
-    types_tool = getToolByName(self.getPortalObject(), 'portal_types')
+    types_tool = self.getPortalObject().portal_types
     for key in self._archive.keys():
       wflist = key.split(' | ')
       if len(wflist) == 2:
@@ -2473,7 +2473,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     installed_bt = kw.get('installed_bt')
-    types_tool = getToolByName(self.getPortalObject(), 'portal_types')
+    types_tool = self.getPortalObject().portal_types
     changed = False
     if installed_bt is not None:
       previous_portal_type_workflow_chain_list = list(installed_bt\
@@ -2553,7 +2553,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
       self._resetDynamicModules()
 
   def uninstall(self, context, **kw):
-    types_tool = getToolByName(self.getPortalObject(), 'portal_types')
+    types_tool = self.getPortalObject().portal_types
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_key_list = [object_path]
