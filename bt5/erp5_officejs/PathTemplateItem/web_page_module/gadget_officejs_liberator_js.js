@@ -41,7 +41,7 @@
         },
         remote_sub_storage: {
           type: "mapping",
-          id: ["equalSubProperty", "url_string"],
+          id: ["equalSubProperty", "reference"],
           property: {
             "relative_url": ["ignore"],
             "version": ["ignore"]

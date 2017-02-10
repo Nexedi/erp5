@@ -103,12 +103,20 @@
           options: args
         };
       }
-      return gadget.jio_get(args.jio_key)
-        .push(function (doc) {
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.jio_get(args.jio_key),
+            gadget.getSetting("forced_view")
+          ]);
+        })
+        .push(function (result) {
           var sub_options = {},
-            base_portal_type = doc.portal_type.toLowerCase().replace(/\s/g, "_");
+            base_portal_type = result[1] === undefined ? 
+            result[0].portal_type.toLowerCase().replace(/\s/g, "_") :
+            result[1];
           sub_options = {
-            doc: doc,
+            doc: result[0],
             jio_key: args.jio_key,
             search: args.search
           };
@@ -129,6 +137,8 @@
     })
     
     .declareAcquiredMethod('jio_get', 'jio_get')
+    .declareAcquiredMethod('getSetting', 'getSetting')
+    .declareAcquiredMethod('setSetting', 'setSetting')
     .declareAcquiredMethod('renderApplication', 'renderApplication')
     .declareMethod('start', function () {
       var gadget = this,
