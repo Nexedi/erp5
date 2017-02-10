@@ -74,8 +74,12 @@ class WorkflowVariable(IdAsReferenceMixin("variable_", "prefix"), XMLObject,
       else:
         self.variable_expression = None
 
+    security.declareProtected(Permissions.ModifyPortalContent,
+      'setVariableExpressionText')
     def setVariableExpressionText(self, text):
       self.variable_expression = Expression(text)
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+      'getVariableExpressionText')
     def getVariableExpressionText(self):
       return getattr(self.variable_expression, 'text', '')

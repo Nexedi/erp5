@@ -74,6 +74,8 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject,
                PropertySheet.ActionInformation,
     )
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+      'getAvailableCatalogVars')
     def getAvailableCatalogVars(self):
       parent = self.getParentValue()
       res = [parent.getStateVariable()]
@@ -84,6 +86,8 @@ class Worklist(IdAsReferenceMixin("worklist_", "prefix"), XMLObject,
       res.sort()
       return res
 
+    security.declareProtected(Permissions.ModifyPortalContent,
+      'updateDynamicVariable')
     def updateDynamicVariable(self):
       # Keep worklist variables updating, correspond to workflow variables.
       # In the new workflow, we may not need this function for the moment.
