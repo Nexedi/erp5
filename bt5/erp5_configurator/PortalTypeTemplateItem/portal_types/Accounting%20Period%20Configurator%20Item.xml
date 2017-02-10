@@ -42,6 +42,12 @@
             <value> <string> Setup an Accounting Period. </string> </value>
         </item>
         <item>
+            <key> <string>erp5workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>factory</string> </key>
             <value> <string>addAccountingPeriodConfiguratorItem</string> </value>
         </item>
@@ -74,6 +80,12 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>AccountingPeriodConfiguratorItem</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

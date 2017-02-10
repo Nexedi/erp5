@@ -183,26 +183,26 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     sequence.edit(next_dict=next_dict)
 
   def stepCheckMultipleUserAccountThreeBrazil(self, sequence=None, sequence_list=None, **kw):
-     """ Check if the users were created correctly """
-     business_configuration = sequence.get("business_configuration")
-     person_config_save = business_configuration["5"]
-     person_config_item = person_config_save["1"]
-     self.assertEqual(person_config_item.getReference(), "person_creator")
-     person_config_item = person_config_save["2"]
-     self.assertEqual(person_config_item.getReference(), "person_assignee")
-     person_config_item = person_config_save["3"]
-     self.assertEqual(person_config_item.getReference(), "person_assignor")
+    """ Check if the users were created correctly """
+    business_configuration = sequence.get("business_configuration")
+    person_config_save = business_configuration["5"]
+    person_config_item = person_config_save["1"]
+    self.assertEqual(person_config_item.getReference(), "person_creator")
+    person_config_item = person_config_save["2"]
+    self.assertEqual(person_config_item.getReference(), "person_assignee")
+    person_config_item = person_config_save["3"]
+    self.assertEqual(person_config_item.getReference(), "person_assignor")
 
   def stepCheckMultipleUserAccountThreeFrance(self, sequence=None, sequence_list=None, **kw):
-     """ Check if the users were created correctly """
-     business_configuration = sequence.get("business_configuration")
-     person_config_save = business_configuration["5"]
-     person_config_item = person_config_save["1"]
-     self.assertEqual(person_config_item.getReference(), "french_creator")
-     person_config_item = person_config_save["2"]
-     self.assertEqual(person_config_item.getReference(), "french_assignee")
-     person_config_item = person_config_save["3"]
-     self.assertEqual(person_config_item.getReference(), "french_assignor")
+    """ Check if the users were created correctly """
+    business_configuration = sequence.get("business_configuration")
+    person_config_save = business_configuration["5"]
+    person_config_item = person_config_save["1"]
+    self.assertEqual(person_config_item.getReference(), "french_creator")
+    person_config_item = person_config_save["2"]
+    self.assertEqual(person_config_item.getReference(), "french_assignee")
+    person_config_item = person_config_save["3"]
+    self.assertEqual(person_config_item.getReference(), "french_assignor")
 
   def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
     """ Check the installation form """
