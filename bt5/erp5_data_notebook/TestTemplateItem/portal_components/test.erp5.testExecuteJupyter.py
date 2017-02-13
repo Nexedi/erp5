@@ -735,3 +735,124 @@ context.Base_renderAsHtml(iframe)
     
     self.assertTrue(pivottable_frame_display_path in json_result['code_result'])
 
+  def testConsecutiveImports(self):
+    '''
+      This test guarantees that importing a module's variables consecutively in
+      Jupyter works.
+    '''
+    self.login('dev_user')
+    import_code = '''
+from string import ascii_lowercase, ascii_uppercase, digits
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Import'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+
+    jupyter_code = '''
+print ascii_lowercase
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
+
+    jupyter_code = '''
+print ascii_uppercase
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+
+    jupyter_code = '''
+print digits
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), '0123456789')
+
+  def testStarImport(self):
+    '''
+      This test guarantees that "from x import *" works in Jupyter.
+    '''
+    self.login('dev_user')
+    import_code = '''
+from string import *
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Import'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+
+    jupyter_code = '''
+print ascii_lowercase
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), 'abcdefghijklmnopqrstuvwxyz')
+
+  def testAsImport(self):
+    '''
+      This test guarantees that "from x import a as b" works in Jupyter.
+    '''
+    self.login('dev_user')
+    import_code = '''
+from string import digits as dig
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Import'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+
+    jupyter_code = '''
+print dig
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), '0123456789')
+
+
