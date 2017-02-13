@@ -433,7 +433,7 @@ NETWORK:\n
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>onlyoffice</string> </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
