@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>spreadsheet_gadget_landing_page.html</string> </value>
+            <value> <string>ooffice_spreadsheet_gadget_landing_page.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Spreadsheet Gadget Landing Page</string> </value>
+            <value> <string>OnlyOffice Spreadsheet Gadget Landing Page</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -237,7 +237,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19317.26590.7014</string> </value>
+                <value> <string>957.19350.56466.65501</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -255,7 +255,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486991379.96</float>
+                        <float>1486993380.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
