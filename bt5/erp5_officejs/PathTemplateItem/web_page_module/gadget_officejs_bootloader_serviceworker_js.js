@@ -107,6 +107,13 @@ var global = self, window = self;
             return self.setting_storage.get(self.registration.scope)
               .push(function (doc) {
                 relative_url = doc.landing_page || "/";
+              })
+              .push(undefined, function (error) {
+                if (error.status_code === 404) {
+                  relative_url = "/";
+                  return;
+                }
+                throw error;
               });
           }
         })
