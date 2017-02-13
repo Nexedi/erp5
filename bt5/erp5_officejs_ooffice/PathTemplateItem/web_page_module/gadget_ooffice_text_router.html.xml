@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_ooffice_text_router.html</string> </value>
+            <value> <string>gadget_ooffice_text_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -231,7 +231,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19354.57916.15342</string> </value>
+                <value> <string>957.19360.26821.41676</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +249,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486993631.06</float>
+                        <float>1486996407.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
