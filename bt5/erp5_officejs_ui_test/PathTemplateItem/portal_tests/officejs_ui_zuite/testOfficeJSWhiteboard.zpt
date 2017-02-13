@@ -24,11 +24,11 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_cribjs/</td>
+  <td>${base_url}/web_site_module/officejs_whiteboard/</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//a</td>
   <td></td>
 </tr>
