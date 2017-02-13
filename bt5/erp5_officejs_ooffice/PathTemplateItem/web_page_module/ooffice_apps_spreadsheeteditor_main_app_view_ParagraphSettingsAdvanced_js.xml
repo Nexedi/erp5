@@ -78,12 +78,30 @@
             <value> <string>ParagraphSettingsAdvanced.js</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>ooffice_apps_spreadsheeteditor_main_app_view_ParagraphSettingsAdvanced_js</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -91,7 +109,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>onlyoffice</string> </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -218,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.20766.57483.9506</string> </value>
+                <value> <string>957.22293.5469.62208</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -236,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1471768452.74</float>
+                        <float>1487349134.04</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

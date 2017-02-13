@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_ooffice_spreadsheet_router.html</string> </value>
+            <value> <string>gadget_ooffice_spreadsheet_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Spreadsheet Router Gadget</string> </value>
+            <value> <string>Spreadsheet OnlyOffice Router Gadget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -231,7 +231,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19299.52450.32273</string> </value>
+                <value> <string>957.19401.10682.18107</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +249,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486993644.52</float>
+                        <float>1486997081.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

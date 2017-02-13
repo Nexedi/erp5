@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -115,9 +150,15 @@
             </value>
         </item>
         <item>
-            <key> <string>_identity_criterion</string> </key>
+            <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -218,9 +259,21 @@
             </value>
         </item>
         <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -228,7 +281,7 @@
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
-                <string>aggregate/web_page_module/gadget_officejs_pdf_viewer_html</string>
+                <string>aggregate/web_page_module/gadget_ooffice_spreadsheet_gadget_landing_page.html</string>
               </tuple>
             </value>
         </item>
@@ -289,6 +342,14 @@
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>url_string</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>custom_render_method_id</string> </key>
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
@@ -307,8 +368,20 @@
             <value> <string>development</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewRenderJSPreference</string> </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -322,11 +395,23 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJS</string> </value>
+            <value> <string>RJSVersioning</string> </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Bookmark Manager Development</string> </value>
+            <value> <string>OnlyOffice Spreadsheet Gadget Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -335,7 +420,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -351,18 +436,9 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="PersistentMapping" module="Persistence.mapping"/>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>data</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
+    <pickle> <int>0</int> </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
@@ -373,13 +449,51 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>url_string</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -392,13 +506,13 @@
                 <item>
                     <key> <string>category_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -407,7 +521,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -418,9 +532,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -446,7 +558,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486991768.34</float>
+                        <float>1487176628.79</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -455,14 +567,14 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
       </tuple>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -491,7 +603,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19324.9184.52753</string> </value>
+                <value> <string>957.25177.43251.1280</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -509,7 +621,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486991812.52</float>
+                        <float>1487343248.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

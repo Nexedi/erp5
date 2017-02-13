@@ -100,7 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio text View</string> </value>
+            <value> <string>OfficeJS Jio Text View</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -231,7 +231,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19357.63963.20224</string> </value>
+                <value> <string>957.19360.29180.62003</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +249,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486993898.43</float>
+                        <float>1486997134.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

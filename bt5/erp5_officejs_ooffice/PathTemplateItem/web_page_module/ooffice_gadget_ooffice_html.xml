@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>onlyoffice</string> </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -240,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.30412.57307.9625</string> </value>
+                <value> <string>957.30887.53494.61286</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1483724971.81</float>
+                        <float>1487685814.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

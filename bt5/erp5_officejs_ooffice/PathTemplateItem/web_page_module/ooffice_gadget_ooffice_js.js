@@ -234,53 +234,51 @@ if (Common === undefined) {
     .declareMethod('render', function (options) {
       console.log('begin render');
       var g = this,
+        magic,
         queue = new RSVP.Queue();
+      g.props.jio_key = options.jio_key;
+      g.props.key = options.key || "text_content";
+      g.props.value = options.value;
+      if (g.props.value === "data:") {
+        g.props.value = undefined;
+      }
+      if (g.props.value) {
+        if (g.props.value.slice === undefined) {
+          display_error(g, "not suported type of document value: " +
+            typeof g.props.value);
+        }
+        magic = g.props.value.slice(0, 5);
+        if (magic === "data:") {
+          g.props.value = atob(g.props.value.split(',')[1]);
+        }
+        magic = g.props.value.slice(0, 4);
+        switch (magic) {
+        case 'XLSY':
+        case 'PPTY':
+        case 'DOCY':
+          break;
+        case "PK\x03\x04":
+        case "PK\x05\x06":
+          g.props.value_zip_storage = jIO.createJIO({
+            type: "zipfile",
+            file: g.props.value
+          });
+          g.props.value_zip_storage.getAttachment('/', 'body.txt')
+            .then(undefined, function (error) {
+              if (error.status_code === 404) {
+                display_error(g, 'not supported format: "' + g.props.value + '"');
+              }
+              display_error(g, error);
+            });
+          break;
+        default:
+          display_error(g, 'not supported format: "' + g.props.value + '"');
+        }
+      }
+      if (!g.props.value_zip_storage) {
+        g.props.value_zip_storage = jIO.createJIO({type: "zipfile"});
+      }
       return queue
-        .push(function () {
-          var magic;
-          g.props.jio_key = options.jio_key;
-          g.props.key = options.key || "text_content";
-          g.props.value = options.value;
-          if (g.props.value === "data:") {
-            g.props.value = undefined;
-          }
-          if (g.props.value) {
-            if (g.props.value.slice === undefined) {
-              throw "not suported type of document value: " +
-                typeof g.props.value;
-            }
-            magic = g.props.value.slice(0, 5);
-            if (magic === "data:") {
-              g.props.value = atob(g.props.value.split(',')[1]);
-            }
-            magic = g.props.value.slice(0, 4);
-            switch (magic) {
-            case 'XLSY':
-            case 'PPTY':
-            case 'DOCY':
-              break;
-            case "PK\x03\x04":
-            case "PK\x05\x06":
-              g.props.value_zip_storage = jIO.createJIO({
-                type: "zipfile",
-                file: g.props.value
-              });
-              g.props.value_zip_storage.getAttachment('/', 'body.txt')
-                .then(undefined, function (error) {
-                  if (error.status_code === 404) {
-                    throw 'not supported format: "' + g.props.value + '"';
-                  }
-                  throw error;
-                });
-              break;
-            default:
-              throw 'not supported format: "' + g.props.value + '"';
-            }
-          }
-          if (!g.props.value_zip_storage) {
-            g.props.value_zip_storage = jIO.createJIO({type: "zipfile"});
-          }
-        })
         .push(function () {
           return g.getSetting('portal_type');
         })
