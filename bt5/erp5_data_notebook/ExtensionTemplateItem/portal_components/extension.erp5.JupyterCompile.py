@@ -677,38 +677,101 @@ class ImportFixer(ast.NodeTransformer):
     and environment function which setups the module and return it to be merged
     with the user context.
     """
-    module_name = node.names[0].name
-    
+
     test_import_string = None
+    result_name = ""
+    root_module_name = ""
+
+    module_names = []
+
     if getattr(node, "module", None) is not None:
       # case when 'from <module_name> import <something>'
-      test_import_string = "from %s import %s" %(node.module, module_name)
-      # XXX: handle sub case when "from <module_name> import *"
-      #if module_name == '*':
-      #  module_name = '%s_ALL' %(node.module)
-      #else:
-      #  module_name = '%s_%s' %(node.module, module_name)
-      
-    if getattr(node.names[0], 'asname'):
-      # case when 'import <module_name> as <name>'
-      module_name = node.names[0].asname
-      test_import_string = "import %s as %s" %(node.names[0].name, module_name)
+      root_module_name = node.module
 
-    if test_import_string is None:
-      # case 'import <module_name>
+      if (node.names[0].name == '*'):
+        # case when "from <module_name> import *"
+        mod = importlib.import_module(node.module)
+        tmp_dict = mod.__dict__
+
+        for name in tmp_dict.keys():
+          if (name[0] != '_'):
+            module_names.append(name)
+
+        test_import_string = "from %s import *" %(node.module)
+        result_name = "%s_ALL" %(node.module)
+      else:
+        # case when "from <module_name> import a as b, c as d, ..."
+        original_names = []
+        as_names = []
+
+        for name in node.names:
+          original_names.append(name.name)
+          if getattr(name, "asname", None) is None:
+            as_names.append(None)
+          else:
+            as_names.append(name.asname)
+
+        test_import_string = "from %s import " %(node.module)
+        for i in range(0, len(original_names)):
+          test_import_string = test_import_string + original_names[i]
+          if as_names[i]!=None:
+            test_import_string = test_import_string + ' as %s' %(as_names[i])
+          test_import_string = test_import_string + ', '
+        test_import_string = test_import_string[:-2]
+
+        module_names = []
+        for i in range(0, len(original_names)):
+          if as_names[i]!=None:
+            module_names.append(as_names[i])
+          else:
+            module_names.append(original_names[i])
+
+        for i in range(0, len(original_names)):
+          if as_names[i]!=None:
+            result_name = result_name + '%s_' %(as_names[i])
+          else:
+            result_name = result_name + '%s_' %(original_names[i])
+        result_name = result_name[:-1]
+
+
+
+    elif getattr(node.names[0], 'asname'):
+      # case when "import <module_name> as <name>""
+      module_names = [(node.names[0].asname), ]
+      test_import_string = "import %s as %s" %(node.names[0].name,
+                                               module_names[0])
+      result_name = node.names[0].asname
+      root_module_name = node.names[0].name
+
+    else:
+      # case when "import <module_name>"
+      module_names = [(node.names[0].name), ]
       test_import_string = "import %s" %node.names[0].name
+      result_name = node.names[0].name
+      root_module_name = node.names[0].name
 
-    #log('%s : %s' %(module_name, test_import_string))
-    if not self.import_func_dict.get(module_name):
+    final_module_names = []
+    for name in module_names:
+      if not self.import_func_dict.get(name):
+        final_module_names.append(name)
+
+    log("module_names[0]: " + module_names[0])
+    log("result_name: " + result_name)
+
+    if final_module_names:
       # try to import module before it is added to environment
       # this way if user tries to import non existent module Exception
       # is immediately raised and doesn't block next Jupyter cell execution
       exec(test_import_string)
-      empty_function = self.newEmptyFunction("%s_setup" % module_name)
-      return_dict = self.newReturnDict(module_name)
+
+      empty_function = self.newEmptyFunction("%s_setup" %result_name)
+      return_dict = self.newReturnDict(final_module_names)
+
+      log(return_dict)
+
       empty_function.body = [node, return_dict]
-      environment_set = self.newEnvironmentSetCall("%s_setup" % module_name)
-      warning = self.newImportWarningCall(module_name)
+      environment_set = self.newEnvironmentSetCall("%s_setup" %result_name)
+      warning = self.newImportWarningCall(root_module_name, result_name)
       return [empty_function, environment_set, warning]
     else:
       return node
@@ -721,13 +784,16 @@ class ImportFixer(ast.NodeTransformer):
     func_body = "def %s(): pass" % func_name
     return ast.parse(func_body).body[0]
 
-  def newReturnDict(self, module_name):
+  def newReturnDict(self, module_names):
     """
       Return an AST.Expr representing a returned dict with one single key named
-      `'module_name'` (as string) which returns the variable `module_name` (as 
+      `'module_name'` (as string) which returns the variable `module_name` (as
       expression).
     """
-    return_dict = "return {'%s': %s}" % (module_name, module_name)
+    return_dict = "return {"
+    for name in module_names:
+      return_dict = return_dict + "'%s': %s, " % (name, name)
+    return_dict = return_dict + '}'
     return ast.parse(return_dict).body[0]
 
   def newEnvironmentSetCall(self, func_name):
@@ -739,18 +805,18 @@ class ImportFixer(ast.NodeTransformer):
     tree = ast.parse(code_string)
     return tree.body[0]
 
-  def newImportWarningCall(self, module_name):
+  def newImportWarningCall(self, module_name, function_name):
     """
       Return an AST.Expr representanting a print statement with a warning to an
       user about the import of a module named `module_name` and instructs him
       on how to fix it.
     """
     warning = ("print '"
-               "WARNING: Your imported the module %s without using "
-               "the environment object, which is not recomended. "
+               "WARNING: Your imported from the module %s without "
+               "using the environment object, which is not recomended. "
                "Your import was automatically converted to use such method."
-               "The setup function was named as: %s_setup.\\n" 
-               "'") % (module_name, module_name)
+               "The setup function was named as: %s_setup.\\n"
+               "'") % (module_name, function_name)
     tree = ast.parse(warning)
     return tree.body[0]
 
