@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,12 +67,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_ooffice_spreadsheet_router.html</string> </value>
+            <value> <string>gadget_officejs_jio_text_view.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -82,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet_router_html</string> </value>
+            <value> <string>gadget_ooffice_jio_text_view_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -90,7 +86,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -100,7 +96,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Spreadsheet Router Gadget</string> </value>
+            <value> <string>OfficeJS Jio Text View JS</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -186,7 +188,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486990307.95</float>
+                        <float>1486993945.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -231,7 +233,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19299.52450.32273</string> </value>
+                <value> <string>957.19358.38500.25787</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +251,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486993644.52</float>
+                        <float>1486993850.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -306,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486990001.36</float>
+                        <float>1486993783.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
