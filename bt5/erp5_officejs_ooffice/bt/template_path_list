@@ -1,1 +1,6 @@
+web_page_module/gadget_ooffice_*
 web_page_module/ooffice_*
+web_site_module/ooffice_spreadsheet
+web_site_module/ooffice_spreadsheet/**
+web_site_module/ooffice_spreadsheet_gadget
+web_site_module/ooffice_spreadsheet_gadget/**
