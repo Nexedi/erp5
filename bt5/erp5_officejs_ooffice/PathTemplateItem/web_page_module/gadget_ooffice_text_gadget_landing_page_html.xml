@@ -72,7 +72,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_ooffice_spreadsheet_router.html</string> </value>
+            <value> <string>ooffice_text_gadget_landing_page.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -82,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_ooffice_spreadsheet_router_html</string> </value>
+            <value> <string>gadget_ooffice_text_gadget_landing_page_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -100,7 +100,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Spreadsheet Router Gadget</string> </value>
+            <value> <string>OnlyOffice Text Gadget Landing Page</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -186,7 +192,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486990307.95</float>
+                        <float>1486994384.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -231,7 +237,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19299.52450.32273</string> </value>
+                <value> <string>957.19364.34766.25361</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -249,7 +255,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486993644.52</float>
+                        <float>1486994217.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -306,7 +312,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486990001.36</float>
+                        <float>1486993196.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
