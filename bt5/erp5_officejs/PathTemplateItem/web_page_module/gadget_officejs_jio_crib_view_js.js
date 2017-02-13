@@ -122,7 +122,9 @@
       var gadget = this;
       gadget.options = options;
       gadget.options.doc.title = gadget.options.doc.title || "";
-      gadget.options.jio_key = gadget.options.doc.reference;
+      if (gadget.options.doc.reference !== undefined) {
+        gadget.options.jio_key = gadget.options.doc.reference;
+      }
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
