@@ -425,7 +425,7 @@
         </item>
         <item>
             <key> <string>configuration_landing_page</string> </key>
-            <value> <string>spreadsheet_landing_page.html</string> </value>
+            <value> <string>ooffice_spreadsheet_landing_page.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_latest_document_version</string> </key>
@@ -700,7 +700,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.19331.52048.50670</string> </value>
+                <value> <string>957.19336.10281.56149</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -718,7 +718,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486992489.4</float>
+                        <float>1486993348.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
