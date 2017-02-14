@@ -42,8 +42,6 @@
         div = document.createElement('div'),
         queue = new RSVP.Queue();
 
-      console.log(modification_dict);
-
       if ((modification_dict.hasOwnProperty('editable')) ||
           (modification_dict.hasOwnProperty('editor'))) {
         // Clear first to DOM, append after to reduce flickering/manip
