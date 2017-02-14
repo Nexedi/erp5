@@ -45,7 +45,7 @@ else:
 
 line.edit(
   start_date=DateTime(record.getStartDate()),
-  stop_date=DateTime(record.getStopDate()),
+  stop_date=DateTime(record.getStopDate()).latestTime(),
   resource=record.getResource(),
   )
 
