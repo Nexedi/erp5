@@ -4,8 +4,8 @@ Expense Record Module | view
 Expense Record | jio_view
 Expense Record | view
 Expense Validation Request Module | view
+Expense Validation Request | jump_to_related_transaction
 Expense Validation Request | records
-Expense Validation Request | transactions
 Expense Validation Request | view
 Leave Report Record | jio_view
 Leave Report Record | view
