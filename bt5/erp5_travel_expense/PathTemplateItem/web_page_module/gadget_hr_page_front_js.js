@@ -72,7 +72,13 @@
           return gadget.getSetting('last_sync_date');
         })
         .push(function (result) {
-          gadget.props.element.querySelector('.last_sync_date').innerHTML = result || 'not synchronize yet';
+          if (!result) {
+            return gadget.redirect({
+              page: 'sync',
+              auto_repair: true
+            });
+          }
+          gadget.props.element.querySelector('.last_sync_date').innerHTML = result;
           gadget.props.portal_type = "Expense Record";
           gadget.props.document_title_plural = "Expense Requests";
           return RSVP.all([
