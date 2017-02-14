@@ -29,6 +29,7 @@
 
 import hashlib
 import fnmatch
+from datetime import datetime
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import Persistent
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
@@ -68,6 +69,7 @@ class BusinessTemplate(XMLObject):
      )
 
   template_path_list = ()
+  status = ''
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -89,7 +91,7 @@ class BusinessTemplate(XMLObject):
     Flatenned:      BI(s) should be at the zeroth layer.
     Build:          BI(s) do have values from the OS DB.
     """
-    pass
+    return self.status
 
   def applytoERP5(self, DB):
     """Apply the flattened/reduced business template to the DB"""
@@ -133,7 +135,7 @@ class BusinessTemplate(XMLObject):
     """Upgrade the business template"""
     pass
 
-  def flatten(self):
+  def flattenBusienssTemplate(self):
     """
     Flattening a reduced business template with two path p1 and p2 where p1 <> p2:
 
@@ -141,13 +143,55 @@ class BusinessTemplate(XMLObject):
     A reduced business template BT is said to be flattened if and only if:
     flatten(BT) = BT
     """
-    pass
+    if self.getStatus() != 'reduced':
+      raise ValueError, 'Please reduce the BT before flatenning'
+    else:
+      # TODO: Still not clear on what flattens means here
+      pass
 
-  def reduceBT(self):
+  def reduceBusienssTemplate(self):
     """
-    Reduce the current Business Template
+    Reduction is a function that takes a Business Template as input and returns
+    a smaller business template by taking out values with lower priority layers.
+
+    Two path on different layer are reduced as a single path with the highest layer:
+
+    If l1 > l2,
+    reduce([(p, s, l1, (a, b, c)), (p, s, l2, (d, e))]) = [(p, s, l1, merge(a, b, c))]
+    Where the merge is a monotonic commutative function that depends on the type of a, b and c:
+
+    if a, b and c are sets, merge = union
+    if a, b and c are lists, merge = ordered concatenation
+    if a, b and c are objects, merge = the object created the last
+    else merge = MAX
+
+    A business template BT is said to be reduced if and only if:
+    reduce(BT) = BT
     """
-    pass
+    path_list = [path_item.getBusinessPath() for path in self._path_item_list]
+
+    seen_path_list = set()
+    unique_path_list = [x for x in path_list if x not in seen_path_list and not seen_path_list.add(x)]
+
+    # Create an extra dict for values on path which are repeated in the path list
+    seen_path_dict = {path: [] for path in seen_path_list}
+    unique_path_dict = {}
+
+    for path_item in self._path_item_list:
+      if path_item._path in seen_path_list:
+        seen_path_dict[path_item._path].append(path_item)
+      else:
+        unique_path_dict[path_item._path].append(path_item)
+
+    # Reduce the values and get the merged result out of it
+    for path, path_item_list in seen_path_dict.items():
+      merged_business_item = reduce(lambda x, y: x+y, path_item_list)
+      seen_path_dict[path] = merged_business_item
+
+    # Add both unique and seen path item and update _path_item_list attribute
+    reduced_path_item_list = seen_path_dict.values() + unique_value_dict.values()
+    self._path_item_list = reduced_path_item_list
+    self.status = 'reduced'
 
 class BusinessItem(Implicit, Persistent):
 
@@ -155,6 +199,11 @@ class BusinessItem(Implicit, Persistent):
     attributes for a path configuration being:
 
     - path  (similar to an xpath expression)
+        Examples of path :
+          portal_type/Person
+          portal_type/Person#title
+          portal_type/Person#property_sheet?ancestor=DublinCore
+          portal_type/Person#property_sheet?position=2
     - sign  (+1/-1)
     - layer (0, 1, 2, 3, etc.)
     - value (a set of pickable value in python)
@@ -169,8 +218,9 @@ class BusinessItem(Implicit, Persistent):
     self._sign = int(sign)
     self._layer = int(layer)
     self._value = value
-    # Generate hash of from the value
-    self._sha = self._generateHash()
+    if value:
+      # Generate hash of from the value
+      self._sha = self._generateHash()
 
   def _generateHash(self):
     """
@@ -181,8 +231,8 @@ class BusinessItem(Implicit, Persistent):
       # Raise in case there is no value for the BusinessItem object
       raise ValueError, "Value not defined for the %s BusinessItem" %self._path
     else:
-      # Expects to raise error on case the value for the object is not
-      # picklable
+      # Expects to raise error on case the value for the object
+      # is not picklable
       sha1 = hashlib.sha1(self._value).hexdigest()
 
   def build(self, context, **kw):
@@ -201,8 +251,22 @@ class BusinessItem(Implicit, Persistent):
       _recursiveRemoveUid(obj)
       self._value = obj
 
+  def applyValueToPath(self):
+    """
+    Apply the value to the path given.
+
+    1. If the path doesn't exist, and its a new object, create the object.
+    2. If the path doesn't exist, and its a new property, apply the property on
+        the object.
+    3. If the path doesn't exist, and its a new property, raise error.
+    """
+    pass
+
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
+      XXX: Needs to be updated for Business Item as we now consider that we
+      can also use path to add properties.
+
       This method calls itself recursively.
 
       The folder is the current object which contains sub-objects.
@@ -226,6 +290,78 @@ class BusinessItem(Implicit, Persistent):
             relative_url_list + [object_id], id_list[1:]))
     return path_list
 
+  def setPropertyToPath(self, path, property_name, value):
+    """
+    Set property for the object at given path
+    """
+    portal = self.getPortalObject()
+    obj = portal.unrestrictedTraverse(path)
+    obj.setProperty(property_name, value)
+
+
+  def generateXML(self):
+    """
+    Generate XML for different objects/type/properties differently.
+    1. Objects: Use XMLImportExport from ERP5Type
+    2. For properties, first get the property type, then create XML object
+    for the different property differenty(Use ObjectPropertyItem from BT5)
+    3. For attributes, we can export part of the object, rather than exporting
+    whole of the object
+    """
+    pass
+
+  def __add__(self, other):
+    """
+    Add the values from the path when the path is same for 2 objects
+    """
+    if self._path != other._path:
+      raise ValueError, "BusinessItem are incommensurable"
+    else:
+      # Create a new BusinessItem by merging the values of the objects and
+      # taking out the one with lower priority layer
+      higer_priority_layer = max(self._layer, other._layer)
+      # Merge the values
+      merged_value = self._mergeValue(self._value, other._value)
+      return BusinessItem(self._path, 1, higer_priority_layer, merged_value)
+
+  def _mergeValue(self, val1, val2):
+    """
+    Merge two values to create a new value.
+    Need to take care of type of values
+    """
+    built_in_number_type = (int, long, float, complex)
+    built_in_container_type = (tuple, list, dict, set)
+
+    if not val1:
+      return val2
+    if not val2:
+      return val1
+
+    # Now, consider the type of both values
+    if isinstance(val1, built_in_number_type) and isinstance(val2, built_in_number_type):
+      merged_value = max(val1, val2)
+    elif isinstance(val1, set) and isinstance(val2, set):
+      merged_value = va1.union(val2)
+    elif isinstance(val1, list) and isinstance(val2, list):
+      merged_value = val1 + val2
+    elif isinstance(val1, tuple) and isinstance(val2, tuple):
+      merged_value = val1 + val2
+    else:
+      # In all other case, check if the values are objects and then take the
+      # objects created last.
+      # XXX: Should we go with creation date or modification_date ??
+      # TODO: Add check that the values are ERP5 objects
+      creation_date_1 = getattr(val1, 'creation_date', 0)
+      creation_date_2 = getattr(val2, 'creation_date', 0)
+      # TODO: In case both are created at same time, prefer one with higher
+      # priority layer
+      if creation_date_1 > creation_date_2:
+        merged_value = val1
+      else:
+        merged_value = val2
+
+    return merged_value
+
   def getBusinessPath(self):
     return self._path
 
@@ -238,19 +374,11 @@ class BusinessItem(Implicit, Persistent):
   def getBusinessPathValue(self):
     return self._value
 
+  def setBusinessPathValue(self, value):
+    self._value = value
+
   def getBusinessPathSha(self):
     return self._sha
 
   def getParentBusinessTemplate(self):
     return self.aq_parent
-
-  def generateXML(self):
-    """
-    Generate XML for different objects/type/properties differently.
-    1. Objects: Use XMLImportExport from ERP5Type
-    2. For properties, first get the property type, then create XML object
-    for the different property differenty(Use ObjectPropertyItem from BT5)
-    3. For attributes, we can export part of the object, rather than exporting
-    whole of the object
-    """
-    pass
