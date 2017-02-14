@@ -70,6 +70,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>source_title</string>
+                          <string>Person</string>
+                        </tuple>
+                        <tuple>
                           <string>source_reference</string>
                           <string>User Reference</string>
                         </tuple>
