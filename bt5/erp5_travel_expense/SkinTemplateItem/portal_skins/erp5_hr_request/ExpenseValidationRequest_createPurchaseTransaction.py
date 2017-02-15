@@ -60,6 +60,6 @@ except ValidationFailed, error_message:
     context.getAbsoluteUrl(),
     message
     )
-transaction.stop()
+transaction.confirm()
 
 return transaction.getRelativeUrl()
