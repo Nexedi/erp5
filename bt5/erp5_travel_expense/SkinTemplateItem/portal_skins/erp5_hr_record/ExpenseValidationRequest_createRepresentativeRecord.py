@@ -1,26 +1,16 @@
-portal = context.getPortalObject()
-
 if not record_relative_url:
-  record_brain_list = portal.portal_catalog(
-    portal_type="Expense Record",
-    strict_follow_up_uid=context.getUid(),
-    simulation_state="stopped",
+  record = context.Ticket_getLatestRepresentativeRecordValue(
+    portal_type="Expense Record"
     )
-  if len(record_brain_list) > 1:
-    raise ValueError("Number of record superior to one")
-  elif len(record_brain_list) == 0:
-    return
-  record= record_brain_list[0].getObject()
-  #XXX Record_archivePreviousVersions deliver this record, but may not index yet
-  if record.getSimulationState() != 'stopped':
-    return
-  # XXX to be finished
 else:
-  record = portal.restrictedTraverse(record_relative_url)
+  record = context.getPortalObject().restrictedTraverse(record_relative_url)
 
+if record is None:
+  return
 
-
-
+if context.getModificationDate() <= record.getCreationDate():
+  # Nothing to do
+  return
 
 new_record = record.Base_createCloneDocument(batch_mode=True)
 new_record.edit(

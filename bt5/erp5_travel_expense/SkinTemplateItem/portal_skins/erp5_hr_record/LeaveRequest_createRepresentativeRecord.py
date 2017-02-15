@@ -1,25 +1,23 @@
-portal = context.getPortalObject()
-
 if not record_relative_url:
-  record_brain_list = portal.portal_catalog(
-    portal_type="Leave Request Record",
-    strict_follow_up_uid=context.getUid(),
-    simulation_state="stopped",
+  record = context.Ticket_getLatestRepresentativeRecordValue(
+    portal_type="Leave Request Record"
     )
-  if len(record_brain_list) > 1:
-    raise ValueError("Number of record superior to one")
-  elif len(record_brain_list) == 0:
-    return
-  record= record_brain_list[0].getObject()
-  # XXX to be finished
 else:
-  record = portal.restrictedTraverse(record_relative_url)
+  record = context.getPortalObject().restrictedTraverse(record_relative_url)
+
+if record is None:
+  return "No records"
 
 line_list = context.objectValues(portal_type="Leave Request Period")
 if len(line_list) == 1:
   line = line_list[0]
 else:
   raise ValueError("incorrect number of Leave Request Period in %s" % context.getRelativeUrl())
+
+if context.getModificationDate() <= record.getCreationDate() \
+    and line.getModificationDate() <= record.getCreationDate():
+  # Nothing to do
+  return "Nothing to do"
 
 
 new_record = record.Base_createCloneDocument(batch_mode=True)

@@ -1,1 +1,0 @@
-return context.getParentValue().LeaveRequest_createRepresentativeRecord(record_relative_url)

@@ -1,7 +1,12 @@
+image_module/marker-icon
+image_module/marker-shadow
 portal_alarms/alarm_process_draft_localisation_record
-portal_alarms/alarm_process_draft_records
+portal_alarms/alarm_process_draft_record_list
+portal_alarms/create_representative_record_for_leave_request
+portal_alarms/create_representative_record_for_expense_validation_request
+portal_alarms/create_representative_record_for_travel_request
+portal_categories/use/hr
+portal_categories/use/hr/**
 web_page_module/gadget_hr_*
 web_site_module/officejs_hr
 web_site_module/officejs_hr/**
-image_module/marker-icon
-image_module/marker-shadow
