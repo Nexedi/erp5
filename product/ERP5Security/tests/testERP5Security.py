@@ -119,11 +119,13 @@ class TestUserManagement(ERP5TypeTestCase):
     if login is not None:
       if login is AUTO_LOGIN:
         login = 'login_%s' % self._login_generator()
-      new_person.newContent(
+      login_document = new_person.newContent(
         portal_type='ERP5 Login',
         reference=login,
         password=password,
-      ).validate()
+      )
+      # we execute user action transition to make sure validation checks are performed.
+      self.portal.portal_workflow.doActionFor(login_document, 'validate_action')
     if tic:
       self.tic()
     return new_person.Person_getUserId(), login, password
@@ -243,7 +245,6 @@ class TestUserManagement(ERP5TypeTestCase):
     login_value.invalidate()
     login_value.setReference('')
     self.commit()
-    self.assertRaises(ValidationFailed, login_value.validate)
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login_value, 'validate_action')
 
   def test_PersonWithLoginWithNotAssignmentAreNotUsers(self):
@@ -570,7 +571,6 @@ class TestUserManagement(ERP5TypeTestCase):
     login2_value.invalidate()
     login2_value.setReference(login1)
     self.commit()
-    self.assertRaises(ValidationFailed, login2_value.validate)
     self.assertRaises(ValidationFailed, self.portal.portal_workflow.doActionFor, login2_value, 'validate_action')
 
   def _duplicateLoginReference(self, commit):
