@@ -70,7 +70,9 @@ path_list = [brain.path for brain in
   portal.portal_selections.callSelectionFor(selection_name, params=selection_params)]
 
 batch_size = 100 # XXX
-priority = 2 # XXX
+# We want change state activities to have a lower priority that erp5_deferred_style reports
+# not to prevent everybody from running report while a users change state of many documents.
+priority = 3
 path_list_len = len(path_list)
 
 for i in xrange(0, path_list_len, batch_size):
