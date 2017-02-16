@@ -87,6 +87,10 @@
                           <string>Purchase Packing List</string>
                           <string>Purchase Packing List</string>
                         </tuple>
+                        <tuple>
+                          <string>Expense Validation Request</string>
+                          <string>Expense Validation Request</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
