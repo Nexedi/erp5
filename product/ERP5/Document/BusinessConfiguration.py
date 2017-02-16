@@ -52,7 +52,7 @@ class BusinessTemplate(XMLObject):
   an ERP5Site. Everything will be saved just via path"""
 
   meta_type = 'ERP5 Business Template'
-  portal_type = 'Business Template'
+  portal_type = 'Business Manager'
   allowed_content_types = ('BusinessItem', )
   add_permission = Permissions.AddPortalContent
 
@@ -134,11 +134,13 @@ class BusinessTemplate(XMLObject):
     return result
 
   def install(self):
-    """Install the business template
-      We do installation step by step:
+    """
+    Installs the business template in steps:
+
       1. Reduction of the BT
       2. Flattenning the BT
-      3. COpying the object at the path mentioned in BT"""
+      3. COpying the object at the path mentioned in BT
+    """
     status = self.getStatus()
     if status == 'reduced':
       self.flattenBusinessTemplate()
@@ -160,7 +162,7 @@ class BusinessTemplate(XMLObject):
     """Upgrade the business template"""
     pass
 
-  def flattenBusienssTemplate(self):
+  def flattenBusinessTemplate(self):
     """
     Flattening a reduced business template with two path p1 and p2 where p1 <> p2:
 
@@ -168,15 +170,18 @@ class BusinessTemplate(XMLObject):
     A reduced business template BT is said to be flattened if and only if:
     flatten(BT) = BT
     """
+    portal = self.getPortalObject()
     if self.getStatus() != 'reduced':
       raise ValueError, 'Please reduce the BT before flatenning'
       # XXX: Maybe call reduce function on BT by itself here rather than just
       # raising the error, because there is no other choice
     else:
-      # TODO: Still not clear on what flattens means here
-      pass
+      path_list = self.getTemplatePathList()
+      for path_item in self._path_item_list:
+        path = path_item._path
+        obj = portal.unrestrictedTraverse(path)
 
-  def reduceBusienssTemplate(self):
+  def reduceBusienessTemplate(self):
     """
     Reduction is a function that takes a Business Template as input and returns
     a smaller business template by taking out values with lower priority layers.
@@ -265,18 +270,28 @@ class BusinessItem(Implicit, Persistent):
   def build(self, context, **kw):
     """
     Extract value for the given path from the OFS
+
+    Three different situations to extract value:
+    1. For paths which point directly to an object in OFS
+    2. For paths which point to multiple objects inside a folder
+    3. For paths which point to property of an object in OFS : In this case, we
+    can have URL Delimiters like ?, #, = in the path
     """
     p = context.getPortalObject()
     path = self._path
-    include_subobjects = 0
-    if path.endswith("**"):
-      include_subobjects = 1
-    for relative_url in self._resolvePath(p, [], path.split('/')):
+
+    if '#' in path:
+      relative_url, property_id = path.split('#')
       obj = p.unrestrictedTraverse(relative_url)
-      obj = obj._getCopy(context)
-      obj = obj.__of__(context)
-      _recursiveRemoveUid(obj)
-      self._value = obj
+      property_value = obj.getProperty(property_id)
+      self._value = property_value
+    else:
+      for relative_url in self._resolvePath(p, [], path.split('/')):
+        obj = p.unrestrictedTraverse(relative_url)
+        obj = obj._getCopy(context)
+        obj = obj.__of__(context)
+        _recursiveRemoveUid(obj)
+        self._value = obj
 
   def applyValueToPath(self):
     """
@@ -284,15 +299,33 @@ class BusinessItem(Implicit, Persistent):
 
     1. If the path doesn't exist, and its a new object, create the object.
     2. If the path doesn't exist, and its a new property, apply the property on
-        the object.
+      the object.
     3. If the path doesn't exist, and its a new property, raise error.
     """
     pass
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
-      XXX: Needs to be updated for Business Item as we now consider that we
-      can also use path to add properties.
+      XXX: Needs to be updated for as we now consider that we can also use path
+      to add properties.
+
+      We go through 3 types of paths:
+
+      1. General path we find in erp5 for objects
+      Ex: portal_type/Person
+      In this case, we import/export the object on the path
+
+      2. Path where we consider saving sub-objects also, in that case we create
+      new BusinessItem for those objects
+      Ex: portal_catalog/erp5_mysql_innodb/**
+      This should create BI for the catalog methods sub-objects present in the
+      erp5_catalog.
+
+      3. Path where we save specific properties of erp5 objects.
+      Ex: portal_type/Person#title
+      In this case, we reach the object to apply/get property value. In case the
+      property is non-existent or not-available while applying, we apply it by
+      guessing the type from the value given.
 
       This method calls itself recursively.
 
@@ -307,7 +340,7 @@ class BusinessItem(Implicit, Persistent):
       # If the id has no meta character, do not have to check all objects.
       obj = folder._getOb(id, None)
       if obj is None:
-        raise AttributeError, "Could not resolve '%s' during Business Item processing." % id
+        raise AttributeError, "Could not resolve '%s' during BusinessItem processing." % id
       return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
     path_list = []
     for object_id in fnmatch.filter(folder.objectIds(), id):
@@ -333,6 +366,12 @@ class BusinessItem(Implicit, Persistent):
     for the different property differenty(Use ObjectPropertyItem from BT5)
     3. For attributes, we can export part of the object, rather than exporting
     whole of the object
+    """
+    pass
+
+  def install(self):
+    """
+    Set the value to the defined path.
     """
     pass
 
