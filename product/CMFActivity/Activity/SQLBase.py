@@ -30,6 +30,7 @@ import sys
 import transaction
 from DateTime import DateTime
 from Shared.DC.ZRDB.Results import Results
+from Shared.DC.ZRDB.DA import DatabaseError
 from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
@@ -216,9 +217,19 @@ class SQLBase(Queue):
         path = None
       else:
         path = '/'.join(object.getPhysicalPath())
-      result = hasMessage(table=self.sql_table, path=path, method_id=method_id,
-        only_valid=only_valid, active_process_uid=active_process_uid)
-      if result:
+      try:
+        result = hasMessage(table=self.sql_table, path=path, method_id=method_id,
+          only_valid=only_valid, active_process_uid=active_process_uid)
+      except DatabaseError:
+        LOG(
+          'SQLBase',
+          ERROR,
+          '%r raised, considering there are no activities' % (
+            hasMessage,
+          ),
+          error=True,
+        )
+      else:
         return result[0].message_count > 0
     return 0
 
