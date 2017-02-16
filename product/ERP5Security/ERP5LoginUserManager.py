@@ -37,6 +37,8 @@ from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlu
 from DateTime import DateTime
 from Products import ERP5Security
 from AccessControl import SpecialUsers
+from Shared.DC.ZRDB.DA import DatabaseError
+from zLOG import LOG, ERROR
 
 # To prevent login thieves
 SPECIAL_USER_NAME_SET = (
@@ -139,11 +141,23 @@ class ERP5LoginUserManager(BasePlugin):
     return (user_value.getUserId(), login_value.getReference())
 
   def _getLoginValueFromLogin(self, login, login_portal_type=None):
-    user_list = self.enumerateUsers(
-      login=login,
-      exact_match=True,
-      login_portal_type=login_portal_type,
-    )
+    try:
+      user_list = self.enumerateUsers(
+        login=login,
+        exact_match=True,
+        login_portal_type=login_portal_type,
+      )
+    except DatabaseError:
+      # DatabaseError gets raised when catalog is not functional. In which case
+      # it should be fine to bail without any user, letting PAS continue trying
+      # other plugins.
+      LOG(
+        repr(self),
+        ERROR,
+        'enumerateUsers raised, bailing',
+        error=True,
+      )
+      user_list = []
     if not user_list:
       return
     single_user, = user_list
