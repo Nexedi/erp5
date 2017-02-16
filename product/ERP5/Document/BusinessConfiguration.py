@@ -93,6 +93,12 @@ class BusinessTemplate(XMLObject):
     """
     return self.status
 
+  def setStatus(self, status=None):
+    if not status:
+      raise ValueError, 'No status provided'
+    else:
+      self.status = status
+
   def applytoERP5(self, DB):
     """Apply the flattened/reduced business template to the DB"""
     portal  = self.getPortalObject()
@@ -128,8 +134,27 @@ class BusinessTemplate(XMLObject):
     return result
 
   def install(self):
-    """Install the business template"""
-    pass
+    """Install the business template
+      We do installation step by step:
+      1. Reduction of the BT
+      2. Flattenning the BT
+      3. COpying the object at the path mentioned in BT"""
+    status = self.getStatus()
+    if status == 'reduced':
+      self.flattenBusinessTemplate()
+      self.install()
+    elif status == 'flattened':
+      self._install()
+    else:
+      self.reduceBusinessTemplate()
+      self.install()
+
+  def _install(self):
+    """
+    Run installation
+    """
+    for path_item in self._path_item_list:
+      path_item.install()
 
   def upgrade(self):
     """Upgrade the business template"""
@@ -145,6 +170,8 @@ class BusinessTemplate(XMLObject):
     """
     if self.getStatus() != 'reduced':
       raise ValueError, 'Please reduce the BT before flatenning'
+      # XXX: Maybe call reduce function on BT by itself here rather than just
+      # raising the error, because there is no other choice
     else:
       # TODO: Still not clear on what flattens means here
       pass
@@ -191,7 +218,7 @@ class BusinessTemplate(XMLObject):
     # Add both unique and seen path item and update _path_item_list attribute
     reduced_path_item_list = seen_path_dict.values() + unique_value_dict.values()
     self._path_item_list = reduced_path_item_list
-    self.status = 'reduced'
+    self.setStatus('reduced')
 
 class BusinessItem(Implicit, Persistent):
 
@@ -297,7 +324,6 @@ class BusinessItem(Implicit, Persistent):
     portal = self.getPortalObject()
     obj = portal.unrestrictedTraverse(path)
     obj.setProperty(property_name, value)
-
 
   def generateXML(self):
     """
