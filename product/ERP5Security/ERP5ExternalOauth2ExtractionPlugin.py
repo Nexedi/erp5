@@ -146,7 +146,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
           'No Base_createOauth2User script available, install '
             'erp5_credential_oauth2, disabled authentication.')
       return DumbHTTPExtractor().extractCredentials(request)
-    creds, user_dict = {"login_portal_type": self.login_portal_type}, None
+
     cookie_hash = request.get(self.cookie_name)
     if cookie_hash is not None:
       try:
@@ -188,7 +188,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
           newSecurityManager(self, self.getUser(ERP5Security.SUPER_USER))
         try:
           self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
-          user_entry["login_portal_type"] = creds["login_portal_type"]
+          user_entry["login_portal_type"] = self.login_portal_type
           # user_id is optional.
           # It is only used to create Google Login under a pre-existing person
           user_entry["user_id"] = user_dict.get("user_id")
@@ -205,7 +205,15 @@ class ERP5ExternalOauth2ExtractionPlugin:
     except KeyError:
       # allow to work w/o cache
       pass
-    creds['external_login'] = user
+
+    # Credentials returned here will be used by ERP5LoginUserManager to find the login document
+    # having reference `user`.
+    creds = {
+      "login_portal_type": self.login_portal_type,
+      "external_login": user
+    }
+
+    # PAS wants remote_host / remote_address
     creds['remote_host'] = request.get('REMOTE_HOST', '')
     try:
       creds['remote_address'] = request.getClientAddr()
