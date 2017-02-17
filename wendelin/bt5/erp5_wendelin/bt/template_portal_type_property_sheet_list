@@ -3,6 +3,8 @@ Data Array Line Existence Constraint | ConstraintType
 Data Array Line Existence Constraint | DataArrayLine
 Data Array Line | DataArrayLine
 Data Array | DataArray
+Data Descriptor Type | TextDocument
+Data Descriptor Type | Url
 Data Event | DataEvent
 Data Ingestion Line | DataMovement
 Data Operation | DataOperation
@@ -13,4 +15,6 @@ Data Set | Predicate
 Data Stream | OffsetIndex
 Data Supply Line | DataMovement
 Data Supply | Version
+Device Configuration Type | TextDocument
+Device Configuration Type | Url
 Ingestion Policy | IngestionPolicy

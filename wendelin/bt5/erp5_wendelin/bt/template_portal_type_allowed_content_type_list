@@ -4,6 +4,8 @@ Data Analysis Module | Data Analysis
 Data Analysis | Data Analysis Line
 Data Array Module | Data Array
 Data Array | Data Array Line
+Data Descriptor Type | Action Information
+Data Descriptor Type | Role Information
 Data Event Module | Data Event
 Data Ingestion Batch Module | Data Ingestion Batch
 Data Ingestion Module | Data Ingestion
@@ -20,6 +22,11 @@ Data Supply | Data Supply Line
 Data Transformation Module | Data Transformation
 Data Transformation | Data Transformation Operation Line
 Data Transformation | Data Transformation Resource Line
+Device Configuration Module | Meda Configuration
+Device Configuration Type | Action Information
+Device Configuration Type | Role Information
 Ingestion Policy Tool | Ingestion Policy
 Property Sheet | Data Array Line Existence Constraint
 Sensor Module | Sensor
+Types Tool | Data Descriptor Type
+Types Tool | Device Configuration Type
