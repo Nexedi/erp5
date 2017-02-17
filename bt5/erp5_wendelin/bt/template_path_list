@@ -1,3 +1,4 @@
+portal_callables/DataIngestionLine_writeFluentdIngestionToDataStream
 portal_gadgets/WendelinInformationGadget
 portal_gadgets/WendelinInformationGadget/**
 web_page_module/wendelin_information_gadget.html
