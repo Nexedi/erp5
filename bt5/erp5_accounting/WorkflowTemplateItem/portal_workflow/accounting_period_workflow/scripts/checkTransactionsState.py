@@ -73,6 +73,10 @@ movement_list = portal.portal_simulation.getMovementHistoryList(
       from_date=period.getStartDate().earliestTime(),
       at_date=period.getStopDate().latestTime(),
       simulation_state=invalid_simulation_state_list,
+      # We only consider accounting movements really using accounts as node.
+      # There could be a line in stock table because the node is an organisation acquired
+      # from parent invoice.
+      node_uid=[node.uid for node in portal.portal_catalog(portal_type='Account')],
       portal_type=portal.getPortalAccountingMovementTypeList(),
       limit=1)
 

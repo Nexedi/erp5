@@ -3024,10 +3024,70 @@ class TestClosingPeriod(AccountingTestCase):
            period, 'stop_action',
            profit_and_loss_account=pl.getRelativeUrl())
 
-    self.assertRaises(ValidationFailed,
-          self.getPortal().portal_workflow.doActionFor,
-          period2, 'stop_action' )
+    with self.assertRaisesRegexp(ValidationFailed,
+        '.*Previous accounting periods has to be closed first.*'):
+      self.getPortal().portal_workflow.doActionFor(
+        period2, 'stop_action')
 
+  def test_PeriodClosingRefusedWhenTransactionAreNotStopped(self):
+    organisation_module = self.organisation_module
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+
+    pl = self.portal.account_module.newContent(
+      portal_type='Account',
+      account_type='equity')
+
+    transaction1 = self._makeOne(
+      start_date=DateTime(2006, 1, 1),
+      destination_section_value=organisation_module.client_1,
+      portal_type='Sale Invoice Transaction',
+      simulation_state='stopped',
+      lines=(dict(source_value=self.account_module.goods_sales,
+                  source_credit=100),
+             dict(source_value=self.account_module.receivable,
+                  source_debit=100)))
+
+    with self.assertRaisesRegexp(
+        ValidationFailed,
+       'All Accounting Transactions for this organisation during'
+       ' the period have to be closed first'):
+      self.portal.portal_workflow.doActionFor(
+        period,
+        'stop_action')
+
+  def test_PeriodClosingRefusedWhenTransactionAreNotStoppedIgnoreInternalLine(self):
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+
+    pl = self.portal.account_module.newContent(
+      portal_type='Account',
+      account_type='equity')
+
+    # This transaction has lines that should block closing for `main_section`,
+    # but not for `section` because from `section` side there are no accounting lines.
+    transaction1 = self._makeOne(
+      start_date=DateTime(2006, 1, 1),
+      source_section_value=self.main_section,
+      source_value=self.main_section,
+      destination_section_value=self.section,
+      destination_value=self.section,
+      portal_type='Sale Invoice Transaction',
+      simulation_state='stopped',
+      lines=(dict(source_value=self.account_module.goods_sales,
+                  source_credit=100),
+             dict(source_value=self.account_module.receivable,
+                  source_debit=100)))
+
+    self.portal.portal_workflow.doActionFor(
+      period,
+      'stop_action',
+      profit_and_loss_account=pl.getRelativeUrl())
+    self.tic()
 
 
 class TestAccountingExport(AccountingTestCase):
