@@ -1,5 +1,7 @@
+Data Descriptor Module | business_application
 Data Event | aggregate
 Data Event | destination
 Data Event | resource
 Data Event | source
 Data Transformation Module | business_application
+Device Configuration Module | business_application

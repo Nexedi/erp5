@@ -17,6 +17,10 @@
  <portal_type id="Data Array Module">
   <item>Data Array</item>
  </portal_type>
+ <portal_type id="Data Descriptor Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Data Event Module">
   <item>Data Event</item>
  </portal_type>
@@ -63,6 +67,13 @@
  <portal_type id="Data Transformation Module">
   <item>Data Transformation</item>
  </portal_type>
+ <portal_type id="Device Configuration Module">
+  <item>Meda Configuration</item>
+ </portal_type>
+ <portal_type id="Device Configuration Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Ingestion Policy Tool">
   <item>Ingestion Policy</item>
  </portal_type>
@@ -71,5 +82,9 @@
  </portal_type>
  <portal_type id="Sensor Module">
   <item>Sensor</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>Data Descriptor Type</item>
+  <item>Device Configuration Type</item>
  </portal_type>
 </allowed_content_type_list>

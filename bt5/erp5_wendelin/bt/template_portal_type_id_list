@@ -9,6 +9,8 @@ Data Array
 Data Array Line
 Data Array Line Existence Constraint
 Data Array Module
+Data Descriptor Module
+Data Descriptor Type
 Data Event
 Data Event Module
 Data Ingestion
@@ -35,6 +37,8 @@ Data Transformation
 Data Transformation Module
 Data Transformation Operation Line
 Data Transformation Resource Line
+Device Configuration Module
+Device Configuration Type
 Ingestion Policy
 Ingestion Policy Tool
 Sensor

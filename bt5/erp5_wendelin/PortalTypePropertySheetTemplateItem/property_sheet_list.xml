@@ -12,6 +12,10 @@
   <item>ConstraintType</item>
   <item>DataArrayLine</item>
  </portal_type>
+ <portal_type id="Data Descriptor Type">
+  <item>TextDocument</item>
+  <item>Url</item>
+ </portal_type>
  <portal_type id="Data Event">
   <item>DataEvent</item>
  </portal_type>
@@ -39,6 +43,10 @@
  </portal_type>
  <portal_type id="Data Supply Line">
   <item>DataMovement</item>
+ </portal_type>
+ <portal_type id="Device Configuration Type">
+  <item>TextDocument</item>
+  <item>Url</item>
  </portal_type>
  <portal_type id="Ingestion Policy">
   <item>IngestionPolicy</item>

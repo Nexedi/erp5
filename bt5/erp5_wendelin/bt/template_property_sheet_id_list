@@ -1,7 +1,9 @@
 IngestionPolicy
 DataArray
 DataArrayLine
+DataDescriptor
 DataEvent
+DataDescriptor
 DataMovement
 DataOperation
 OffsetIndex
