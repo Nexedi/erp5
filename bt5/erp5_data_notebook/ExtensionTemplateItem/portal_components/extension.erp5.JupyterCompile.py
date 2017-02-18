@@ -15,8 +15,17 @@ import json
 import transaction
 import Acquisition
 import astor
-import importlib
 from Products.ERP5Type.Log import log
+
+# Display matplotlib figure automatically like
+# the original python kernel
+import matplotlib
+import matplotlib.pyplot as plt
+from IPython.core.pylabtools import print_figure
+from IPython.core.display import _pngxy
+from ipykernel.jsonutil import json_clean, encode_images
+import threading
+display_data_wrapper_lock = threading.Lock()
 
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
@@ -69,17 +78,21 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   
   # Pass all to code Base_runJupyter external function which would execute the code
   # and returns a dict of result
-  final_result = Base_runJupyterCode(self, python_expression, old_notebook_context)
+  final_result = displayDataWrapper(lambda:Base_runJupyterCode(self, python_expression, old_notebook_context))
     
   new_notebook_context = final_result['notebook_context']
   
   result = {
     u'code_result': final_result['result_string'],
+    u'print_result': final_result['print_result'],
+    u'displayhook_result': final_result['displayhook_result'],
     u'ename': final_result['ename'],
     u'evalue': final_result['evalue'],
     u'traceback': final_result['traceback'],
     u'status': final_result['status'],
-    u'mime_type': final_result['mime_type']}
+    u'mime_type': final_result['mime_type'],
+    u'extra_data_list': final_result['extra_data_list'],
+  }
   
   # Updates the context in the notebook with the resulting context of code 
   # execution.
@@ -106,6 +119,8 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   except UnicodeDecodeError:
     result = {
       u'code_result': None,
+      u'print_result': None,
+      u'displayhook_result': None,
       u'ename': u'UnicodeDecodeError',
       u'evalue': None,
       u'traceback': None,
@@ -128,6 +143,62 @@ def mergeTracebackListIntoResultDict(result_dict, error_result_dict_list):
       result_dict['traceback'].append(error_result_dict['traceback'])
       result_dict['status'] = error_result_dict['status']
   return result_dict
+
+
+def matplotlib_pre_run():
+  matplotlib.interactive(True)
+  rc = {'figure.figsize': (6.0,4.0),
+        'figure.facecolor': (1,1,1,0),
+        'figure.edgecolor': (1,1,1,0),
+        'font.size': 10,
+        'figure.dpi': 36,
+        'figure.subplot.bottom' : .125
+        }
+  for key, value in rc.items():
+    matplotlib.rcParams[key] = value
+  plt.gcf().clear()
+
+def matplotlib_post_run(data_list):
+  png_data = None
+  figure = plt.gcf()
+  # Always try to get the current figure.
+  # This is not efficient, but we can support any libraries
+  # that use matplotlib.
+  png_data = print_figure(figure, fmt='png')
+  figure.clear()
+  if png_data is not None:
+    width, height = _pngxy(png_data)
+    data = encode_images({'image/png':png_data})
+    metadata = {'image/png':dict(width=width, height=height)}
+    data_list.append(json_clean(dict(data=data, metadata=metadata)))
+
+class Displayhook(object):
+  def hook(self, value):
+    if value is not None:
+      self.result = repr(value)
+  def pre_run(self):
+    self.old_hook = sys.displayhook
+    sys.displayhook = self.hook
+    self.result = None
+  def post_run(self):
+    sys.displayhook = self.old_hook
+displayhook = Displayhook()
+
+def displayDataWrapper(function):
+  with display_data_wrapper_lock:
+    # pre run
+    displayhook.pre_run()
+    matplotlib_pre_run()
+    extra_data_list = []
+    try:
+      result = function()
+      extra_data_list = result.get('extra_data_list', [])
+    finally:
+      # post run
+      displayhook.post_run()
+      matplotlib_post_run(extra_data_list)
+  result['extra_data_list'] = extra_data_list
+  return result
 
 def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
   """
@@ -292,6 +363,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           transaction.abort()
           result = {
             'result_string': "EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias,
+            'print_result': {"data":{"text/plain":"EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias}, "metadata":{}},
+            'displayhook_result': None,
             'notebook_context': notebook_context,
             'status': 'ok',
             'mime_type': 'text/plain',
@@ -404,9 +477,14 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     
     if inject_variable_dict.get('_print') is not None:
       output = inject_variable_dict['_print'].getCapturedOutputString()
-  
+
+  displayhook_result = {"data":{}, "metadata":{}}
+  if displayhook.result is not None:
+    displayhook_result["data"]["text/plain"] = displayhook.result
   result = {
     'result_string': output,
+    'print_result': {"data":{"text/plain":output}, "metadata":{}},
+    'displayhook_result': displayhook_result,
     'notebook_context': notebook_context,
     'status': status,
     'mime_type': mime_type,
