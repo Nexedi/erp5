@@ -152,7 +152,7 @@ def matplotlib_pre_run():
         'figure.facecolor': (1,1,1,0),
         'figure.edgecolor': (1,1,1,0),
         'font.size': 10,
-        'figure.dpi': 36,
+        'figure.dpi': 72,
         'figure.subplot.bottom' : .125
         }
   for key, value in rc.items():
