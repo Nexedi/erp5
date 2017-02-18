@@ -15,6 +15,7 @@ import json
 import transaction
 import Acquisition
 import astor
+import importlib
 from Products.ERP5Type.Log import log
 
 # Display matplotlib figure automatically like
