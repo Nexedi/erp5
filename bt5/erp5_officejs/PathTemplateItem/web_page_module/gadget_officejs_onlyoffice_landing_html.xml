@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,20 +64,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_devtool_page_webs_list.js</string> </value>
+            <value> <string>gadget_officejs_onlyoffice_landing.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_devtool_page_webs_list_js</string> </value>
+            <value> <string>gadget_officejs_onlyoffice_landing_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +95,11 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>revision</string> </key>
+            <value> <string>10</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -107,13 +109,15 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>DevTool Web Elements List JS</string> </value>
+            <value> <string>OnlyOffice gadget landing</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>/</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>onlyoffice</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -195,7 +199,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1466354900.65</float>
+                        <float>1478730153.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -240,7 +244,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>952.17750.64891.24132</string> </value>
+                <value> <string>957.27792.36839.44390</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +262,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467409438.82</float>
+                        <float>1487499975.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -315,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1466353908.67</float>
+                        <float>1478728483.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
