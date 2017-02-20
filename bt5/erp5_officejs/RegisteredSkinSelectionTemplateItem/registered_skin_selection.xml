@@ -8,15 +8,11 @@
   <skin_selection>RJSVersioning</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
-  <skin_folder>erp5_web_renderjs_ui_unsafe</skin_folder>
-  <skin_selection>RJSUnsafe</skin_selection>
- </skin_folder_selection>
- <skin_folder_selection>
   <skin_folder>erp5_web_versioning</skin_folder>
-  <skin_selection>RJSVersioning</skin_selection>
+  <skin_selection>RJSVersioning,View</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>erp5_xhtml_style</skin_folder>
-  <skin_selection>RJS,RJSVersioning</skin_selection>
+  <skin_selection>RJSVersioning</skin_selection>
  </skin_folder_selection>
 </registered_skin_selection>

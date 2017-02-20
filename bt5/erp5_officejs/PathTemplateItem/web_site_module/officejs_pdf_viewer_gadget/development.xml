@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -228,13 +263,13 @@
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
-                <string>aggregate/web_page_module/gadget_ckeditor_html</string>
+                <string>aggregate/web_page_module/gadget_officejs_pdf_viewer_html</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\' data: https: \'unsafe-inline\'</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -326,7 +361,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Bookmark Manager Development</string> </value>
+            <value> <string>PDF Viewer Gadget Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -418,9 +453,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -446,7 +479,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486717508.76</float>
+                        <float>1487774730.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -455,7 +488,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -491,7 +524,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.14753.9656.54903</string> </value>
+                <value> <string>957.32375.301.23859</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -509,7 +542,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486717531.15</float>
+                        <float>1487775083.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
