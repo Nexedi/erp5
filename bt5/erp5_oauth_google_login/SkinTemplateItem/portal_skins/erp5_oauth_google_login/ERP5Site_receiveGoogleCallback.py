@@ -20,7 +20,6 @@ elif code is not None:
   if response_dict is not None:
     access_token = response_dict['access_token'].encode('utf-8')
     response_dict['login'] = context.ERP5Site_getGoogleUserId(access_token)
-    response_dict['user_id'] = portal.portal_membership.getAuthenticatedMember().getUserId()
     hash_str = context.Base_getHMAC(access_token, access_token)
     context.REQUEST.RESPONSE.setCookie('__ac_google_hash', hash_str, path='/')
     context.Base_setBearerToken(hash_str,
