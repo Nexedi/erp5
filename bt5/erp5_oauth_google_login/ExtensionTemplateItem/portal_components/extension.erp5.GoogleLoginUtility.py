@@ -53,5 +53,5 @@ def getUserId(access_token):
     socket.setdefaulttimeout(timeout)
 
   if google_entry is not None:
-    return google_entry['id'].encode('utf-8')
+    return google_entry['email'].encode('utf-8')
   return None
