@@ -139,14 +139,6 @@ class ERP5ExternalOauth2ExtractionPlugin:
   security.declarePrivate('extractCredentials')
   def extractCredentials(self, request):
     """ Extract Oauth2 credentials from the request header. """
-    Base_createOauth2User = getattr(self.getPortalObject(),
-      'Base_createOauth2User', None)
-    if Base_createOauth2User is None:
-      LOG('ERP5ExternalOauth2ExtractionPlugin', INFO,
-          'No Base_createOauth2User script available, install '
-            'erp5_credential_oauth2, disabled authentication.')
-      return DumbHTTPExtractor().extractCredentials(request)
-
     cookie_hash = request.get(self.cookie_name)
     if cookie_hash is not None:
       try:
@@ -177,29 +169,6 @@ class ERP5ExternalOauth2ExtractionPlugin:
       # fallback to default way
       return DumbHTTPExtractor().extractCredentials(request)
 
-    tag = '%s_user_creation_in_progress' % cookie_hash.encode('hex')
-    if self.getPortalObject().portal_activities.countMessageWithTag(tag) > 0:
-      self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
-    else:
-      # create the user if not found
-      if not self.searchUsers(login=user, exact_match=True):
-        sm = getSecurityManager()
-        if sm.getUser().getId() != ERP5Security.SUPER_USER:
-          newSecurityManager(self, self.getUser(ERP5Security.SUPER_USER))
-        try:
-          self.REQUEST['USER_CREATION_IN_PROGRESS'] = user_dict
-          user_entry["login_portal_type"] = self.login_portal_type
-          # user_id is optional.
-          # It is only used to create Google Login under a pre-existing person
-          user_entry["user_id"] = user_dict.get("user_id")
-          try:
-            Base_createOauth2User(tag, **user_entry)
-          except Exception:
-            LOG('ERP5ExternalOauth2ExtractionPlugin', ERROR,
-              'Issue while calling creation script:', error=True)
-            raise
-        finally:
-          setSecurityManager(sm)
     try:
       self.setToken(self.prefix + token, user)
     except KeyError:
