@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -283,6 +318,14 @@
             <value> <string>SAMEORIGIN</string> </value>
         </item>
         <item>
+            <key> <string>container_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>content_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+        </item>
+        <item>
             <key> <string>custom_render_method_id</string> </key>
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
@@ -301,6 +344,10 @@
             <value> <string>development</string> </value>
         </item>
         <item>
+            <key> <string>layout_configuration_form_id</string> </key>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Section</string> </value>
         </item>
@@ -316,7 +363,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text Editor dev</string> </value>
+            <value> <string>Text Editor Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -408,13 +455,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -436,7 +481,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1441733959.69</float>
+                        <float>1487769854.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -445,7 +490,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -467,7 +512,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -481,7 +526,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.4916.21530.42257</string> </value>
+                <value> <string>957.32291.53407.20701</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -499,7 +544,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486127358.89</float>
+                        <float>1487769849.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
