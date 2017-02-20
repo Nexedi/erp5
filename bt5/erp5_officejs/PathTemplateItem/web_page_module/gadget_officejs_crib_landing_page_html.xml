@@ -105,6 +105,12 @@
             <value> <string>OfficeJS Cribjs Landing Page</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value> <string>001</string> </value>
         </item>
@@ -233,7 +239,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.15083.42790.58692</string> </value>
+                <value> <string>957.15096.9000.18670</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -251,7 +257,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486737351.99</float>
+                        <float>1487598447.07</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

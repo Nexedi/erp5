@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -244,7 +279,7 @@
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>Office JS SVG Editor</string> </value>
+            <value> <string>Office JS CribJS</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -260,19 +295,19 @@
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_officejs_jio.html</string> </value>
+            <value> <string>gadget_officejs_jio_crib_from.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
+            <value> <string>gadget_officejs_crib.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_officejs_application_panel.html</string> </value>
+            <value> <string>gadget_officejs_crib_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_svg_editor_router.html</string> </value>
+            <value> <string>gadget_officejs_crib_router.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -281,6 +316,14 @@
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
             <value> <string>SAMEORIGIN</string> </value>
+        </item>
+        <item>
+            <key> <string>container_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>content_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
@@ -301,6 +344,10 @@
             <value> <string>development</string> </value>
         </item>
         <item>
+            <key> <string>layout_configuration_form_id</string> </key>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Section</string> </value>
         </item>
@@ -316,7 +363,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>SVG Editor Development</string> </value>
+            <value> <string>Cribjs Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -408,9 +455,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -436,7 +481,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486735160.41</float>
+                        <float>1487776975.47</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -445,7 +490,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -481,7 +526,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.15047.22392.65484</string> </value>
+                <value> <string>957.32413.33639.8635</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -499,7 +544,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486735175.37</float>
+                        <float>1487777151.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

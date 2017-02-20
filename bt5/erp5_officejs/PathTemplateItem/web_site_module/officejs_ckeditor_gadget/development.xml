@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -322,11 +357,11 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJS</string> </value>
+            <value> <string>RJSVersioning</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Bookmark Manager Development</string> </value>
+            <value> <string>CKEditor Gadget Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -418,13 +453,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -446,7 +479,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486127745.02</float>
+                        <float>1487769923.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -455,7 +488,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>embedded</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -491,7 +524,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.4932.43507.6502</string> </value>
+                <value> <string>958.9788.40013.31522</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -509,7 +542,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486128307.71</float>
+                        <float>1491222813.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

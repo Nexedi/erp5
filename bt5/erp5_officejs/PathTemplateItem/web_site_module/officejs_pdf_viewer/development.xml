@@ -7,6 +7,24 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
@@ -49,7 +67,24 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
                 <string>Owner</string>
+                <string>Reviewer</string>
               </tuple>
             </value>
         </item>
@@ -244,11 +279,11 @@
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>Office JS SVG Editor</string> </value>
+            <value> <string>Office JS PDF Viewer</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+            <value> <string>default-src \'self\' data: https: \'unsafe-inline\'</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -264,7 +299,7 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
+            <value> <string>gadget_officejs_pdf_viewer.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -272,7 +307,7 @@
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_svg_editor_router.html</string> </value>
+            <value> <string>gadget_officejs_pdf_viewer_router.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -281,6 +316,14 @@
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
             <value> <string>SAMEORIGIN</string> </value>
+        </item>
+        <item>
+            <key> <string>container_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>content_layout</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
@@ -301,6 +344,10 @@
             <value> <string>development</string> </value>
         </item>
         <item>
+            <key> <string>layout_configuration_form_id</string> </key>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Section</string> </value>
         </item>
@@ -316,7 +363,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>SVG Editor Development</string> </value>
+            <value> <string>PDF Viewer Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>

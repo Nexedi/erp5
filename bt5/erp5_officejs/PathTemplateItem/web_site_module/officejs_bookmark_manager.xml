@@ -397,7 +397,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
+            <value> <string>default-src \'self\' data: https: \'unsafe-inline\'</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -655,7 +655,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468957254.51</float>
+                        <float>1487598579.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -690,9 +690,7 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>Deleted objects: []</string> </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -700,7 +698,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.2071.56258.37990</string> </value>
+                <value> <string>957.29437.43603.22203</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -718,7 +716,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486128580.51</float>
+                        <float>1487599391.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

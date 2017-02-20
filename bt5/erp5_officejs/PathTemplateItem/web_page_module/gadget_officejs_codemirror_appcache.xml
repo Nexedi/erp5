@@ -111,7 +111,7 @@
 CACHE:\n
 renderjs.js\n
 rsvp.js\n
-gadget_officejs_codemirror.html\n
+/\n
 gadget_officejs_codemirror.js\n
 codemirror/lib/codemirror.js\n
 codemirror/lib/codemirror.css\n
@@ -268,7 +268,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.15093.27235.5137</string> </value>
+                <value> <string>957.30669.28687.29849</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -286,7 +286,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486737981.86</float>
+                        <float>1487777271.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
