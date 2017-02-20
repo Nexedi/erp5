@@ -119,7 +119,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
-image_editor_landing_page.html\n
 jio_mappingstorage.js\n
 URI.js\n
 dygraph.js\n
@@ -174,11 +173,10 @@ gadget_officejs_webrtc_jio.js\n
 gadget_officejs_widget_listbox.js\n
 erp5_launcher.js\n
 erp5_launcher.html\n
+/\n
 gadget_officejs_image_editor_router.html\n
 gadget_officejs_jio_image_view.html\n
 gadget_officejs_jio_image_view.js\n
-gadget_officejs_liberator.js\n
-gadget_officejs_liberator.html\n
 NETWORK:\n
 *
 
@@ -186,7 +184,7 @@ NETWORK:\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Text EditorGadget OfficeJS AppCache</string> </value>
+            <value> <string>Image Editor OfficeJS AppCache</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -323,7 +321,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.13372.40497.39594</string> </value>
+                <value> <string>957.29602.29356.10683</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -341,7 +339,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486655962.7</float>
+                        <float>1487776087.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
