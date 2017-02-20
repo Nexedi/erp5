@@ -407,7 +407,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
+            <value> <string>default-src \'self\' data: https: \'unsafe-inline\'</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -435,7 +435,9 @@
         </item>
         <item>
             <key> <string>configuration_landing_page</string> </key>
-            <value> <string>gadget_officejs_codemirror.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_latest_document_version</string> </key>
@@ -716,7 +718,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.15080.63259.50670</string> </value>
+                <value> <string>957.30669.28687.29849</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -734,7 +736,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486737743.39</float>
+                        <float>1487776944.86</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

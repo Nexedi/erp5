@@ -110,7 +110,7 @@ renderjs.js\n
 rsvp.js\n
 jiodev.js\n
 gadget_ckeditor.js\n
-gadget_ckeditor.html\n
+/\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 gadget_erp5_nojqm.css\n
@@ -563,7 +563,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -577,7 +577,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.4929.54910.23296</string> </value>
+                <value> <string>957.30669.28687.29849</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -595,7 +595,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486568027.3</float>
+                        <float>1487770161.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

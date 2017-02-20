@@ -407,7 +407,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
+            <value> <string>default-src \'self\' data: https: \'unsafe-inline\'</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -435,7 +435,9 @@
         </item>
         <item>
             <key> <string>configuration_landing_page</string> </key>
-            <value> <string>pdf_viewer_landing_page.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_latest_document_version</string> </key>

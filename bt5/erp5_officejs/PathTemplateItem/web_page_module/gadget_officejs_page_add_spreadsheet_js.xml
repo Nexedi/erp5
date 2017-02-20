@@ -112,6 +112,12 @@
             <value> <string>OfficeJS Add Spreadsheet JS</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value>
               <none/>
