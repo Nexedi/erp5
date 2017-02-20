@@ -163,7 +163,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
     except KeyError:
       user_entry = self.getUserEntry(token)
       if user_entry is not None:
-        user = user_entry["reference"] = user_dict["login"]
+        user = user_entry["reference"]
 
     if user is None:
       # fallback to default way
@@ -263,14 +263,12 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
     user_entry = {}
     if google_entry is not None:
       # sanitise value
-      try:
-        for k in (('first_name', 'given_name'),
+      for k in (('first_name', 'given_name'),
             ('last_name', 'family_name'),
-            ('email', 'email')):
-          value = google_entry[k[1]].encode('utf-8')
-          user_entry[k[0]] = value
-      except KeyError:
-        user_entry = None
+            ('email', 'email'),
+            ('reference', 'email'),):
+        value = google_entry[k[1]].encode('utf-8')
+        user_entry[k[0]] = value
     return user_entry
 
 #List implementation of class
