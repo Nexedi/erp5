@@ -18,6 +18,8 @@ data_ingestion = portal_catalog.getResultValue(
   
 if data_ingestion is None:
   data_ingestion = portal.data_ingestion_module.get(data_ingestion_id)
+  if data_ingestion.getSimulationState() != "started":
+    data_ingestion = None
 
 if data_ingestion is None:
   specialise_value_list = [x.getObject() for x in portal_catalog.searchResults(
