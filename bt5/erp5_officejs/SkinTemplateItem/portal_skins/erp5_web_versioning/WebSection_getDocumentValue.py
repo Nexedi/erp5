@@ -18,6 +18,18 @@
    fix acquisition issues within the _aq_dynamic
    lookup from WebSection class.
 """
+context.log(context.REQUEST['TraversalRequestNameStack'])
+
+stack = context.REQUEST['TraversalRequestNameStack']
+if type(name) is list:
+  name = name[0]
+url_list = [name]
+
+while len(stack):
+  url_list.append(stack.pop())
+
+reference = "/".join(url_list)
+
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 if portal is None: portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
@@ -29,6 +41,10 @@ valid_portal_type_list = portal.getPortalDocumentTypeList()
 # Find the applicable language
 if language is None:
   language = portal.Localizer.get_selected_language()
+
+if validation_state is None:
+  validation_state = ('released', 'released_alive', 'published', 'published_alive',
+                      'shared', 'shared_alive', 'public', 'validated')
 
 if effective_date is None:
   if now is None:
@@ -48,13 +64,12 @@ base_sort = (('effective_date', 'descending'), )
 # Portal Type and validation state should be handled by predicate
 # By default
 web_page_list = context.searchResults(
-  reference=name,
+  reference=reference,
   effective_date=effective_date,
   language=(language, ''),
   sort_on=(('language', 'descending'), ) + base_sort,
   limit=1,
   **kw)
-
 if len(web_page_list) == 0:
   # Default returns None
   web_page = None

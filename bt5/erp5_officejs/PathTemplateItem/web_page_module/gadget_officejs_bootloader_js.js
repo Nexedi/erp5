@@ -18,65 +18,38 @@ var repair = false;
     default_view_reference: "jio_view"
   };
 
-  function createStorage(query, version_url, version) {
+  function createStorage(version_url, manifest) {
     return jIO.createJIO({
       type: "replicate",
       conflict_handling: 2,
-      check_remote_modification: true, // put false for prod
+      parallel_operation_attachment_amount: 10,
+      parallel_operation_amount: 10,
+      check_remote_attachment_modification: false,
+      check_remote_attachment_creation: true,
+      check_remote_modification: false,
       check_remote_deletion: false,
       check_local_creation: false,
       check_local_deletion: false,
       check_local_modification: false,
-      query: {
-        query: 'portal_type: ("Web Illustration",' +
-          '"Web Manifest","Web Script","Web Style","Web Page") AND version: "' +
-            version + '" ' + query,
-        "limit": [0, 27131]
-      },
       signature_storage: {
-        type: "uuid",
-        sub_storage: {
-          type: "indexeddb",
-          database: "installer_hash"
-        }
+        type: "indexeddb",
+        database: "installer_hash"
       },
       local_sub_storage: {
-        type: "mapping",
-        no_sub_query_id: true,
-        id: ["equalSubProperty", "relative_url"],
-        property: {
-          "reference": ["equalSubId"]
-        },
+        type: "query",
         sub_storage: {
-          type: "query",
+          type: "uuid",
           sub_storage: {
-            type: "uuid",
-            sub_storage: {
-              type: "indexeddb",
-              database: window.location.origin + window.location.pathname +
-                version_url
-            }
+            type: "indexeddb",
+            database: "officejs_code_source"
           }
         }
       },
-      remote_sub_storage: remote_storage
-    });
-  }
-
-  function postMessage(gadget, message) {
-    return new RSVP.Promise(function (resolve, reject) {
-      var messageChannel = new MessageChannel();
-      messageChannel.port1.onmessage = function (event) {
-        if (event.data.error) {
-          reject(event.data.error);
-        } else {
-          return resolve(event.data);
-        }
-      };
-      gadget.props.serviceWorker.postMessage(
-        JSON.stringify(message),
-        [messageChannel.port2]
-      );
+      remote_sub_storage: {
+        type: "appcache",
+        manifest: manifest,
+        version: version_url
+      }
     });
   }
 
@@ -199,63 +172,11 @@ var repair = false;
     .declareMethod("install", function () {
       var gadget = this;
 
-      return serviceWorker_setting_storage.put(
-        window.location.origin + window.location.pathname +
-          gadget.props.version_url,
-        {
-            "version": gadget.props.document_version,
-            "landing_page": gadget.props.landing_page
-          }
-      )
-        .push(function () {
-          // transform a cache to url_list
-          gadget.props.storage = jIO.createJIO({
-            type: "mapping",
-            id: ["equalSubProperty", "reference"],
-            sub_storage: remote_storage
-          });
-          return gadget.props.storage.get(gadget.props.cache_file)
-            .push(function (doc) {
-              var url_list = doc.text_content.split('\r\n'),
-                i,
-                take = false;
-              if (url_list.length === 1) {
-                url_list = doc.text_content.split('\n');
-              }
-              if (url_list.length === 1) {
-                url_list = doc.text_content.split('\r');
-              }
-              for (i = 0; i < url_list.length; i += 1) {
-                if (url_list[i].indexOf("NETWORK:") >= 0) {
-                  take = false;
-                }
-                if (take &&
-                    url_list[i] !== "" &&
-                    url_list[i].charAt(0) !== '#' &&
-                    url_list[i].charAt(0) !== ' ') {
-                  url_list[i].replace("\r", "");
-                  gadget.props.cached_url.push(url_list[i]);
-                  gadget.props.query_list.push('( reference: "' +
-                    url_list[i] + '" )');
-                }
-                if (url_list[i].indexOf("CACHE:") >= 0) {
-                  take = true;
-                }
-              }
-            });
-        })
-        .push(function () {
-          var query = " AND (" + gadget.props.query_list.join(' OR ') + ')';
-          gadget.props.storage = createStorage(
-            query,
-            gadget.props.version_url,
-            gadget.props.document_version
-          );
-          return gadget.props.storage.repair();
-        })
-        .push(undefined, function (error) {
-          console.log(error);
-        }) // Here For Url too long: ex officejs_ckeditor_gadget
+      gadget.props.storage = createStorage(
+        gadget.props.version_url,
+        gadget.props.cache_file
+      );
+      return gadget.props.storage.repair()
         .push(function () {
           // remove base if present
           if (document.querySelector("base")) {
@@ -279,15 +200,6 @@ var repair = false;
           } else if (registration.active) {
             gadget.props.serviceWorker = registration.active;
           }
-        })
-        .push(function () {
-          return postMessage(
-            gadget,
-            {
-              "action": "install",
-              "url_list": gadget.props.cached_url
-            }
-          );
         });
     })
 

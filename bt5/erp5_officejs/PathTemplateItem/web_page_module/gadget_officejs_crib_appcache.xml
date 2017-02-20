@@ -119,6 +119,7 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.wof
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 jio_mappingstorage.js\n
+/\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 URI.js\n
@@ -179,7 +180,6 @@ gadget_officejs_page_application_list.js\n
 gadget_officejs_crib_router.html\n
 gadget_officejs_jio_crib_view.html\n
 gadget_officejs_jio_crib_view.js\n
-crib_landing_page.html\n
 gadget_officejs_jio_crib_from.js\n
 gadget_officejs_jio_crib_from.html\n
 gadget_officejs_page_jio_crib_configurator.html\n
@@ -329,7 +329,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.15163.63735.56388</string> </value>
+                <value> <string>957.30669.28687.29849</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -347,7 +347,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486975621.67</float>
+                        <float>1487777321.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
