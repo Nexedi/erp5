@@ -112,17 +112,16 @@ CACHE:\n
 rsvp.js\n
 renderjs.js\n
 jiodev.js\n
-gadget_officejs_image_editor.html\n
+/\n
 gadget_officejs_image_editor.js\n
 renderjs.js\n
 rsvp.js\n
 gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
-miniPaint/config.js\n
+miniPaint/config.jsg\n
 miniPaint/img/right.png\n
 miniPaint/img/colorwheel.png\n
 miniPaint/img/favicon.png\n
-miniPaint/img/logo.png\n
 miniPaint/img/preview.jpg\n
 miniPaint/img/sprites.png\n
 miniPaint/js/draw_tools.js\n
@@ -316,7 +315,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.13372.40497.39594</string> </value>
+                <value> <string>957.32407.23435.38775</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -334,7 +333,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486655946.11</float>
+                        <float>1487776775.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

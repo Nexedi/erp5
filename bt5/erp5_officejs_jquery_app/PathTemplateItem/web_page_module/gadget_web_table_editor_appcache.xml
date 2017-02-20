@@ -112,8 +112,10 @@ CACHE:\n
 renderjs.js\n
 rsvp.js\n
 jquery.js\n
-gadget_officejs_web_table_editor.html\n
+/\n
 gadget_officejs_web_table_editor.js\n
+gadget_officejs_liberator.js\n
+gadget_officejs_liberator.html\n
 jquery-sheets/wickedgrid.css\n
 jquery-sheets/menu.html\n
 jquery-sheets/font-awesome.css\n
