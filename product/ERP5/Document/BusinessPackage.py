@@ -93,6 +93,7 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
   "PythonScript":        ("py",   0, "_body"),
   "Spreadsheet":         (None,   0, "data"),
   "SQL":                 ("sql",  0, "src"),
+  "SQL Method":          ("sql",  0, "src"),
   "Test Component":      ("py",   0, "text_content"),
   "Test Page":           (None,   0, "text_content"),
   "Web Page":            (None,   0, "text_content"),
@@ -163,8 +164,10 @@ class BusinessPackage(XMLObject):
                             'business_package_installation_workflow'] = None
 
     def _install(self, **kw):
-      self._path_item.install(self)
-      self._object_property_item.install(self)
+      portal_templates = self.aq_parent
+      bp5_list = [self,]
+      portal_templates.installMultipleBusinessPackage(bp5_list)
+
       workflow_tool = self.getPortalObject().portal_workflow
       workflow_tool.business_package_installation_workflow.notifyWorkflowMethod(
           self, 'install', kw={'comment': 'Installed'})
@@ -471,6 +474,21 @@ class PathTemplatePackageItem(Implicit, Persistent):
     self._path_archive = PersistentMapping()
     for id in id_list:
       self._path_archive[id] = None
+
+  def __add__(self, other):
+    """
+    Create one Path Item object from adding two given objects of this class
+    """
+    path_archive = self._path_archive.copy()
+    objects = self._objects.copy()
+
+    path_archive.update(other._path_archive)
+    objects.update(other._objects)
+
+    self._path_archive = path_archive
+    self._objects = objects
+
+    return self
 
   def _guessFilename(self, document, key, data):
     # Try to guess the extension based on the id of the document
@@ -800,25 +818,13 @@ class PathTemplatePackageItem(Implicit, Persistent):
     keys.sort()
     return keys
 
-  def install(self, context, *args, **kw):
+  def install(self, *args, **kw):
     force = 1
     update_dict = {}
-    portal = context.getPortalObject()
+    portal = self.getPortalObject()
     object_key_list = self._getObjectKeyList()
     for path in object_key_list:
-      __traceback_info__ = path
-      # We do not need to perform any backup because the object was
-      # created during the Business Template installation
-      if update_dict.get(path) == 'migrate':
-        continue
-
-      if update_dict.has_key(path) or force:
-        # get action for the oject
-        action = 'backup'
-        if not force:
-          action = update_dict[path]
-          if action == 'nothing':
-            continue
+        __traceback_info__ = path
         # get subobjects in path
         path_list = path.split('/')
         container_path = path_list[:-1]
@@ -975,6 +981,21 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
       if id is not None and id != '':
         self._archive[id] = None
 
+  def __add__(self, other):
+    """
+    Create one Path Item object from adding two given objects of this class
+    """
+    archive = self._archive.copy()
+    objects = self._objects.copy()
+
+    archive.update(other._archive)
+    objects.update(other._objects)
+
+    self._archive = archive
+    self._objects = objects
+
+    return self
+
   def build(self, context, **kw):
     p = context.getPortalObject()
     for key in self._archive:
@@ -1057,15 +1078,15 @@ class ObjectPropertyTemplatePackageItem(Implicit, Persistent):
         modified_object_list.update({relative_url : ['Modified', self.__class__.__name__[:-12]]})
     return modified_object_list
 
-  def install(self, context, *args, **kw):
-    portal = context.getPortalObject()
+  def install(self, *args, **kw):
+    portal = self.getPortalObject()
     for relative_url in self._objects:
       obj = portal.unrestrictedTraverse(relative_url)
       for property_dict in self._objects[relative_url]:
         obj.setProperty(property_dict['id'], property_dict['value'], property_dict['type'])
 
-  def uninstall(self, context, **kw):
-    portal = context.getPortalObject()
+  def uninstall(self, **kw):
+    portal = self.getPortalObject()
     for relative_url in self._objects:
       obj = portal.unrestrictedTraverse(relative_url)
       for property_dict in self._objects[relative_url]:
@@ -1078,8 +1099,11 @@ def createInstallationData(package_list):
   """
   Create installation object as well as add new node on the installation tree
   from the installed state
+  XXX: No need to compare hash here for now as for sure this design is going
+  to be changed
   """
   path_list = []
+  property_list = []
   final_data = {}
   conflicted_data = {}
 
@@ -1087,36 +1111,8 @@ def createInstallationData(package_list):
   for package in package_list:
     path_list.extend(package.getTemplatePathList())
     path_list = list(set(path_list))
-  import copy
-  for package in package_list:
-    obj_dict = package._path_item._objects
-    hash_dict = package._path_item._hash
-    for path in path_list:
-      object_metadata = {}
-      object_metadata['obj'] = obj_dict[path]
-      object_metadata['sha'] = hash_dict[path]
-
-      # If the path already exists in conflicted_data, add the metadata in the
-      # conflicted_data itself
-      if conflicted_data.has_key(path):
-        conflicted_data[path].append(object_metadata)
-
-      # If the path is new, add the metadata to final_data
-      elif not final_data.has_key(path):
-        final_data[path] = object_metadata
-
-      # If the object is neither in conflicted_data already in final_data,
-      # compare hash of the objects
-      else:
-        # Leave the metadata in final_data in case the hash matches,
-        # else add it to conflicted_data and remove the older
-        if final_data[path]['sha'] ==  object_metadata['sha']:
-          continue
-        else:
-          conflicted_data[path] = [object_metadata]
-          conflict_object_metadata = copy.copy(final_data[path])
-          conflicted_data[path].append(conflict_object_metadata)
-          del final_data[path]
+    property_list.extend(package.getTemplateObjectPropertyList())
+    property_list= list(set(property_list))
 
   return final_data, conflicted_data
 
@@ -1172,6 +1168,14 @@ class InstallationTree(object):
     While mapping we compare between installed_item of BT, if exisits as well
     as ZODB. The Installation Tree should be smart enough to take us nearest to
     the installed state. If any conflict whatsoever arise, it should raise it.
+
+    We expect Installation Tree to act as combination of BT5s to be installed,
+    so that'll mean only combination of paths and properties. This way we can
+    perform CRDT on the paths and values based on layers.
+
+    IT = BT1 + BT2 = [p1, p2, p3] + [p2, p3, p4]
+    Now, we decide the value on p2 based on the algo/layering/diff and take the
+    use as close as possible to the installtion.
     """
     # Return if the context is None
     if context is None:
