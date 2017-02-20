@@ -372,6 +372,8 @@ import sys
     reference = 'testBase_displayImageReference5'
     data_template = '<img src="data:application/unknown;base64,%s" /><br />'
     data = 'qwertyuiopasdfghjklzxcvbnm<somerandomcharacterstosaveasimagedata>'
+    if getattr(self.image_module, 'testBase_displayImageID5', None) is not None:
+      self.image_module.manage_delObjects(ids=['testBase_displayImageID5'])
     self.image_module.newContent(
       portal_type='Image',
       id='testBase_displayImageID5',
@@ -854,5 +856,4 @@ print dig
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '0123456789')
-
 
