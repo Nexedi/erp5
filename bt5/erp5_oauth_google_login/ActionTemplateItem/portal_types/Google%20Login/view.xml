@@ -77,7 +77,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Login_view</string> </value>
+            <value> <string>string:${object_url}/GoogleLogin_view</string> </value>
         </item>
       </dictionary>
     </pickle>
