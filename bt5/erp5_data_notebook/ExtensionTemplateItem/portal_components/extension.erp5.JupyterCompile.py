@@ -938,6 +938,8 @@ def getErrorMessageForException(self, exception, notebook_context):
   return {
     'status': 'error',
     'result_string': None,
+    'print_result': None,
+    'displayhook_result': None,
     'notebook_context': notebook_context,
     'mime_type': 'text/plain',
     'evalue': str(value),
@@ -1146,4 +1148,3 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
-
