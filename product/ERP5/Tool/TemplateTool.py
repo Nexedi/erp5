@@ -1616,6 +1616,26 @@ class TemplateTool (BaseTool):
       return imported_bt5
 
     security.declareProtected(Permissions.ManagePortal,
+            'installMultipleBusinessPackage')
+    def installMultipleBusinessPackage(self, bp5_list):
+      """
+      Install multiple Business Package at the same time
+      """
+      # XXX: Compare before calling install on path object property items
+      from Products.ERP5.Document.BusinessPackage import \
+                    ObjectPropertyTemplatePackageItem, PathTemplatePackageItem
+
+      final_path_item = bp5_list[0]._path_item
+      final_prop_item = bp5_list[0]._object_property_item
+
+      for bp5 in bp5_list:
+        final_path_item += bp5._path_item
+        final_prop_item += bp5._object_property_item
+
+      final_path_item.install()
+      final_prop_item.install()
+
+    security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
     def getBusinessTemplateUrl(self, base_url_list, bt5_title):
       """
