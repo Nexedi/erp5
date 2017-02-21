@@ -101,7 +101,11 @@ class TemplateTool (BaseTool):
     title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
-    allowed_types = ('ERP5 Business Template', 'ERP5 Business Package')
+    allowed_types = (
+      'ERP5 Business Template',
+      'ERP5 Business Package',
+      'ERP5 Business Manager',
+      )
 
     # This stores information on repositories.
     repository_dict = {}
@@ -1634,6 +1638,11 @@ class TemplateTool (BaseTool):
 
       final_path_item.install()
       final_prop_item.install()
+
+    security.declareProtected(Permissions.ManagePortal,
+            'installMultipleBusinessManager')
+    def installMultipleBusinessManager(self, bm_list):
+      pass
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
