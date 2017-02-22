@@ -262,7 +262,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getPortalObject().restrictedTraverse(\'web_site_module/officejs_\' + context.getPortalType().lower() + \'_landing\').absolute_url() + \'/\'</string> </value>
+            <value> <string>python: context.getPortalObject().restrictedTraverse(\'web_site_module/officejs_gadget_onlyoffice\').absolute_url() + \'/onlyoffice/gadget_officejs_onlyoffice_\' + context.getPortalType().lower() + \'_landing.html\'</string> </value>
         </item>
       </dictionary>
     </pickle>
