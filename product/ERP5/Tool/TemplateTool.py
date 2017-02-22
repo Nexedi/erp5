@@ -1642,7 +1642,32 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
             'installMultipleBusinessManager')
     def installMultipleBusinessManager(self, bm_list):
-      pass
+      """
+      Creates a single BM from multiple Business Manager and run installation
+      on all at once after reducing the final BM.
+      """
+      # Create the final Business Manager
+      if len(bm_list) == 1:
+        combinedBT = bm_list[0]
+      else:
+        # Summation should also consider arithmetic on the Business Item(s)
+        # having same path and layer and combine them.
+        combinedBT = sum(bm_list)
+
+      # XXX: We are missing the part of creating installed_BM for all the BM
+      # we have in bm_list, because this would be needed in case we build
+      # Business Manager again
+
+      # Reduce the final Business Manager
+      combinedBT.reduceBusinessManager()
+      combinedBT.flattenBusinessManager()
+
+      if combinedBT.getStatus() == 'flattened':
+        # Run install on separate Business Item one by one
+        for path_item in combinedBt._path_item_list:
+          path_item.install()
+      else:
+        raise ValueError, 'Business Manager not flattened, cannot install'
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
