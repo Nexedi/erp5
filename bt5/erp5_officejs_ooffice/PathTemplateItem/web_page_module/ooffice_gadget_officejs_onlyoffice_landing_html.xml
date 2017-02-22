@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_ooffice.html</string> </value>
+            <value> <string>gadget_officejs_onlyoffice_landing.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ooffice_gadget_ooffice_html</string> </value>
+            <value> <string>ooffice_gadget_officejs_onlyoffice_landing_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -98,6 +98,10 @@
             <value> <string>Web Page</string> </value>
         </item>
         <item>
+            <key> <string>revision</string> </key>
+            <value> <string>10</string> </value>
+        </item>
+        <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>
@@ -105,11 +109,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>gadget_ooffice.html</string> </value>
+            <value> <string>OnlyOffice gadget landing</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>ooffice/gadget_ooffice.html</string> </value>
+            <value> <string>/</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +199,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467488647.67</float>
+                        <float>1478730153.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -240,7 +244,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.24802.24995.24046</string> </value>
+                <value> <string>957.32475.19298.7475</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +262,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487676107.2</float>
+                        <float>1487782317.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,9 +285,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -299,7 +301,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -317,7 +319,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1467457774.36</float>
+                        <float>1478728483.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

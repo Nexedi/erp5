@@ -237,55 +237,86 @@ if (Common === undefined) {
         queue = new RSVP.Queue();
       return queue
         .push(function () {
-          var magic;
+          return g.getSetting('portal_type');
+        })
+        .push(undefined, function (error) {
+          return "";
+        })
+        .push(function (portal_type) {
+          var value;
           g.props.jio_key = options.jio_key;
           g.props.key = options.key || "text_content";
-          g.props.value = options.value;
-          if (g.props.value === "data:") {
-            g.props.value = undefined;
+          g.props.documentType = portal_type.toLowerCase();
+          value = options.value;
+          if (value === "data:" || value === undefined) {
+            // fix empty value
+            value = "";
           }
-          if (g.props.value) {
-            if (g.props.value.slice === undefined) {
-              throw "not suported type of document value: " +
-                typeof g.props.value;
+          if (value) {
+            if (value.slice === undefined) {
+              throw "not suported type of variable containing the document: " +
+                typeof value;
             }
-            magic = g.props.value.slice(0, 5);
-            if (magic === "data:") {
-              g.props.value = atob(g.props.value.split(',')[1]);
+            if (value.slice(0, 5) === "data:") {
+              value = atob(value.split(',')[1]);
             }
-            magic = g.props.value.slice(0, 4);
-            switch (magic) {
-            case 'XLSY':
-            case 'PPTY':
-            case 'DOCY':
-              break;
+          }
+          if (value) {
+            switch (value.slice(0, 4)) {
             case "PK\x03\x04":
             case "PK\x05\x06":
               g.props.value_zip_storage = jIO.createJIO({
                 type: "zipfile",
-                file: g.props.value
+                file: value
               });
-              g.props.value_zip_storage.getAttachment('/', 'body.txt')
-                .then(undefined, function (error) {
+              return g.props.value_zip_storage.getAttachment('/', 'body.txt')
+                .push(undefined, function (error) {
                   if (error.status_code === 404) {
-                    throw 'not supported format: "' + g.props.value + '"';
+                    throw 'not supported format of document: "' + value.slice(0, 100) + '"';
                   }
                   throw error;
+                })
+                .push(jIO.util.readBlobAsText)
+                .push(function (evt) {
+                  return evt.target.result;
                 });
+            }
+          }
+          return value;
+        })
+        .push(function (value) {
+          var magic, documentType;
+          g.props.value = value;
+          if (!g.props.documentType && value === "") {
+            throw "can not create empty document because portal_type is unknown";
+          }
+          if (value) {
+            magic = g.props.value.slice(0, 4);
+            switch (magic) {
+            case 'XLSY':
+              documentType = "spreadsheet";
+              break;
+            case 'PPTY':
+              documentType = "presentation";
+              break;
+            case 'DOCY':
+              documentType = "text";
               break;
             default:
-              throw 'not supported format: "' + g.props.value + '"';
+              throw "can not detect document type by magic: " + magic;
+            }
+            if (g.props.documentType) {
+              if (documentType !== g.props.documentType) {
+                throw "editor not fit the document type";
+              }
+            } else {
+              //set editor type by docuementType
+              g.props.documentType = documentType;
             }
           }
           if (!g.props.value_zip_storage) {
             g.props.value_zip_storage = jIO.createJIO({type: "zipfile"});
           }
-        })
-        .push(function () {
-          return g.getSetting('portal_type');
-        })
-        .push(function (portal_type) {
-          g.props.documentType = portal_type.toLowerCase();
           return g.setFillStyle();
         })
         .push(function (size) {
