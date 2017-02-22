@@ -50,5 +50,7 @@
  </portal_type>
  <portal_type id="Ingestion Policy">
   <item>IngestionPolicy</item>
+  <item>Reference</item>
+  <item>Version</item>
  </portal_type>
 </property_sheet_list>

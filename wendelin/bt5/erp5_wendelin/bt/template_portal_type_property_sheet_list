@@ -18,3 +18,5 @@ Data Supply | Version
 Device Configuration Type | TextDocument
 Device Configuration Type | Url
 Ingestion Policy | IngestionPolicy
+Ingestion Policy | Reference
+Ingestion Policy | Version
