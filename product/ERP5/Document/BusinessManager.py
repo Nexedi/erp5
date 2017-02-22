@@ -31,6 +31,8 @@ import hashlib
 import fnmatch
 import re
 from datetime import datetime
+from itertools import chain
+from operator import attrgetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Globals import Persistent
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
@@ -134,6 +136,13 @@ class BusinessManager(XMLObject):
       result = tuple(result)
     return result
 
+  def __radd__(self, other):
+    """
+    Adds the Business Item objects for the given Business Manager objects
+    """
+    combined_business_item_list = self._path_item_list.extend(other._path_item_list)
+    self._path_item_list = combined_business_item_list
+
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
   def storeTemplateData(self):
     """
@@ -166,7 +175,7 @@ class BusinessManager(XMLObject):
       2. Flattenning the BT
       3. Copying the object at the path mentioned in BT
     """
-    if self.status == 'built':
+    if self.status == 'uninstalled':
       self.reduceBusinessManager()
     elif self.status == 'reduced':
       self.flattenBusinessManager()
@@ -206,7 +215,7 @@ class BusinessManager(XMLObject):
         path = path_item._path
         layer = path_item._layer
         obj = portal.unrestrictedTraverse(path)
-        # Flatten the BusinessItem to the lowest layer
+        # Flatten the BusinessItem to the lowest layer ?? Why required, no change
         if layer != 0:
           path._layer = 0
 
@@ -214,6 +223,9 @@ class BusinessManager(XMLObject):
     """
     Reduction is a function that takes a Business Manager as input and returns
     a smaller Business Manager by taking out values with lower priority layers.
+
+    After taking out BusinessItem(s) with lower priority layer, we also go
+    through arithmetic in case there are multiple number of BI at the higher layer
 
     Two path on different layer are reduced as a single path with the highest layer:
 
@@ -230,7 +242,7 @@ class BusinessManager(XMLObject):
     reduce(BT) = BT
     """
     path_list = [path_item.getBusinessPath() for path in self._path_item_list]
-
+    reduced_path_item_list = []
     # We separate the path list in the ones which are repeated and the ones
     # which are unique for the installation
     seen_path_list = set()
@@ -238,21 +250,35 @@ class BusinessManager(XMLObject):
 
     # Create an extra dict for values on path which are repeated in the path list
     seen_path_dict = {path: [] for path in seen_path_list}
-    unique_path_dict = {}
 
     for path_item in self._path_item_list:
       if path_item._path in seen_path_list:
+        # In case the path is repeated keep the path_item in a separate dict
+        ## for further arithmetic
         seen_path_dict[path_item._path].append(path_item)
       else:
-        unique_path_dict[path_item._path].append(path_item)
+        # If the path is unique, add them in the list of reduced Business Item
+        reduced_path_item_list.append(path_item)
 
     # Reduce the values and get the merged result out of it
     for path, path_item_list in seen_path_dict.items():
-      merged_business_item = reduce(lambda x, y: x+y, path_item_list)
-      seen_path_dict[path] = merged_business_item
 
-    # Add both unique and seen path item and update _path_item_list attribute
-    reduced_path_item_list = seen_path_dict.values() + unique_value_dict.values()
+      higest_priority_layer = max(path_item_list, attrgetter='_layer')
+      prioritized_path_item = [path_item in path_item_list where \
+                                      path_item._layer==higest_priority_layer]
+      merged_business_item = prioritized_path_item[0]
+
+      if len(prioritized_path_item) != 1:
+        path_item_list_add = [path_item in path_item_list where  path_item._sign > 0 ]
+        path_item_list_subtract = [path_item in path_item_list where  path_item._sign < 0 ]
+
+        combined_path_item_add = reduce(lambda x, y: x+y, path_item_list_add)
+        combined_path_item_subtract = reduce(lambda x, y: x+y, path_item_list_subtract)
+        # TODO: Process the intersection for the above mentioned 2 paths. This
+        # would make it easier to install
+        reduced_path_item_list.append(combined_path_item_add)
+        reduced_path_item_list.append(combined_path_item_subtract)
+
     self._path_item_list = reduced_path_item_list
     self.setStatus('reduced')
 
@@ -407,56 +433,44 @@ class BusinessItem(Implicit, Persistent):
       object_property_item = ObjectPropertyTemplateItem(id_list)
       object_property_item.install()
 
-  def __add__(self, other):
+  def __radd__(self, other):
     """
     Add the values from the path when the path is same for 2 objects
     """
     if self._path != other._path:
-      raise ValueError, "BusinessItem are incommensurable"
+      raise ValueError, "BusinessItem are incommensurable, have different path"
     else:
-      # Create a new BusinessItem by merging the values of the objects and
-      # taking out the one with lower priority layer
-      higer_priority_layer = max(self._layer, other._layer)
-      # Merge the values
-      if len(self._value) > 1:
-        merged_value = self._mergeValue(self._value)
-        return BusinessItem(self._path, 1, higer_priority_layer, merged_value)
+        if self._sign != other._sign:
+          raise ValueError, "BusinessItem are incommensurable, have different sign"
+        else:
+          self._value = self._mergeValue(value_list=[self._value, other._value])
+          return self
 
-  def _mergeValue(self, val1, val2):
+  def _mergeValue(self, value_list):
     """
-    Merge two values to create a new value.
-    Need to take care of type of values
+    Merge value in value list
     """
     built_in_number_type = (int, long, float, complex)
-    built_in_container_type = (tuple, list, dict, set)
-
-    if not val1:
-      return val2
-    if not val2:
-      return val1
 
     # Now, consider the type of both values
-    if isinstance(val1, built_in_number_type) and isinstance(val2, built_in_number_type):
-      merged_value = max(val1, val2)
-    elif isinstance(val1, set) and isinstance(val2, set):
-      merged_value = va1.union(val2)
-    elif isinstance(val1, list) and isinstance(val2, list):
-      merged_value = val1 + val2
-    elif isinstance(val1, tuple) and isinstance(val2, tuple):
-      merged_value = val1 + val2
+    if all(isinstance(x, builtin_number_type) for x in value_list):
+      merged_value = max(value_list)
+    elif all(isinstance(x, set) for x in value_list):
+      merged_value = set(chain.from_iterable(value_list))
+    elif all(isinstance(x, list) for x in value_list):
+      merged_value = list(chain.from_iterable(value_list))
+    elif all(isinstance(x, tuple) for x in value_list):
+      merged_value = tuple(chain.from_iterable(value_list))
     else:
       # In all other case, check if the values are objects and then take the
       # objects created last.
+
       # XXX: Should we go with creation date or modification_date ??
-      # TODO: Add check that the values are ERP5 objects
-      creation_date_1 = getattr(val1, 'creation_date', 0)
-      creation_date_2 = getattr(val2, 'creation_date', 0)
-      # TODO: In case both are created at same time, prefer one with higher
+      # TODO:
+      # 1. Add check that the values are ERP5 objects
+      # 2. In case 2 maximums are created at same time, prefer one with higher
       # priority layer
-      if creation_date_1 > creation_date_2:
-        merged_value = val1
-      else:
-        merged_value = val2
+      merged_value = max(value_list, attrgetter='creation_date')
 
     return merged_value
 
