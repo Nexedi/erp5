@@ -2,6 +2,8 @@ data_acquisition_unit_module
 data_aggregation_unit_module
 data_analysis_module
 data_array_module
+data_configuration_module
+data_descriptor_module
 data_event_module
 data_ingestion_batch_module
 data_ingestion_module
@@ -13,4 +15,5 @@ data_set_module
 data_stream_module
 data_supply_module
 data_transformation_module
+device_configuration_module
 sensor_module

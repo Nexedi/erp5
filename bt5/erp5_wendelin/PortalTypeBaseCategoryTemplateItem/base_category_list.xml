@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Data Configuration Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Data Descriptor Module">
   <item>business_application</item>
  </portal_type>
