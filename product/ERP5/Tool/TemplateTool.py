@@ -1664,7 +1664,7 @@ class TemplateTool (BaseTool):
 
       if combinedBT.getStatus() == 'flattened':
         # Run install on separate Business Item one by one
-        for path_item in combinedBt._path_item_list:
+        for path_item in combinedBT._path_item_list:
           path_item.install()
       else:
         raise ValueError, 'Business Manager not flattened, cannot install'
