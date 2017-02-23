@@ -231,22 +231,21 @@ class BusinessManager(XMLObject):
 
     If l1 > l2,
     reduce([(p, s, l1, (a, b, c)), (p, s, l2, (d, e))]) = [(p, s, l1, merge(a, b, c))]
-    Where the merge is a monotonic commutative function that depends on the type of a, b and c:
-
-    if a, b and c are sets, merge = union
-    if a, b and c are lists, merge = ordered concatenation
-    if a, b and c are objects, merge = the object created the last
-    else merge = MAX
 
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
+
     path_list = [path_item.getBusinessPath() for path in self._path_item_list]
     reduced_path_item_list = []
+
     # We separate the path list in the ones which are repeated and the ones
     # which are unique for the installation
     seen_path_list = set()
-    unique_path_list = [x for x in path_list if x not in seen_path_list and not seen_path_list.add(x)]
+    unique_path_list = [x for x
+                        in path_list
+                        if x not in seen_path_list
+                        and not seen_path_list.add(x)]
 
     # Create an extra dict for values on path which are repeated in the path list
     seen_path_dict = {path: [] for path in seen_path_list}
@@ -263,24 +262,65 @@ class BusinessManager(XMLObject):
     # Reduce the values and get the merged result out of it
     for path, path_item_list in seen_path_dict.items():
 
-      higest_priority_layer = max(path_item_list, attrgetter='_layer')
-      prioritized_path_item = [path_item in path_item_list where \
-                                      path_item._layer==higest_priority_layer]
-      merged_business_item = prioritized_path_item[0]
+      # Create separate list of list items with highest priority
+      higest_priority_layer = max(path_item_list, key=attrgetter('_layer'))
+      prioritized_path_item = [ path_item for path_item
+                                in path_item_list
+                                if path_item._layer == higest_priority_layer._layer]
 
-      if len(prioritized_path_item) != 1:
-        path_item_list_add = [path_item in path_item_list where  path_item._sign > 0 ]
-        path_item_list_subtract = [path_item in path_item_list where  path_item._sign < 0 ]
+      # Separate the positive and negative sign path_item
+      if len(prioritized_path_item) > 1:
 
-        combined_path_item_add = reduce(lambda x, y: x+y, path_item_list_add)
-        combined_path_item_subtract = reduce(lambda x, y: x+y, path_item_list_subtract)
-        # TODO: Process the intersection for the above mentioned 2 paths. This
-        # would make it easier to install
-        reduced_path_item_list.append(combined_path_item_add)
-        reduced_path_item_list.append(combined_path_item_subtract)
+        path_item_list_add = [item for item
+                              in prioritized_path_item
+                              if item._sign > 0 ]
+
+        path_item_list_subtract = [item for item
+                                  in prioritized_path_item
+                                  if item._sign < 0 ]
+
+        combined_added_path_item = reduce(lambda x, y: x+y, path_item_list_add)
+        combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
+
+        added_value = combined_added_path_item._value
+        subtraced_value = combined_subtracted_path_item._value
+
+        if added_value != subtracted_value:
+          # Append the arithmetically combined path_item objects in the final
+          # reduced list after removing the intersection
+          added_value, subtracted_value = \
+                  self._simplifyValueIntersection(added_value, subtracted_value)
+
+          combined_added_path_item._value = added_value
+          combined_subtracted_path_item._value = subtracted_value
+
+          # Append the path_item to the final reduced path_item_list after
+          # doing required arithmetic on it
+          reduced_path_item_list.append(combined_added_path_item)
+          reduced_path_item_list.append(combined_subtracted_path_item)
+
+      else:
+        reduced_path_item_list.append(prioritized_path_item[0])
 
     self._path_item_list = reduced_path_item_list
     self.setStatus('reduced')
+
+  def _simplifyValueIntersection(self, added_value, subtracted_value):
+    """
+    Returns values for the Business Item having same path and layer after
+    removing the intersection of the values
+
+    Parameters:
+    added_value - Value for the Business Item having sign = +1
+    subtracted_value - Value for Busienss Item having sign = -1
+    """
+    built_in_number_type = (int, long, float, complex)
+    built_in_container_type = (tuple, list, dict, set)
+
+    if all(isinstance(added_value, built_in_container_type)) and \
+            all(isinstance(subtracted_value, built_in_container_type)):
+      # For all the values of container type, we remove the intersection
+      pass
 
 class BusinessItem(Implicit, Persistent):
 
@@ -439,18 +479,25 @@ class BusinessItem(Implicit, Persistent):
     """
     if self._path != other._path:
       raise ValueError, "BusinessItem are incommensurable, have different path"
+    elif self._sign != other._sign:
+      raise ValueError, "BusinessItem are incommensurable, have different sign"
     else:
-        if self._sign != other._sign:
-          raise ValueError, "BusinessItem are incommensurable, have different sign"
-        else:
-          self._value = self._mergeValue(value_list=[self._value, other._value])
-          return self
+      self._value = self._mergeValue(value_list=[self._value, other._value])
+      return self
 
   def _mergeValue(self, value_list):
     """
     Merge value in value list
+
+    merge(a, b, c) : A monotonic commutative function that depends on the
+    type of a, b and c:
+
+    if a, b and c are sets, merge = union
+    if a, b and c are lists, merge = ordered concatenation
+    if a, b and c are objects, merge = the object created the last
+    else merge = MAX
     """
-    built_in_number_type = (int, long, float, complex)
+    builtin_number_type = (int, long, float, complex)
 
     # Now, consider the type of both values
     if all(isinstance(x, builtin_number_type) for x in value_list):
@@ -468,9 +515,10 @@ class BusinessItem(Implicit, Persistent):
       # XXX: Should we go with creation date or modification_date ??
       # TODO:
       # 1. Add check that the values are ERP5 objects
-      # 2. In case 2 maximums are created at same time, prefer one with higher
-      # priority layer
-      merged_value = max(value_list, attrgetter='creation_date')
+      # 2. In case 2 maximum values are created at same time, prefer one with
+      # higher priority layer
+      merged_value = max([max(value, key=attrgetter('creation_date'))
+                      for value in value_list], key=attrgetter('creation_date'))
 
     return merged_value
 
