@@ -40,6 +40,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.Globals import InitializeClass
 from zLOG import LOG, INFO, WARNING
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 _MARKER = []
 
@@ -214,10 +215,10 @@ class BusinessManager(XMLObject):
       for path_item in self._path_item_list:
         path = path_item._path
         layer = path_item._layer
-        obj = portal.unrestrictedTraverse(path)
         # Flatten the BusinessItem to the lowest layer ?? Why required, no change
         if layer != 0:
-          path._layer = 0
+          path_item._layer = 0
+      self.status = 'flattened'
 
   def reduceBusinessManager(self):
     """
@@ -462,16 +463,86 @@ class BusinessItem(Implicit, Persistent):
     """
     pass
 
-  def install(self):
+  def install(self, context):
     """
     Set the value to the defined path.
     """
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
+    portal = context.getPortalObject()
     if self.isProperty :
       realtive_url, property_id = self._path.split('#')
       object_property_item = ObjectPropertyTemplateItem(id_list)
       object_property_item.install()
+    else:
+      path_list = self._path.split('/')
+      container_path = path_list[:-1]
+      object_id = path_list[-1]
+      try:
+        container = self.unrestrictedResolveValue(portal, container_path)
+      except KeyError:
+        # parent object can be set to nothing, in this case just go on
+        container_url = '/'.join(container_path)
+      old_obj = container._getOb(object_id, None)
+      # install object
+      obj = self._value
+      obj = obj._getCopy(container)
+      container._setObject(object_id, obj)
+      obj = container._getOb(object_id)
+      obj.isIndexable = ConstantGetter('isIndexable', value=False)
+      aq_base(obj).uid = portal.portal_catalog.newUid()
+      del obj.isIndexable
+      if getattr(aq_base(obj), 'reindexObject', None) is not None:
+        obj.reindexObject()
+
+  def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
+                               restricted=0):
+    """
+      Get the value without checking the security.
+      This method does not acquire the parent.
+    """
+    if isinstance(path, basestring):
+      stack = path.split('/')
+    else:
+      stack = list(path)
+    stack.reverse()
+    if stack:
+      if context is None:
+        portal = aq_inner(self.getPortalObject())
+        container = portal
+      else:
+        container = context
+
+      if restricted:
+        validate = getSecurityManager().validate
+
+      while stack:
+        key = stack.pop()
+        try:
+          value = container[key]
+        except KeyError:
+          LOG('BusinessManager', WARNING,
+              'Could not access object %s' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        if restricted:
+          try:
+            if not validate(container, container, key, value):
+              raise Unauthorized('unauthorized access to element %s' % key)
+          except Unauthorized:
+            LOG('BusinessTemplate', WARNING,
+                'access to %s is forbidden' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        container = value
+
+      return value
+    else:
+      return context
 
   def __radd__(self, other):
     """
