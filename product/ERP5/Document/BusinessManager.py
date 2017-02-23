@@ -235,8 +235,7 @@ class BusinessManager(XMLObject):
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
-
-    path_list = [path_item.getBusinessPath() for path in self._path_item_list]
+    path_list = [path_item.getBusinessPath() for path_item in self._path_item_list]
     reduced_path_item_list = []
 
     # We separate the path list in the ones which are repeated and the ones
@@ -317,10 +316,11 @@ class BusinessManager(XMLObject):
     built_in_number_type = (int, long, float, complex)
     built_in_container_type = (tuple, list, dict, set)
 
-    if all(isinstance(added_value, built_in_container_type)) and \
-            all(isinstance(subtracted_value, built_in_container_type)):
-      # For all the values of container type, we remove the intersection
-      pass
+    # For all the values of container type, we remove the intersection
+    added_value = [ x for x in added_value if not x in subtracted_value ]
+    subtracted_value = [ x for x in subtracted_value if not x in added_value ]
+
+    return added_value, subtracted_value
 
 class BusinessItem(Implicit, Persistent):
 
