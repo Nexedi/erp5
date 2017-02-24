@@ -1,1 +1,0 @@
-return context.data_stream_module.wendelin_examples_keras_log.getData()
