@@ -253,20 +253,18 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_catalog_A = '%s | %s | %s'%(path_catalog_A, 1, 1)
     path_item_list_A = [path_item_catalog_A]
     managerA._setTemplatePathList(path_item_list_A)
-    self.tic()
+
     built_manager_A = managerA.build()
 
     # Delete the catalog object
     self.portal.portal_catalog.manage_delObjects(
                                             [test_catalog_A.getId(),])
-    self.tic()
 
     # Test that the catalog don't exist on site anymore
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_catalog_A))
 
     # Install the Business Manager A
     portal_templates.installMultipleBusinessManager([built_manager_A])
-    self.tic()
 
     # Test that the catalog exists
     catalog_1 = self.portal.restrictedTraverse(path_catalog_A)
@@ -279,20 +277,18 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                       reference = 'erp5-package.Test.Document',
                                       data='test data',
                                       )
-    self.tic()
+
     path_item_document_B = '%s | %s | %s'%(path_document_B.getRelativeUrl(), 1, 1)
     managerB._setTemplatePathList([path_item_document_B])
-    self.tic()
+
     built_manager_B = managerB.build()
 
     # Delete the document object
     self.portal.document_module.manage_delObjects(
                                             [path_document_B.getId(),])
-    self.tic()
 
     # Add an empty path list in managerA
     managerA._setTemplatePathList([])
-    self.tic()
     built_manager_A = managerA.build()
 
     # Try installing built Business Managers A and B together
