@@ -25,6 +25,7 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("updatePanel", "updatePanel")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -130,6 +131,17 @@
                 }
                 element.appendChild(fragment);
               });
+          }
+        })
+        .push(function () {
+          var jio_key = gadget.state.options.jio_key;
+          /*jslint regexp: true*/
+          if (/^[^\/]+_module\/.+$/.test(jio_key)) {
+            /*jslint regexp: false*/
+            return gadget.updatePanel({
+              erp5_document: JSON.parse(gadget.state.erp5_document),
+              editable: gadget.state.options.editable
+            });
           }
         });
     })
