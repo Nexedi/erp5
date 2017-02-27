@@ -124,8 +124,7 @@ class BusinessManager(XMLObject):
       self._setTemplatePathList(path_item_list)
 
   def _setTemplatePathList(self, path_item_list):
-    if path_item_list:
-      self.template_path_list = path_item_list
+    self.template_path_list = path_item_list
 
   def getTemplatePathList(self):
     return self.template_path_list
@@ -158,7 +157,10 @@ class BusinessManager(XMLObject):
     if path_item_list:
       path_item_list = [l.split(' | ') for l in path_item_list]
     for path_item in path_item_list:
-      self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
+      try:
+        self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
+      except IndexError:
+        pass
 
   def build(self, no_action=False, **kw):
     """Creates new values for business item from the values from
