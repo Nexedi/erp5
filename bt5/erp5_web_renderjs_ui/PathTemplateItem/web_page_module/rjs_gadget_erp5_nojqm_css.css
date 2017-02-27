@@ -488,24 +488,61 @@ div[data-gadget-scope='panel'] img {
   text-align: left;
   height: 100%;
 }
-div[data-gadget-scope='panel'] ul {
+div[data-gadget-scope='panel'] ul:first-child {
   margin-top: 30pt;
 }
 div[data-gadget-scope='panel'] ul li a {
   color: #FFFFFF;
+  display: block;
   padding: 3pt;
   padding-left: 12pt;
-  display: block;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-div[data-gadget-scope='panel'] ul li a::before {
-  width: 24pt;
-}
 div[data-gadget-scope='panel'] ul li a:hover,
 div[data-gadget-scope='panel'] ul li a:active {
   background-color: #2b2b2b;
+}
+div[data-gadget-scope='panel'] ul li a::before {
+  width: 24pt;
+}
+div[data-gadget-scope='panel'] dl {
+  background-color: #777777;
+  color: #1F1F1F;
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+  transition: transform 0.2s ease-out;
+}
+div[data-gadget-scope='panel'] dl:not(:empty) {
+  transform: scaleY(1);
+}
+div[data-gadget-scope='panel'] dl dt {
+  padding: 3pt;
+  padding-left: 12pt;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+div[data-gadget-scope='panel'] dl dt::before {
+  width: 24pt;
+}
+div[data-gadget-scope='panel'] dl dd a {
+  color: #FFFFFF;
+  display: block;
+  padding: 3pt;
+  padding-left: 12pt;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 36pt;
+}
+div[data-gadget-scope='panel'] dl dd a:hover,
+div[data-gadget-scope='panel'] dl dd a:active {
+  background-color: #2b2b2b;
+}
+div[data-gadget-scope='panel'] dl dd a::before {
+  width: 24pt;
 }
 /**********************************************
 * Gadget: editor panel

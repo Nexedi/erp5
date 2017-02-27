@@ -582,28 +582,66 @@ div[data-gadget-scope='panel'] {
   }
 
 
+  .alignwithicon() {
+    padding: @half-margin-size;
+    padding-left: @double-margin-size;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &::before {
+      // Use width instead of padding-right
+      // To keep text aligned
+      width: @quadruple-margin-size;
+    }
+  }
+
+  .alignwithouticon() {
+    .alignwithicon();
+    padding-left: @double-margin-size + @quadruple-margin-size;
+  }
+
+  .linkpanel() {
+    color: @white;
+    display: block;
+    &:hover, &:active {
+      background-color: darken(@panelbackgroundcolor, 10%);
+    }
+  }
 
   ul {
-    margin-top: @headerheight;
+    &:first-child {
+      margin-top: @headerheight;
+    }
     li {
       a {
-        color: @white;
-        padding: @half-margin-size;
-        padding-left: @double-margin-size;
-        display: block;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap; 
-
-        &::before {
-          // Use width instead of padding-right
-          // To keep text aligned
-          width: @quadruple-margin-size;
-        }
-        &:hover, &:active {
-          background-color: darken(@panelbackgroundcolor, 10%);
-        }
+        .linkpanel();
+        .alignwithicon();
       }
+    }
+  }
+
+  dl {
+    background-color: @grey;
+    color: @black;
+
+    // Animate when content is added
+    transform-origin: 50% 0;
+    transform: scaleY(0);
+    &:not(:empty) {
+      transform: scaleY(1);
+    }
+    transition: transform @transition-timing;
+
+    dt {
+      .alignwithicon();
+    }
+
+    dd {
+        a {
+          .linkpanel();
+          .alignwithouticon();
+        }
     }
   }
 

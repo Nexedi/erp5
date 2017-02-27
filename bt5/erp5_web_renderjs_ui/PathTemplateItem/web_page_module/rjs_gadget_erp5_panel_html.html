@@ -35,7 +35,23 @@
           <li><a href="{{preference_href}}" class="ui-btn ui-btn-icon-left ui-icon-gear" data-i18n="Preferences">Preferences</a></li>
           <li class="ui-last-child"><a href="{{logout_href}}" class="ui-btn ui-btn-icon-left ui-icon-power-off" data-i18n="Logout" accesskey="o">Logout</a></li>
         </ul>
+        <dl></dl>
       </div>
+    </script>
+
+    <script id="panel-template-body-desktop" type="text/x-handlebars-template">
+        <dt class="ui-content-title ui-body-c ui-btn ui-btn-icon-left ui-icon-eye" data-i18n="Views">Views</dt>
+        {{#each view_list}}
+        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+          <a data-i18n="{{title}}" class="ui-body-inherit" href="{{href}}">{{title}}</a>
+        </dd>
+        {{/each}}
+        <dt class="ui-content-title ui-body-c  ui-btn ui-btn-icon-left ui-icon-cogs" data-i18n="Decisions">Decisions</dt>
+        {{#each workflow_list}}
+        <dd data-role="listview" data-theme="c" data-inset="true" class="document-listview">
+          <a data-i18n="{{title}}" class="ui-body-inherit" href="{{href}}">{{title}}</a>
+        </dd>
+        {{/each}}
     </script>
 
     <!-- custom script -->

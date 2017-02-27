@@ -42,6 +42,10 @@
     };
   }
 
+  function initPanelOptions(gadget) {
+    gadget.props.panel_argument_list = {};
+  }
+
   function route(my_root_gadget, my_scope, my_method, argument_list) {
     return RSVP.Queue()
       .push(function () {
@@ -64,6 +68,13 @@
       })
       .push(function () {
         return header_gadget.render(gadget.props.header_argument_list);
+      });
+  }
+
+  function updatePanel(gadget) {
+    return gadget.getDeclaredGadget("panel")
+      .push(function (panel_gadget) {
+        return panel_gadget.render(gadget.props.panel_argument_list);
       });
   }
 
@@ -147,6 +158,10 @@
     console.error(error);
     if (error instanceof Error) {
       console.error(error.stack);
+    }
+    if (gadget.props === undefined) {
+      // Gadget has not yet been correctly initialized
+      throw error;
     }
     // XXX Improve error rendering
     gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";
@@ -235,13 +250,11 @@
           return jio_gadget.createJio(setting.jio_storage_description);
         })
         .push(function () {
-
           return gadget.getDeclaredGadget('panel');
         })
         .push(function (panel_gadget) {
-          return panel_gadget.render();
+          return panel_gadget.render({});
         })
-
         .push(function () {
           return gadget.getDeclaredGadget('router');
         })
@@ -407,6 +420,12 @@
         });
     })
 
+    .allowPublicAcquisition("updatePanel", function (param_list) {
+      var gadget = this;
+      initPanelOptions(gadget);
+      gadget.props.panel_argument_list = param_list[0];
+    })
+
     .allowPublicAcquisition('triggerPanel', function () {
       return route(this, "panel", "toggle");
     })
@@ -487,7 +506,10 @@
               content_container.appendChild(main_gadget.element);
               element.appendChild(content_container);
 
-              return updateHeader(gadget);
+              return RSVP.all([
+                updateHeader(gadget),
+                updatePanel(gadget)
+              ]);
               // XXX Drop notification
               // return header_gadget.notifyLoaded();
             }
@@ -500,7 +522,10 @@
           return page_gadget.render(gadget.state.options);
         })
         .push(function () {
-          return updateHeader(gadget);
+          return RSVP.all([
+            updateHeader(gadget),
+            updatePanel(gadget)
+          ]);
         });
     })
     // Render the page
@@ -512,6 +537,7 @@
       // By default, init the header options to be empty
       // (ERP5 title by default + sidebar)
       initHeaderOptions(gadget);
+      initPanelOptions(gadget);
       return new RSVP.Queue()
         .push(function () {
           return increaseLoadingCounter(gadget);
