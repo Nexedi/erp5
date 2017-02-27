@@ -137,12 +137,15 @@ class BusinessManager(XMLObject):
       result = tuple(result)
     return result
 
-  def __radd__(self, other):
+  def __add__(self, other):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
-    combined_business_item_list = self._path_item_list.extend(other._path_item_list)
-    self._path_item_list = combined_business_item_list
+    self._path_item_list.extend(other._path_item_list)
+    self.template_path_list.extend(other.template_path_list)
+    return self
+
+  __radd__ = __add__
 
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
   def storeTemplateData(self):
@@ -236,7 +239,9 @@ class BusinessManager(XMLObject):
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
-    path_list = [path_item.getBusinessPath() for path_item in self._path_item_list]
+    path_list = [path_item.getBusinessPath() for path_item
+                  in self._path_item_list]
+
     reduced_path_item_list = []
 
     # We separate the path list in the ones which are repeated and the ones
@@ -544,7 +549,7 @@ class BusinessItem(Implicit, Persistent):
     else:
       return context
 
-  def __radd__(self, other):
+  def __add__(self, other):
     """
     Add the values from the path when the path is same for 2 objects
     """
@@ -555,6 +560,8 @@ class BusinessItem(Implicit, Persistent):
     else:
       self._value = self._mergeValue(value_list=[self._value, other._value])
       return self
+
+  __radd__ = __add__
 
   def _mergeValue(self, value_list):
     """
