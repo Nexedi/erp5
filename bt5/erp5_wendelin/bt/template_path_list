@@ -1,3 +1,4 @@
+portal_alarms/wendelin_handle_analysis
 portal_callables/DataIngestionLine_writeFluentdIngestionToDataStream
 portal_gadgets/WendelinInformationGadget
 portal_gadgets/WendelinInformationGadget/**
