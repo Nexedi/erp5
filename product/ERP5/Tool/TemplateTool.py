@@ -1651,11 +1651,11 @@ class TemplateTool (BaseTool):
       else:
         # Summation should also consider arithmetic on the Business Item(s)
         # having same path and layer and combine them.
-        combinedBM = sum(bm_list)
+        combinedBM = reduce(lambda x, y: x+y, bm_list)
 
       # XXX: We are missing the part of creating installed_BM for all the BM
       # we have in bm_list, because this would be needed in case we build
-      # Business Manager again
+      # Business Manager again.
 
       # Reduce the final Business Manager
       combinedBM.reduceBusinessManager()
@@ -1664,8 +1664,8 @@ class TemplateTool (BaseTool):
       return combinedBM
 
     security.declareProtected(Permissions.ManagePortal,
-            'installMultipleBusinessManager')
-    def installMultipleBusinessManager(self, bm):
+            'installBusinessManager')
+    def installBusinessManager(self, bm):
       """
       Run installation on flattened Business Manager
       """
@@ -1675,6 +1675,16 @@ class TemplateTool (BaseTool):
           path_item.install(self)
       else:
         raise ValueError, 'Business Manager not flattened, cannot install'
+
+    security.declareProtected(Permissions.ManagePortal,
+            'installMultipleBusinessManager')
+    def installMultipleBusinessManager(self, bm_list):
+      """
+      Run installation on flattened Business Manager
+      """
+      combinedBM = self.combineMultipleBusinessManager(bm_list)
+      self.installBusinessManager(combinedBM)
+
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
