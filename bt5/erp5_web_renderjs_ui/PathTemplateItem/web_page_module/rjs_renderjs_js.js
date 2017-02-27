@@ -1265,36 +1265,53 @@ if (typeof document.contains !== 'function') {
       return this.element;
     })
     .declareMethod('changeState', function (state_dict) {
-      var key,
-        modified = false,
-        previous_cancelled = this.hasOwnProperty('__modification_dict'),
-        modification_dict,
+      var next_onStateChange = new RSVP.Queue(),
+        previous_onStateCHange,
         context = this;
-      if (previous_cancelled) {
-        modification_dict = this.__modification_dict;
-        modified = true;
-      } else {
-        modification_dict = {};
-        this.__modification_dict = modification_dict;
-      }
-      for (key in state_dict) {
-        if (state_dict.hasOwnProperty(key) &&
-            (state_dict[key] !== this.state[key])) {
-          this.state[key] = state_dict[key];
-          modification_dict[key] = state_dict[key];
-          modified = true;
-        }
-      }
-      if (modified && this.__state_change_callback !== undefined) {
-        return new RSVP.Queue()
+      if (context.hasOwnProperty('__previous_onStateChange')) {
+        previous_onStateCHange = context.__previous_onStateChange;
+        next_onStateChange
           .push(function () {
-            return context.__state_change_callback(modification_dict);
+            return previous_onStateCHange;
           })
-          .push(function (result) {
-            delete context.__modification_dict;
-            return result;
+          .push(undefined, function () {
+            // Run callback even if previous failed
+            return;
           });
       }
+      context.__previous_onStateChange = next_onStateChange;
+      return next_onStateChange
+        .push(function () {
+          var key,
+            modified = false,
+            previous_cancelled = context.hasOwnProperty('__modification_dict'),
+            modification_dict;
+          if (previous_cancelled) {
+            modification_dict = context.__modification_dict;
+            modified = true;
+          } else {
+            modification_dict = {};
+          }
+          for (key in state_dict) {
+            if (state_dict.hasOwnProperty(key) &&
+                (state_dict[key] !== context.state[key])) {
+              context.state[key] = state_dict[key];
+              modification_dict[key] = state_dict[key];
+              modified = true;
+            }
+          }
+          if (modified && context.__state_change_callback !== undefined) {
+            context.__modification_dict = modification_dict;
+            return new RSVP.Queue()
+              .push(function () {
+                return context.__state_change_callback(modification_dict);
+              })
+              .push(function (result) {
+                delete context.__modification_dict;
+                return result;
+              });
+          }
+        });
     });
 
   /////////////////////////////////////////////////////////////////
