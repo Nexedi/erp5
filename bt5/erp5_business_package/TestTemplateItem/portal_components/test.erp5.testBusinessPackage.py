@@ -30,9 +30,7 @@ import time
 import os
 from App.config import getConfiguration
 from urllib import pathname2url
-#import tempfile
-from Products.ERP5.Document.BusinessPackage import InstallationTree, createInstallationData
-#from Products.ERP5Type.tests.runUnitTest import tests_home
+from Products.ERP5.Document.BusinessPackage import createInstallationData
 
 class TestBusinessPackage(ERP5TypeTestCase):
   """
@@ -87,8 +85,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     if not title:
       title = bp_id
     package = self.portal.portal_templates.newContent(id=bp_id, portal_type='Business Package')
-    #self.assertTrue(package.getBuildingState() == 'draft')
-    #self.assertTrue(package.getInstallationState() == 'not_installed')
     package.edit(title = bp_id,
                   version='1.0',
                   description='package for live test')
@@ -136,18 +132,332 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package.install()
     self.tic()
 
-  def test_fileImportAndReinstallWithProperty(self):
+  def _createBusinessManager(self, bm_id=None, title=None):
+    if not bm_id:
+      bm_id = 'manager_%s'%str(time.time())
+    if not title:
+      title = bm_id
+    manager = self.portal.portal_templates.newContent(id=bm_id, \
+                                                portal_type='Business Manager')
+    self.tic()
+    return manager
+
+  def _installationOfBusinessManagerViaTemplateTool(self):
+    """
+    We try installing one or multiple Business Manager all via portal_templates,
+    keeping in mind that any operation done on BM should result in a BM which
+    can be easlily mapped with OFS.
+    """
+    manager = self._createBusinessManager()
+    portal_templates = self.portal.portal_templates
+
+    test_catalog_1 = self.portal.portal_catalog.newContent(
+                                    portal_type = 'Catalog',
+                                    title = 'Test Catalog 1 for Multiple BP5 Installation',
+                                    )
+
+    path_catalog_1 = test_catalog_1.getRelativeUrl()
+    path_item_catalog_1 = '%s | %s | %s'%(path_catalog_1, 1, 1)
+    path_item_list = [path_item_catalog_1]
+
+    manager._setTemplatePathList(path_item_list)
+    built_manager = manager.build()
+    self.tic()
+
+    bm_list = []
+    bm_list.append(built_manager)
+
+    self.portal.portal_catalog.manage_delObjects( \
+                                      [test_catalog_1.getId(),])
+    self.tic()
+
+    # Test that the catalogs don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_catalog_1))
+
+    portal_templates.installMultipleBusinessManager(bm_list)
+    self.tic()
+
+    catalog_1 = self.portal.restrictedTraverse(path_catalog_1)
+    self.assertEquals(catalog_1.getTitle(), \
+                      'Test Catalog 1 for Multiple BP5 Installation')
+
+  def reduceBusinessManagerWithTwoConflictingPath(self):
+    """
+    Test the final Business Manager for Business Manager which have same path
+    at different layer
+    """
+    portal_templates = self.portal.portal_templates
+    manager_1 = self._createBusinessManager()
+    manager_2 = self._createBusinessManager()
+
+    test_catalog_1 = self.portal.portal_catalog.newContent(
+                                    portal_type = 'Catalog',
+                                    title = 'Test Catalog 1 for Multiple BP5 Installation',
+                                    )
+
+    path_catalog_1 = test_catalog_1.getRelativeUrl()
+    path_item_catalog_1 = '%s | %s | %s'%(path_catalog_1, 1, 1)
+    path_item_list_1 = [path_item_catalog_1]
+
+    manager_1._setTemplatePathList(path_item_list_1)
+    built_manager_1 = manager_1.build()
+    self.tic()
+
+    test_catalog_1.edit(
+                        title = 'Test Catalog 2 for Multiple BP5 Installation',
+                        )
+
+    path_item_catalog_2 = '%s | %s | %s'%(path_catalog_1, 1, 2)
+    path_item_list_2 = [path_item_catalog_2]
+
+    manager_2._setTemplatePathList(path_item_list_2)
+    built_manager_2 = manager_2.build()
+    self.tic()
+
+    self.portal.portal_catalog.manage_delObjects( \
+                                      [test_catalog_1.getId(),])
+    self.tic()
+
+    # Test that the catalogs don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_catalog_1))
+
+    bm_list = []
+    bm_list.append(built_manager_1)
+    bm_list.append(built_manager_2)
+
+    portal_templates.installMultipleBusinessManager(bm_list)
+    self.tic()
+
+    catalog_1 = self.portal.restrictedTraverse(path_catalog_1)
+    self.assertEquals(catalog_1.getTitle(), \
+                      'Test Catalog 2 for Multiple BP5 Installation')
+
+  def test_UpdateVersionOfBusinessManager(self):
+    """
+    * install bm A which add one workflow W1
+    * install bm B which surcharge workflow W2
+    * drop workflow W2 from bm configuration
+    * update bp5 B: ensure that the ZODB contains W1
+    """
+    portal_templates  = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    managerB = self._createBusinessManager()
+
+    test_catalog_A = self.portal.portal_catalog.newContent(
+                                    portal_type = 'Catalog',
+                                    title = 'Test Catalog A for Multiple BM Installation',
+                                    )
+
+    # Add catalog to the path list for Business Manager and build the object
+    path_catalog_A = test_catalog_A.getRelativeUrl()
+    path_item_catalog_A = '%s | %s | %s'%(path_catalog_A, 1, 1)
+    path_item_list_A = [path_item_catalog_A]
+    managerA._setTemplatePathList(path_item_list_A)
+    self.tic()
+    built_manager_A = managerA.build()
+
+    # Delete the catalog object
+    self.portal.portal_catalog.manage_delObjects(
+                                            [test_catalog_A.getId(),])
+    self.tic()
+
+    # Test that the catalog don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_catalog_A))
+
+    # Install the Business Manager A
+    portal_templates.installMultipleBusinessManager([built_manager_A])
+    self.tic()
+
+    # Test that the catalog exists
+    catalog_1 = self.portal.restrictedTraverse(path_catalog_A)
+    self.assertEquals(catalog_1.getTitle(), \
+                      'Test Catalog A for Multiple BM Installation')
+
+    # Create new  Business Manager B with some different object
+    path_document_B = self.portal.document_module.newContent(
+                                      portal_type='File',
+                                      reference = 'erp5-package.Test.Document',
+                                      data='test data',
+                                      )
+    self.tic()
+    path_item_document_B = '%s | %s | %s'%(path_document_B.getRelativeUrl(), 1, 1)
+    managerB._setTemplatePathList([path_item_document_B])
+    self.tic()
+    built_manager_B = managerB.build()
+
+    # Delete the document object
+    self.portal.document_module.manage_delObjects(
+                                            [path_document_B.getId(),])
+    self.tic()
+
+    # Add an empty path list in managerA
+    managerA._setTemplatePathList([])
+    self.tic()
+    built_manager_A = managerA.build()
+
+    # Try installing built Business Managers A and B together
+    bm_list = []
+
+    bm_list.append(built_manager_A)
+    bm_list.append(built_manager_B)
+    portal_templates.installMultipleBusinessManager(bm_list)
+
+    # Check if the catalog still exists
+    catalog_1 = self.portal.restrictedTraverse(path_catalog_A)
+    self.assertEquals(catalog_1.getTitle(), \
+                      'Test Catalog A for Multiple BM Installation')    
+
+  def _differentFileImportAndReinstallOnTwoPackages(self):
+    """
+    Test two Business Templates build and installation of same file.
+
+    Here we will be using Insatallation Tree in Template Tool to install
+    in the two configurations all together, rather than doing installation
+    one after another.
+
+    Expected result: If we install same object from 2 different business packages,
+    then in that case the installation object should compare between the
+    state of OFS and installation and install accordingly.
+    """
+
+    old_package = self._createBusinessPackage()
+    new_package = self._createBusinessPackage()
+
+    portal_templates = self.portal.portal_templates
+
+    test_catalog_1 = self.portal.portal_catalog.newContent(
+                                    portal_type = 'Catalog',
+                                    title = 'Test Catalog 1 for Multiple BP5 Installation',
+                                    )
+    test_catalog_2 = self.portal.portal_catalog.newContent(
+                                    portal_type = 'Catalog',
+                                    title = 'Test Catalog 2 for Multiple BP5 Installation',
+                                    )
+    self.tic()
+
+    # Update the property for the above mentioned objects so that we can use
+    # them in tests
+    test_catalog_1.edit(
+      sql_catalog_datetime_search_keys=[
+        'alarm.alarm_date',
+        'alarm_date',
+        'catalog.creation_date',
+        'catalog.grouping_date',
+        'catalog.modification_date'
+        ],
+      )
+
+    test_catalog_2.edit(
+      sql_catalog_datetime_search_keys=[
+         'creation_date',
+         'date',
+         'delivery.start_date',
+         'delivery.start_date_range_max',
+         'delivery.start_date_range_min',
+        ],
+      )
+
+    property_list = [
+      'sql_catalog_datetime_search_keys_list',
+      'sql_catalog_full_text_search_keys_list',
+      ]
+
+    path_1 = test_catalog_1.getRelativeUrl()
+    path_2 = test_catalog_2.getRelativeUrl()
+
+    prop_list_1 = []
+    prop_list_2 = []
+    for prop_id in property_list:
+      prop_line_1 = '%s | %s' % (path_1, prop_id)
+      prop_line_2 = '%s | %s' % (path_2, prop_id)
+      prop_list_1.append(prop_line_1)
+      prop_list_2.append(prop_line_2)
+
+    old_package.edit(
+      template_path_list=[path_1,],
+      template_object_property_list=prop_list_1,
+                      )
+    new_package.edit(
+      template_path_list=[path_2,],
+      template_object_property_list=prop_list_2,
+      )
+    self.tic()
+
+    # Build both the packages
+    old_package_path = self._buildAndExportBusinessPackage(old_package)
+    new_package_path = self._buildAndExportBusinessPackage(new_package)
+    self.tic()
+
+    import_old_package = self._importBusinessPackage(old_package, old_package_path)
+    import_new_package = self._importBusinessPackage(new_package, new_package_path)
+    # Get installation data from the list of packages which we want to install
+    package_list = [import_old_package, import_new_package]
+
+    # Delete document from site
+    self.portal.portal_catalog.manage_delObjects( \
+                                      [
+                                        test_catalog_1.getId(),
+                                        test_catalog_2.getId(),
+                                      ])
+    self.tic()
+
+    # Test that the catalogs don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_1))
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_2))
+
+    # Install multiple Business Package all together
+    portal_templates.installMultipleBusinessPackage(package_list)
+
+    catalog_1 = self.portal.restrictedTraverse(path_1)
+    catalog_2 = self.portal.restrictedTraverse(path_2)
+
+    self.assertEquals(catalog_1.getTitle(), \
+                      'Test Catalog 1 for Multiple BP5 Installation')
+
+    self.assertEquals(catalog_2.getTitle(), \
+                      'Test Catalog 2 for Multiple BP5 Installation')
+
+  def _fileImportAndReinstallWithProperty(self):
     """
     Test Business Package for Path and ObjectProperty Items together.
     Here we export path as well propertie(s) for different objects and check
     if we are able to install them back using Business Package
     """
-    package = self._createBusinessPackage(bp_id='erp5_export_path_and_property')
-    file_path_list = ['portal_catalog/erp5_mysql_innodb',]
-    property_list = ['portal_catalog | default_erp5_catalog_id']
+    bp_id = 'erp5_mysql_innodb_catalog_%s'%time.time()
+    package = self._createBusinessPackage(bp_id=bp_id)
+    catalog_path =  'portal_catalog/erp5_mysql_innodb'
+    file_path_list = (
+                      'portal_catalog/erp5_mysql_innodb',
+                      'portal_catalog/erp5_mysql_innodb/**',
+                      )
+
+    #erp5_catalog = self.portal.unrestrictedTraverse(catalog_path)
+
+    property_list = [
+      'sql_catalog_datetime_search_keys_list',
+      'sql_catalog_full_text_search_keys_list',
+      'sql_catalog_keyword_search_keys_list',
+      'sql_catalog_local_role_keys_list',
+      'sql_catalog_multivalue_keys_list',
+      'sql_catalog_related_keys_list',
+      'sql_catalog_request_keys_list',
+      'sql_search_result_keys_list',
+      'sql_search_tables_list',
+      'sql_catalog_role_keys_list',
+      'sql_catalog_scriptable_keys_list',
+      'sql_catalog_search_keys_list',
+      'sql_catalog_security_uid_columns_list',
+      'sql_catalog_topic_search_keys_list'
+      ]
+
+    prop_list = []
+    for prop_id in property_list:
+      prop_line = '%s | %s' % (catalog_path, prop_id)
+      prop_list.append(prop_line)
+
     package.edit(
                   template_path_list=file_path_list,
-                  template_object_property_list=property_list
+                  template_object_property_list=prop_list
                   )
     self.tic()
 
@@ -155,13 +465,14 @@ class TestBusinessPackage(ERP5TypeTestCase):
     import_package = self._importBusinessPackage(package, package_path)
     self._installBusinessPackage(import_package)
 
-  def test_fileImportAndReinstallForDocument(self):
+  def fileImportAndReinstallForDocument(self):
     """
     Test Business Package build and install with test document.
 
     Expected result: Installs the exported object to the path expected on site.
     """
-    package = self._createBusinessPackage(bp_id='erp5_mysql_innodb_catalog_1')
+    bp_id = 'erp5_mysql_innodb_catalog_%s'%time.time()
+    package = self._createBusinessPackage(bp_id=bp_id)
     document_file = self.portal.document_module.newContent(
                                     portal_type = 'File',
                                     title = 'Test Document',
@@ -171,14 +482,18 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.tic()
 
     file_path = document_file.getRelativeUrl()
-    package.edit(template_path_list=file_path)
+    property_list = ['%s | title'%file_path,]
+    package.edit(
+      template_path_list=file_path,
+      template_object_property_list=property_list,
+    )
     self.tic()
 
     # Build package
     package_path = self._buildAndExportBusinessPackage(package)
 
     # Delete the document
-    self.portal.document_module.manage_delObjects([document_file.getID(),])
+    self.portal.document_module.manage_delObjects([document_file.getId(),])
     self.tic()
     # Assert that the file is gone
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
@@ -192,64 +507,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
     document = self.portal.restrictedTraverse(file_path)
     self.assertEquals(document.title, 'Test Document')
-
-  def _sameFileImportAndReinstallOnTwoPackages(self):
-    """
-    Test two Business Packages build and installation of same file.
-
-    Here we will be using Insatallation Tree to install in the two packages
-    all together, rather than doing installation one after another.
-
-    Expected result: If we install same object from 2 different business packages,
-    then in that case the installation object should compare between the
-    state of OFS and installation and install accordingly.
-    """
-
-    old_package = self._createBusinessPackage()
-    new_package = self._createBusinessPackage()
-
-    document_file = self.portal.document_module.newContent(
-                                    portal_type = 'File',
-                                    title = 'Test Document',
-                                    reference = 'erp5-package.Test.Document.Two.BP',
-                                    data = 'test file',
-                                    content_type = None)
-    self.tic()
-
-    file_path = document_file.getRelativeUrl()
-    old_package.edit(template_path_list=[file_path,])
-    new_package.edit(template_path_list=[file_path,])
-    self.tic()
-
-    # Build both the packages
-    self._buildAndExportBusinessPackage(old_package)
-    self._buildAndExportBusinessPackage(new_package)
-    self.tic()
-
-    # Get installation data from the list of packages which we want to install
-    package_list = [old_package, new_package]
-
-    final_data, conflicted_data = createInstallationData(package_list)
-
-    # Delete document from site
-    self.portal.document_module.manage_delObjects([document_file.getId(),])
-    self.tic()
-
-    # Test if the file doesn't exist on site anymore
-    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
-
-    if not conflicted_data:
-      # Create InstallationTree object
-      installation_tree = InstallationTree(final_data)
-      # We try to install pakcages via mapping the installation tree to ZODB
-      # As both have exactly same document we expect that only one of them get installed
-      installation_tree.mapToERP5Site(self.portal)
-
-
-    # Test if the file is back
-    self.assertIsNotNone(self.portal.restrictedTraverse(file_path))
-    document = self.portal.restrictedTraverse(file_path)
-    self.assertEquals(document.title, document_file.title)
 
   def _AddConflictedFileAtSamePathViaTwoPackages(self):
     """
