@@ -232,7 +232,105 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertEquals(catalog_1.getTitle(), \
                       'Test Catalog 2 for Multiple BP5 Installation')
 
-  def test_UpdateVersionOfBusinessManager(self):
+  def test_globalInstallationOfBusinessTemplate(self):
+    """
+
+    NOTE:
+    Keep in mind that the installation is done on build Business Manager
+    objects only, we are not yet exporting a Business Manager object
+
+    USE CASE:
+    * 2 bt5: A / B
+    * B has a path C
+    * install A and B
+    * you should have C in ZODB
+    * modify B to remove path C
+    * modify A to provide a path C (with a different content to simplify)
+    * update A and B
+    * C' should be in ZODB
+
+    EXPECTED RESULT:
+    Content of C': Something different than C, to be able to check
+    where C' is path C provided by A
+
+    """
+    portal_templates = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    managerB = self._createBusinessManager()
+
+    test_catalog = self.portal.portal_catalog.newContent(
+                                    portal_type = 'Catalog',
+                                    title = 'Test Catalog initial for Multiple BM Installation',
+                                    )
+
+    # Add catalog to the path list for Business Manager and build the object
+    catalog_path = test_catalog.getRelativeUrl()
+    path_item_catalog = '%s | %s | %s'%(catalog_path, 1, 1)
+    path_item_list = [path_item_catalog]
+
+    # Set catalog path item as path_item in managerB
+    managerB._setTemplatePathList(path_item_list)
+
+    # Build both Business Manager(s)
+    built_manager_B = managerB.build()
+    built_manager_A = managerA.build()
+
+    # Delete the catalog object
+    self.portal.portal_catalog.manage_delObjects(
+                                            [test_catalog.getId(),])
+
+    # Test that the catalog don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(catalog_path))
+
+    # Install both the Business Manager(s)
+    portal_templates.installMultipleBusinessManager([
+                                                    built_manager_A,
+                                                    built_manager_B
+                                                    ])
+
+    # Test that the catalog exists on ZODB after installation
+    catalog = self.portal.restrictedTraverse(catalog_path)
+    self.assertEquals(catalog.getTitle(), \
+                      'Test Catalog initial for Multiple BM Installation')
+
+    # Remove the catalog_path from managerB
+    managerB._setTemplatePathList([])
+
+    # Edit the catalog
+    test_catalog.edit(title='Edited version of Catalog for managerA')
+
+    # Add catalog_path to managerA
+    managerA._setTemplatePathList(path_item_list)
+
+    # Change Status for both Business Manager objects explicilty reason
+    # explained in NOTE in docstring for test
+    managerB.setStatus('uninstalled')
+    managerA.setStatus('uninstalled')
+
+    # Build both the Business Manager(s)
+    built_manager_B = managerB.build()
+    built_manager_A = managerA.build()
+
+    # Delete the catalog from the erp5 site
+    self.portal.portal_catalog.manage_delObjects(
+                                            [test_catalog.getId(),])
+
+    # Test that the catalog don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(catalog_path))
+
+    # Install both the Business Manager(s)
+    portal_templates.installMultipleBusinessManager([
+                                                    built_manager_A,
+                                                    built_manager_B
+                                                    ])
+
+    # Test that the catalog exists on ZODB after installation with the newer
+    # updated version
+    catalog = self.portal.restrictedTraverse(catalog_path)
+    self.assertEquals(catalog.getTitle(), \
+                      'Test Catalog initial for Multiple BM Installation')
+
+  def _UpdateVersionOfBusinessManager(self):
     """
     * install bm A which add one workflow W1
     * install bm B which surcharge workflow W2
