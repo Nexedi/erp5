@@ -26,7 +26,7 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('triggerSubmit', function () {
-      this.element.querySelector('button').click();
+      this.element.querySelector('input[type="submit"]').click();
     })
 
     .declareMethod('render', function (options) {
@@ -51,21 +51,16 @@
         view_list = this.state.erp5_document._links.action_workflow || [];
 
       title = this.state.form_definition.title;
-      for (i = 0; i < view_list.length; i += 1) {
-        if (view_list[i].name === this.state.view) {
-          title = view_list[i].title;
-        }
-      }
 
       // XXX hardcoded...
-      switch (form_gadget.state.title) {
+      switch (title) {
       case "Create User":
         icon = " ui-icon-user";
         break;
       case "Create Document":
         icon = " ui-icon-file-o";
         break;
-      case "Change State":
+      case "Validate Workflow Action":
         icon = " ui-icon-share-alt";
         break;
       case "Submit":
@@ -76,10 +71,25 @@
         break;
       }
 
+      for (i = 0; i < view_list.length; i += 1) {
+        if (view_list[i].href === this.state.view) {
+          title = view_list[i].title;
+        }
+      }
+
+
       // Calculate the h3 properties
-      return form_gadget.translate(title)
-        .push(function (translated_title) {
-          selector.textContent = "\u00A0" + translated_title;
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            form_gadget.translate(form_gadget.state.form_definition.title),
+            form_gadget.translate(title),
+          ]);
+        })
+        .push(function (translated_title_list) {
+          form_gadget.element.querySelector('input.dialogconfirm').value = translated_title_list[1];
+
+          selector.textContent = "\u00A0" + translated_title_list[0];
           selector.className = "ui-content-title ui-body-c ui-icon ui-icon-custom" + icon;
 
           // Render the erp5_from
@@ -102,10 +112,10 @@
           ]);
         })
         .push(function (all_result) {
+          form_gadget.element.querySelector('a.dialogcancel').href = all_result[0];
           return form_gadget.updateHeader({
             cancel_url: all_result[0],
-            page_title: all_result[1],
-            submit_action: true
+            page_title: all_result[1]
           });
         });
     })

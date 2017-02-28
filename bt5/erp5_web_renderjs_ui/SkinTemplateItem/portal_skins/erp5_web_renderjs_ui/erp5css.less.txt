@@ -1021,8 +1021,10 @@ div[data-gadget-scope='header'] .ui-header {
 
   input[type='submit'] {
     padding: @margin-size;
+    margin-top: @headerheight;
+    margin-right: @double-margin-size;
 
-    background-color: @panelbackgroundcolor;
+    background-color: @coloraccent;
     color: @white;
 
     border-radius: @radius;
@@ -1032,10 +1034,10 @@ div[data-gadget-scope='header'] .ui-header {
     min-width: 8em;
 
     &:hover, &:focus {
-      background-color: lighten(@panelbackgroundcolor, 10%);
+      background-color: lighten(@coloraccent, 10%);
     }
     &:active {
-      background-color: lighten(@panelbackgroundcolor, 20%);
+      background-color: lighten(@coloraccent, 20%);
     }
   }
 
