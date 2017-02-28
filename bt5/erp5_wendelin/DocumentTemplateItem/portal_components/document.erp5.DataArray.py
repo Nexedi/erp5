@@ -121,6 +121,13 @@ class DataArray(BigFile):
     Get numpy array dtype
     """
     return self.getArray().dtype
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArrayDtypeNames')
+  def getArrayDtypeNames(self):
+    """
+    Get numpy array dtype names
+    """
+    return self.getArray().dtype.names
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
