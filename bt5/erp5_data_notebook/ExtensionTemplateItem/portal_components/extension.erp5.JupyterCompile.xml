@@ -46,12 +46,13 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:390, 10: Use of exec (exec-used)</string>
-                <string>W:433, 10: Use of exec (exec-used)</string>
-                <string>W:446, 10: Use of exec (exec-used)</string>
-                <string>W:539,  6: No exception type(s) specified (bare-except)</string>
-                <string>W:851,  6: Use of exec (exec-used)</string>
-                <string>W:1086,  2: Redefining name \'IFrame\' from outer scope (line 4) (redefined-outer-name)</string>
+                <string>W:394, 10: Use of exec (exec-used)</string>
+                <string>W:437, 10: Use of exec (exec-used)</string>
+                <string>W:450, 10: Use of exec (exec-used)</string>
+                <string>W:539,  4: No exception type(s) specified (bare-except)</string>
+                <string>W:547,  6: No exception type(s) specified (bare-except)</string>
+                <string>W:859,  6: Use of exec (exec-used)</string>
+                <string>W:1094,  2: Redefining name \'IFrame\' from outer scope (line 4) (redefined-outer-name)</string>
               </tuple>
             </value>
         </item>

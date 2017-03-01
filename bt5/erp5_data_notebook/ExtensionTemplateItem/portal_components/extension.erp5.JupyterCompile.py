@@ -28,6 +28,10 @@ from ipykernel.jsonutil import json_clean, encode_images
 import threading
 display_data_wrapper_lock = threading.Lock()
 
+# Well known unserializable types
+from Record import Record
+well_known_unserializable_type_tuple = (ModuleType, Record,)
+
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
   # Check permissions for current user and display message to non-authorized user 
@@ -460,7 +464,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     volatile_variable_list.append('__builtins__')
 
     for key, val in user_context.items():
-      if not key in globals_dict.keys() and not isinstance(val, ModuleType) and not key in volatile_variable_list:
+      if not key in globals_dict.keys() and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
         if canSerialize(val):
           notebook_context['variables'][key] = val
         else:
@@ -512,7 +516,7 @@ class EnvironmentDefinitionError(TypeError):
 def canSerialize(obj):
 
   container_type_tuple = (list, tuple, dict, set, frozenset)
-  
+
   # if object is a container, we need to check its elements for presence of
   # objects that cannot be put inside the zodb
   if isinstance(obj, container_type_tuple):
@@ -530,7 +534,11 @@ def canSerialize(obj):
     # Need to unwrap the variable, otherwise we get a TypeError, because
     # objects cannot be pickled while inside an acquisition wrapper.
     unwrapped_obj = Acquisition.aq_base(obj)
-    writer = ObjectWriter(unwrapped_obj)
+    try:
+      writer = ObjectWriter(unwrapped_obj)
+    except:
+      # Ignore any exceptions, otherwise Jupyter becomes permanent unusble state.
+      return False
     for obj in writer:
       try:
         writer.serialize(obj)
