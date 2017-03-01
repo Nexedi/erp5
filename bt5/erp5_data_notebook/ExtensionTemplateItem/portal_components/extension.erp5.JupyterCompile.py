@@ -176,7 +176,10 @@ def matplotlib_post_run(data_list):
 class Displayhook(object):
   def hook(self, value):
     if value is not None:
-      self.result = repr(value)
+      if getattr(value, '_repr_html_', None) is not None:
+        self.result = {'data':{'text/html':value._repr_html_()}, 'metadata':{}}
+      else:
+        self.result = repr(value)
   def pre_run(self):
     self.old_hook = sys.displayhook
     sys.displayhook = self.hook
@@ -481,7 +484,10 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
 
   displayhook_result = {"data":{}, "metadata":{}}
   if displayhook.result is not None:
-    displayhook_result["data"]["text/plain"] = displayhook.result
+    if isinstance(displayhook.result, str):
+      displayhook_result["data"]["text/plain"] = displayhook.result
+    elif isinstance(displayhook.result, dict):
+      displayhook_result = displayhook.result
   result = {
     'result_string': output,
     'print_result': {"data":{"text/plain":output}, "metadata":{}},

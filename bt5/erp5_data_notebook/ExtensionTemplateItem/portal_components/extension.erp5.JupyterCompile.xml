@@ -46,13 +46,12 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:312, 10: Use of exec (exec-used)</string>
-                <string>W:355, 10: Use of exec (exec-used)</string>
-                <string>W:368, 10: Use of exec (exec-used)</string>
-                <string>W:453,  6: No exception type(s) specified (bare-except)</string>
-                <string>W:706,  6: Use of exec (exec-used)</string>
-                <string>W:932,  2: Redefining name \'IFrame\' from outer scope (line 4) (redefined-outer-name)</string>
-                <string>W: 18,  0: Unused log imported from Products.ERP5Type.Log (unused-import)</string>
+                <string>W:390, 10: Use of exec (exec-used)</string>
+                <string>W:433, 10: Use of exec (exec-used)</string>
+                <string>W:446, 10: Use of exec (exec-used)</string>
+                <string>W:539,  6: No exception type(s) specified (bare-except)</string>
+                <string>W:851,  6: Use of exec (exec-used)</string>
+                <string>W:1086,  2: Redefining name \'IFrame\' from outer scope (line 4) (redefined-outer-name)</string>
               </tuple>
             </value>
         </item>
