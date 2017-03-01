@@ -26,6 +26,15 @@
 
     <script id="panel-template-body" type="text/x-handlebars-template">
       <div class="ui-content">
+
+        <form class="dialog_form">
+          <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
+                                       ui-icon-action ui-btn-icon-right ui-screen-hidden">Submit</button>
+          <div data-gadget-url="gadget_erp5_searchfield.html"
+               data-gadget-scope="erp5_searchfield"
+               data-gadget-sandbox="public"></div>
+        </form>
+
         <ul data-role="listview" class="ui-listview" data-enhanced="true">
           <li class="ui-first-child"><a href="#" class="ui-btn ui-btn-icon-left ui-icon-home" data-i18n="Home">Home</a></li>
           <li><a href="{{module_href}}" class="ui-btn ui-btn-icon-left ui-icon-puzzle-piece" data-i18n="Modules" accesskey="m">Modules</a></li>
