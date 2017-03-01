@@ -336,6 +336,10 @@ class TemplateTool (BaseTool):
         bp = self.newContent(bt_id, 'Business Package')
         bp.importFile(path)
         return bp
+      elif format_version == 3:
+        bm = self.newContent(bt_id, 'Business Manager')
+        bm.importFile(path)
+        return bm
 
       bt = self.newContent(bt_id, 'Business Template')
       bt.importFile(path)
@@ -390,15 +394,18 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
-        # Check the format version for the bt
-        format_version_path = name+'/bp/template_format_version'
-        try:
-          file = open(os.path.normpath(format_version_path))
-          format_version = int(file.read())
-          file.close()
-        except IOError:
-          format_version = 1
+        template_version_path_list = [
+                                      name+'/bp/template_format_version',
+                                      name+'/bm/template_format_version',
+                                     ]
 
+        for path in template_version_path_list:
+          try:
+            file = open(os.path.normpath(format_version_path))
+          except IOError:
+            pass
+        format_version = int(file.read())
+        file.close()
         # XXX: Download only needed in case the file is in directory
         bt = self._download_local(os.path.normpath(name), id, format_version)
 
