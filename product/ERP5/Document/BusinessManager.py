@@ -57,6 +57,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from zLOG import LOG, INFO, WARNING
 from Products.ERP5Type.patches.ppml import importXML
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -143,7 +144,7 @@ class BusinessManager(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   _properties = (
-    {'id': 'template_path',
+    {'id': 'template_path_list',
      'type': 'lines',
      'default': 'python: ()',
      'acquisition_base_category': (),
@@ -152,9 +153,19 @@ class BusinessManager(XMLObject):
      'acquisition_accessor_id': 'getTemplatePathList',
      'override': 1,
      'mode': 'w'},
+     {'id': 'template_format_version',
+     'type': 'int',
+     'default': 'python: 3',
+     'acquisition_base_category': (),
+     'acquisition_portal_type': (),
+     'acquisition_depends': None,
+     'acquisition_accessor_id': 'getTemplateFormatVersion',
+     'override': 1,
+     'mode': 'w'},
      )
 
   template_path_list = ()
+  template_format_version = 3
   status = 'uninstalled'
 
   # Declarative security
@@ -194,9 +205,10 @@ class BusinessManager(XMLObject):
   def edit(self, **kw):
     """
     Explicilty edit the class instance
+    XXX: No need of this class ? as we already have _edit from ERP5Type.Folder
     """
-    if 'path_item_list' in kw:
-      path_item_list = kw.pop('path_item_list')
+    if 'template_path_list' in kw:
+      path_item_list = kw.pop('template_path_list')
       self._setTemplatePathList(path_item_list)
 
   def _setTemplatePathList(self, path_item_list):
@@ -212,6 +224,16 @@ class BusinessManager(XMLObject):
       result = tuple(result)
     return result
 
+  def getTemplateFormatVersion(self):
+    return self.template_format_version
+
+  def _setTemplateFormatVersion(self, value):
+    self.template_format_version = int(value)
+
+  def propertyMap(self):
+    prop_map = super(BusinessManager, self).propertyMap()
+    final_prop_map = prop_map+self._properties
+    return final_prop_map
 
   security.declareProtected(Permissions.ManagePortal, 'export')
   def export(self, path=None, local=0, bma=None, **kw):
@@ -221,7 +243,7 @@ class BusinessManager(XMLObject):
     XXX: Are we planning to use something like archive for saving the exported
     objects inside a Business Manager
     """
-    if not self.getState() == 'built':
+    if not self.getStatus() == 'built':
       raise ValueError, 'Manager not built properly'
     return self._export(path, local, bma, **kw)
 
@@ -232,7 +254,7 @@ class BusinessManager(XMLObject):
         # we export into a folder tree
         bma = BusinessManagerFolder(path, creation=1)
       else:
-        # We export BP into a tarball file
+        # We export bm into a tarball file
         if path is None:
           path = self.getTitle()
         bma = BusinessManagerTarball(path, creation=1)
@@ -242,21 +264,57 @@ class BusinessManager(XMLObject):
       prop_type = prop['type']
       id = prop['id']
       if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'revision',
-                'install_object_list_list', 'id_generator', 'bp_for_diff'):
+                'install_object_list_list', 'id_generator', 'bm_for_diff'):
         continue
       value = self.getProperty(id)
       if not value:
         continue
       if prop_type in ('text', 'string', 'int', 'boolean'):
-        bpa.addObject(str(value), name=id, path='bp', ext='')
+        bma.addObject(str(value), name=id, path='bm', ext='')
       elif prop_type in ('lines', 'tokens'):
-        bpa.addObject('\n'.join(value), name=id, path='bp', ext='')
+        bma.addObject('\n'.join(value), name=id, path='bm', ext='')
 
     # Export each part
     for item in self._path_item_list:
         item.export(context=self, bma=bma, **kw)
 
     return bma.finishCreation()
+
+  security.declareProtected(Permissions.ManagePortal, 'importFile')
+  def importFile(self, path):
+    """
+      Import all xml files in Business Manager
+    """
+    bma = (BusinessManagerFolder if os.path.isdir(path) else
+        BusinessManagerTarball)(path, importing=1)
+    bm_item = bm()
+    bma.importFiles(bm_item, parent=self)
+    prop_dict = {}
+    for prop in self.propertyMap():
+      pid = prop['id']
+      if pid != 'id':
+        prop_type = prop['type']
+        value = bm_item.get(pid)
+        if prop_type in ('text', 'string'):
+          prop_dict[pid] = value or ''
+        elif prop_type in ('int', 'boolean'):
+          prop_dict[pid] = value or 0
+        elif prop_type in ('lines', 'tokens'):
+          # XXX: Do add pid[:-5] after we switch to proper getters and setters
+          prop_dict[pid] = (value or '').splitlines()
+    # XXX: This is not working, needs to be fixed so as it copies all the
+    # properties from BMA to the newly created Business Manager
+    self._edit(**prop_dict)
+    self.storeTemplateData()
+
+    #workflow_tool = self.getPortalObject().portal_workflow
+    #workflow_tool.business_package_building_workflow.notifyWorkflowMethod(
+    #    self, 'edit', kw={'comment': 'Downloaded'})
+    for item_object in self._path_item_list:
+      item_object.importFile(bma, parent=self)
+
+    # Set the status to uninstalled
+    self.setStatus('uninstalled')
 
   def __add__(self, other):
     """
@@ -872,7 +930,7 @@ class BusinessItem(Implicit, Persistent):
     path = self.__class__.__name__ + '/'
 
     # We now will add the XML object and its sha hash while exporting the object
-    # to Business package itself
+    # to Business Manager itself
 
     # Back compatibility with filesystem Documents
     key = self._path
@@ -920,7 +978,7 @@ class BusinessItem(Implicit, Persistent):
             extension = self.guessExtensionOfDocument(obj, key, data
                                                       if record_id == 'data'
                                                       else None)
-          bpa.addObject(StringIO(data), key, path=path,
+          bma.addObject(StringIO(data), key, path=path,
                         ext='._xml' if extension == 'xml' else '.' + extension)
           break
         # since we get the obj from context we should
@@ -931,6 +989,123 @@ class BusinessItem(Implicit, Persistent):
       f = StringIO()
       XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
       bma.addObject(f, key, path=path)
+
+  def importFile(self, bma, parent, **kw):
+    bma.importFiles(self, parent)
+
+  def _importFile(self, file_name, file_obj, parent):
+    obj_key, file_ext = os.path.splitext(file_name)
+    # id() for installing several bt5 in the same transaction
+    transactional_variable_obj_key = "%s-%s" % (id(self), obj_key)
+    if file_ext != '.xml':
+        # For ZODB Components: if .xml have been processed before, set the
+        # source code property, otherwise store it in a transactional variable
+        # so that it can be set once the .xml has been processed
+        data = file_obj.read()
+        try:
+          obj = self._objects[obj_key]
+        except KeyError:
+          getTransactionalVariable()[transactional_variable_obj_key] = data
+        else:
+          self._restoreSeparatelyExportedProperty(obj, data)
+    else:
+      connection = self.getConnection(parent)
+      __traceback_info__ = 'Importing %s' % file_name
+      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
+        obj = connection.importFile(self._compileXML(file_obj))
+      else:
+        # FIXME: Why not use the importXML function directly? Are there any BT5s
+        # with actual .zexp files on the wild?
+        obj = connection.importFile(file_obj, customImporters=customImporters)
+      self._value = obj
+
+      data = getTransactionalVariable().get(transactional_variable_obj_key)
+      if data is not None:
+        self._restoreSeparatelyExportedProperty(obj, data)
+
+  def _restoreSeparatelyExportedProperty(self, obj, data):
+    unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
+      obj.__class__.__name__][1:]
+    if unicode_data:
+      data = data.decode(obj.output_encoding)
+    try:
+      setattr(obj, property_name, data)
+    except BrokenModified:
+      obj.__Broken_state__[property_name] = data
+      obj._p_changed = 1
+    else:
+      # Revert any work done by __setstate__.
+      # XXX: This is enough for all objects we currently split in 2 files,
+      #      but __setstate__ could behave badly with the missing attribute
+      #      and newly added types may require more than this.
+      self.removeProperties(obj, 1, keep_workflow_history=True)
+
+  def getConnection(self, obj):
+    while True:
+      connection = obj._p_jar
+      if connection is not None:
+        return connection
+      obj = obj.aq_parent
+
+  def _compileXML(self, file):
+    # This method converts XML to ZEXP. Because the conversion
+    # is quite heavy, a persistent cache database is used to
+    # store ZEXP, so the second run wouldn't have to re-generate
+    # identical data again.
+    #
+    # For now, a pair of the path to an XML file and its modification time
+    # are used as a unique key. In theory, a checksum of the content could
+    # be used instead, and it could be more reliable, as modification time
+    # might not be updated in some insane filesystems correctly. However,
+    # in practice, checksums consume a lot of CPU time, so when the cache
+    # does not hit, the increased overhead is significant. In addition, it
+    # does rarely happen that two XML files in Business Manager contain
+    # the same data, so it may not be expected to have more cache hits
+    # with this approach.
+    #
+    # The disadvantage is that this wouldn't work with the archive format,
+    # because each entry in an archive does not have a mtime in itself.
+    # However, the plan is to have an archive to retain ZEXP directly
+    # instead of XML, so the idea of caching would be completely useless
+    # with the archive format.
+    name = file.name
+    mtime = os.path.getmtime(file.name)
+    key = '%s:%s' % (name, mtime)
+
+    try:
+      return StringIO(cache_database.db[key])
+    except:
+      pass
+
+    from Shared.DC.xml import ppml
+    from OFS.XMLExportImport import start_zopedata, save_record, save_zopedata
+    import xml.parsers.expat
+    outfile=StringIO()
+    try:
+      data=file.read()
+      F=ppml.xmlPickler()
+      F.end_handlers['record'] = save_record
+      F.end_handlers['ZopeData'] = save_zopedata
+      F.start_handlers['ZopeData'] = start_zopedata
+      F.binary=1
+      F.file=outfile
+      p=xml.parsers.expat.ParserCreate('utf-8')
+      p.returns_unicode = False
+      p.CharacterDataHandler=F.handle_data
+      p.StartElementHandler=F.unknown_starttag
+      p.EndElementHandler=F.unknown_endtag
+      p.Parse(data)
+
+      try:
+        cache_database.db[key] = outfile.getvalue()
+      except:
+        pass
+
+      outfile.seek(0)
+      return outfile
+    except:
+      outfile.close()
+      raise
 
   def getBusinessPath(self):
     return self._path
@@ -956,7 +1131,7 @@ class BusinessItem(Implicit, Persistent):
 
 class BusinessManagerArchive(object):
   """
-    This is the base class for all Business Template archives
+    This is the base class for all Business Manager archives
   """
 
   def __init__(self, path, **kw):
@@ -989,7 +1164,7 @@ class BusinessManagerArchive(object):
 
 class BusinessManagerFolder(BusinessManagerArchive):
   """
-  Class archiving business template into a folder tree
+  Class archiving business manager into a folder tree
   """
 
   def _writeString(self, obj, path):
@@ -1002,11 +1177,10 @@ class BusinessManagerFolder(BusinessManagerArchive):
     finally:
       f.close()
 
-  def importFiles(self, item):
+  def importFiles(self, item, parent):
     """
       Import file from a local folder
     """
-
     join = os.path.join
     item_name = item.__class__.__name__
     root = join(os.path.normpath(self.path), item_name, '')
@@ -1028,7 +1202,7 @@ class BusinessManagerFolder(BusinessManagerArchive):
               continue
             # self.revision.hash(item_name + '/' + file_name, f.read())
             f.seek(0)
-            item._importFile(file_name, f)
+            item._importFile(file_name, f, parent)
     finally:
       if hasattr(cache_database, 'db'):
         cache_database.db.close()
@@ -1070,7 +1244,7 @@ class BusinessManagerTarball(BusinessManagerArchive):
     self.tar.close()
     return self.fobj
 
-  def importFiles(self, item):
+  def importFiles(self, item, parent):
     """
       Import all file from the archive to the site
     """
@@ -1084,15 +1258,15 @@ class BusinessManagerTarball(BusinessManagerArchive):
       f = extractfile(info)
       self.revision.hash(item_name + '/' + file_name, f.read())
       f.seek(0)
-      item._importFile(file_name, f)
+      item._importFile(file_name, f, parent)
 
 
 class bm(dict):
   """
-  Fake 'bm' item to read bp/* files through BusinessManagerArchive
+  Fake 'bm' item to read bm/* files through BusinessManagerArchive
   """
 
-  def _importFile(self, file_name, file):
+  def _importFile(self, file_name, file, parent):
     self[file_name] = file.read()
 
 #InitializeClass(BusinessManager)
