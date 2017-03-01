@@ -484,6 +484,16 @@ div[data-gadget-scope='panel'] div[data-role="header"] a::before {
     display: none;
   }
 }
+div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] {
+  padding: 3pt 12pt;
+}
+div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] button {
+  color: #FFFFFF;
+}
+div[data-gadget-scope='panel'] div[data-gadget-scope='erp5_searchfield'] input[type="search"] {
+  color: #FFFFFF !important;
+  background-color: #777777 !important;
+}
 div[data-gadget-scope='panel'] img {
   text-align: left;
   height: 100%;

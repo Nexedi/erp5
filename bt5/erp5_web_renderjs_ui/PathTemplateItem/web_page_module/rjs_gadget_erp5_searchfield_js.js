@@ -9,7 +9,8 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
       var state_dict = {
-        extended_search: options.extended_search || ""
+        extended_search: options.extended_search || "",
+        focus: options.focus
       };
 
       return this.changeState(state_dict);
@@ -20,8 +21,13 @@
       return gadget.getDeclaredGadget('input')
         .push(function (input_gadget) {
           var focus = false;
-          if (!gadget.state.extended_search) {
-            focus = true;
+          var focus;
+          if (gadget.state.focus === undefined) {
+            if (gadget.state.extended_search) {
+              focus = false;
+            } else {
+              focus = true;
+            }
           }
           return input_gadget.render({
             type: "search",

@@ -29,6 +29,7 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -73,7 +74,8 @@
     .onStateChange(function (modification_dict) {
       var context = this,
         gadget = this,
-        queue = new RSVP.Queue();
+        queue = new RSVP.Queue(),
+        tmp_element;
 
       if (modification_dict.hasOwnProperty("visible")) {
         if (this.state.visible) {
@@ -114,7 +116,20 @@
             );
           })
           .push(function (my_translated_or_plain_html) {
-            context.element.querySelector("div").innerHTML = my_translated_or_plain_html;
+            tmp_element = document.createElement('div');
+            tmp_element.innerHTML = my_translated_or_plain_html;
+            return context.declareGadget('gadget_erp5_searchfield.html', {
+              scope: "erp5_searchfield",
+              element: tmp_element.querySelector('[data-gadget-scope="erp5_searchfield"]')
+            });
+          })
+          .push(function (search_gadget) {
+            return search_gadget.render({
+              focus: false
+            });
+          })
+          .push(function () {
+            context.element.querySelector("div").appendChild(tmp_element);
             return context.listenResize();
           });
       }
@@ -223,6 +238,40 @@
       event.initEvent('resize', true, true);
       window.dispatchEvent(event);
       return result;
-    });
+    })
+
+    .allowPublicAcquisition('notifyChange', function () {
+      // Typing a search query should not modify the header status
+      return;
+    })
+    .onEvent('submit', function () {
+      var gadget = this;
+
+      return gadget.getDeclaredGadget("erp5_searchfield")
+        .push(function (search_gadget) {
+          return search_gadget.getContent();
+        })
+        .push(function (data) {
+          var options = {
+            page: "search"
+          };
+          if (data.search) {
+            options.extended_search = data.search;
+          }
+          // Remove focus from the search field
+          document.activeElement.blur();
+          return gadget.redirect({command: 'display', options: options});
+        });
+
+    }, false, true)
+
+    .onEvent('blur', function (evt) {
+      // XXX Horrible hack to clear the search when focus is lost
+      // This does not follow renderJS design, as a gadget should not touch
+      // another gadget content
+      if (evt.target.type === 'search') {
+        evt.target.value = "";
+      }
+    }, true, false);
 
 }(window, document, rJS, Handlebars, RSVP, Node, loopEventListener));

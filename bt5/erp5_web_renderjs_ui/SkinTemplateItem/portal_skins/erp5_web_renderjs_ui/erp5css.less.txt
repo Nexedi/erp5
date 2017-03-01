@@ -576,6 +576,17 @@ div[data-gadget-scope='panel'] {
     }
   }
 
+  div[data-gadget-scope='erp5_searchfield'] {
+    padding: @half-margin-size @double-margin-size;
+    button {
+      color: @white;
+    }
+    input[type="search"] {
+      color: @white !important;
+      background-color: @grey !important;
+    }
+  }
+
   img {
     text-align: left;
     height: 100%;
