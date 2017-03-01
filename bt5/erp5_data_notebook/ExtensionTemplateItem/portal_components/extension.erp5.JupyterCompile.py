@@ -867,7 +867,13 @@ class ImportFixer(ast.NodeTransformer):
       Return a AST.Function object representing a function with name `func_name`
       and an empty body.
     """
-    func_body = "def %s(): pass" % func_name
+    dotless_func_name = ''
+    for symbol in func_name:
+      if symbol is '.':
+        dotless_func_name = dotless_func_name + 'dot'
+      else:
+        dotless_func_name = dotless_func_name + symbol
+    func_body = "def %s(): pass" % dotless_func_name
     return ast.parse(func_body).body[0]
 
   def newReturnDict(self, module_names):
@@ -887,7 +893,14 @@ class ImportFixer(ast.NodeTransformer):
       Return an AST.Expr representaion an `environment.define` call receiving
       `func_name` (as an expression) and `'func_name'` (as string).
     """
-    code_string = "environment.define(%s, '%s')" % (func_name, func_name)
+    dotless_func_name = ''
+    for symbol in func_name:
+      if symbol is '.':
+        dotless_func_name = dotless_func_name + 'dot'
+      else:
+        dotless_func_name = dotless_func_name + symbol
+    
+    code_string = "environment.define(%s, '%s')" % (dotless_func_name, func_name)
     tree = ast.parse(code_string)
     return tree.body[0]
 
@@ -897,12 +910,19 @@ class ImportFixer(ast.NodeTransformer):
       user about the import of a module named `module_name` and instructs him
       on how to fix it.
     """
+    dotless_func_name = ''
+    for symbol in function_name:
+      if symbol is '.':
+        dotless_func_name = dotless_func_name + 'dot'
+      else:
+        dotless_func_name = dotless_func_name + symbol
+    
     warning = ("print '"
                "WARNING: Your imported from the module %s without "
                "using the environment object, which is not recomended. "
                "Your import was automatically converted to use such method."
                "The setup function was named as: %s_setup.\\n"
-               "'") % (module_name, function_name)
+               "'") % (module_name, dotless_func_name)
     tree = ast.parse(warning)
     return tree.body[0]
 
