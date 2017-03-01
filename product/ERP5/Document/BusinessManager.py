@@ -27,22 +27,96 @@
 #
 ##############################################################################
 
+import gc
+import os
+import posixpath
+import transaction
+import imghdr
+import tarfile
+import time
 import hashlib
 import fnmatch
 import re
+import threading
+from copy import deepcopy
+from collections import defaultdict
+from cStringIO import StringIO
+from OFS.Image import Pdata
+from lxml.etree import parse
+from urllib import quote, unquote
+from OFS import SimpleItem, XMLExportImport
 from datetime import datetime
 from itertools import chain
 from operator import attrgetter
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.CMFCore.utils import getToolByName
+from Products.PythonScripts.PythonScript import PythonScript
+from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.Globals import Persistent
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.Globals import InitializeClass
 from zLOG import LOG, INFO, WARNING
+from Products.ERP5Type.patches.ppml import importXML
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+customImporters = {
+    XMLExportImport.magic: importXML,
+    }
 
+CACHE_DATABASE_PATH = None
+try:
+  if int(os.getenv('ERP5_BT5_CACHE', 0)):
+    from App.config import getConfiguration
+    import gdbm
+    instancehome = getConfiguration().instancehome
+    CACHE_DATABASE_PATH = os.path.join(instancehome, 'bt5cache.db')
+except TypeError:
+  pass
+cache_database = threading.local()
 _MARKER = []
+
+SEPARATELY_EXPORTED_PROPERTY_DICT = {
+  # For objects whose class name is 'class_name', the 'property_name'
+  # attribute is removed from the XML export, and the value is exported in a
+  # separate file, with extension specified by 'extension'.
+  # 'extension' must be None for auto-detection.
+  #
+  # class_name: (extension, unicode_data, property_name),
+  "Document Component":  ("py",   0, "text_content"),
+  "DTMLDocument":        (None,   0, "raw"),
+  "DTMLMethod":          (None,   0, "raw"),
+  "Extension Component": ("py",   0, "text_content"),
+  "File":                (None,   0, "data"),
+  "Image":               (None,   0, "data"),
+  "OOoTemplate":         ("oot",  1, "_text"),
+  "PDF":                 ("pdf",  0, "data"),
+  "PDFForm":             ("pdf",  0, "data"),
+  "Python Script":       ("py",   0, "_body"),
+  "PythonScript":        ("py",   0, "_body"),
+  "Spreadsheet":         (None,   0, "data"),
+  "SQL":                 ("sql",  0, "src"),
+  "SQL Method":          ("sql",  0, "src"),
+  "Test Component":      ("py",   0, "text_content"),
+  "Test Page":           (None,   0, "text_content"),
+  "Web Page":            (None,   0, "text_content"),
+  "Web Script":          (None,   0, "text_content"),
+  "Web Style":           (None,   0, "text_content"),
+  "ZopePageTemplate":    ("zpt",  1, "_text"),
+}
+
+
+def _delObjectWithoutHook(obj, id):
+  """OFS.ObjectManager._delObject without calling manage_beforeDelete."""
+  ob = obj._getOb(id)
+  if obj._objects:
+    obj._objects = tuple([i for i in obj._objects if i['id'] != id])
+  obj._delOb(id)
+  try:
+    ob._v__object_deleted__ = 1
+  except:
+    pass
+
 
 def _recursiveRemoveUid(obj):
   """Recusivly set uid to None, to prevent (un)indexing.
@@ -53,6 +127,7 @@ def _recursiveRemoveUid(obj):
     obj.uid = None
   for subobj in obj.objectValues():
     _recursiveRemoveUid(subobj)
+
 
 class BusinessManager(XMLObject):
 
@@ -68,15 +143,15 @@ class BusinessManager(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   _properties = (
-    { 'id' : 'template_path',
-      'type': 'lines',
-      'default': 'python: ()',
-      'acquisition_base_category'     : (),
-      'acquisition_portal_type'       : (),
-      'acquisition_depends'           : None,
-      'acquisition_accessor_id'       : 'getTemplatePathList',
-      'override'    : 1,
-      'mode'        : 'w' },
+    {'id': 'template_path',
+     'type': 'lines',
+     'default': 'python: ()',
+     'acquisition_base_category': (),
+     'acquisition_portal_type': (),
+     'acquisition_depends': None,
+     'acquisition_accessor_id': 'getTemplatePathList',
+     'override': 1,
+     'mode': 'w'},
      )
 
   template_path_list = ()
@@ -87,11 +162,12 @@ class BusinessManager(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.SimpleItem
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.Version
+  property_sheets = (
+                      PropertySheet.Base,
+                      PropertySheet.XMLObject,
+                      PropertySheet.SimpleItem,
+                      PropertySheet.CategoryCore,
+                      PropertySheet.Version,
                     )
 
   def getStatus(self):
@@ -112,7 +188,7 @@ class BusinessManager(XMLObject):
 
   def applytoERP5(self, DB):
     """Apply the flattened/reduced Business Manager to the DB"""
-    portal  = self.getPortalObject()
+    portal = self.getPortalObject()
     pass
 
   def edit(self, **kw):
@@ -136,12 +212,58 @@ class BusinessManager(XMLObject):
       result = tuple(result)
     return result
 
+
+  security.declareProtected(Permissions.ManagePortal, 'export')
+  def export(self, path=None, local=0, bma=None, **kw):
+    """
+    Export the object
+
+    XXX: Are we planning to use something like archive for saving the exported
+    objects inside a Business Manager
+    """
+    if not self.getState() == 'built':
+      raise ValueError, 'Manager not built properly'
+    return self._export(path, local, bma, **kw)
+
+  def _export(self, path=None, local=0, bma=None, **kw):
+
+    if bma is None:
+      if local:
+        # we export into a folder tree
+        bma = BusinessManagerFolder(path, creation=1)
+      else:
+        # We export BP into a tarball file
+        if path is None:
+          path = self.getTitle()
+        bma = BusinessManagerTarball(path, creation=1)
+
+    # export bt
+    for prop in self.propertyMap():
+      prop_type = prop['type']
+      id = prop['id']
+      if id in ('id', 'uid', 'rid', 'sid', 'id_group', 'last_id', 'revision',
+                'install_object_list_list', 'id_generator', 'bp_for_diff'):
+        continue
+      value = self.getProperty(id)
+      if not value:
+        continue
+      if prop_type in ('text', 'string', 'int', 'boolean'):
+        bpa.addObject(str(value), name=id, path='bp', ext='')
+      elif prop_type in ('lines', 'tokens'):
+        bpa.addObject('\n'.join(value), name=id, path='bp', ext='')
+
+    # Export each part
+    for item in self._path_item_list:
+        item.export(context=self, bma=bma, **kw)
+
+    return bma.finishCreation()
+
   def __add__(self, other):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
     self._path_item_list.extend(other._path_item_list)
-    template_path_list = list(self.template_path_list)+(list(other.template_path_list))
+    template_path_list = list(self.template_path_list)+list(other.template_path_list)
     self.template_path_list = template_path_list
     return self
 
@@ -152,7 +274,7 @@ class BusinessManager(XMLObject):
     """
     Store data for objects in the ERP5
     """
-    LOG('Business Manager', INFO, 'Storing Manager Data') 
+    LOG('Business Manager', INFO, 'Storing Manager Data')
     self._path_item_list = []
     path_item_list = self.getTemplatePathList()
     if path_item_list:
@@ -243,7 +365,7 @@ class BusinessManager(XMLObject):
     reduce(BT) = BT
     """
     path_list = [path_item.getBusinessPath() for path_item
-                  in self._path_item_list]
+                 in self._path_item_list]
 
     reduced_path_item_list = []
 
@@ -261,7 +383,7 @@ class BusinessManager(XMLObject):
     for path_item in self._path_item_list:
       if path_item._path in seen_path_list:
         # In case the path is repeated keep the path_item in a separate dict
-        ## for further arithmetic
+        # for further arithmetic
         seen_path_dict[path_item._path].append(path_item)
       else:
         # If the path is unique, add them in the list of reduced Business Item
@@ -272,20 +394,20 @@ class BusinessManager(XMLObject):
 
       # Create separate list of list items with highest priority
       higest_priority_layer = max(path_item_list, key=attrgetter('_layer'))
-      prioritized_path_item = [ path_item for path_item
-                                in path_item_list
-                                if path_item._layer == higest_priority_layer._layer]
+      prioritized_path_item = [path_item for path_item
+                               in path_item_list
+                               if path_item._layer == higest_priority_layer._layer]
 
       # Separate the positive and negative sign path_item
       if len(prioritized_path_item) > 1:
 
         path_item_list_add = [item for item
                               in prioritized_path_item
-                              if item._sign > 0 ]
+                              if item._sign > 0]
 
         path_item_list_subtract = [item for item
-                                  in prioritized_path_item
-                                  if item._sign < 0 ]
+                                   in prioritized_path_item
+                                   if item._sign < 0]
 
         combined_added_path_item = reduce(lambda x, y: x+y, path_item_list_add)
         combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
@@ -326,10 +448,11 @@ class BusinessManager(XMLObject):
     built_in_container_type = (tuple, list, dict, set)
 
     # For all the values of container type, we remove the intersection
-    added_value = [ x for x in added_value if not x in subtracted_value ]
-    subtracted_value = [ x for x in subtracted_value if not x in added_value ]
+    added_value = [x for x in added_value if x not in subtracted_value]
+    subtracted_value = [x for x in subtracted_value if x not in added_value]
 
     return added_value, subtracted_value
+
 
 class BusinessItem(Implicit, Persistent):
 
@@ -370,7 +493,7 @@ class BusinessItem(Implicit, Persistent):
     LOG('Business Manager', INFO, 'Genrating hash')
     if not self._value:
       # Raise in case there is no value for the BusinessItem object
-      raise ValueError, "Value not defined for the %s BusinessItem" %self._path
+      raise ValueError, "Value not defined for the %s BusinessItem" % self._path
     else:
       # Expects to raise error on case the value for the object
       # is not picklable
@@ -389,7 +512,6 @@ class BusinessItem(Implicit, Persistent):
     LOG('Business Manager', INFO, 'Building Business Item')
     p = context.getPortalObject()
     path = self._path
-
     if '#' in str(path):
       self.isProperty = True
       relative_url, property_id = path.split('#')
@@ -478,7 +600,7 @@ class BusinessItem(Implicit, Persistent):
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
     portal = context.getPortalObject()
-    if self.isProperty :
+    if self.isProperty:
       realtive_url, property_id = self._path.split('#')
       object_property_item = ObjectPropertyTemplateItem(id_list)
       object_property_item.install()
@@ -492,6 +614,9 @@ class BusinessItem(Implicit, Persistent):
         # parent object can be set to nothing, in this case just go on
         container_url = '/'.join(container_path)
       old_obj = container._getOb(object_id, None)
+      # delete the old object before installing a new object
+      if old_obj:
+        container._delOb(object_id)
       # install object
       obj = self._value
       obj = obj._getCopy(container)
@@ -599,9 +724,213 @@ class BusinessItem(Implicit, Persistent):
       # 2. In case 2 maximum values are created at same time, prefer one with
       # higher priority layer
       merged_value = max([max(value, key=attrgetter('creation_date'))
-                      for value in value_list], key=attrgetter('creation_date'))
+                          for value in value_list],
+                         key=attrgetter('creation_date'))
 
     return merged_value
+
+
+  def _guessFilename(self, document, key, data):
+    """
+    Try to guess the extension based on the id of the document
+    """
+    yield key
+    document_base = aq_base(document)
+    # Try to guess the extension based on the reference of the document
+    if hasattr(document_base, 'getReference'):
+      yield document.getReference()
+    elif isinstance(document_base, ERP5BaseBroken):
+      yield getattr(document_base, "reference", None)
+    # Try to guess the extension based on the title of the document
+    yield getattr(document_base, "title", None)
+    # Try to guess from content
+    if data:
+      for test in imghdr.tests:
+        extension = test(data, None)
+        if extension:
+          yield 'x.' + extension
+
+  def guessExtensionOfDocument(self, document, key, data=None):
+    """
+    Guesses and returns the extension of an ERP5 document.
+
+    The process followed is:
+    1. Try to guess extension by the id of the document
+    2. Try to guess extension by the title of the document
+    3. Try to guess extension by the reference of the document
+    4. Try to guess from content (only image data is tested)
+
+    If there's a content type, we only return an extension that matches.
+
+    In case everything fails then:
+    - '.bin' is returned for binary files
+    - '.txt' is returned for text
+    """
+    document_base = aq_base(document)
+    # XXX Zope items like DTMLMethod would not implement getContentType method
+    mime = None
+    if hasattr(document_base, 'getContentType'):
+      content_type = document.getContentType()
+    elif isinstance(document_base, ERP5BaseBroken):
+      content_type = getattr(document_base, "content_type", None)
+    else:
+      content_type = None
+    # For stable export, people must have a MimeTypes Registry, so do not
+    # fallback on mimetypes. We prefer the mimetypes_registry because there
+    # are more extensions and we can have preferred extensions.
+    # See also https://bugs.python.org/issue1043134
+    mimetypes_registry = self.getPortalObject()['mimetypes_registry']
+    if content_type:
+      try:
+        mime = mimetypes_registry.lookup(content_type)[0]
+      except (IndexError, MimeTypeException):
+        pass
+
+    for key in self._guessFilename(document, key, data):
+      if key:
+        ext = os.path.splitext(key)[1][1:].lower()
+        if ext and (mimetypes_registry.lookupExtension(ext) is mime if mime
+                    else mimetypes_registry.lookupExtension(ext)):
+          return ext
+
+    if mime:
+      # return first registered extension (if any)
+      if mime.extensions:
+        return mime.extensions[0]
+      for ext in mime.globs:
+        if ext[0] == "*" and ext.count(".") == 1:
+          return ext[2:].encode("utf-8")
+
+    # in case we could not read binary flag from mimetypes_registry then return
+    # '.bin' for all the Portal Types where exported_property_type is data
+    # (File, Image, Spreadsheet). Otherwise, return .bin if binary was returned
+    # as 1.
+    binary = getattr(mime, 'binary', None)
+    if binary or binary is None is not data:
+      return 'bin'
+    # in all other cases return .txt
+    return 'txt'
+
+  def removeProperties(self,
+                       obj,
+                       export,
+                       properties=[],
+                       keep_workflow_history=False,
+                       keep_workflow_history_last_history_only=False):
+    """
+    Remove unneeded properties for export
+    """
+    obj._p_activate()
+    klass = obj.__class__
+    classname = klass.__name__
+    attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
+                'last_id', 'uid',
+                '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+    if properties:
+      for prop in properties:
+        if prop.endswith('_list'):
+          prop = prop[:-5]
+        attr_set.add(prop)
+    if export:
+      if keep_workflow_history_last_history_only:
+        self._removeAllButLastWorkflowHistory(obj)
+      elif not keep_workflow_history:
+        attr_set.add('workflow_history')
+      # PythonScript covers both Zope Python scripts
+      # and ERP5 Python Scripts
+      if isinstance(obj, PythonScript):
+        attr_set.update(('func_code', 'func_defaults', '_code',
+                         '_lazy_compilation', 'Python_magic'))
+        for attr in 'errors', 'warnings', '_proxy_roles':
+          if not obj.__dict__.get(attr, 1):
+            delattr(obj, attr)
+      elif classname in ('File', 'Image'):
+        attr_set.update(('_EtagSupport__etag', 'size'))
+      elif classname == 'SQL' and klass.__module__ == 'Products.ZSQLMethods.SQL':
+        attr_set.update(('_arg', 'template'))
+      elif interfaces.IIdGenerator.providedBy(obj):
+        attr_set.update(('last_max_id_dict', 'last_id_dict'))
+      elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+        attr_set.add('type_provider_list')
+
+    for attr in obj.__dict__.keys():
+      if attr in attr_set or attr.startswith('_cache_cookie_'):
+        delattr(obj, attr)
+
+    if classname == 'PDFForm':
+      if not obj.getProperty('business_template_include_content', 1):
+        obj.deletePdfContent()
+    return obj
+
+  def export(self, context, bma, **kw):
+    """
+      Export the business item object : fill the BusinessManageArchive with
+      objects exported as XML, hierarchicaly organised.
+    """
+    if not self._value:
+      return
+    path = self.__class__.__name__ + '/'
+
+    # We now will add the XML object and its sha hash while exporting the object
+    # to Business package itself
+
+    # Back compatibility with filesystem Documents
+    key = self._path
+    obj = self._value
+    if isinstance(obj, str):
+      if not key.startswith(path):
+        key = path + key
+      bma.addObject(obj, name=key, ext='.py')
+    else:
+      try:
+        extension, unicode_data, record_id = \
+          SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
+      except KeyError:
+        pass
+      else:
+        while 1:  # not a loop
+          obj = obj._getCopy(context)
+          data = getattr(aq_base(obj), record_id, None)
+          if unicode_data:
+            if type(data) is not unicode:
+              break
+            try:
+              data = data.encode(aq_base(obj).output_encoding)
+            except (AttributeError, UnicodeEncodeError):
+              break
+          elif type(data) is not bytes:
+            if not isinstance(data, Pdata):
+              break
+            data = bytes(data)
+          try:
+            # Delete this attribute from the object.
+            # in case the related Portal Type does not exist, the object may be broken.
+            # So we cannot delattr, but we can delete the key of its its broken state
+            if isinstance(obj, ERP5BaseBroken):
+              del obj.__Broken_state__[record_id]
+              obj._p_changed = 1
+            else:
+              delattr(obj, record_id)
+          except (AttributeError, KeyError):
+            # property was acquired on a class,
+            # do nothing, only .xml metadata will be exported
+            break
+          # export a separate file with the data
+          if not extension:
+            extension = self.guessExtensionOfDocument(obj, key, data
+                                                      if record_id == 'data'
+                                                      else None)
+          bpa.addObject(StringIO(data), key, path=path,
+                        ext='._xml' if extension == 'xml' else '.' + extension)
+          break
+        # since we get the obj from context we should
+        # again remove useless properties
+        obj = self.removeProperties(obj, 1, keep_workflow_history=True)
+        transaction.savepoint(optimistic=True)
+
+      f = StringIO()
+      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+      bma.addObject(f, key, path=path)
 
   def getBusinessPath(self):
     return self._path
@@ -623,5 +952,147 @@ class BusinessItem(Implicit, Persistent):
 
   def getParentBusinessManager(self):
     return self.aq_parent
+
+
+class BusinessManagerArchive(object):
+  """
+    This is the base class for all Business Template archives
+  """
+
+  def __init__(self, path, **kw):
+    self.path = path
+
+  def addObject(self, obj, name, path=None, ext='.xml'):
+    if path:
+      name = posixpath.join(path, name)
+    # XXX required due to overuse of os.path
+    name = name.replace('\\', '/').replace(':', '/')
+    name = quote(name + ext)
+    path = name.replace('/', os.sep)
+    try:
+      write = self._writeFile
+    except AttributeError:
+      if not isinstance(obj, str):
+        obj.seek(0)
+        obj = obj.read()
+      self._writeString(obj, path)
+    else:
+      if isinstance(obj, str):
+        obj = StringIO(obj)
+      else:
+        obj.seek(0)
+      write(obj, path)
+
+  def finishCreation(self):
+    pass
+
+
+class BusinessManagerFolder(BusinessManagerArchive):
+  """
+  Class archiving business template into a folder tree
+  """
+
+  def _writeString(self, obj, path):
+    object_path = os.path.join(self.path, path)
+    path = os.path.dirname(object_path)
+    os.path.exists(path) or os.makedirs(path)
+    f = open(object_path, 'wb')
+    try:
+      f.write(obj)
+    finally:
+      f.close()
+
+  def importFiles(self, item):
+    """
+      Import file from a local folder
+    """
+
+    join = os.path.join
+    item_name = item.__class__.__name__
+    root = join(os.path.normpath(self.path), item_name, '')
+    root_path_len = len(root)
+    if CACHE_DATABASE_PATH:
+      try:
+        cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'cf')
+      except gdbm.error:
+        cache_database.db = gdbm.open(CACHE_DATABASE_PATH, 'nf')
+    try:
+      for root, dirs, files in os.walk(root):
+        for file_name in files:
+          file_name = join(root, file_name)
+          with open(file_name, 'rb') as f:
+            file_name = posixpath.normpath(file_name[root_path_len:])
+            if '%' in file_name:
+              file_name = unquote(file_name)
+            elif item_name == 'bm' and file_name == 'revision':
+              continue
+            # self.revision.hash(item_name + '/' + file_name, f.read())
+            f.seek(0)
+            item._importFile(file_name, f)
+    finally:
+      if hasattr(cache_database, 'db'):
+        cache_database.db.close()
+        del cache_database.db
+
+
+class BusinessManagerTarball(BusinessManagerArchive):
+  """
+  Class archiving business manager into a tarball file
+  """
+
+  def __init__(self, path, creation=0, importing=0, **kw):
+    super(BusinessManagerTarball, self).__init__(path, **kw)
+    if creation:
+      self.fobj = StringIO()
+      self.tar = tarfile.open('', 'w:gz', self.fobj)
+      self.time = time.time()
+    elif importing:
+      self.tar = tarfile.open(path, 'r:gz')
+      self.item_dict = item_dict = defaultdict(list)
+      for info in self.tar.getmembers():
+        if info.isreg():
+          path = info.name.split('/')
+          if path[0] == '.':
+            del path[0]
+          item_dict[path[1]].append(('/'.join(path[2:]), info))
+
+  def _writeFile(self, obj, path):
+    if self.path:
+      path = posixpath.join(self.path, path)
+    info = tarfile.TarInfo(path)
+    info.mtime = self.time
+    obj.seek(0, 2)
+    info.size = obj.tell()
+    obj.seek(0)
+    self.tar.addfile(info, obj)
+
+  def finishCreation(self):
+    self.tar.close()
+    return self.fobj
+
+  def importFiles(self, item):
+    """
+      Import all file from the archive to the site
+    """
+    extractfile = self.tar.extractfile
+    item_name = item.__class__.__name__
+    for file_name, info in self.item_dict.get(item_name, ()):
+      if '%' in file_name:
+        file_name = unquote(file_name)
+      elif item_name == 'bm' and file_name == 'revision':
+        continue
+      f = extractfile(info)
+      self.revision.hash(item_name + '/' + file_name, f.read())
+      f.seek(0)
+      item._importFile(file_name, f)
+
+
+class bm(dict):
+  """
+  Fake 'bm' item to read bp/* files through BusinessManagerArchive
+  """
+
+  def _importFile(self, file_name, file):
+    self[file_name] = file.read()
 
 #InitializeClass(BusinessManager)
