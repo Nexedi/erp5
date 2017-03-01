@@ -401,11 +401,15 @@ class TemplateTool (BaseTool):
 
         for path in template_version_path_list:
           try:
-            file = open(os.path.normpath(format_version_path))
+            file = open(os.path.normpath(path))
           except IOError:
-            pass
-        format_version = int(file.read())
-        file.close()
+            continue
+        try:
+          format_version = int(file.read())
+          file.close()
+        except UnboundLocalError:
+          # In case none of the above paths do have template_format_version
+          format_version = 1
         # XXX: Download only needed in case the file is in directory
         bt = self._download_local(os.path.normpath(name), id, format_version)
 
