@@ -388,6 +388,7 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
           del notebook_context['setup'][key]
       
       # Running all the setup functions that we got
+      failed_setup_key_list = []
       for key, value in notebook_context['setup'].iteritems():
         try:
           code = compile(value['code'], '<string>', 'exec')
@@ -395,12 +396,15 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         # An error happened, so we show the user the stacktrace along with a
         # note that the exception happened in a setup function's code.
         except Exception as e:
+          failed_setup_key_list.append(key)
           if value['func_name'] in user_context:
             del user_context[value['func_name']]
           error_return_dict = getErrorMessageForException(self, e, notebook_context)
           additional_information = "An error happened when trying to run the one of your setup functions:"
           error_return_dict['traceback'].insert(0, additional_information)
           setup_error_return_dict_list.append(error_return_dict)
+      for failed_setup_key in failed_setup_key_list:
+        del notebook_context['setup'][failed_setup_key]
 
       # Iterating over envinronment.define calls captured by the environment collector
       # that are functions and saving them as setup functions.
