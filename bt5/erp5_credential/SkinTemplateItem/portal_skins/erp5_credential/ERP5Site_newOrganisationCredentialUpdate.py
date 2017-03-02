@@ -1,6 +1,6 @@
 """Create a new credential update"""
 portal_status_message=""
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()
+person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
 if person is None:
   portal_status_message = context.Base_translateString("Can't find corresponding person, it's not possible to update your credentials.")
 else:

@@ -2,7 +2,7 @@ from DateTime import DateTime
 
 form = context.REQUEST.form
 
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()
+person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
 sender_email = "freecloudalliance@freecloudalliance.org"
 
 if person and person.getEmail():

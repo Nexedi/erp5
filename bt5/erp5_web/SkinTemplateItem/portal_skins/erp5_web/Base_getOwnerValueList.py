@@ -6,11 +6,6 @@
   NOTE: we usually asume that there is only a single owner
   or that, at least,  only the first owner matters for
   the "My Documents" list.
-
-  TODO:
-  - how can we make sure that is is consistent with 
-    ERP5Site_getAuthenticatedMemberPersonValue 
-    in erp5_base ?
 """
 from zExceptions import Unauthorized
 getUserValueByUserId = context.Base_getUserValueByUserId

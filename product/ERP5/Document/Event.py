@@ -83,8 +83,7 @@ class AcknowledgeableMixin:
     result = self.hasAcknowledgementActivity(user_name=user_name)
     if not result:
       # Check in the catalog if we can find an acknowledgement
-      person_value = self.ERP5Site_getAuthenticatedMemberPersonValue(
-                          user_name=user_name)
+      person_value = self.Base_getUserValueByUserId(user_name)
       if len(self.portal_catalog(portal_type='Acknowledgement',
                 default_causality_uid=self.getUid(),
                 default_destination_uid=person_value.getUid(),

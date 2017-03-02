@@ -125,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.ERP5Site_getAuthenticatedMemberPersonValue() is not None and here.ERP5Site_getAuthenticatedMemberPersonValue().getFirstName() or None</string> </value>
+            <value> <string>python: here.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue() is not None and here.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue().getFirstName() or None</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -8,8 +8,7 @@
 if user_name is None:
   raise ValueError("User name must be provided")
 
-person_value = context.ERP5Site_getAuthenticatedMemberPersonValue(
-                       user_name=user_name)
+person_value = context.Base_getUserValueByUserId(user_name)
 
 result = None
 if not context.isAcknowledged(user_name=user_name):

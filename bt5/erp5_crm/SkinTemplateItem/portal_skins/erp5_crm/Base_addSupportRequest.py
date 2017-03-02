@@ -1,5 +1,5 @@
 portal = context.getPortalObject()
-logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 now = DateTime()
 
 if support_request_template:

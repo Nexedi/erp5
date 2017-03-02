@@ -960,7 +960,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
       }
   
       # Handle also other kind of users: instance, computer, master
-      person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+      person = portal.portal_membership.getAuthenticatedMember().getUserValue()
       if person is not None:
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {

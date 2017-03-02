@@ -1,5 +1,5 @@
 # Define a Reporter as Source Trade
-person =  context.ERP5Site_getAuthenticatedMemberPersonValue()
+person =  context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
 
 if person is not None:
   context.setSourceTradeValue(person)

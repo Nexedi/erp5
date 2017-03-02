@@ -19,7 +19,7 @@ edit_kw = {'portal_type': portal_type,
            'resource': resource,
            'source_carrier': context.getWebSectionValue().getRelativeUrl(),
           }
-connected_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+connected_user = portal.portal_membership.getAuthenticatedMember().getUserValue()
 if connected_user is not None:
   edit_kw['source'] = connected_user.getRelativeUrl()
 

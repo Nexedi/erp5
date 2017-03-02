@@ -4,7 +4,7 @@ event = context
 
 operator_list = event.getDestinationList()
 try:
-  source_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+  source_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
   if source_value:
     operator_list.append(source_value.getRelativeUrl())
 except ValueError:

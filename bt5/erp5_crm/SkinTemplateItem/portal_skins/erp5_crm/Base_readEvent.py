@@ -8,7 +8,7 @@ portal = context.getPortalObject()
 request = context.REQUEST
 event_id = request['id']
 
-user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+user = portal.portal_membership.getAuthenticatedMember().getUserValue()
 # If we have a logged in user it's probably a backoffice agent.
 if user is None:
   # If the referer contains the url of the event we are probably viewing the event

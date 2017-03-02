@@ -2,7 +2,7 @@
 Parameter:
   property_name -- property to get, Mandatory (String, Example: 'title')
 """
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()
+person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
 if person is not None:
   organisation = person.getDefaultCareerSubordinationValue()
   if organisation is not None:

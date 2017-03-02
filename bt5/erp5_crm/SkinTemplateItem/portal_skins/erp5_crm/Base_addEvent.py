@@ -12,7 +12,7 @@ portal = context.getPortalObject()
 portal_entity_type_list = portal.getPortalEntityTypeList()
 
 # Search current user ID
-logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+logged_in_user_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 start_date = DateTime()
 
 organisation = None

@@ -57,20 +57,20 @@ class TestCertificateAuthority(ERP5TypeTestCase):
   def test_person_request_certificate(self):
     user_id, login = self._createPerson()
     self.loginByUserName(login)
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
 
   def test_person_revoke_certificate(self):
     user_id, login = self._createPerson()
     self.loginByUserName(login)
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     self.assertRaises(ValueError, person.revokeCertificate)
 
   def test_person_request_revoke_certificate(self):
     user_id, login = self._createPerson()
     self.loginByUserName(login)
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     person.revokeCertificate()
@@ -78,7 +78,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
   def test_person_request_certificate_twice(self):
     user_id, login = self._createPerson()
     self.loginByUserName(login)
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     self.assertRaises(ValueError, person.getCertificate)
@@ -87,7 +87,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     user_id, login = self._createPerson()
     user_id2, login2 = self._createPerson()
     self.loginByUserName(login)
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     self.loginByUserName(login2)
     self.assertRaises(Unauthorized, person.getCertificate)
 
@@ -95,7 +95,7 @@ class TestCertificateAuthority(ERP5TypeTestCase):
     user_id, login = self._createPerson()
     user_id2, login2 = self._createPerson()
     self.loginByUserName(login)
-    person = self.portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    person = self.portal.portal_membership.getAuthenticatedMember().getUserValue()
     certificate = person.getCertificate()
     self.assertTrue('CN=%s' % user_id in certificate['certificate'])
     self.loginByUserName(login2)

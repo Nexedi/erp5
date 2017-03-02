@@ -1,5 +1,5 @@
 portal = context.getPortalObject()
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 if not person:
   return None

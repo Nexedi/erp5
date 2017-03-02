@@ -370,7 +370,7 @@ class TestUNG(ERP5TypeTestCase):
     response = json.loads(portal.ERP5Site_checkIfUserExist(**kw))
     self.assertEqual(response.get("response"), False)
     self.loginByUserName("ung_reference")
-    user = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    user = portal.portal_membership.getAuthenticatedMember().getUserValue()
     self.assertEqual(user.getFirstName(), "UNG")
 
   def testWebSection_addGadgetList(self):

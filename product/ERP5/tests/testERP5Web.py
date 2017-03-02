@@ -310,8 +310,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.tic()
 
     # find person object by reference
-    person = website.ERP5Site_getAuthenticatedMemberPersonValue(
-                                                           kw['reference'])
+    person = website.Base_getUserValueByUserId(kw['reference'])
     self.assertEqual(person.getReference(), kw['reference'])
     self.assertEqual(person.getFirstName(), kw['first_name'])
     self.assertEqual(person.getLastName(), kw['last_name'])

@@ -9,7 +9,7 @@ if not 'Deferred' in portal.portal_skins.getSkinSelections():
   return context.Base_redirect('view', keep_items=dict(
               portal_status_message=N_("Deferred style must be installed to run this report")))
   
-person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+person_value = portal.portal_membership.getAuthenticatedMember().getUserValue()
 if person_value is None:
   portal.changeSkin(None)
   return context.Base_redirect('view', keep_items=dict(

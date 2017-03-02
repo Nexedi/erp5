@@ -9,7 +9,7 @@ def getPersonCareerDict(user_name):
   result = {'group_list': [],
             'site_list': [],
             }
-  person = portal.ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_name)
+  person = portal.Base_getUserValueByUserId(user_name)
   if person is None:
     return result
 

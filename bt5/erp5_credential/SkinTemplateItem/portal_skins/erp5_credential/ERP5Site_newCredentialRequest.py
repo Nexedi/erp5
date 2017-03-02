@@ -43,7 +43,7 @@ credential_request.reindexObject(activate_kw=dict(tag='set_login_%s' % reference
 
 #We attach the current user to the credential request if not anonymous
 if not context.portal_membership.isAnonymousUser():
-  person = context.ERP5Site_getAuthenticatedMemberPersonValue()
+  person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
   destination_decision = []
   if reference in [x.getReference() for x in person.objectValues(portal_type='ERP5 Login')
                    if x.getValidationState() == 'validated']:

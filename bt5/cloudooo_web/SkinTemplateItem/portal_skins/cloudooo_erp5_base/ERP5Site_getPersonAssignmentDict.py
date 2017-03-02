@@ -10,7 +10,7 @@ result = {'group_list': [],
           'site_list': [],
           'function_list': [],
           'destination_trade_relative_url': None}
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_name)
+person = portal.Base_getUserValueByUserId(user_name)
 
 if person is None:
   return result

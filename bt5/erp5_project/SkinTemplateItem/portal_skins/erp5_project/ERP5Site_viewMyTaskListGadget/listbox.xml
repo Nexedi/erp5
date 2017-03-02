@@ -238,7 +238,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("source_relative_url", context.getPortalObject().ERP5Site_getAuthenticatedMemberPersonValue().getRelativeUrl()), ("simulation_state", ["confirmed", "started"])]</string> </value>
+            <value> <string>python: [("source_relative_url", context.getPortalObject().getPortalObject().portal_membership.getAuthenticatedMember().getUserValue().getRelativeUrl()), ("simulation_state", ["confirmed", "started"])]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -88,7 +88,7 @@
       <ul tal:define="group python: document_stats['documents_groups_sorted'][0];
                       group_obj python: here.restrictedTraverse('portal_categories/group/%s' %group[0]);
                       person python: document_stats['documents_owners_sorted'][0];
-                      person_obj python: here.ERP5Site_getAuthenticatedMemberPersonValue(person[0]);">
+                      person_obj python: here.Base_getUserValueByUserId(person[0]);">
         <li><b>Person:</b> 
              <a href="" tal:attributes="href person_obj/absolute_url">
                <span tal:content="person_obj/getTitle"/>

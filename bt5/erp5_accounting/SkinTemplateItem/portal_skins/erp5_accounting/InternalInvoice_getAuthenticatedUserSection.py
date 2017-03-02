@@ -4,7 +4,7 @@ If the user is only affected to one of the two involved sections' group, then we
 If the user is affected to both sections, then we use the user preference.
 '''
 
-person = context.ERP5Site_getAuthenticatedMemberPersonValue()
+person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
 if person is None:
   return ''
 

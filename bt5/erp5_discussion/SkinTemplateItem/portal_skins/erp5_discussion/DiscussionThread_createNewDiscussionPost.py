@@ -4,7 +4,7 @@
 from DateTime import DateTime
 
 portal = context.getPortalObject()
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 discussion_thread = context
 is_temp_object = discussion_thread.isTempObject()

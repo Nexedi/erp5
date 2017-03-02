@@ -1,7 +1,7 @@
 portal = context.getPortalObject()
 
 event_list = []
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 if person is not None:
   # XXX Wrong way to filter the same person in source OR destination.

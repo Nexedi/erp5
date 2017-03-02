@@ -1,4 +1,4 @@
-person = context.ERP5Site_getAuthenticatedMemberPersonValue
+person = context.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
 
 discussion_post = context.newContent(
     title=title,

@@ -37,7 +37,7 @@ else:
 
   # XXX Hardcoded behaviour for JS app.
   # Expect came_from to be an URL template
-  person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+  person = portal.portal_membership.getAuthenticatedMember().getUserValue()
   url_parameter = "n.me"
   pattern = '{[&|?]%s}' % url_parameter
   if (person is None):

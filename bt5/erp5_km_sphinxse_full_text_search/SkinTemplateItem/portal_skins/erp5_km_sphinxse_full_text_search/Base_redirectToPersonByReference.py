@@ -3,7 +3,7 @@
   This script is used in "NO ZODB" approach mode although it can be used in other UI parts
   as well.
 """
-person = context.ERP5Site_getAuthenticatedMemberPersonValue(reference)
+person = context.Base_getUserValueByUserId(reference)
 if person is not None:
   person.Base_redirect(form_id='view')
 else:

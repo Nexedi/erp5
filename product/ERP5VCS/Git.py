@@ -308,7 +308,7 @@ class Git(WorkingCopy):
       if author:
         return author.groups()
     #try:
-    #  author = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    #  author = portal.portal_membership.getAuthenticatedMember().getUserValue()
     #  name = author.getTitle()
     #  email = author.getDefaultEmailText()
     #  if name and email:

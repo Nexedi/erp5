@@ -6,7 +6,7 @@ from zExceptions import Unauthorized
 MARKER = ['', None, []]
 
 portal = context.getPortalObject()
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 version = '001'
 language = portal.Localizer.get_selected_language()
@@ -131,7 +131,7 @@ if send_notification_text not in ('', None):
     else:
       mail_text = notification_message.asText(
         substitution_method_parameter_dict={'mapping_dict':notification_mapping_dict})
-    sender = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+    sender = portal.portal_membership.getAuthenticatedMember().getUserValue()
     #Send email
     for recipient in person_list:
       portal.portal_notifications.sendMessage(

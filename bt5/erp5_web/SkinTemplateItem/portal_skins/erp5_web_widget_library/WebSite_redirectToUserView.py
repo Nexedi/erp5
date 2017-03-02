@@ -16,7 +16,7 @@ if context.portal_membership.isAnonymousUser():
                                keep_items={'portal_status_message':msg})
 
 # Call generic erp5_base method to find user value  
-person_object = context.ERP5Site_getAuthenticatedMemberPersonValue(user)
+person_object = context.Base_getUserValueByUserId(user)
 
 # Return if no such user
 if person_object is None:
