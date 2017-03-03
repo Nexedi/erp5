@@ -145,4 +145,36 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="search_in_form_list">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//input[@name='search']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//input[@name='search']</td>
+      <td tal:content="search_query"></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_search_in_form_list">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//input[@name='search']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td tal:content="python: &quot;//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//div[@data-gadget-scope='erp5_searchfield']//input[@value='%s' and @type='search' and @name='search']&quot; % search_query"></td>
+      <td></td>
+    </tr>
+
+  </tal:block>
+
 </tal:block>
