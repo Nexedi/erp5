@@ -364,7 +364,7 @@ Alarm Tool Node: %s
     new results, then this process will be added to the list
     of processes
     """
-    activate_kw = kw.get('activate_kw', {})
+    activate_kw = kw.pop('activate_kw', {})
     activate_kw.setdefault('tag', self.__getTag(False))
     portal_activities = getToolByName(self,'portal_activities')
     active_process = portal_activities.newActiveProcess(start_date=DateTime(),
