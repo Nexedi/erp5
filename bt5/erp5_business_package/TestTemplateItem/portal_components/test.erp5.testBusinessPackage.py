@@ -88,7 +88,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package.edit(title = bp_id,
                   version='1.0',
                   description='package for live test')
-    self.tic()
     return package
 
   def _buildAndExportBusinessPackage(self, package):
@@ -96,9 +95,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     Builds and exports Business Package to a given export directory
     Returns the path of export
     """
-    self.tic()
     package.build()
-    self.tic()
 
     cfg = getConfiguration()
     bp_title = pathname2url(package.getTitle())
@@ -106,7 +103,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Export package at the package_path
     package.export(path=package_path, local=True)
-    self.tic()
 
     return package_path
 
@@ -121,7 +117,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
                     id=package.id+'1',
                     )
 
-    self.tic()
     return import_package
 
   def _installBusinessPackage(self, package):
@@ -130,7 +125,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     Expected to install the PathTemplateObject items
     """
     package.install()
-    self.tic()
 
   def _createBusinessManager(self, bm_id=None, title=None):
     if not bm_id:
@@ -141,6 +135,34 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                                 portal_type='Business Manager')
     self.tic()
     return manager
+
+  def _exportBusinessManager(self, manager):
+    """
+    Exports a Business Manager object to the destined path
+    """
+    cfg = getConfiguration()
+    bm_title = pathname2url(manager.getTitle())
+    manager_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bm_title,))
+
+    # Export package at the package_path
+    manager.export(path=manager_path, local=True)
+
+    return manager_path
+
+  def _importBusinessManager(self, manager, manager_path, increment):
+    """
+    Imports the package from the path where it had been exported.
+
+    @params:
+    increment: Used for changing the ID of downloaded Business Manager
+    """
+
+    import_manager = self.portal.portal_templates.download(
+                    url='file:'+manager_path,
+                    id=manager.id+str(increment),
+                    )
+
+    return import_manager
 
   def _installationOfBusinessManagerViaTemplateTool(self):
     """
@@ -162,20 +184,17 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     manager._setTemplatePathList(path_item_list)
     built_manager = manager.build()
-    self.tic()
 
     bm_list = []
     bm_list.append(built_manager)
 
     self.portal.portal_catalog.manage_delObjects( \
                                       [test_catalog_1.getId(),])
-    self.tic()
 
     # Test that the catalogs don't exist on site anymore
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_catalog_1))
 
     portal_templates.installMultipleBusinessManager(bm_list)
-    self.tic()
 
     catalog_1 = self.portal.restrictedTraverse(path_catalog_1)
     self.assertEquals(catalog_1.getTitle(), \
@@ -201,7 +220,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     manager_1._setTemplatePathList(path_item_list_1)
     built_manager_1 = manager_1.build()
-    self.tic()
 
     test_catalog_1.edit(
                         title = 'Test Catalog 2 for Multiple BP5 Installation',
@@ -212,11 +230,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     manager_2._setTemplatePathList(path_item_list_2)
     built_manager_2 = manager_2.build()
-    self.tic()
 
     self.portal.portal_catalog.manage_delObjects( \
                                       [test_catalog_1.getId(),])
-    self.tic()
 
     # Test that the catalogs don't exist on site anymore
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_catalog_1))
@@ -226,7 +242,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     bm_list.append(built_manager_2)
 
     portal_templates.installMultipleBusinessManager(bm_list)
-    self.tic()
 
     catalog_1 = self.portal.restrictedTraverse(path_catalog_1)
     self.assertEquals(catalog_1.getTitle(), \
@@ -265,15 +280,15 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Add catalog to the path list for Business Manager and build the object
     catalog_path = test_catalog.getRelativeUrl()
-    path_item_catalog = '%s | %s | %s'%(catalog_path, 1, 1)
+    path_item_catalog = '%s | %s | %s' % (catalog_path, 1, 1)
     path_item_list = [path_item_catalog]
 
     # Set catalog path item as path_item in managerB
     managerB._setTemplatePathList(path_item_list)
 
     # Build both Business Manager(s)
-    built_manager_B = managerB.build()
     built_manager_A = managerA.build()
+    built_manager_B = managerB.build()
 
     # Delete the catalog object
     self.portal.portal_catalog.manage_delObjects(
@@ -282,53 +297,71 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Test that the catalog don't exist on site anymore
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(catalog_path))
 
+    # Export the built Business Manager
+    exported_manager_path_B = self._exportBusinessManager(built_manager_A)
+    exported_manager_path_A = self._exportBusinessManager(built_manager_B)
+
+    # Import the Business Managers
+    imported_manager_A = self._importBusinessManager(managerA,
+                                                      exported_manager_path_A,
+                                                      increment=1)
+    imported_manager_B = self._importBusinessManager(managerB,
+                                                      exported_manager_path_B,
+                                                      increment=1)
+
     # Install both the Business Manager(s)
     portal_templates.installMultipleBusinessManager([
-                                                    built_manager_A,
-                                                    built_manager_B
+                                                    imported_manager_A,
+                                                    imported_manager_B,
                                                     ])
 
+    # XXX: Match the state of manager A and B, nothing extra added
+    # portal_templates.installMultipleBusinessManager([
+    #                                                imported_package_A,
+    #                                                imported_package_B,
+    #                                                ])
+
     # Test that the catalog exists on ZODB after installation
-    catalog = self.portal.restrictedTraverse(catalog_path)
-    self.assertEquals(catalog.getTitle(), \
+    installed_test_catalog = self.portal.restrictedTraverse(catalog_path)
+    self.assertEquals(installed_test_catalog.getTitle(), \
                       'Test Catalog initial for Multiple BM Installation')
 
-    # Remove the catalog_path from managerB
+    # Add catalog_path to managerA and remove the catalog_path from managerB
+    managerA._setTemplatePathList(path_item_list)
     managerB._setTemplatePathList([])
 
-    # Edit the catalog
-    test_catalog.edit(title='Edited version of Catalog for managerA')
-
-    # Add catalog_path to managerA
-    managerA._setTemplatePathList(path_item_list)
-
-    # Change Status for both Business Manager objects explicilty reason
-    # explained in NOTE in docstring for test
-    managerB.setStatus('uninstalled')
-    managerA.setStatus('uninstalled')
+    installed_test_catalog.edit(title='new_couscous')
 
     # Build both the Business Manager(s)
-    built_manager_B = managerB.build()
     built_manager_A = managerA.build()
+    built_manager_B = managerB.build()
 
-    # Delete the catalog from the erp5 site
-    self.portal.portal_catalog.manage_delObjects(
-                                            [test_catalog.getId(),])
+    # Then we change the title of test catalog again
+    installed_test_catalog.edit(title='new_couscous_change_again')
 
-    # Test that the catalog don't exist on site anymore
-    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(catalog_path))
+    # Export the built Business Manager
+    exported_manager_path_A = self._exportBusinessManager(built_manager_A)
+    exported_manager_path_B = self._exportBusinessManager(built_manager_B)
 
+    # Import the Business Managers
+    imported_manager_A = self._importBusinessManager(managerA,
+                                                      exported_manager_path_A,
+                                                      increment=2)
+    imported_manager_B = self._importBusinessManager(managerB,
+                                                      exported_manager_path_B,
+                                                      increment=2)
+
+    # Match the overall state, 
     # Install both the Business Manager(s)
     portal_templates.installMultipleBusinessManager([
-                                                    built_manager_A,
-                                                    built_manager_B
+                                                    imported_manager_A,
+                                                    imported_manager_B,
                                                     ])
 
     # Test that the catalog exists on ZODB after installation with the newer
     # updated version
-    catalog = self.portal.restrictedTraverse(catalog_path)
-    self.assertEquals(catalog.getTitle(), \
-                      'Test Catalog initial for Multiple BM Installation')
+    catalog = self.portal.restrictedTraverse(installed_test_catalog.getRelativeUrl())
+    self.assertEquals(catalog.getTitle(), "new_couscous")
 
   def _UpdateVersionOfBusinessManager(self):
     """
@@ -427,7 +460,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                     portal_type = 'Catalog',
                                     title = 'Test Catalog 2 for Multiple BP5 Installation',
                                     )
-    self.tic()
 
     # Update the property for the above mentioned objects so that we can use
     # them in tests
@@ -475,13 +507,10 @@ class TestBusinessPackage(ERP5TypeTestCase):
       template_path_list=[path_2,],
       template_object_property_list=prop_list_2,
       )
-    self.tic()
 
     # Build both the packages
     old_package_path = self._buildAndExportBusinessPackage(old_package)
     new_package_path = self._buildAndExportBusinessPackage(new_package)
-    self.tic()
-
     import_old_package = self._importBusinessPackage(old_package, old_package_path)
     import_new_package = self._importBusinessPackage(new_package, new_package_path)
     # Get installation data from the list of packages which we want to install
@@ -493,7 +522,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                         test_catalog_1.getId(),
                                         test_catalog_2.getId(),
                                       ])
-    self.tic()
 
     # Test that the catalogs don't exist on site anymore
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(path_1))
@@ -553,7 +581,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
                   template_path_list=file_path_list,
                   template_object_property_list=prop_list
                   )
-    self.tic()
 
     package_path = self._buildAndExportBusinessPackage(package)
     import_package = self._importBusinessPackage(package, package_path)
@@ -573,7 +600,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                     reference = 'erp5-package.Test.Document',
                                     data = 'test file',
                                     content_type = None)
-    self.tic()
 
     file_path = document_file.getRelativeUrl()
     property_list = ['%s | title'%file_path,]
@@ -581,14 +607,12 @@ class TestBusinessPackage(ERP5TypeTestCase):
       template_path_list=file_path,
       template_object_property_list=property_list,
     )
-    self.tic()
 
     # Build package
     package_path = self._buildAndExportBusinessPackage(package)
 
     # Delete the document
     self.portal.document_module.manage_delObjects([document_file.getId(),])
-    self.tic()
     # Assert that the file is gone
     self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(file_path))
 
@@ -616,23 +640,19 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                     reference = 'erp5-package.Test.Document.Two.BP',
                                     data = 'test file',
                                     content_type = None)
-    self.tic()
 
     file_path = document_file.getRelativeUrl()
     old_package.edit(template_path_list=[file_path,])
 
     # Build the first package
     self._buildAndExportBusinessPackage(old_package)
-    self.tic()
 
     # Change something in the document file
     document_file.edit(data='Voila, we play with conflict')
-    self.tic()
     new_package.edit(template_path_list=[file_path,])
 
     # Build the second package
     self._buildAndExportBusinessPackage(new_package)
-    self.tic()
 
     # Get installation data from the list of packages which we want to install
     package_list = [old_package, new_package]
@@ -641,7 +661,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Delete document from site
     self.portal.document_module.manage_delObjects([document_file.getId(),])
-    self.tic()
 
     # Assert that the final data is empty and conflicted data contains \
     # two different versions of the file
@@ -663,7 +682,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     package = self._createBusinessPackage()
     package.edit(template_path_list=[folder_path,])
     self._buildAndExportBusinessPackage(package)
-    self.tic()
 
     # Check for the presence of catalog objects/paths in the business package
     built_package = self.portal._getOb(package.getId())
@@ -686,11 +704,10 @@ class TestBusinessPackage(ERP5TypeTestCase):
           ]
 
     package.edit(template_path_list=folder_path_list)
-    self.tic()
+    
     # XXX: Here, we are not exporting the package and its objects, just building
     # and saving it inside the package for the tests.
     self._buildAndExportBusinessPackage(package)
-    self.tic()
 
     # Check for presence of catalog objects from all the catalogs mentioned in
     # the folder path list
@@ -726,10 +743,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     package.edit(template_path_list=file_path_list)
     package.edit(template_object_property_list=object_property_list)
-    self.tic()
 
     self._buildAndExportBusinessPackage(package)
-    self.tic()
 
     # Check for presence of catalog objects from all the catalogs mentioned in
     # the folder path list
