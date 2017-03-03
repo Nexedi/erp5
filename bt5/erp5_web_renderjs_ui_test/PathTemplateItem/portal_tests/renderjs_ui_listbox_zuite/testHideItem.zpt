@@ -147,22 +147,13 @@
 
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Hide Rows']</td>
+  <td>//button[@name='SelectRows']</td>
   <td></td>
 </tr>
 
 
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -218,22 +209,13 @@
 
 <tr>
   <td>click</td>
-   <td>//button[@data-i18n='Hide Rows']</td>
+   <td>//button[@name='SelectRows']</td>
   <td></td>
 </tr>
 
 
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>

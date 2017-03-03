@@ -39,21 +39,9 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>Save</td>
@@ -71,22 +59,9 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo Line</td>
-</tr>
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>Save</td>
@@ -111,22 +86,9 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo Line</td>
-</tr>
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>Save</td>
@@ -168,7 +130,6 @@
   <td>Foo Category</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>type</td>
@@ -466,14 +427,11 @@
   <td></td>
 </tr>
 
-
-
 <tr>
   <td>waitForElementPresent</td>
   <td>//input[@name="field_my_short_title"]</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>verifyNotValue</td>

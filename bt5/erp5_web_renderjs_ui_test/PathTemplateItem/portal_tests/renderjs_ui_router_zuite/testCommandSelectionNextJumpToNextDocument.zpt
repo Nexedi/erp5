@@ -63,26 +63,9 @@
 </tr>
 
 <!-- Enter a search query to create a selection parameter -->
-<tr>
-  <td>type</td>
-  <td>search</td>
-  <td>title</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextNotPresent</td>
-  <td>Title 3</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 3</td>
-  <td></td>
-</tr>
+<tal:block tal:define="search_query python: 'title'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
 
 <!-- Sort -->
 <tr>
@@ -129,16 +112,15 @@
 </tr>
 
 <tr>
-  <td>waitForTextNotPresent</td>
-  <td>Title 3</td>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Title 3</td>
+  <td>waitForElementNotPresent</td>
+  <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
   <td></td>
 </tr>
-
 
 <!-- Go to the first element -->
 <tr>

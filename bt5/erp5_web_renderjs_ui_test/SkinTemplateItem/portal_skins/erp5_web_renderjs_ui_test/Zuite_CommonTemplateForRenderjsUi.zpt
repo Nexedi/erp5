@@ -36,7 +36,13 @@
   
   
    <tal:block metal:define-macro="clear_query">
- 
+
+    <tr>
+     <td>waitForElementPresent</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+     <td></td>
+    </tr>
+
     <tr>
      <td>waitForElementPresent</td>
      <td>//a[@data-i18n='Previous']</td>
@@ -45,7 +51,7 @@
 
     <tr>
      <td>type</td>
-     <td>search</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
      <td></td>
     </tr>
 
@@ -57,10 +63,10 @@
 
     <tr>
      <td>click</td>
-     <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
+     <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
      <td></td>
     </tr>
-    
+
     <tr>
       <td>waitForElementPresent</td>
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
@@ -72,8 +78,7 @@
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
       <td></td>
     </tr>
-    
- 
+
   </tal:block>
 
   <tal:block metal:define-macro="submit_search_filter">
@@ -127,5 +132,77 @@
    <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
   </tal:block>
 
+  <tal:block metal:define-macro="submit_dialog">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//input[@class='dialogconfirm' and @type='submit']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_dialog.html')]//input[@class='dialogconfirm' and @type='submit']</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="search_in_form_list">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>type</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td tal:content="search_query"></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="check_search_in_form_list">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>assertElementPresent</td>
+      <td tal:content="python: &quot;//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//input[@value='%s' and @type='search' and @name='search']&quot; % search_query"></td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="wait_for_content_loaded">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+  </tal:block>
 
 </tal:block>

@@ -37,21 +37,9 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>Save</td>
@@ -69,22 +57,9 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo Line</td>
-</tr>
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>Save</td>
@@ -109,22 +84,9 @@
   <td>link=Add</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo Line</td>
-</tr>
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
   <td>waitForTextPresent</td>
   <td>Save</td>
@@ -232,7 +194,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name="search"]</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//input[@name="search"]</td>
   <td></td>
 </tr>
 
@@ -302,38 +264,12 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//input[@name="search"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>verifyTextPresent</td>
+  <td>waitForTextPresent</td>
   <td>Select Template</td>
   <td></td>
 </tr>
 
-<tr>
-  <td>type</td>
-  <td>//input[@name="search"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//button[contains(@class, "search_button")]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
 <tr>
   <td>waitForElementPresent</td>
@@ -468,27 +404,9 @@
   <td></td>
 </tr>
 
-
-<tr>
-  <td>type</td>
-  <td>//input[@name="search"]</td>
-  <td>id:2</td>
-</tr>
-
-
-<tr>
-  <td>click</td>
-  <td>//button[contains(@class, "search_button")]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//a[@data-i18n="Previous"]</td>
-  <td></td>
-</tr>
-
+<tal:block tal:define="search_query python: 'id:2'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
 
 <tr>
   <td>waitForElementPresent</td>

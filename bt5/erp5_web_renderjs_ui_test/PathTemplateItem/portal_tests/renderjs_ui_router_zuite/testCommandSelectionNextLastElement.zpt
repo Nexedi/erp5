@@ -30,27 +30,10 @@
 </tr>
 
 <!-- Enter a search query to create a selection parameter -->
-<tr>
-  <td>type</td>
-  <td>search</td>
-  <td>title</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//button[contains(@class, 'search_button')]</td>
-  <td></td>
-</tr>
+<tal:block tal:define="search_query python: 'title'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/search_in_form_list" />
+</tal:block>
 
-<tr>
-  <td>waitForTextNotPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
 <tr>
   <td>click</td>
   <td>//div[@data-gadget-scope='field_listbox']//a[text()='Title 1' and contains(@href, '#!index')]</td>
@@ -90,11 +73,9 @@
   <td>Foos</td>
   <td></td>
 </tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='erp5_searchfield']//input[@value='title' and @type='search' and @name='search']</td>
-  <td></td>
-</tr>
+<tal:block tal:define="search_query python: 'title'">
+  <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/check_search_in_form_list" />
+</tal:block>
 <tr>
   <td>waitForTextPresent</td>
   <td>Title 1</td>
