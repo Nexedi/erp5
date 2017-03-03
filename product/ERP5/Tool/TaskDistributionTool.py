@@ -173,7 +173,8 @@ class TaskDistributionTool(BaseTool):
       test_result._setIntIndex(int_index)
     if project_title is not None:
       project_list = portal.portal_catalog(portal_type='Project',
-                                           title=SimpleQuery(comparison_operator='=', title=project_title))
+        title=SimpleQuery(comparison_operator='=',
+          title=project_title.encode('utf-8')))
       if len(project_list) != 1:
         raise ValueError('found this list of project : %r for title %r' % \
                       ([x.path for x in project_list], project_title))
