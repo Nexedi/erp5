@@ -66,6 +66,8 @@ RELATED_DYNAMIC_METHOD_NAME = '_related'
 RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
 ZOPE_SECURITY_SUFFIX = '__roles__'
 
+SECURITY_QUERY_ARGUMENT_NAME = 'ERP5Catalog_security_query'
+
 class IndexableObjectWrapper(object):
 
     def __init__(self, ob):
@@ -592,7 +594,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return security_uid_dict, role_column_dict, local_role_column_dict
 
     security.declarePublic('getSecurityQuery')
-    def getSecurityQuery(self, query=None, sql_catalog_id=None, local_roles=None, **kw):
+    def getSecurityQuery(self, sql_catalog_id=None, local_roles=None, **kw):
       """
         Build a query based on allowed roles or on a list of security_uid
         values. The query takes into account the fact that some roles are
@@ -603,8 +605,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       user_is_superuser = (user == system_user) or (user_str == ERP5Security.SUPER_USER)
       if user_is_superuser:
         # We need no security check for super user.
-        return query
-      original_query = query
+        return
       security_uid_dict, role_column_dict, local_role_column_dict = \
           self.getSecurityUidDictAndRoleColumnDict(
             sql_catalog_id=sql_catalog_id,
@@ -662,12 +663,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         local_role_query = ComplexQuery(*query_list, **operator_kw)
         query = ComplexQuery(query, local_role_query, operator='AND')
 
-      if original_query is not None:
-        query = ComplexQuery(query, original_query, operator='AND')
       return query
 
     # searchResults has inherited security assertions.
-    def searchResults(self, query=None, sql_catalog_id=None, local_roles=None, **kw):
+    def searchResults(self, sql_catalog_id=None, local_roles=None, **kw):
         """
         Calls ZCatalog.searchResults with extra arguments that
         limit the results to what the user is allowed to see.
@@ -680,16 +679,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
         catalog_id = self.getPreferredSQLCatalogId(sql_catalog_id)
         query = self.getSecurityQuery(
-          query=query,
           sql_catalog_id=catalog_id,
           local_roles=local_roles,
         )
+        if SECURITY_QUERY_ARGUMENT_NAME in kw:
+          # Note: we must *not* create a ComplexQuery on behalf of caller.
+          # ComplexQueries bypass SearchKey mechanism, which would make passed
+          # "security_query" argument behave differently from arbitrary names.
+          raise ValueError('%r is a reserved argument.' % SECURITY_QUERY_ARGUMENT_NAME)
         if query is not None:
-          kw['query'] = query
+          kw[SECURITY_QUERY_ARGUMENT_NAME] = query
         kw.setdefault('limit', self.default_result_limit)
-        # get catalog from preference
-        #LOG("searchResult", INFO, catalog_id)
-        #         LOG("searchResult", INFO, ZCatalog.searchResults(self, query=query, sql_catalog_id=catalog_id, src__=1, **kw))
         return ZCatalog.searchResults(self, sql_catalog_id=catalog_id, **kw)
 
     __call__ = searchResults
@@ -730,7 +730,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         except IndexError:
           return None
 
-    def countResults(self, query=None, sql_catalog_id=None, local_roles=None, **kw):
+    def countResults(self, sql_catalog_id=None, local_roles=None, **kw):
         """
             Calls ZCatalog.countResults with extra arguments that
             limit the results to what the user is allowed to see.
@@ -744,14 +744,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
         catalog_id = self.getPreferredSQLCatalogId(sql_catalog_id)
         query = self.getSecurityQuery(
-          query=query,
           sql_catalog_id=catalog_id,
           local_roles=local_roles,
         )
+        if SECURITY_QUERY_ARGUMENT_NAME in kw:
+          # Note: we must *not* create a ComplexQuery on behalf of caller.
+          # ComplexQueries bypass SearchKey mechanism, which would make passed
+          # "security_query" argument behave differently from arbitrary names.
+          raise ValueError('%r is a reserved argument.' % SECURITY_QUERY_ARGUMENT_NAME)
         if query is not None:
-          kw['query'] = query
+          kw[SECURITY_QUERY_ARGUMENT_NAME] = query
         kw.setdefault('limit', self.default_count_limit)
-        # get catalog from preference
         return ZCatalog.countResults(self, sql_catalog_id=catalog_id, **kw)
 
     security.declarePrivate('unrestrictedCountResults')
