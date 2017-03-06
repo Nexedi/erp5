@@ -376,15 +376,15 @@ class BusinessManager(XMLObject):
     """
     if self.status == 'uninstalled':
       self.reduceBusinessManager()
-    elif self.status == 'reduced':
-      self.flattenBusinessManager()
+    #elif self.status == 'reduced':
+    #  self.flattenBusinessManager()
     self._install()
 
   def _install(self):
     """
     Run installation
     """
-    if self.status != 'flattened':
+    if self.status != 'reduced':
       self.install()
     else:
       # Invoke install on every BusinessItem object
@@ -434,8 +434,8 @@ class BusinessManager(XMLObject):
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
-    path_list = [path_item.getBusinessPath() for path_item
-                 in self._path_item_list]
+    path_list = list(set([path_item.getBusinessPath() for path_item
+                 in self._path_item_list]))
 
     reduced_path_item_list = []
 
@@ -463,10 +463,10 @@ class BusinessManager(XMLObject):
     for path, path_item_list in seen_path_dict.items():
 
       # Create separate list of list items with highest priority
-      higest_priority_layer = max(path_item_list, key=attrgetter('_layer'))
+      higest_priority_layer = max(path_item_list, key=attrgetter('_layer'))._layer
       prioritized_path_item = [path_item for path_item
                                in path_item_list
-                               if path_item._layer == higest_priority_layer._layer]
+                               if path_item._layer == higest_priority_layer]
 
       # Separate the positive and negative sign path_item
       if len(prioritized_path_item) > 1:
@@ -483,7 +483,7 @@ class BusinessManager(XMLObject):
         combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
 
         added_value = combined_added_path_item._value
-        subtraced_value = combined_subtracted_path_item._value
+        subtracted_value = combined_subtracted_path_item._value
 
         if added_value != subtracted_value:
           # Append the arithmetically combined path_item objects in the final
@@ -495,9 +495,11 @@ class BusinessManager(XMLObject):
           combined_subtracted_path_item._value = subtracted_value
 
           # Append the path_item to the final reduced path_item_list after
-          # doing required arithmetic on it
-          reduced_path_item_list.append(combined_added_path_item)
+          # doing required arithmetic on it. Make sure to first append
+          # subtracted item because while installation, we need to first
+          # uninstall the old object and then install new object at same path
           reduced_path_item_list.append(combined_subtracted_path_item)
+          reduced_path_item_list.append(combined_added_path_item)
 
       else:
         reduced_path_item_list.append(prioritized_path_item[0])
@@ -516,6 +518,12 @@ class BusinessManager(XMLObject):
     """
     built_in_number_type = (int, long, float, complex)
     built_in_container_type = (tuple, list, dict, set)
+    built_in_type_list = built_in_number_type + built_in_container_type
+
+    # For ERP5 objects, we should return the added and subtracted values as it is
+    if type(added_value).__name__ not in built_in_type_list and \
+        type(subtracted_value).__name__ not in built_in_type_list:
+      return added_value, subtracted_value
 
     # For all the values of container type, we remove the intersection
     added_value = [x for x in added_value if x not in subtracted_value]
@@ -609,23 +617,23 @@ class BusinessItem(Implicit, Persistent):
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
-      We go through 3 types of paths:
+    We go through 3 types of paths:
 
-      1. General path we find in erp5 for objects
-      Ex: portal_type/Person
-      In this case, we import/export the object on the path
+    1. General path we find in erp5 for objects
+    Ex: portal_type/Person
+    In this case, we import/export the object on the path
 
-      2. Path where we consider saving sub-objects also, in that case we create
-      new BusinessItem for those objects
-      Ex: portal_catalog/erp5_mysql_innodb/**
-      This should create BI for the catalog methods sub-objects present in the
-      erp5_catalog.
+    2. Path where we consider saving sub-objects also, in that case we create
+    new BusinessItem for those objects
+    Ex: portal_catalog/erp5_mysql_innodb/**
+    This should create BI for the catalog methods sub-objects present in the
+    erp5_catalog.
 
-      This method calls itself recursively.
+    This method calls itself recursively.
 
-      The folder is the current object which contains sub-objects.
-      The list of ids are path components. If the list is empty,
-      the current folder is valid.
+    The folder is the current object which contains sub-objects.
+    The list of ids are path components. If the list is empty,
+    the current folder is valid.
     """
     if len(id_list) == 0:
       return ['/'.join(relative_url_list)]
@@ -669,6 +677,7 @@ class BusinessItem(Implicit, Persistent):
     """
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
+    import pdb; pdb.set_trace()
     portal = context.getPortalObject()
     if self.isProperty:
       realtive_url, property_id = self._path.split('#')
@@ -687,16 +696,17 @@ class BusinessItem(Implicit, Persistent):
       # delete the old object before installing a new object
       if old_obj:
         container._delOb(object_id)
-      # install object
-      obj = self._value
-      obj = obj._getCopy(container)
-      container._setObject(object_id, obj)
-      obj = container._getOb(object_id)
-      obj.isIndexable = ConstantGetter('isIndexable', value=False)
-      aq_base(obj).uid = portal.portal_catalog.newUid()
-      del obj.isIndexable
-      if getattr(aq_base(obj), 'reindexObject', None) is not None:
-        obj.reindexObject()
+      if self._sign == 1:
+        # install object
+        obj = self._value
+        obj = obj._getCopy(container)
+        container._setOb(object_id, obj)
+        obj = container._getOb(object_id)
+        obj.isIndexable = ConstantGetter('isIndexable', value=False)
+        aq_base(obj).uid = portal.portal_catalog.newUid()
+        del obj.isIndexable
+        if getattr(aq_base(obj), 'reindexObject', None) is not None:
+          obj.reindexObject()
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
