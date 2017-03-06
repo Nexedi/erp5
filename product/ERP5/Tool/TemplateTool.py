@@ -1690,7 +1690,6 @@ class TemplateTool (BaseTool):
       """
       if bm.getStatus() == 'reduced':
         # Run install on separate Business Item one by one
-        import pdb; pdb.set_trace()
         for path_item in bm._path_item_list:
           path_item.install(self)
       else:
