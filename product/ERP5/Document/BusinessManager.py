@@ -320,7 +320,6 @@ class BusinessManager(XMLObject):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
-    import pdb; pdb.set_trace()
     self._path_item_list.extend(other._path_item_list)
     template_path_list = list(self.template_path_list)+list(other.template_path_list)
     self.template_path_list = template_path_list
