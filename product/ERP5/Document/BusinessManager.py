@@ -677,7 +677,6 @@ class BusinessItem(Implicit, Persistent):
     """
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
-    import pdb; pdb.set_trace()
     portal = context.getPortalObject()
     if self.isProperty:
       realtive_url, property_id = self._path.split('#')
