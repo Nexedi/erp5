@@ -57,23 +57,8 @@
 </tr>
 
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Proceed']</td>
- 	<td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tr>
- 	<td>select</td>
- 	<td>//select[@name='field_your_portal_type']</td>
-  <td>label=Foo</td>
-</tr>
-
-<tr>
- 	<td>click</td>
- 	<td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>
@@ -90,24 +75,7 @@
 
 <!-- create 2 Foo lines, one has same id as parent  -->
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Proceed']</td>
- 	<td></td>
-</tr>
-
-<tr>
- <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
- 	<td>label=Foo Line</td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -146,25 +114,7 @@
   <td></td>
 </tr>
 
-
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Proceed']</td>
- 	<td></td>
-</tr>
-
-<tr>
- <td>select</td>
-  <td>//select[@name='field_your_portal_type']</td>
- 	<td>label=Foo Line</td>
-</tr>
-
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -223,19 +173,9 @@
  	<td>//a[@data-i18n='Delete']</td>
  	<td></td>
 </tr>
- 
-<tr>
- <td>waitForElementPresent</td>
- <td>//button[@data-i18n='Proceed']</td>
- <td></td>
-</tr>
- 	
-<tr>
- 	<td>click</td>
- 	<td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
- 	
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
+
 <tr>
  	<td>waitForTextPresent</td>
  	<td>deleted</td>
@@ -302,18 +242,8 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Proceed']</td>
- 	<td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tr>
- 	<td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
- 
 <tr>
  	<td>waitForElementPresent</td>
   <td>//a[@data-i18n="Editable"]</td>
@@ -369,18 +299,8 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
- 	<td>//button[@data-i18n='Proceed']</td>
- 	<td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<tr>
- 	<td>click</td>
-  <td>//button[@data-i18n='Proceed']</td>
-  <td></td>
-</tr>
- 
 <tr>
  	<td>waitForElementPresent</td>
   <td>//a[@data-i18n="Editable"]</td>
