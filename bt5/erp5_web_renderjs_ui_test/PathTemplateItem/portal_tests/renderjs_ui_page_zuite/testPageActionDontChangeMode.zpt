@@ -85,10 +85,9 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n="Proceed"]</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_dialog.html']//input[@class='dialogconfirm' and @type='submit']</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>click</td>
