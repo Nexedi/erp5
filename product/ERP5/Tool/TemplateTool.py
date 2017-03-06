@@ -314,6 +314,7 @@ class TemplateTool (BaseTool):
       self.deleteContent(id)
       self._importObjectFromFile(StringIO(export_string), id=id)
 
+
     security.declareProtected( Permissions.ManagePortal, 'manage_download' )
     def manage_download(self, url, id=None, REQUEST=None):
       """The management interface for download.
@@ -1693,9 +1694,52 @@ class TemplateTool (BaseTool):
       """
       Run installation on flattened Business Manager
       """
-      combinedBM = self.combineMultipleBusinessManager(bm_list)
+      final_bm_list = []
+      installed_bm_list = self.getInstalledBusinessManagerList()
+      installed_bm_title_list = self.getInstalledBusinessManagerTitleList()
+      installed_bm_dict = dict(zip(installed_bm_title_list, installed_bm_list))
+      import pdb; pdb.set_trace()
+      for bm in bm_list:
+
+        if bm.title in installed_bm_title_list:
+          # Not very suitable way to look for already installed BM
+          installed_bm = installed_bm_dict[bm.title]
+          # XXX: Installed BM is already reduced. For the Business Manager we
+          # are planning to install, we should reduce it also.
+          compared_bm = self.compareBusinessManager(bm, installed_bm)
+          final_bm_list.append(compared_bm)
+
+        else:
+          final_bm_list.append(bm)
+      combinedBM = self.combineMultipleBusinessManager(final_bm_list)
       self.installBusinessManager(combinedBM)
 
+      # Explicilty change the status of Business Manager which are installed
+      for bm in bm_list:
+        bm.setStatus('installed')
+
+    def getInstalledBusinessManagerList(self):
+      bm_list = self.objectValues(portal_type='Business Manager')
+      installed_bm_list = [bm for bm in bm_list if bm.getStatus() == 'installed']
+      return installed_bm_list
+
+    def getInstalledBusinessManagerTitleList(self):
+      installed_bm_list = self.getInstalledBusinessManagerList()
+      if not len(installed_bm_list):
+        return []
+      installed_bm_title_list = [bm.title for bm in installed_bm_list]
+      return installed_bm_title_list
+
+    security.declareProtected(Permissions.ManagePortal,
+            'compareMultipleBusinessManager')
+    def compareBusinessManager(self, new_bm, old_bm):
+      """
+      Compare two business manager and return a new Business manager based on
+      the difference. This is specially required to comapre two versions of
+      Business Manager(s).
+      """
+      compared_bm = new_bm-old_bm
+      return compared_bm
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')

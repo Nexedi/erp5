@@ -320,12 +320,25 @@ class BusinessManager(XMLObject):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
+    import pdb; pdb.set_trace()
     self._path_item_list.extend(other._path_item_list)
     template_path_list = list(self.template_path_list)+list(other.template_path_list)
     self.template_path_list = template_path_list
     return self
 
   __radd__ = __add__
+
+  def __sub__(self, other):
+    """
+    Override subtract to find difference b/w the values in different cases.
+    """
+    # Reverse the sign of Business Item objects for the old Business Manager
+    for path_item in other._path_item_list:
+      path_item._sign = -1
+      self._path_item_list.append(path_item)
+    return self
+
+  __rsub__ = __add__
 
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
   def storeTemplateData(self):
@@ -786,7 +799,6 @@ class BusinessItem(Implicit, Persistent):
                          key=attrgetter('creation_date'))
 
     return merged_value
-
 
   def _guessFilename(self, document, key, data):
     """
