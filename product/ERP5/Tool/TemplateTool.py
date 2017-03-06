@@ -1698,7 +1698,7 @@ class TemplateTool (BaseTool):
       installed_bm_list = self.getInstalledBusinessManagerList()
       installed_bm_title_list = self.getInstalledBusinessManagerTitleList()
       installed_bm_dict = dict(zip(installed_bm_title_list, installed_bm_list))
-      import pdb; pdb.set_trace()
+
       for bm in bm_list:
 
         if bm.title in installed_bm_title_list:
