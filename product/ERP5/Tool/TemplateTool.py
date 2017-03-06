@@ -1657,13 +1657,20 @@ class TemplateTool (BaseTool):
       """
       Combines multiple BM to form single flattened BM
       """
+      new_bm_list = bm_list[:]
       # Create the final Business Manager
       if len(bm_list) == 1:
-        combinedBM = bm_list[0]
+        combinedBM = new_bm_list[0]
       else:
+        # Better to create a new Business Manager than to make change
+        # in the installed one
+        combinedBM = self.newContent(portal_type='Business Manager')
+        combinedBM.build()
         # Summation should also consider arithmetic on the Business Item(s)
         # having same path and layer and combine them.
-        combinedBM = reduce(lambda x, y: x+y, bm_list)
+
+        new_bm_list.insert(0, combinedBM)
+        combinedBM = reduce(lambda x, y: x+y, new_bm_list)
 
       # XXX: We are missing the part of creating installed_BM for all the BM
       # we have in bm_list, because this would be needed in case we build
@@ -1671,7 +1678,7 @@ class TemplateTool (BaseTool):
 
       # Reduce the final Business Manager
       combinedBM.reduceBusinessManager()
-      combinedBM.flattenBusinessManager()
+      # combinedBM.flattenBusinessManager()
 
       return combinedBM
 
@@ -1681,8 +1688,9 @@ class TemplateTool (BaseTool):
       """
       Run installation on flattened Business Manager
       """
-      if bm.getStatus() == 'flattened':
+      if bm.getStatus() == 'reduced':
         # Run install on separate Business Item one by one
+        import pdb; pdb.set_trace()
         for path_item in bm._path_item_list:
           path_item.install(self)
       else:
@@ -1698,10 +1706,10 @@ class TemplateTool (BaseTool):
       installed_bm_list = self.getInstalledBusinessManagerList()
       installed_bm_title_list = self.getInstalledBusinessManagerTitleList()
       installed_bm_dict = dict(zip(installed_bm_title_list, installed_bm_list))
-
       for bm in bm_list:
 
         if bm.title in installed_bm_title_list:
+
           # Not very suitable way to look for already installed BM
           installed_bm = installed_bm_dict[bm.title]
           # XXX: Installed BM is already reduced. For the Business Manager we
@@ -1711,6 +1719,7 @@ class TemplateTool (BaseTool):
 
         else:
           final_bm_list.append(bm)
+
       combinedBM = self.combineMultipleBusinessManager(final_bm_list)
       self.installBusinessManager(combinedBM)
 
@@ -1735,7 +1744,7 @@ class TemplateTool (BaseTool):
     def compareBusinessManager(self, new_bm, old_bm):
       """
       Compare two business manager and return a new Business manager based on
-      the difference. This is specially required to comapre two versions of
+      the difference. This is specially required to compare two versions of
       Business Manager(s).
       """
       compared_bm = new_bm-old_bm
