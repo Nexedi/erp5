@@ -1186,7 +1186,6 @@ class Catalog(Folder,
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
-    global global_uid_buffer_dict
     klass = self.__class__
     assert klass._reserved_uid_lock.locked()
     assert getattr(self, 'aq_base', None) is not None
