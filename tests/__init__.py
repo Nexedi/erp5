@@ -86,7 +86,10 @@ class ERP5(_ERP5):
                           'testFunctionalConfigurator',
                           'testFunctionalConfiguratorConsulting',
                           'testERP5eGov',
-                          'testAccounting_l10n_fr_m9'):
+                          'testAccounting_l10n_fr_m9',
+                          # Not a test
+                          'testERP5SyncMLMixin'
+         ):
         continue
       test_list.append(full_test_case)
     return test_list
