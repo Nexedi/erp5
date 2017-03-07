@@ -143,9 +143,6 @@ else:
 UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300 # XXX 300 is arbitrary value of catalog object list
 MAX_PATH_LEN = 255
-RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
-                     'format', 'search_mode', 'operator', 'selection_domain', 'selection_report',
-                     'extra_key_list', )
 
 valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)') # Nicer
 
