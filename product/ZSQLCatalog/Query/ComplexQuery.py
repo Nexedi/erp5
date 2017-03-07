@@ -70,6 +70,8 @@ class ComplexQuery(Query):
     assert self.logical_operator in ('and', 'or', 'not'), self.logical_operator
     unknown_column_dict = kw.pop('unknown_column_dict', {})
     self.from_expression = unknown_column_dict.pop('from_expression', None)
+    if kw:
+      raise TypeError('Unknown named arguments: %r' % (kw.keys(), ))
     query_list = []
     append = query_list.append
     extend = query_list.extend
