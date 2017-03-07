@@ -191,6 +191,7 @@ allow_type(type(f_StringIO))
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
 import datetime
+allow_type(type(datetime.datetime.strptime("","")))
 ContainerAssertions[datetime.datetime] = 1
 ContainerAssertions[datetime.time] = 1
 ContainerAssertions[datetime.date] = 1
@@ -227,6 +228,7 @@ ModuleSecurityInfo('email.mime.text').declarePublic('MIMEText')
 MNAME_MAP = {
   'zipfile': 'Products.ERP5Type.ZipFile',
   'calendar': 'Products.ERP5Type.Calendar',
+  'datetime': 'Products.ERP5Type.Datetime',
 }
 for alias, real in MNAME_MAP.items():
   assert '.' not in alias, alias # TODO: support this
