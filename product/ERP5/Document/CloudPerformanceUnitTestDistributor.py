@@ -90,12 +90,8 @@ class CloudPerformanceUnitTestDistributor(ERP5ProjectUnitTestDistributor):
     we will have only one configuration (unlike scalability tests). But for API consistency,
     always return a list.
     """
-    test_suite = self._getTestSuiteFromTitle("ERP5-Cloud-Reliability")
-    cluster_configuration = test_suite.getClusterConfiguration() or '{}'
-    try:
-      generated_configuration = {"configuration_list": [json.loads(cluster_configuration)]}
-    except ValueError:
-      generated_configuration = {"configuration_list": [{}]}
-    if batch_mode:
-      return generated_configuration
-    return json.dumps(generated_configuration)
+    # The test_suite_title parameter does not correspond exactly to the test
+    # suite title present in ERP5, as this test is not supposed to share the
+    # effort to run tests.
+    return super(CloudPerformanceUnitTestDistributor, self) \
+      .generateConfiguration("ERP5-Cloud-Reliability", batch_mode)
