@@ -584,8 +584,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             security_uid_dict = {None: [x.security_uid for x in \
               self.unrestrictedSearchResults(
                 allowedRolesAndUsers=allowedRolesAndUsers,
-                select_expression="security_uid",
-                group_by_expression="security_uid")] }
+                select_list=["security_uid"],
+                group_by=["security_uid"])] }
           else:
             # XXX: What with this string transformation ?! Souldn't it be done in
             # dtml instead ? ... yes, but how to be bw compatible ?
