@@ -49,7 +49,7 @@ request_eform.setTitle(request_eform.getOwnerFirstName()+' '+request_eform.getOw
 query=ComplexQuery(Query(title=request_eform.getTitle()),
              Query(birth_date=request_eform.getOwnerBirthday()),
              Query(birthplace_city=request_eform.getOwnerBirthplace()),
-             operator="AND")
+             logical_operator="AND")
 person_list=[person.getObject() for person in \
        context.portal_catalog(portal_type='Person',query=query)]
 

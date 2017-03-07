@@ -30,7 +30,7 @@ query = ComplexQuery(Query(parent_uid=event_uid_list),
                      Query(uid=event_uid_list),
                      Query(parent_uid=attachment_pdf_uid_list),
                      Query(uid=attachment_pdf_uid_list),
-                     operator="OR")
+                     logical_operator="OR")
 
 kw['portal_type'] = ('PDF')
 result_uid = [x.getUid() for x in context.portal_catalog(query=query, **kw)]

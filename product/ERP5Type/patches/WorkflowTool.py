@@ -282,9 +282,9 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
                         **{my_criterion_id: criterion_value})
           if isinstance(criterion_value, ExclusionTuple):
             query = NegatedQuery(query)
-            query = ComplexQuery(operator='OR',
+            query = ComplexQuery(logical_operator='OR',
                       *(query, getQuery(**{my_criterion_id: None})))
-          append(ComplexQuery(query, subcriterion_query, operator='AND'))
+          append(ComplexQuery(query, subcriterion_query, logical_operator='AND'))
   else:
     possible_value_list = tuple()
     impossible_value_list = tuple()
@@ -315,12 +315,12 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
         **{my_criterion_id: impossible_value_list}
       )
       query = NegatedQuery(query)
-      query = ComplexQuery(operator='OR',
+      query = ComplexQuery(logical_operator='OR',
                 *(query, getQuery(**{my_criterion_id: None})))
       value_query_list.append(query)
-    append(ComplexQuery(operator='AND', *value_query_list))
+    append(ComplexQuery(logical_operator='AND', *value_query_list))
   if len(query_list):
-    return ComplexQuery(operator='OR', *query_list)
+    return ComplexQuery(logical_operator='OR', *query_list)
   return None
 
 def getWorklistListQuery(getQuery, grouped_worklist_dict):

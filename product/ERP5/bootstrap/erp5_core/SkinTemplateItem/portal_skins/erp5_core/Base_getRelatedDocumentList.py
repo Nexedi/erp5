@@ -11,6 +11,6 @@ if follow_up_related_document_list:
   kw['query'] = ComplexQuery(
     kw['query'],
     Query(uid=[x.getUid() for x in follow_up_related_document_list]),
-    operator='or')
+    logical_operator='or')
 
 return portal_catalog(portal_type=portal_type, limit=limit, **kw)

@@ -619,8 +619,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         for key, value in role_column_dict.items():
           new_query = Query(**{key : value})
           query_list.append(new_query)
-        operator_kw = {'operator': 'OR'}
-        role_query = ComplexQuery(*query_list, **operator_kw)
+        role_query = ComplexQuery(logical_operator='OR', *query_list)
       if security_uid_dict:
         catalog_security_uid_groups_columns_dict = \
             self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
@@ -634,12 +633,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                   security_uid_list,
             'operator': 'IN'}))
 
-        security_uid_query = ComplexQuery(*query_list, operator='OR')
+        security_uid_query = ComplexQuery(*query_list, logical_operator='OR')
 
       if role_query:
         if security_uid_query:
           # merge
-          query = ComplexQuery(security_uid_query, role_query, operator='OR')
+          query = ComplexQuery(security_uid_query, role_query, logical_operator='OR')
         else:
           query = role_query
       elif security_uid_query:
@@ -659,9 +658,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         for key, value in local_role_column_dict.items():
           new_query = Query(**{key : value})
           query_list.append(new_query)
-        operator_kw = {'operator': 'AND'}
-        local_role_query = ComplexQuery(*query_list, **operator_kw)
-        query = ComplexQuery(query, local_role_query, operator='AND')
+        local_role_query = ComplexQuery(logical_operator='AND', *query_list)
+        query = ComplexQuery(query, local_role_query, logical_operator='AND')
 
       return query
 

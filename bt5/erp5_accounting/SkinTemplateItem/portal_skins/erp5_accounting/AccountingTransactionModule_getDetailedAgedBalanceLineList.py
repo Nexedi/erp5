@@ -15,7 +15,7 @@ section_uid = portal.Base_getSectionUidListForSectionCategory(
 grouping_query = ComplexQuery(
       Query(grouping_reference=None),
       Query(grouping_date=at_date, range="min"),
-      operator="OR")
+      logical_operator="OR")
       
 account_number_memo = {}
 def getAccountNumber(account_url):

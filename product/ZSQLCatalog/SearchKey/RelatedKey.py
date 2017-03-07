@@ -231,7 +231,7 @@ class RelatedKey(SearchKey):
     # Example:
     #   ComplexQuery(Query(title="foo"),
     #                Query(subordination_title="bar")
-    #                , operator='OR')
+    #                , logical_operator='OR')
     # Former catalog rendering (truncated where-expression):
     #   AND ((catalog.title LIKE '%foo%') OR
     #        (related_catalog_1.title LIKE '%bar%'))

@@ -48,7 +48,7 @@ for item in items:
 #    query = ComplexQuery(Query(title=person_title),
 #                 Query(birth_date=item['start_date']),
 #                 Query(birthplace_city=item['default_birthplace_address_city']),
-#                 operator="AND")
+#                 logical_operator="AND")
 #    best_candidate_list=list(context.portal_catalog(portal_type='Person',
 #                                        query=query))
 #verify that the new person is not selected more than once in the fast input 

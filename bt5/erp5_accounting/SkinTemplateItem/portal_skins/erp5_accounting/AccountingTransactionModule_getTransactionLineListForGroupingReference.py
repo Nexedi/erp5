@@ -69,7 +69,7 @@ else:
 if title:
   search_kw['title_query'] = ComplexQuery(Query(title=title),
                                           Query(parent_title=title),
-                                          operator='OR')
+                                          logical_operator='OR')
 if delivery_reference:
   search_kw['parent_reference'] = delivery_reference
 if debit_price:

@@ -54,31 +54,31 @@ if person_start_date == None or person_birthplace == None:
                        Query(title = person_title_reversed),
                        Query(title = person_first_name),
                        Query(title = person_last_name),
-                       operator = "OR")
+                       logical_operator = "OR")
 else:
   query = ComplexQuery(Query(title = person_title),
                        ComplexQuery(
                          Query(title = person_title),
                          Query(birth_date = person_start_date),
-                         operator = "AND"),
+                         logical_operator = "AND"),
                        ComplexQuery(
                          Query(title = person_title),
                          Query(birthplace_city = person_birthplace),
-                         operator = "AND"),
+                         logical_operator = "AND"),
                        ComplexQuery(
                          Query(birth_date = person_start_date),
                          Query(birthplace_city = person_birthplace),
-                         operator = "AND"),
+                         logical_operator = "AND"),
                        ComplexQuery(
                          Query(title = person_title_reversed),
                          Query(title = person_first_name),
                          Query(title = person_last_name),
-                         operator = "OR"),
+                         logical_operator = "OR"),
                        ComplexQuery(
                          Query(title = person_title),
                          Query(birth_date = [DateTime(person_start_date.year(), 1, 1), DateTime(person_start_date.year(), 12, 31),],range = 'minmax'),
-                         operator = "AND"),
-                         operator = "OR")
+                         logical_operator = "AND"),
+                         logical_operator = "OR")
 select_expression = \
 """((title ="%s"))AS result_order
 """ % (person_title)

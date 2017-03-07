@@ -18,7 +18,7 @@ for base_category_name, category in category_dict.items():
                                key='ExactMatch'),
                          Query(reference=category,
                                key='ExactMatch'),
-                         operator='OR'),
+                         logical_operator='OR'),
                 ComplexQuery(Query(relative_url='%s/%%' % base_category_name)))
     category_value = portal.portal_catalog.getResultValue(query=query)
 

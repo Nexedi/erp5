@@ -204,7 +204,7 @@ class NodeBudgetVariation(BudgetVariation):
             query = ComplexQuery(
                             NegatedQuery(Query(**{axis: other_uid_list})),
                             Query(**{axis: None}),
-                            operator="OR")
+                            logical_operator="OR")
 
         else:
           value = portal_categories.getCategoryValue(node_url,
@@ -219,7 +219,7 @@ class NodeBudgetVariation(BudgetVariation):
         query_dict[axis] = ComplexQuery(
               query,
               Query(**{axis: query_dict[axis]}),
-              operator='OR')
+              logical_operator='OR')
       else:
         query_dict[axis] = query
 
@@ -297,7 +297,7 @@ class NodeBudgetVariation(BudgetVariation):
           query_dict[axis] = ComplexQuery(
                 Query(**{axis: None}),
                 Query(**{axis: query_dict[axis]}),
-                operator="OR")
+                logical_operator="OR")
         else:
           query_dict[axis] = Query(**{axis: None})
       return query_dict

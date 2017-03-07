@@ -93,7 +93,7 @@ if portal.portal_selections.getSelectionParamsFor(selection_name).get('omit_grou
     params['grouping_query'] = ComplexQuery(
       Query(grouping_reference=None),
       Query(grouping_date=params['at_date'], range="min"),
-      operator="OR")
+      logical_operator="OR")
   else:
     params['grouping_reference'] = None
 

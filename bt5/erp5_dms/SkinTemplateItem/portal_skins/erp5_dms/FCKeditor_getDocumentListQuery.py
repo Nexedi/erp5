@@ -11,5 +11,5 @@ return ComplexQuery(
     Query(validation_state=('published', 'published_alive', 'released', 'released_alive', 'shared', 'shared_alive'),
           reference='!=None'),
     Query(validation_state='embedded', parent_uid=context.getUid()),
-    operator='or'),
-  operator='and')
+    logical_operator='or'),
+  logical_operator='and')

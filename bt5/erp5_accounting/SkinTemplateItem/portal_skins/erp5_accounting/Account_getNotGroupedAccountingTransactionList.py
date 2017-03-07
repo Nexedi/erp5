@@ -17,7 +17,7 @@ inventory_query = {
   'grouping_query': ComplexQuery(
     Query(grouping_reference=None),
     Query(grouping_date=at_date, range="min"),
-    operator="OR"),
+    logical_operator="OR"),
   'simulation_state': params['simulation_state'],
   'node_uid': kw['node_uid'],
   'portal_type': portal.getPortalAccountingMovementTypeList(),

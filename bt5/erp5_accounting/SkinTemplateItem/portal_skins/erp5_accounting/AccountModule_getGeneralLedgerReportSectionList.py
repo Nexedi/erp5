@@ -101,7 +101,7 @@ if request.get('omit_grouping_reference', False):
     params['grouping_query'] = ComplexQuery(
       Query(grouping_reference=None),
       Query(grouping_date=at_date, range="min"),
-      operator="OR")
+      logical_operator="OR")
   else:
     params['grouping_reference'] = None
 

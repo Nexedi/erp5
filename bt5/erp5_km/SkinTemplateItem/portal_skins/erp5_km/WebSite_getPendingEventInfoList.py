@@ -30,7 +30,7 @@ for action in ordered_global_action_list:
       sub_query_list = []
       for k, v in query_dict.items():
         sub_query_list.append(Query(**{k: v}))
-      complex_query = ComplexQuery(*sub_query_list, **dict(operator="AND"))
+      complex_query = ComplexQuery(logical_operator="AND", *sub_query_list)
       # add to query filtering by local roles as defined in worklist
       complex_query = portal.portal_catalog.getSecurityQuery(query=complex_query, local_roles=local_roles)
       query_list.append(complex_query)
@@ -43,7 +43,7 @@ if not query_list:
     return []
 
 # Invoke catalog
-query = ComplexQuery(*query_list, **dict(operator="OR"))
+query = ComplexQuery(logical_operator="OR", *query_list)
 #query = portal.portal_catalog.getSecurityQuery(query)
 #result_list = portal.portal_catalog(query=query,
 #                                    sort_on='modification_date',

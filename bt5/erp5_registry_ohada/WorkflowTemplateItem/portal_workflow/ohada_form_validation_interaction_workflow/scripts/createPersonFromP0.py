@@ -79,7 +79,7 @@ new_registry_number = request_eform.portal_ids.generateNewId(
 query=ComplexQuery(Query(title=request_eform.getTitle()),
              Query(birth_date=request_eform.getStartDate()),
              Query(birthplace_city=request_eform.getDefaultBirthplaceAddressCity()),
-             operator="AND")
+             logical_operator="AND")
 person_list = [person.getObject() for person in person_module.searchFolder(query=query)]
 if  request_eform.getBeginning() or request_eform.getOpening():
   if len(person_list) == 0:

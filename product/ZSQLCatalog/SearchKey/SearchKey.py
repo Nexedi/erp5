@@ -362,7 +362,7 @@ class SearchKey(object):
     if len(query_list) == 1:
       query = query_list[0]
     else:
-      query = ComplexQuery(query_list, operator=logical_operator)
+      query = ComplexQuery(query_list, logical_operator=logical_operator)
     return query
 
   def parseSearchText(self, value, is_column):

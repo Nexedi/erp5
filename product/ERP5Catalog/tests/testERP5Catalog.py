@@ -1213,7 +1213,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # title='bcd' OR description='efg'
     catalog_kw = {'query':ComplexQuery(Query(title='bcd'),
                                        Query(description='efg'),
-                                       operator='OR')}
+                                       logical_operator='OR')}
     self.failIfDifferentSet([org_b.getPath(), org_c.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
@@ -1222,11 +1222,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     #  title='foo' and description='bar'
     catalog_kw = {'query':ComplexQuery(ComplexQuery(SimpleQuery(title='abc'),
                                                     SimpleQuery(description='abc'),
-                                                    operator='AND'),
+                                                    logical_operator='AND'),
                                        ComplexQuery(SimpleQuery(title='foo'),
                                                     SimpleQuery(description='bar'),
-                                                    operator='AND'),
-                                       operator='OR')}
+                                                    logical_operator='AND'),
+                                       logical_operator='OR')}
     self.failIfDifferentSet([org_a.getPath(), org_f.getPath()],
         [x.path for x in self.getCatalogTool()(
                 portal_type='Organisation',**catalog_kw)])
@@ -1719,7 +1719,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # First try without aliases
     query1 = Query(parent_portal_type="Organisation")
     query2 = Query(grand_parent_portal_type="Organisation Module")
-    complex_query = ComplexQuery(query1, query2, operator="AND")
+    complex_query = ComplexQuery(query1, query2, logical_operator="AND")
     self.failIfDifferentSet([org_a.getPath() + '/default_address'],
         [x.path for x in self.getCatalogTool()(query=complex_query)])
     # Then try with aliases
@@ -1728,7 +1728,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     query2 = Query(grand_parent_portal_type="Organisation Module",
                    table_alias_list=(("catalog" , "parent"),
                                     ("catalog", "grand_parent")))
-    complex_query = ComplexQuery(query1, query2, operator="AND")
+    complex_query = ComplexQuery(query1, query2, logical_operator="AND")
     self.failIfDifferentSet([org_a.getPath() + '/default_address'],
         [x.path for x in self.getCatalogTool()(query=complex_query)])
     sql_kw = self.getCatalogTool().buildSQLQuery(query=complex_query)
@@ -2180,27 +2180,27 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # complex query
     query = ComplexQuery(Query(portal_type='Person'),
                          Query(region_uid=asia.getUid()),
-                         operator='AND')
+                         logical_operator='AND')
     self.assertEqual(len(catalog(query=query)), 1)
 
     # complex query
     query = ComplexQuery(Query(portal_type='Person'),
                          Query(region_uid=(africa.getUid(), asia.getUid())),
-                         operator='AND')
+                         logical_operator='AND')
     self.assertEqual(len(catalog(query=query)), 2)
 
     # more complex query
     query_find_european = ComplexQuery(Query(portal_type='Person'),
                                        Query(region_uid=europe.getUid()),
-                                       operator='AND')
+                                       logical_operator='AND')
     self.assertEqual(len(catalog(query=query_find_european)), 1)
 
     query_find_name_erp5 = ComplexQuery(Query(portal_type='Person'),
                                         Query(title='%ERP5'),
-                                        operator='AND')
+                                        logical_operator='AND')
     self.assertEqual(len(catalog(query=query_find_name_erp5)), 2)
 
-    self.assertRaises(NotImplementedError, ComplexQuery, query_find_european, query_find_name_erp5, operator='OR')
+    self.assertRaises(NotImplementedError, ComplexQuery, query_find_european, query_find_name_erp5, logical_operator='OR')
 
   def test_check_security_table_content(self):
     sql_connection = self.getSQLConnection()
@@ -3525,19 +3525,19 @@ VALUES
           'site_reference="foo" AND function_description="bar"',
           ComplexQuery(Query(site_reference='foo'),
                        Query(function_description='bar'),
-                       operator='AND'))
+                       logical_operator='AND'))
     # Double join on same relation
     check(both_object_list,
           'site_reference="foo" AND site_description="bar"',
           ComplexQuery(Query(site_reference='foo'),
                        Query(site_description='bar'),
-                       operator='AND'))
+                       logical_operator='AND'))
     # Double join on same related key
     check(title_object_list,
           'site_title="foo1" AND site_title="foo2"',
           ComplexQuery(Query(site_title='=foo1'),
                        Query(site_title='=foo2'),
-                       operator='AND'))
+                       logical_operator='AND'))
 
   def test_SearchFolderWithRelatedDynamicRelatedKey(self):
     # Create some objects

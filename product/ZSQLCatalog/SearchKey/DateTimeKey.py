@@ -162,7 +162,7 @@ def wholePeriod(search_key, group, column, value_list, exclude=False):
     first_date, second_date = getPeriodBoundaries(value)
     append(ComplexQuery([SimpleQuery(search_key=search_key, comparison_operator=first_operator, group=group, **{column: first_date}),
                          SimpleQuery(search_key=search_key, comparison_operator=second_operator, group=group, **{column: second_date})],
-                        operator=logical_operator))
+                        logical_operator=logical_operator))
   return query_list
 
 def matchWholePeriod(search_key, group, column, value_list, *ignored):

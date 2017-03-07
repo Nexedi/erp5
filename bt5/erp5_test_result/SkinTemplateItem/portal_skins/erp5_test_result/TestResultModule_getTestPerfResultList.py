@@ -16,11 +16,11 @@ new_test_result_list = []
 context.log("rev_query_list", rev_query_list)
 if rev_query_list:
   result = context.searchFolder(title='PERF-ERP5-MASTER', simulation_state='stopped',
-    revision=ComplexQuery(operator='AND', *rev_query_list),
+    revision=ComplexQuery(logical_operator='AND', *rev_query_list),
     sort_on=(('delivery.start_date', 'ASC'),),src__=1)
   context.log("result", result)
   for test in context.searchFolder(title='PERF-ERP5-MASTER', simulation_state='stopped',
-    revision=ComplexQuery(operator='AND', *rev_query_list),
+    revision=ComplexQuery(logical_operator='AND', *rev_query_list),
     sort_on=(('delivery.start_date', 'ASC'),)):
     test = test.getObject()
     if revision != test.getReference():

@@ -61,7 +61,7 @@ for key in sorted(request.form.keys()):
       q_kw = {key : None}
       left_join_list.append(key) 
       left_join_list.append('strict_%s' % key)
-      query_list.append(ComplexQuery(NegatedQuery(Query(**nq_kw)), Query(**q_kw), operator="OR"))
+      query_list.append(ComplexQuery(NegatedQuery(Query(**nq_kw)), Query(**q_kw), logical_operator="OR"))
       new_mapping[key] = ""
       new_mapping["dialog_%s" %(key,)] = value
       new_mapping["dialog_excluded_%s" %(key,)] = True

@@ -121,16 +121,16 @@ if __name__ == '__main__':
       return not (self == other)
 
   class ComplexQuery:
-    def __init__(self, query_list, operator):
-      self.operator = operator
+    def __init__(self, query_list, logical_operator):
+      self.logical_operator = logical_operator
       self.query_list = query_list
 
     def __repr__(self):
-      return 'ComplexQuery(%r, operator=%r)' % (self.query_list, self.operator)
+      return 'ComplexQuery(%r, logical_operator=%r)' % (self.query_list, self.logical_operator)
 
     def __eq__(self, other):
       if isinstance(other, ComplexQuery):
-        if self.operator != other.operator:
+        if self.logical_operator != other.logical_operator:
           return False
         other_query_list = other.query_list[:]
         for my_query in self.query_list:
@@ -178,17 +178,17 @@ if __name__ == '__main__':
     ('+1', None),
     ('-1', None),
 
-    ('foo OR "-" OR bar OR -baz', ComplexQuery([Query(None, 'foo'), Query(None, '-'), Query(None, 'bar'), Query(None, '-baz')], operator='or')),
-    ('foo "-" bar -baz',          ComplexQuery([Query(None, 'foo'), Query(None, '-'), Query(None, 'bar'), Query(None, '-baz')], operator='and')),
+    ('foo OR "-" OR bar OR -baz', ComplexQuery([Query(None, 'foo'), Query(None, '-'), Query(None, 'bar'), Query(None, '-baz')], logical_operator='or')),
+    ('foo "-" bar -baz',          ComplexQuery([Query(None, 'foo'), Query(None, '-'), Query(None, 'bar'), Query(None, '-baz')], logical_operator='and')),
     ('title:foo',                 Query('title', 'foo')),
     ('title: foo',                Query('title', 'foo')),
-    ('title:foo bar',             ComplexQuery([Query('title', 'foo'), Query(None, 'bar')], operator='and')),
+    ('title:foo bar',             ComplexQuery([Query('title', 'foo'), Query(None, 'bar')], logical_operator='and')),
     ('title:"foo bar"',           Query('title', 'foo bar')),
     ('"title:foo bar"',           Query(None, 'title:foo bar')),
     ('"foo bar"',                 Query(None, 'foo bar')),
     ('"foo   bar"',               Query(None, 'foo   bar')),
-    ('foo AND bar',               ComplexQuery([Query(None, 'foo'), Query(None, 'bar')], operator='and')),
-    ('foo OR bar',                ComplexQuery([Query(None, 'foo'), Query(None, 'bar')], operator='or')),
+    ('foo AND bar',               ComplexQuery([Query(None, 'foo'), Query(None, 'bar')], logical_operator='and')),
+    ('foo OR bar',                ComplexQuery([Query(None, 'foo'), Query(None, 'bar')], logical_operator='or')),
     ('"foo AND bar"',             Query(None, 'foo AND bar')),
     ('"foo and bar"',             Query(None, 'foo and bar')),
     ('"foo OR bar"',              Query(None, 'foo OR bar')),
@@ -199,18 +199,18 @@ if __name__ == '__main__':
     ('">1"',                      Query(None, '>1')),
     ('>a',                        Query(None, 'a', '>')),
     ('">a"',                      Query(None, '>a')),
-    ('>1 0',                      ComplexQuery([Query(None, '1', '>'), Query(None, '0')], operator='and')),
+    ('>1 0',                      ComplexQuery([Query(None, '1', '>'), Query(None, '0')], logical_operator='and')),
     ('>=1',                       Query(None, '1', '>=')),
     ('>"=1"',                     Query(None, '=1', '>')),
-    ('-"1"',                      ComplexQuery([Query(None, '-'), Query(None, '1')], operator='and')),
+    ('-"1"',                      ComplexQuery([Query(None, '-'), Query(None, '1')], logical_operator='and')),
     ('"!-1"',                     Query(None, '!-1')),
 #    (r"a:'tu:\'tu\''",            ['a', "tu:'tu'"]),
     (r'''b:"tu:\'tu\'"''',        Query('b', "tu:\\'tu\\'")),
     (r'''c:"tu:'tu'"''',          Query('c', "tu:'tu'")),
     (r'd:"tu:\"tu\""',            Query('d', 'tu:"tu"')),
-    ('toto: tutu tutu',           ComplexQuery([Query('toto', 'tutu'), Query(None, 'tutu')], operator='and')),
-    ('(tutu) (toto:tata)',        ComplexQuery([Query(None, 'tutu'), Query('toto', 'tata')], operator='and')),
-    ('(tutu) (toto:"tata")',      ComplexQuery([Query(None, 'tutu'), Query('toto', 'tata')], operator='and')),
+    ('toto: tutu tutu',           ComplexQuery([Query('toto', 'tutu'), Query(None, 'tutu')], logical_operator='and')),
+    ('(tutu) (toto:tata)',        ComplexQuery([Query(None, 'tutu'), Query('toto', 'tata')], logical_operator='and')),
+    ('(tutu) (toto:"tata")',      ComplexQuery([Query(None, 'tutu'), Query('toto', 'tata')], logical_operator='and')),
 #    ('toto:',                     ['toto', '']),
     ('toto:""',                   Query('toto', '')),
 #    ("''",                        ''),
@@ -219,49 +219,49 @@ if __name__ == '__main__':
     (r'"\n"',                     Query(None, '\\n')),
 #こんにちは
     (u'ん',                       None),
-    (u'(toto:ん) OR (titi:ん)',   ComplexQuery([Query('toto', u'ん'), Query('titi', u'ん')], operator='or')),
+    (u'(toto:ん) OR (titi:ん)',   ComplexQuery([Query('toto', u'ん'), Query('titi', u'ん')], logical_operator='or')),
     ('ん',                        None),
-    ('(toto:ん) OR (titi:ん)',    ComplexQuery([Query('toto', 'ん'), Query('titi', 'ん')], operator='or')),
+    ('(toto:ん) OR (titi:ん)',    ComplexQuery([Query('toto', 'ん'), Query('titi', 'ん')], logical_operator='or')),
     ('(foo)',                     Query(None, 'foo')),
     ('toto:(foo)',                Query('toto', 'foo')),
-    ('(foo OR bar)',              ComplexQuery([Query(None, 'foo'), Query(None, 'bar')], operator='or')),
+    ('(foo OR bar)',              ComplexQuery([Query(None, 'foo'), Query(None, 'bar')], logical_operator='or')),
     ('(a AND b) OR (c AND (d OR e))',
-                                  ComplexQuery([ComplexQuery([Query(None, 'a'), Query(None, 'b')], operator='and'), ComplexQuery([Query(None, 'c'), ComplexQuery([Query(None, 'd'), Query(None, 'e')], operator='or')], operator='and')], operator='or')),
-    ('(foo:"") (bar:baz)',        ComplexQuery([Query('foo', ''), Query('bar', 'baz')], operator='and')),
-    ('(foo:"") (OR:bar)',         ComplexQuery([Query('foo', ''), Query(None, 'OR:bar')], operator='and')),
+                                  ComplexQuery([ComplexQuery([Query(None, 'a'), Query(None, 'b')], logical_operator='and'), ComplexQuery([Query(None, 'c'), ComplexQuery([Query(None, 'd'), Query(None, 'e')], logical_operator='or')], logical_operator='and')], logical_operator='or')),
+    ('(foo:"") (bar:baz)',        ComplexQuery([Query('foo', ''), Query('bar', 'baz')], logical_operator='and')),
+    ('(foo:"") (OR:bar)',         ComplexQuery([Query('foo', ''), Query(None, 'OR:bar')], logical_operator='and')),
 #    ('foo: OR',                   ['foo', 'or']),
 #    ('foo: OR ',                  ['foo', 'or']),
 #    ('(foo:)',                    ['foo', '']),
     ('(foo: bar)',                Query('foo', 'bar')),
-    ('(a:b) AND (c:d)',           ComplexQuery([Query('a', 'b'), Query('c', 'd')], operator='and')),
-    ('a:(b c)',                   ComplexQuery([Query('a', 'b'), Query('a', 'c')], operator='or')),
-    ('a:(b OR c)',                ComplexQuery([Query('a', 'b'), Query('a', 'c')], operator='or')),
-    ('a:(b c d)',                 ComplexQuery([Query('a', 'b'), Query('a', 'c'), Query('a', 'd')], operator='or')),
-    ('a:(b (c d))',               ComplexQuery([Query('a', 'b'), Query('a', 'c'), Query('a', 'd')], operator='or')),
-    ('a:(b OR (c d))',            ComplexQuery([Query('a', 'b'), Query('a', 'c'), Query('a', 'd')], operator='or')),
+    ('(a:b) AND (c:d)',           ComplexQuery([Query('a', 'b'), Query('c', 'd')], logical_operator='and')),
+    ('a:(b c)',                   ComplexQuery([Query('a', 'b'), Query('a', 'c')], logical_operator='or')),
+    ('a:(b OR c)',                ComplexQuery([Query('a', 'b'), Query('a', 'c')], logical_operator='or')),
+    ('a:(b c d)',                 ComplexQuery([Query('a', 'b'), Query('a', 'c'), Query('a', 'd')], logical_operator='or')),
+    ('a:(b (c d))',               ComplexQuery([Query('a', 'b'), Query('a', 'c'), Query('a', 'd')], logical_operator='or')),
+    ('a:(b OR (c d))',            ComplexQuery([Query('a', 'b'), Query('a', 'c'), Query('a', 'd')], logical_operator='or')),
     ('"JeanANDPaul"',             Query(None, 'JeanANDPaul')),
-    ('"Jean" AND "Paul"',         ComplexQuery([Query(None, 'Jean'), Query(None, 'Paul')], operator='and')),
-    ('"jean paul" OR "thierry"',  ComplexQuery([Query(None, 'jean paul'), Query(None, 'thierry')], operator='or')),
-    ('title:Paul Jean Lili',      ComplexQuery([Query('title', 'Paul'), Query(None, 'Jean'), Query(None, 'Lili')], operator='and')),
+    ('"Jean" AND "Paul"',         ComplexQuery([Query(None, 'Jean'), Query(None, 'Paul')], logical_operator='and')),
+    ('"jean paul" OR "thierry"',  ComplexQuery([Query(None, 'jean paul'), Query(None, 'thierry')], logical_operator='or')),
+    ('title:Paul Jean Lili',      ComplexQuery([Query('title', 'Paul'), Query(None, 'Jean'), Query(None, 'Lili')], logical_operator='and')),
     ('toto AND titi OR tutu AND tata OR toto',
-                                  ComplexQuery([ComplexQuery([Query(None, 'toto'), Query(None, 'titi')], operator='and'), ComplexQuery([Query(None, 'tutu'), Query(None, 'tata')], operator='and'), Query(None, 'toto')], operator='or')),
+                                  ComplexQuery([ComplexQuery([Query(None, 'toto'), Query(None, 'titi')], logical_operator='and'), ComplexQuery([Query(None, 'tutu'), Query(None, 'tata')], logical_operator='and'), Query(None, 'toto')], logical_operator='or')),
     ('toto AND (titi OR tutu) AND tata OR toto',
-                                  ComplexQuery([ComplexQuery([Query(None, 'toto'), ComplexQuery([Query(None, 'titi'), Query(None, 'tutu')], operator='or'), Query(None, 'tata')], operator='and'), Query(None, 'toto')], operator='or')),
+                                  ComplexQuery([ComplexQuery([Query(None, 'toto'), ComplexQuery([Query(None, 'titi'), Query(None, 'tutu')], logical_operator='or'), Query(None, 'tata')], logical_operator='and'), Query(None, 'toto')], logical_operator='or')),
     ('"OR ARGENT"',               Query(None, 'OR ARGENT')),
-    ('1 AND 2 OR 3',              ComplexQuery([ComplexQuery([Query(None, '1'), Query(None, '2')], operator='and'), Query(None, '3')], operator='or')),
-    ('1 OR 2 AND 3',              ComplexQuery([Query(None, '1'), ComplexQuery([Query(None, '2'), Query(None, '3')], operator='and')], operator='or')),
-    ('1 AND 2 3',                 ComplexQuery([Query(None, '1'), Query(None, '2'), Query(None, '3')], operator='and')),
-    ('1 2 AND 3',                 ComplexQuery([Query(None, '1'), Query(None, '2'), Query(None, '3')], operator='and')),
-    ('10 11 AND 12 13',            ComplexQuery([Query(None, '10'), Query(None, '11'), Query(None, '12'), Query(None, '13')], operator='and')),
-    ('1 OR 2 3',                 ComplexQuery([Query(None, '1'), ComplexQuery([Query(None, '2'), Query(None, '3')], operator='and')], operator='or')),
-    ('1 2 OR 3',                 ComplexQuery([ComplexQuery([Query(None, '1'), Query(None, '2')], operator='and'), Query(None, '3')], operator='or')),
-    ('10 11 OR 12 13',            ComplexQuery([ComplexQuery([Query(None, '10'), Query(None, '11')], operator='and'), ComplexQuery([Query(None, '12'), Query(None, '13')], operator='and')], operator='or')),
+    ('1 AND 2 OR 3',              ComplexQuery([ComplexQuery([Query(None, '1'), Query(None, '2')], logical_operator='and'), Query(None, '3')], logical_operator='or')),
+    ('1 OR 2 AND 3',              ComplexQuery([Query(None, '1'), ComplexQuery([Query(None, '2'), Query(None, '3')], logical_operator='and')], logical_operator='or')),
+    ('1 AND 2 3',                 ComplexQuery([Query(None, '1'), Query(None, '2'), Query(None, '3')], logical_operator='and')),
+    ('1 2 AND 3',                 ComplexQuery([Query(None, '1'), Query(None, '2'), Query(None, '3')], logical_operator='and')),
+    ('10 11 AND 12 13',            ComplexQuery([Query(None, '10'), Query(None, '11'), Query(None, '12'), Query(None, '13')], logical_operator='and')),
+    ('1 OR 2 3',                 ComplexQuery([Query(None, '1'), ComplexQuery([Query(None, '2'), Query(None, '3')], logical_operator='and')], logical_operator='or')),
+    ('1 2 OR 3',                 ComplexQuery([ComplexQuery([Query(None, '1'), Query(None, '2')], logical_operator='and'), Query(None, '3')], logical_operator='or')),
+    ('10 11 OR 12 13',            ComplexQuery([ComplexQuery([Query(None, '10'), Query(None, '11')], logical_operator='and'), ComplexQuery([Query(None, '12'), Query(None, '13')], logical_operator='and')], logical_operator='or')),
     ('((1 AND 2 OR 3) OR (4 OR 5 6) OR (7 8 OR 9) OR (10 11 OR 12 13))',
-                                  ComplexQuery([ComplexQuery([Query(None, '1', '='), Query(None, '2', '=')], operator='and'), Query(None, '3', '='), Query(None, '4', '='), ComplexQuery([Query(None, '5', '='), Query(None, '6', '=')], operator='and'), ComplexQuery([Query(None, '7', '='), Query(None, '8', '=')], operator='and'), Query(None, '9', '='), ComplexQuery([Query(None, '10', '='), Query(None, '11', '=')], operator='and'), ComplexQuery([Query(None, '12', '='), Query(None, '13', '=')], operator='and')], operator='or')),
+                                  ComplexQuery([ComplexQuery([Query(None, '1', '='), Query(None, '2', '=')], logical_operator='and'), Query(None, '3', '='), Query(None, '4', '='), ComplexQuery([Query(None, '5', '='), Query(None, '6', '=')], logical_operator='and'), ComplexQuery([Query(None, '7', '='), Query(None, '8', '=')], logical_operator='and'), Query(None, '9', '='), ComplexQuery([Query(None, '10', '='), Query(None, '11', '=')], logical_operator='and'), ComplexQuery([Query(None, '12', '='), Query(None, '13', '=')], logical_operator='and')], logical_operator='or')),
     ('((titi:foo) AND (toto:bar)) OR ((titi:bar) AND (toto:foo))',
-                                  ComplexQuery([ComplexQuery([Query('titi', 'foo'), Query('toto', 'bar')], operator='and'), ComplexQuery([Query('titi', 'bar'), Query('toto', 'foo')], operator='and')], operator='or')),
-    ('title:(Paul Jean OR Lili)', ComplexQuery([Query('title', 'Paul'), Query('title', 'Jean'), Query('title', 'Lili')], operator='or')),
-    ('title:Paul Jean OR Lili',   ComplexQuery([ComplexQuery([Query('title', 'Paul'), Query(None, 'Jean')], operator='and'), Query(None, 'Lili')], operator='or')),
+                                  ComplexQuery([ComplexQuery([Query('titi', 'foo'), Query('toto', 'bar')], logical_operator='and'), ComplexQuery([Query('titi', 'bar'), Query('toto', 'foo')], logical_operator='and')], logical_operator='or')),
+    ('title:(Paul Jean OR Lili)', ComplexQuery([Query('title', 'Paul'), Query('title', 'Jean'), Query('title', 'Lili')], logical_operator='or')),
+    ('title:Paul Jean OR Lili',   ComplexQuery([ComplexQuery([Query('title', 'Paul'), Query(None, 'Jean')], logical_operator='and'), Query(None, 'Lili')], logical_operator='or')),
   ]
 
   def walk(node, key=None):
@@ -279,7 +279,7 @@ if __name__ == '__main__':
       query_list = [walk(x, key) for x in node.getNodeList()]
       operator = node.getLogicalOperator()
       if operator == 'not' or len(query_list) > 1:
-        result = ComplexQuery(query_list, operator=operator)
+        result = ComplexQuery(query_list, logical_operator=logical_operator)
       elif len(query_list) == 1:
         result = query_list[0]
       else:

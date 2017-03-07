@@ -246,7 +246,7 @@ class SimulationTool(BaseTool):
         simulation_query = ComplexQuery(
           self._getIncreaseQuery(table, 'quantity', True),
           SimpleQuery(**{table + '.simulation_state': input_simulation_state}),
-          operator='AND',
+          logical_operator='AND',
         )
         output_simulation_state = simulation_state_dict.get('output_simulation_state')
         if output_simulation_state is not None:
@@ -255,9 +255,9 @@ class SimulationTool(BaseTool):
             ComplexQuery(
               self._getIncreaseQuery(table, 'quantity', False),
               SimpleQuery(**{table + '.simulation_state': output_simulation_state}),
-              operator='AND',
+              logical_operator='AND',
             ),
-            operator='OR'
+            logical_operator='OR'
           )
         return simulation_query
 
@@ -378,14 +378,14 @@ class SimulationTool(BaseTool):
         ComplexQuery(
           SimpleQuery(comparison_operator='<', **{table + '.' + column: 0}),
           SimpleQuery(**{table + '.is_cancellation': increase}),
-          operator='AND',
+          logical_operator='AND',
         ),
         ComplexQuery(
           SimpleQuery(comparison_operator='>=', **{table + '.' + column: 0}),
           SimpleQuery(**{table + '.is_cancellation': not increase}),
-          operator='AND',
+          logical_operator='AND',
         ),
-        operator='OR',
+        logical_operator='OR',
       )
 
     def _generateSQLKeywordDict(self, table='stock', **kw):
@@ -491,7 +491,7 @@ class SimulationTool(BaseTool):
             simulation_query = ComplexQuery(
               simulation_query,
               reserved_query,
-              operator='OR',
+              logical_operator='OR',
             )
         if simulation_query is not None:
           new_kw['query'] = simulation_query

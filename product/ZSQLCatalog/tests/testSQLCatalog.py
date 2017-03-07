@@ -825,7 +825,7 @@ class TestSQLCatalog(ERP5TypeTestCase):
 #return catalog(title={'query': 'a', 'operator': 'not'})
 #return catalog(title={'query': ['a', 'b'], 'operator': 'not'})
 #return context.portal_catalog(source_title="toto", source_description="tutu", src__=1)
-#print catalog(query=ComplexQuery(Query(title='1'), ComplexQuery(Query(portal_type='Foo') ,Query(portal_type='Bar'), operator='or'), operator='and'))
+#print catalog(query=ComplexQuery(Query(title='1'), ComplexQuery(Query(portal_type='Foo') ,Query(portal_type='Bar'), logical_operator='or'), logical_operator='and'))
 #print catalog(title={'query': ('path', 2), 'operator': 'and'}, exception=TypeError)
 #print catalog(sort_on=[('source_title', )], check_search_text=False)
 #print catalog(query=ComplexQuery(Query(source_title='foo'), Query(source_title='bar')), sort_on=[('source_title', ), ('source_title_1', )], check_search_text=False)

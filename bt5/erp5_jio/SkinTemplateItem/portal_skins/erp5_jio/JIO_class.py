@@ -367,7 +367,7 @@ class JioGeneric():
         try:
           while True: query_dict['query_list'].remove(None)
         except ValueError: pass
-        return ComplexQuery(operator=query_dict['operator'],
+        return ComplexQuery(logical_operator=query_dict['operator'],
                             *query_dict['query_list'])
       return None
     return rec(query_dict)
@@ -380,7 +380,7 @@ class JioGeneric():
       kw['query'] = ComplexQuery(
         kw['query'],
         ComplexQuery(
-          operator='or',
+          logical_operator='or',
           *[SimpleQuery(comparison_operator="=", portal_type=x) \
             for x in self.allowed_portal_type_list]
         ),
@@ -388,7 +388,7 @@ class JioGeneric():
       )
     else:
       kw['query'] = ComplexQuery(
-        operator='or',
+        logical_operator='or',
         *[SimpleQuery(comparison_operator="=", portal_type=x) \
           for x in self.allowed_portal_type_list]
       )
@@ -438,7 +438,7 @@ class JioGeneric():
   #     editkw['query'] = ComplexQuery(
   #       editkw['query'],
   #       ComplexQuery(
-  #         operator='or',
+  #         logical_operator='or',
   #         *[SimpleQuery(comparison_operator="=", portal_type=x) \
   #           for x in self.allowed_portal_type_list]
   #       ),
