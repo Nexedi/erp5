@@ -325,11 +325,8 @@ def generateNestedQuery(getQuery, priority_list, criterion_dict,
 
 def getWorklistListQuery(getQuery, grouped_worklist_dict):
   """
-    Return a tuple of 3 value:
-    - a select_expression with a count(*) and all columns used in
-      goup_by_expression
-    - a group_by_expression with all columns required for provided
-      grouped_worklist_dict
+    Return a tuple of 2 values:
+    - a list of columns to select or to group by.
     - a query applying all criterions contained in provided
       grouped_worklist_dict
   """
