@@ -3674,7 +3674,7 @@ VALUES
   def test_IndexationContextIndependence(self):
     def doCatalog(catalog, document):
       catalog.catalogObjectList([document], check_uid=0)
-      result = catalog(select_expression='reference', uid=document.getUid())
+      result = catalog(select_list=['reference'], uid=document.getUid())
       self.assertEqual(len(result), 1)
       return result[0].reference
 
@@ -3720,8 +3720,10 @@ VALUES
     self.tic()
     portal_catalog = self.getCatalogTool()
     res = portal_catalog.searchResults(
-      select_expression='count(DISTINCT catalog.reference) AS count_reference',
-      group_by_expression='catalog.reference',
+      select_dict={
+        'count_reference': 'count(DISTINCT reference)',
+      },
+      group_by=['reference'],
       portal_type='Person',
     )
     self.assertEqual(1, len(res))

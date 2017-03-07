@@ -4,7 +4,7 @@ if depth == 0:
   task_uid_list  = context.portal_selections.getSelectionUidList(context=context, selection_name='task_report_module_selection')
   person_result = context.portal_catalog(portal_type=["Person",],
                                          source_related_uid=task_uid_list,
-                                         select_expression='portal_type, relative_url, id, title',
+                                         select_list=['portal_type', 'relative_url', 'id', 'title'],
                                          sort_on = (('title','ascending'),))
   person_dict = {}
   person_list = []

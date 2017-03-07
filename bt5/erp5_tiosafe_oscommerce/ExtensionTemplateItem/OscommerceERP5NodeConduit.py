@@ -292,7 +292,10 @@ class OscommerceERP5NodeConduit(TioSafeBaseConduit):
       address_list = document.searchFolder(
           portal_type='Address',
           sort_on=(['id', 'ASC'],),
-          where_expression='id != "default_address"',
+          id={
+            'query': 'default_address',
+            'operator': '!=',
+          },
       )
       try:
         address = address_list[address_index].getObject()
@@ -385,7 +388,10 @@ class OscommerceERP5NodeConduit(TioSafeBaseConduit):
         address_list = document.searchFolder(
             portal_type='Address',
             sort_on=(['id', 'ASC'], ),
-            where_expression='id != "default_address"',
+            id={
+              'query': 'default_address',
+              'operator': '!=',
+            },
         )
         address_id = address_list[address_index].getId()
       try:

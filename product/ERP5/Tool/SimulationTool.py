@@ -808,7 +808,7 @@ class SimulationTool(BaseTool):
         if where_expression != '':
           add_kw['where_expression'] = where_expression
           add_kw['predicate_category.uid'] = '!=NULL'
-          add_kw['group_by_expression'] = 'uid'
+          add_kw['group_by'] = ['uid']
           add_query = self.portal_catalog(**add_kw)
           uid_list = []
           for line in add_query:

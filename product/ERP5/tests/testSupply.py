@@ -264,7 +264,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     kw = {}
     kw['predicate.uid'] = supply_line.getUid()
-    kw['select_expression'] = 'predicate.start_date_range_min'
+    kw['select_list'] = ['predicate.start_date_range_min']
 
     # check supply line in predicate table
     result = self.catalog_tool(**kw)
