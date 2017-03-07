@@ -694,12 +694,13 @@ class BusinessItem(Implicit, Persistent):
       old_obj = container._getOb(object_id, None)
       # delete the old object before installing a new object
       if old_obj:
-        container._delOb(object_id)
+        container._delObject(object_id)
+      # If sign is +1, set the new object on the container
       if self._sign == 1:
         # install object
         obj = self._value
         obj = obj._getCopy(container)
-        container._setOb(object_id, obj)
+        container._setObject(object_id, obj)
         obj = container._getOb(object_id)
         obj.isIndexable = ConstantGetter('isIndexable', value=False)
         aq_base(obj).uid = portal.portal_catalog.newUid()
