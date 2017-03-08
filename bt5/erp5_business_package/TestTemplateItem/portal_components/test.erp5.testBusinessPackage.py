@@ -82,56 +82,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
     except AttributeError:
       pass
 
-  def _createBusinessPackage(self, bp_id=None, title=None):
-    if not bp_id:
-      bp_id = 'package_%s'%str(time.time())
-    if not title:
-      title = bp_id
-    package = self.portal.portal_templates.newContent(id=bp_id, portal_type='Business Package')
-    package.edit(title = bp_id,
-                  version='1.0',
-                  description='package for live test')
-    return package
-
-  def _buildAndExportBusinessPackage(self, package):
-    """
-    Builds and exports Business Package to a given export directory
-    Returns the path of export
-    """
-    package.build()
-
-    cfg = getConfiguration()
-    bp_title = pathname2url(package.getTitle())
-    package_path = os.path.join(cfg.instancehome, 'tests', '%s' % (bp_title,))
-
-    # Export package at the package_path
-    package.export(path=package_path, local=True)
-
-    return package_path
-
-  def _importBusinessPackage(self, package, package_path):
-    """
-    Imports the package from the path where it had been exported.
-    """
-    self.portal.portal_templates.manage_delObjects(package.getId())
-
-    import_package = self.portal.portal_templates.download(
-                    url='file:'+package_path,
-                    id=package.id+'1',
-                    )
-
-    return import_package
-
-  def _installBusinessPackage(self, package):
-    """
-    Install the package from its built version.
-    Expected to install the PathTemplateObject items
-    """
-    package.install()
-
-  def _createBusinessManager(self, bm_id=None, title=None):
+  def _createBusinessManager(self, sequence=None, bm_id=None, title=None):
     if not bm_id:
-      bm_id = 'manager_%s'%str(time.time())
+      bm_id = 'manager_%s' % str(time.time())
     if not title:
       title = bm_id
     manager = self.portal.portal_templates.newContent(
@@ -168,6 +121,271 @@ class TestBusinessPackage(ERP5TypeTestCase):
                     )
 
     return import_manager
+
+  def _copyBusinessManager(self, manager_id_list):
+    """
+    Copy the manger objects and returns the newly copied manager objects  
+    """
+    portal_templates = self.portal.portal_templates
+
+    copy_data = portal_templates.manage_copyObjects(ids=manager_id_list)
+    result_list = portal_templates.manage_pasteObjects(copy_data)
+
+    new_id_list = []
+    for res in result_list:
+      new_id_list.append(res['new_id'])
+
+    manager_list = []
+    for new_id in new_id_list:
+      manager_list.append(portal_templates._getOb(new_id))
+
+    return tuple(manager_list)
+
+  def _addFolderInERP5(self):
+    """
+    """
+    test_folder = self.portal.newContent(id='test_folder',
+                                         portal_type='Folder',
+                                         title='couscous',
+                                         )
+    return test_folder
+
+  def test_useCase_IX(self):
+    """
+    Case IX:
+    """
+    portal_templates = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    test_folder = self._addFolderInERP5()
+
+    # Add catalog to the path list for Business Manager and build the object
+    folder_path = test_folder.getRelativeUrl()
+    # Add title as the property we want to use in path_item
+    path_item_folder = '%s | %s | %s' % (folder_path, 1, 1)
+    path_item_list = [path_item_folder]
+
+    # Set catalog path item as path_item in managerA
+    managerA._setTemplatePathList(path_item_list)
+
+    # Copy the Business Manager object
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
+    managerA_new.setStatus('uninstalled')
+
+    # Delete the object from ZODB so as we can install the object there
+    self.portal.manage_delObjects([test_folder.getId(),])
+    # Install the Business Manager
+    portal_templates.installMultipleBusinessManager([managerA_new,])
+
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
+    self.assertEquals(installed_test_folder.getTitle(),
+                      'couscous')
+
+    # Delete the object again from ZODB
+    self.portal.manage_delObjects([test_folder.getId(),])
+
+    # Set empty path item as path_item in managerA
+    managerA._setTemplatePathList([])
+
+    # Copy the Business Manager object
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
+    managerA_new.setStatus('uninstalled')
+
+    portal_templates.installMultipleBusinessManager([managerA_new,])
+
+    # Test that the catalogs don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(folder_path))
+
+  def test_useCase_X(self):
+    """
+    A       A       A :       A
+    """
+    portal_templates = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    test_folder = self._addFolderInERP5()
+
+    # Add catalog to the path list for Business Manager and build the object
+    folder_path = test_folder.getRelativeUrl()
+    # Add title as the property we want to use in path_item
+    path_item_folder = '%s | %s | %s' % (folder_path, 1, 1)
+    path_item_list = [path_item_folder]
+
+    # Set catalog path item as path_item in managerA
+    managerA._setTemplatePathList(path_item_list)
+
+    # Copy the Business Manager object
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
+    managerA_new.setStatus('uninstalled')
+
+    # Delete the object from ZODB so as we can install the object there
+    self.portal.manage_delObjects([test_folder.getId(),])
+    # Install the Business Manager
+    portal_templates.installMultipleBusinessManager([managerA_new,])
+
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
+    self.assertEquals(installed_test_folder.getTitle(),
+                      'couscous')
+
+    # Copy the Business Manager object, updated version of managerA
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
+    managerA_new.setStatus('uninstalled')
+
+    # Install the updated Business Manager
+    portal_templates.installMultipleBusinessManager([managerA_new,])
+
+    # Expect the Business Manager to be there
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
+    self.assertEquals(installed_test_folder.getTitle(),
+                      'couscous')
+
+  def test_useCase_XIII(self):
+    """
+    A       C       A :       C
+    """
+    portal_templates = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    test_folder = self._addFolderInERP5()
+
+    # Add catalog to the path list for Business Manager and build the object
+    folder_path = test_folder.getRelativeUrl()
+    # Add title as the property we want to use in path_item
+    path_item_folder = '%s | %s | %s' % (folder_path, 1, 1)
+    path_item_list = [path_item_folder]
+
+    # Set catalog path item as path_item in managerA
+    managerA._setTemplatePathList(path_item_list)
+
+    # Copy the Business Manager object
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
+    managerA_new.setStatus('uninstalled')
+
+    # Delete the object from ZODB so as we can install the object there
+    self.portal.manage_delObjects([test_folder.getId(),])
+    # Install the Business Manager
+    portal_templates.installMultipleBusinessManager([managerA_new,])
+
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
+    self.assertEquals(installed_test_folder.getTitle(),
+                      'couscous')
+
+    # Copy the Business Manager object, updated version of managerA
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
+    managerA_new.setStatus('uninstalled')
+
+  def test_globalInstallationOfBusinessTemplate(self):
+    """
+    NOTE:
+    Keep in mind that the installation is done on copy of built Business Manager
+    objects only, we are not yet exporting a Business Manager object
+
+    USE CASE:
+    * 2 bt5: A / B
+    * B has a path C
+    * install A and B
+    * you should have C in ZODB
+    * modify B to remove path C
+    * modify A to provide a path C (with a different content to simplify)
+    * update A and B
+    * C' should be in ZODB
+
+    EXPECTED RESULT:
+    Content of C': Something different than C, to be able to check
+    where C' is path C provided by A
+    """
+    portal_templates = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    managerB = self._createBusinessManager()
+    test_folder = self._addFolderInERP5()
+
+    # Add catalog to the path list for Business Manager and build the object
+    folder_path = test_folder.getRelativeUrl()
+    path_item_folder = '%s | %s | %s' % (folder_path, 1, 1)
+    path_item_list = [path_item_folder]
+
+    # Set catalog path item as path_item in managerB
+    managerB._setTemplatePathList(path_item_list)
+
+    managerA_new, managerB_new = self._copyBusinessManager([
+                                                            managerA.id,
+                                                            managerB.id,
+                                                            ])
+
+    managerA_new.build()
+    managerB_new.build()
+    # Change the status of the new Business Manager objects as combined
+    # installation checks if the Business Manager has status 'uninstalled'
+    managerA_new.setStatus('uninstalled')
+    managerB_new.setStatus('uninstalled')
+
+    # Delete the catalog object
+    self.portal.manage_delObjects([test_folder.getId(),])
+
+    # Test that the catalog don't exist on site anymore
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(folder_path))
+
+    # Install both the Business Manager(s)
+    portal_templates.installMultipleBusinessManager([
+                                                    managerA_new,
+                                                    managerB_new,
+                                                    ])
+
+    # XXX: Match the state of manager A and B, nothing extra added
+    # portal_templates.installMultipleBusinessManager([
+    #                                                imported_package_A,
+    #                                                imported_package_B,
+    #                                                ])
+
+    # Test that the catalog exists on ZODB after installation
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
+    self.assertEquals(installed_test_folder.getTitle(),
+                      'couscous')
+
+    # Add catalog_path to managerA and remove the catalog_path from managerB
+    managerA._setTemplatePathList(path_item_list)
+    managerB._setTemplatePathList([])
+
+    managerA_new, managerB_new = self._copyBusinessManager([
+                                                            managerA.id,
+                                                            managerB.id,
+                                                            ])
+
+    installed_test_folder.edit(title='new_couscous')
+
+    # Build the new managers so that they do have the Business Item(s) defined
+    # in them properly
+    managerA_new.build()
+    managerB_new.build()
+
+    # Change the status of the new Business Manager objects as combined
+    # installation checks if the Business Manager has status 'uninstalled'
+    managerA_new.setStatus('uninstalled')
+    managerB_new.setStatus('uninstalled')
+
+    # Then we change the title of test catalog again
+    installed_test_folder.edit(title='new_couscous_change_again')
+
+    # Match the overall state,
+    # Install both the Business Manager(s)
+    portal_templates.installMultipleBusinessManager([
+                                                    managerA_new,
+                                                    managerB_new,
+                                                    ])
+
+    # Test that the catalog exists on ZODB after installation with the newer
+    # updated version
+    test_folder = self.portal.restrictedTraverse(installed_test_folder.getRelativeUrl())
+    self.assertEquals(test_folder.getTitle(), "new_couscous")
+
+    # Delete the test folder created at the path if it exists there
+    try:
+      self.portal.manage_delObjects([test_folder.getId(),])
+    except Exception:
+      pass
 
   def _installationOfBusinessManagerViaTemplateTool(self):
     """
@@ -251,135 +469,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
     catalog_1 = self.portal.restrictedTraverse(path_catalog_1)
     self.assertEquals(catalog_1.getTitle(), \
                       'Test Catalog 2 for Multiple BP5 Installation')
-
-  def test_globalInstallationOfBusinessTemplate(self):
-    """
-
-    NOTE:
-    Keep in mind that the installation is done on build Business Manager
-    objects only, we are not yet exporting a Business Manager object
-
-    USE CASE:
-    * 2 bt5: A / B
-    * B has a path C
-    * install A and B
-    * you should have C in ZODB
-    * modify B to remove path C
-    * modify A to provide a path C (with a different content to simplify)
-    * update A and B
-    * C' should be in ZODB
-
-    EXPECTED RESULT:
-    Content of C': Something different than C, to be able to check
-    where C' is path C provided by A
-
-    """
-    portal_templates = self.portal.portal_templates
-    managerA = self._createBusinessManager()
-    managerB = self._createBusinessManager()
-
-    test_folder = self.portal.newContent(
-                                    id='test_folder',
-                                    portal_type='Folder',
-                                    title='couscous',
-                                    )
-
-    # Add catalog to the path list for Business Manager and build the object
-    folder_path = test_folder.getRelativeUrl()
-    path_item_folder = '%s | %s | %s' % (folder_path, 1, 1)
-    path_item_list = [path_item_folder]
-
-    # Set catalog path item as path_item in managerB
-    managerB._setTemplatePathList(path_item_list)
-
-    copy_data = portal_templates.manage_copyObjects(ids=[
-                                                        managerA.id,
-                                                        managerB.id,
-                                                        ])
-    result = portal_templates.manage_pasteObjects(copy_data)
-    managerA_new_id = result[0]['new_id']
-    managerB_new_id = result[1]['new_id']
-
-    managerA_new = portal_templates._getOb(managerA_new_id)
-    managerB_new = portal_templates._getOb(managerB_new_id)
-
-    managerA_new.build()
-    managerB_new.build()
-    # Change the status of the new Business Manager objects as combined
-    # installation checks if the Business Manager has status 'uninstalled'
-    managerA_new.setStatus('uninstalled')
-    managerB_new.setStatus('uninstalled')
-
-    # Delete the catalog object
-    self.portal.manage_delObjects([test_folder.getId(),])
-
-    # Test that the catalog don't exist on site anymore
-    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(folder_path))
-
-    # Install both the Business Manager(s)
-    portal_templates.installMultipleBusinessManager([
-                                                    managerA_new,
-                                                    managerB_new,
-                                                    ])
-
-    # XXX: Match the state of manager A and B, nothing extra added
-    # portal_templates.installMultipleBusinessManager([
-    #                                                imported_package_A,
-    #                                                imported_package_B,
-    #                                                ])
-
-    # Test that the catalog exists on ZODB after installation
-    installed_test_folder = self.portal.restrictedTraverse(folder_path)
-    self.assertEquals(installed_test_folder.getTitle(),
-                      'couscous')
-
-    # Add catalog_path to managerA and remove the catalog_path from managerB
-    managerA._setTemplatePathList(path_item_list)
-    managerB._setTemplatePathList([])
-
-    copy_data = portal_templates.manage_copyObjects(ids=[
-                                                        managerA.id,
-                                                        managerB.id,
-                                                        ])
-    result = portal_templates.manage_pasteObjects(copy_data)
-    managerA_new_id = result[0]['new_id']
-    managerB_new_id = result[1]['new_id']
-
-    managerA_new = portal_templates._getOb(managerA_new_id)
-    managerB_new = portal_templates._getOb(managerB_new_id)
-
-    installed_test_folder.edit(title='new_couscous')
-
-    # Build the new managers so that they do have the Business Item(s) defined
-    # in them properly
-    managerA_new.build()
-    managerB_new.build()
-
-    # Change the status of the new Business Manager objects as combined
-    # installation checks if the Business Manager has status 'uninstalled'
-    managerA_new.setStatus('uninstalled')
-    managerB_new.setStatus('uninstalled')
-
-    # Then we change the title of test catalog again
-    installed_test_folder.edit(title='new_couscous_change_again')
-
-    # Match the overall state, 
-    # Install both the Business Manager(s)
-    portal_templates.installMultipleBusinessManager([
-                                                    managerA_new,
-                                                    managerB_new,
-                                                    ])
-
-    # Test that the catalog exists on ZODB after installation with the newer
-    # updated version
-    test_folder = self.portal.restrictedTraverse(installed_test_folder.getRelativeUrl())
-    self.assertEquals(test_folder.getTitle(), "new_couscous")
-
-    # Delete the test folder created at the path if it exists there
-    try:
-      self.portal.manage_delObjects([test_folder.getId(),])
-    except Exception:
-      pass
 
   def _UpdateVersionOfBusinessManager(self):
     """
