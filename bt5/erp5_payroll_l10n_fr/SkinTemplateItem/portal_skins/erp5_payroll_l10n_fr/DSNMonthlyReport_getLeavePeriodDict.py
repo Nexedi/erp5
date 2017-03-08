@@ -22,7 +22,7 @@ else:
   from_date = DateTime(effective_date.year(), effective_date.month(), 1)
 
 # We report leave periods which are not over yet ...
-result = portal.portal_catalog(SimpleQuery(expiration_date=None), portal_type='Leave Request Period')
+result = portal.portal_catalog(query=SimpleQuery(expiration_date=None), portal_type='Leave Request Period')
 leave_period_list = [period.getObject() for period in result]
 
 # ... And leave periods which ended during last period
