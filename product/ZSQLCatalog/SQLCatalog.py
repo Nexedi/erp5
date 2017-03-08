@@ -2418,6 +2418,7 @@ class Catalog(Folder,
     ).asSQLExpressionDict()
 
   # Compatibililty SQL Sql
+  security.declarePrivate('buildSqlQuery')
   buildSqlQuery = buildSQLQuery
 
   security.declareProtected(access_contents_information, 'getCannonicalArgumentDict')
