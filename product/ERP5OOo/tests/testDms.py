@@ -232,7 +232,7 @@ class TestDocument(TestDocumentMixin):
     return getattr(document_module, id)
 
   def getPreferences(self, image_display):
-    preference_tool = self.portal.getPortalObject().portal_preferences
+    preference_tool = self.portal.portal_preferences
     height_preference = 'preferred_%s_image_height' % (image_display,)
     width_preference = 'preferred_%s_image_width' % (image_display,)
     height = int(preference_tool.getPreference(height_preference))
