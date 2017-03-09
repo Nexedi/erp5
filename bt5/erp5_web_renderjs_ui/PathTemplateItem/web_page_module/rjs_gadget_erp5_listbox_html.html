@@ -4,7 +4,6 @@
    <!--
      data-i18n=No records
      data-i18n=Records
-     data-i18n=Searching
    -->
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no" />
@@ -150,7 +149,7 @@
 
     <script id="listbox-template" type="text/x-handlebars-template">
       <div class="ui-table-header ui-header ui-bar-c ui-corner-all">
-        <h1 data-i18n="{{title}}" class="ui-title ui-override-theme">{{title}}</h1>
+        <h1 data-i18n="{{title}}" class="ui-title ui-override-theme">{{title}}<span> <span class="listboxloader ui-icon-spinner ui-btn-icon-left"></span></span></h1>
         <!--div class="ui-controlgroup ui-controlgroup-horizontal ui-btn-left">
           <div class="ui-controlgroup-controls"-->
             <button data-rel="hide" data-i18n="Hide Rows" name="Hide" type="submit" class="submit responsive ui-last-child ui-btn ui-icon-eye ui-btn-icon-left {{hide_class}}">Hide Rows</button>
@@ -164,7 +163,7 @@
       </div>
       <table class="ui-responsive ui-body-c ui-table-inset">
         <thead class="ui-bar-inherit thead"></thead>
-        <tbody><tr><td colspan="1" data-i18n="Searching" class="ui-icon-spinner ui-btn-icon-left">Searching</td></tr></tbody>
+        <tbody></tbody>
         <tfoot class="ui-bar-inherit tfoot"></tfoot>
       </table>
     </div>

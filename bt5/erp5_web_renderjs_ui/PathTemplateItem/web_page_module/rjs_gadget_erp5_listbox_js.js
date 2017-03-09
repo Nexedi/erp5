@@ -318,6 +318,8 @@
         dataset,
         counter,
         limit_options,
+        loading_element_classList = gadget.element.querySelector(".listboxloader").classList,
+        loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
         i;
 
       if (only_cancel) {
@@ -353,6 +355,7 @@
       } else {
         limit_options = [begin_from, lines + 1];
       }
+      loading_element_classList.add.apply(loading_element_classList, loading_class_list);
 
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
@@ -471,6 +474,7 @@
               return renderListboxTfoot(gadget);
             })
             .push(function (my_html) {
+              loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
               gadget.element.querySelector(".tfoot").innerHTML = my_html;
             });
 
