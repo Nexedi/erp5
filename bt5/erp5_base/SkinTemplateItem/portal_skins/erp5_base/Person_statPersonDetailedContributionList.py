@@ -31,25 +31,31 @@ elif aggregation_level == "week":
   sql_format = "%Y-%u"
 elif aggregation_level == "day":
   sql_format = "%Y-%m-%d"
-params = {"creation_date":(from_date, to_date)}
-query=None
+count_kw = {}
 if from_date is not None and to_date is not None:  
-  params = {"creation_date":(from_date, to_date)}
-  query = Query(range="minngt", **params)
+  count_kw['creation_date'] = {
+    'range': 'minngt',
+    'query': (from_date, to_date),
+  }
 elif from_date is not None:
-  params = {"creation_date":from_date}
-  query = Query(range="min", **params)
+  count_kw['creation_date'] = {
+    'range': 'min',
+    'query': from_date,
+  }
 elif to_date is not None:
-  params = {"creation_date":to_date}
-  query = Query(range="ngt", **params)
+  count_kw['creation_date'] = {
+    'range': 'ngt',
+    'query': to_date,
+  }
 select_expression = {'date' : 'DATE_FORMAT(creation_date, "%s")'%sql_format}
 group_by = ['DATE_FORMAT(creation_date, "%s")' % sql_format,]
 
 # count number of object created by the user for each type of document
 result_list = context.portal_catalog.countResults(select_expression=select_expression,
                                                   portal_type=portal_type_list,limit=None,
-                                                  owner=context.Person_getUserId(),query=query,
-                                                  group_by_expression=group_by)
+                                                  owner=context.Person_getUserId(),
+                                                  group_by_expression=group_by,
+                                                  **count_kw)
 
 # build result dict per portal_type then period
 period_count_dict = {}

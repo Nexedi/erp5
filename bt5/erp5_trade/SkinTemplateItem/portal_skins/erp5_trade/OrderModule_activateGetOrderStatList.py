@@ -1,5 +1,3 @@
-from Products.ZSQLCatalog.SQLCatalog import Query
-
 portal = context.getPortalObject()
 category_tool = portal.portal_categories
 
@@ -54,17 +52,21 @@ elif aggregation_level == "week":
 elif aggregation_level == "day":
   date_format = "%Y-%m-%d"
 
-params = {"delivery.start_date":(from_date, at_date)}
-query=None
 if from_date is not None and at_date is not None:
-  params = {"delivery.start_date": (from_date, at_date)}
-  query = Query(range="minngt", **params)
+  catalog_params['delivery.start_date'] = {
+    'range': 'minngt',
+    'query': (from_date, at_date),
+  }
 elif from_date is not None:
-  params = {"delivery.start_date": from_date}
-  query = Query(range="min", **params)
+  catalog_params['delivery.start_date'] = {
+    'range': 'min',
+    'query': from_date,
+  }
 elif at_date is not None:
-  params = {"delivery.start_date": at_date}
-  query = Query(range="ngt", **params)
+  catalog_params['delivery.start_date'] = {
+    'range': 'ngt',
+    'query': at_date,
+  }
 
 select_params = {"select_list" : ['source_section_title', 'destination_section_title',
   'delivery.start_date']}
@@ -86,7 +88,6 @@ portal.portal_catalog.activate(tag=tag).searchAndActivate(
     'tag' : tag,
     },
   # All SQL Params
-  query=query,
   portal_type=doc_portal_type,
   simulation_state=simulation_state,
   packet_size=1000,

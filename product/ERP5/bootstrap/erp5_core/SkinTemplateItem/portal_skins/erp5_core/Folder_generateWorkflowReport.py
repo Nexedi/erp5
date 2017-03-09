@@ -28,13 +28,12 @@ for portal_type in context.allowedContentTypes():
       add(state_var)
 column_list = ['portal_type'] + list(state_variable_set)
 COUNT = 'count(*)'
+search_folder_kw = {}
 if use_selection:
   selection_kw = portal.portal_selections.getSelectionParamsFor(selection_name).copy()
   selection_kw.pop('limit', None)
-  query = portal.portal_catalog.getSQLCatalog().buildQuery(selection_kw)
-else:
-  query = None
-for line in context.searchFolder(group_by=column_list, select_list=[COUNT] + column_list, query=query):
+  search_folder_kw['query'] = portal.portal_catalog.getSQLCatalog().buildQuery(selection_kw)
+for line in context.searchFolder(group_by=column_list, select_list=[COUNT] + column_list, **search_folder_kw):
   portal_type = line.portal_type
   count = getattr(line, COUNT)
   for state_variable in state_variable_set:

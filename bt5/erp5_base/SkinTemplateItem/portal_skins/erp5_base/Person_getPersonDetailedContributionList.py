@@ -31,17 +31,22 @@ elif aggregation_level == "day":
   sql_format = "%Y-%m-%d"
 if to_date is not None:
   to_date = atTheEndOfPeriod(to_date, period=aggregation_level)
-params = {"creation_date":(from_date, to_date)}
-query=None
+count_kw = {}
 if from_date is not None and to_date is not None:
-  params = {"creation_date":(from_date, to_date)}
-  query = Query(range="minmax", **params)
+  count_kw['creation_date'] = {
+    'range': 'minmax',
+    'query': (from_date, to_date),
+  }
 elif from_date is not None:
-  params = {"creation_date":from_date}
-  query = Query(range="min", **params)
+  count_kw['creation_date'] = {
+    'range': 'min',
+    'query': from_date,
+  }
 elif to_date is not None:
-  params = {"creation_date":to_date}
-  query = Query(range="max", **params)
+  count_kw['creation_date'] = {
+    'range': 'max',
+    'query': to_date,
+  }
 select_expression = {'date' : 'DATE_FORMAT(creation_date, "%s")'%sql_format, 'portal_type' : None}
 group_by = ['DATE_FORMAT(creation_date, "%s")' % sql_format, 'portal_type']
 
@@ -49,8 +54,9 @@ group_by = ['DATE_FORMAT(creation_date, "%s")' % sql_format, 'portal_type']
 reference = kw.get('person_reference_list', context.Person_getUserId())
 result_list = context.portal_catalog.countResults(select_expression=select_expression,
                                                   portal_type=portal_type_list,limit=None,
-                                                  owner=reference,query=query,
-                                                  group_by_expression=group_by)
+                                                  owner=reference,
+                                                  group_by_expression=group_by,
+                                                  **count_kw)
 
 # build result dict per portal_type then period
 portal_type_count_dict = {}

@@ -8,21 +8,27 @@ aggregation_level = request.get('aggregation_level', None)
 if to_date is not None:
   to_date = atTheEndOfPeriod(to_date, period=aggregation_level)
 # build query based on dates
-query=None
-if from_date is not None and to_date is not None:  
-  params = {"delivery.start_date":(from_date, to_date)}
-  query = Query(range="minmax", **params)
+catalog_kw = {}
+if from_date is not None and to_date is not None:
+  catalog_kw['delivery.start_date'] = {
+    'range': 'minmax',
+    'query': (from_date, to_date),
+  }
 elif from_date is not None:
-  params = {"delivery.start_date":from_date}
-  query = Query(range="min", **params)
+  catalog_kw['delivery.start_date'] = {
+    'range': 'min',
+    'query': from_date,
+  }
 elif to_date is not None:
-  params = {"delivery.start_date":to_date}
-  query = Query(range="max", **params)
+  catalog_kw['delivery.start_date'] = {
+    'range': 'max',
+    'query': to_date,
+  }
 
 event_type_list = portal.getPortalEventTypeList()
 # get events where user is either source or destination
-source_event_list = portal.portal_catalog(portal_type=event_type_list, default_source_uid=context.getUid(),query=query)
-dest_event_list = portal.portal_catalog(portal_type=event_type_list, default_destination_uid=context.getUid(),query=query)
+source_event_list = portal.portal_catalog(portal_type=event_type_list, default_source_uid=context.getUid(), **catalog_kw)
+dest_event_list = portal.portal_catalog(portal_type=event_type_list, default_destination_uid=context.getUid(), **catalog_kw)
 
 event_list = list(source_event_list)+list(dest_event_list)
 
