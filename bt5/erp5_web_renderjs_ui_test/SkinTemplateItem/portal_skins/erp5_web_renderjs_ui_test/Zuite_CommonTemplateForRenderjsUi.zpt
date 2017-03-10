@@ -190,7 +190,19 @@
       <td tal:content="python: &quot;//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']//div[@data-gadget-scope='erp5_searchfield']//input[@value='%s' and @type='search' and @name='search']&quot; % search_query"></td>
       <td></td>
     </tr>
+  </tal:block>
 
+  <tal:block metal:define-macro="wait_for_content_loaded">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>waitForElementNotPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
   </tal:block>
 
 </tal:block>
