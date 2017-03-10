@@ -49,7 +49,7 @@
   }
 
 
-  function renderEditableField(gadget, element) {
+  function renderEditableField(gadget, element, column_list) {
     var i,
       promise_list = [],
       uid_value_dict = {},
@@ -85,26 +85,27 @@
         }
       }
       promise_list.push(renderSubCell(element_list[i],
-        gadget.props.result.data.rows[line].value[gadget.state.column_list[column][0]] || ""));
+        gadget.props.result.data.rows[line].value[column_list[column][0]] || ""));
     }
     return RSVP.all(promise_list);
   }
 
 
   function renderListboxTbody(gadget, template) {
-    var tmp;
+    var tmp,
+      column_list = JSON.parse(gadget.state.column_list_json);
 
     return gadget.translateHtml(template(
       {
         "body_value": gadget.props.body_value,
         "show_anchor": gadget.state.show_anchor,
-        "column_list": gadget.state.column_list
+        "column_list": column_list
       }
     ))
       .push(function (my_html) {
         tmp = document.createElement("tbody");
         tmp.innerHTML = my_html;
-        return renderEditableField(gadget, tmp);
+        return renderEditableField(gadget, tmp, column_list);
       })
       .push(function () {
         var table =  gadget.element.querySelector("table"),
@@ -204,7 +205,7 @@
       queue
         .push(function () {
           // Cancel previous line rendering to not conflict with the asynchronous render for now
-          return gadget.renderContent(true);
+          return gadget.renderContent(true, {});
         })
         .push(function () {
           // XXX Fix in case of multiple listboxes
@@ -220,7 +221,7 @@
             editable: field_json.editable,
 
             begin_from: parseInt(result_list[0] || '0', 10) || 0,
-            sort_list: result_list[1] || [],
+            sort_list_json: JSON.stringify(result_list[1] || []),
 
             show_anchor: field_json.show_anchor,
             line_icon: field_json.line_icon,
@@ -229,9 +230,10 @@
             list_method: field_json.list_method,
             list_method_template: field_json.list_method_template,
 
-            column_list: field_json.column_list,
-            sort_column_list: sort_column_list,
-            search_column_list: search_column_list,
+            column_list_json: JSON.stringify(field_json.column_list),
+
+            sort_column_list_json: JSON.stringify(sort_column_list),
+            search_column_list_json: JSON.stringify(search_column_list),
             hide_sort: field_json.sort_column_list.length ? "" : "ui-disabled",
 
             field_id: options.field_id,
@@ -242,55 +244,72 @@
         })
         .push(function () {
           // Force line calculation in any case
-          return gadget.renderContent();
+          return gadget.renderContent(false, {
+            sort_list: JSON.parse(gadget.state.sort_list_json),
+            column_list: field_json.column_list,
+            sort_column_list: sort_column_list,
+            search_column_list: search_column_list
+          });
         });
       return queue;
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var gadget = this,
         head_value = [],
         class_value,
+        sort_list,
+        column_list,
         tmp,
         i,
         j;
 
-      for (i = 0; i < gadget.state.column_list.length; i += 1) {
-        class_value = "";
-        for (j = 0; j < gadget.state.sort_list.length; j += 1) {
-          tmp = gadget.state.sort_list[j];
-          if (tmp[0] === gadget.state.column_list[i][0]) {
-            if (tmp[1] === "ascending") {
-              class_value = "ui-icon ui-icon-arrow-up";
-            } else {
-              class_value = "ui-icon ui-icon-arrow-down";
-            }
-            break;
-          }
-        }
-        head_value.push({
-          "data-i18n": gadget.state.column_list[i][1],
-          "class_value": class_value,
-          "text": gadget.state.column_list[i][1]
-        });
-      }
+      if ((modification_dict.hasOwnProperty('sort_list_json')) ||
+          (modification_dict.hasOwnProperty('column_list_json')) ||
+          (modification_dict.hasOwnProperty('title')) ||
+          (modification_dict.hasOwnProperty('hide_sort')) ||
+          (modification_dict.hasOwnProperty('hide_class'))) {
 
-      gadget.props.head_value = head_value;
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.translateHtml(listbox_template({
-              hide_class: gadget.state.hide_class,
-              hide_sort: gadget.state.hide_sort,
-              title: gadget.state.title
-            })),
-            renderListboxThead(gadget, listbox_hidden_thead_template)
-          ]);
-        })
-        .push(function (result_list) {
-          gadget.element.querySelector(".document_table").innerHTML = result_list[0];
-          gadget.element.querySelector(".thead").innerHTML = result_list[1];
-        });
+        sort_list = JSON.parse(gadget.state.sort_list_json);
+        column_list = JSON.parse(gadget.state.column_list_json);
+
+        for (i = 0; i < column_list.length; i += 1) {
+          class_value = "";
+          for (j = 0; j < sort_list.length; j += 1) {
+            tmp = sort_list[j];
+            if (tmp[0] === column_list[i][0]) {
+              if (tmp[1] === "ascending") {
+                class_value = "ui-icon ui-icon-arrow-up";
+              } else {
+                class_value = "ui-icon ui-icon-arrow-down";
+              }
+              break;
+            }
+          }
+          head_value.push({
+            "data-i18n": column_list[i][1],
+            "class_value": class_value,
+            "text": column_list[i][1]
+          });
+        }
+
+        gadget.props.head_value = head_value;
+        return new RSVP.Queue()
+          .push(function () {
+            return RSVP.all([
+              gadget.translateHtml(listbox_template({
+                hide_class: gadget.state.hide_class,
+                hide_sort: gadget.state.hide_sort,
+                title: gadget.state.title
+              })),
+              renderListboxThead(gadget, listbox_hidden_thead_template)
+            ]);
+          })
+          .push(function (result_list) {
+            gadget.element.querySelector(".document_table").innerHTML = result_list[0];
+            gadget.element.querySelector(".thead").innerHTML = result_list[1];
+          });
+      }
     })
 
     .declareMethod('getListboxInfo', function () {
@@ -298,7 +317,7 @@
       //construct search panel
       //hardcoded begin_from key to define search position
       return {
-        search_column_list: this.state.search_column_list,
+        search_column_list: JSON.parse(this.state.search_column_list_json),
         begin_from: this.state.key + "_begin_from"
       };
     })
@@ -306,7 +325,7 @@
     //////////////////////////////////////////////
     // render the listbox in an asynchronous way
     //////////////////////////////////////////////
-    .declareJob('renderContent', function (only_cancel) {
+    .declareJob('renderContent', function (only_cancel, parsed_json_options) {
       var gadget = this,
 //         props = gadget.props,
 //         field_json = props.field_json,
@@ -319,7 +338,10 @@
         counter,
         limit_options,
         loading_element_classList = gadget.element.querySelector(".listboxloader").classList,
+        tbody_classList = gadget.element.querySelector("table").querySelector("tbody").classList,
         loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
+        disabled_class = 'ui-disabled',
+        sort_list = parsed_json_options.sort_list,
         i;
 
       if (only_cancel) {
@@ -329,6 +351,7 @@
       if (this.state.query === undefined) {
         gadget.element.querySelector('tfoot').textContent =
           "Unsupported list method: '" + this.state.list_method + "'";
+        loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
         return;
       }
      // function buildQueryString(previous, next) {
@@ -345,8 +368,8 @@
         }
       }
 
-      for (i = 0; i < this.state.column_list.length; i += 1) {
-        select_list.push(this.state.column_list[i][0]);
+      for (i = 0; i < parsed_json_options.column_list.length; i += 1) {
+        select_list.push(parsed_json_options.column_list[i][0]);
       }
       select_list.push("uid");
 
@@ -356,6 +379,7 @@
         limit_options = [begin_from, lines + 1];
       }
       loading_element_classList.add.apply(loading_element_classList, loading_class_list);
+      tbody_classList.add(disabled_class);
 
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
@@ -363,7 +387,7 @@
         "query": query_string,
         "limit": limit_options,
         "select_list": select_list,
-        "sort_on": gadget.state.sort_list
+        "sort_on": sort_list
       })
 
         .push(function (result) {
@@ -384,7 +408,7 @@
                   selection_index: begin_from + i,
                   query: query_string,
                   list_method_template: gadget.state.list_method_template,
-                  "sort_list:json": gadget.state.sort_list
+                  "sort_list:json": sort_list
                 }
               })
             );
@@ -404,8 +428,8 @@
               for (i = 0; i < counter; i += 1) {
                 tmp_url = result_list[i + 1];
                 tr_value = [];
-                for (j = 0; j < gadget.state.column_list.length; j += 1) {
-                  value = allDocs_result.data.rows[i].value[gadget.state.column_list[j][0]] || "";
+                for (j = 0; j < parsed_json_options.column_list.length; j += 1) {
+                  value = allDocs_result.data.rows[i].value[parsed_json_options.column_list[j][0]] || "";
                   tr_value.push({
                     "type": value.type,
                     "editable": value.editable && gadget.state.editable,
@@ -449,7 +473,7 @@
             })
             .push(function (url_list) {
               var foot = {};
-              foot.colspan = gadget.state.column_list.length + gadget.state.show_anchor +
+              foot.colspan = parsed_json_options.column_list.length + gadget.state.show_anchor +
                 (gadget.state.line_icon ? 1 : 0);
               foot.default_colspan = foot.colspan;
               foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
@@ -474,7 +498,6 @@
               return renderListboxTfoot(gadget);
             })
             .push(function (my_html) {
-              loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
               gadget.element.querySelector(".tfoot").innerHTML = my_html;
             });
 
@@ -501,6 +524,11 @@
             .push(function (html) {
               gadget.element.querySelector(".document_table").innerHTML = html;
             });
+        })
+        .push(function (result) {
+          loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
+          tbody_classList.remove(disabled_class);
+          return result;
         });
 
     })
@@ -547,8 +575,8 @@
       if (evt.target === sort_button) {
         evt.preventDefault();
         url = "gadget_erp5_sort_editor.html";
-        options.sort_column_list = gadget.state.sort_column_list;
-        options.sort_list = gadget.state.sort_list;
+        options.sort_column_list = JSON.parse(gadget.state.sort_column_list_json);
+        options.sort_list = JSON.parse(gadget.state.sort_list_json);
         options.key = gadget.state.key + "_sort_list:json";
         return gadget.renderEditorPanel(url, options);
       }
