@@ -332,6 +332,7 @@ class BusinessManager(XMLObject):
     Override subtract to find difference b/w the values in different cases.
     """
     # Reverse the sign of Business Item objects for the old Business Manager
+    # Trying comparing/subtracting ZODB with old installed object
     for path_item in other._path_item_list:
       path_item._sign = -1
       self._path_item_list.append(path_item)
@@ -562,6 +563,8 @@ class BusinessItem(Implicit, Persistent):
     if value:
       # Generate hash of from the value
       self._sha = self._generateHash()
+    else:
+      self._sha = ''
 
   def _generateHash(self):
     """
@@ -575,7 +578,11 @@ class BusinessItem(Implicit, Persistent):
     else:
       # Expects to raise error on case the value for the object
       # is not picklable
-      sha256 = hashlib.sha256(self._value).hexdigest()
+      try:
+        sha256 = hashlib.sha256(self._value).hexdigest()
+      except TypeError:
+        sha256 = hashlib.sha256(self._value.asXML()).hexdigest()
+      self._sha = sha256
 
   def build(self, context, **kw):
     """
@@ -584,8 +591,8 @@ class BusinessItem(Implicit, Persistent):
     Three different situations to extract value:
     1. For paths which point directly to an object in OFS
     2. For paths which point to multiple objects inside a folder
-    3. For paths which point to property of an object in OFS : In this case, we
-    can have URL delimiters like ?, #, = in the path
+    3. For paths which point to property of an object in OFS : In this case,
+    we can have URL delimiters like ?, #, = in the path
     """
     LOG('Business Manager', INFO, 'Building Business Item')
     p = context.getPortalObject()
@@ -596,13 +603,21 @@ class BusinessItem(Implicit, Persistent):
       obj = p.unrestrictedTraverse(relative_url)
       property_value = obj.getProperty(property_id)
       self._value = property_value
+      # Generate hash for the property value
+      self._generateHash()
     else:
-      for relative_url in self._resolvePath(p, [], path.split('/')):
-        obj = p.unrestrictedTraverse(relative_url)
-        obj = obj._getCopy(context)
-        obj = obj.__of__(context)
-        _recursiveRemoveUid(obj)
-        self._value = obj
+      try:
+        for relative_url in self._resolvePath(p, [], path.split('/')):
+          obj = p.unrestrictedTraverse(relative_url)
+          obj = obj._getCopy(context)
+          obj = obj.__of__(context)
+          _recursiveRemoveUid(obj)
+          self._value = obj
+          # Generate hash for the erp5 object value
+          self._generateHash()
+      except AttributeError:
+        # In case the object doesn't exist, just pass without raising error
+        pass
 
   def applyValueToPath(self):
     """
@@ -694,6 +709,8 @@ class BusinessItem(Implicit, Persistent):
       old_obj = container._getOb(object_id, None)
       # delete the old object before installing a new object
       if old_obj:
+        # XXX: In case there is an old object which has been modified from the
+        # older installation, then show the conflict status.
         container._delObject(object_id)
       # If sign is +1, set the new object on the container
       if self._sign == 1:
@@ -745,7 +762,7 @@ class BusinessItem(Implicit, Persistent):
             if not validate(container, container, key, value):
               raise Unauthorized('unauthorized access to element %s' % key)
           except Unauthorized:
-            LOG('BusinessTemplate', WARNING,
+            LOG('BusinessManager', WARNING,
                 'access to %s is forbidden' % (path,))
           if default is _MARKER:
             raise
@@ -943,7 +960,7 @@ class BusinessItem(Implicit, Persistent):
 
   def export(self, context, bma, **kw):
     """
-      Export the business item object : fill the BusinessManageArchive with
+      Export the business item object : fill the BusinessManagerArchive with
       objects exported as XML, hierarchicaly organised.
     """
     if not self._value:

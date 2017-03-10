@@ -1678,6 +1678,14 @@ class TemplateTool (BaseTool):
 
       # Reduce the final Business Manager
       combinedBM.reduceBusinessManager()
+
+      # Build BM from the paths of combined Business Manager and then comapare
+      # then to show the changes in both states
+      buildBM = self.newContent(portal_type='Business Manager')
+      final_template_path_list = list(set(combinedBM.getTemplatePathList()))
+      buildBM._setTemplatePathList(final_template_path_list)
+      buildBM.build()
+
       # combinedBM.flattenBusinessManager()
 
       return combinedBM
@@ -1720,6 +1728,10 @@ class TemplateTool (BaseTool):
           final_bm_list.append(bm)
 
       combinedBM = self.combineMultipleBusinessManager(final_bm_list)
+
+      # XXX: Build Business Manager from ZODB and compare the changes done by
+      # the user which might get affetcted.
+
       self.installBusinessManager(combinedBM)
 
       # Explicilty change the status of Business Manager which are installed
