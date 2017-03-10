@@ -177,6 +177,7 @@ if from_date or is_pl_account:
             Movement_getExplanationTranslatedPortalType='',
             Movement_getExplanationReference='',
             Movement_getMirrorSectionTitle='',
+            mirror_section_title='',
             Movement_getNodeGapId='',
             getListItemUrl=lambda *args,**kw: None,
             Movement_getExplanationUrl=lambda **kw:None,
@@ -194,6 +195,11 @@ if from_date or is_pl_account:
           previous_balance.edit(
             Movement_getNodeGapId=node.Account_getGapId(),
             node_translated_title=node.getTranslatedTitle()
+          )
+        if params.get('mirror_section_uid'):
+          mirror_section = portal.portal_catalog.getObject(params['mirror_section_uid'])
+          previous_balance.edit(
+            mirror_section_title=mirror_section.getTitle()
           )
         section = portal.portal_catalog.getObject(section_uid)
         previous_balance.edit(
