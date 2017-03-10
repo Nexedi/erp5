@@ -30,7 +30,8 @@ display_data_wrapper_lock = threading.Lock()
 
 # Well known unserializable types
 from Record import Record
-well_known_unserializable_type_tuple = (ModuleType, Record,)
+from wendelin.bigarray.array_zodb import ZBigArray
+well_known_unserializable_type_tuple = (ModuleType, Record, ZBigArray)
 
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
