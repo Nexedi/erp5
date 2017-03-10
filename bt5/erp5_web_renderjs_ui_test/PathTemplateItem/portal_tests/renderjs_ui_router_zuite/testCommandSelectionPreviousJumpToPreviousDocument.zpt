@@ -68,11 +68,6 @@
 </tal:block>
 
 <tr>
-  <td>waitForTextNotPresent</td>
-  <td>Title 1</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForTextPresent</td>
   <td>Title 1</td>
   <td></td>
@@ -123,8 +118,13 @@
 </tr>
 
 <tr>
-  <td>waitForTextNotPresent</td>
-  <td>Title 3</td>
+  <td>waitForElementPresent</td>
+  <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
   <td></td>
 </tr>
 <tr>

@@ -68,12 +68,6 @@
     </tr>
 
     <tr>
-     <td>waitForElementNotPresent</td>
-     <td>//a[@data-i18n='Previous']</td>
-     <td></td>
-    </tr>
-
-    <tr>
       <td>waitForElementPresent</td>
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
       <td></td>
@@ -83,12 +77,6 @@
       <td>waitForElementNotPresent</td>
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
       <td></td>
-    </tr>
-
-    <tr>
-     <td>waitForElementPresent</td>
-     <td>//a[@data-i18n='Previous']</td>
-     <td></td>
     </tr>
 
   </tal:block>
@@ -114,12 +102,6 @@
     </tr>
 
     <tr>
-     <td>waitForElementNotPresent</td>
-     <td>//a[@data-i18n='Previous']</td>
-     <td></td>
-    </tr>
-
-    <tr>
       <td>waitForElementPresent</td>
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
       <td></td>
@@ -129,12 +111,6 @@
       <td>waitForElementNotPresent</td>
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
       <td></td>
-    </tr>
-
-    <tr>
-     <td>waitForElementPresent</td>
-     <td>//a[@data-i18n='Previous']</td>
-     <td></td>
     </tr>
 
   </tal:block>
