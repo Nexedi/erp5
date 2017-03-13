@@ -6083,7 +6083,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Real Zope Objects (can be exported into XML directly by Zope)
       # XXX Bad naming
       item_list_1 = ['_product_item', '_workflow_item', '_portal_type_item',
-                     '_category_item', '_path_item', '_preference_tem',
+                     '_category_item', '_path_item', '_preference_item',
                      '_skin_item', '_action_item', '_tool_item', ]
 
       # Not considered as objects by Zope (will be exported into XML manually)
