@@ -51,7 +51,7 @@ params = dict(at_date=at_date,
               node_uid=traverse(node).getUid(),
               simulation_state=simulation_state,
               detailed_from_date_summary=detailed_from_date_summary,
-              hide_grouping=omit_grouping_reference,
+              omit_grouping_reference=omit_grouping_reference,
               from_date=None,
               payment_uid=None,
               mirror_section_uid=None,)

@@ -88,7 +88,7 @@ period_start_date = params.pop('period_start_date', None)
 if is_pl_account and not from_date:
   from_date = period_start_date
 
-if portal.portal_selections.getSelectionParamsFor(selection_name).get('hide_grouping'):
+if portal.portal_selections.getSelectionParamsFor(selection_name).get('omit_grouping_reference'):
   if params.get('at_date'):
     params['grouping_query'] = ComplexQuery(
       Query(grouping_reference=None),

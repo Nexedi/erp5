@@ -93,7 +93,6 @@ default_selection_params = params.copy()
 default_selection_params['period_start_date'] = period_start_date
 default_selection_params['movement_portal_type'] = portal.getPortalAccountingMovementTypeList()
 default_selection_params['no_mirror_section_uid_cache'] = 1
-default_selection_params['hide_grouping'] = request.get('omit_grouping_reference', False) # XXX is this still used ?
 
 
 # if user request report without grouping reference, don't show accounts that only have grouped lines in the period.

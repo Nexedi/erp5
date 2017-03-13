@@ -35,7 +35,6 @@ params =  {
   , 'simulation_state': simulation_state
 }
 
-params['hide_grouping'] = request['omit_grouping_reference']
 if from_date:
   params['from_date'] = from_date
 else :
@@ -72,7 +71,7 @@ entity_columns = [
                        ('running_total_price', 'Balance'),
 ]
 
-if not params['hide_grouping']  :
+if not request['omit_grouping_reference']:
   entity_columns.append(('grouping_reference',
                          'Grouping Reference'))
 
