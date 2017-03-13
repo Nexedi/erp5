@@ -25,6 +25,11 @@
   <td>Hello</td>
  <td>OK</td>
 </tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>HomePage</td>
+ <td>OK</td>
+</tr>
 </tbody></table>
   </body>
 </html>
