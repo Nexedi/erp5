@@ -331,11 +331,19 @@ class BusinessManager(XMLObject):
     """
     Override subtract to find difference b/w the values in different cases.
     """
+    # Create the sha list for all path item list available in current object
+    sha_list = [item._sha for item in self._path_item_list]
     # Reverse the sign of Business Item objects for the old Business Manager
     # Trying comparing/subtracting ZODB with old installed object
     for path_item in other._path_item_list:
-      path_item._sign = -1
-      self._path_item_list.append(path_item)
+      if path_item._sha in sha_list:
+        self._path_item_list = [item for item
+                                in self._path_item_list
+                                if item._sha != path_item._sha]
+      else:
+        path_item._sign = -1
+        self._path_item_list.append(path_item)
+
     return self
 
   __rsub__ = __add__
