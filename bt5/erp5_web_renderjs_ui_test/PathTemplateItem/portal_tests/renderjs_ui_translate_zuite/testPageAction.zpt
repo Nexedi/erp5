@@ -85,14 +85,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[text() = 'jixu']</td>
+  <td>//button[text() = 'yanzhen']</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//button[text() = 'jixu']</td>
+  <td>//button[text() = 'yanzhen']</td>
   <td></td>
 </tr>
 
