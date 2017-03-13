@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Run the test as anonymous -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Logout']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Logout']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Confirm']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Confirm']</td>
+  <td></td>
+</tr>
+<!-- Use waitForElementPresent command to make sure we are logged out -->
+<!-- Then access the homepage to make sure the login form still can appear -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="WebSite_login:method"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name="WebSite_login:method"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_name']</td>
+  <td>user_logout_test</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='__ac_password']</td>
+  <td>user_logout_test</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>WebSite_login:method</td>
+	<td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@class='ui-title']</td>
+  <td></td>
+</tr>
+</tbody></table>
+  </body>
+</html>
