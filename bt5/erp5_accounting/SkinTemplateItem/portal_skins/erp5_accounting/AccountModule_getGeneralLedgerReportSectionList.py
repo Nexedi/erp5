@@ -206,12 +206,16 @@ account_type_to_group_by_node = [at for at in balance_sheet_account_type_list
 
 if gap_list or gap_root:
   params['node_category'] = gap_list or gap_root
-  default_selection_params['node_category'] = gap_list or gap_root
 
 if mirror_section_category_list:
   params['mirror_section_category'] = mirror_section_category_list
   default_selection_params['mirror_section_category'] =\
         mirror_section_category_list
+
+# inventory parameters for the total section
+total_params = default_selection_params.copy()
+# we'll append all the node used, instead of using node_category.
+total_params['node_uid'] = set([])
 
 report_section_list = []
 
@@ -241,6 +245,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 # non zero balance at begining of period
 for inventory in portal.portal_simulation.getInventoryList(
@@ -268,6 +273,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 
 # profit & loss -> same, but from date limited to the current period
@@ -292,6 +298,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 # group by mirror_section
 # movements in the period
@@ -317,6 +324,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 # non zero balance at begining of period
 for inventory in portal.portal_simulation.getInventoryList(
@@ -345,6 +353,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 # group by payment
 # movements in the period
@@ -370,6 +379,7 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 # non zero balance at begining of period
 for inventory in portal.portal_simulation.getInventoryList(
@@ -397,13 +407,14 @@ for inventory in portal.portal_simulation.getInventoryList(
   addReportSection(path=inventory.node_relative_url,
                    selection_params=selection_params,
                    title=getFullAccountName(key))
+  total_params['node_uid'].add(inventory.node_uid)
 
 
 report_section_list = [x[1] for x in sorted(report_section_list, key=lambda x: x[0])]
 
 if not export:
-  total_params = default_selection_params.copy()
   total_params['at_date'] = at_date
+  total_params['node_uid'] = list(total_params['node_uid'])
   report_section_list.append(ReportSection(
               path=context.getPhysicalPath(),
               title=Base_translateString("Total"),

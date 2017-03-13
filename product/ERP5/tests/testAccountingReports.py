@@ -4181,6 +4181,74 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEqual(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=200, credit_price=100)
 
+  def testGeneralLedgerGAPFilterSameGAPSelectedTwice(self):
+    # General Ledger filtered by GAP category. Edge case: selecting
+    # a gap and its parent. This use to double the amount because
+    # node is twice member of node_category
+
+    # we will use the same data set as account statement
+    self.createAccountStatementDataSetOnTwoPeriods()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 2, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    # Here we select 4 and 41
+    request_form['gap_list'] = [
+        'my_country/my_accounting_standards/4',
+        'my_country/my_accounting_standards/4/41']
+
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    request_form['export'] = False
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountModule_viewGeneralLedgerReport')
+    self.assertEqual(2, len(report_section_list))
+
+    self.assertEqual(
+        '41 - Receivable (Client 1)',
+        report_section_list[0].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+
+    self.assertEqual(2, len(data_line_list))
+    self.checkLineProperties(
+        data_line_list[0],
+        Movement_getSpecificReference='Previous Balance',
+        date=DateTime(2006, 2, 1),
+        debit_price=300,
+        credit_price=0,
+        running_total_price=300, )
+
+    self.checkLineProperties(
+        data_line_list[1],
+        Movement_getSpecificReference='3',
+        Movement_getExplanationTitleAndAnalytics='Transaction 3\nref3',
+        date=DateTime(2006, 2, 2),
+        debit_price=300,
+        credit_price=0,
+        running_total_price=600, )
+
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+          Movement_getSpecificReference=None,
+          Movement_getExplanationTitleAndAnalytics=None,
+          date=None,
+          debit_price=600, credit_price=0, )
+
+    self.assertEqual('Total', report_section_list[1].getTitle())
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(1, len(data_line_list))
+    self.checkLineProperties(
+        data_line_list[0],
+        debit_price=600,
+        credit_price=0)
+
   def testGeneralLedgerFunction(self):
     # general ledger restricted to a function
     self.createProjectAndFunctionDataSet()

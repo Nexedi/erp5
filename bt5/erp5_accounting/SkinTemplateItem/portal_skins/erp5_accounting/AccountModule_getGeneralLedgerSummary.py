@@ -23,17 +23,17 @@ if mirror_section_uid:
 if ledger_uid:
   inventory_kw['ledger_uid'] = ledger_uid
 
-if node_category:
-  # XXX if node category is passed, income or balance accounts are not
+if node_uid:
+  # XXX if node uid is passed, income or balance accounts are not
   # calculated differently. As a result, the summary doesn't take from_date
   # into account for income accounts.
   return [Object(
             debit_price=getInventoryAssetPrice(omit_asset_decrease=1,
-                               node_category=node_category,
+                               node_uid=node_uid,
                                precision=precision,
                                **inventory_kw),
             credit_price=-getInventoryAssetPrice(omit_asset_increase=1,
-                               node_category=node_category,
+                               node_uid=node_uid,
                                precision=precision,
                                 **inventory_kw) or 0 ) ]
 
