@@ -30,8 +30,13 @@ display_data_wrapper_lock = threading.Lock()
 
 # Well known unserializable types
 from Record import Record
-from wendelin.bigarray.array_zodb import ZBigArray
-well_known_unserializable_type_tuple = (ModuleType, Record, ZBigArray)
+well_known_unserializable_type_tuple = (ModuleType, Record)
+# ZBigArray may not be available
+try:
+  from wendelin.bigarray.array_zodb import ZBigArray
+  well_known_unserializable_type_tuple = tuple(list(well_known_unserializable_type_tuple) + [ZBigArray])
+except ImportError:
+  pass
 
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
