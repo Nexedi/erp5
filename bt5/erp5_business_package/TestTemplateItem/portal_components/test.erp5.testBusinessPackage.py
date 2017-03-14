@@ -150,6 +150,41 @@ class TestBusinessPackage(ERP5TypeTestCase):
                                          )
     return test_folder
 
+
+
+  # **********  TESTS FOR COMBINING MULTIPLE BUSINESS MANAGERS ************
+  #########################################################################
+
+  def test_combineBusinessItemWithDifferentSign(self):
+    """
+    Same path, same value, differernt sign
+    """
+    portal_templates = self.portal.portal_templates
+    managerA = self._createBusinessManager()
+    managerB = self._createBusinessManager()
+
+    test_folder = self._addFolderInERP5()
+    folder_path = test_folder.getRelativeUrl()
+
+    path_item_folder_A = '%s | %s | %s' % (folder_path, 1, 1)
+    path_item_list_A = [path_item_folder_A]
+
+    managerA._setTemplatePathList(path_item_list_A)
+    managerA.build()
+
+    path_item_folder_B = '%s | %s | %s' % (folder_path, -1, 1)
+    path_item_list_B = [path_item_folder_B]
+
+
+    managerB._setTemplatePathList(path_item_list_B)
+    managerB.build()
+
+    bm_list = [managerA, managerB]
+    combinedBM = portal_templates.combinedBusinessManager(bm_list)
+
+  # **********  TESTS FOR DIFFERENT INSTALLATION USE CASES ************
+  #####################################################################
+
   def test_useCase_I(self):
     """
     Case I: What to test here ?
@@ -353,8 +388,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
     # Delete the object from ZODB so as we can install the object there
-    self.portal.manage_delObjects([test_folder.getId(),])
+    self.portal.manage_delObjects([installed_test_folder.getId(),])
 
     # Set catalog path item as path_item in managerA
     managerA._setTemplatePathList([])
