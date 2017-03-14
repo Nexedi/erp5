@@ -11,12 +11,16 @@
             <value>
               <list>
                 <string>default</string>
+                <string>description</string>
+                <string>items</string>
+                <string>size</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_simulation_state</string> </value>
+            <value> <string>my_dialog_mode_invoice_simulation_state</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,6 +63,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -67,7 +75,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -84,16 +108,34 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Only consider transactions in those states.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_dialog_mode_invoice_simulation_state</string> </value>
+                    <value> <string>my_multi_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>size</string> </key>
+                    <value> <int>5</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Simulation State</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -110,6 +152,32 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>request/simulation_state | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.ERP5Site_getWorkflowStateItemList(portal_type=\'Accounting Transaction\', state_var=\'simulation_state\', display_none_category=False)</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: len(field.get_value(\'items\'))</string> </value>
         </item>
       </dictionary>
     </pickle>
