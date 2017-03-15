@@ -346,7 +346,7 @@ class BusinessManager(XMLObject):
 
     return self
 
-  __rsub__ = __add__
+  __rsub__ = __sub__
 
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
   def storeTemplateData(self):
