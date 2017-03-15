@@ -37,16 +37,9 @@
                          .getElementById("error-message-template")
                          .innerHTML,
     error_message_template = Handlebars.compile(error_message_source),
-    variable = {};
-
-
-  function renderListboxThead(gadget, template) {
-    return gadget.translateHtml(template({
-      head_value: gadget.props.head_value,
-      show_anchor: gadget.state.show_anchor,
-      line_icon: gadget.state.line_icon
-    }));
-  }
+    variable = {},
+    loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
+    disabled_class = 'ui-disabled';
 
 
   function renderEditableField(gadget, element, column_list) {
@@ -74,30 +67,30 @@
       column = element_list[i].getAttribute("column");
       line = element_list[i].getAttribute("line");
       if (gadget.props.listbox_uid_dict.key === undefined) {
-        gadget.props.listbox_uid_dict.key = gadget.props.result.data.rows[line].value["listbox_uid:list"].key;
-        gadget.props.listbox_uid_dict.value = [gadget.props.result.data.rows[line].value["listbox_uid:list"].value];
-        uid_value_dict[gadget.props.result.data.rows[line].value["listbox_uid:list"].value] = null;
+        gadget.props.listbox_uid_dict.key = gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].key;
+        gadget.props.listbox_uid_dict.value = [gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value];
+        uid_value_dict[gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value] = null;
       } else {
-        uid_value = gadget.props.result.data.rows[line].value["listbox_uid:list"].value;
+        uid_value = gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value;
         if (!uid_value_dict.hasOwnProperty(uid_value)) {
           uid_value_dict[uid_value] = null;
           gadget.props.listbox_uid_dict.value.push(uid_value);
         }
       }
       promise_list.push(renderSubCell(element_list[i],
-        gadget.props.result.data.rows[line].value[column_list[column][0]] || ""));
+        gadget.state.allDocs_result.data.rows[line].value[column_list[column][0]] || ""));
     }
     return RSVP.all(promise_list);
   }
 
 
-  function renderListboxTbody(gadget, template) {
+  function renderListboxTbody(gadget, template, body_value) {
     var tmp,
       column_list = JSON.parse(gadget.state.column_list_json);
 
     return gadget.translateHtml(template(
       {
-        "body_value": gadget.props.body_value,
+        "body_value": body_value,
         "show_anchor": gadget.state.show_anchor,
         "column_list": column_list
       }
@@ -116,15 +109,15 @@
   }
 
 
-  function renderListboxTfoot(gadget) {
+  function renderListboxTfoot(gadget, foot) {
     return gadget.translateHtml(listbox_tfoot_template(
       {
-        "colspan": gadget.props.foot.colspan,
-        "previous_classname": gadget.props.foot.previous_classname,
-        "previous_url": gadget.props.foot.previous_url,
-        "record": gadget.props.foot.record,
-        "next_classname": gadget.props.foot.next_classname,
-        "next_url": gadget.props.foot.next_url
+        "colspan": foot.colspan,
+        "previous_classname": foot.previous_classname,
+        "previous_url": foot.previous_url,
+        "record": foot.record,
+        "next_classname": foot.next_classname,
+        "next_url": foot.next_url
       }
     ));
   }
@@ -162,6 +155,8 @@
         i,
         sort_column_list = [],
         search_column_list = [],
+        query_string,
+        url_query,
         queue;
 
       //only display which is in listbox's column list
@@ -188,6 +183,17 @@
       }
       search_column_list.push(["searchable_text", "Searchable Text"]);
 
+      url_query = options.extended_search;
+      query_string = new URI(field_json.query).query(true).query;
+      if (url_query) {
+        //query_string = field_json.column_list.reduce(buildQueryString, ' AND (').replace(new RegExp("OR " + '$'), ')');
+        if (query_string) {
+          query_string = '(' + query_string + ') AND (' + url_query + ')';
+        } else {
+          query_string = url_query;
+        }
+      }
+
       queue = RSVP.Queue();
       if (!variable.translated_records) {
         queue
@@ -205,7 +211,7 @@
       queue
         .push(function () {
           // Cancel previous line rendering to not conflict with the asynchronous render for now
-          return gadget.renderContent(true, {});
+          return gadget.fetchLineContent(true);
         })
         .push(function () {
           // XXX Fix in case of multiple listboxes
@@ -226,6 +232,7 @@
             show_anchor: field_json.show_anchor,
             line_icon: field_json.line_icon,
             query: field_json.query,
+            query_string: query_string,
             lines: field_json.lines,
             list_method: field_json.list_method,
             list_method_template: field_json.list_method_template,
@@ -239,16 +246,14 @@
             field_id: options.field_id,
             extended_search: options.extended_search,
             hide_class: options.hide_enabled ? "" : "ui-disabled",
-            command: field_json.command || 'index'
-          });
-        })
-        .push(function () {
-          // Force line calculation in any case
-          return gadget.renderContent(false, {
-            sort_list: JSON.parse(gadget.state.sort_list_json),
-            column_list: field_json.column_list,
-            sort_column_list: sort_column_list,
-            search_column_list: search_column_list
+            command: field_json.command || 'index',
+
+            // Force line calculation in any case
+            allDocs_result: undefined,
+
+            // No error message
+            has_error: false,
+            show_line_selector: false
           });
         });
       return queue;
@@ -256,17 +261,52 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        head_value = [],
+        head_value_list = [],
         class_value,
         sort_list,
         column_list,
         tmp,
         i,
-        j;
+        j,
+        result_queue = new RSVP.Queue();
+
+/*
+      if (modification_dict.hasOwnProperty('error_text') && this.state.error_text !== undefined) {
+        // XXX TODO
+        this.element.querySelector('tfoot').textContent =
+          "Unsupported list method: '" + this.state.list_method + "'";
+        loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
+        return;
+      }
+*/
+
+      if (gadget.state.has_error) {
+        return result_queue
+          .push(function () {
+            var options = {extended_search: undefined};
+            options[gadget.state.key + "_sort_list:json"] = undefined;
+            return gadget.getUrlFor({
+              command: 'store_and_change',
+              options: options
+            });
+          })
+          .push(function (url) {
+            return gadget.translateHtml(error_message_template({
+              reset_url: url
+            }));
+          })
+          .push(function (html) {
+            gadget.element.querySelector(".document_table").innerHTML = html;
+          });
+      }
+
+
 
       if ((modification_dict.hasOwnProperty('sort_list_json')) ||
           (modification_dict.hasOwnProperty('column_list_json')) ||
           (modification_dict.hasOwnProperty('title')) ||
+          (modification_dict.hasOwnProperty('has_error')) ||
+          (modification_dict.hasOwnProperty('show_line_selector')) ||
           (modification_dict.hasOwnProperty('hide_sort')) ||
           (modification_dict.hasOwnProperty('hide_class'))) {
 
@@ -286,23 +326,41 @@
               break;
             }
           }
-          head_value.push({
+          head_value_list.push({
             "data-i18n": column_list[i][1],
             "class_value": class_value,
             "text": column_list[i][1]
           });
         }
 
-        gadget.props.head_value = head_value;
-        return new RSVP.Queue()
+        result_queue
           .push(function () {
+            var listbox_thead_template,
+              hide_button_text,
+              hide_button_name;
+
+            if (gadget.state.show_line_selector) {
+              listbox_thead_template = listbox_show_thead_template;
+              hide_button_text = 'Submit';
+              hide_button_name = 'SelectRows';
+            } else {
+              listbox_thead_template = listbox_hidden_thead_template;
+              hide_button_text = 'Hide Rows';
+              hide_button_name = 'Hide';
+            }
             return RSVP.all([
               gadget.translateHtml(listbox_template({
                 hide_class: gadget.state.hide_class,
                 hide_sort: gadget.state.hide_sort,
-                title: gadget.state.title
+                title: gadget.state.title,
+                hide_button_text: hide_button_text,
+                hide_button_name: hide_button_name
               })),
-              renderListboxThead(gadget, listbox_hidden_thead_template)
+              gadget.translateHtml(listbox_thead_template({
+                head_value: head_value_list,
+                show_anchor: gadget.state.show_anchor,
+                line_icon: gadget.state.line_icon
+              }))
             ]);
           })
           .push(function (result_list) {
@@ -310,6 +368,152 @@
             gadget.element.querySelector(".thead").innerHTML = result_list[1];
           });
       }
+
+      if (gadget.state.allDocs_result === undefined) {
+        // Trigger line content calculation
+        result_queue
+          .push(function () {
+            var loading_element_classList = gadget.element.querySelector(".listboxloader").classList,
+              tbody_classList = gadget.element.querySelector("table").querySelector("tbody").classList;
+            // Set the loading icon and trigger line calculation
+            loading_element_classList.add.apply(loading_element_classList, loading_class_list);
+            tbody_classList.add(disabled_class);
+
+            return gadget.fetchLineContent(false);
+          });
+
+      } else if ((modification_dict.hasOwnProperty('show_line_selector')) ||
+          (modification_dict.hasOwnProperty('allDocs_result'))) {
+
+        // Render the listbox content
+        result_queue
+          .push(function () {
+            var lines = gadget.state.lines,
+              promise_list = [],
+              allDocs_result = gadget.state.allDocs_result,
+              counter;
+
+            column_list = JSON.parse(gadget.state.column_list_json);
+
+            if (lines === 0) {
+              lines = allDocs_result.data.total_rows;
+              counter = allDocs_result.data.total_rows;
+            } else {
+              counter = Math.min(allDocs_result.data.total_rows, lines);
+            }
+            sort_list = JSON.parse(gadget.state.sort_list_json);
+
+            for (i = 0; i < counter; i += 1) {
+              promise_list.push(
+                gadget.getUrlFor({
+                  command: gadget.state.command,
+                  options: {
+                    jio_key: allDocs_result.data.rows[i].id,
+                    uid: allDocs_result.data.rows[i].value.uid,
+                    selection_index: gadget.state.begin_from + i,
+                    query: gadget.state.query_string,
+                    list_method_template: gadget.state.list_method_template,
+                    "sort_list:json": sort_list
+                  }
+                })
+              );
+            }
+            return new RSVP.Queue()
+              .push(function () {
+                return RSVP.all(promise_list);
+              })
+
+              .push(function (result_list) {
+                var value,
+                  body_value = [],
+                  tr_value = [],
+                  tmp_url,
+                  listbox_tbody_template;
+
+                for (i = 0; i < counter; i += 1) {
+                  tmp_url = result_list[i];
+                  tr_value = [];
+                  for (j = 0; j < column_list.length; j += 1) {
+                    value = allDocs_result.data.rows[i].value[column_list[j][0]] || "";
+                    tr_value.push({
+                      "type": value.type,
+                      "editable": value.editable && gadget.state.editable,
+                      "href": tmp_url,
+                      "text": value,
+                      "line": i,
+                      "column": j
+                    });
+                  }
+                  body_value.push({
+                    "value": allDocs_result.data.rows[i].value.uid,
+                    "jump": tmp_url,
+                    "tr_value": tr_value,
+                    "line_icon": gadget.state.line_icon
+                  });
+                }
+
+                if (gadget.state.show_line_selector) {
+                  listbox_tbody_template = listbox_show_tbody_template;
+                } else {
+                  listbox_tbody_template = listbox_hidden_tbody_template;
+                }
+
+                return renderListboxTbody(gadget, listbox_tbody_template, body_value);
+              })
+              .push(function () {
+                var prev_param = {},
+                  next_param = {};
+                function setNext() {
+                  if (allDocs_result.data.rows.length > lines) {
+                    next_param[gadget.state.key + '_begin_from'] = gadget.state.begin_from + lines;
+                  }
+                }
+
+                if (gadget.state.begin_from === 0) {
+                  setNext();
+                } else {
+                  prev_param[gadget.state.key + '_begin_from'] = gadget.state.begin_from - lines;
+                  setNext();
+                }
+                return RSVP.all([
+                  gadget.getUrlFor({command: 'change', options: prev_param}),
+                  gadget.getUrlFor({command: 'change', options: next_param})
+                ]);
+
+              })
+              .push(function (url_list) {
+                var foot = {};
+                foot.colspan = column_list.length + gadget.state.show_anchor +
+                  (gadget.state.line_icon ? 1 : 0);
+                foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
+                foot.previous_url = url_list[0];
+                foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
+                foot.next_url = url_list[1];
+                if ((gadget.state.begin_from === 0) && (counter === 0)) {
+                  foot.record = variable.translated_no_record;
+                } else if ((allDocs_result.data.rows.length <= lines) && (gadget.state.begin_from === 0)) {
+                  foot.record = counter + " " + variable.translated_records;
+                } else {
+                  foot.record = variable.translated_records + " " + (((gadget.state.begin_from + lines) / lines - 1) * lines + 1) + " - " + (((gadget.state.begin_from + lines) / lines - 1) * lines + counter);
+                }
+
+                if (gadget.state.begin_from === 0) {
+                  foot.previous_classname += " ui-disabled";
+                }
+                if (allDocs_result.data.rows.length <= lines) {
+                  foot.next_classname += " ui-disabled";
+                }
+                return renderListboxTfoot(gadget, foot);
+              })
+              .push(function (my_html) {
+                gadget.element.querySelector(".tfoot").innerHTML = my_html;
+                var loading_element_classList = gadget.element.querySelector(".listboxloader").classList;
+                loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
+              });
+          });
+      }
+
+      return result_queue;
     })
 
     .declareMethod('getListboxInfo', function () {
@@ -325,212 +529,64 @@
     //////////////////////////////////////////////
     // render the listbox in an asynchronous way
     //////////////////////////////////////////////
-    .declareJob('renderContent', function (only_cancel, parsed_json_options) {
-      var gadget = this,
-//         props = gadget.props,
-//         field_json = props.field_json,
-        begin_from = this.state.begin_from,
-        url_query =  this.state.extended_search,
-        query_string,
-        lines = this.state.lines,
-        select_list = [],
-        dataset,
-        counter,
-        limit_options,
-        loading_element_classList = gadget.element.querySelector(".listboxloader").classList,
-        tbody_classList = gadget.element.querySelector("table").querySelector("tbody").classList,
-        loading_class_list = ['ui-icon-spinner', 'ui-btn-icon-left'],
-        disabled_class = 'ui-disabled',
-        sort_list = parsed_json_options.sort_list,
-        i;
-
+    .declareJob('fetchLineContent', function (only_cancel) {
       if (only_cancel) {
         return;
       }
 
       if (this.state.query === undefined) {
-        gadget.element.querySelector('tfoot').textContent =
-          "Unsupported list method: '" + this.state.list_method + "'";
-        loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
-        return;
-      }
-     // function buildQueryString(previous, next) {
-     //   return previous + next[0] + ':= "' + url_query + '" OR ';
-     // }
-
-      query_string = new URI(this.state.query).query(true).query;
-      if (url_query) {
-        //query_string = field_json.column_list.reduce(buildQueryString, ' AND (').replace(new RegExp("OR " + '$'), ')');
-        if (query_string) {
-          query_string = '(' + query_string + ') AND (' + url_query + ')';
-        } else {
-          query_string = url_query;
-        }
+        /*
+        return this.changeState({
+          error_text: "Unsupported list method: '" + this.state.list_method + "'"
+        });
+        */
+        return this.changeState({
+          has_error: true
+        });
       }
 
-      for (i = 0; i < parsed_json_options.column_list.length; i += 1) {
-        select_list.push(parsed_json_options.column_list[i][0]);
+      var gadget = this,
+        select_list = [],
+        limit_options,
+        column_list = JSON.parse(gadget.state.column_list_json),
+        i;
+
+      for (i = 0; i < column_list.length; i += 1) {
+        select_list.push(column_list[i][0]);
       }
       select_list.push("uid");
 
-      if (lines === 0) {
+      if (gadget.state.lines === 0) {
         limit_options = undefined;
       } else {
-        limit_options = [begin_from, lines + 1];
+        limit_options = [gadget.state.begin_from, gadget.state.lines + 1];
       }
-      loading_element_classList.add.apply(loading_element_classList, loading_class_list);
-      tbody_classList.add(disabled_class);
+
 
       return gadget.jio_allDocs({
         // XXX Not jIO compatible, but until a better api is found...
         "list_method_template": this.state.list_method_template,
-        "query": query_string,
+        "query": gadget.state.query_string,
         "limit": limit_options,
         "select_list": select_list,
-        "sort_on": sort_list
+        "sort_on": JSON.parse(gadget.state.sort_list_json)
       })
-
         .push(function (result) {
-          var promise_list = [result];
-          if (lines === 0) {
-            lines =  result.data.total_rows;
-            counter = result.data.total_rows;
-          } else {
-            counter = Math.min(result.data.total_rows, lines);
-          }
-          for (i = 0; i < counter; i += 1) {
-            promise_list.push(
-              gadget.getUrlFor({
-                command: gadget.state.command,
-                options: {
-                  jio_key: result.data.rows[i].id,
-                  uid: result.data.rows[i].value.uid,
-                  selection_index: begin_from + i,
-                  query: query_string,
-                  list_method_template: gadget.state.list_method_template,
-                  "sort_list:json": sort_list
-                }
-              })
-            );
-          }
-          return new RSVP.Queue()
-            .push(function () {
-              return RSVP.all(promise_list);
-            })
-            .push(function (result_list) {
-              var j,
-                allDocs_result = result_list[0],
-                value,
-                body_value = [],
-                tr_value = [],
-                tmp_url;
-              dataset = allDocs_result;
-              for (i = 0; i < counter; i += 1) {
-                tmp_url = result_list[i + 1];
-                tr_value = [];
-                for (j = 0; j < parsed_json_options.column_list.length; j += 1) {
-                  value = allDocs_result.data.rows[i].value[parsed_json_options.column_list[j][0]] || "";
-                  tr_value.push({
-                    "type": value.type,
-                    "editable": value.editable && gadget.state.editable,
-                    "href": tmp_url,
-                    "text": value,
-                    "line": i,
-                    "column": j
-                  });
-                }
-                body_value.push({
-                  "value": allDocs_result.data.rows[i].value.uid,
-                  "jump": tmp_url,
-                  "tr_value": tr_value,
-                  "line_icon": gadget.state.line_icon
-                });
-              }
-              gadget.props.body_value = body_value;
-              gadget.props.result = result;
-              return renderListboxTbody(gadget, listbox_hidden_tbody_template);
-            })
-            .push(function () {
-              var prev_param = {},
-                next_param = {};
-              function setNext() {
-                if (dataset.data.rows.length > lines) {
-                  next_param[gadget.state.key + '_begin_from'] = begin_from + lines;
-                }
-              }
-
-              if (begin_from === 0) {
-                setNext();
-              } else {
-                prev_param[gadget.state.key + '_begin_from'] = begin_from - lines;
-                setNext();
-              }
-              return RSVP.all([
-                gadget.getUrlFor({command: 'change', options: prev_param}),
-                gadget.getUrlFor({command: 'change', options: next_param})
-              ]);
-
-            })
-            .push(function (url_list) {
-              var foot = {};
-              foot.colspan = parsed_json_options.column_list.length + gadget.state.show_anchor +
-                (gadget.state.line_icon ? 1 : 0);
-              foot.default_colspan = foot.colspan;
-              foot.previous_classname = "ui-btn ui-icon-carat-l ui-btn-icon-left responsive ui-first-child";
-              foot.previous_url = url_list[0];
-              foot.next_classname = "ui-btn ui-icon-carat-r ui-btn-icon-right responsive ui-last-child";
-              foot.next_url = url_list[1];
-              if ((begin_from === 0) && (counter === 0)) {
-                foot.record = variable.translated_no_record;
-              } else if ((dataset.data.rows.length <= lines) && (begin_from === 0)) {
-                foot.record = counter + " " + variable.translated_records;
-              } else {
-                foot.record = variable.translated_records + " " + (((begin_from + lines) / lines - 1) * lines + 1) + " - " + (((begin_from + lines) / lines - 1) * lines + counter);
-              }
-
-              if (begin_from === 0) {
-                foot.previous_classname += " ui-disabled";
-              }
-              if (dataset.data.rows.length <= lines) {
-                foot.next_classname += " ui-disabled";
-              }
-              gadget.props.foot = foot;
-              return renderListboxTfoot(gadget);
-            })
-            .push(function (my_html) {
-              gadget.element.querySelector(".tfoot").innerHTML = my_html;
-            });
-
+          return gadget.changeState({
+            allDocs_result: result
+          });
 
         }, function (error) {
+          // do not crash interface if allDocs fails
+          //this will catch all error, not only search criteria invalid error
           if (error instanceof RSVP.CancellationError) {
             throw error;
           }
-
-          // do not crash interface if allDocs fails
-          //this will catch all error, not only search criteria invalid error
           console.warn(error);
-          var options = {extended_search: undefined};
-          options[gadget.state.key + "_sort_list:json"] = undefined;
-          return gadget.getUrlFor({
-            command: 'store_and_change',
-            options: options
-          })
-            .push(function (url) {
-              return gadget.translateHtml(error_message_template({
-                reset_url: url
-              }));
-            })
-            .push(function (html) {
-              gadget.element.querySelector(".document_table").innerHTML = html;
-            });
-        })
-        .push(function (result) {
-          loading_element_classList.remove.apply(loading_element_classList, loading_class_list);
-          tbody_classList.remove(disabled_class);
-          return result;
+          return gadget.changeState({
+            has_error: true
+          });
         });
-
     })
 
     .declareMethod("getContent", function (options) {
@@ -570,8 +626,15 @@
       var gadget = this,
         sort_button = gadget.element.querySelector('button[name="Sort"]'),
         hide_button = gadget.element.querySelector('button[name="Hide"]'),
+        select_button = gadget.element.querySelector('button[name="SelectRows"]'),
         url,
-        options = {};
+        options = {},
+        all_hide_element_list,
+        hide_element_list = [],
+        query_list = [],
+        search_query,
+        i;
+
       if (evt.target === sort_button) {
         evt.preventDefault();
         url = "gadget_erp5_sort_editor.html";
@@ -580,83 +643,60 @@
         options.key = gadget.state.key + "_sort_list:json";
         return gadget.renderEditorPanel(url, options);
       }
+
       if (evt.target === hide_button) {
         evt.preventDefault();
-        return new RSVP.Queue()
-          .push(function () {
-            var i,
-              all_hide_elements,
-              query_list = [],
-              search_query,
-              thead_template,
-              tbody_template,
-              hide_button_html,
-              hide_elements = [];
-            if (gadget.props.foot.colspan === gadget.props.foot.default_colspan) {
-              thead_template = listbox_show_thead_template;
-              tbody_template = listbox_show_tbody_template;
-              hide_button_html = "Submit";
-              gadget.props.foot.colspan += 1;
-            } else {
-              //hide closed
-              //maybe submit
-              all_hide_elements = gadget.element.querySelectorAll(".hide_element");
-              for (i = 0; i < all_hide_elements.length; i += 1) {
-                if (!all_hide_elements[i].checked) {
-                  hide_elements.push(all_hide_elements[i]);
-                }
-              }
-              if (hide_elements.length) {
-                for (i = 0; i < hide_elements.length; i += 1) {
-                  query_list.push(new SimpleQuery({
-                    key: "catalog.uid",
-                    type: "simple",
-                    operator: "!=",
-                    value: hide_elements[i].getAttribute("value")
-                  }));
-                }
-                if (gadget.state.extended_search) {
-                  search_query = QueryFactory.create(gadget.state.extended_search);
-                }
-                if (search_query) {
-                  query_list.push(search_query);
-                }
-                search_query = new ComplexQuery({
-                  operator: "AND",
-                  query_list: query_list,
-                  type: "complex"
-                });
-
-                return gadget.redirect({
-                  command: 'store_and_change',
-                  options: {
-                    "extended_search": Query.objectToSearchText(search_query)
-                  }
-                });
-              }
-
-              gadget.props.foot.colspan -= 1;
-              hide_button_html = "Hide Rows";
-              thead_template = listbox_hidden_thead_template;
-              tbody_template = listbox_hidden_tbody_template;
-            }
-            return new RSVP.Queue()
-              .push(function () {
-                return RSVP.all([
-                  renderListboxThead(gadget, thead_template),
-                  renderListboxTbody(gadget, tbody_template),
-                  renderListboxTfoot(gadget, listbox_tfoot_template),
-                  gadget.translate(hide_button_html)
-                ]);
-              })
-              .push(function (all_innerHTML) {
-                //change hide button's text
-                hide_button.innerHTML = all_innerHTML[3];
-                gadget.element.querySelector(".thead").innerHTML = all_innerHTML[0];
-                gadget.element.querySelector(".tfoot").innerHTML = all_innerHTML[2];
-              });
-          });
+        return gadget.changeState({
+          show_line_selector: true
+        });
       }
+
+      if (evt.target === select_button) {
+        evt.preventDefault();
+
+        //hide closed
+        //maybe submit
+        all_hide_element_list = gadget.element.querySelectorAll(".hide_element");
+        for (i = 0; i < all_hide_element_list.length; i += 1) {
+          if (!all_hide_element_list[i].checked) {
+            hide_element_list.push(all_hide_element_list[i]);
+          }
+        }
+        if (hide_element_list.length) {
+          for (i = 0; i < hide_element_list.length; i += 1) {
+            query_list.push(new SimpleQuery({
+              key: "catalog.uid",
+              type: "simple",
+              operator: "!=",
+              value: hide_element_list[i].getAttribute("value")
+            }));
+          }
+          if (gadget.state.extended_search) {
+            search_query = QueryFactory.create(gadget.state.extended_search);
+          }
+          if (search_query) {
+            query_list.push(search_query);
+          }
+          search_query = new ComplexQuery({
+            operator: "AND",
+            query_list: query_list,
+            type: "complex"
+          });
+
+          return gadget.redirect({
+            command: 'store_and_change',
+            options: {
+              "extended_search": Query.objectToSearchText(search_query)
+            }
+          });
+        }
+
+        return gadget.changeState({
+          show_line_selector: false
+        });
+
+      }
+
     }, false, false)
 
     .allowPublicAcquisition("notifyInvalid", function () {
