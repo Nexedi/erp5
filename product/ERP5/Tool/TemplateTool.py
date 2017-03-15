@@ -60,6 +60,7 @@ from base64 import b64encode, b64decode
 from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
+from difflib import unified_diff
 import subprocess
 import time
 
@@ -1652,91 +1653,194 @@ class TemplateTool (BaseTool):
       final_prop_item.install()
 
     security.declareProtected(Permissions.ManagePortal,
-            'combineMultipleBusinessManager')
-    def combineMultipleBusinessManager(self, bm_list):
+            'installBusinessManager')
+    def installBusinessManager(self, bm):
       """
-      Combines multiple BM to form single flattened BM
+      Run installation on flattened Business Manager
+      """
+      # Run install on separate Business Item one by one
+      for path_item in bm._path_item_list:
+        path_item.install(self)
+
+      bm.setStatus('installed')
+
+    security.declareProtected(Permissions.ManagePortal,
+            'updateInstallationState')
+    def updateInstallationState(self, bm_list):
+      """
+      Run installation after comparing combined Business Manager status
+
+      Steps:
+      1. Create combinedBM for the bm_list
+      2. Get the old combinedBM by checking the 'installed' status for it or
+      by checking timestamp (?? which is better)
+      CombinedBM: Collection of all Business item(s) whether installed or
+      uninstalled
+      3. Build BM from the filesystem
+      4. Compare the combinedBM state to the last combinedBM state
+      5. Compare the installation state to the OFS state
+      6. If conflict while comaprison at 3, raise the error
+      7. In all other case, install the BM List
+      """
+      # Try getting a Business Manager with the title 'Combined Business Manager'
+      # which we would need to compare. Also using search keeping in mind we
+      # index Business Manager(s)
+      installation_state_result = self.searchFolder(
+                                          portal_type='Business Manager',
+                                          title='Installation State',
+                                          )
+
+      # If there is 1 or more Business Manager(s) with 'Combined Business Manager'
+      # title, take the firs one, cause it is the one created currently
+      if len(installation_state_result) :
+        path = installation_state_result.dictionaries()[0]['path']
+        old_installation_state = self.unrestrictedTraverse(path)
+      else:
+        # Create a new Business Manager which we'll use for comapring installation
+        # state
+        old_installation_state = self.newContent(
+                                          portal_type='Business Manager',
+                                          title='Installation State',
+                                         )
+        old_installation_state.build()
+      # XXX: We can also create old_installation_state BM by other ways, namely
+      # 1. Combining the Business Item list from all the installed states of
+      # last BM(s)
+      # 2..
+
+      # Create Single Business Manager by comparing the old_installation_state
+      # with the list of BM(s) we want to install currently. This also should
+      # reduce the combined Business Manager.
+      new_installation_state = self.createNewInstallationState(
+                                                        bm_list,
+                                                        old_installation_state
+                                                        )
+
+      # Build Business Manager from ZODB and compare the changes done by
+      # the user which might get affected.
+      buildBM = self.newContent(portal_type='Business Manager')
+      final_template_path_list = list(set(new_installation_state.getTemplatePathList()))
+      buildBM._setTemplatePathList(final_template_path_list)
+      buildBM.build()
+
+      self.installBusinessManager(new_installation_state)
+      self.cleanInstallationState(new_installation_state)
+
+      # Change status of all BM installed
+      for bm in bm_list:
+        bm.setStatus('installed')
+
+    installMultipleBusinessManager = updateInstallationState
+
+    security.declareProtected(Permissions.ManagePortal,
+            'createNewInstallationState')
+    def createNewInstallationState(self, bm_list, old_installation_state):
+      """
+      Combines multiple BM to form single BM which would be the new
+      installtion state
       """
       new_bm_list = bm_list[:]
-      # Create the final Business Manager
-      if len(bm_list) == 1:
-        combinedBM = new_bm_list[0]
-      else:
-        # Better to create a new Business Manager than to make change
-        # in the installed one
-        combinedBM = self.newContent(portal_type='Business Manager')
-        combinedBM.build()
-        # Summation should also consider arithmetic on the Business Item(s)
-        # having same path and layer and combine them.
 
-        new_bm_list.insert(0, combinedBM)
-        combinedBM = reduce(lambda x, y: x+y, new_bm_list)
+      # Summation should also consider arithmetic on the Business Item(s)
+      # having same path and layer and combine them.
+      combinedBM = self.newContent(portal_type='Business Manager',
+                                   title='Combined Business Manager')
+      combinedBM.build()
+      new_bm_list.insert(0, combinedBM)
+      combinedBM = reduce(lambda x, y: x+y, new_bm_list)
+
+      # Compare combinedBM to the old_installation_state and return new
+      # installation state
+      path_list = combinedBM.getTemplatePathList()
+
+      final_path_list = []
+      final_path_item_list = []
+
+      final_path_list.extend(path_list)
+      final_path_item_list.extend(combinedBM._path_item_list)
+
+      for item in old_installation_state._path_item_list:
+        if item._path in path_list:
+          # If there is update of path item, change the sign of the last
+          # version of that Business Item and add it to final_path_item_list
+          item._sign = -1
+        final_path_list.append(item._path)
+        final_path_item_list.append(item)
+
+      final_path_list = list(set(final_path_list))
+      final_path_item_list.sort(key=lambda x: x._sign)
+
+      combinedBM._setTemplatePathList(final_path_list)
+      combinedBM._path_item_list = final_path_item_list
+
+      # Change the title of the combined BM
+      combinedBM.edit(title='Installation State')
 
       # XXX: We are missing the part of creating installed_BM for all the BM
       # we have in bm_list, because this would be needed in case we build
       # Business Manager again.
 
       # Reduce the final Business Manager
-      combinedBM.reduceBusinessManager()
-
-      # Build BM from the paths of combined Business Manager and then comapare
-      # then to show the changes in both states
-      buildBM = self.newContent(portal_type='Business Manager')
-      final_template_path_list = list(set(combinedBM.getTemplatePathList()))
-      buildBM._setTemplatePathList(final_template_path_list)
-      buildBM.build()
-
-      # combinedBM.flattenBusinessManager()
+      #combinedBM.reduceBusinessManager()
 
       return combinedBM
 
     security.declareProtected(Permissions.ManagePortal,
-            'installBusinessManager')
-    def installBusinessManager(self, bm):
+            'compareInstallationStateWithOFS')
+    def compareInstallationStateWithOFS(self, buildBM, installingBM):
       """
-      Run installation on flattened Business Manager
+      Compare the buildBM and to be installed BM and show the changes in a way
+      it can be notified or installed.
+
+      1. Compare the hash of the objects and create a diff file in case of
+      conflict
+      2. If forced installation, delete the old object and install the ones
+      from update Business Manager
+
+      Returns:
+
+      - has_confict: True , if there is a conflict between the 2 BMs
+      - DiffFile: In case there is conflict between the two states
       """
-      if bm.getStatus() == 'reduced':
-        # Run install on separate Business Item one by one
-        for path_item in bm._path_item_list:
-          path_item.install(self)
-      else:
-        raise ValueError, 'Business Manager not flattened, cannot install'
+      installing_sha_list = [item._sha for item in installingBM._path_item_list]
+      final_item_list = []
+
+      for item in buildBM._path_item_list:
+        if not item._sha in installing_sha_list:
+          final_item_list.append(item)
+        else:
+          return final_item_list
 
     security.declareProtected(Permissions.ManagePortal,
-            'installMultipleBusinessManager')
-    def installMultipleBusinessManager(self, bm_list):
+            'compareMultipleBusinessManager')
+    def compareBusinessManager(self, new_bm, old_bm):
       """
-      Run installation on flattened Business Manager
+      Compare two business manager and return a new Business manager based on
+      the difference. This is specially required to compare two versions of
+      Business Manager(s).
       """
-      final_bm_list = []
-      installed_bm_list = self.getInstalledBusinessManagerList()
-      installed_bm_title_list = self.getInstalledBusinessManagerTitleList()
-      installed_bm_dict = dict(zip(installed_bm_title_list, installed_bm_list))
-      for bm in bm_list:
+      compared_bm = new_bm - old_bm
+      # Return the subtraction of the Business Manager
+      return compared_bm
 
-        if bm.title in installed_bm_title_list:
+    def cleanInstallationState(self, installation_state):
+      """
+      Installation State is the Business Manager which has been installed
+      Cleaning means removal of all the Business Item with negative sign
 
-          # Not very suitable way to look for already installed BM
-          installed_bm = installed_bm_dict[bm.title]
-          # XXX: Installed BM is already reduced. For the Business Manager we
-          # are planning to install, we should reduce it also.
-          compared_bm = self.compareBusinessManager(bm, installed_bm)
-          final_bm_list.append(compared_bm)
+      **WARNING**:This should only be done after installing the Business Manager
+      """
+      if installation_state.getStatus() != 'installed':
+        LOG(WARNING, 0, 'Trying to clean installation state before installing')
+        raise ValueError, "Can't clean before installing"
 
-        else:
-          final_bm_list.append(bm)
+      final_path_item_list = []
 
-      combinedBM = self.combineMultipleBusinessManager(final_bm_list)
+      for item in installation_state._path_item_list:
+        if item._sign == 1:
+          final_path_item_list.append(item)
 
-      # XXX: Build Business Manager from ZODB and compare the changes done by
-      # the user which might get affetcted.
-
-      self.installBusinessManager(combinedBM)
-
-      # Explicilty change the status of Business Manager which are installed
-      for bm in bm_list:
-        bm.setStatus('installed')
+      installation_state._path_item_list = final_path_item_list
 
     def getInstalledBusinessManagerList(self):
       bm_list = self.objectValues(portal_type='Business Manager')
@@ -1749,17 +1853,6 @@ class TemplateTool (BaseTool):
         return []
       installed_bm_title_list = [bm.title for bm in installed_bm_list]
       return installed_bm_title_list
-
-    security.declareProtected(Permissions.ManagePortal,
-            'compareMultipleBusinessManager')
-    def compareBusinessManager(self, new_bm, old_bm):
-      """
-      Compare two business manager and return a new Business manager based on
-      the difference. This is specially required to compare two versions of
-      Business Manager(s).
-      """
-      compared_bm = new_bm-old_bm
-      return compared_bm
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
