@@ -310,6 +310,7 @@ class ERP5TypeInformation(XMLObject,
       'device',
       'device_configuration',
       'data_descriptor',
+      'data_sink',
       # LEGACY - needs a warning - XXX-JPS
       'tax_movement',
     )
