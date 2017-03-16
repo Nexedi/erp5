@@ -1546,6 +1546,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_data_descriptor_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalDataSinkTypeList')
+  def getPortalDataSinkTypeList(self):
+    """
+    Returns Data Sink types.    
+    """
+    return self._getPortalGroupedTypeList('data_sink') or\
+           self._getPortalConfiguration('portal_data_sink_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalDeviceTypeList')
   def getPortalDeviceTypeList(self):
     """

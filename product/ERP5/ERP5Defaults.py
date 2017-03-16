@@ -197,6 +197,9 @@ portal_business_link_type_list = ('Business Link',)
 
 portal_data_descriptor_type_list = ()
 
+portal_data_sink_type_list = ('Data Stream',
+                              'Data Bucket Stream')
+
 portal_device_type_list = ('Data Acquisition Unit',
                            'Data Aggregation Unit'
                            'Sensor')
