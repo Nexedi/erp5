@@ -98,6 +98,27 @@
       return this.changeState(state_dict);
     })
 
+    .declareJob('detachChangeState', function (value_uid, catalog_index) {
+      var gadget = this;
+      return gadget.jio_allDocs({
+        "query":  Query.objectToSearchText(new SimpleQuery({
+          key: "catalog.uid",
+          value: value_uid
+        })),
+        "limit": [0, 1],
+        "select_list": [catalog_index]
+      })
+        .push(function (result) {
+          return gadget.changeState({
+            value_text: result.data.rows[0]
+              .value[catalog_index]
+          });
+        })
+        .push(function () {
+          return gadget.notifyChange();
+        });
+    })
+
     .onStateChange(function (modification_dict) {
       var gadget = this,
         queue = new RSVP.Queue(),
@@ -145,20 +166,8 @@
           // User selected a document from a listbox
           if ((gadget.state.value_uid) && (!gadget.state.value_text)) {
             plane.className = SEARCHING_CLASS_STR;
-            return gadget.jio_allDocs({
-              "query":  Query.objectToSearchText(new SimpleQuery({
-                key: "catalog.uid",
-                value: gadget.state.value_uid,
-                limit: [0, 1]
-              })),
-              "select_list": [gadget.state.catalog_index]
-            })
-              .push(function (result) {
-                return gadget.changeState({
-                  value_text: result.data.rows[0]
-                    .value[gadget.state.catalog_index]
-                });
-              });
+            return gadget.detachChangeState(gadget.state.value_uid,
+                                            gadget.state.catalog_index);
           }
 
 
