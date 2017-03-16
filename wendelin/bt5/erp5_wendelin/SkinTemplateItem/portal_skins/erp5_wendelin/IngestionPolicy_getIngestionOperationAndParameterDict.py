@@ -34,8 +34,6 @@ if data_ingestion is None:
       reference = specialise_reference,
       validation_state = 'default')]
       
-  context.log(specialise_value_list)
-  
   # create a new data ingestion
   data_ingestion = portal.data_ingestion_module.newContent(
       id = data_ingestion_id,
@@ -90,7 +88,7 @@ if data_ingestion is None:
   data_ingestion_batch_id =  "%s-%s" %(today_string,
                                        data_ingestion_batch_reference)
 
-  data_stream = None
+  data_sink = None
   if data_ingestion_batch_reference is not None:
     data_ingestion_batch = portal_catalog.getResultValue(
       portal_type = "Data Ingestion Batch",
@@ -112,18 +110,25 @@ if data_ingestion is None:
         aggregate_uid = data_ingestion_batch.getUid())
   
       if previous_data_ingestion_line is not None:
-        data_stream = previous_data_ingestion_line\
-          .getAggregateDataStreamValue()
+        data_sink = previous_data_ingestion_line\
+          .getAggregateDataSinkValue()
 
     input_line.setDefaultAggregateValue(data_ingestion_batch)
 
-  if data_stream is None:
-    data_stream = portal.data_stream_module.newContent(
-      portal_type = "Data Stream",
-      reference = data_ingestion_reference)
-    data_stream.validate()
   
-  input_line.setDefaultAggregateValue(data_stream)
+  data_product = portal.portal_catalog.getResultValue(
+    portal_type = "Data Product",
+    reference = resource_reference)
+    
+  data_sink_type = data_product.getAggregatedPortalType()
+  
+  if data_sink is None:
+    data_sink = portal.getDefaultModule(data_sink_type).newContent(
+      portal_type = data_sink_type,
+      reference = data_ingestion_reference)
+    data_sink.validate()
+  
+  input_line.setDefaultAggregateValue(data_sink)
   data_ingestion.start()
 
 else:
@@ -135,6 +140,8 @@ else:
       operation_line = line
 
 data_operation = operation_line.getResourceValue()
-data_stream = input_line.getAggregateDataStreamValue()
+parameter_dict = {
+   input_line.getReference(): input_line.getAggregateDataSinkValue(),
+  'bucket_reference': movement_dict.get('bucket_reference', None)}
 
-return data_operation, {'data_stream': data_stream}
+return data_operation, parameter_dict
