@@ -716,10 +716,6 @@ class BusinessItem(Implicit, Persistent):
         container_url = '/'.join(container_path)
       old_obj = container._getOb(object_id, None)
       # delete the old object before installing a new object
-      if old_obj:
-        # XXX: In case there is an old object which has been modified from the
-        # older installation, then show the conflict status.
-        container._delObject(object_id)
       # If sign is +1, set the new object on the container
       if self._sign == 1:
         # install object
@@ -732,6 +728,12 @@ class BusinessItem(Implicit, Persistent):
         del obj.isIndexable
         if getattr(aq_base(obj), 'reindexObject', None) is not None:
           obj.reindexObject()
+      else:
+        # Only in case if sign is -1
+        if old_obj:
+          # XXX: In case there is an old object which has been modified from the
+          # older installation, then show the conflict status.
+          container._delObject(object_id)
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
