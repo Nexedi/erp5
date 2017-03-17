@@ -12,18 +12,22 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>suspended</string> </value>
+            <value> <string>open</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Suspended</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>open</string>
-                <string>open_action</string>
+                <string>accept</string>
+                <string>accept_action</string>
+                <string>reject</string>
+                <string>reject_action</string>
+                <string>suspend</string>
+                <string>suspend_action</string>
               </tuple>
             </value>
         </item>

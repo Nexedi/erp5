@@ -54,33 +54,44 @@
             </value>
         </item>
         <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>publication_section/application/logo</string>
-                <string>publication_section/application/logo</string>
+                <string>product_line/software</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>codification</string> </key>
-            <value> <string>LOGO</string> </value>
-        </item>
-        <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>LOGO</string> </value>
+            <value> <string>SOFT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Logo of an application</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>logo</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string>software</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -88,9 +99,31 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Logo</string> </value>
+            <value> <string>Software</string> </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
     </pickle>
   </record>
 </ZopeData>

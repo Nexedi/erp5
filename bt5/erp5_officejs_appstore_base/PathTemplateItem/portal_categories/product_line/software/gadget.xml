@@ -57,38 +57,37 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>publication_section/application/logo</string>
-                <string>publication_section/application/logo</string>
+                <string>product_line/software/gadget</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>codification</string> </key>
-            <value> <string>LOGO</string> </value>
-        </item>
-        <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>LOGO</string> </value>
+            <value> <string>GDT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Logo of an application</string> </value>
+            <value> <string>HTML5 Application</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>logo</string> </value>
+            <value> <string>gadget</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>2</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Gadget</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Logo</string> </value>
+            <value> <string>Gadget HTML5</string> </value>
         </item>
       </dictionary>
     </pickle>
