@@ -57,30 +57,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>publication_section/application/logo</string>
-                <string>publication_section/application/logo</string>
+                <string>publication_section/application/package</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>codification</string> </key>
-            <value> <string>LOGO</string> </value>
-        </item>
-        <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>LOGO</string> </value>
+            <value> <string>PKG</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Logo of an application</string> </value>
+            <value> <string>Original Package contributed to make the application</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>logo</string> </value>
-        </item>
-        <item>
-            <key> <string>int_index</string> </key>
-            <value> <int>0</int> </value>
+            <value> <string>package</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -88,7 +79,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Logo</string> </value>
+            <value> <string>Package</string> </value>
         </item>
       </dictionary>
     </pickle>

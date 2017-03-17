@@ -22,12 +22,10 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>accept</string>
-                <string>accept_action</string>
+                <string>open</string>
+                <string>open_action</string>
                 <string>reject</string>
                 <string>reject_action</string>
-                <string>suspend</string>
-                <string>suspend_action</string>
               </tuple>
             </value>
         </item>

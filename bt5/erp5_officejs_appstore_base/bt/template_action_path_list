@@ -1,5 +1,4 @@
-Software Product | add_web_document
 Software Product | application_version_list_view
-Software Product | create_software_publication
 Software Product | document_view
+Software Publication Module | create_sofware_publication_dialog
 Software Release | document_view
