@@ -6,6 +6,9 @@ if response is None:
 file = context
 file_content = file.getData()
 
+# The vanilla HTML is wanted
+response.setBase(None)
+
 if REQUEST.getHeader('If-Modified-Since', '') == file.getModificationDate().rfc822():
   response.setStatus(304)
   return ""
