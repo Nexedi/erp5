@@ -10,6 +10,10 @@ Foo Module | list_ui
 Foo Module | search
 Foo Module | sort_on
 Foo Module | view
+Foo | dummy_listfield_report
+Foo | dummy_multicheckboxfield_report
+Foo | dummy_multilistfield_report
+Foo | dummy_radiofield_report
 Foo | dummy_report
 Foo | list
 Foo | select_bar

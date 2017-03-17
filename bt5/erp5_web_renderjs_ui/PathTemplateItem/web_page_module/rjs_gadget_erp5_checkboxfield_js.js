@@ -56,6 +56,15 @@
         return this.getDeclaredGadget('sub')
           .push(function (gadget) {
             return gadget.getContent();
+          })
+          .push(function (result) {
+            // Automatically add default_%s:int:0
+            //   https://lab.nexedi.com/nexedi/erp5/blob/8ae0706177/product/Formulator/Widget.py#L476
+            var key_list = Object.keys(result), i;
+            for (i = 0; i < key_list.length; i += 1) {
+              result["default_" + key_list[i] + ":int"] = 0;
+            }
+            return result;
           });
       }
       return {};

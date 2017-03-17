@@ -1,5 +1,9 @@
 test.erp5.testFunctionalRJSCore
 test.erp5.testFunctionalRJSCheckBoxField
+test.erp5.testFunctionalRJSListField
+test.erp5.testFunctionalRJSMultiCheckBoxField
+test.erp5.testFunctionalRJSMultiListField
+test.erp5.testFunctionalRJSRadioField
 test.erp5.testFunctionalRJSDateTimeField
 test.erp5.testFunctionalRJSRelationField
 test.erp5.testFunctionalRJSPageTemplate

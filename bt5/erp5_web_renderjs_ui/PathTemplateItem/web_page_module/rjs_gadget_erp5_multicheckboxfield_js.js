@@ -143,6 +143,8 @@
               }
             }
             final_result[gadget.state.name] = value_list;
+            // Automatically add default_%s:int:0
+            //   https://lab.nexedi.com/nexedi/erp5/blob/8ae0706177/product/Formulator/Widget.py#L1273
             final_result["default_" + gadget.state.name + ":int"] = 0;
             return final_result;
           });
