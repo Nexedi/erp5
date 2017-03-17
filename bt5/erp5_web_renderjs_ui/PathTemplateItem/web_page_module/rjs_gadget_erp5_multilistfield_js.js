@@ -38,6 +38,7 @@
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
+          key: field_json.key,
           sub_select_key: field_json.sub_select_key,
           sub_input_key: field_json.sub_input_key,
           hidden: field_json.hidden
@@ -111,6 +112,11 @@
         }
         return queue
           .push(function () {
+            if (result_list[result_list.length - 1] === "") {
+              result_list.pop();
+            }
+            final_result[gadget.state.key] = result_list;
+            final_result["default_" + gadget.state.key + ":int"] = 0;
             final_result[gadget.state.sub_select_key] = result_list;
             final_result[gadget.state.sub_input_key] = 0;
             return final_result;

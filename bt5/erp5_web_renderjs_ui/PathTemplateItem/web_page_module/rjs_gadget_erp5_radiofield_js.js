@@ -148,9 +148,13 @@
             var j;
             for (j = 0; j < result_list.length; j += 1) {
               if (result_list[j].hasOwnProperty(gadget.state.name)) {
+                result_list[j]["default_" + gadget.state.name] = "";
                 return result_list[j];
               }
             }
+            j = {};
+            j["default_" + gadget.state.name] = "";
+            return j;
           });
       }
       return final_result;
