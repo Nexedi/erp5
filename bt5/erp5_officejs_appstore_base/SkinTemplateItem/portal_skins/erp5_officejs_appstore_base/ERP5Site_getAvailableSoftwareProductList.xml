@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=True</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareProduct_fixRelatedWebSite</string> </value>
+            <value> <string>ERP5Site_getAvailableSoftwareProductList</string> </value>
         </item>
       </dictionary>
     </pickle>
