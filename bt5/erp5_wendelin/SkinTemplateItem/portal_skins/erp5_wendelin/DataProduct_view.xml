@@ -53,7 +53,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -67,7 +69,9 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_variation_base_category</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -85,6 +89,7 @@
                         <string>my_use_list</string>
                         <string>my_variation_base_category_list</string>
                         <string>my_variation_category_list</string>
+                        <string>my_individual_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
