@@ -61,6 +61,7 @@ from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 from difflib import unified_diff
+from operator import attrgetter
 import subprocess
 import time
 
@@ -1685,16 +1686,14 @@ class TemplateTool (BaseTool):
       # Try getting a Business Manager with the title 'Combined Business Manager'
       # which we would need to compare. Also using search keeping in mind we
       # index Business Manager(s)
-      installation_state_result = self.searchFolder(
-                                          portal_type='Business Manager',
-                                          title='Installation State',
-                                          )
+      installation_state_list = [l for l
+                                 in self.objectValues(portal_type='Business Manager')
+                                 if l.title == 'Installation State']
 
       # If there is 1 or more Business Manager(s) with 'Combined Business Manager'
       # title, take the firs one, cause it is the one created currently
-      if len(installation_state_result) :
-        path = installation_state_result.dictionaries()[0]['path']
-        old_installation_state = self.unrestrictedTraverse(path)
+      if len(installation_state_list) :
+        old_installation_state = installation_state_list[-1]
       else:
         # Create a new Business Manager which we'll use for comapring installation
         # state
@@ -1723,7 +1722,15 @@ class TemplateTool (BaseTool):
       buildBM._setTemplatePathList(final_template_path_list)
       buildBM.build()
 
+      # Compare installation state with OFS state
+      self.compareInstallationStateWithOFS(buildBM,
+                                           new_installation_state,
+                                           old_installation_state)
+
+      # Install the compared installation state
       self.installBusinessManager(new_installation_state)
+
+      # Remove the path_item with negative sign
       self.cleanInstallationState(new_installation_state)
 
       # Change status of all BM installed
@@ -1741,6 +1748,22 @@ class TemplateTool (BaseTool):
       """
       new_bm_list = bm_list[:]
 
+      # Create a list of path and hashes to be used for comparison
+      path_list = []
+      sha_list = []
+      forbidden_bm_title_list = ['Installation State',]
+
+      for bm in new_bm_list:
+        forbidden_bm_title_list.append(bm.title)
+        for item in bm._path_item_list:
+          path_list.append(item._path)
+          sha_list.append(item._sha)
+
+      installed_bm_list = [l for l
+                           in self.getInstalledBusinessManagerList()
+                           if l.title not in forbidden_bm_title_list]
+      new_bm_list.extend(installed_bm_list)
+
       # Summation should also consider arithmetic on the Business Item(s)
       # having same path and layer and combine them.
       combinedBM = self.newContent(portal_type='Business Manager',
@@ -1749,32 +1772,53 @@ class TemplateTool (BaseTool):
       new_bm_list.insert(0, combinedBM)
       combinedBM = reduce(lambda x, y: x+y, new_bm_list)
 
-      # Compare combinedBM to the old_installation_state and return new
-      # installation state
-      path_list = combinedBM.getTemplatePathList()
-
-      final_path_list = []
+      final_path_list = combinedBM.getTemplatePathList()
       final_path_item_list = []
 
-      final_path_list.extend(path_list)
       final_path_item_list.extend(combinedBM._path_item_list)
 
+      removable_sha_list = []
+      removable_path_list = []
+
       for item in old_installation_state._path_item_list:
-        if item._path in path_list:
+        if item._path in path_list and item._sha in sha_list:
+          # If there is Business Item which have no change on updation, then
+          # no need to reinstall it, cause in that case we prefer the changes
+          # at ZODB
+
+          # XXX: BAD DESIGN: Should compare both path as well as hash and keep
+          # them together in a dictionary,using them separately can lead to
+          # conflict in case two paths have same hash.
+          removable_sha_list.append(item._sha)
+          removable_path_list.append(item._path)
+        else:
           # If there is update of path item, change the sign of the last
           # version of that Business Item and add it to final_path_item_list
           item._sign = -1
-        final_path_list.append(item._path)
-        final_path_item_list.append(item)
+          final_path_item_list.append(item)
 
-      final_path_list = list(set(final_path_list))
+      final_path_list.extend(old_installation_state.getTemplatePathList())
+
+      # Remove the Business Item objects from final_path_item_list which have
+      # same sha and path
+      final_path_list = [path for path
+                         in final_path_list
+                         if path not in removable_path_list]
+
+      final_path_item_list = [item for item
+                              in final_path_item_list
+                              if item._sha not in removable_sha_list]
+
       final_path_item_list.sort(key=lambda x: x._sign)
+
+      # Remove the old installation state
+      self._delObject(old_installation_state.getId())
 
       combinedBM._setTemplatePathList(final_path_list)
       combinedBM._path_item_list = final_path_item_list
 
       # Change the title of the combined BM
-      combinedBM.edit(title='Installation State')
+      combinedBM.setTitle('Installation State')
 
       # XXX: We are missing the part of creating installed_BM for all the BM
       # we have in bm_list, because this would be needed in case we build
@@ -1787,7 +1831,8 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.ManagePortal,
             'compareInstallationStateWithOFS')
-    def compareInstallationStateWithOFS(self, buildBM, installingBM):
+    def compareInstallationStateWithOFS(self, buildBM, new_installation_state,
+            old_installation_state):
       """
       Compare the buildBM and to be installed BM and show the changes in a way
       it can be notified or installed.
@@ -1802,14 +1847,38 @@ class TemplateTool (BaseTool):
       - has_confict: True , if there is a conflict between the 2 BMs
       - DiffFile: In case there is conflict between the two states
       """
-      installing_sha_list = [item._sha for item in installingBM._path_item_list]
+      # XXX: BAD DESIGN: Should compare both path as well as hash, just path
+      # can lead to conflict in case two paths have same sha.
+
+      built_item_dict = {
+                        item._path: item._sha for
+                        item in buildBM._path_item_list
+                        }
+
+      old_item_dict = {
+                      item._path: item._sha for
+                      item in old_installation_state._path_item_list
+                      }
+
+      # For creating new_item_dict, we have to take use of template_path_list
+      # property as there can be case where we have path but not path_item as
+      # the new state already gets filtered while creation
+      new_item_dict = {
+                      item._path: item._sha for
+                      item in new_installation_state._path_item_list
+                      }
+
+      build_sha_list = built_item_dict.values()
       final_item_list = []
 
-      for item in buildBM._path_item_list:
-        if not item._sha in installing_sha_list:
-          final_item_list.append(item)
+      for item in new_installation_state._path_item_list:
+        if item._sha in build_sha_list and item._sign == 1:
+          # No need to install value which we already have
+          continue
         else:
-          return final_item_list
+          final_item_list.append(item)
+
+      new_installation_state._path_item_list = final_item_list
 
     security.declareProtected(Permissions.ManagePortal,
             'compareMultipleBusinessManager')
@@ -1831,7 +1900,7 @@ class TemplateTool (BaseTool):
       **WARNING**:This should only be done after installing the Business Manager
       """
       if installation_state.getStatus() != 'installed':
-        LOG(WARNING, 0, 'Trying to clean installation state before installing')
+        LOG('WARNING', 0, 'Trying to clean installation state before installing')
         raise ValueError, "Can't clean before installing"
 
       final_path_item_list = []
