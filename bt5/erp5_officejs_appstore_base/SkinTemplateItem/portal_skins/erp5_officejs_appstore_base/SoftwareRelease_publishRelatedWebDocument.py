@@ -22,9 +22,10 @@ if web_site.getValidationState() != 'published':
   web_site.setEffectiveDate(today)
   web_site.publish()
 
-version_web_section = web_site[software_release.getVersion()]
+version_web_section = web_site[software_release.getReference()]
 version_web_section.setCriterion('validation_state', 'published')
-version_web_section.publish()
+if portal.portal_workflow.isTransitionPossible(version_web_section, 'publish'):
+  version_web_section.publish()
 
 def webSectionUpdatePredicate(current_section):
   current_section.setCriterion('validation_state', 'published')
@@ -58,16 +59,3 @@ web_manifest.setData("""CACHE MANIFEST
 CACHE:
 NETWORK:
 *""" % (DateTime().rfc822()))
-
-
-# Is latest Websection what we want?
-if "latest" not in web_site.objectIds():
-  latest_web_section = version_web_section.Base_createCloneDocument(batch_mode=True)
-  latest_web_section.setId("latest")
-  latest_web_section.publish()
-else:
-  latest_web_section = web_site['latest']
-  # Update Aggregate, Version and Title
-  latest_web_section.setCriterion('version', software_release.getVersion())
-  latest_web_section.setTitle(version_web_section.getTitle())
-  latest_web_section.setAggregate(version_web_section.getAggregate())

@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>batch_mode=True</string> </value>
+            <value> <string>as_link=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareProduct_fixRelatedWebSite</string> </value>
+            <value> <string>SoftwarePublication_getTestUrl</string> </value>
         </item>
       </dictionary>
     </pickle>
