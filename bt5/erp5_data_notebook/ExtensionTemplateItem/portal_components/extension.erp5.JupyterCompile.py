@@ -76,9 +76,13 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
                                       title=title,
                                       reference=reference,
                                       batch_mode=True)
-  
-  # Add new Data Notebook Line to the Data Notebook
-  data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
+
+  # By default, store_history is True
+  store_history = kw.get('store_history', True)
+  data_notebook_line = None
+  if store_history:
+    # Add new Data Notebook Line to the Data Notebook
+    data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
                                        notebook_code=python_expression,
                                        batch_mode=True)
   
@@ -138,10 +142,11 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
       u'status': u'error',
       u'mime_type': result['mime_type']}
     serialized_result = json.dumps(result)
-  
-  data_notebook_line.edit(
-    notebook_code_result = result['code_result'], 
-    mime_type = result['mime_type'])
+
+  if data_notebook_line is not None:
+    data_notebook_line.edit(
+      notebook_code_result = result['code_result'],
+      mime_type = result['mime_type'])
   
   return serialized_result  
 
