@@ -115,7 +115,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
       cache_tool.updateCache()
     cache_factory = cache_tool.getRamCacheRoot().get(self.cache_factory_name)
     if cache_factory is None:
-      raise KeyError
+      raise KeyError("Cache factory %s not found" % self.cache_factory_name)
     return cache_factory
 
   def setToken(self, key, body):
@@ -201,9 +201,12 @@ class ERP5ExternalOauth2ExtractionPlugin:
         finally:
           setSecurityManager(sm)
     try:
+      # Every request will update cache to postpone the cache expiration
+      # to keep the user logged in
       self.setToken(self.prefix + token, user)
-    except KeyError:
+    except KeyError as error:
       # allow to work w/o cache
+      LOG(self.getId(), INFO, error)
       pass
     creds['external_login'] = user
     creds['remote_host'] = request.get('REMOTE_HOST', '')
