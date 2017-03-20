@@ -141,10 +141,12 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     return tuple(manager_list)
 
-  def _addFolderInERP5(self):
+  def _addFolderInERP5(self, id=None):
     """
     """
-    test_folder = self.portal.newContent(id='test_folder',
+    if not id:
+      id = 'test_folder'
+    test_folder = self.portal.newContent(id=id,
                                          portal_type='Folder',
                                          title='couscous',
                                          )
@@ -155,7 +157,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
   # **********  TESTS FOR COMBINING MULTIPLE BUSINESS MANAGERS ************
   #########################################################################
 
-  def test_combineBusinessItemWithDifferentSign(self):
+  def _combineBusinessItemWithDifferentSign(self):
     """
     Same path, same value, differernt sign
     """
@@ -180,7 +182,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerB.build()
 
     bm_list = [managerA, managerB]
-    combinedBM = portal_templates.combinedBusinessManager(bm_list)
+    combinedBM = portal_templates.combineMultipleBusinessManager(bm_list)
 
   # **********  TESTS FOR DIFFERENT INSTALLATION USE CASES ************
   #####################################################################
@@ -329,6 +331,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
   def test_useCase_V(self):
     """
     Case V:
+    _       A       B:      ??
     """
     portal_templates = self.portal.portal_templates
     managerA = self._createBusinessManager()
@@ -362,6 +365,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
     # XXX: What to expect: couscous or new_couscous? or conflict display
 
   def test_useCase_VI(self):
@@ -425,17 +429,23 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA_new.build()
     managerA_new.setStatus('uninstalled')
 
+    self.portal.manage_delObjects([test_folder.getId(),])
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    # Delete the object from ZODB so as we can install the object there
-    self.portal.manage_delObjects([test_folder.getId(),])
+    installed_test_folder = self.portal.restrictedTraverse(folder_path)
+    self.assertEquals(installed_test_folder.getTitle(), 'couscous')
 
+    managerA_new, = self._copyBusinessManager([managerA.id,])
+    managerA_new.build()
     managerA_new.setStatus('uninstalled')
 
+    # Delete the object from ZODB so as we can install the object there
+    self.portal.manage_delObjects([installed_test_folder.getId(),])
+
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    # Expected undecided, if forced installation, then install test_folder,
-    # otherwise let the state of ZODB unchanged
+    # This should install nothing as we prefer user changes
+    self.assertRaises(KeyError, lambda: self.portal.restrictedTraverse(folder_path))
 
   def test_useCase_VIII(self):
     """
@@ -461,7 +471,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     # Delete the object from ZODB so as we can install the object there
     self.portal.manage_delObjects([test_folder.getId(),])
-
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
     installed_test_folder = self.portal.restrictedTraverse(folder_path)
@@ -475,11 +484,11 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA_new.setStatus('uninstalled')
 
     # Delete the object from ZODB so as we can install the object there
-    self.portal.manage_delObjects([test_folder.getId(),])
+    self.portal.manage_delObjects([installed_test_folder.getId(),])
 
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    # Expected result undecide, if forced installation, then install the folder
+    # Expected result undecided, if forced installation, then install the folder
     # from updated Business Manager, otherwise let the user change in ZODB
     # persist, i.e, no test_folder
 
@@ -686,6 +695,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA_new.build()
     managerA_new.setStatus('uninstalled')
 
+    # Delete the object from ZODB so as we can install the object there
+    self.portal.manage_delObjects([test_folder.getId(),])
     # Install the Business Manager
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
@@ -697,7 +708,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA_new.build()
     managerA_new.setStatus('uninstalled')
 
-    test_folder.edit(title='new_couscous')
+    installed_test_folder.edit(title='new_couscous')
 
     # Install the Business Manager
     portal_templates.installMultipleBusinessManager([managerA_new,])
@@ -728,6 +739,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA_new.build()
     managerA_new.setStatus('uninstalled')
 
+    # Delete the object from ZODB so as we can install the object there
+    self.portal.manage_delObjects([test_folder.getId(),])
     # Install the Business Manager
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
