@@ -1,5 +1,3 @@
-import httplib
-import urllib
 import json
 import httplib2
 import apiclient.discovery
@@ -7,36 +5,33 @@ import oauth2client.client
 import socket
 from zLOG import LOG, ERROR
 
+SCOPE_LIST = ['https://www.googleapis.com/auth/userinfo.profile',
+              'https://www.googleapis.com/auth/userinfo.email']
+
+def redirectToGoogleLoginPage(self):
+  portal = self.getPortalObject()
+  flow = oauth2client.client.OAuth2WebServerFlow(
+    client_id=portal.portal_preferences.getPreferredGoogleClientId(),
+    client_secret=portal.portal_preferences.getPreferredGoogleSecretKey(),
+    scope=SCOPE_LIST,
+    redirect_uri="{0}/ERP5Site_receiveGoogleCallback".format(portal.absolute_url()),
+    access_type="offline",
+    prompt="consent",
+    include_granted_scopes="true")
+  self.REQUEST.RESPONSE.redirect(flow.step1_get_authorize_url())
+
 def getAccessTokenFromCode(self, code, redirect_uri):
-  connection_kw = {'host': 'accounts.google.com', 'timeout': 30}
-  connection = httplib.HTTPSConnection(**connection_kw)
-  data = {
-      'client_id': self.portal_preferences.getPreferredGoogleClientId(),
-      'client_secret': self.portal_preferences.getPreferredGoogleSecretKey(),
-      'grant_type': 'authorization_code',
-      'redirect_uri': redirect_uri,
-      'code': code
-      }
-  data = urllib.urlencode(data)
-  headers = {
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Accept": "*/*"
-  }
-  connection.request('POST', '/o/oauth2/token', data, headers)
-  response = connection.getresponse()
-  status = response.status
-  if status != 200:
-    return status, None
-
-  try:
-    body = json.loads(response.read())
-  except Exception, error_str:
-    return status, {"error": error_str}
-
-  try:
-    return status, body
-  except Exception:
-    return status, None
+  portal = self.getPortalObject()
+  flow = oauth2client.client.OAuth2WebServerFlow(
+    client_id=portal.portal_preferences.getPreferredGoogleClientId(),
+    client_secret=portal.portal_preferences.getPreferredGoogleSecretKey(),
+    scope=SCOPE_LIST,
+    redirect_uri=redirect_uri,
+    access_type="offline",
+    include_granted_scopes="true")
+  credential = flow.step2_exchange(code)
+  credential_data = json.loads(credential.to_json())
+  return credential_data
 
 def getUserId(access_token):
   timeout = socket.getdefaulttimeout()
