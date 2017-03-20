@@ -33,6 +33,7 @@ from App.config import getConfiguration
 import os
 import shutil
 import sys
+import hashlib
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -1755,11 +1756,14 @@ class TemplateTool (BaseTool):
 
       installation_process._path_item_list = to_install_path_item_list
 
-      self.compareOldStateToOFS(installation_process, old_installation_state)
+      error_list = self.compareOldStateToOFS(installation_process, old_installation_state)
 
       # Change status of all BM installed
       for bm in bm_list:
         bm.setStatus('installed')
+
+      if error_list:
+        raise ValueError(' '.join(error_list))
 
     installMultipleBusinessManager = updateInstallationState
 
@@ -1775,20 +1779,20 @@ class TemplateTool (BaseTool):
 
         try:
           obj = portal.restrictedTraverse(path)
-          obj_sha = hashlib.sha256(obj.toXML()).hexdigest()
+          obj_sha = hashlib.sha256(obj.asXML()).hexdigest()
           # Get item at old state
-          old_item = old_state.getBusinessItemByPath()
+          old_item = old_state.getBusinessItemByPath(path)
           # Check if there is an object at old state at this path
 
           if old_item:
             # Compare hash with ZODB
 
-            if old_item._sha == obj._sha:
+            if old_item._sha == obj_sha:
               # No change at ZODB on old item, so get the new item
               new_item = installation_process.getBusinessItemByPath(path)
               # Compare new item hash with ZODB
 
-              if new_item._sha == obj._sha:
+              if new_item._sha == obj_sha:
                 # If same hash, do nothing
                 continue
 
@@ -1801,28 +1805,26 @@ class TemplateTool (BaseTool):
               new_item = installation_process.getBusinessItemByPath(path)
               # Compare new item hash with ZODB
 
-              if new_item._sha == obj._sha:
+              if new_item._sha == obj_sha:
                 # If same hash, do nothing
                 continue
 
               else:
                 # Raise error
                 error_list.append('Trying to remove changes at ZODB at %s' % path)
-                raise ValueError('Trying to remove changes at ZODB at %s' % path)
 
           else:
             # Object created at ZODB by the user
             # Compare with the new_item
 
             new_item = installation_process.getBusinessItemByPath(path)
-            if new_item._sha == obj._sha:
+            if new_item._sha == obj_sha:
               # If same hash, do nothing
               continue
 
             else:
               # Raise error
               error_list.append('Trying to remove changes at ZODB at %s' % path)
-              raise ValueError('Trying to remove changes at ZODB at %s' % path)
 
         except Exception:
           # Get item at old state
@@ -1837,12 +1839,13 @@ class TemplateTool (BaseTool):
 
             if new_item._sign == 1:
               error_list.append('Object at %s removed by user' % path)
-              raise ValueError('Object at %s removed by user' % path)
 
           else:
             # If there is  no item at old state, install the new_item
             new_item = installation_process.getBusinessItemByPath(path)
             new_item.install(installation_process)
+
+      return error_list
 
     security.declareProtected(Permissions.ManagePortal,
             'createNewInstallationState')
