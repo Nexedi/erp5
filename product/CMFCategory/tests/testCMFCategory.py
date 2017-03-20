@@ -762,12 +762,22 @@ class TestCMFCategory(ERP5TypeTestCase):
     order.setDestinationAdministrationValue(person)
     self.assertEqual(order.getDestinationAdministrationPersonTitle(), 'toto')
 
-    packing_list.setDestinationAdministrationValue(None)
-    packing_list.setOrderValue(None)
-    self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), None)
+    try:
+      category = self.portal.portal_categories.destination_administration
+      original_acquisition_base_category_list = category.getAcquisitionBaseCategoryList()
+      category.setAcquisitionBaseCategoryList(['parent', 'order'])
 
-    packing_list.setOrderValue(order)
-    self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
+      line = order.newContent(portal_type='Sale Order Line')
+      self.assertEqual(line.getDestinationAdministrationPersonTitle(), 'toto')
+
+      packing_list.setDestinationAdministrationValue(None)
+      packing_list.setOrderValue(None)
+      self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), None)
+
+      packing_list.setOrderValue(order)
+      self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
+    finally:
+      category.setAcquisitionBaseCategoryList(original_acquisition_base_category_list)
 
   def test_22_UserFriendlyException(self):
     """Test message raise if bad use of setter."""
