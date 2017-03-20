@@ -1683,61 +1683,166 @@ class TemplateTool (BaseTool):
       6. If conflict while comaprison at 3, raise the error
       7. In all other case, install the BM List
       """
-      # Try getting a Business Manager with the title 'Combined Business Manager'
-      # which we would need to compare. Also using search keeping in mind we
-      # index Business Manager(s)
-      installation_state_list = [l for l
-                                 in self.objectValues(portal_type='Business Manager')
-                                 if l.title == 'Installation State']
+      # Create old installation state from Instsalled Business Manager
+      installed_bm_list = self.getInstalledBusinessManagerList()
+      combined_installed_path_item = [item for bm
+                                      in installed_bm_list
+                                      for item in bm._path_item_list]
 
-      # If there is 1 or more Business Manager(s) with 'Combined Business Manager'
-      # title, take the firs one, cause it is the one created currently
-      if len(installation_state_list) :
-        old_installation_state = installation_state_list[-1]
-      else:
-        # Create a new Business Manager which we'll use for comapring installation
-        # state
-        old_installation_state = self.newContent(
-                                          portal_type='Business Manager',
-                                          title='Installation State',
-                                         )
-        old_installation_state.build()
-      # XXX: We can also create old_installation_state BM by other ways, namely
-      # 1. Combining the Business Item list from all the installed states of
-      # last BM(s)
-      # 2..
+      # Create BM for old installation state and update its path item list
+      old_installation_state = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='Old Installation State',
+                                  )
+      old_installation_state._path_item_list = combined_installed_path_item
 
-      # Create Single Business Manager by comparing the old_installation_state
-      # with the list of BM(s) we want to install currently. This also should
-      # reduce the combined Business Manager.
-      new_installation_state = self.createNewInstallationState(
-                                                        bm_list,
-                                                        old_installation_state
-                                                        )
+      forbidden_bm_title_list = ['Old Installation State',]
+      for bm in bm_list:
+        forbidden_bm_title_list.append(bm.title)
 
-      # Build Business Manager from ZODB and compare the changes done by
-      # the user which might get affected.
-      buildBM = self.newContent(portal_type='Business Manager')
-      final_template_path_list = list(set(new_installation_state.getTemplatePathList()))
-      buildBM._setTemplatePathList(final_template_path_list)
-      buildBM.build()
+      new_installed_bm_list = [l for l
+                               in self.getInstalledBusinessManagerList()
+                               if l.title not in forbidden_bm_title_list]
+      new_installed_bm_list.extend(bm_list)
 
-      # Compare installation state with OFS state
-      self.compareInstallationStateWithOFS(buildBM,
-                                           new_installation_state,
-                                           old_installation_state)
+      combined_new_path_item = [item for bm
+                                in new_installed_bm_list
+                                for item in bm._path_item_list]
 
-      # Install the compared installation state
-      self.installBusinessManager(new_installation_state)
+      # Create BM for new installation state and update its path item list
+      new_installation_state = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='New Installation State',
+                                  )
+      new_installation_state._path_item_list = combined_new_path_item
 
-      # Remove the path_item with negative sign
-      self.cleanInstallationState(new_installation_state)
+      # Create installation process, which have the changes to be made in the
+      # OFS during installation. Importantly, it should also be a Business Manager
+      installation_process = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='Installation Process',
+                                  )
+
+      # Get path list for old and new states
+      old_state_path_list = old_installation_state.getPathList()
+      new_state_path_list = new_installation_state.getPathList()
+
+      to_install_path_item_list = []
+
+      # Get the path which has been removed in new installation_state
+      removed_path_list = [path for path
+                           in old_state_path_list
+                           if path not in new_state_path_list]
+
+      # Add the removed path with negative sign in the to_install_path_item_list
+      for path in removed_path_list:
+        old_item = old_installation_state.getBusinessItemByPath(path)
+        old_item._sign = -1
+        to_install_path_item_list.append(old_item)
+
+      # Path Item List for installation_process should be the difference between
+      # old and new installation state
+      for item in new_installation_state._path_item_list:
+        # If the path has been removed, then add it with sign = -1
+        old_item = old_installation_state.getBusinessItemByPath(item._path)
+        if old_item:
+          # If the old_item exists, we match the hashes and if it differs, then
+          # add the new item
+          if old_item._sha != item._sha:
+            to_install_path_item_list.append(item)
+        else:
+          to_install_path_item_list.append(item)
+
+      installation_process._path_item_list = to_install_path_item_list
+
+      self.compareOldStateToOFS(installation_process, old_installation_state)
 
       # Change status of all BM installed
       for bm in bm_list:
         bm.setStatus('installed')
 
     installMultipleBusinessManager = updateInstallationState
+
+    def compareOldStateToOFS(self, installation_process, old_state):
+
+      # Get the paths about which we are concerned about
+      to_update_path_list = installation_process.getPathList()
+      portal = self.getPortalObject()
+
+      error_list = []
+
+      for path in to_update_path_list:
+
+        try:
+          obj = portal.restrictedTraverse(path)
+          obj_sha = hashlib.sha256(obj.toXML()).hexdigest()
+          # Get item at old state
+          old_item = old_state.getBusinessItemByPath()
+          # Check if there is an object at old state at this path
+
+          if old_item:
+            # Compare hash with ZODB
+
+            if old_item._sha == obj._sha:
+              # No change at ZODB on old item, so get the new item
+              new_item = installation_process.getBusinessItemByPath(path)
+              # Compare new item hash with ZODB
+
+              if new_item._sha == obj._sha:
+                # If same hash, do nothing
+                continue
+
+              else:
+                # Install the new_item
+                new_item.install(installation_process)
+
+            else:
+              # Change at ZODB, so get the new item
+              new_item = installation_process.getBusinessItemByPath(path)
+              # Compare new item hash with ZODB
+
+              if new_item._sha == obj._sha:
+                # If same hash, do nothing
+                continue
+
+              else:
+                # Raise error
+                error_list.append('Trying to remove changes at ZODB at %s' % path)
+                raise ValueError('Trying to remove changes at ZODB at %s' % path)
+
+          else:
+            # Object created at ZODB by the user
+            # Compare with the new_item
+
+            new_item = installation_process.getBusinessItemByPath(path)
+            if new_item._sha == obj._sha:
+              # If same hash, do nothing
+              continue
+
+            else:
+              # Raise error
+              error_list.append('Trying to remove changes at ZODB at %s' % path)
+              raise ValueError('Trying to remove changes at ZODB at %s' % path)
+
+        except Exception:
+          # Get item at old state
+          old_item = old_state.getBusinessItemByPath(path)
+          # Check if there is an object at old state at this path
+
+          if old_item:
+            # This means that the user had removed the object at this path
+            # Check what the sign is for the new_item
+            new_item = installation_process.getBusinessItemByPath(path)
+            # Check sign of new_item
+
+            if new_item._sign == 1:
+              error_list.append('Object at %s removed by user' % path)
+              raise ValueError('Object at %s removed by user' % path)
+
+          else:
+            # If there is  no item at old state, install the new_item
+            new_item = installation_process.getBusinessItemByPath(path)
+            new_item.install(installation_process)
 
     security.declareProtected(Permissions.ManagePortal,
             'createNewInstallationState')
@@ -1849,27 +1954,33 @@ class TemplateTool (BaseTool):
       """
       # XXX: BAD DESIGN: Should compare both path as well as hash, just path
       # can lead to conflict in case two paths have same sha.
-
       built_item_dict = {
-                        item._path: item._sha for
-                        item in buildBM._path_item_list
+                        item._path: item._sha for item
+                        in buildBM._path_item_list
                         }
 
       old_item_dict = {
-                      item._path: item._sha for
-                      item in old_installation_state._path_item_list
+                      item._path: item._sha for item
+                      in old_installation_state._path_item_list
                       }
 
       # For creating new_item_dict, we have to take use of template_path_list
       # property as there can be case where we have path but not path_item as
       # the new state already gets filtered while creation
       new_item_dict = {
-                      item._path: item._sha for
-                      item in new_installation_state._path_item_list
+                      item._path: item._sha for item
+                      in new_installation_state._path_item_list
+                      if item._sign == 1
                       }
 
       build_sha_list = built_item_dict.values()
       final_item_list = []
+
+      for item in new_installation_state._path_item_list:
+        if item._sign == 1:
+          if path in old_item_dict.keys():
+            if old_item_dict[path] == item._sha:
+              pass
 
       for item in new_installation_state._path_item_list:
         if item._sha in build_sha_list and item._sign == 1:
@@ -1892,6 +2003,8 @@ class TemplateTool (BaseTool):
       # Return the subtraction of the Business Manager
       return compared_bm
 
+    security.declareProtected(Permissions.ManagePortal,
+            'cleanInstallationState')
     def cleanInstallationState(self, installation_state):
       """
       Installation State is the Business Manager which has been installed
