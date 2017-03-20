@@ -364,6 +364,33 @@ class BusinessManager(XMLObject):
       except IndexError:
         pass
 
+  def getPathList(self):
+    path_list = []
+    for item in self._path_item_list:
+      path_list.append(item._path)
+    return path_list
+
+  def getPathShaDict(self):
+    path_sha_dict = {}
+    # TODO: Handle error for BM with multiple items at same path
+    for item in self._path_item_list:
+      path_sha_dict[item._path] = item._sha
+    return path_item_dict
+
+  def getPathItemDict(self):
+    path_item_dict = {}
+    # TODO: Handle error for BM with multiple items at same path
+    for item in self._path_item_list:
+      path_item_dict[item._path] = item
+    return path_item_dict
+
+  def getBusinessItemByPath(self, path):
+    path_item_dict = self.getPathItemDict()
+    try:
+      return path_item_dict[path]
+    except KeyError:
+      return
+
   def build(self, no_action=False, **kw):
     """Creates new values for business item from the values from
     OFS Database"""
@@ -540,7 +567,6 @@ class BusinessManager(XMLObject):
 
     return added_value, subtracted_value
 
-
 class BusinessItem(Implicit, Persistent):
 
   """Saves the path and values for objects, properties, etc, the
@@ -716,6 +742,9 @@ class BusinessItem(Implicit, Persistent):
         container_url = '/'.join(container_path)
       old_obj = container._getOb(object_id, None)
       # delete the old object before installing a new object
+      if old_obj:
+        container._delObject(object_id)
+      # Create a new object only if sign is +1
       # If sign is +1, set the new object on the container
       if self._sign == 1:
         # install object
@@ -728,12 +757,6 @@ class BusinessItem(Implicit, Persistent):
         del obj.isIndexable
         if getattr(aq_base(obj), 'reindexObject', None) is not None:
           obj.reindexObject()
-      else:
-        # Only in case if sign is -1
-        if old_obj:
-          # XXX: In case there is an old object which has been modified from the
-          # older installation, then show the conflict status.
-          container._delObject(object_id)
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
