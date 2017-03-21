@@ -1,74 +1,0 @@
-<!doctype html>
-
-<title>CodeMirror: Bi-directional Text Demo</title>
-<meta charset="utf-8"/>
-<link rel=stylesheet href="../doc/docs.css">
-
-<link rel="stylesheet" href="../lib/codemirror.css">
-<script src="../lib/codemirror.js"></script>
-<script src="../mode/xml/xml.js"></script>
-<style type="text/css">
-      .CodeMirror {border-top: 1px solid black; border-bottom: 1px solid black;}
-    </style>
-<div id=nav>
-  <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>
-
-  <ul>
-    <li><a href="../index.html">Home</a>
-    <li><a href="../doc/manual.html">Manual</a>
-    <li><a href="https://github.com/codemirror/codemirror">Code</a>
-  </ul>
-  <ul>
-    <li><a class=active href="#">Bi-directional Text</a>
-  </ul>
-</div>
-
-<article>
-<h2>Bi-directional Text Demo</h2>
-<form><textarea id="code" name="code"><!-- Piece of the CodeMirror manual, 'translated' into Arabic by
-     Google Translate -->
-
-<dl>
-  <dt id=option_value><code>value (string or Doc)</code></dt>
-  <dd>ÙÙÙØ© Ø§ÙØšØ¯Ø§ÙØ© Ø§ÙÙØ­Ø±Ø±. ÙÙÙÙ Ø£Ù ØªÙÙÙ Ø³ÙØ³ÙØ©Ø Ø£Ù. ÙØ§ØŠÙ ÙØ³ØªÙØ¯.</dd>
-  <dt id=option_mode><code>mode (string or object)</code></dt>
-  <dd>ÙØ¶Ø¹ Ø§ÙØ§Ø³ØªØ®Ø¯Ø§Ù. Ø¹ÙØ¯ÙØ§ ÙØ§ ØªØ¹Ø·ÙØ ÙÙØ°Ø§ Ø§ÙØ§ÙØªØ±Ø§Ø¶Ù Ø¥ÙÙ Ø§ÙØ·Ø±ÙÙØ© Ø§ÙØ§ÙÙÙ
-  Ø§ÙØªÙ ØªÙ ØªØ­ÙÙÙÙØ§. ÙØ¯ ÙÙÙÙ ÙÙ Ø³ÙØ³ÙØ©Ø ÙØ§ÙØªÙ Ø¥ÙØ§ Ø£Ø³ÙØ§Ø¡ Ø£Ù ØšØšØ³Ø§Ø·Ø© ÙÙ ÙØ¶Ø¹
-  MIME ÙÙØ¹ Ø§ÙÙØ±ØªØšØ·Ø© Ø§Ø³Ø·Ø©. ØšØ¯ÙØ§ ÙÙ Ø°ÙÙØ ÙØ¯ ÙÙÙÙ ÙÙ ÙØ§ØŠÙ ÙØ­ØªÙÙ Ø¹ÙÙ
-  Ø®ÙØ§Ø±Ø§Øª Ø§ÙØªÙÙÙÙ ÙÙØ§Ø³Ø·Ø©Ø ÙØ¹ <code>name</code> Ø§ÙØ®Ø§ØµÙØ© Ø§ÙØªÙ ÙØ¶Ø¹ Ø£Ø³ÙØ§Ø¡
-  (Ø¹ÙÙ Ø³ØšÙÙ Ø§ÙÙØ«Ø§Ù <code>{name: "javascript", json: true}</code>).
-  ØµÙØ­Ø§Øª Ø§ÙØªØ¬Ø±ÙØšÙ ÙÙÙ ÙØ¶Ø¹ ØªØ­ØªÙÙ Ø¹ÙÙ ÙØ¹ÙÙÙØ§Øª Ø­ÙÙ ÙØ§ ÙØ¹ÙÙØ§Øª ØªÙÙÙÙ ÙØ¶Ø¹
-  ÙØ¯Ø¹ÙÙØ§. ÙÙÙÙÙ Ø£Ù ØªØ·ÙØš CodeMirror Ø§ÙØªÙ ØªÙ ØªØ¹Ø±ÙÙÙØ§ Ø·Ø±Ù ÙØ£ÙÙØ§Ø¹ MIME
-  Ø§ÙÙØŽÙ Ø¹ÙÙ <code>CodeMirror.modes</code>
-  Ù <code>CodeMirror.mimeModes</code> Ø§ÙÙØ§ØŠÙØ§Øª. ÙØ¶Ø¹ Ø®Ø±Ø§ØŠØ· Ø§ÙØ£Ø³ÙØ§Ø¡
-  Ø§ÙØ£ÙÙÙ ÙÙÙØŽØŠØ§Øª Ø§ÙØ®Ø§ØµØ© ØšÙÙØ ÙØ®Ø±Ø§ØŠØ· ÙØ£ÙÙØ§Ø¹ MIME 2 Ø§ÙÙÙØ§ØµÙØ§Øª
-  ÙØ§Ø³Ø·Ø©.</dd>
-  <dt id=option_theme><code>theme (string)</code></dt>
-  <dd>ÙÙØ¶ÙØ¹ ÙÙÙØ· Ø§ÙÙØ­Ø±Ø± ÙØ¹. ÙØ¬Øš Ø¹ÙÙÙ Ø§ÙØªØ£ÙØ¯ ÙÙ Ø§ÙÙÙÙ CSS ØªØ­Ø¯ÙØ¯
-  Ø§ÙÙÙØ§ØšÙØ© <code>.cm-s-[name]</code> ÙØªÙ ØªØ­ÙÙÙ Ø£ÙÙØ§Ø· (Ø§ÙØžØ±
-  <a href="../theme/"><code>theme</code></a> Ø§ÙØ¯ÙÙÙ ÙÙ Ø§ÙØªÙØ²ÙØ¹).
-  Ø§ÙØ§ÙØªØ±Ø§Ø¶Ù ÙÙ <code>"default"</code> Ø ÙØ§ÙØªÙ ØªÙ ØªØ¶ÙÙÙÙØ§ ÙÙ
-  Ø§ÙØ£ÙÙØ§Ù <code>codemirror.css</code>. ÙÙÙ Ø§ÙÙÙÙÙ Ø§Ø³ØªØ®Ø¯Ø§Ù ÙØŠØ§Øª ÙØªØ¹Ø¯Ø¯Ø©
-  ÙÙ ØªØ·ØšÙÙ Ø§ÙØ³ÙØ§Øª ÙØ±Ø© ÙØ§Ø­Ø¯Ø© Ø¹ÙÙ Ø³ØšÙÙ Ø§ÙÙØ«Ø§Ù <code>"foo bar"</code>
-  Ø³ÙØªÙ ØªØ¹ÙÙÙ ÙÙ ÙÙ <code>cm-s-foo</code> Ù <code>cm-s-bar</code>
-  Ø§ÙØ·ØšÙØ§Øª Ø¥ÙÙ Ø§ÙÙØ­Ø±Ø±.</dd>
-</dl>
-</textarea></form>
-
-    <script>
-var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-  mode: "text/html",
-  lineNumbers: true
-});
-</script>
-
-  <p>Demonstration of bi-directional text support. See
-  the <a href="http://marijnhaverbeke.nl/blog/cursor-in-bidi-text.html">related
-  blog post</a> for more background.</p>
-
-  <p><strong>Note:</strong> There is
-  a <a href="https://github.com/codemirror/CodeMirror/issues/1757">known
-  bug</a> with cursor motion and mouse clicks in bi-directional lines
-  that are line wrapped.</p>
-
-</article>
