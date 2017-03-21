@@ -38,6 +38,7 @@ import hashlib
 import fnmatch
 import re
 import threading
+import pprint
 from copy import deepcopy
 from collections import defaultdict
 from cStringIO import StringIO
@@ -615,7 +616,9 @@ class BusinessItem(Implicit, Persistent):
       try:
         sha256 = hashlib.sha256(self._value).hexdigest()
       except TypeError:
-        sha256 = hashlib.sha256(self._value.asXML()).hexdigest()
+        obj_dict = self._value.__dict__.copy()
+        del obj_dict['uid']
+        sha256 = hash(pprint.pformat(obj_dict))
       self._sha = sha256
 
   def build(self, context, **kw):
