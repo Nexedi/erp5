@@ -7,6 +7,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>caching_policy_manager</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>source-sans-pro-bold.ttf</string> </value>
         </item>
