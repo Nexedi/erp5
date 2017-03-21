@@ -12,6 +12,9 @@
   <item>ConstraintType</item>
   <item>DataArrayLine</item>
  </portal_type>
+ <portal_type id="Data Bucket Stream">
+  <item>OffsetIndex</item>
+ </portal_type>
  <portal_type id="Data Descriptor Type">
   <item>TextDocument</item>
   <item>Url</item>
