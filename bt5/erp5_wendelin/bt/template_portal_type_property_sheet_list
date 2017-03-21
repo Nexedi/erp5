@@ -3,6 +3,7 @@ Data Array Line Existence Constraint | ConstraintType
 Data Array Line Existence Constraint | DataArrayLine
 Data Array Line | DataArrayLine
 Data Array | DataArray
+Data Bucket Stream | OffsetIndex
 Data Descriptor Type | TextDocument
 Data Descriptor Type | Url
 Data Event | DataEvent
