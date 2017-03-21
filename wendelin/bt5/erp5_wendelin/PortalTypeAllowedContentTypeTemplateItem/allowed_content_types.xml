@@ -41,6 +41,7 @@
  </portal_type>
  <portal_type id="Data Product">
   <item>Embedded File</item>
+  <item>Measure</item>
   <item>Product Individual Variation</item>
  </portal_type>
  <portal_type id="Data Product Module">
