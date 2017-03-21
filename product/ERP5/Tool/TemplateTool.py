@@ -34,6 +34,7 @@ import os
 import shutil
 import sys
 import hashlib
+import pprint
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -1779,7 +1780,20 @@ class TemplateTool (BaseTool):
 
         try:
           obj = portal.restrictedTraverse(path)
-          obj_sha = hashlib.sha256(obj.asXML()).hexdigest()
+          # Use shallow copy of the dict of the object at ZODB after removing
+          # attributes which changes at small updation, like workflow_history,
+          # uid, volatile attributes(which starts with _v)
+          obj_dict = obj.__dict__.copy()
+          removable_attributes = [attr for attr
+                                  in obj_dict.keys()
+                                  if attr.startswith('_v')]
+
+          removable_attributes.append('uid')
+          for attr in removable_attributes:
+            del obj_dict[attr]
+
+          obj_sha = hash(pprint.pformat(obj_dict))
+
           # Get item at old state
           old_item = old_state.getBusinessItemByPath(path)
           # Check if there is an object at old state at this path
@@ -1826,7 +1840,7 @@ class TemplateTool (BaseTool):
               # Raise error
               error_list.append('Trying to remove changes at ZODB at %s' % path)
 
-        except Exception:
+        except KeyError:
           # Get item at old state
           old_item = old_state.getBusinessItemByPath(path)
           # Check if there is an object at old state at this path
