@@ -363,10 +363,11 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     test_folder.edit(title='couscous')
 
-    portal_templates.installMultipleBusinessManager([managerA_new,])
+    with self.assertRaises(ValueError) as context:
+      portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    installed_test_folder = self.portal.restrictedTraverse(folder_path)
-    # XXX: What to expect: couscous or new_couscous? or conflict display
+    self.assertTrue('Trying to remove changes at ZODB at test_folder' in
+                      context.exception)
 
   def test_useCase_VI(self):
     """
@@ -486,11 +487,11 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Delete the object from ZODB so as we can install the object there
     self.portal.manage_delObjects([installed_test_folder.getId(),])
 
-    portal_templates.installMultipleBusinessManager([managerA_new,])
+    with self.assertRaises(ValueError) as context:
+      portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    # Expected result undecided, if forced installation, then install the folder
-    # from updated Business Manager, otherwise let the user change in ZODB
-    # persist, i.e, no test_folder
+    self.assertTrue('Object at test_folder removed by user' in
+                      context.exception)
 
   def test_useCase_IX(self):
     """
@@ -667,10 +668,11 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA_new.build()
     managerA_new.setStatus('uninstalled')
 
-    # Install the updated Business Manager
-    portal_templates.installMultipleBusinessManager([managerA_new,])
+    with self.assertRaises(ValueError) as context:
+      portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    # Expected should be conflict as change by the user and updated BM conflicts
+    self.assertTrue('Trying to remove changes at ZODB at test_folder' in
+                      context.exception)
 
   def test_useCase_XIII(self):
     """
@@ -756,13 +758,13 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Change the title at ZODB again
     installed_test_folder.edit(title='new_couscous_redefined')
 
-    # Install the Business Manager
-    portal_templates.installMultipleBusinessManager([managerA_new,])
+    with self.assertRaises(ValueError) as context:
+      portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    # Expected result should show confict between the two as at both ZODB as
-    # well as updated BM, we do make changes in the test_folder
+    self.assertTrue('Trying to remove changes at ZODB at test_folder' in
+                      context.exception)
 
-  def test_globalInstallationOfBusinessTemplate(self):
+  def _globalInstallationOfBusinessTemplate(self):
     """
     NOTE:
     Keep in mind that the installation is done on copy of built Business Manager
