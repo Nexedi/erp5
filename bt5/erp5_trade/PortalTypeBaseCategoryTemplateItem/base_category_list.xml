@@ -23,7 +23,13 @@
  <portal_type id="Purchase Trade Condition Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Returned Purchase Order Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Returned Purchase Packing List Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Returned Sale Order Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Returned Sale Packing List Module">

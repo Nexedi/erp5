@@ -126,6 +126,17 @@
  <portal_type id="Purchase Trade Condition Module">
   <item>Purchase Trade Condition</item>
  </portal_type>
+ <portal_type id="Returned Purchase Order">
+  <item>Payment Condition</item>
+  <item>Returned Purchase Order Line</item>
+ </portal_type>
+ <portal_type id="Returned Purchase Order Line">
+  <item>Returned Purchase Order Cell</item>
+  <item>Returned Purchase Order Line</item>
+ </portal_type>
+ <portal_type id="Returned Purchase Order Module">
+  <item>Returned Purchase Order</item>
+ </portal_type>
  <portal_type id="Returned Purchase Packing List">
   <item>Payment Condition</item>
   <item>Returned Purchase Packing List Line</item>
@@ -135,6 +146,17 @@
  </portal_type>
  <portal_type id="Returned Purchase Packing List Module">
   <item>Returned Purchase Packing List</item>
+ </portal_type>
+ <portal_type id="Returned Sale Order">
+  <item>Payment Condition</item>
+  <item>Returned Sale Order Line</item>
+ </portal_type>
+ <portal_type id="Returned Sale Order Line">
+  <item>Returned Sale Order Cell</item>
+  <item>Returned Sale Order Line</item>
+ </portal_type>
+ <portal_type id="Returned Sale Order Module">
+  <item>Returned Sale Order</item>
  </portal_type>
  <portal_type id="Returned Sale Packing List">
   <item>Payment Condition</item>

@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>all_columns</string>
+                <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>source_project_title</string>
+                          <string>Client Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_project_title</string>
+                          <string>Supplier Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Shipping Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>order_translated_title</string>
+                          <string>Priority</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode_translated_title</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm_translated_title</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>specialise_title</string>
+                          <string>Sale Trade Condition</string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_title</string>
+                          <string>Sales Order Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>causality_reference</string>
+                          <string>Sales Order Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_title</string>
+                          <string>Returner</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_title</string>
+                          <string>Recipient</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>order</string>
+                          <string>Priority</string>
+                        </tuple>
+                        <tuple>
+                          <string>incoterm</string>
+                          <string>Incoterm</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_mode</string>
+                          <string>Delivery Mode</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Delivery Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Shipping Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>total_price</string>
+                          <string>Total Price</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_view_mode_module_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Returned Sale Order</string>
+                          <string>Returned Sale Order</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>returned_sale_order_module_view_retuned_sale_order_list_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Returned Sale Orders</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -112,6 +112,18 @@
   <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Returned Purchase Order</type>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Purchase Order Cell</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Purchase Order Line</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
   <type>Returned Purchase Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, packing_list_workflow</workflow>
  </chain>
@@ -121,6 +133,18 @@
  </chain>
  <chain>
   <type>Returned Purchase Packing List Line</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Sale Order</type>
+  <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, order_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Sale Order Cell</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Returned Sale Order Line</type>
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
