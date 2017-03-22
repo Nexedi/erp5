@@ -38,10 +38,18 @@ Purchase Packing List Line
 Purchase Packing List Module
 Purchase Trade Condition
 Purchase Trade Condition Module
+Returned Purchase Order
+Returned Purchase Order Cell
+Returned Purchase Order Line
+Returned Purchase Order Module
 Returned Purchase Packing List
 Returned Purchase Packing List Cell
 Returned Purchase Packing List Line
 Returned Purchase Packing List Module
+Returned Sale Order
+Returned Sale Order Cell
+Returned Sale Order Line
+Returned Sale Order Module
 Returned Sale Packing List
 Returned Sale Packing List Cell
 Returned Sale Packing List Line

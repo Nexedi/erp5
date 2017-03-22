@@ -120,6 +120,27 @@ Purchase Trade Condition | view
 Purchase Trade Condition | view_payment
 Purchase Trade Condition | view_profile
 Purchase Trade Condition | view_trade_model_line_list
+Returned Purchase Order Cell | view
+Returned Purchase Order Line | price_view
+Returned Purchase Order Line | profile_view
+Returned Purchase Order Line | quantity_view
+Returned Purchase Order Line | view
+Returned Purchase Order Line | view_trade_model
+Returned Purchase Order Module | delivery_line_report
+Returned Purchase Order Module | order_export
+Returned Purchase Order Module | order_report
+Returned Purchase Order Module | view
+Returned Purchase Order | apply_trade_condition
+Returned Purchase Order | fast_input
+Returned Purchase Order | fast_input_update
+Returned Purchase Order | jump_to_related_returned_purchase_packing_list
+Returned Purchase Order | order_print
+Returned Purchase Order | payment_condition
+Returned Purchase Order | profile_view
+Returned Purchase Order | reset_movement_price_list
+Returned Purchase Order | view
+Returned Purchase Order | view_stock
+Returned Purchase Order | view_trade_model
 Returned Purchase Packing List Cell | view
 Returned Purchase Packing List Line | price_view
 Returned Purchase Packing List Line | profile_view
@@ -134,6 +155,31 @@ Returned Purchase Packing List | payment_condition
 Returned Purchase Packing List | profile_view
 Returned Purchase Packing List | view
 Returned Purchase Packing List | view_stock
+Returned Sale Order Cell | view
+Returned Sale Order Line | price_view
+Returned Sale Order Line | profile_view
+Returned Sale Order Line | quantity_view
+Returned Sale Order Line | view
+Returned Sale Order Line | view_trade_model
+Returned Sale Order Module | delivery_line_report
+Returned Sale Order Module | order_export
+Returned Sale Order Module | order_report
+Returned Sale Order Module | view
+Returned Sale Order Module | workflow_report
+Returned Sale Order | apply_trade_condition
+Returned Sale Order | fast_input
+Returned Sale Order | fast_input_update
+Returned Sale Order | jump_to_related_returned_sale_packing_list
+Returned Sale Order | order_print
+Returned Sale Order | order_summary
+Returned Sale Order | payment_condition
+Returned Sale Order | profile_view
+Returned Sale Order | reference_generate
+Returned Sale Order | reset_movement_price_list
+Returned Sale Order | sale_order_planning
+Returned Sale Order | view
+Returned Sale Order | view_stock
+Returned Sale Order | view_trade_model
 Returned Sale Packing List Cell | view
 Returned Sale Packing List Line | price_view
 Returned Sale Packing List Line | profile_view
