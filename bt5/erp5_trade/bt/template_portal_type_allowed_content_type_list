@@ -63,10 +63,20 @@ Purchase Trade Condition Module | Purchase Trade Condition
 Purchase Trade Condition | Payment Condition
 Purchase Trade Condition | Purchase Supply Line
 Purchase Trade Condition | Trade Model Line
+Returned Purchase Order Line | Returned Purchase Order Cell
+Returned Purchase Order Line | Returned Purchase Order Line
+Returned Purchase Order Module | Returned Purchase Order
+Returned Purchase Order | Payment Condition
+Returned Purchase Order | Returned Purchase Order Line
 Returned Purchase Packing List Line | Returned Purchase Packing List Cell
 Returned Purchase Packing List Module | Returned Purchase Packing List
 Returned Purchase Packing List | Payment Condition
 Returned Purchase Packing List | Returned Purchase Packing List Line
+Returned Sale Order Line | Returned Sale Order Cell
+Returned Sale Order Line | Returned Sale Order Line
+Returned Sale Order Module | Returned Sale Order
+Returned Sale Order | Payment Condition
+Returned Sale Order | Returned Sale Order Line
 Returned Sale Packing List Line | Returned Sale Packing List Cell
 Returned Sale Packing List Module | Returned Sale Packing List
 Returned Sale Packing List | Payment Condition
