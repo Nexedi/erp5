@@ -1,18 +1,25 @@
 from DateTime import DateTime
+from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query, SimpleQuery
+
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
 
 now = DateTime()
 
-query_dict = {
-  "portal_type": "Data Ingestion Line",
-  "stock.quantity": '!=0',
-  "resource_portal_type": "Data Product",
-  "simulation_state": "stopped"}
+query = AndQuery(
+          Query(portal_type = "Data Ingestion Line"),
+          Query(**{"stock.quantity": "!=0"}),
+          Query(resource_portal_type = "Data Product"),
+          # Should be improved to support mor than one analysis per ingestion
+          SimpleQuery(causality_related_relative_url = None),
+          OrQuery(
+            Query(simulation_state = "stopped",
+                  use_relative_url = "use/big_data/ingestion/batch"),
+            Query(simulation_state = "started",
+                  use_relative_url = "use/big_data/ingestion/stream")))
 
-for movement in portal_catalog(**query_dict):
-  batch_relative_url = movement.getAggregateDataIngestionBatch()
-  if batch_relative_url is None:
+for movement in portal_catalog(query):
+  if movement.DataIngestionLine_hasMissingRequiredItem():
     raise ValueError("Transformation requires movement to have " +
                      "aggregated data ingestion batch")
   data_ingestion = movement.getParentValue()
@@ -58,13 +65,21 @@ for movement in portal_catalog(**query_dict):
           # ingestion line with the same resource. If it is an operation line
           # then we search for an ingestion line with resource portal type
           # Data Product
-          related_movement_list = portal_catalog(
-            portal_type="Data Ingestion Line",
-            aggregate_relative_url=batch_relative_url,
-            resource_relative_url = resource.getRelativeUrl())
+          batch_relative_url = movement.getAggregateDataIngestionBatch()
+          if batch_relative_url is not None:
+            related_movement_list = portal_catalog(
+              portal_type="Data Ingestion Line",
+              aggregate_relative_url=batch_relative_url,
+              resource_relative_url = resource.getRelativeUrl())
+          else:
+            # get related movements only from current data ingestion
+            related_movement_list = movement.getParentValue().searchFolder(
+              portal_type="Data Ingestion Line",
+              resource_relative_url = resource.getRelativeUrl())
           for related_movement in related_movement_list:
             aggregate_set.update(related_movement.getAggregateSet())
-            related_movement.getParentValue().deliver()
+            if related_movement.getUse() == "big_data/ingestion/batch":
+              related_movement.getParentValue().deliver()
         else:
           # it is an output line
           # create new item based on item_type
@@ -76,7 +91,7 @@ for movement in portal_catalog(**query_dict):
                                                  data_ingestion.getReference()),
                             version = '001')
           item.validate()
-          aggregate_set.add(item)
+          aggregate_set.add(item.getRelativeUrl())
 
       data_analysis.newContent(
         portal_type = "Data Analysis Line",
@@ -84,8 +99,9 @@ for movement in portal_catalog(**query_dict):
         reference = transformation_line.getReference(),
         int_index = transformation_line.getIntIndex(),
         resource_value = resource,
+        variation_category_list = transformation_line.getVariationCategoryList(),
         quantity = quantity,
         quantity_unit = transformation_line.getQuantityUnit(),
-        aggregate_value_set = aggregate_set)
+        aggregate_set = aggregate_set)
         
-    data_analysis.plan()
+    data_analysis.start()
