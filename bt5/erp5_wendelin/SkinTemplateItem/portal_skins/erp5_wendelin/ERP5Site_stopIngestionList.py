@@ -5,11 +5,14 @@ from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery
 portal_catalog = context.getPortalObject().portal_catalog
 
 # search for dates older than one minute ago
+# Only stop data ingestion of related resource is configured for batch
+# ingestion
 old_start_date = addToDate(DateTime(), {'minute' : -1})
 start_date_query = Query(**{'delivery.start_date': old_start_date, 'range': 'ngt'})
 kw_dict = {"query": start_date_query,
            "portal_type": "Data Ingestion",
-           "simulation_state": "started"}
+           "simulation_state": "started",
+           "use_relative_url": "use/big_data/ingestion/batch"}
 
 parent_uid_list = [x.getUid() for x in portal_catalog(**kw_dict)]
 
@@ -53,10 +56,5 @@ if len(parent_uid_list) != 0:
         # TODO: this should be implemented in transformation, not here
         continue
     
-    # Only stop data ingestion of related resource is configured for batch
-    # ingestion
-    # TODO: probably this should be done in another way
-    resource = data_ingestion_line.getResourceValue()
-    if "big_data/ingestion/batch_ingestion" in resource.getUseList():
-      data_ingestion.setStopDate(DateTime())
-      data_ingestion.stop()
+    data_ingestion.setStopDate(DateTime())
+    data_ingestion.stop()
