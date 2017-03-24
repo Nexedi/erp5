@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>RightMenu.template</string> </value>
+            <value> <string>ooffice/apps/spreadsheeteditor/main/app/template/RightMenu.template</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -87,7 +87,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>ooffice/apps/spreadsheeteditor/main/app/template/RightMenu.template</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>

@@ -1,3 +1,5 @@
+document_module/ooffice_*
+image_module/ooffice_*
 web_page_module/gadget_ooffice_*
 web_page_module/ooffice_*
 web_site_module/ooffice_presentation
