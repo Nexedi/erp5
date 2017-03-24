@@ -75,19 +75,39 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>DocumentPreview.js</string> </value>
+            <value> <string>ooffice/apps/presentationeditor/main/app/view/DocumentPreview.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>ooffice_apps_presentationeditor_main_app_view_DocumentPreview_js</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Script</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>url_string</string> </key>
-            <value> <string>ooffice/apps/presentationeditor/main/app/view/DocumentPreview.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -218,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.23956.47039.49698</string> </value>
+                <value> <string>958.21215.64755.8072</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -236,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1471734746.61</float>
+                        <float>1490960643.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

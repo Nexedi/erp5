@@ -109,7 +109,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>zipfilestorage-with-jszip.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>

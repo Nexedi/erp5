@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>Analytics.js</string> </value>
+            <value> <string>ooffice/apps/common/Analytics.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -104,8 +104,14 @@
             </value>
         </item>
         <item>
+            <key> <string>title</string> </key>
+            <value> <string>Analytics.js</string> </value>
+        </item>
+        <item>
             <key> <string>url_string</string> </key>
-            <value> <string>ooffice/apps/common/Analytics.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.53697.26309.11895</string> </value>
+                <value> <string>958.18513.63401.44731</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1477344365.22</float>
+                        <float>1490616222.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>textanddataFunctions.js</string> </value>
+            <value> <string>ooffice/sdkjs/cell/model/FormulaObjects/textanddataFunctions.js</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -87,7 +87,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>ooffice/sdkjs/cell/model/FormulaObjects/textanddataFunctions.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>

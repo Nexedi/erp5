@@ -123,7 +123,7 @@ rsvp.js\n
 renderjs.js\n
 jiodev.js\n
 jquerymobile.js\n
-jquerymodile.css\n
+jquerymobile.css\n
 jquery.js\n
 gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
@@ -264,7 +264,7 @@ ooffice/apps/presentationeditor/main/resources/img/controls/dimension-picker/dim
 ooffice/apps/presentationeditor/main/resources/img/toolbar-menu.png\n
 ooffice/gadget_ooffice.html\n
 ooffice/gadget_ooffice.js\n
-ooffice/resources/help/en/Contents.json\n
+#ooffice/resources/help/en/Contents.json\n
 ooffice/sdkjs/cell/model/CellInfo.js\n
 ooffice/sdkjs/cell/model/Serialize.js\n
 ooffice/sdkjs/cell/model/Workbook.js\n
@@ -724,7 +724,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.9788.40013.31522</string> </value>
+                <value> <string>958.14358.25520.40465</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -742,7 +742,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490264283.2</float>
+                        <float>1490618099.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
