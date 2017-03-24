@@ -22,17 +22,16 @@ if request.get('field_prefix', None):
 if dialog_id not in ('', None):
   form_id = dialog_id
 
-# Prevent users who don't have rights to edit the object from
-# editing it by calling the Base_edit script with correct
-# parameters directly.
-if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify portal content', context) :
-  msg = Base_translateString("You do not have the permissions to edit the object.")
-  redirect_url = '%s/%s?selection_index=%s&selection_name=%s&%s' % (context.absolute_url(), form_id, selection_index, selection_name, 'portal_status_message=%s' % msg)
-  return context.Base_redirect(redirect_url)
-
 # Get the form
 form = getattr(context,form_id)
 edit_order = form.edit_order
+
+# Prevent users who don't have rights to edit the object from
+# editing it by calling the Base_edit script with correct
+# parameters directly.
+if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify portal content', context):
+  request.RESPONSE.setStatus(403)
+  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
 
 try:
   # Validate
