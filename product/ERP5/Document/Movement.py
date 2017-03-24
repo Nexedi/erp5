@@ -325,7 +325,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
            DeprecationWarning)
 
     local_price = self._baseGetPrice()
-    if local_price is None:
+    if local_price is None and evaluate:
       # We must find a price for this movement
       local_price = self._getPrice(context=self)
     return local_price
