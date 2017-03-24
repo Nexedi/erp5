@@ -291,7 +291,7 @@ ooffice/apps/documenteditor/main/resources/img/controls/dimension-picker/dimensi
 ooffice/apps/documenteditor/main/resources/img/toolbar-menu.png\n
 ooffice/gadget_ooffice.html\n
 ooffice/gadget_ooffice.js\n
-ooffice/resources/help/en/Contents.json\n
+#ooffice/resources/help/en/Contents.json\n
 ooffice/sdkjs/cell/model/CellInfo.js\n
 ooffice/sdkjs/cell/model/Serialize.js\n
 ooffice/sdkjs/cell/model/Workbook.js\n
@@ -746,7 +746,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.12602.31545.50039</string> </value>
+                <value> <string>958.12606.15650.31505</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +764,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490261654.3</float>
+                        <float>1490366756.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

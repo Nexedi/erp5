@@ -123,7 +123,7 @@ rsvp.js\n
 renderjs.js\n
 jiodev.js\n
 jquerymobile.js\n
-jquerymodile.css\n
+jquerymobile.css\n
 jquery.js\n
 /\n
 gadget_officejs_onlyoffice_landing.js\n
@@ -280,7 +280,7 @@ ooffice/apps/spreadsheeteditor/main/resources/css/app.css\n
 ooffice/apps/spreadsheeteditor/main/resources/img/toolbar-menu.png\n
 ooffice/gadget_ooffice.html\n
 ooffice/gadget_ooffice.js\n
-ooffice/resources/help/en/Contents.json\n
+#ooffice/resources/help/en/Contents.json\n
 ooffice/sdkjs/cell/Local/api_jio.js\n
 ooffice/sdkjs/cell/apiBuilder.js\n
 ooffice/sdkjs/cell/css/main.css\n
@@ -757,7 +757,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.30966.3185.19285</string> </value>
+                <value> <string>958.14358.10320.58180</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -775,7 +775,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487691081.12</float>
+                        <float>1490607294.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
