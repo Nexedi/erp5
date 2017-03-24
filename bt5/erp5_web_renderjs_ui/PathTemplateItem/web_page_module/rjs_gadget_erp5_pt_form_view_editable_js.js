@@ -146,17 +146,25 @@
                 return form_gadget.redirect({command: 'reload'});
               })
               .push(undefined, function (error) {
-                if ((error.target !== undefined) && (error.target.status === 400)) {
-                  return form_gadget.notifySubmitted()
-                    .push(function () {
-                      return form_gadget.translate('Input data has errors');
-                    })
-                    .push(function (message) {
-                      return form_gadget.notifyChange(message + '.');
-                    })
-                    .push(function () {
-                      return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
-                    });
+                if (error.target !== undefined) {
+                  var error_text;
+                  if (error.target.status === 400) {
+                    error_text = 'Input data has errors';
+                  } else if (error.target.status === 403) {
+                    error_text = 'You do not have the permissions to edit the object';
+                  }
+                  if (error_text !== undefined) {
+                    return form_gadget.notifySubmitted()
+                      .push(function () {
+                        return form_gadget.translate(error_text);
+                      })
+                      .push(function (message) {
+                        return form_gadget.notifyChange(message + '.');
+                      })
+                      .push(function () {
+                        return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
+                      });
+                  }
                 }
                 throw error;
               });
