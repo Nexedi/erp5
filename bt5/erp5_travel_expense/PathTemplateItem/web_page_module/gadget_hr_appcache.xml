@@ -66,7 +66,9 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>contributor/person_module/2</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -108,7 +110,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
+# generated on Fri, 24 March 2017 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 # version 1.0\n
@@ -334,7 +336,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>supercedriclen</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -348,7 +350,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.54751.3513.37683</string> </value>
+                <value> <string>957.20828.35466.8669</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -366,7 +368,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486474400.78</float>
+                        <float>1490349225.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
