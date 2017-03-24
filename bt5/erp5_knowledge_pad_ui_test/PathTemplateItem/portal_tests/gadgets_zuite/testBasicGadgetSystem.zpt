@@ -136,11 +136,6 @@
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td>Google Calendar </td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
   <td>ERP5 Worklists</td>
   <td></td>
 </tr>
@@ -157,11 +152,6 @@
 <tr>
   <td>verifyTextPresent</td>
   <td>Documentation</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyTextPresent</td>
-  <td>Clock</td>
   <td></td>
 </tr>
 <!-- Renaming pad -->

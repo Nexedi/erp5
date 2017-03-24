@@ -1,5 +1,3 @@
-portal_gadgets/clock
-portal_gadgets/clock/**
 portal_gadgets/erp5_advertisement
 portal_gadgets/erp5_advertisement/**
 portal_gadgets/erp5_documentation
@@ -12,9 +10,3 @@ portal_gadgets/erp5_web_section_random_page
 portal_gadgets/erp5_web_section_random_page/**
 portal_gadgets/erp5_worklists
 portal_gadgets/erp5_worklists/**
-portal_gadgets/google_calendar
-portal_gadgets/google_calendar/**
-portal_gadgets/google_maps
-portal_gadgets/google_maps/**
-portal_gadgets/google_search
-portal_gadgets/google_search/**
