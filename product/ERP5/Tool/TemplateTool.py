@@ -1742,6 +1742,10 @@ class TemplateTool (BaseTool):
         old_item._sign = -1
         to_install_path_item_list.append(old_item)
 
+      # Update hashes of item in old state before installation
+      for item in old_installation_state._path_item_list:
+        item._sha = self.calculateComparableHash(item._value)
+
       # Path Item List for installation_process should be the difference between
       # old and new installation state
       for item in new_installation_state._path_item_list:
@@ -1768,6 +1772,27 @@ class TemplateTool (BaseTool):
 
     installMultipleBusinessManager = updateInstallationState
 
+    def calculateComparableHash(self, object):
+      """
+      Remove some attributes before comparing hashses
+      and return hash of the comparable object dict
+
+      Use shallow copy of the dict of the object at ZODB after removing
+      attributes which changes at small updation, like workflow_history,
+      uid, volatile attributes(which starts with _v)
+      """
+      obj_dict = object.__dict__.copy()
+      removable_attributes = [attr for attr
+                              in obj_dict.keys()
+                              if attr.startswith('_v')]
+
+      removable_attributes.append('uid')
+      for attr in removable_attributes:
+        del obj_dict[attr]
+
+      obj_sha = hash(pprint.pformat(obj_dict))
+      return obj_sha
+
     def compareOldStateToOFS(self, installation_process, old_state):
 
       # Get the paths about which we are concerned about
@@ -1780,19 +1805,7 @@ class TemplateTool (BaseTool):
 
         try:
           obj = portal.restrictedTraverse(path)
-          # Use shallow copy of the dict of the object at ZODB after removing
-          # attributes which changes at small updation, like workflow_history,
-          # uid, volatile attributes(which starts with _v)
-          obj_dict = obj.__dict__.copy()
-          removable_attributes = [attr for attr
-                                  in obj_dict.keys()
-                                  if attr.startswith('_v')]
-
-          removable_attributes.append('uid')
-          for attr in removable_attributes:
-            del obj_dict[attr]
-
-          obj_sha = hash(pprint.pformat(obj_dict))
+          obj_sha = self.calculateComparableHash(obj)
 
           # Get item at old state
           old_item = old_state.getBusinessItemByPath(path)
