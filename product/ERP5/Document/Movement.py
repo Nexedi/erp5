@@ -230,8 +230,6 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       if self.isMovingItem(item)]
 
   # Pricing methods
-  # _getPrice is defined in the order / delivery
-  # Pricing mehod
   def _getPrice(self, context):
     context = self.asContext(context=context,
                              quantity=self.getConvertedQuantity())
