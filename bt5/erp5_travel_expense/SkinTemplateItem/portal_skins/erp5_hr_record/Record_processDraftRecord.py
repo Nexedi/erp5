@@ -3,7 +3,11 @@
 
 portal = context.getPortalObject()
 record = context
-if record.getSimulationState() not in ("draft", "started"):
+is_record_ready_method = record.getTypeBasedMethod(
+  "isRecordReadyForProcess",
+  fallback_script_id="Record_isRecordReadyForProcess"
+  )
+if is_record_ready_method():
   return
 
 # Is it the only new record

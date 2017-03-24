@@ -3,6 +3,7 @@
 (function (window, rJS, RSVP, jIO, UriTemplate, alertify, indexedDB) {
   "use strict";
   // xxxxxxxxxxxxxxxxx overwrite 
+  /*
   function openIndexedDB(jio_storage) {
     var db_name = jio_storage._database_name;
     function resolver(resolve, reject) {
@@ -79,7 +80,7 @@
         return handleRequest(transaction
                         .objectStore("metadata")["delete"](id));
       });
-  };
+  };*/
 
   function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -300,7 +301,7 @@
               limit: [0, 1234567890]
             },
             use_remote_post: true,
-            conflict_handling: 3,
+            conflict_handling: 2,
             check_local_modification: false,
             check_local_creation: true,
             check_local_deletion: false,

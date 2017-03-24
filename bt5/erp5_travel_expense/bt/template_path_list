@@ -1,5 +1,6 @@
 image_module/marker-icon
 image_module/marker-shadow
+portal_alarms/alarm_garbage_collect_draft_expense_record_list
 portal_alarms/alarm_process_draft_localisation_record
 portal_alarms/alarm_process_draft_record_list
 portal_alarms/create_representative_record_for_expense_validation_request
