@@ -75,11 +75,23 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>Main.js</string> </value>
+            <value> <string>ooffice/apps/spreadsheeteditor/main/app/controller/Main.js</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>ooffice_apps_spreadsheeteditor_main_app_controller_Main_js</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -90,8 +102,20 @@
             <value> <string>1</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Main.js</string> </value>
+        </item>
+        <item>
             <key> <string>url_string</string> </key>
-            <value> <string>ooffice/apps/spreadsheeteditor/main/app/controller/Main.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -222,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.2604.12251.64682</string> </value>
+                <value> <string>958.18339.3430.47257</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -240,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486024251.76</float>
+                        <float>1490605671.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
