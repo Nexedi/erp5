@@ -71,8 +71,7 @@
               var intFormat = numberFormat({digitsAfterDecimal: 0});
               var notification = noty({type: "info", text: "Refreshing data", layout: "bottom"});
 
-              $.getJSON("ZMySQLDAConnection_getQueryResultAsJSON", {query: editor.getValue()}, function(mps) {
-
+              $.post("ZMySQLDAConnection_getQueryResultAsJSON", {query: editor.getValue()}, function(mps) {
                 ht.clear();
                 if (mps.length > 1) {
                   ht.updateSettings({
@@ -104,7 +103,7 @@
                 });
                 notification.close();
               }
-                       ).fail(function(jqXHR, textStatus, errorThrown) {
+             , 'json').fail(function(jqXHR, textStatus, errorThrown) {
                 notification.close();
                 noty({type: "error", text: jqXHR.responseText, timeout: 5000, layout: "bottom" });
               });
