@@ -11,6 +11,10 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string></string> </value>
         </item>
@@ -65,7 +69,7 @@
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Access contents information</string>
               </tuple>
             </value>
         </item>
