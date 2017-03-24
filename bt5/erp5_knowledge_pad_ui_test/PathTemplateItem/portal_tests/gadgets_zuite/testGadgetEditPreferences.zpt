@@ -28,45 +28,45 @@ Wait for activities</span>
 <!-- Add to pad few gadgets -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/google_calendar</td>
+  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_web_section_random_page</td>
   <td></td>
 </tr>
 <tr>
   <td>storeText</td>
   <td>transition_message</td>
-  <td>calendar_box_url</td>
+  <td>erp5_web_section_random_page_box_url</td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${calendar_box_url}</td>
+  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_web_section_random_page_box_url}</td>
   <td></td>
 </tr>
 <tr>
   <td>storeText</td>
   <td>transition_message</td>
-  <td>calendar_box_id</td>
+  <td>erp5_web_section_random_page_box_id</td>
 </tr>
 
-<!-- Clock -->
+<!-- erp5_persons -->
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/clock</td>
+  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/erp5_persons</td>
   <td></td>
 </tr>
 <tr>
   <td>storeText</td>
   <td>transition_message</td>
-  <td>clock_box_url</td>
+  <td>erp5_persons_box_url</td>
 </tr>
 <tr>
   <td>openAndWait</td>
-  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${clock_box_url}</td>
+  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${erp5_persons_box_url}</td>
   <td></td>
 </tr>
 <tr>
   <td>storeText</td>
   <td>transition_message</td>
-  <td>clock_box_id</td>
+  <td>erp5_persons_box_id</td>
 </tr>
 
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
@@ -78,17 +78,17 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@id='${clock_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='${erp5_persons_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>gadget_preference_${clock_box_id}_field_my_preferred_header_title</td>
-  <td>Clock XXXXX</td>
+  <td>gadget_preference_${erp5_persons_box_id}_field_my_preferred_header_title</td>
+  <td>ERP5 Persons XXXXX</td>
 </tr>
 <tr>
   <td>keyPressAndWait</td>
-  <td>gadget_preference_${clock_box_id}_field_my_preferred_header_title</td>
+  <td>gadget_preference_${erp5_persons_box_id}_field_my_preferred_header_title</td>
   <td>\13</td>
 </tr>
 <tr>
@@ -98,22 +98,22 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td>Clock XXXXX</td>
+  <td>ERP5 Persons XXXXX</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@id='${calendar_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='${erp5_web_section_random_page_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
-  <td>Calendar YYYYY</td>
+  <td>gadget_preference_${erp5_web_section_random_page_box_id}_field_my_preferred_header_title</td>
+  <td>Random Web Page YYYYY</td>
 </tr>
 <tr>
   <td>keyPressAndWait</td>
-  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
+  <td>gadget_preference_${erp5_web_section_random_page_box_id}_field_my_preferred_header_title</td>
   <td>\13</td>
 </tr>
 <tr>
@@ -123,24 +123,24 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td>Calendar YYYYY</td>
+  <td>Random Web Page YYYYY</td>
   <td></td>
 </tr>
 
 <!-- Edit gadget form submit by pressing enter -->
 <tr>
   <td>click</td>
-  <td>//div[@id='${calendar_box_id}']/h3/span/a[2]</td>
+  <td>//div[@id='${erp5_web_section_random_page_box_id}']/h3/span/a[2]</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
-  <td>Calendar AAAAA</td>
+  <td>gadget_preference_${erp5_web_section_random_page_box_id}_field_my_preferred_header_title</td>
+  <td>Random Web Page AAAAA</td>
 </tr>
 <tr>
   <td>keyPressAndWait</td>
-  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>
+  <td>gadget_preference_${erp5_web_section_random_page_box_id}_field_my_preferred_header_title</td>
   <td>\13</td>
 </tr>
 <tr>
@@ -150,7 +150,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>verifyTextPresent</td>
-  <td>Calendar AAAAA</td>
+  <td>Random Web Page AAAAA</td>
   <td></td>
 </tr>
 
@@ -165,7 +165,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@id='${calendar_box_id}']/h3/span/a[1]</td>
+  <td>//div[@id='${erp5_web_section_random_page_box_id}']/h3/span/a[1]</td>
   <td></td>
 </tr>
 <tr>
@@ -182,7 +182,7 @@ Wait for activities</span>
 </tr>
 <tr>
   <td>verifyTextNotPresent</td>
-  <td>Calendar AAAAA</td>
+  <td>Random Web Page AAAAA</td>
   <td></td>
 </tr>
 
