@@ -20,5 +20,5 @@ WHERE
   AND path = <dtml-sqlvar path type="string">
   AND method_id = <dtml-sqlvar method_id type="string">
   AND group_method_id = <dtml-sqlvar group_method_id type="string">
-  AND signature = <dtml-sqlvar signature type="int">
+  AND signature = <dtml-sqlvar signature type="string">
 FOR UPDATE

@@ -36,6 +36,7 @@ from ZODB.POSException import ConflictError
 
 try:
   from sklearn.externals.joblib import register_parallel_backend
+  from sklearn.externals.joblib.hashing import hash
   from sklearn.externals.joblib.parallel import ParallelBackendBase, parallel_backend
   from sklearn.externals.joblib.parallel import FallbackToBackend, SequentialBackend
   from sklearn.externals.joblib._parallel_backends import SafeFunction
@@ -123,15 +124,15 @@ if ENABLE_JOBLIB:
       portal_activities = self.active_process.portal_activities
       active_process_id = self.active_process.getId()
       joblib_result = None
-      sig = make_hash(batch.items[0])
-
-      if not self.active_process.getResult(sig):
+      sig = hash(batch.items[0])
+      sigint = int(sig, 16) % (10 ** 16)
+      if not self.active_process.getResult(sigint):
         joblib_result = portal_activities.activate(activity='SQLJoblib',
           tag="joblib_%s" % active_process_id,
           signature=sig,
-          active_process=self.active_process).Base_callSafeFunction(sig, MySafeFunction(batch))
+          active_process=self.active_process).Base_callSafeFunction(sigint, MySafeFunction(batch))
       if joblib_result is None:
-        joblib_result = CMFActivityResult(self.active_process, sig, callback)
+        joblib_result = CMFActivityResult(self.active_process, sigint, callback)
       return joblib_result
 
     def configure(self, n_jobs=1, parallel=None, **backend_args):

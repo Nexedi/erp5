@@ -53,7 +53,6 @@ from SQLDict import SQLDict
 class MyBatchedSignature(object):
   """Create hashable signature"""
   def __init__(self, batch):
-    #LOG('CMFActivity', INFO, batch.items)
     items = batch.items[0]
     self.func = items[0].__name__
     self.args = items[1]
@@ -108,8 +107,6 @@ class SQLJoblib(SQLDict):
     if m.is_registered:
       uid = portal.portal_ids.generateNewIdList(self.uid_group,
         id_count=1, id_generator='uid')[0]
-      #import pdb; pdb.set_trace()
-      LOG("CMFActivityBackendEntered", INFO, m.activity_kw.get('signature', 0))
       m.order_validation_text = x = self.getOrderValidationText(m)
       processing_node = (0 if x == 'none' else -1)
       portal.SQLJoblib_writeMessage(
@@ -123,7 +120,7 @@ class SQLJoblib(SQLDict):
         group_method_id=m.getGroupId(),
         date=m.activity_kw.get('at_date'),
         tag=m.activity_kw.get('tag', ''),
-        signature=m.activity_kw.get('signature', 0),
+        signature=m.activity_kw.get('signature', ''),
         processing_node=processing_node,
         serialization_tag=m.activity_kw.get('serialization_tag', ''))
 
@@ -150,7 +147,6 @@ class SQLJoblib(SQLDict):
             signature=signature)
           reserve_uid_list = uid_list = [x.uid for x in result]
           if reserve_uid_list:
-            LOG("CMFActivityBackendMarked", INFO, signature, uid_list)
             activity_tool.SQLJoblib_reserveDuplicatedLineList(
               processing_node=processing_node, uid=reserve_uid_list)
         except:
@@ -210,13 +206,13 @@ class SQLJoblib(SQLDict):
       if result:
         load = self.getProcessableMessageLoader(activity_tool, processing_node)
         m, uid, uid_list = load(result[0])
-        LOG("CMFActivityBackendExecuting", INFO, m.signature)
         # This handles cases wehre the result has been already calculated
         # but the duplicate message(s) somehow landed in the queue, 
         # we should not execute these messages and its duplicates again
         # hence just delete them.
         active_process = activity_tool.unrestrictedTraverse(m.active_process)
-        if active_process.getResult(m.signature):
+        sigint = int(m.signature, 16) % (10 ** 16)
+        if active_process.getResult(sigint):
           uid_list.append(uid)
           LOG("CMFActivityBackendDeleting", INFO, m.signature)
           self.finalizeMessageExecution(activity_tool, [], None, uid_list)

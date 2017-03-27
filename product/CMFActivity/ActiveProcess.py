@@ -124,7 +124,8 @@ class ActiveProcess(Base):
         return
 
     if self.use_btree:
-      result_list.insert(result.sig, result)
+      signature = int(result.sig, 16)
+      result_list.insert(signature, result)
     else:
       result_list.append(result)
 

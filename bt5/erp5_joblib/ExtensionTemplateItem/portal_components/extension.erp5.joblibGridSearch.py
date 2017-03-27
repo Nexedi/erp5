@@ -24,8 +24,8 @@ def test(self, active_process_path):
   y = np.ascontiguousarray(y)
   clf = GridSearchCV(SVC(), param_grid=param_grid, verbose=10)
   active_process = self.portal_activities.unrestrictedTraverse(active_process_path)
+  tic = time.time()
   with parallel_backend('CMFActivity', n_jobs=2, active_process=active_process):
-    tic = time.time()
     clf.fit(X, y)
   log("I am here", time.time()-tic)
   return 'ok', sklearn.__version__, joblib.__version__, time.time() - tic

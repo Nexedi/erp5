@@ -35,7 +35,7 @@ VALUES
 <dtml-sqlvar expr="priority" type="int">,
 <dtml-sqlvar expr="group_method_id" type="string">,
 <dtml-sqlvar expr="tag" type="string">,
-<dtml-sqlvar expr="signature" type="int">,
+<dtml-sqlvar expr="signature" type="string">,
 <dtml-sqlvar expr="serialization_tag" type="string">,
 <dtml-sqlvar expr="message" type="string">
 )

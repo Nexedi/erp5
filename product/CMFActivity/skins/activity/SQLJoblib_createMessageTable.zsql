@@ -20,7 +20,7 @@ CREATE TABLE <dtml-var table> (
   `priority` TINYINT NOT NULL DEFAULT 0,
   `group_method_id` VARCHAR(255) NOT NULL DEFAULT '',
   `tag` VARCHAR(255) NOT NULL,
-  `signature` BIGINT NOT NULL,
+  `signature` VARCHAR(255) NOT NULL,
   `serialization_tag` VARCHAR(255) NOT NULL,
   `retry` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `message` LONGBLOB NOT NULL,
