@@ -1,7 +1,57 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, URI, calculatePageTitle, jIO */
-(function (window, rJS, RSVP, URI, calculatePageTitle, jIO) {
+/*global window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO */
+(function (window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO) {
   "use strict";
+
+  function extractParamListFromContentDisposition(text) {
+    // text = " ATTACHMENT; FILENAME = MyFile "
+    // Returns -> [" ATTACHMENT", " FILENAME = MyFile "]
+    return text.split(";");
+  }
+
+  function parseContentDispositionParam(text) {
+    // text = " ATTACHMENT"
+    // Returns -> {name:"attachment", value:null}
+    // text = " FILENAME = MyFile "
+    // Returns -> {name:"filename", value:"MyFile"}
+    var i, l = text.length;
+    for (i = 0; i < l; i += 1) {
+      if (text[i] === "=") {
+        return {name: text.slice(0, i).trim().toLowerCase(), value: text.slice(i + 1).trim()};
+      }
+    }
+    return {name: text.trim().toLowerCase(), value: null};
+  }
+
+  function parseEachContentDispositionParamToDict(paramList) {
+    // paramList = [" ATTACHMENT", " FILENAME = MyFile "]
+    // Returns -> {attachment: null, filename: "MyFile"}
+    var i, l = paramList.length, r = {}, p = null;
+    for (i = 0; i < l; i += 1) {
+      p = parseContentDispositionParam(paramList[i]);
+      r[p.name] = p.value;
+    }
+    return r;
+  }
+
+  function parseContentDisposition(text) {
+    // text = " ATTACHMENT; FILENAME = MyFile "
+    // Returns -> {attachment:null, filename:"MyFile"}
+    return parseEachContentDispositionParamToDict(extractParamListFromContentDisposition(text));
+  }
+
+  function extractFilenameFromContentDisposition(text) {
+    // text = " ATTACHMENT; FILENAME = \"MyFile \" "
+    // Returns -> "MyFile "
+    var o = parseContentDisposition(text);
+    if (typeof o.filename === "string") {
+      if (o.filename[0] === "\"" && o.filename[o.filename.length - 1] === "\"") {
+        return o.filename.slice(1, -1);
+      }
+      return o.filename;
+    }
+    return null;
+  }
 
   rJS(window)
     .setState({
@@ -120,6 +170,16 @@
         });
     })
 
+    .declareJob("deferRevokeObjectUrlWithLink", function (object_url, a_tag) {
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.delay(10);
+        })
+        .push(function () {
+          URL.revokeObjectURL(object_url);
+          document.body.removeChild(a_tag);
+        });
+    })
 
     .onEvent('submit', function () {
       var form_gadget = this,
@@ -172,6 +232,8 @@
             location = evt.target.getResponseHeader("X-Location"),
             jio_key,
             list = [],
+            a,
+            object_url,
             message;
           try {
             message = JSON.parse(responseText).portal_status_message;
@@ -183,8 +245,20 @@
             list.push(form_gadget.redirect({command: 'history_previous'}));
           } else {
             if (location === undefined || location === null) {
-              // No redirection, stay on the same document
-              list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined, editable: form_gadget.state.editable}}));
+              // Download the data
+              if (evt.target.responseType === "blob") {
+                message = evt.target.response;
+              } else {
+                message = new Blob([evt.target.response], {type: evt.target.getResponseHeader("Content-Type")});
+              }
+              object_url = URL.createObjectURL(message);
+              a = document.createElement("a");
+              a.style = "display: none";
+              a.href = object_url;
+              a.download = extractFilenameFromContentDisposition(evt.target.getResponseHeader("Content-Disposition")) || "untitled";
+              document.body.appendChild(a);
+              a.click();
+              form_gadget.deferRevokeObjectUrlWithLink(object_url, a);
             } else {
               jio_key = new URI(location).segment(2);
               if (form_gadget.state.id === jio_key) {
@@ -222,4 +296,4 @@
     }, false, true);
 
 
-}(window, rJS, RSVP, URI, calculatePageTitle, jIO));
+}(window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO));

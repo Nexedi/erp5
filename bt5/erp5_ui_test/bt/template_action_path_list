@@ -5,11 +5,13 @@ Bar | view
 Bar | view_datetime_field
 Foo Bar Module | view
 Foo Line | view
+Foo Module | do_nothing_report_jio
 Foo Module | list
 Foo Module | list_ui
 Foo Module | search
 Foo Module | sort_on
 Foo Module | view
+Foo | do_nothing_report_jio
 Foo | dummy_listfield_report
 Foo | dummy_multicheckboxfield_report
 Foo | dummy_multilistfield_report
