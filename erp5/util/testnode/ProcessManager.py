@@ -34,7 +34,7 @@ import signal
 import sys
 import time
 
-MAX_TIMEOUT = 36000
+MAX_TIMEOUT = 3600 * 4
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
