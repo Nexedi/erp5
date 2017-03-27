@@ -1,6 +1,8 @@
 import re
 import json
 
+portal = context.getPortalObject()
+
 
 
 Base_translateString = context.Base_translateString
@@ -12,9 +14,8 @@ tmp_re = re.compile(r"""/[{}]/g, """"")
 
 translate_word = []
 
-web_page_list = context.Base_getListFileFromAppcache(only_html=1)
-for web_page in web_page_list:
-  web_page = context.web_page_module.searchFolder(portal_type='Web Page',reference=web_page)[0]
+for web_page in portal.web_page_module.searchFolder(portal_type='Web Page',
+                                                    reference=context.Base_getListFileFromAppcache(only_html=1)):
   data = attribute_filter_re.findall(web_page.getTextContent())
   for attribute in data:
     a = re.sub(r'[{|}]', "", attribute[1])
