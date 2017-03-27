@@ -14,6 +14,20 @@
      <td></td>
     </tr>
  
+    <!-- First loader while calling Base_edit -->
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>waitForTextPresent</td>
+      <td>Data updated.</td>
+      <td></td>
+    </tr>
+
+    <!-- Second loader while updating the page -->
     <tr>
       <td>waitForElementPresent</td>
       <td>//button[@class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>

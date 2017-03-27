@@ -211,6 +211,11 @@
   <td>//input[@name="field_my_successor_title"]</td>
   <td>TEST</td>
 </tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name="field_my_title"]</td>
+  <td>TEST</td>
+</tr>
 
 </tbody></table>
 </body>
