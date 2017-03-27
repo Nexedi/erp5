@@ -243,7 +243,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
     self.commit()
     self.setSystemPreference()
-    self.portal.portal_tests.TestTool_cleanUpTestResults()
+    # non-recursive results clean of portal_tests/ or portal_tests/``run_only`` 
+    self.portal.portal_tests.TestTool_cleanUpTestResults(self.run_only or None)
     self.tic()
     host, port = self.startZServer()
     self.runner = FunctionalTestRunner(host, port,
