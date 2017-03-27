@@ -143,6 +143,7 @@ class ProcessManager(object):
       if p.poll() is None:
         log('PROCESS TOO LONG OR DEAD, GOING TO BE TERMINATED')
         killCommand(p.pid, log)
+        raise SubprocessError('Dead or too long process killed')
 
     if self.under_cancellation:
       raise CancellationError("Test Result was cancelled")
