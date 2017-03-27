@@ -65,6 +65,9 @@
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
             gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
+            gadget.state.erp5_document._links.action_object_report_jio ?
+                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+                "",
             calculatePageTitle(gadget, gadget.state.erp5_document)
           ]);
         })
@@ -76,8 +79,8 @@
             previous_url: all_result[3],
             next_url: all_result[4],
             tab_url: all_result[5],
-            export_url: "",
-            page_title: all_result[6]
+            export_url: all_result[6],
+            page_title: all_result[7]
           });
         });
     });

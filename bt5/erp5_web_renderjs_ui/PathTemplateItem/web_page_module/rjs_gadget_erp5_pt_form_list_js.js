@@ -83,6 +83,9 @@
             new_content_action,
             form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             form_gadget.getUrlFor({command: 'display', options: {}}),
+            form_gadget.state.erp5_document._links.action_object_report_jio ?
+                form_gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+                "",
             calculatePageTitle(form_gadget, form_gadget.state.erp5_document)
           ]);
         })
@@ -93,8 +96,8 @@
             cut_url: "",
             add_url: all_gadget[0],
             actions_url: all_gadget[1],
-            export_url: "",
-            page_title: all_gadget[3],
+            export_url: all_gadget[3],
+            page_title: all_gadget[4],
             front_url: all_gadget[2],
             filter_action: true
           });

@@ -1,0 +1,57 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form List Actions Link</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_list.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Foos</td>
+  <td></td>
+</tr>
+
+<!-- Header has a link to the export page
+     Here we assume that portal_types/Foo%20Module has at least one object_report_jio -->
+<tr>
+  <td>assertElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@href, '#!change') and contains(@href, 'n.page=export')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@href, '#!change') and contains(@href, 'n.page=export')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_export.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Report</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
