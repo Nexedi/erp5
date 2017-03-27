@@ -251,7 +251,7 @@ a:focus {
   outline-offset: -2px;
   outline: 2px solid #3388cc;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   a[accesskey]:after {
     content: " [" attr(accesskey) "] ";
   }
@@ -338,7 +338,7 @@ textarea {
   vertical-align: top;
   transition: height 0.2s ease-out;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   textarea {
     height: 4em;
   }
@@ -346,7 +346,7 @@ textarea {
     height: 20em;
   }
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (min-width: 90em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (max-width: 90em) {
   textarea {
     min-height: 10em;
   }
@@ -437,12 +437,12 @@ div[data-gadget-scope='panel'] {
   display: block;
   z-index: 2000;
 }
-@media only screen and (max-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
   div[data-gadget-scope='panel'] {
     box-shadow: 5px 0 5px rgba(0, 0, 0, 0.15);
   }
 }
-@media only screen and (max-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
   div[data-gadget-scope='panel'] {
     left: -186pt;
     transition: transform 200ms ease-out;
@@ -478,7 +478,7 @@ div[data-gadget-scope='panel'] div[data-role="header"] a::before {
   text-indent: 0;
   margin-left: 12pt;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='panel'] div[data-role="header"] button[data-i18n="Close"],
   div[data-gadget-scope='panel'] div[data-role="header"] a[data-i18n="Close"] {
     display: none;
@@ -568,7 +568,7 @@ div[data-gadget-scope='editor_panel'] {
   display: block;
   z-index: 3000;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='editor_panel'] {
     left: -186pt;
     transition: transform 200ms ease-out;
@@ -579,7 +579,7 @@ div[data-gadget-scope='editor_panel'] {
     transform: translate3d(186pt, 0, 0);
   }
 }
-@media only screen and (max-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
   div[data-gadget-scope='editor_panel'] {
     right: -186pt;
     transition: transform 200ms ease-out;
@@ -671,7 +671,7 @@ div[data-gadget-scope='header'] .ui-header {
   color: #FFFFFF;
   background-color: #0E81C2;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header {
     margin-left: 180pt;
   }
@@ -693,13 +693,13 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
   transition: background-color 0.2s ease-out;
   line-height: 30pt;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
     background-color: #0E81C2;
   }
 }
-@media only screen and (max-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
     background-color: #085078;
@@ -717,7 +717,7 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
     width: 8em;
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a {
     width: 3em;
@@ -726,7 +726,7 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
     white-space: nowrap;
   }
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (min-width: 90em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button::before,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a::before {
     width: 1em;
@@ -734,7 +734,7 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
     text-align: center;
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button::before,
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a::before {
     float: left;
@@ -742,7 +742,7 @@ div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a:active {
     margin-left: 12pt;
   }
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls button[name="panel"],
   div[data-gadget-scope='header'] .ui-header .ui-controlgroup-controls a[name="panel"] {
     display: none;
@@ -752,13 +752,13 @@ div[data-gadget-scope='header'] .ui-header > .ui-btn-left button,
 div[data-gadget-scope='header'] .ui-header > .ui-btn-left a {
   border-right: 1px solid rgba(255, 255, 255, 0.55);
 }
-@media only screen and (max-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right button,
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right a {
     border-left: 1px solid rgba(255, 255, 255, 0.55);
   }
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right button,
   div[data-gadget-scope='header'] .ui-header > .ui-btn-right a {
     padding-left: 24pt;
@@ -775,7 +775,7 @@ div[data-gadget-scope='header'] .ui-header h1 {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header h1 {
     flex: 1 100%;
   }
@@ -783,12 +783,12 @@ div[data-gadget-scope='header'] .ui-header h1 {
 div[data-gadget-scope='header'] .ui-header h1 > span {
   padding-left: 42pt;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header h1 > span {
     padding-left: 30pt;
   }
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header h1 > span {
     padding-left: 24pt;
   }
@@ -803,28 +803,28 @@ div[data-gadget-scope='header'] .ui-header h1 a::before {
   display: inline-block;
   width: 42pt;
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (max-width: 45em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header h1 a::before {
     text-align: center;
   }
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header h1 a::before {
     padding-left: 24pt;
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header h1 a::before {
     width: 30pt;
   }
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header .ui-subheader {
     text-align: left;
     flex: 1;
   }
 }
-@media only screen and (max-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (min-width: 45em), only screen and (min-width: 45em) and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header .ui-subheader {
     flex: 1 100%;
   }
@@ -832,7 +832,7 @@ div[data-gadget-scope='header'] .ui-header h1 a::before {
 div[data-gadget-scope='header'] .ui-header ul {
   display: flex;
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (max-width: 45em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header ul li {
     flex: 1;
     border-left: 1px solid rgba(0, 0, 0, 0.55);
@@ -856,7 +856,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     display: block;
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header ul li a {
     text-align: center;
     vertical-align: middle;
@@ -873,7 +873,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     width: 100%;
   }
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   div[data-gadget-scope='header'] .ui-header ul li a {
     display: block;
     padding-left: 24pt;
@@ -927,7 +927,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content input[type='submit']:active {
   background-color: #ffa366;
 }
-@media only screen and (min-width: 90em) {
+@media not screen and (max-width: 90em) {
   .gadget-content {
     margin-left: 180pt;
   }
@@ -937,7 +937,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-top: 7em;
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .gadget-content {
     padding: 6pt;
     padding-top: 6em;
@@ -1004,7 +1004,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   position: absolute;
   right: 6pt;
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (min-width: 90em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (max-width: 90em) {
   .gadget-content .left,
   .gadget-content .right {
     vertical-align: top;
@@ -1015,7 +1015,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (min-width: 90em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (max-width: 90em) {
   .gadget-content .ui-field-contain {
     display: flex;
   }
@@ -1026,7 +1026,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     flex: 3;
   }
 }
-@media only screen and (min-width: 45em) and (max-width: 90em), only screen and (min-width: 90em) {
+@media only screen and (min-width: 45em) and (max-width: 90em), not screen and (max-width: 90em) {
   .gadget-content .center .ui-field-contain label + div {
     flex: 7;
   }
@@ -1037,7 +1037,7 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content form label span span {
   animation: fadein 0.2s ease-out;
 }
-@media only screen and (min-width: 90em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (max-width: 90em), only screen and (min-width: 45em) and (max-width: 90em) {
   .gadget-content form label span span {
     background-color: #FF6600;
     color: #f8fff3;
@@ -1061,7 +1061,7 @@ div[data-gadget-scope='header'] .ui-header ul {
     content: '';
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .gadget-content form label span span {
     margin-left: 6pt;
     color: #FF6600;
@@ -1154,7 +1154,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
   display: flex;
   padding-bottom: 6pt;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table .ui-table-header {
     border-bottom: 2px solid rgba(0, 0, 0, 0.14902);
   }
@@ -1173,7 +1173,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table .ui-table-header button:last-of-type {
   margin-right: 0;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table .ui-table-header button {
     width: 2em;
     overflow: hidden;
@@ -1184,7 +1184,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table .ui-table-header button::before {
   margin-right: 6pt;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table .ui-table-header button::before {
     float: left;
     text-indent: 0;
@@ -1205,7 +1205,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table table thead tr th {
   padding: 6pt 3pt;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table table thead {
     display: none;
   }
@@ -1223,13 +1223,13 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table table tbody tr:active {
   background-color: #e0e0e0;
 }
-@media only screen and (min-width: 90em), only screen and (min-width: 45em) and (max-width: 90em) {
+@media not screen and (max-width: 90em), only screen and (min-width: 45em) and (max-width: 90em) {
   .document_table table tbody a {
     display: block;
     padding: 3pt;
   }
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table table tbody tr {
     display: block;
     overflow: hidden;
@@ -1313,7 +1313,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table table tfoot .ui-controlgroup-controls a:active {
   background-color: #e0e0e0;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table table tfoot .ui-controlgroup-controls a {
     overflow: hidden;
     text-indent: -9999px;
@@ -1323,7 +1323,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
 .document_table table tfoot .ui-controlgroup-controls a::before {
   margin-right: 6pt;
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   .document_table table tfoot .ui-controlgroup-controls a::before {
     float: left;
     text-indent: 6pt;
@@ -1343,7 +1343,7 @@ div[data-gadget-scope='notification'] {
 div[data-gadget-scope='notification'].visible {
   transform: translate3d(-216pt, 0, 0);
 }
-@media only screen and (max-width: 45em) {
+@media not screen and (min-width: 45em) {
   div[data-gadget-scope='notification'].visible {
     transform: translate3d(-198pt, 0, 0);
   }
