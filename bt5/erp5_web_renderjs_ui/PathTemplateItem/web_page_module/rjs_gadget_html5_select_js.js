@@ -52,6 +52,8 @@
         tmp = "";
 
       select.setAttribute('name', this.state.name);
+      select.setAttribute('id', this.state.name);
+
       if (this.state.title) {
         select.setAttribute('title', this.state.title);
       }

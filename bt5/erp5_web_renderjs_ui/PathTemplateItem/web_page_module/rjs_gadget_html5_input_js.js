@@ -43,6 +43,8 @@
         textarea.checked = this.state.checked;
       }
       textarea.setAttribute('name', this.state.name);
+      textarea.setAttribute('id', this.state.name);
+
       textarea.setAttribute('type', this.state.type);
       if (this.state.title) {
         textarea.setAttribute('title', this.state.title);

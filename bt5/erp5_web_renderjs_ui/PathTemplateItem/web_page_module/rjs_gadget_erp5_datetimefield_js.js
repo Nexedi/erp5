@@ -82,7 +82,7 @@
         queue = new RSVP.Queue(),
         promise_list,
         input_state = {
-          name: gadget.state.key + '_input',
+          name: gadget.state.key,
           editable: gadget.state.editable,
           required: gadget.state.required,
           type: gadget.state.date_only ? "date" : "datetime-local",
@@ -262,7 +262,7 @@
             return RSVP.all(promise_list);
           })
           .push(function (result_list) {
-            var value = result_list[0][gadget.state.key + '_input'],
+            var value = result_list[0][gadget.state.key],
               timezone = "+0000",
               year,
               month,
