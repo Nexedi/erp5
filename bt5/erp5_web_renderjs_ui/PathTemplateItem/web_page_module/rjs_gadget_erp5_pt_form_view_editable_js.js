@@ -135,9 +135,16 @@
                 ]);
               })
               .push(function (result_list) {
+                if (result_list[1].target.responseType === "blob") {
+                  return jIO.util.readBlobAsText(result_list[1].target.response);
+                } else {
+                  return {target: {result: result_list[1].target.response}};
+                }
+              })
+              .push(function (event) {
                 var message;
                 try {
-                  message = JSON.parse(result_list[1].target.responseText).portal_status_message;
+                  message = JSON.parse(event.target.result).portal_status_message;
                 } catch (ignore) {
                 }
                 return form_gadget.notifySubmitted(message);
@@ -162,7 +169,14 @@
                         return form_gadget.notifyChange(message + '.');
                       })
                       .push(function () {
-                        return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
+                        if (error.target.responseType === "blob") {
+                          return jIO.util.readBlobAsText(error.target.response);
+                        } else {
+                          return {target: {result: error.target.response}};
+                        }
+                      })
+                      .push(function (event) {
+                        return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
                       });
                   }
                 }

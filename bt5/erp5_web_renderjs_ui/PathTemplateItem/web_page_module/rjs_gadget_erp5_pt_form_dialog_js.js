@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP, URI, calculatePageTitle */
-(function (window, rJS, RSVP, URI, calculatePageTitle) {
+/*global window, rJS, RSVP, URI, calculatePageTitle, jIO */
+(function (window, rJS, RSVP, URI, calculatePageTitle, jIO) {
   "use strict";
 
   rJS(window)
@@ -158,12 +158,23 @@
 
         })
         .push(function (evt) {
-          var location = evt.target.getResponseHeader("X-Location"),
+          if (evt.target.responseType === "blob") {
+            return RSVP.all([
+              evt,
+              jIO.util.readBlobAsText(evt.target.response)
+            ]);
+          }
+          return [evt, {target: {result: evt.target.response}}];
+        })
+        .push(function (result_list) {
+          var evt = result_list[0],
+            responseText = result_list[1].target.result,
+            location = evt.target.getResponseHeader("X-Location"),
             jio_key,
             list = [],
             message;
           try {
-            message = JSON.parse(evt.target.response).portal_status_message;
+            message = JSON.parse(responseText).portal_status_message;
           } catch (ignore) {
           }
           list.push(form_gadget.notifySubmitted(message));
@@ -196,7 +207,13 @@
                 return form_gadget.notifyChange(message + '.');
               })
               .push(function () {
-                return form_gadget.displayFormulatorValidationError(JSON.parse(error.target.responseText));
+                if (error.target.responseType === "blob") {
+                  return jIO.util.readBlobAsText(error.target.response);
+                }
+                return {target: {result: error.target.response}};
+              })
+              .push(function (event) {
+                return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
               });
           }
           throw error;
@@ -205,4 +222,4 @@
     }, false, true);
 
 
-}(window, rJS, RSVP, URI, calculatePageTitle));
+}(window, rJS, RSVP, URI, calculatePageTitle, jIO));
