@@ -82,25 +82,36 @@ class DataBucketStream(Document):
       Remove one Bucket
     """
     return self._tree.pop(key)
-  
-  def itervalues(self, min_key=None, count=None):
+    
+  def getBucketKeySequence(self, start_key=None, count=None):
     """
-      Yield complete buckets of data.
+      Get a lazy sequence of bucket values
     """
-    for i, chunk in enumerate(self._tree.itervalues(min_key)):
-      if count is not None and i > count - 1:
-        break
-      out = chunk.value
-      # Free memory used by chunk. Helps avoiding thrashing connection
-      # cache by discarding chunks earlier.
-      chunk._p_deactivate()
-      yield out
+    excludemin = start_key is not None
+    sequence = self._tree.keys(min=start_key, excludemin=excludemin)
+    if count is None:
+      return sequence
+    return sequence[:count]
 
-  def readBucketList(self, min_key=None, count=None):
+  def getBucketValueSequence(self, start_key=None, count=None):
     """
-      Get complete buckets of data.
+      Get a lazy sequence of bucket values
     """
-    return [bucket for bucket in self.itervalues(min_key, count)]
+    excludemin = start_key is not None
+    sequence = self._tree.values(min=start_key, excludemin=excludemin)
+    if count is None:
+      return sequence
+    return sequence[:count]
+    
+  def getBucketItemSequence(self, start_key=None, count=True):
+    """
+      Get a lazy sequence of bucket values
+    """
+    excludemin = start_key is not None
+    sequence = self._tree.items(min=start_key, excludemin=excludemin)
+    if count is None:
+      return sequence
+    return sequence[:count]
     
   def getItemList(self):
     """
