@@ -76,6 +76,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Progress Indicator</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Sensor</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

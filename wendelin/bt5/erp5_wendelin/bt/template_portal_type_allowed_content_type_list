@@ -29,6 +29,7 @@ Device Configuration Module | Meda Configuration
 Device Configuration Type | Action Information
 Device Configuration Type | Role Information
 Ingestion Policy Tool | Ingestion Policy
+Progress Indicator Module | Progress Indicator
 Property Sheet | Data Array Line Existence Constraint
 Sensor Module | Sensor
 Types Tool | Data Descriptor Type

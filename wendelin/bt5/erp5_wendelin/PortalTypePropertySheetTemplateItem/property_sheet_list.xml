@@ -56,4 +56,7 @@
   <item>Reference</item>
   <item>Version</item>
  </portal_type>
+ <portal_type id="Progress Indicator">
+  <item>OffsetIndex</item>
+ </portal_type>
 </property_sheet_list>
