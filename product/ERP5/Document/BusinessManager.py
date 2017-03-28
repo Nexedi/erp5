@@ -53,7 +53,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
-from Products.ERP5Type.Globals import Persistent
+from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
@@ -610,6 +610,10 @@ class BusinessItem(Implicit, Persistent):
     if not self._value:
       # Raise in case there is no value for the BusinessItem object
       raise ValueError, "Value not defined for the %s BusinessItem" % self._path
+    elif self.isProperty:
+      # In case of property, the value is a PersisitentMapping object, so it
+      # can be easily hashed after formatting
+      sha256 = hash(pprint.pformat(self._value))
     else:
       # Expects to raise error on case the value for the object
       # is not picklable
@@ -619,7 +623,7 @@ class BusinessItem(Implicit, Persistent):
         obj_dict = self._value.__dict__.copy()
         del obj_dict['uid']
         sha256 = hash(pprint.pformat(obj_dict))
-      self._sha = sha256
+    self._sha = sha256
 
   def build(self, context, **kw):
     """
@@ -639,7 +643,15 @@ class BusinessItem(Implicit, Persistent):
       relative_url, property_id = path.split('#')
       obj = p.unrestrictedTraverse(relative_url)
       property_value = obj.getProperty(property_id)
-      self._value = property_value
+      property_type = obj.getPropertyType(property_id)
+      # Create a persistent object which can be saved inside ZODB for the value
+      value = PersistentMapping()
+      value['name'] = property_id
+      value['type'] = property_type
+      value['value'] = property_value
+      self._value = value
+      # Add the value object in the database
+      obj._p_jar.add(value)
       # Generate hash for the property value
       self._generateHash()
     else:
@@ -730,10 +742,14 @@ class BusinessItem(Implicit, Persistent):
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
     portal = context.getPortalObject()
-    if self.isProperty:
-      realtive_url, property_id = self._path.split('#')
-      object_property_item = ObjectPropertyTemplateItem(id_list)
-      object_property_item.install()
+    if '#' in str(self._path):
+      self.isProperty = True
+      relative_url, property_id = self._path.split('#')
+      obj = portal.unrestrictedTraverse(relative_url)
+      # XXX: Here, we do deal with different cases such as if the object exists
+      # or not or have the same value or compare states
+      prop = self._value
+      obj.setProperty(prop['name'], prop['value'], prop['type'])
     else:
       path_list = self._path.split('/')
       container_path = path_list[:-1]
@@ -1004,7 +1020,6 @@ class BusinessItem(Implicit, Persistent):
 
     # We now will add the XML object and its sha hash while exporting the object
     # to Business Manager itself
-
     # Back compatibility with filesystem Documents
     key = self._path
     obj = self._value
@@ -1340,5 +1355,3 @@ class bm(dict):
 
   def _importFile(self, file_name, file, parent):
     self[file_name] = file.read()
-
-#InitializeClass(BusinessManager)
