@@ -16,4 +16,5 @@ data_stream_module
 data_supply_module
 data_transformation_module
 device_configuration_module
+progress_indicator_module
 sensor_module

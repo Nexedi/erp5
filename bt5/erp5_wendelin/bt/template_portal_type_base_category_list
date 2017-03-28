@@ -6,3 +6,4 @@ Data Event | resource
 Data Event | source
 Data Transformation Module | business_application
 Device Configuration Module | business_application
+Progress Indicator Module | business_application

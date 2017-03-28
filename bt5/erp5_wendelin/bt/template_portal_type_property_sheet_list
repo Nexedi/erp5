@@ -21,3 +21,4 @@ Device Configuration Type | Url
 Ingestion Policy | IngestionPolicy
 Ingestion Policy | Reference
 Ingestion Policy | Version
+Progress Indicator | OffsetIndex

@@ -64,6 +64,8 @@ Device Configuration Type | view
 Ingestion Policy Tool | add_ingestion_policy
 Ingestion Policy Tool | view
 Ingestion Policy | view
+Progress Indicator Module | view
+Progress Indicator | view
 Sensor Module | view
 Sensor | view
 System Preference | wendelin_preference

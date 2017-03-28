@@ -19,6 +19,9 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
                 analysis_line.getAggregateDataArrayValue() or \
                 analysis_line.getAggregateDataDescriptorValue()
     parameter_dict[reference] = aggregate
+    progress_indicator = analysis_line.getAggregateProgressIndicatorValue()
+    if progress_indicator is not None:
+      parameter_dict["%s_progress_indicator" %reference] = progress_indicator
 script_id = operation.getScriptId()
 getattr(operation_analysis_line, script_id)(**parameter_dict)
 
