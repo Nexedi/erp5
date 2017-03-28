@@ -1060,7 +1060,7 @@ class BusinessItem(Implicit, Persistent):
         transaction.savepoint(optimistic=True)
 
       f = StringIO()
-      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+      obj._p_jar.exportFile(obj._p_oid, f)
       bma.addObject(f, key, path=path)
 
   def importFile(self, bma, parent, **kw):
@@ -1068,9 +1068,16 @@ class BusinessItem(Implicit, Persistent):
 
   def _importFile(self, file_name, file_obj, parent):
     obj_key, file_ext = os.path.splitext(file_name)
+
     # id() for installing several bt5 in the same transaction
     transactional_variable_obj_key = "%s-%s" % (id(self), obj_key)
-    if file_ext != '.xml':
+
+    if file_ext == '.zexp':
+      connection = self.getConnection(parent)
+      __traceback_info__ = 'Importing %s' % file_name
+      obj = connection.importFile(file_obj, customImporters=customImporters)
+
+    elif file_ext != '.xml':
         # For ZODB Components: if .xml have been processed before, set the
         # source code property, otherwise store it in a transactional variable
         # so that it can be set once the .xml has been processed
@@ -1081,20 +1088,12 @@ class BusinessItem(Implicit, Persistent):
           getTransactionalVariable()[transactional_variable_obj_key] = data
         else:
           self._restoreSeparatelyExportedProperty(obj, data)
-    else:
-      connection = self.getConnection(parent)
-      __traceback_info__ = 'Importing %s' % file_name
-      if hasattr(cache_database, 'db') and isinstance(file_obj, file):
-        obj = connection.importFile(self._compileXML(file_obj))
-      else:
-        # FIXME: Why not use the importXML function directly? Are there any BT5s
-        # with actual .zexp files on the wild?
-        obj = connection.importFile(file_obj, customImporters=customImporters)
-      self._value = obj
 
-      data = getTransactionalVariable().get(transactional_variable_obj_key)
-      if data is not None:
-        self._restoreSeparatelyExportedProperty(obj, data)
+    self._value = obj
+
+    data = getTransactionalVariable().get(transactional_variable_obj_key)
+    if data is not None:
+      self._restoreSeparatelyExportedProperty(obj, data)
 
   def _restoreSeparatelyExportedProperty(self, obj, data):
     unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
@@ -1210,7 +1209,7 @@ class BusinessManagerArchive(object):
   def __init__(self, path, **kw):
     self.path = path
 
-  def addObject(self, obj, name, path=None, ext='.xml'):
+  def addObject(self, obj, name, path=None, ext='.zexp'):
     if path:
       name = posixpath.join(path, name)
     # XXX required due to overuse of os.path
