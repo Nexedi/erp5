@@ -223,7 +223,7 @@
         event,
         context = this;
       function extractSizeAndDispatch() {
-        if (window.matchMedia("(min-width: 90em)").matches) {
+        if (window.matchMedia("(min-width: 85em)").matches) {
           return context.changeState({
             desktop: true
           });

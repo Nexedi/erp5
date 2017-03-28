@@ -48,8 +48,8 @@
 // @panelwidth: 15em;
 
 @smartphone: ~"not screen and (min-width: 45em)";
-@tablet: ~"only screen and (min-width: 45em) and (max-width: 90em)";
-@desktop: ~"not screen and (max-width: 90em)";
+@tablet: ~"only screen and (min-width: 45em) and (max-width: 85em)";
+@desktop: ~"not screen and (max-width: 85em)";
 
 
 /**********************************************
