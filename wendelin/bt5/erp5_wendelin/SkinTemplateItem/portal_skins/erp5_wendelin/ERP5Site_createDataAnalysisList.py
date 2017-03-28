@@ -1,5 +1,5 @@
 from DateTime import DateTime
-from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import AndQuery, OrQuery, Query, NegatedQuery, SimpleQuery
 
 portal = context.getPortalObject()
 portal_catalog = portal.portal_catalog
@@ -11,12 +11,13 @@ query = AndQuery(
           Query(**{"stock.quantity": "!=0"}),
           Query(resource_portal_type = "Data Product"),
           # Should be improved to support mor than one analysis per ingestion
-          SimpleQuery(causality_related_relative_url = None),
+          SimpleQuery(parent_causality_related_relative_url = None),
           OrQuery(
             Query(simulation_state = "stopped",
                   use_relative_url = "use/big_data/ingestion/batch"),
-            Query(simulation_state = "started",
-                  use_relative_url = "use/big_data/ingestion/stream")))
+            AndQuery(
+              Query(simulation_state = "started"),
+              Query(use_relative_url = "use/big_data/ingestion/stream"))))
 
 for movement in portal_catalog(query):
   if movement.DataIngestionLine_hasMissingRequiredItem():
