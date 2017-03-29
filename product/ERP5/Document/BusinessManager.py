@@ -354,16 +354,55 @@ class BusinessManager(XMLObject):
     """
     Store data for objects in the ERP5
     """
+    portal = self.getPortalObject()
     LOG('Business Manager', INFO, 'Storing Manager Data')
     self._path_item_list = []
     path_item_list = self.getTemplatePathList()
     if path_item_list:
       path_item_list = [l.split(' | ') for l in path_item_list]
     for path_item in path_item_list:
-      try:
-        self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
-      except IndexError:
-        pass
+      # Here we check for the path which also add sub-objects, in that case,
+      # we create separate BusinessItem objects for each sub-object with
+      # same layer and sign
+      # XXX: Not very effective as it tries to get all the objects which makes
+      # it vey slow
+      path_list = self._resolvePath(portal, [], path_item[0].split('/'))
+      for path in path_list:
+        try:
+          self._path_item_list.append(BusinessItem(path, path_item[1], path_item[2]))
+        except IndexError:
+          pass
+
+  def _resolvePath(self, folder, relative_url_list, id_list):
+    """
+      For Business Manager, we expect to resolve the path incase we face
+      paths which expect to include sub-objects.
+      For example: 'portal_catalog/erp5_mysql_innodb/**' should only consider
+      the sub-objects of the object mentioned, and create separate BusinessItem
+      objects for all of them.
+
+      This method calls itself recursively.
+
+      The folder is the current object which contains sub-objects.
+      The list of ids are path components. If the list is empty,
+      the current folder is valid.
+    """
+    if len(id_list) == 0:
+      return ['/'.join(relative_url_list)]
+    id = id_list[0]
+    if re.search('[\*\?\[\]]', id) is None:
+      # If the id has no meta character, do not have to check all objects.
+      obj = folder._getOb(id, None)
+      if obj is None:
+        raise AttributeError, "Could not resolve '%s' during business template processing." % id
+      return self._resolvePath(obj, relative_url_list + [id], id_list[1:])
+    path_list = []
+    for object_id in fnmatch.filter(folder.objectIds(), id):
+      if object_id != "":
+        path_list.extend(self._resolvePath(
+            folder._getOb(object_id),
+            relative_url_list + [object_id], id_list[1:]))
+    return path_list
 
   def getPathList(self):
     path_list = []
@@ -656,6 +695,12 @@ class BusinessItem(Implicit, Persistent):
       self._generateHash()
     else:
       try:
+        # XXX: After we apply _resolve path list while storing Data for the
+        # Business Manager, this should be of no use as there will be no path
+        # where we are going to achieve something different for relative_path
+        # from the result of _resolvePath on a given path.
+        # TODO: Remove this after checking successfull implementation of
+        # _resolve path in Business Manager in storeTemplateData
         for relative_url in self._resolvePath(p, [], path.split('/')):
           obj = p.unrestrictedTraverse(relative_url)
           obj = obj._getCopy(context)
@@ -872,7 +917,7 @@ class BusinessItem(Implicit, Persistent):
       # 2. In case 2 maximum values are created at same time, prefer one with
       # higher priority layer
       merged_value = max([max(value, key=attrgetter('creation_date'))
-                          for value in value_list],
+                         for value in value_list],
                          key=attrgetter('creation_date'))
 
     return merged_value
