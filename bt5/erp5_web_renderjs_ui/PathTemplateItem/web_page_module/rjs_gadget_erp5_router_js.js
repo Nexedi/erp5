@@ -570,7 +570,18 @@
           })
         );
       }
-    } else if (command_options.args.page === 'history') {
+    } 
+
+    if (command_options.args.page === undefined) {
+      return routeMethodLess(gadget);
+    }
+
+    command_options.args.jio_key = command_options.path || undefined;
+
+    // Store current options to handle navigation
+    gadget.props.options = JSON.parse(JSON.stringify(command_options.args));
+
+    if (command_options.args.page === 'history') {
       // This is an adhoc route to handle local navigation history
       return gadget.props.jio_navigation_gadget.allDocs({
         sort_on: [['access_time', 'descending']]
@@ -594,14 +605,6 @@
         });
     }
 
-    if (command_options.args.page === undefined) {
-      return routeMethodLess(gadget);
-    }
-
-    command_options.args.jio_key = command_options.path || undefined;
-
-    // Store current options to handle navigation
-    gadget.props.options = JSON.parse(JSON.stringify(command_options.args));
 
     if (gadget.props.form_content) {
       command_options.args.form_content = gadget.props.form_content;
