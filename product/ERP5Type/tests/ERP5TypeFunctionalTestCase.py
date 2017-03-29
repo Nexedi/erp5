@@ -55,6 +55,7 @@ if tests_framework_home.startswith('/usr/lib'):
 else:
   real_instance_home = os.path.sep.join(
     tests_framework_home.split(os.path.sep)[:-3])
+
 instance_home = os.path.join(real_instance_home, 'unit_test')
 bt5_dir_list = ','.join([
                     os.path.join(instance_home, 'Products/ERP5/bootstrap'),
