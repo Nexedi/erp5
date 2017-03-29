@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80*/
-/*globals window, RSVP, rJS, jIO*/
+/*global window, RSVP, rJS, jIO*/
 (function (window, RSVP, rJS, jIO) {
   "use strict";
 
@@ -31,9 +31,8 @@
     /* Declared Methods */
 
     .declareMethod("postTodo", function (title) {
-      var gadget = this,
-        storage = gadget.state.storage;
-      return storage.post({
+      var gadget = this;
+      return gadget.state.storage.post({
         title: title,
         completed: false,
         creation_date: Date.now()
@@ -41,9 +40,8 @@
     })
 
     .declareMethod("putTodo", function (id, todo) {
-      var gadget = this,
-        storage = gadget.state.storage;
-      return storage.get(id)
+      var gadget = this;
+      return gadget.state.storage.get(id)
         .push(function (result) {
           var key;
           for (key in todo) {
@@ -56,14 +54,13 @@
           return todo;
         })
         .push(function (todo) {
-          return storage.put(id, todo);
+          return gadget.state.storage.put(id, todo);
         });
     })
 
-    .declareMethod("getTodos", function (query) {
-      var gadget = this,
-        storage = gadget.state.storage;
-      return storage.allDocs({
+    .declareMethod("getTodoList", function (query) {
+      var gadget = this;
+      return gadget.state.storage.allDocs({
         query: query,
         sort_on: [["creation_date", "ascending"]],
         select_list: ["title", "completed"]
@@ -83,9 +80,8 @@
     })
 
     .declareMethod("getTodoCountDict", function () {
-      var gadget = this,
-        storage = gadget.state.storage;
-      return storage.allDocs({select_list: ["completed"]})
+      var gadget = this;
+      return gadget.state.storage.allDocs({select_list: ["completed"]})
         .push(function (result_list) {
           var todo_count_dict = {
             total: result_list.data.total_rows,
@@ -100,46 +96,42 @@
         });
     })
 
-    .declareMethod("changeTitle", function (id, title) {
+    .declareMethod("changeTodoTitle", function (id, title) {
       var gadget = this;
       return gadget.putTodo(id, {title: title});
     })
 
-    .declareMethod("toggleOne", function (id, completed) {
+    .declareMethod("setOneTodoStatus", function (id, completed) {
       var gadget = this;
       return gadget.putTodo(id, {completed: completed});
     })
 
-    .declareMethod("toggleAll", function (completed) {
-      var gadget = this,
-        storage = gadget.state.storage;
-      return storage.allDocs()
+    .declareMethod("setAllTodoStatus", function (completed) {
+      var gadget = this;
+      return gadget.state.storage.allDocs()
         .push(function (result_list) {
           var promise_list = [], i;
           for (i = 0; i < result_list.data.total_rows; i += 1) {
             promise_list.push(
-              gadget.toggleOne(result_list.data.rows[i].id, completed)
+              gadget.setOneTodoStatus(result_list.data.rows[i].id, completed)
             );
           }
           return RSVP.all(promise_list);
         });
     })
 
-    .declareMethod("removeOne", function (id) {
-      var gadget = this,
-        storage = gadget.state.storage;
-      return storage.remove(id);
+    .declareMethod("removeOneTodo", function (id) {
+      var gadget = this;
+      return gadget.state.storage.remove(id);
     })
 
-    .declareMethod("removeCompleted", function () {
+    .declareMethod("removeAllCompletedTodo", function () {
       var gadget = this;
-      return gadget.getTodos()
+      return gadget.getTodoList('completed: "true"')
         .push(function (todo_list) {
           var promise_list = [], i;
           for (i = 0; i < todo_list.length; i += 1) {
-            if (todo_list[i].completed) {
-              promise_list.push(gadget.removeOne(todo_list[i].id));
-            }
+            promise_list.push(gadget.removeOneTodo(todo_list[i].id));
           }
           return RSVP.all(promise_list);
         });

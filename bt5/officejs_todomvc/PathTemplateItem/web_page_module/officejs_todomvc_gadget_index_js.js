@@ -1,5 +1,5 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80*/
-/*globals window, document, navigator, rJS, Handlebars*/
+/*global window, document, navigator, rJS, Handlebars*/
 (function (window, document, navigator, rJS, Handlebars) {
   "use strict";
 
@@ -12,7 +12,7 @@
 
   /* Global Variables */
 
-    handlebars_template; // = Handlebars.compile(template.innerHTML);
+    handlebars_template;
 
 
   /* Initialization */
@@ -28,11 +28,15 @@
 
     .declareService(function () {
       var gadget = this,
-        template = gadget.element.querySelector(".handlebars-template"),
         div = document.createElement("div");
       gadget.element.appendChild(div);
-      handlebars_template = Handlebars.compile(template.innerHTML);
-      return gadget.declareGadget("tutorial_officejs_gadget_router.html", {
+      handlebars_template = Handlebars.compile(
+        document.head.querySelector(".handlebars-template").innerHTML
+      );
+      // Normally, router gadgets are declared in the HTML of the root gadget
+      // because one app only needs one router, and it is not dynamic at all.
+      // However, this is declared in JavaScript purely to serve as an example.
+      return gadget.declareGadget("officejs_todomvc_gadget_router.html", {
         scope: "router",
         sandbox: "public",
         element: div
@@ -40,7 +44,7 @@
         .push(function () {
           if (navigator.serviceWorker) {
             return navigator.serviceWorker.register(
-              "tutorial_officejs_serviceworker.js"
+              "officejs_todomvc_serviceworker.js"
             );
           }
         })
@@ -71,7 +75,7 @@
         })
         .push(function (count_dict) {
           todo_count_dict = count_dict;
-          return model_gadget.getTodos(gadget.state.query);
+          return model_gadget.getTodoList(gadget.state.query);
         })
         .push(function (todo_list) {
           var plural = todo_list.length === 1 ? " item" : " items",
@@ -97,7 +101,7 @@
             }
           }
 
-          gadget.element.querySelector(".handlebars").innerHTML =
+          gadget.element.querySelector(".handlebars-anchor").innerHTML =
             handlebars_template({
               todo_list: todo_list,
               todo_exists: todo_count_dict.total >= 1,
@@ -142,20 +146,20 @@
         .push(function (model_gadget) {
           switch (event.target.className) {
           case "toggle":
-            return model_gadget.toggleOne(
+            return model_gadget.setOneTodoStatus(
               jio_id,
               !todo_item.classList.contains("completed")
             );
           case "toggle-all":
-            return model_gadget.toggleAll(event.target.checked);
+            return model_gadget.setAllTodoStatus(event.target.checked);
           case "toggle-label":
-            return model_gadget.toggleAll(
+            return model_gadget.setAllTodoStatus(
               !gadget.element.querySelector(".toggle-all").checked
             );
           case "destroy":
-            return model_gadget.removeOne(jio_id);
+            return model_gadget.removeOneTodo(jio_id);
           case "clear-completed":
-            return model_gadget.removeCompleted();
+            return model_gadget.removeAllCompletedTodo();
           default:
             if (gadget.state.editing_jio_id
                 && event.target.className !== "edit") {
@@ -191,7 +195,7 @@
         if (event.keyCode === ENTER_KEY && item) {
           return gadget.getDeclaredGadget("model")
             .push(function (model_gadget) {
-              return model_gadget.changeTitle(
+              return model_gadget.changeTodoTitle(
                 event.target.parentElement.getAttribute("data-jio-id"),
                 item
               );

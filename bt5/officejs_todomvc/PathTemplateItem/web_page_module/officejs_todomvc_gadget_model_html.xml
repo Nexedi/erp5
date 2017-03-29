@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs_gadget_index.html</string> </value>
+            <value> <string>officejs_todomvc_gadget_model.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_gadget_index_html</string> </value>
+            <value> <string>officejs_todomvc_gadget_model_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -113,7 +113,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial Index</string> </value>
+            <value> <string>OfficeJS TodoMVC Model</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

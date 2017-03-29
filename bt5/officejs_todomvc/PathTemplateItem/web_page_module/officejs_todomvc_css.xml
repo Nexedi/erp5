@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs.css</string> </value>
+            <value> <string>officejs_todomvc.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_css</string> </value>
+            <value> <string>officejs_todomvc_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial CSS</string> </value>
+            <value> <string>OfficeJS TodoMVC CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

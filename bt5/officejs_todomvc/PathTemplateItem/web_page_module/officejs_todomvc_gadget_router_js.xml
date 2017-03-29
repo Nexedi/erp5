@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs_serviceworker.js</string> </value>
+            <value> <string>officejs_todomvc_gadget_router.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_serviceworker_js</string> </value>
+            <value> <string>officejs_todomvc_gadget_router_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial Service Worker JS</string> </value>
+            <value> <string>OfficeJS TodoMVC Router Gadget JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

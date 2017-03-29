@@ -1,9 +1,9 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80*/
-/*globals self, caches, fetch*/
+/*global self, caches, fetch*/
 (function (self, caches, fetch) {
   "use strict";
 
-  var CACHE_VERSION = 2,
+  var CACHE_VERSION = 1,
     CACHE_NAME = "todos-renderjs-" + CACHE_VERSION.toString();
   self.addEventListener("install", function (event) {
     event.waitUntil(caches.open(CACHE_NAME)
@@ -12,17 +12,17 @@
           "./",
           "rsvp.js",
           "renderjs.js",
-          "jio.js",
+          "jiodev.js",
           "handlebars.js",
-          "launcher_icon.png",
-          "base.css",
-          "index.css",
-          "index.html",
-          "index.js",
-          "gadget_model.html",
-          "gadget_model.js",
-          "gadget_router.html",
-          "gadget_router.js"
+          "officejs_todomvc_icon.svg?format=svg",
+          "officejs_todomvc_icon.png?format=png",
+          "officejs_todomvc.css",
+          "officejs_todomvc_gadget_index.html",
+          "officejs_todomvc_gadget_index.js",
+          "officejs_todomvc_gadget_model.html",
+          "officejs_todomvc_gadget_model.js",
+          "officejs_todomvc_gadget_router.html",
+          "officejs_todomvc_gadget_router.js"
         ]);
       })
       .then(function () {

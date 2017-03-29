@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,8 +78,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs_gadget_model.js</string> </value>
+            <value> <string>officejs_todomvc_gadget_router.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,15 +93,17 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_gadget_model_js</string> </value>
+            <value> <string>officejs_todomvc_gadget_router_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -107,11 +113,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial Model Gadget JS</string> </value>
+            <value> <string>OfficeJS TodoMVC Router</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
       </dictionary>
     </pickle>
