@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs_manifest.json</string> </value>
+            <value> <string>officejs_todomvc_manifest.json</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_manifest_json</string> </value>
+            <value> <string>officejs_todomvc_manifest_json</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -110,11 +110,15 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>{\n
-  "short_name": "OfficeJS Todos",\n
-  "name": "OfficeJS Todo List - Sample Tutorial Application",\n
+  "short_name": "OfficeJS TodoMVC",\n
+  "name": "OfficeJS TodoMVC App",\n
   "icons": [{\n
-    "src": "tutorial_officejs_logo.png",\n
-    "sizes": "256x256",\n
+    "src": "officejs_todomvc_icon.svg?format=svg",\n
+    "sizes": "any",\n
+    "type": "image/svg"\n
+  }, {\n
+    "src": "officejs_todomvc_icon.png?format=png",\n
+    "sizes": "any",\n
     "type": "image/png"\n
   }],\n
   "start_url": "./",\n
@@ -123,7 +127,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial Manifest</string> </value>
+            <value> <string>OfficeJS TodoMVC Manifest</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
