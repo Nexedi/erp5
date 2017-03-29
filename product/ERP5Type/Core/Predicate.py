@@ -139,34 +139,36 @@ class Predicate(XMLObject):
 #            (result, property, value, max))
         if not result:
           return result
-    multimembership_criterion_base_category_list = \
-        self.getMultimembershipCriterionBaseCategoryList()
-    membership_criterion_base_category_list = \
-        self.getMembershipCriterionBaseCategoryList()
-    tested_base_category = {}
-#    LOG('predicate test', 0,
-#        'categories will be tested in multi %s single %s as %s' % \
-#        (multimembership_criterion_base_category_list,
-#        membership_criterion_base_category_list,
-#        self.getMembershipCriterionCategoryList()))
     # Test category memberships. Enable the read-only transaction cache
     # because this part is strictly read-only, and context.isMemberOf
     # is very expensive when the category list has many items.
-    if isMemberOf is None:
-      isMemberOf = context._getCategoryTool().isMemberOf
-    with readOnlyTransactionCache():
-      for c in self.getMembershipCriterionCategoryList():
-        bc = c.split('/', 1)[0]
-        if tested_base_category_list is None or bc in tested_base_category_list:
-          if bc in multimembership_criterion_base_category_list:
-            if not isMemberOf(context, c, strict_membership=strict_membership):
-              return 0
-          elif bc in membership_criterion_base_category_list and \
-               not tested_base_category.get(bc):
-            tested_base_category[bc] = \
-              isMemberOf(context, c, strict_membership=strict_membership)
-    if 0 in tested_base_category.itervalues():
-      return 0
+    membership_criterion_category_list = self.getMembershipCriterionCategoryList()
+    if membership_criterion_category_list:
+      multimembership_criterion_base_category_list = \
+        self.getMultimembershipCriterionBaseCategoryList()
+      membership_criterion_base_category_list = \
+        self.getMembershipCriterionBaseCategoryList()
+      tested_base_category = {}
+#      LOG('predicate test', 0,
+#          'categories will be tested in multi %s single %s as %s' % \
+#         (multimembership_criterion_base_category_list,
+#         membership_criterion_base_category_list,
+#         self.getMembershipCriterionCategoryList()))
+      if isMemberOf is None:
+        isMemberOf = context._getCategoryTool().isMemberOf
+      with readOnlyTransactionCache():
+        for c in membership_criterion_category_list:
+          bc = c.split('/', 1)[0]
+          if tested_base_category_list is None or bc in tested_base_category_list:
+            if bc in multimembership_criterion_base_category_list:
+              if not isMemberOf(context, c, strict_membership=strict_membership):
+                return 0
+            elif bc in membership_criterion_base_category_list and \
+                 not tested_base_category.get(bc):
+              tested_base_category[bc] = \
+                isMemberOf(context, c, strict_membership=strict_membership)
+      if 0 in tested_base_category.itervalues():
+        return 0
 
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
