@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Image" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,24 +64,6 @@
             </value>
         </item>
         <item>
-            <key> <string>_count</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
@@ -91,15 +73,13 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>c0e6b37c33e868aa4c227df87000ea8c</string> </value>
-        </item>
-        <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>image/png</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs_logo.png</string> </value>
+            <value> <string>officejs_todomvc_serviceworker.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -108,26 +88,16 @@
             </value>
         </item>
         <item>
-            <key> <string>filename</string> </key>
-            <value> <string>tutorial_officejs_logo.png</string> </value>
-        </item>
-        <item>
-            <key> <string>height</string> </key>
-            <value> <int>256</int> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_logo_png</string> </value>
+            <value> <string>officejs_todomvc_serviceworker_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Image</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -137,41 +107,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial Logo</string> </value>
+            <value> <string>OfficeJS TodoMVC Service Worker JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>width</string> </key>
-            <value> <int>256</int> </value>
+            <value> <string>001</string> </value>
         </item>
       </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Length" module="BTrees.Length"/>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
     </pickle>
   </record>
 </ZopeData>

@@ -3,22 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OfficeJS App</title>
+    <link href="officejs_todomvc_manifest.json" rel="manifest">
+    <title>OfficeJS TodoMVC App</title>
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
-    <script src="jio.js"></script>
     <script src="handlebars.js"></script>
-    <script src="tutorial_officejs_gadget_index.js"></script>
-    <link href="tutorial_officejs.css" rel="stylesheet">
-    <link href="tutorial_officejs_manifest.json" rel="manifest">
-  </head>
-  <body>
-    <div data-gadget-url="tutorial_officejs_gadget_model.html"
-      data-gadget-scope="model"
-      data-gadget-sandbox="public">
-    </div>
-    <main class="handlebars">
-    </main>
+    <script src="officejs_todomvc_gadget_index.js"></script>
+    <link href="officejs_todomvc.css" rel="stylesheet">
     <script class="handlebars-template" type="text/x-handlebars-template">
       <section class="todoapp">
         <header class="header">
@@ -56,7 +47,16 @@
       </section>
       <footer class="info">
         <p>Double-click to edit a todo</p>
+        <p>Concept and themes from <a href="http://todomvc.com/">TodoMVC</a></p>
       </footer>
     </script>
+  </head>
+  <body>
+    <div data-gadget-url="officejs_todomvc_gadget_model.html"
+      data-gadget-scope="model"
+      data-gadget-sandbox="public">
+    </div>
+    <main class="handlebars-anchor">
+    </main>
   </body>
 </html>

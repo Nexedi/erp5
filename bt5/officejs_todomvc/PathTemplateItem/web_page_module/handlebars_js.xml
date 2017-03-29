@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -27,6 +24,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +44,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -53,11 +52,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -79,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>tutorial_officejs_gadget_router.js</string> </value>
+            <value> <string>handlebars.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tutorial_officejs_gadget_router_js</string> </value>
+            <value> <string>handlebars_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -107,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Tutorial Router Gadget JS</string> </value>
+            <value> <string>Handlebars JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
