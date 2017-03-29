@@ -1136,24 +1136,23 @@ class BusinessItem(Implicit, Persistent):
       connection = self.getConnection(parent)
       __traceback_info__ = 'Importing %s' % file_name
       obj = connection.importFile(file_obj, customImporters=customImporters)
+      self._value = obj
+
+      data = getTransactionalVariable().get(transactional_variable_obj_key)
+      if data is not None:
+        self._restoreSeparatelyExportedProperty(obj, data)
 
     elif file_ext != '.xml':
         # For ZODB Components: if .xml have been processed before, set the
         # source code property, otherwise store it in a transactional variable
         # so that it can be set once the .xml has been processed
         data = file_obj.read()
-        try:
-          obj = self._objects[obj_key]
-        except KeyError:
+        item = parent.getBusinessItemByPath(obj_key)
+        obj = item._value
+        if obj is None:
           getTransactionalVariable()[transactional_variable_obj_key] = data
         else:
           self._restoreSeparatelyExportedProperty(obj, data)
-
-    self._value = obj
-
-    data = getTransactionalVariable().get(transactional_variable_obj_key)
-    if data is not None:
-      self._restoreSeparatelyExportedProperty(obj, data)
 
   def _restoreSeparatelyExportedProperty(self, obj, data):
     unicode_data, property_name = SEPARATELY_EXPORTED_PROPERTY_DICT[
