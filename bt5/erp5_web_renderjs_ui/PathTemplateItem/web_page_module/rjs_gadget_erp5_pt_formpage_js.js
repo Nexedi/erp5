@@ -62,7 +62,6 @@
               .push(function (result2) {
                 return gadget.redirect({command: 'change', options: {
                   view: result2._links.view[0].href,
-                  editable: undefined,
                   page: undefined
                 }});
               });

@@ -64,41 +64,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n = 'Editable' and text() = 'bianxue']</td>
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//a[@data-i18n = 'Editable' and text() = 'bianxue']</td>
+  <td>//h3[text() = 'shitu']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//a[text() = 'lishi']</td>
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n = 'Editable' and text() = 'bianxue']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n = 'Viewable' and text() = 'shitujiemian']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyElementPresent</td>
-  <td>//a[@data-i18n = 'Viewable' and text() = 'shitujiemian']</td>
+  <td>//h3[text() = 'shitu']</td>
   <td></td>
 </tr>
 
