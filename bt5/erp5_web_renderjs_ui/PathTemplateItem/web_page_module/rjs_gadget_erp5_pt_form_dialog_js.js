@@ -83,7 +83,7 @@
         .push(function () {
           return RSVP.all([
             form_gadget.translate(form_gadget.state.form_definition.title),
-            form_gadget.translate(title),
+            form_gadget.translate(title)
           ]);
         })
         .push(function (translated_title_list) {
