@@ -55,7 +55,7 @@ for movement in portal_catalog(query):
       aggregate_set = set()
       # manually add device and device configuration to every line
       aggregate_set.add(movement.getAggregateDevice())
-      # workaround the case that device configuration portal type exists
+      # workaround the case that no device configuration portal type exists
       # without this work around aggregate from any portal type
       # would be returned, because getAggregateValue(portal_type=[]) does not
       # return  None as expected. This must be fixed properly in generic erp5
