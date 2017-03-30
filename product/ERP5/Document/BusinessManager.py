@@ -820,6 +820,7 @@ class BusinessItem(Implicit, Persistent):
       if self._sign == 1:
         # install object
         obj = self._value
+        obj = obj._getCopy(container)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
         obj.isIndexable = ConstantGetter('isIndexable', value=False)
