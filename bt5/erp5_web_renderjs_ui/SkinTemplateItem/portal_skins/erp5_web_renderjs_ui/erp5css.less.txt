@@ -591,6 +591,19 @@ div[data-gadget-scope='panel'] {
     height: 100%;
   }
 
+  div[data-gadget-scope="erp5_checkbox"] {
+    padding: @half-margin-size;
+    padding-left: @double-margin-size;
+
+    label, span, input {
+      cursor: pointer;
+    }
+
+    span {
+      width: @quadruple-margin-size;
+      display: inline-block;
+    }
+  }
 
   .alignwithicon() {
     padding: @half-margin-size;
