@@ -22,6 +22,10 @@ for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
     progress_indicator = analysis_line.getAggregateProgressIndicatorValue()
     if progress_indicator is not None:
       parameter_dict["%s_progress_indicator" %reference] = progress_indicator
+    for base_category in analysis_line.getVariationRangeBaseCategoryList():
+      parameter_dict["%s_%s" %(reference, base_category)] = \
+          analysis_line.getVariationCategoryItemList(
+              base_category_list=(base_category,))[0][0]
 script_id = operation.getScriptId()
 getattr(operation_analysis_line, script_id)(**parameter_dict)
 
