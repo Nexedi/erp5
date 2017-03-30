@@ -110,9 +110,11 @@ class DataArray(BigFile):
   security.declareProtected(Permissions.AccessContentsInformation, 'getArrayShape')
   def getArrayShape(self):
     """
-    Get numpy array shape-
+    Get numpy array shape.
     """
-    return self.getArray().shape
+    zarray = self.getArray()
+    if zarray is not None:
+      return zarray.shape
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
