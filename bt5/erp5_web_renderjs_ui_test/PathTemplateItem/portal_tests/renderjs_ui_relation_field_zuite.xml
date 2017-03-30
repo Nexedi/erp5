@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkboxfield_zuite</string> </value>
+            <value> <string>renderjs_ui_relation_field_zuite</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

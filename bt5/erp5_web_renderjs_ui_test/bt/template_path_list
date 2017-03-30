@@ -1,3 +1,7 @@
+portal_tests/renderjs_ui_check_box_field_zuite
+portal_tests/renderjs_ui_check_box_field_zuite/**
+portal_tests/renderjs_ui_date_time_field_zuite
+portal_tests/renderjs_ui_date_time_field_zuite/**
 portal_tests/renderjs_ui_listbox_zuite
 portal_tests/renderjs_ui_listbox_zuite/**
 portal_tests/renderjs_ui_logout_translate_zuite
@@ -10,6 +14,8 @@ portal_tests/renderjs_ui_page_templates_zuite
 portal_tests/renderjs_ui_page_templates_zuite/**
 portal_tests/renderjs_ui_page_zuite
 portal_tests/renderjs_ui_page_zuite/**
+portal_tests/renderjs_ui_relation_field_zuite
+portal_tests/renderjs_ui_relation_field_zuite/**
 portal_tests/renderjs_ui_router_zuite
 portal_tests/renderjs_ui_router_zuite/**
 portal_tests/renderjs_ui_translate_zuite
