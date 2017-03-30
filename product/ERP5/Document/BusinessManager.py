@@ -358,20 +358,27 @@ class BusinessManager(XMLObject):
     LOG('Business Manager', INFO, 'Storing Manager Data')
     self._path_item_list = []
     path_item_list = self.getTemplatePathList()
+
     if path_item_list:
       path_item_list = [l.split(' | ') for l in path_item_list]
+
     for path_item in path_item_list:
-      # Here we check for the path which also add sub-objects, in that case,
-      # we create separate BusinessItem objects for each sub-object with
-      # same layer and sign
-      # XXX: Not very effective as it tries to get all the objects which makes
-      # it vey slow
-      path_list = self._resolvePath(portal, [], path_item[0].split('/'))
-      for path in path_list:
-        try:
-          self._path_item_list.append(BusinessItem(path, path_item[1], path_item[2]))
-        except IndexError:
-          pass
+
+      if '#' in  str(path_item[0]):
+        # If its a property, no need to resolve the path
+        self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
+      else:
+        # Here we check for the path which also add sub-objects, in that case,
+        # we create separate BusinessItem objects for each sub-object with
+        # same layer and sign
+        # XXX: Not very effective as it tries to get all the objects which makes
+        # it vey slow
+        path_list = self._resolvePath(portal, [], path_item[0].split('/'))
+        for path in path_list:
+          try:
+            self._path_item_list.append(BusinessItem(path, path_item[1], path_item[2]))
+          except IndexError:
+            pass
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
