@@ -103,7 +103,7 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
     
-  def getBucketItemSequence(self, start_key=None, count=True):
+  def getBucketItemSequence(self, start_key=None, count=None):
     """
       Get a lazy sequence of bucket values
     """
