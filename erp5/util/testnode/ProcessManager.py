@@ -106,23 +106,34 @@ def killCommand(pid, log):
   child (until childs does not change) and then we brutally kill
   everyone at the same time
   """
-  process = psutil.Process(pid)
-  new_child_set = set([x.pid for x in process.children(recursive=True)])
-  child_set = None
-  os.kill(pid, signal.SIGSTOP)
-  while new_child_set != child_set:
-    child_set = new_child_set
-    log("killCommand, new_child_set : %r, child_set: %r" % (
-        new_child_set, child_set))
-    for child_pid in child_set:
-      os.kill(child_pid, signal.SIGSTOP)
-    time.sleep(1)
-    child_set = new_child_set
+  try:
+    process = psutil.Process(pid)
     new_child_set = set([x.pid for x in process.children(recursive=True)])
-  log("killCommand, finishing, child_set : %r" % (child_set,))
-  for child_pid in child_set:
-    os.kill(child_pid, signal.SIGKILL)
-  os.kill(pid, signal.SIGKILL)
+    child_set = None
+    try:
+      os.kill(pid, signal.SIGSTOP)
+    except OSError:
+      pass
+    while new_child_set != child_set:
+      child_set = new_child_set
+      log("killCommand, new_child_set : %r, child_set: %r" % (
+          new_child_set, child_set))
+      for child_pid in child_set:
+        try:
+          os.kill(child_pid, signal.SIGSTOP)
+        except OSError:
+          log("killCommand, OSError, %r is already dead" % child_pid)
+          pass
+      time.sleep(1)
+      child_set = new_child_set
+      new_child_set = set([x.pid for x in process.children(recursive=True)])
+    log("killCommand, finishing, child_set : %r" % (child_set,))
+    for child_pid in child_set:
+      os.kill(child_pid, signal.SIGKILL)
+    os.kill(pid, signal.SIGKILL)
+  except psutil.NoSuchProcess:
+    log("killCommand, NoSuchProcess raised")
+    pass
 
 class ProcessManager(object):
 
@@ -195,9 +206,12 @@ class ProcessManager(object):
     user_login = getpass.getuser()
     to_kill_list = []
     for process in psutil.process_iter():
-      if process.username() == user_login and process.name() == name:
-        self.log('ProcesssManager, killall on %s having pid %s' % (name, process.pid))
-        to_kill_list.append(process.pid)
+      try:
+        if process.username() == user_login and process.name() == name:
+          self.log('ProcesssManager, killall on %s having pid %s' % (name, process.pid))
+          to_kill_list.append(process.pid)
+      except psutil.NoSuchProcess:
+        pass
     for pid in to_kill_list:
       killCommand(pid, self.log)
 
