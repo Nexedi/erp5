@@ -1578,7 +1578,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     Returns Device Configuration types.
     """
     return self._getPortalGroupedTypeList('device_configuration') or\
-           self._getPortalConfiguration('portal_device_configuation_type_list')
+           self._getPortalConfiguration('portal_device_configuration_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
