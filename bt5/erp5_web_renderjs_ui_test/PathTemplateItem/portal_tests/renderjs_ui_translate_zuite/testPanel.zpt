@@ -74,6 +74,12 @@
  </tr>
 
 
+  <tr>
+   <td>verifyText</td>
+   <td>//div[@data-gadget-scope="erp5_checkbox"]//label</td>
+   <td>bianxue</td>
+ </tr>
+
 </tbody></table>
 </body>
 </html>

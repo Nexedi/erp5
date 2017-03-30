@@ -157,8 +157,8 @@
 </tr>
 
 <tr>
-  <td>waitForElementPresent</td>
- 	<td>//div[@data-gadget-scope="field_listbox"]</td>
+ 	<td>waitForTextPresent</td>
+ 	<td>2 Records</td>
  	<td></td>
 </tr>
  
@@ -187,28 +187,25 @@
   <td>deleted</td>
   <td></td>
 </tr>
- 
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
 <tr>
  	<td>click</td>
- 	<td>//a[@class="ui-link"]</td>
+ 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
  	<td></td>
 </tr>
 
 <tr>
  	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n="Editable"]</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
+ 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
  	<td></td>
 </tr>
  
 <tr>
  	<td>click</td>
- 	<td>//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
+ 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
  	<td></td>
 </tr>
 
@@ -218,17 +215,7 @@
   <td></td>
 </tr>
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n="Editable"]</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>click</td>
- 	<td>//a[@data-i18n="Editable"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -246,26 +233,22 @@
 
 <tr>
  	<td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Editable"]</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>waitForElementPresent</td>
  	<td>//a[@data-i18n="Previous"]</td>
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
  	<td>waitForElementPresent</td>
- 	<td>//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
+ 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
  	<td></td>
 </tr>
  
 <tr>
  	<td>click</td>
- 	<td>//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
+ 	<td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_view.html')]//div[@data-gadget-scope="field_listbox"]//a[@class="ui-link"]</td>
  	<td></td>
 </tr>
 
@@ -275,17 +258,7 @@
   <td></td>
 </tr>
 
-<tr>
- 	<td>waitForElementPresent</td>
- 	<td>//a[@data-i18n="Editable"]</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>click</td>
- 	<td>//a[@data-i18n="Editable"]</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/toggle_editable_mode" />
 
 <tr>
  	<td>waitForElementPresent</td>
@@ -303,16 +276,9 @@
 
 <tr>
  	<td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Editable"]</td>
- 	<td></td>
-</tr>
-
-<tr>
- 	<td>waitForElementPresent</td>
  	<td>//a[@data-i18n="Previous"]</td>
   <td></td>
 </tr>
-
 
 <tr>
  	<td>waitForTextPresent</td>
@@ -323,13 +289,6 @@
 <tr>
  	<td>verifyTextPresent</td>
  	<td>No records</td>
- 	<td></td>
-</tr>
-
-
-<tr>
-  <td>click</td>
- 	<td>//a[@data-i18n="Editable"]</td>
  	<td></td>
 </tr>
 

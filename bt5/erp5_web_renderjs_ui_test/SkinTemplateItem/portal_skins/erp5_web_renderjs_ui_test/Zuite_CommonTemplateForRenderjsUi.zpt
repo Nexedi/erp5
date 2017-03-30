@@ -219,4 +219,33 @@
     </tr>
   </tal:block>
 
+  <tal:block metal:define-macro="toggle_editable_mode">
+    <tr>
+      <td>waitForElementPresent</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//div[contains(@data-gadget-url, 'gadget_erp5_field_multicheckbox.html')]//label</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>click</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//div[contains(@data-gadget-url, 'gadget_erp5_field_multicheckbox.html')]//label</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="verify_is_non_editable_mode">
+    <tr>
+      <td>assertNotChecked</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//div[contains(@data-gadget-url, 'gadget_erp5_field_multicheckbox.html')]//input</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
+  <tal:block metal:define-macro="verify_is_editable_mode">
+    <tr>
+      <td>assertChecked</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_panel.html')]//div[contains(@data-gadget-url, 'gadget_erp5_field_multicheckbox.html')]//input</td>
+      <td></td>
+    </tr>
+  </tal:block>
+
 </tal:block>

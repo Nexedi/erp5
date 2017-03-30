@@ -44,12 +44,12 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 
@@ -72,13 +72,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
@@ -355,6 +355,10 @@
   <td>Foo Module</td>
   <td></td>
 </tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
+
 <tr>
   <td>waitForElementPresent</td>
   <td>//tbody/tr[1]/th/a</td>
@@ -370,47 +374,26 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Views"]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n="Views"]</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Actions']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Editable']</td>
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Editable']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 

@@ -55,24 +55,24 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Views']</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Views' and contains(@href, '#!change') and contains(@href, 'n.page=tab')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Relation Fields']</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
@@ -108,6 +108,11 @@
   <td>blur</td>
 </tr>
 
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
+  <td></td>
+</tr>
 <tr>
   <td>click</td>
   <td>//li[@data-relative-url='portal_categories/foo_category/a/a1']</td>
@@ -237,16 +242,12 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Editable"]</td>
-  <td></td>
-</tr>
-
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/verify_is_editable_mode" />
 
 <tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope="field_my_title"]//p</td>
+  <td>verifyValue</td>
+  <td>//div[@data-gadget-scope="field_my_title"]//input</td>
   <td>A New Foo</td>
 </tr>
 
@@ -256,13 +257,13 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_bar_category_title_list']//fieldset[2]//a[contains(@class, "ui-icon-plane")]</td>
   <td></td>
 </tr>
-
 
 <tr>
   <td>click</td>
@@ -270,17 +271,12 @@
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/verify_is_editable_mode" />
 
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n="Editable"]</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>verifyText</td>
-  <td>//div[@data-gadget-scope="field_my_title"]//p</td>
+  <td>verifyValue</td>
+  <td>//div[@data-gadget-scope="field_my_title"]//input</td>
   <td>Another Foo</td>
 </tr>
 

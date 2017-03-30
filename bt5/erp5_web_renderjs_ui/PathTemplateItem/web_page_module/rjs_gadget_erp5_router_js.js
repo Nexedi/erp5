@@ -15,20 +15,36 @@
     PREFIX_DISPLAY = "/",
     PREFIX_COMMAND = "!",
     // PREFIX_ERROR = "?",
+
+    // Display a jio document with only the passed parameters
     COMMAND_DISPLAY_STATE = "display",
+    // Store the jio key for the person document of the user
     COMMAND_LOGIN = "login",
+    // Display a raw string URL
     COMMAND_RAW = "raw",
+    // Redisplay the page with the same parameters
     COMMAND_RELOAD = "reload",
+    // Display the latest state stored for a jio document
     COMMAND_DISPLAY_STORED_STATE = "display_stored_state",
+    // Display the current jio document, but change some URL parameters
     COMMAND_CHANGE_STATE = "change",
+    // Like change, but also store the current jio document display state
     COMMAND_STORE_AND_CHANGE_STATE = "store_and_change",
+    // Display one entry index from a selection
     COMMAND_INDEX_STATE = "index",
+    // Display previous entry index from a selection
     COMMAND_SELECTION_PREVIOUS = "selection_previous",
+    // Display next entry index from a selection
     COMMAND_SELECTION_NEXT = "selection_next",
+    // Display previously accessed document
     COMMAND_HISTORY_PREVIOUS = "history_previous",
+    // Store the current document in history and display the next one
     COMMAND_PUSH_HISTORY = "push_history",
+    // Change UI language
     COMMAND_CHANGE_LANGUAGE = "change_language",
-    VALID_URL_COMMAND_DICT = {};
+    VALID_URL_COMMAND_DICT = {},
+    STICKY_PARAMETER_LIST = ['editable'];
+
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_DISPLAY_STORED_STATE] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_STATE] = null;
@@ -43,6 +59,32 @@
   VALID_URL_COMMAND_DICT[COMMAND_RELOAD] = null;
   VALID_URL_COMMAND_DICT[COMMAND_CHANGE_LANGUAGE] = null;
 
+  function dropStickyParameterEntry(options) {
+    // Drop sticky parameters from an options dict
+    // Do not modify the options parameters, to prevent any unexpected side effect
+    var i,
+      result = JSON.parse(JSON.stringify(options));
+    for (i = 0; i < STICKY_PARAMETER_LIST.length; i += 1) {
+      delete result[STICKY_PARAMETER_LIST[i]];
+    }
+    return result;
+  }
+
+  function copyStickyParameterDict(previous_options, next_options, drop_options) {
+    var i,
+      key;
+    // Keep sticky parameters if they are currently defined in URL
+    if (drop_options === undefined) {
+      drop_options = {};
+    }
+    for (i = 0; i < STICKY_PARAMETER_LIST.length; i += 1) {
+      key = STICKY_PARAMETER_LIST[i];
+      // Check that sticky parameter previously exist and that it was not modified
+      if (previous_options.hasOwnProperty(key) && (!(next_options.hasOwnProperty(key) || drop_options.hasOwnProperty(key)))) {
+        next_options[key] = previous_options[key];
+      }
+    }
+  }
 
   function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -68,6 +110,9 @@
   }
 
   function addHistory(gadget, options, previous_selection_id) {
+    // Drop sticky parameters
+    options = dropStickyParameterEntry(options);
+
     var options_blob = {
       type: "options",
       data: options
@@ -242,6 +287,8 @@
     if (jio_key) {
       queue = gadget.props.jio_state_gadget.get(jio_key)
         .push(function (options) {
+          // Keep the sticky parameters
+          copyStickyParameterDict(next_options, options);
           next_options = options;
         }, function (error) {
           if ((error instanceof jIO.util.jIOError) &&
@@ -291,23 +338,24 @@
   function execStoreAndChangeCommand(gadget, previous_options, next_options, drop_options) {
     var options,
       jio_key,
-      queue;
+      queue,
+      display_url;
     options = calculateChangeOptions(previous_options, next_options, drop_options);
 
     jio_key = options.jio_key;
     delete options.jio_key;
 
+    display_url = getDisplayUrlFor(jio_key, options);
+
     if (jio_key) {
-      queue = gadget.props.jio_state_gadget.put(jio_key, options);
+      queue = gadget.props.jio_state_gadget.put(jio_key, dropStickyParameterEntry(options));
     } else {
       queue = new RSVP.Queue();
     }
 
     return queue
       .push(function () {
-        return synchronousChangeState(
-          getDisplayUrlFor(jio_key, options)
-        );
+        return synchronousChangeState(display_url);
       });
   }
 
@@ -376,14 +424,16 @@
                 getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)
               );
             }
+            var options = {
+              selection: previous_options.selection,
+              selection_index: parseInt(previous_options.selection_index || '0', 10) + 1,
+              history: previous_options.history
+            };
+            copyStickyParameterDict(previous_options, options);
             return addNavigationHistoryAndDisplay(
               gadget,
               result.data.rows[0].id,
-              {
-                selection: previous_options.selection,
-                selection_index: parseInt(previous_options.selection_index || '0', 10) + 1,
-                history: previous_options.history
-              }
+              options
             );
           });
       }, function (error) {
@@ -425,14 +475,16 @@
                 getCommandUrlFor(gadget, COMMAND_HISTORY_PREVIOUS, previous_options)
               );
             }
+            var options = {
+              selection: previous_options.selection,
+              selection_index: parseInt(previous_options.selection_index, 10) - 1,
+              history: previous_options.history
+            };
+            copyStickyParameterDict(previous_options, options);
             return addNavigationHistoryAndDisplay(
               gadget,
               result.data.rows[0].id,
-              {
-                selection: previous_options.selection,
-                selection_index: parseInt(previous_options.selection_index, 10) - 1,
-                history: previous_options.history
-              }
+              options
             );
           });
       }, function (error) {
@@ -446,15 +498,16 @@
       });
   }
 
-  function redirectToParent(gadget, jio_key) {
+  function redirectToParent(gadget, jio_key, previous_options) {
     return gadget.jio_getAttachment(jio_key, "links")
       .push(function (erp5_document) {
         var parent_link = erp5_document._links.parent,
-          uri;
+          uri,
+          options = {};
         if (parent_link !== undefined) {
           uri = new URI(parent_link.href);
-
-          return addNavigationHistoryAndDisplay(gadget, uri.segment(2), {});
+          copyStickyParameterDict(previous_options, options);
+          return addNavigationHistoryAndDisplay(gadget, uri.segment(2), options);
         }
       });
   }
@@ -468,7 +521,7 @@
       previous_id;
     if (history === undefined) {
       if (jio_key !== undefined) {
-        return redirectToParent(gadget, jio_key);
+        return redirectToParent(gadget, jio_key, previous_options);
       }
     }
     if (previous_options.back_field) {
@@ -511,12 +564,14 @@
           options = result_list[0].data,
           next_jio_key = options.jio_key;
         delete options.jio_key;
+
+        copyStickyParameterDict(previous_options, options);
         return addNavigationHistoryAndDisplay(gadget, next_jio_key, options);
       }, function (error) {
         // XXX Check if 404
         if ((error instanceof jIO.util.jIOError) &&
             (error.status_code === 404)) {
-          return redirectToParent(gadget, jio_key);
+          return redirectToParent(gadget, jio_key, previous_options);
           // return [{data: {}}, undefined];
         }
         throw error;
@@ -544,14 +599,19 @@
   //////////////////////////////////////////////////////////////////
   // Command URL functions
   //////////////////////////////////////////////////////////////////
-  function routeMethodLess(gadget) {
+  function routeMethodLess(gadget, previous_options) {
     // Nothing. Go to front page
     // If no frontpage is configured, his may comes from missing configuration on website
     // or default HTML gadget modification date more recent than the website modification date
     return gadget.getSetting("frontpage_gadget")
       .push(function (result) {
+        var options = {page: result};
+        if (previous_options === undefined) {
+          previous_options = {};
+        }
+        copyStickyParameterDict(previous_options, options);
         return synchronousChangeState(
-          getDisplayUrlFor(undefined, {page: result})
+          getDisplayUrlFor(undefined, options)
         );
       });
   }
@@ -573,7 +633,7 @@
     }
 
     if (command_options.args.page === undefined) {
-      return routeMethodLess(gadget);
+      return routeMethodLess(gadget, command_options.args);
     }
 
     command_options.args.jio_key = command_options.path || undefined;
@@ -651,6 +711,9 @@
     if (!valid) {
       throw new Error('Unsupported parameters: ' + key);
     }
+
+    // Do not calculate this while generating the URL string to not do this too much time
+    copyStickyParameterDict(previous_options, next_options, drop_options);
 
     if (command_options.path === COMMAND_DISPLAY_STATE) {
       return execDisplayCommand(gadget, next_options);
@@ -864,7 +927,7 @@
         if (command_options.method) {
           throw new Error('Unsupported hash method: ' + command_options.method);
         }
-        result = routeMethodLess(gadget);
+        result = routeMethodLess(gadget, command_options.args);
       }
       return new RSVP.Queue()
         .push(function () {

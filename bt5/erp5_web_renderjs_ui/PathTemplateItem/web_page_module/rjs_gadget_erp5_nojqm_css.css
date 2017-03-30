@@ -498,6 +498,19 @@ div[data-gadget-scope='panel'] img {
   text-align: left;
   height: 100%;
 }
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] {
+  padding: 3pt;
+  padding-left: 12pt;
+}
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] label,
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] span,
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] input {
+  cursor: pointer;
+}
+div[data-gadget-scope='panel'] div[data-gadget-scope="erp5_checkbox"] span {
+  width: 24pt;
+  display: inline-block;
+}
 div[data-gadget-scope='panel'] ul:first-child {
   margin-top: 30pt;
 }

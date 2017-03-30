@@ -1,4 +1,4 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 3, unparam: true */
 /*global window, document, rJS, Handlebars, RSVP, Node, loopEventListener */
 (function (window, document, rJS, Handlebars, RSVP, Node, loopEventListener) {
   "use strict";
@@ -15,6 +15,9 @@
     panel_template_body = Handlebars.compile(template_element
                          .getElementById("panel-template-body")
                          .innerHTML),
+    panel_template_body_list = Handlebars.compile(template_element
+                         .getElementById("panel-template-body-list")
+                         .innerHTML),
     panel_template_body_desktop = Handlebars.compile(template_element
                                   .getElementById("panel-template-body-desktop")
                                   .innerHTML);
@@ -29,7 +32,9 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -48,7 +53,8 @@
     .declareMethod('render', function (options) {
       var erp5_document = options.erp5_document,
         workflow_list,
-        view_list;
+        view_list,
+        context = this;
       if (erp5_document !== undefined) {
         workflow_list = erp5_document._links.action_workflow || [];
         view_list = erp5_document._links.action_object_view || [];
@@ -63,12 +69,15 @@
         workflow_list = JSON.stringify(workflow_list);
         view_list = JSON.stringify(view_list);
       }
-      return this.changeState({
-        workflow_list: workflow_list,
-        view_list: view_list,
-        global: true,
-        editable: options.editable
-      });
+      return context.getUrlParameter('editable')
+        .push(function (editable) {
+          return context.changeState({
+            workflow_list: workflow_list,
+            view_list: view_list,
+            global: true,
+            editable: options.editable || editable || false
+          });
+        });
     })
 
     .onStateChange(function (modification_dict) {
@@ -92,32 +101,16 @@
       if (modification_dict.hasOwnProperty("global")) {
         queue
           .push(function () {
-            return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "front"}}),
-              context.getUrlFor({command: 'display', options: {page: "history"}}),
-              context.getUrlFor({command: 'display', options: {page: "preference"}}),
-              context.getUrlFor({command: 'display', options: {page: "logout"}}),
-              context.getUrlFor({command: 'display', options: {page: "search"}}),
-              context.getUrlFor({command: 'display', options: {page: "worklist"}})
-            ]);
-          })
-          .push(function (result_list) {
             // XXX: Customize panel header!
             return context.translateHtml(
               panel_template_header() +
-                panel_template_body({
-                  "module_href": result_list[0],
-                  "history_href": result_list[1],
-                  "preference_href": result_list[2],
-                  "logout_href": result_list[3],
-                  "search_href": result_list[4],
-                  "worklist_href": result_list[5]
-                })
+                panel_template_body()
             );
           })
           .push(function (my_translated_or_plain_html) {
             tmp_element = document.createElement('div');
             tmp_element.innerHTML = my_translated_or_plain_html;
+
             return context.declareGadget('gadget_erp5_searchfield.html', {
               scope: "erp5_searchfield",
               element: tmp_element.querySelector('[data-gadget-scope="erp5_searchfield"]')
@@ -128,9 +121,72 @@
               focus: false
             });
           })
+
+          .push(function () {
+            return context.declareGadget('gadget_erp5_field_multicheckbox.html', {
+              scope: "erp5_checkbox",
+              element: tmp_element.querySelector('[data-gadget-scope="erp5_checkbox"]')
+            });
+          })
+
           .push(function () {
             context.element.querySelector("div").appendChild(tmp_element);
             return context.listenResize();
+          });
+      }
+
+      if (modification_dict.hasOwnProperty("editable")) {
+        queue
+          // Update the global links
+          .push(function () {
+            return RSVP.all([
+              context.getUrlFor({command: 'display', options: {page: "front"}}),
+              context.getUrlFor({command: 'display', options: {page: "history"}}),
+              context.getUrlFor({command: 'display', options: {page: "preference"}}),
+              context.getUrlFor({command: 'display', options: {page: "logout"}}),
+              context.getUrlFor({command: 'display', options: {page: "search"}}),
+              context.getUrlFor({command: 'display', options: {page: "worklist"}}),
+              context.getUrlFor({command: 'display'})
+            ]);
+          })
+          .push(function (result_list) {
+            return context.translateHtml(
+              panel_template_body_list({
+                "module_href": result_list[0],
+                "history_href": result_list[1],
+                "preference_href": result_list[2],
+                "logout_href": result_list[3],
+                "search_href": result_list[4],
+                "worklist_href": result_list[5],
+                "front_href": result_list[6]
+              })
+            );
+          })
+
+          .push(function (result) {
+            context.element.querySelector("ul").innerHTML = result;
+
+            // Update the checkbox field value
+            return RSVP.all([
+              context.getDeclaredGadget("erp5_checkbox"),
+              context.translate("Editable")
+            ]);
+          })
+          .push(function (result_list) {
+            var value = [],
+              search_gadget = result_list[0],
+              title = result_list[1];
+            if (context.state.editable) {
+              value = ['editable'];
+            }
+            return search_gadget.render({field_json: {
+              editable: true,
+              name: 'editable',
+              key: 'editable',
+              hidden: false,
+              items: [[title, 'editable']],
+              default: value
+            }});
           });
       }
 
@@ -240,10 +296,29 @@
       return result;
     })
 
-    .allowPublicAcquisition('notifyChange', function () {
+    .allowPublicAcquisition('notifyChange', function (argument_list, scope) {
+      if (scope === 'erp5_checkbox') {
+        var context = this;
+        return context.getDeclaredGadget('erp5_checkbox')
+          .push(function (gadget) {
+            return gadget.getContent();
+          })
+          .push(function (result) {
+            var options = {editable: undefined};
+            if (result.editable.length === 1) {
+              options.editable = true;
+            }
+            return context.redirect({command: 'change', options: options});
+          });
+      }
       // Typing a search query should not modify the header status
       return;
     })
+    .allowPublicAcquisition('notifyValid', function () {
+      // Typing a search query should not modify the header status
+      return;
+    })
+
     .onEvent('submit', function () {
       var gadget = this;
 

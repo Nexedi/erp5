@@ -52,8 +52,7 @@
                 command: 'change',
                 options: {
                   view: view_list[i].href,
-                  page: undefined,
-                  editable: options.editable
+                  page: undefined
                 }
               })
             );

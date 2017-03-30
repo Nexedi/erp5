@@ -33,7 +33,7 @@
         gadget = this,
         erp5_document,
         tab_title = "Views",
-        tab_icon = options.editable ? "pencil" : "eye",
+        tab_icon = "eye",
         jump_list;
 
       function handleParent(parent_link) {
@@ -88,7 +88,6 @@
           for (i = 0; i < view_list.length; i += 1) {
             promise_list.push(gadget.getUrlFor({command: 'change', options: {
               view: view_list[i].href,
-              editable: options.editable,
               page: undefined
             }}));
           }
@@ -147,10 +146,7 @@
             gadget.getUrlFor({command: 'change', options: {
               page: undefined
             }}),
-            calculatePageTitle(gadget, erp5_document),
-            gadget.getUrlFor({command: 'change', options: {
-              editable: options.editable ? undefined : true
-            }})
+            calculatePageTitle(gadget, erp5_document)
           ]);
         })
         .push(function (url_list) {
@@ -158,11 +154,6 @@
             back_url: url_list[0],
             page_title: url_list[1]
           };
-          if (options.editable) {
-            dict.view_url = url_list[2];
-          } else {
-            dict.edit_url = url_list[2];
-          }
           return gadget.updateHeader(dict);
         });
     });
