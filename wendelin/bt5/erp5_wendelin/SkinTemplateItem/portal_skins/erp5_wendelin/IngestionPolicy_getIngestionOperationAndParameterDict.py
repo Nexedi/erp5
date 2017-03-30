@@ -68,6 +68,7 @@ if data_ingestion is None:
       quantity = supply_line.getQuantity(),
       reference = supply_line.getReference(),
       resource = supply_line.getResource(),
+      use = supply_line.getUse()
     )
     if current_line.getResourceReference() == resource_reference:
       input_line = current_line
