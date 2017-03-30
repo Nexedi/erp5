@@ -105,7 +105,7 @@ class DataArray(BigFile):
     if array is None:
       return 0
     else:
-      return self.getArray().nbytes
+      return array.nbytes
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getArrayShape')
   def getArrayShape(self):

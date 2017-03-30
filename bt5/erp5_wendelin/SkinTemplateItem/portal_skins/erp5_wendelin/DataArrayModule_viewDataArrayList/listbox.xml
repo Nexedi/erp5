@@ -81,6 +81,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>size</string>
+                          <string>Size</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -152,6 +156,10 @@
                         <tuple>
                           <string>shape</string>
                           <string>Shape</string>
+                        </tuple>
+                        <tuple>
+                          <string>size</string>
+                          <string>Size</string>
                         </tuple>
                       </list>
                     </value>
