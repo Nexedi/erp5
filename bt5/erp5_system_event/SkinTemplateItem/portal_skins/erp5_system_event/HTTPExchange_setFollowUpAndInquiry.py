@@ -15,4 +15,4 @@ while True:
 follow_up = getattr(context, 'HTTPExchange_getFollowUpFor' + codification)()
 if follow_up is not None:
   context.setFollowUpValue(follow_up)
-  follow_up.getTypeBasedMethod('inquiry')()
+  follow_up.getTypeBasedMethod('inquiry')(http_exchange_value=context)
