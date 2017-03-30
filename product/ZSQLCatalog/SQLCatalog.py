@@ -738,19 +738,10 @@ class Catalog(Folder,
         for item in item_list:
           f.write('    <item type="str">%s</item>\n' % escape(str(item)))
         f.write('  </property>\n')
-    # XXX Although filters are not properties, output filters here.
-    # XXX Ideally, filters should be properties in Z SQL Methods, shouldn't they?
+    # Filters are now propeties in ERP5 SQL Method(s)
     filter_dict = self._getFilterDict()
     if filter_dict:
-      filter_list = []
-      for filter_id in filter_dict.keys():
-        filter_definition = filter_dict[filter_id]
-        filter_list.append((filter_id, filter_definition))
-      # Sort for easy diff
-      filter_list.sort(key=lambda x: x[0])
-      for filter_item in filter_list:
-        filter_id  = filter_item[0]
-        filter_def = filter_item[1]
+      for filter_id, filter_def in sorted(filter_dict.iteritems()):
         if not filter_def['filtered']:
           # If a filter is not activated, no need to output it.
           continue
