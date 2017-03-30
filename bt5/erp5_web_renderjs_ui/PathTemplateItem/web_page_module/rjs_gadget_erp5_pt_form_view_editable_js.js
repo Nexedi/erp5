@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, calculatePageTitle */
+/*global window, rJS, RSVP, calculatePageTitle, jIO */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, calculatePageTitle) {
+(function (window, rJS, RSVP, calculatePageTitle, jIO) {
   "use strict";
 
   rJS(window)
@@ -71,13 +71,13 @@
           }
 
           if (delete_action !== undefined) {
-            delete_action = form_gadget.getUrlFor({command: 'change', options: {view: delete_action.href, editable: undefined}});
+            delete_action = form_gadget.getUrlFor({command: 'change', options: {view: delete_action.href}});
           } else {
             delete_action = "";
           }
           return RSVP.all([
             form_gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            form_gadget.getUrlFor({command: 'change', options: {page: "action", editable: true}}),
+            form_gadget.getUrlFor({command: 'change', options: {page: "action"}}),
             new_content_action,
             form_gadget.getUrlFor({command: 'history_previous'}),
             delete_action,
@@ -137,9 +137,8 @@
               .push(function (result_list) {
                 if (result_list[1].target.responseType === "blob") {
                   return jIO.util.readBlobAsText(result_list[1].target.response);
-                } else {
-                  return {target: {result: result_list[1].target.response}};
                 }
+                return {target: {result: result_list[1].target.response}};
               })
               .push(function (event) {
                 var message;
@@ -171,9 +170,8 @@
                       .push(function () {
                         if (error.target.responseType === "blob") {
                           return jIO.util.readBlobAsText(error.target.response);
-                        } else {
-                          return {target: {result: error.target.response}};
                         }
+                        return {target: {result: error.target.response}};
                       })
                       .push(function (event) {
                         return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
@@ -187,4 +185,4 @@
 
     }, false, true);
 
-}(window, rJS, RSVP, calculatePageTitle));
+}(window, rJS, RSVP, calculatePageTitle, jIO));

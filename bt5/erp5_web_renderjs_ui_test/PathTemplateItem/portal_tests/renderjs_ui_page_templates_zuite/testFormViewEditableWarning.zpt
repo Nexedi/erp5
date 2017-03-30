@@ -64,12 +64,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'n.editable=true')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.page=') and contains(@href, 'n.editable=true')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Relation Fields' and contains(@href, '#!change') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>
