@@ -514,8 +514,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
     with self.assertRaises(ValueError) as context:
       portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    self.assertTrue('Trying to remove changes at ZODB at test_folder' in
-                      context.exception)
+    self.assertTrue('Trying to remove changes at ZODB at test_folder#short_title'
+                     in context.exception)
 
   def test_useCase_VI(self):
     """
@@ -599,7 +599,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    self.assertEquals(test_folder.getProperty('short_title'), '')
+    self.assertIn(test_folder.getProperty('short_title'), ('', None))
 
   def test_useCase_VII(self):
     """
@@ -763,12 +763,13 @@ class TestBusinessPackage(ERP5TypeTestCase):
     with self.assertRaises(ValueError) as context:
       portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    self.assertTrue('Object at test_folder removed by user' in
+    self.assertTrue('Object at test_folder#short_title removed by user' in
                       context.exception)
 
   def test_useCase_IX(self):
     """
     Case IX:
+    A       A       _  :      _
     """
     portal_templates = self.portal.portal_templates
     managerA = self._createBusinessManager()
@@ -795,9 +796,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     installed_test_folder = self.portal.restrictedTraverse(folder_path)
     self.assertEquals(installed_test_folder.getTitle(), 'couscous')
-
-    # Delete the object again from ZODB
-    self.portal.manage_delObjects([test_folder.getId(),])
 
     # Set empty path item as path_item in managerA
     managerA._setTemplatePathList([])
@@ -1012,7 +1010,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     # Install the Business Manager
     portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    self.assertEquals(test_folder.getProperty('short_title'), 'new_foo')
+    self.assertEquals(test_folder.getProperty('short_title'), 'foo')
 
     test_folder.setProperty('short_title', 'new_foo')
     # Copy the Business Manager object, updated version of managerA
@@ -1113,8 +1111,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
     with self.assertRaises(ValueError) as context:
       portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    self.assertTrue('Trying to remove changes at ZODB at test_folder' in
-                      context.exception)
+    self.assertTrue('Trying to remove changes at ZODB at test_folder#short_title'
+                     in context.exception)
 
 
   def test_useCase_XIII(self):
@@ -1292,8 +1290,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
     with self.assertRaises(ValueError) as context:
       portal_templates.installMultipleBusinessManager([managerA_new,])
 
-    self.assertTrue('Trying to remove changes at ZODB at test_folder' in
-                      context.exception)
+    self.assertTrue('Trying to remove changes at ZODB at test_folder#short_title'
+                     in context.exception)
 
   def _migrateCatalogBTToBM(self):
     """
