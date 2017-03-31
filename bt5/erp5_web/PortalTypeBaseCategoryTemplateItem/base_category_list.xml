@@ -1,4 +1,8 @@
 <base_category_list>
+ <portal_type id="Static Web Section">
+  <item>aggregate</item>
+  <item>caching_policy</item>
+ </portal_type>
  <portal_type id="Web Page">
   <item>predecessor</item>
   <item>publication_section</item>

@@ -1,4 +1,9 @@
 <allowed_content_type_list>
+ <portal_type id="Static Web Section">
+  <item>File</item>
+  <item>Image</item>
+  <item>Role Definition</item>
+ </portal_type>
  <portal_type id="Web Page">
   <item>Embedded File</item>
  </portal_type>
@@ -9,12 +14,14 @@
   <item>File</item>
   <item>Image</item>
   <item>Role Definition</item>
+  <item>Static Web Section</item>
   <item>Web Section</item>
  </portal_type>
  <portal_type id="Web Site">
   <item>File</item>
   <item>Image</item>
   <item>Role Definition</item>
+  <item>Static Web Section</item>
   <item>Web Section</item>
  </portal_type>
  <portal_type id="Web Site Module">

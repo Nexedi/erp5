@@ -2,6 +2,8 @@ Base Category | category_publication_workflow
 Base Domain | category_publication_workflow
 Category | category_publication_workflow
 Domain | category_publication_workflow
+Static Web Section | category_publication_workflow
+Static Web Section | edit_workflow
 Web Page | document_conversion_interaction_workflow
 Web Page | document_security_interaction_workflow
 Web Page | edit_workflow

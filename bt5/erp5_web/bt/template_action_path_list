@@ -1,5 +1,14 @@
 File | web_view
 Image | web_view
+Static Web Section | generate_section
+Static Web Section | layout_configuration
+Static Web Section | local_permission
+Static Web Section | new_default_page
+Static Web Section | new_page
+Static Web Section | predicate
+Static Web Section | section_content
+Static Web Section | view
+Static Web Section | web_view
 Web Page Module | list_ui
 Web Page Module | sort_on
 Web Page Module | view
