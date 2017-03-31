@@ -570,7 +570,7 @@
           })
         );
       }
-    } 
+    }
 
     if (command_options.args.page === undefined) {
       return routeMethodLess(gadget);
