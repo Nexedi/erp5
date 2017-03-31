@@ -26,7 +26,11 @@ for language in available_language_set:
   else:
     website_url_set[language]=  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section.absolute_url())
 
-return default_web_page.WebPage_viewAsWeb(mapping_dict={
+view_as_web_method = default_web_page.getTypeBasedMethod(
+  "viewAsWeb",
+  fallback_script_id="WebPage_viewAsWeb"
+  )
+return view_as_web_method(mapping_dict={
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default="worklist"),
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),
   "action_view": web_section.getLayoutProperty("configuration_view_action_category", default="object_view"),
