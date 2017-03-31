@@ -1845,8 +1845,12 @@ class TemplateTool (BaseTool):
               # Compare new item hash with ZODB
 
               if new_item._sha == obj_sha:
-                # If same hash, do nothing
-                continue
+                if new_item._sign == -1:
+                  # If the sign is negative, remove the value from the path
+                  new_item.install(installation_process)
+                else:
+                  # If same hash, and +1 sign, do nothing
+                  continue
 
               else:
                 # Install the new_item
