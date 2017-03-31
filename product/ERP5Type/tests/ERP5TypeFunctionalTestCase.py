@@ -40,21 +40,13 @@ from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
+from lxml import etree
+from lxml.html import builder as E
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-# REGEX FOR ZELENIUM TESTS
-TEST_PASS_RE = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
-TEST_FAILURE_RE = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
-IMAGE_RE = re.compile('<img[^>]*?>')
-TEST_ERROR_TITLE_RE = re.compile('(?:error.gif.*?>|title status_failed"><td[^>]*>)([^>]*?)</td></tr>', re.S)
-TEST_RESULT_RE = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
-                          '<img.*?</div>\s.*?</div>\s*', re.S)
-
-TEST_ERROR_RESULT_RE = re.compile('.*(?:error.gif|title status_failed).*', re.S)
-EXPECTED_FAILURE_RE = re.compile('.*expected failure.*', re.I)
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
 
@@ -162,8 +154,10 @@ class FunctionalTestRunner:
       firefox_driver = firefox_bin.replace("firefox-slapos", "geckodriver")
       firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
       firefox_capabilities['marionette'] = True
-      firefox_capabilities['binary'] = firefox_bin
-      browser = webdriver.Firefox(capabilities=firefox_capabilities, executable_path=firefox_driver)
+      browser = webdriver.Firefox(
+        capabilities=firefox_capabilities,
+        executable_path=firefox_driver,
+        firefox_binary=FirefoxBinary(firefox_bin))
       start_time = time.time()
       browser.get(self._getTestURL())
 
@@ -179,30 +173,49 @@ class FunctionalTestRunner:
       WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
         By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
       )))
+      self.execution_duration = round(time.time() - start_time, 2)
+      html_parser = etree.HTMLParser(recover=True)
+      iframe = etree.fromstring(
+      browser.execute_script(
+        "return document.getElementById('testSuiteFrame').contentDocument.querySelector('html').innerHTML"
+      ).encode('UTF-8'),
+        html_parser
+      )
+      browser.quit()
     finally:
       xvfb.quit()
+    return iframe
 
-  def processResult(self):
-    file_content = self.getStatus().encode("utf-8", "replace")
-    sucess_amount = int(TEST_PASS_RE.search(file_content).group(1))
-    failure_amount = int(TEST_FAILURE_RE.search(file_content).group(1))
-    error_title_list = [re.compile('\s+').sub(' ', x).strip()
-                    for x in TEST_ERROR_TITLE_RE.findall(file_content)]
-
-    is_expected_failure = lambda x: EXPECTED_FAILURE_RE.match(x)
-    expected_failure_amount = len(filter(is_expected_failure, error_title_list))
-    # Remove expected failures from list
-    error_title_list = filter(lambda x: not is_expected_failure(x), error_title_list)
-    failure_amount -= expected_failure_amount
-
-    detail = ''
-    for test_result in TEST_RESULT_RE.findall(file_content):
-      if TEST_ERROR_RESULT_RE.match(test_result):
-        detail += test_result
-
-    detail = IMAGE_RE.sub('', detail)
+  def processResult(self, iframe):
+    tbody = iframe.xpath('.//body/table/tbody')[0]
+    tr_count = failure_amount = expected_failure_amount = 0
+    error_title_list = []
+    detail = ""
+    for tr in tbody:
+      if tr_count:
+        # First td is the main title
+        test_name = tr[0][0].text
+        error = False
+        if len(tr) == 1:
+          # Test was not executed
+          failure += 1
+          detail += 'Test ' + test_name + ' not executed'
+          error_title_list.append(test_name)
+        else:
+          test_table = tr[1].xpath('.//table')[0]
+          status = tr.attrib.get('class')
+          if 'status_failed' in status:
+            if etree.tostring(test_table).find("expected failure") != -1:
+              expected_failure_amount += 1
+            else:
+              failure_amount += 1
+              error_title_list.append(test_name)
+            detail_element = E.DIV()
+            detail_element.append(E.DIV(E.P(test_name), E.BR, test_table))
+            detail += etree.tostring(detail_element)
+      tr_count += 1
+    sucess_amount = tr_count - 1 - failure_amount - expected_failure_amount
     if detail:
-      detail = IMAGE_RE.sub('', detail)
       detail = '''<html>
 <head>
  <style type="text/css">tr.status_failed { background-color:red };</style>
@@ -293,7 +306,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     debug = self.foreground or os.environ.get("erp5_debug_mode")
     error = None
     try:
-      self.runner.test(debug=debug)
+      iframe = self.runner.test(debug=debug)
     except TimeoutError, e:
       error = repr(e)
       self._verboseErrorLog(20)
@@ -305,7 +318,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
         self._verboseErrorLog(20)
 
     detail, success, failure, \
-        expected_failure, error_title_list = self.runner.processResult()
+        expected_failure, error_title_list = self.runner.processResult(iframe)
 
     self.logMessage("-" * 79)
     total = success + failure + expected_failure
