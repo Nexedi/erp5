@@ -78,35 +78,35 @@
                 <string>W:713,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
                 <string>W:745,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
                 <string>W:757,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:787,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:806,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:833,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:847,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:875,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:888,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:919,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:930,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:959,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:973,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1007,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1019,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1048,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1065,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1094,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1109,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1139,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1152,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1184,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1195,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1224,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1239,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1271,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1286,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1312,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1315,  4: Unused variable \'imported_manager\' (unused-variable)</string>
-                <string>W:1303,  4: Unused variable \'portal_templates\' (unused-variable)</string>
-                <string>W:1350,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 2 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
-                <string>W:1389,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 2 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:788,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:804,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:831,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:845,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:873,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:886,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:917,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:928,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:957,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:971,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1005,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1017,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1046,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1063,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1092,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1107,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1137,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1150,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1182,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1193,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1222,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1237,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1269,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1284,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1310,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 1 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1313,  4: Unused variable \'imported_manager\' (unused-variable)</string>
+                <string>W:1301,  4: Unused variable \'portal_templates\' (unused-variable)</string>
+                <string>W:1348,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 2 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
+                <string>W:1387,  4: Possible unbalanced tuple unpacking with sequence defined at line 142: left side has 2 label(s), right side has 0 value(s) (unbalanced-tuple-unpacking)</string>
               </tuple>
             </value>
         </item>
