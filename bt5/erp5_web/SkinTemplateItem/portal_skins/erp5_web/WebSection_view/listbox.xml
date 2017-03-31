@@ -202,6 +202,10 @@
                           <string>Web Section</string>
                           <string>Web Section</string>
                         </tuple>
+                        <tuple>
+                          <string>Static Web Section</string>
+                          <string>Static Web Section</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
