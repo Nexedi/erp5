@@ -70,12 +70,14 @@ if download or not use_activity:
 
     content_type = context.getContentType()
 
-    mail_message = context.Base_createMailMessageAsString(from_url, 
+    mail_message = context.Base_createMailMessageAsString(
+      from_url,
       to_url,
       subject,
       body,
       content_type,
-      embedded_file_list=embedded_file_list)
+      embedded_file_list=embedded_file_list,
+      extra_header_dict=extra_header_dict)
 
     if not use_activity:
       context.activate(activity='SQLQueue').sendMailHostMessage(mail_message)
@@ -83,6 +85,8 @@ if download or not use_activity:
 if use_activity:
   method_kw = dict(event_relative_url=context.getRelativeUrl(),
                    from_url=from_url)
+  if extra_header_dict:
+    method_kw['extra_header_dict'] = extra_header_dict
   context.activate(
     after_path_and_method_id=((context.getPath(),), 
                               ('immediateReindexObject', 'recursiveImmediateReindexObject'))).MailMessage_sendByActivity(
