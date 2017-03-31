@@ -6,7 +6,6 @@
   function appendCheckboxField(gadget, item, checked) {
     var input_gadget,
       label_gadget;
-
     if (!gadget.state.editable) {
       if (checked) {
         return gadget.declareGadget('gadget_html5_element.html')
@@ -24,7 +23,10 @@
       return;
     }
 
-    return gadget.declareGadget('gadget_html5_input.html', {scope: item[1]})
+    return gadget.declareGadget('gadget_html5_input.html', {
+      scope: item[1],
+      element: document.createElement('span')
+    })
       .push(function (result) {
         input_gadget = result;
         var state_dict = {
@@ -39,21 +41,12 @@
         return result.render(state_dict);
       })
       .push(function () {
-        return gadget.declareGadget('gadget_html5_element.html');
-      })
-      .push(function (result) {
-        label_gadget = result;
-        var state_dict = {
-          tag: 'label',
-          text_content: item[0]
-        };
-        return result.render(state_dict);
-      })
-      .push(function () {
-        var div = document.createElement("div");
-        div.setAttribute("class", "ui-field-contain");
-        div.appendChild(label_gadget.element);
-        div.appendChild(input_gadget.element);
+        var div = document.createElement("div"),
+          label = document.createElement("label"),
+          text_node = document.createTextNode(item[0]);
+        label.appendChild(input_gadget.element);
+        label.appendChild(text_node);
+        div.appendChild(label);
         gadget.element.appendChild(div);
       });
   }

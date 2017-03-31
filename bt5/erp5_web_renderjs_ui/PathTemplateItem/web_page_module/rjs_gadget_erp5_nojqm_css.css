@@ -279,7 +279,7 @@ hr {
 * Text fields
 **********************************************/
 label {
-  color: #777777;
+  display: block;
 }
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]),
 textarea,
@@ -1019,15 +1019,16 @@ div[data-gadget-scope='header'] .ui-header ul {
   .gadget-content .ui-field-contain {
     display: flex;
   }
-  .gadget-content .ui-field-contain label {
+  .gadget-content .ui-field-contain > label {
     flex: 1;
+    color: #777777;
   }
-  .gadget-content .ui-field-contain label + div {
+  .gadget-content .ui-field-contain > label + div {
     flex: 3;
   }
 }
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
-  .gadget-content .center .ui-field-contain label + div {
+  .gadget-content .center .ui-field-contain > label + div {
     flex: 7;
   }
 }

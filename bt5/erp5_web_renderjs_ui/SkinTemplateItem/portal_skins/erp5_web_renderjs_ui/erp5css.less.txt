@@ -353,8 +353,7 @@ hr {
 **********************************************/
 
 label {
-  // XXX
-  color: @grey;
+  display: block;
 }
 
 input:not([type=submit]):not([type=file]):not([type=checkbox]):not([type=radio]):not([type=color]), textarea, select {
@@ -1166,10 +1165,11 @@ div[data-gadget-scope='header'] .ui-header {
     // Label
     .ui-field-contain {
       display: flex;
-      label {
+      & > label {
         flex: 1;
+        color: @grey;
       }
-      label + div {
+      & > label + div {
         flex: 3;
       }
     }
@@ -1178,7 +1178,7 @@ div[data-gadget-scope='header'] .ui-header {
     // Align field on the left group's field
     .center {
       .ui-field-contain {
-        label + div {
+        & > label + div {
           flex: 7;
         }
       }
