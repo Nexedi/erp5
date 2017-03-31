@@ -25,47 +25,61 @@
 #
 ##############################################################################
 
-import json
 import uuid
-import httplib
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from erp5.component.extension import GoogleLoginUtility
-from Products.ERP5.Document.Person import UserExistsError
 
 CLIENT_ID = "a1b2c3"
 SECRET_KEY = "3c2ba1"
 ACCESS_TOKEN = "T1234"
 CODE = "1234"
 
-class MockHTTPSConnectionResponse(object):
-
-  def __init__(self):
-    self.status = 200
-
-  def read(self):
-    return json.dumps({"access_token": ACCESS_TOKEN})
-
-class MockHTTPSConnection:
-
-  def __init__(self, host, timeout):
-    assert host == 'accounts.google.com'
-    assert timeout == 30
-
-  def request(self, method, url, body, headers):
-    assert method == "POST"
-    assert url == '/o/oauth2/token'
-    assert "client_id=%s" % CLIENT_ID in body, "CLIENT_ID not found %s" % body
-    assert "client_secret=%s" % SECRET_KEY in body, "SECRET_KEY not found %s" % body
-    assert "code=%s" % CODE in body, "CODE not found %s" % body
-
-  def getresponse(self):
-    return MockHTTPSConnectionResponse()
-
 def getUserId(access_token):
-  return "1234"
+  return "dummy@example.com"
 
-httplib.HTTPSConnection = MockHTTPSConnection
+def getAccessTokenFromCode(code, redirect_uri):
+  assert code == CODE, "Invalid code"
+  # This is an example of a Google response
+  return  {'_module': 'oauth2client.client',
+           'scopes': ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'],
+           'revoke_uri': 'https://accounts.google.com/o/oauth2/revoke',
+           'access_token': ACCESS_TOKEN,
+           'token_uri': 'https://www.googleapis.com/oauth2/v4/token',
+           'token_info_uri': 'https://www.googleapis.com/oauth2/v3/tokeninfo',
+           'invalid': False,
+           'token_response': {
+             'access_token': ACCESS_TOKEN,
+             'token_type': 'Bearer',
+             'expires_in': 3600,
+             'refresh_token': "111",
+             'id_token': '222'
+           },
+           'client_id': CLIENT_ID,
+           'id_token': {
+             'picture': '',
+             'sub': '',
+             'aud': '',
+             'family_name': 'D',
+             'iss': 'https://accounts.google.com',
+             'email_verified': True,
+             'at_hash': 'p3vPYQkVuqByBA',
+             'given_name': 'John',
+             'exp': 123,
+             'azp': '123.apps.googleusercontent.com',
+             'iat': 455,
+             'locale': 'pt',
+             'email': getUserId(None),
+             'name': 'John D'
+           },
+           'client_secret': 'secret',
+           'token_expiry': '2017-03-31T16:06:28Z',
+           '_class': 'OAuth2Credentials',
+           'refresh_token': '111',
+           'user_agent': None
+          }
+
 GoogleLoginUtility.getUserId = getUserId
+GoogleLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
 
 class TestGoogleLogin(ERP5TypeTestCase):
 
@@ -117,65 +131,17 @@ class TestGoogleLogin(ERP5TypeTestCase):
     self.logout()
     self.portal.ERP5Site_redirectToGoogleLoginPage()
     location = self.portal.REQUEST.RESPONSE.getHeader("Location")
-    self.assertTrue(location.startswith("https://accounts.google.com/o/oauth2/auth"), location)
+    self.assertTrue(location.startswith("https://accounts.google.com/o/oauth2/v2/auth"), location)
     self.assertIn("response_type=code", location)
     self.assertIn("client_id=%s" % CLIENT_ID, location)
     self.assertNotIn("secret_key=", location)
-    self.assertIn("/ERP5Site_receiveGoogleCallback", location)
+    self.assertIn("ERP5Site_receiveGoogleCallback", location)
 
   def test_receive_google_callback(self):
     """
       Check if ERP5 set cookie properly after receive code from external service
     """
     self.logout()
-    response = self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
-    self.assertEqual(self.portal.absolute_url(), response)
-
-  def create_user_that_already_exists(self):
-    self.portal.person_module.newContent(portal_type="Person", user_id=CODE)
-
-  def test_create_google_login_under_pre_existing_person(self):
-    user_id = getUserId(None)
-    user_entry = {"tag": '123_user_creation_in_progress',
-                  "first_name": "User",
-                  "last_name": "Last Name",
-                  "reference": user_id,
-                  "email": 'example@email.com',
-                  "login_portal_type": "Google Login",
-                  "user_id": self.dummy_user_id
-                 }
-    # We are using superuser to avoid Unauthorized error
-    # The goal of this test to check if Google Login is created
-    # in the right place
-    self.login()
-    self.portal.Base_createOauth2User(**user_entry)
-    self.tic()
-    dummy_user = getattr(self.portal.person_module, self.dummy_user_id)
-    google_login, = [g for g in dummy_user.objectValues(
-      portal_type="Google Login") if g.getReference() == user_id]
-    self.assertNotEqual(None, google_login)
-    self.assertEqual("validated", google_login.getValidationState())
-
-  def test_create_user_with_google_id(self):
-    user_id = getUserId(None)
-    user_entry = {"tag": '123_user_creation_in_progress',
-                  "first_name": "User",
-                  "last_name": "Last Name",
-                  "reference": user_id,
-                  "email": 'example@email.com',
-                  "login_portal_type": "Google Login",
-                  "user_id": 'Anonymous User'
-                 }
-    self.portal.Base_createOauth2User(**user_entry)
-    self.tic()
-    google_login = self.portal.portal_catalog(portal_type="Google Login",
-                                              reference=user_id,
-                                              validation_state="validated")
-    self.assertNotEqual(None, google_login)
-    self.login(user_id)
-    person = self.portal.Base_getUserValueByUserId(user_id)
-    self.assertEqual(user_id, person.getReference())
-    self.assertEqual(user_entry["first_name"], person.getFirstName())
-    self.assertEqual(user_entry["last_name"], person.getLastName())
-    self.login()
-    self.assertRaises(UserExistsError, self.create_user_that_already_exists)
+    self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+    cookie = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")
+    self.assertEqual("b01533abb684a658dc71c81da4e67546", cookie["value"])
