@@ -1,3 +1,23 @@
+"""Build a mail message
+
+ * from_url: the "from" address as UTF-8 encoded string
+ * to_url: the "to" header as UTF-8 encoded string
+ * subject: the subject of the message as UTF-8 encoded string
+ * body: body of the message as UTF-8 encoded string
+ * content_type: mime type of this message, can be text/html for
+   HTML message or anything else for text/plain message.
+ * attachment_list: a list of attachement mapping in format:
+    - mime_type: mime type of thsi attachement
+    - content: file content of the attachement, as a string
+    - name: displayed name of this attachements
+ * embedded_file_list: a list of ERP5 File to use as attachments.
+ * extra_header_dict: additional email headers
+
+Notes: for from_url and to_url, we should use email.utils.formataddr
+"""
+if extra_header_dict is None:
+  extra_header_dict = {}
+
 if content_type == 'text/html':
   mail_template = context.Event_viewHtmlMimeMessage
 else:
@@ -20,7 +40,8 @@ multipart = mail_template.as_message(mfrom=from_url,
                                      mto=to_url,
                                      subject=subject,
                                      body=body,
-                                     encoding='utf-8')
+                                     encoding='utf-8',
+                                     headers=extra_header_dict)
 for attachment_dict in attachment_list:
   multipart.add_file(data=attachment_dict['content'],
                      content_type=attachment_dict['mime_type'],

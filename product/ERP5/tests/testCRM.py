@@ -1852,6 +1852,20 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEqual('FG ER <eee@eee.com>', from_url)
     self.assertEqual(['Expert User <expert@in24.test>'], to_url)
 
+  def test_MailMessage_send_extra_headers(self):
+    """Test sending message with extra headers
+    """
+    mail_message = self.portal.event_module.newContent(
+        portal_type="Mail Message",
+        source='person_module/me',
+        destination='person_module/recipient')
+
+    mail_message.send(extra_header_dict={"X-test-header": "test"})
+    self.tic()
+    (from_url, to_url, last_message,), = self.portal.MailHost._message_list
+    message = message_from_string(last_message)
+    self.assertEqual("test", message.get("X-test-header"))
+
 
 def test_suite():
   suite = unittest.TestSuite()
