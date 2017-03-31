@@ -798,10 +798,12 @@ class BusinessItem(Implicit, Persistent):
       self.isProperty = True
       relative_url, property_id = self._path.split('#')
       obj = portal.unrestrictedTraverse(relative_url)
-      # XXX: Here, we do deal with different cases such as if the object exists
-      # or not or have the same value or compare states
       prop = self._value
-      obj.setProperty(prop['name'], prop['value'], prop['type'])
+      # First remove the property from the existing path and keep the default
+      # empty, and update only if the sign is +1
+      obj._delPropValue(prop['name'])
+      if self._sign == 1:
+        obj.setProperty(prop['name'], prop['value'], prop['type'])
     else:
       path_list = self._path.split('/')
       container_path = path_list[:-1]
