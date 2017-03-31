@@ -1775,20 +1775,24 @@ class TemplateTool (BaseTool):
     def calculateComparableHash(self, object):
       """
       Remove some attributes before comparing hashses
-      and return hash of the comparable object dict
+      and return hash of the comparable object dict, in case the object is
+      an erp5 object.
 
       Use shallow copy of the dict of the object at ZODB after removing
       attributes which changes at small updation, like workflow_history,
       uid, volatile attributes(which starts with _v)
       """
-      obj_dict = object.__dict__.copy()
-      removable_attributes = [attr for attr
-                              in obj_dict.keys()
-                              if attr.startswith('_v')]
+      if object.__class__.__name__ == 'PersistentMapping':
+        obj_dict = object
+      else:
+        obj_dict = object.__dict__.copy()
+        removable_attributes = [attr for attr
+                                in obj_dict.keys()
+                                if attr.startswith('_v')]
 
-      removable_attributes.append('uid')
-      for attr in removable_attributes:
-        del obj_dict[attr]
+        removable_attributes.append('uid')
+        for attr in removable_attributes:
+          del obj_dict[attr]
 
       obj_sha = hash(pprint.pformat(obj_dict))
       return obj_sha
@@ -1804,7 +1808,28 @@ class TemplateTool (BaseTool):
       for path in to_update_path_list:
 
         try:
-          obj = portal.restrictedTraverse(path)
+          if '#' in str(path):
+            relative_url, property_id = path.split('#')
+            obj = portal.restrictedTraverse(relative_url)
+            property_value = obj.getProperty(property_id)
+
+            # If the value at ZODB for the property is none, raise KeyError
+            # This is important to have compatibility between the way we check
+            # path as well as property. Otherwise, if we install a new property,
+            # we are always be getting an Error that there is change made at
+            # ZODB for this property
+            if not property_value:
+              raise KeyError
+            property_type = obj.getPropertyType(property_id)
+            # Create a persistent object to compare the hash
+            value = PersistentMapping()
+            value['name'] = property_id
+            value['type'] = property_type
+            value['value'] = property_value
+            obj = value
+          else:
+            obj = portal.restrictedTraverse(path)
+
           obj_sha = self.calculateComparableHash(obj)
 
           # Get item at old state
