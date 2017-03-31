@@ -40,6 +40,10 @@ from zExceptions.ExceptionFormatter import format_exception
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # REGEX FOR ZELENIUM TESTS
 TEST_PASS_RE = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
@@ -116,137 +120,13 @@ class Xvfb(Process):
       self._runCommand(display_try)
       if self.process.poll() is None:
         self.display = display_try
+        os.environ['DISPLAY'] = self.display
         break
     else:
       raise EnvironmentError("All displays locked : %r" % (self.display_list,))
 
     print 'Xvfb : %d' % self.process.pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
-
-class Browser(Process):
-
-  def __init__(self, profile_dir, host, port):
-    self.profile_dir = profile_dir
-    self.host = host
-    self.port = port
-
-  def _run(self, url, display):
-    """ This method should be implemented on a subclass """
-    raise NotImplementedError
-
-  def _setEnviron(self):
-    pass
-
-  def run(self, url, display):
-    self.clean()
-    self.environ = os.environ.copy()
-    self._setEnviron()
-    self._setDisplay(display)
-    self._run(url)
-    print "Browser %s running on pid: %s" % (self.__class__.__name__,
-                                             self.process.pid)
-
-  def clean(self):
-    """ Clean up removing profile dir and recreating it"""
-    shutil.rmtree(self.profile_dir, ignore_errors=True)
-    os.mkdir(self.profile_dir)
-
-  def _createFile(self, filename, content):
-    file_path = os.path.join(self.profile_dir, filename)
-    with open(file_path, 'w') as f:
-      f.write(content)
-    return file_path
-
-  def _setDisplay(self, display):
-    if display:
-      self.environ["DISPLAY"] = display
-    else:
-      xauth = os.path.expanduser('~/.Xauthority')
-      if os.path.exists(xauth):
-        self.environ["XAUTHORITY"] = xauth
-
-  def _runCommand(self, *args):
-    self._exec(args, close_fds=True, env=self.environ)
-
-class Firefox(Browser):
-  """ Use firefox to open run all the tests"""
-
-  def _setEnviron(self):
-    self.environ['MOZ_NO_REMOTE'] = '1'
-    self.environ['HOME'] = self.profile_dir
-    self.environ['LC_ALL'] = 'C'
-    self.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
-    self.environ["NO_EM_RESTART"] = "1"
-
-    # This disables unwanted SCIM as it fails with Xvfb, at least on Mandriva
-    # 2010.0, because Firefox tries to start scim-bridge which SIGSEGV and
-    # thus Firefox is stucked on register_imcontext()
-    for remove_environment_variable in ('GTK_IM_MODULE',
-                                        'XIM_PROGRAM',
-                                        'XMODIFIERS',
-                                        'QT_IM_MODULE'):
-      self.environ.pop(remove_environment_variable, None)
-
-  def _run(self, url):
-    # Prepare to run
-    self._createFile('prefs.js', self.getPrefJs())
-    firefox_bin = os.environ.get("firefox_bin", "firefox")
-    self._runCommand(firefox_bin, "-no-remote",
-                     "-profile", self.profile_dir, url)
-
-  def getPrefJs(self):
-    from App.config import getConfiguration
-    return """
-// Don't ask if we want to switch default browsers
-user_pref("browser.shell.checkDefaultBrowser", false);
-
-// Disable pop-up blocking
-user_pref("browser.allowpopups", true);
-user_pref("dom.disable_open_during_load", false);
-
-// Configure us as the local proxy
-//user_pref("network.proxy.type", 2);
-
-// Disable security warnings
-user_pref("security.warn_submit_insecure", false);
-user_pref("security.warn_submit_insecure.show_once", false);
-user_pref("security.warn_entering_secure", false);
-user_pref("security.warn_entering_secure.show_once", false);
-user_pref("security.warn_entering_weak", false);
-user_pref("security.warn_entering_weak.show_once", false);
-user_pref("security.warn_leaving_secure", false);
-user_pref("security.warn_leaving_secure.show_once", false);
-user_pref("security.warn_viewing_mixed", false);
-user_pref("security.warn_viewing_mixed.show_once", false);
-
-// Disable "do you want to remember this password?"
-user_pref("signon.rememberSignons", false);
-
-// increase the timeout before warning of unresponsive script
-user_pref("dom.max_script_run_time", 120);
-
-// this is required to upload files
-user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
-user_pref("signed.applets.codebase_principal_support", true);
-user_pref("capability.principal.codebase.p1.id", "http://%s:%s");
-user_pref("capability.principal.codebase.p1.subjectName", "");
-
-// For debugging, do not waste space on screen
-user_pref("browser.tabs.autoHide", true);
-
-// This is required to download reports without requiring user interaction
-// (See ERP5UpgradeUtils for corresponding Extensions)
-user_pref("browser.download.folderList", 2);
-user_pref("browser.download.manager.showWhenStarting", false);
-user_pref("browser.download.dir", "%s");
-user_pref("browser.helperApps.neverAsk.saveToDisk", "application/pdf");
-// Otherwise clear previously defined PDF-related extensions
-// => browser/extensions/pdfjs/content/PdfJs.jsm:_migrate()
-user_pref("pdfjs.disabled", true);
-// Not really necessary (just FTR)
-user_pref("pdfjs.migrationVersion", 42);
-""" % (self.host, self.port,
-       os.path.join(getConfiguration().instancehome, 'var'))
 
 class FunctionalTestRunner:
 
@@ -262,7 +142,6 @@ class FunctionalTestRunner:
     self.run_only = run_only
     profile_dir = os.path.join(self.instance_home, 'profile')
     self.portal = portal
-    self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
     transaction.begin()
@@ -275,26 +154,31 @@ class FunctionalTestRunner:
   def test(self, debug=0):
     xvfb = Xvfb(self.instance_home)
     try:
-      end = time.time() + self.timeout
       if not debug:
         print("\nSet 'erp5_debug_mode' environment variable to 1"
               " to use your existing display instead of Xvfb.")
         xvfb.run()
-      try:
-        self.browser.run(self._getTestURL() , xvfb.display)
-        while time.time() < end:
-          status = self.getStatus()
-          if status and '>ONGOING<' not in status:
-            break
-          time.sleep(10)
-          if self.browser.process.poll() is not None:
-            raise RuntimeError('Test browser is no longer running.')
-        else:
-          # TODO: here we could take a screenshot and display it in the report
-          # (maybe using data: scheme inside a <img>)
-          raise TimeoutError("Test took more than %s seconds" % self.timeout)
-      finally:
-        self.browser.quit()
+      firefox_bin = os.environ.get("firefox_bin") 
+      firefox_driver = firefox_bin.replace("firefox-slapos", "geckodriver")
+      firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
+      firefox_capabilities['marionette'] = True
+      firefox_capabilities['binary'] = firefox_bin
+      browser = webdriver.Firefox(capabilities=firefox_capabilities, executable_path=firefox_driver)
+      start_time = time.time()
+      browser.get(self._getTestURL())
+
+      WebDriverWait(browser, 10).until(EC.presence_of_element_located((
+        By.XPATH, '//iframe[@id="testSuiteFrame"]'
+      )))
+      # XXX No idea how to wait for the iframe content to be loaded
+      time.sleep(5)
+      # Count number of test to be executed
+      test_count = browser.execute_script(
+        "return document.getElementById('testSuiteFrame').contentDocument.querySelector('tbody').children.length"
+      ) - 1
+      WebDriverWait(browser, self.timeout).until(EC.presence_of_element_located((
+        By.XPATH, '//td[@id="testRuns" and contains(text(), "%i")]' % test_count
+      )))
     finally:
       xvfb.quit()
 
