@@ -112,7 +112,6 @@ CACHE:\n
 renderjs.js\n
 rsvp.js\n
 jquery.js\n
-/\n
 gadget_officejs_web_table_editor.js\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
@@ -268,7 +267,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -282,7 +281,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.29602.29356.10683</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -300,7 +299,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487760184.09</float>
+                        <float>1491383606.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
