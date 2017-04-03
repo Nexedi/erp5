@@ -122,7 +122,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 jio_mappingstorage.js\n
 erp5_launcher.js\n
-bookmark_manager_landing_page.html\n
 gadget_erp5.css\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
@@ -319,7 +318,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.11989.33353.26880</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -337,7 +336,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487324281.26</float>
+                        <float>1491383463.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
