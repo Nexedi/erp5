@@ -112,7 +112,6 @@ CACHE:\n
 rsvp.js\n
 renderjs.js\n
 jiodev.js\n
-/\n
 gadget_officejs_image_editor.js\n
 renderjs.js\n
 rsvp.js\n
@@ -315,7 +314,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>958.24493.29776.9796</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -333,7 +332,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490974887.2</float>
+                        <float>1491383625.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
