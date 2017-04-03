@@ -8,7 +8,7 @@
     this._url = window.location.origin + window.location.pathname +
       (window.location.pathname.endsWith('/') ? '' : '/') +
       spec.version + (spec.version.endsWith('/') ? '' : '/');
-    this._url_list = [];
+    this._url_list = ["/"];
   }
 
   AppCacheStorage.prototype.get = function (url) {

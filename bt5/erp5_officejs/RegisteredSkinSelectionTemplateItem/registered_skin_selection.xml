@@ -1,18 +1,14 @@
 <registered_skin_selection>
  <skin_folder_selection>
-  <skin_folder>erp5_officejs_jio_connector</skin_folder>
-  <skin_selection>RJSVersioning</skin_selection>
+  <skin_folder>erp5_web_officejs_ui</skin_folder>
+  <skin_selection>Officejs,View</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>erp5_web_renderjs_ui</skin_folder>
-  <skin_selection>RJSVersioning</skin_selection>
- </skin_folder_selection>
- <skin_folder_selection>
-  <skin_folder>erp5_web_versioning</skin_folder>
-  <skin_selection>RJSVersioning,View</skin_selection>
+  <skin_selection>Officejs</skin_selection>
  </skin_folder_selection>
  <skin_folder_selection>
   <skin_folder>erp5_xhtml_style</skin_folder>
-  <skin_selection>RJSVersioning</skin_selection>
+  <skin_selection>Officejs</skin_selection>
  </skin_folder_selection>
 </registered_skin_selection>

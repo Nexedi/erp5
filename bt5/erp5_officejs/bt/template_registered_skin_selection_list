@@ -1,5 +1,4 @@
-erp5_officejs_jio_connector | RJSVersioning
-erp5_web_renderjs_ui | RJSVersioning
-erp5_web_versioning | RJSVersioning
-erp5_web_versioning | View
-erp5_xhtml_style | RJSVersioning
+erp5_web_officejs_ui | Officejs
+erp5_web_officejs_ui | View
+erp5_web_renderjs_ui | Officejs
+erp5_xhtml_style | Officejs

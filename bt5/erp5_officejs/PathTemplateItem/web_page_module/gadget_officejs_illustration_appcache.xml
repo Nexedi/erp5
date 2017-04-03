@@ -117,7 +117,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
-/\n
 jio_mappingstorage.js\n
 URI.js\n
 dygraph.js\n
@@ -319,7 +318,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.32357.38798.28211</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -337,7 +336,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487774680.72</float>
+                        <float>1491383515.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

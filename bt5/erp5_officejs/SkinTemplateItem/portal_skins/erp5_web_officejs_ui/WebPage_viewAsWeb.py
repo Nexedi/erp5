@@ -6,9 +6,9 @@ if response is None:
 web_page = context
 web_section = REQUEST.get("current_web_section")
 
-if REQUEST.getHeader('If-Modified-Since', '') == web_page.getModificationDate().rfc822():
-  response.setStatus(304)
-  return ""
+#if REQUEST.getHeader('If-Modified-Since', '') == web_page.getModificationDate().rfc822():
+#  response.setStatus(304)
+#  return ""
 
 portal_type = web_page.getPortalType()
 if portal_type in ("Web Page", "Web Script", "Web Manifest", "Web Style"):
