@@ -1,5 +1,9 @@
+image_module/jquery-sheets_*
+image_module/miniPaint_*
 web_page_module/gadget_image_editor_*
 web_page_module/gadget_web_table*
+web_page_module/jquery-sheets_*
+web_page_module/miniPaint_*
 web_site_module/officejs_image_editor
 web_site_module/officejs_image_editor/**
 web_site_module/officejs_image_editor_gadget
