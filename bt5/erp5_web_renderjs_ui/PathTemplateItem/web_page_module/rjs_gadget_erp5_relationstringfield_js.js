@@ -8,9 +8,9 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
-      var gadget = this,
+      var context = this,
         field_json = options.field_json || {};
-      return this.getDeclaredGadget("relation_input")
+      return context.getDeclaredGadget("relation_input")
         .push(function (gadget) {
           var render_options = {
             editable: field_json.editable,
@@ -47,7 +47,7 @@
           return gadget.render(render_options);
         })
         .push(function () {
-          return gadget.changeState({
+          return context.changeState({
             key: options.field_json.key,
             relation_field_id: options.field_json.relation_field_id
           });
