@@ -28,16 +28,17 @@ class MTMultipart(MIMEMultipart):
 
     security.setDefaultAccess('allow')
 
-    def __init__(self,mt,mfrom,mto,_subtype='mixed',boundary=None):
+    def __init__(self, mt, mfrom, mto, _subtype='mixed', boundary=None, **kw):
         MIMEMultipart.__init__(self,_subtype,boundary)
         self.mfrom = mfrom
         self.mto = mto
         self.mt = mt
+        self.extra_header_dict = kw
 
     security.declarePublic('send')
     def send(self):
         "send ourselves using our MailTemplate's send method"
-        return self.mt._send(self.mfrom,self.mto,self)
+        return self.mt._send(self.mfrom, self.mto, self, **self.extra_header_dict)
 
     security.declarePublic('add_file')
     def add_file(self,theFile=None,data=None,filename=None,content_type=None):

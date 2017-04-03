@@ -1452,6 +1452,17 @@ class TestERP5Base(ERP5TypeTestCase):
       ],
     )
 
+  def test_reply_to_in_mail_message(self):
+    mail_message_as_str = self.portal.Base_createMailMessageAsString(
+      "support@project.com",
+      "customer@project.com",
+      "Subject",
+      "Test",
+      "application/text",
+      reply_to="reply@here.com")
+    self.assertIn("Reply-To: reply@here.com", mail_message_as_str)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Base))
