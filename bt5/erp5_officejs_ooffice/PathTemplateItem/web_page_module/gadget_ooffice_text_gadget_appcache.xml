@@ -127,7 +127,6 @@ jquerymobile.css\n
 jquery.js\n
 gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
-/\n
 gadget_officejs_onlyoffice_landing.js\n
 zipfilestorage-with-jszip.js\n
 ooffice/apps/common/Analytics.js\n
@@ -746,7 +745,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.12606.15650.31505</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -764,7 +763,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490366756.1</float>
+                        <float>1491383545.73</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
