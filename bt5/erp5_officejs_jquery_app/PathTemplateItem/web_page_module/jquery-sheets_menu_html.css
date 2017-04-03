@@ -1,0 +1,118 @@
+<ul>
+  <li>
+		<a href="#">File</a>
+		<ul>
+			<li><a onclick="wickedGrid.saveSheet(); return false;" title="Save the spreadsheet.">Save</a></li>
+		</ul>
+  </li>
+
+  <li>
+		<a href="#">Edit</a>
+    <ul>
+      <li><a onclick="wickedGridw.undo.undoManager.undo(); return false;">Undo</a></li>
+      <li><a onclick="wickedGrid.undo.undoManager.redo(); return false;">Redo</a></li>
+      <li><a onclick="wickedGrid.cellFind(); return false;">Find</a></li>
+    </ul>
+  </li>
+
+  <li>
+		<a menu="menuEditRow_menuInstance">Row</a>
+		<ul>
+			<li><a onclick="wickedGrid.addRow(true); return false;" title="Adds an additional row to bottom of the spreadsheet.">Add Row</a></li>
+			<li><a onclick="wickedGrid.addRowMulti(undefined, undefined, true); return false;" title="Adds an additional rows to bottom of the spreadsheet.">Add Multi-Rows</a></li>
+			<!--<li><a onclick="wickedGrid.deleteRow(); return false;" title="Deletes the current rows that are associated with highlighted cells.">Delete Row(s)</a></li>-->
+			<li><a onclick="wickedGrid.addRow(false, wickedGrid.cellLast.rowIndex); return false;" title="Inserts an additional row after currently selected row.">Insert Row Before</a></li>
+			<li><a onclick="wickedGrid.addRow(true, wickedGrid.cellLast.rowIndex); return false;" title="Inserts an additional row after currently selected row.">Insert Row After</a></li>
+    </ul>
+	</li>
+
+	<li>
+		<a menu="menuEditColumn_menuInstance">Column</a>
+		<ul>
+			<li><a onclick="wickedGrid.addColumn(true); return false;" title="Adds an additional column to the right of the spreadsheet.">Add Column</a></li>
+			<li><a onclick="wickedGrid.addColumnMulti(undefined, undefined, true); return false;" title="Adds an additional columns to the right of the spreadsheet.">Add Multi-Columns</a></li>
+			<!--<li><a onclick="wickedGrid.deleteColumn(); return false;" title="Deletes the current columns that are associated with highlighted cells.">Delete Column(s)</a></li>-->
+			<li><a onclick="wickedGrid.addColumn(false, wickedGrid.cellLast.columnIndex); return false;" title="Inserts an additional column after currently selected column.">Insert Column Before</a></li>
+			<li><a onclick="wickedGrid.addColumn(true, wickedGrid.cellLast.columnIndex); return false;" title="Inserts an additional column after currently selected column.">Insert Column After</a></li>
+		</ul>
+	</li>
+
+  <li>
+		<a>Sheet</a>
+		<ul>
+			<li><a onclick="wickedGrid.addSheet(); return false;" title="Add new spreadsheet.">Add Spreadsheet</a></li>
+			<li><a onclick="wickedGrid.deleteSheet(); return false;" title="Delete the current spreadsheet.">Delete Spreadsheet</a></li>
+			<!--<li><a onclick="wickedGrid.calc(); return false;" title="Re-Calculates the current sheet">Refresh Calculations</a></li>
+			<li><a onclick="wickedGrid.sheetTab(); return false;" title="Change the title of the sheet.">Title</a></li>
+      <li><a onclick="wickedGrid.toggleState(); return false;">Toggle Edit & ReadOnly</a></li>-->
+		</ul>
+	</li>
+
+  <li>
+		<a>Function Reference</a>
+		<ul>
+			<li>
+				<a href="#">Math & Standard</a>
+				<ul>
+					<li><a title="Returns the absolute value of a number">ABS()</a></li>
+					<li><a title="Returns a rounded number">AVG(), AVERAGE()</a></li>
+					<li><a title="Returns a number rounded up based on a multiple of significance">CEILING()</a></li>
+					<li><a title="Counts the number of cells that contain a value">COUNT()</a></li>
+					<li><a title="Counts full days from a specific date - format(YYYY,MM,DD)">DAYSFROM()</a></li>
+					<li><a title="Converts a number to text, using a currency format - options(number, decimals, symbol)">DOLLAR()</a></li>
+					<li><a title="Returns a logical value of FALSE">FALSE()</a></li>
+					<li><a title="Returns a text representation of a number rounded to a specified number of decimal places - options(number, decimals, useCommas)">FIXED()</a></li>
+					<li><a title="Returns a number rounded down based on a multiple of significance">FLOOR()</a></li>
+					<li><a title="Creates and executes a javascript function. example: FN(alert('Hello World')), this will execute when sheet compiles.">FN()</a></li>
+					<li><a title="Returns the integer portion of a number">INT()</a></li>
+					<li><a title="Returns the largest value from the numbers provided">MAX()</a></li>
+					<li><a title="Returns the smallest value from the numbers provided">MIN()</a></li>
+					<li><a title="Converts a value to a number">N()</a></li>
+					<li><a title="Gets full date of today">NOW()</a></li>
+					<li><a title="Returns the mathematical constant called pi, which is 3.14159265358979">PI()</a></li>
+					<li><a title="Returns the result of a number raised to a given power">POWER(x, y)</a></li>
+					<li><a title="Returns a random number that is greater than or equal to 0 and less than 1">RAND(), RND()</a></li>
+					<li><a title="Returns a number rounded to a specified number of digits">ROUND()</a></li>
+					<li><a title="Returns all of the values in each of the specified cells and added together">SUM()</a></li>
+					<li><a title="Gets full date of today">TODAY()</a></li>
+					<li><a title="Returns a logical value of TRUE">TRUE()</a></li>
+					<li><a title="Converts a text value that represents a number to a number">VALUE()</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Chart</a>
+				<ul>
+					<li><a href="#" title="Simple verticle style bar chart.">BARCHART()</a></li>
+					<li><a href="#" title="Simple horizontal style bar chart.">HBARCHART()</a></li>
+					<li><a href="#" title="Simple line style bar chart.">LINECHART()</a></li>
+					<li><a href="#" title="Simple pie style bar chart.">PIECHART()</a></li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">Inputs</a>
+				<ul>
+					<li><a href="#">DROPDOWN()</a></li>
+					<li><a href="#">RADIO()</a></li>
+					<li><a href="#">CHECKBOX()</a></li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+
+<ul class="nav navbar-nav" style="float:left; display: block; z-index:-10; left: 9px; width: 100%;">
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-bold'); return false;" title="Bold">
+		<img alt="Bold" src="jquery-sheets/images/bold13.svg"/></a>
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-italics'); return false;" title="Italic">
+		<img alt="Italic" src="jquery-sheets/images/italic3.svg"/></a>
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-underline', 'style-line-through'); return false;" title="Underline">
+		<img alt="Underline" src="jquery-sheets/images/underline1.svg"/></a>
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-line-through', 'style-underline'); return false;" title="Strike Through">
+		<img alt="Strike Through" src="jquery-sheets/images/strikethrough.svg"/></a>
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-left', 'style-center style-right'); return false;" title="Align Left">
+		<img alt="Align Left" src="jquery-sheets/images/left181.svg"/></a>
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-center', 'style-left style-right'); return false;" title="Align Center">
+		<img alt="Align Center" src="jquery-sheets/images/centered5.svg"/></a>
+	<a href="#" onclick="wickedGrid.cellStyleToggle('style-right', 'style-left style-center'); return false;" title="Align Right">
+		<img alt="Align Right" src="jquery-sheets/images/right183.svg"/></a>
+</ul>
