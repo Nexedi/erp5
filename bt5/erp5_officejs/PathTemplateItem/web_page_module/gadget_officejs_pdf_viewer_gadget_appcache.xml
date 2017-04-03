@@ -123,7 +123,6 @@ handlebars.js\n
 rsvp.js\n
 renderjs.js\n
 gadget_officejs_pdf_viewer.js\n
-/\n
 pdf_js/images/toolbarButton-pageUp.png\n
 pdf_js/images/annotation-insert.svg\n
 pdf_js/images/annotation-paragraph.svg\n
@@ -497,7 +496,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.46498.17623.37410</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -515,7 +514,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490014860.81</float>
+                        <float>1491383502.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
