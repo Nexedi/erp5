@@ -229,12 +229,4 @@ if (not(can_redirect) or len(url_params_string) > 2000):
   return dialog_form(**kw)
 
 dialog_method = getattr(context, dialog_method)
-result = dialog_method(**clean_kw)
-if REQUEST is not None:
-  try:
-    mimetype, result = result
-  except ValueError:
-    pass
-  else:
-    REQUEST.RESPONSE.setHeader("Content-Type", mimetype)
-return result
+return dialog_method(**clean_kw)
