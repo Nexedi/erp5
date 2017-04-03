@@ -52,7 +52,8 @@ if BaseMailTemplate is not None:
                          ('mto','To'),
                          ('mcc','Cc'),
                          ('mbcc','Bcc'),
-                         ('subject','Subject')):
+                         ('subject','Subject'),
+                         ('reply_to', 'Reply-To')):
           value = kw.get(key,
                          headers_param.get(header,
                                            getattr(self,

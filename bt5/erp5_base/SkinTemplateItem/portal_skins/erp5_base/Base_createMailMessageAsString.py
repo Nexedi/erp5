@@ -20,7 +20,9 @@ multipart = mail_template.as_message(mfrom=from_url,
                                      mto=to_url,
                                      subject=subject,
                                      body=body,
-                                     encoding='utf-8')
+                                     encoding='utf-8',
+                                     **kw)
+
 for attachment_dict in attachment_list:
   multipart.add_file(data=attachment_dict['content'],
                      content_type=attachment_dict['mime_type'],
