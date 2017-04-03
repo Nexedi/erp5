@@ -125,7 +125,6 @@ jiodev.js\n
 jquerymobile.js\n
 jquerymobile.css\n
 jquery.js\n
-/\n
 gadget_officejs_onlyoffice_landing.js\n
 gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
@@ -757,7 +756,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.14358.10320.58180</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -775,7 +774,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490607294.16</float>
+                        <float>1491383555.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
