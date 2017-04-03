@@ -8,6 +8,8 @@ builder_id_list = (
   'internal_packing_list_builder',
   'sale_packing_list_builder',
   'purchase_packing_list_builder',
+  'returned_sale_packing_list_builder',
+  'returned_purchase_packing_list_builder',
 )
 
 for builder_id in builder_id_list:
