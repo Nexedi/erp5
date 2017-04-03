@@ -119,7 +119,6 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.wof
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 jio_mappingstorage.js\n
-/\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 URI.js\n
@@ -329,7 +328,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.30669.28687.29849</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -347,7 +346,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487777321.08</float>
+                        <float>1491383521.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
