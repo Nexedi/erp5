@@ -8462,6 +8462,12 @@ return new Parser;
     });
 
     this._use_remote_post = spec.use_remote_post || false;
+    // Number of request we allow browser execution for attachments
+    this._parallel_operation_attachment_amount =
+      spec.parallel_operation_attachment_amount || 1;
+    // Number of request we allow browser execution for documents
+    this._parallel_operation_amount =
+      spec.parallel_operation_amount || 1;
 
     this._conflict_handling = spec.conflict_handling || 0;
     // 0: no resolution (ie, throw an Error)
@@ -8604,6 +8610,32 @@ return new Parser;
     // Do not sync the signature document
     skip_document_dict[context._signature_hash] = null;
 
+    function dispatchQueue(function_used, argument_list, number_queue) {
+      var result_promise_list = [],
+        i;
+
+      function pushAndExecute(queue) {
+        queue
+          .push(function () {
+            if (argument_list.length > 0) {
+              var argument_array = argument_list.shift(),
+                sub_queue = new RSVP.Queue();
+              argument_array[0] = sub_queue;
+              function_used.apply(context, argument_array);
+              pushAndExecute(queue);
+              return sub_queue;
+            }
+          });
+      }
+      for (i = 0; i < number_queue; i += 1) {
+        result_promise_list.push(new RSVP.Queue());
+        pushAndExecute(result_promise_list[i]);
+      }
+      if (number_queue > 1) {
+        return RSVP.all(result_promise_list);
+      }
+      return result_promise_list[0];
+    }
 
     function propagateAttachmentDeletion(skip_attachment_dict,
                                          destination,
@@ -8724,8 +8756,8 @@ return new Parser;
         });
     }
 
-    function checkAttachmentSignatureDifference(skip_attachment_dict,
-                                                queue, source,
+    function checkAttachmentSignatureDifference(queue, skip_attachment_dict,
+                                                source,
                                                 destination, id, name,
                                                 conflict_force,
                                                 conflict_revert,
@@ -8775,8 +8807,8 @@ return new Parser;
         });
     }
 
-    function checkAttachmentLocalDeletion(skip_attachment_dict,
-                                queue, destination, id, name, source,
+    function checkAttachmentLocalDeletion(queue, skip_attachment_dict,
+                                destination, id, name, source,
                                 conflict_force, conflict_revert,
                                 conflict_ignore) {
       var status_hash;
@@ -8797,7 +8829,9 @@ return new Parser;
 
     function pushDocumentAttachment(skip_attachment_dict, id, source,
                                     destination, options) {
-      var queue = new RSVP.Queue();
+      var queue = new RSVP.Queue(),
+        local_dict = {},
+        signature_dict = {};
 
       return queue
         .push(function () {
@@ -8821,11 +8855,10 @@ return new Parser;
           ]);
         })
         .push(function (result_list) {
-          var local_dict = {},
-            signature_dict = {},
-            is_modification,
+          var is_modification,
             is_creation,
-            key;
+            key,
+            argument_list = [];
           for (key in result_list[0]) {
             if (result_list[0].hasOwnProperty(key)) {
               if (!skip_attachment_dict.hasOwnProperty(key)) {
@@ -8848,30 +8881,45 @@ return new Parser;
               is_creation = !signature_dict.hasOwnProperty(key)
                 && options.check_creation;
               if (is_modification === true || is_creation === true) {
-                checkAttachmentSignatureDifference(skip_attachment_dict,
-                                                   queue, source,
-                                                   destination, id, key,
-                                                   options.conflict_force,
-                                                   options.conflict_revert,
-                                                   options.conflict_ignore,
-                                                   is_creation,
-                                                   is_modification);
+                argument_list.push([undefined,
+                                    skip_attachment_dict,
+                                    source,
+                                    destination, id, key,
+                                    options.conflict_force,
+                                    options.conflict_revert,
+                                    options.conflict_ignore,
+                                    is_creation,
+                                    is_modification]);
               }
             }
           }
+          return dispatchQueue(
+            checkAttachmentSignatureDifference,
+            argument_list,
+            context._parallel_operation_attachment_amount
+          );
+        })
+        .push(function () {
+          var key, argument_list = [];
           if (options.check_deletion === true) {
             for (key in signature_dict) {
               if (signature_dict.hasOwnProperty(key)) {
                 if (!local_dict.hasOwnProperty(key)) {
-                  checkAttachmentLocalDeletion(skip_attachment_dict,
-                                               queue, destination, id, key,
+                  argument_list.push([undefined,
+                                               skip_attachment_dict,
+                                               destination, id, key,
                                                source,
                                                options.conflict_force,
                                                options.conflict_revert,
-                                               options.conflict_ignore);
+                                               options.conflict_ignore]);
                 }
               }
             }
+            return dispatchQueue(
+              checkAttachmentLocalDeletion,
+              argument_list,
+              context._parallel_operation_attachment_amount
+            );
           }
         });
     }
@@ -9184,7 +9232,7 @@ return new Parser;
         })
         .push(function (result_list) {
           var i,
-            sub_queue = new RSVP.Queue();
+            argument_list = [];
 
           function getResult(j) {
             return function (id) {
@@ -9196,20 +9244,26 @@ return new Parser;
           }
 
           for (i = 0; i < result_list.length; i += 1) {
-            checkSignatureDifference(sub_queue, source, destination,
+            argument_list[i] = [undefined, source, destination,
                                id_list[i].parameter_list[0],
                                conflict_force, conflict_revert,
                                conflict_ignore,
                                document_status_list[i].is_creation,
                                document_status_list[i].is_modification,
-                               getResult(i), options);
+                               getResult(i), options];
           }
-          return sub_queue;
+          return dispatchQueue(
+            checkSignatureDifference,
+            argument_list,
+            options.operation_amount
+          );
         });
     }
 
     function pushStorage(source, destination, options) {
-      var queue = new RSVP.Queue();
+      var queue = new RSVP.Queue(),
+        argument_list = [],
+        argument_list_deletion = [];
       if (!options.hasOwnProperty("use_post")) {
         options.use_post = false;
       }
@@ -9246,6 +9300,7 @@ return new Parser;
               signature_dict[result_list[1].data.rows[i].id] = i;
             }
           }
+          i = 0;
           for (key in local_dict) {
             if (local_dict.hasOwnProperty(key)) {
               is_modification = signature_dict.hasOwnProperty(key)
@@ -9263,29 +9318,50 @@ return new Parser;
                     is_modification: is_modification
                   });
                 } else {
-                  checkSignatureDifference(queue, source, destination, key,
-                                           options.conflict_force,
-                                           options.conflict_revert,
-                                           options.conflict_ignore,
-                                           is_creation, is_modification,
-                                           source.get.bind(source),
-                                           options);
+                  argument_list[i] = [undefined, source, destination,
+                                      key,
+                                      options.conflict_force,
+                                      options.conflict_revert,
+                                      options.conflict_ignore,
+                                      is_creation, is_modification,
+                                      source.get.bind(source),
+                                      options];
+                  i += 1;
                 }
               }
             }
           }
+          queue
+            .push(function () {
+              return dispatchQueue(
+                checkSignatureDifference,
+                argument_list,
+                options.operation_amount
+              );
+            });
           if (options.check_deletion === true) {
+            i = 0;
             for (key in signature_dict) {
               if (signature_dict.hasOwnProperty(key)) {
                 if (!local_dict.hasOwnProperty(key)) {
-                  checkLocalDeletion(queue, destination, key, source,
-                                     options.conflict_force,
-                                     options.conflict_revert,
-                                     options.conflict_ignore,
-                                     options);
+                  argument_list_deletion[i] = [undefined,
+                                               destination, key,
+                                               source,
+                                               options.conflict_force,
+                                               options.conflict_revert,
+                                               options.conflict_ignore,
+                                               options];
+                  i += 1;
                 }
               }
             }
+            queue.push(function () {
+              return dispatchQueue(
+                checkLocalDeletion,
+                argument_list_deletion,
+                options.operation_amount
+              );
+            });
           }
           if ((options.use_bulk_get === true) && (document_list.length !== 0)) {
             checkBulkSignatureDifference(queue, source, destination,
@@ -9296,6 +9372,12 @@ return new Parser;
                                          options.conflict_ignore);
           }
         });
+    }
+
+    function repairDocument(queue, id) {
+      queue.push(function () {
+        return repairDocumentAttachment(id);
+      });
     }
 
     return new RSVP.Queue()
@@ -9350,7 +9432,8 @@ return new Parser;
                                 CONFLICT_CONTINUE),
               check_modification: context._check_local_modification,
               check_creation: context._check_local_creation,
-              check_deletion: context._check_local_deletion
+              check_deletion: context._check_local_deletion,
+              operation_amount: context._parallel_operation_amount
             });
         }
       })
@@ -9381,7 +9464,8 @@ return new Parser;
                                 CONFLICT_CONTINUE),
               check_modification: context._check_remote_modification,
               check_creation: context._check_remote_creation,
-              check_deletion: context._check_remote_deletion
+              check_deletion: context._check_remote_deletion,
+              operation_amount: context._parallel_operation_amount
             });
         }
       })
@@ -9397,19 +9481,19 @@ return new Parser;
           return context._signature_sub_storage.allDocs()
             .push(function (result) {
               var i,
-                repair_document_queue = new RSVP.Queue();
+                argument_list = [],
+                len = result.data.total_rows;
 
-              function repairDocument(id) {
-                repair_document_queue
-                  .push(function () {
-                    return repairDocumentAttachment(id);
-                  });
+              for (i = 0; i < len; i += 1) {
+                argument_list.push(
+                  [undefined, result.data.rows[i].id]
+                );
               }
-
-              for (i = 0; i < result.data.total_rows; i += 1) {
-                repairDocument(result.data.rows[i].id);
-              }
-              return repair_document_queue;
+              return dispatchQueue(
+                repairDocument,
+                argument_list,
+                context._parallel_operation_amount
+              );
             });
         }
       });
@@ -11335,6 +11419,7 @@ return new Parser;
           "type": "POST",
           "url": name,
           "data": data,
+          "dataType": "blob",
           "xhrFields": {
             withCredentials: true
           }
