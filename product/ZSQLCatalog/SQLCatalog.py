@@ -2813,6 +2813,26 @@ class Catalog(Folder,
       return filter_dict
     return None
 
+  security.declarePublic('getConnectionId')
+  def getConnectionId(self, deferred=False):
+    """
+    Returns the 'normal' connection being used by the SQL Method(s) in this
+    catalog.
+    If 'deferred' is True, then returns the deferred connection
+    """
+    for method in self.objectValues():
+      if method.meta_type in ['Z SQL Method',]:
+        if deferred:
+          if 'deferred' in method.connection_id:
+            return method.connection_id
+          else:
+            continue
+        else:
+          if 'deferred' in method.connection_id:
+            continue
+          else:
+            return method.connection_id
+
   security.declarePrivate('getFilterableMethodList')
   def getFilterableMethodList(self):
     """
