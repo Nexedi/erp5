@@ -69,9 +69,13 @@ ZOPE_SECURITY_SUFFIX = '__roles__'
 SECURITY_QUERY_ARGUMENT_NAME = 'ERP5Catalog_security_query'
 
 class IndexableObjectWrapper(object):
+    __security_parameter_cache = None
+    __local_role_cache = None
 
-    def __init__(self, ob):
+    def __init__(self, ob, user_set, role_dict):
         self.__ob = ob
+        self.__user_set = user_set
+        self.__role_dict = role_dict
 
     def __getattr__(self, name):
         return getattr(self.__ob, name)
@@ -80,16 +84,16 @@ class IndexableObjectWrapper(object):
     uid = property(lambda self: self.__ob.getUid(),
                    lambda self, value: setattr(self.__ob, 'uid', value))
 
-    def _getSecurityParameterList(self):
-      result = self.__dict__.get('_cache_result', None)
-      if result is None:
+    def __getLocalRoleDict(self):
+      local_role_dict = self.__local_role_cache
+      if local_role_dict is None:
         ob = self.__ob
         # For each group or user, we have a list of roles, this list
         # give in this order : [roles on object, roles acquired on the parent,
         # roles acquired on the parent of the parent....]
         # So if we have ['-Author','Author'] we should remove the role 'Author'
         # but if we have ['Author','-Author'] we have to keep the role 'Author'
-        localroles = {}
+        local_role_dict = {}
         skip_role_set = set()
         skip_role = skip_role_set.add
         clear_skip_role = skip_role_set.clear
@@ -103,26 +107,28 @@ class IndexableObjectWrapper(object):
             elif role not in skip_role_set:
               new_role(role)
           if new_role_list:
-            localroles[key] = [new_role_list, False]
+            local_role_dict[key] = [new_role_list, False]
+        self.__local_role_cache = local_role_dict
+      return local_role_dict
 
-        portal = ob.getPortalObject()
-        role_dict = dict(portal.portal_catalog.getSQLCatalog().\
-                                              getSQLCatalogRoleKeysList())
-        for user_info in portal.acl_users.searchUsers(id=tuple(localroles), exact_match=True):
-          key = user_info['id']
-          try:
-            localroles[key][1] = True
-          except KeyError:
-            # We found a bug, report it but do not make indexation fail.
-            LOG(
-              'CatalogTool.IndexableObjectWrapper',
-              PROBLEM,
-              'searchUser(id=%r, exact_match=True) returned an entry with '
-              'id=%r. This is very likely a bugin a PAS plugin !' % (
-                tuple(localroles),
-                key,
-              ),
-            )
+    def _getSecurityGroupIdList(self):
+      """
+      Return the list of security group identifiers this document is
+      interested in. They may be actual user identifiers or not.
+      Supposed to be accessed by CatalogTool.
+      """
+      return self.__getLocalRoleDict().keys()
+
+    def _getSecurityParameterList(self):
+      result = self.__security_parameter_cache
+      if result is None:
+        ob = self.__ob
+        local_role_dict = self.__getLocalRoleDict()
+
+        role_dict = self.__role_dict
+        user_set = self.__user_set
+        for security_group_id, security_group_data in local_role_dict.iteritems():
+          security_group_data[1] = security_group_id in user_set
 
         allowed_dict = {}
 
@@ -176,7 +182,7 @@ class IndexableObjectWrapper(object):
               optimized_role_set.add((user, role))
         user_role_dict = {}
         user_view_permission_role_dict = {}
-        for user, (roles, user_exists) in localroles.iteritems():
+        for user, (roles, user_exists) in local_role_dict.iteritems():
           prefix = 'user:' + user
           for role in roles:
             is_not_in_optimised_role_set = (user, role) not in optimized_role_set
@@ -204,9 +210,11 @@ class IndexableObjectWrapper(object):
           sorted_allowed_by_local_roles_group_id[local_roles_group_id] = tuple(
             sorted(allowed))
 
-        self._cache_result = result = (sorted_allowed_by_local_roles_group_id,
-                                       user_role_dict,
-                                       user_view_permission_role_dict)
+        self.__security_parameter_cache = result = (
+          sorted_allowed_by_local_roles_group_id,
+          user_role_dict,
+          user_view_permission_role_dict,
+        )
       return result
 
     def getLocalRolesGroupIdDict(self):
@@ -761,18 +769,24 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         """
         return ZCatalog.countResults(self, REQUEST, **kw)
 
-    def wrapObject(self, object, sql_catalog_id=None, **kw):
-        """
-          Return a wrapped object for reindexing.
-        """
-        catalog = self.getSQLCatalog(sql_catalog_id)
-        if catalog is None:
-          # Nothing to do.
-          LOG('wrapObject', 0, 'Warning: catalog is not available')
-          return (None, None)
+    def wrapObjectList(self, object_value_list, catalog_value):
+      """
+        Return a list of wrapped objects for reindexing.
+      """
+      portal = self.getPortalObject()
 
-        document_object = aq_inner(object)
-        w = IndexableObjectWrapper(document_object)
+      user_set = set()
+      role_dict = dict(catalog_value.getSQLCatalogRoleKeysList())
+      catalog_security_uid_groups_columns_dict = catalog_value.getSQLCatalogSecurityUidGroupsColumnsDict()
+      default_security_uid_column = catalog_security_uid_groups_columns_dict['']
+      getPredicatePropertyDict = catalog_value.getPredicatePropertyDict
+      security_group_set = set()
+      wrapper_list = []
+      for object_value in object_value_list:
+        document_object = aq_inner(object_value)
+        w = IndexableObjectWrapper(document_object, user_set, role_dict)
+        w.predicate_property_dict = getPredicatePropertyDict(object_value) or {}
+        security_group_set.update(w._getSecurityGroupIdList())
 
         # Find the parent definition for security
         is_acquired = 0
@@ -787,37 +801,43 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           else:
             break
         if is_acquired:
-          document_w = IndexableObjectWrapper(document_object)
+          document_w = IndexableObjectWrapper(document_object, user_set, role_dict)
+          security_group_set.update(document_w._getSecurityGroupIdList())
         else:
           document_w = w
+        wrapper_list.append((document_object, w, document_w))
 
-        (security_uid_dict, optimised_roles_and_users) = \
-              catalog.getSecurityUidDict(document_w)
+      # Note: we mutate the set, so all related wrappers get (purposedly)
+      # affected by this, which must happen before _getSecurityParameterList
+      # is called (which happens when calling getSecurityUidDict below).
+      user_set.update(
+        x['id'] for x in portal.acl_users.searchUsers(
+          id=list(security_group_set),
+          exact_match=True,
+        )
+      )
 
-
-        w.optimised_roles_and_users = optimised_roles_and_users
-
-        catalog_security_uid_groups_columns_dict = \
-            catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
-        default_security_uid_column = catalog_security_uid_groups_columns_dict['']
-        for local_roles_group_id, security_uid in security_uid_dict.items():
+      getSecurityUidDict = catalog_value.getSecurityUidDict
+      getSubjectSetUid = catalog_value.getSubjectSetUid
+      wrapped_object_list = []
+      for (document_object, w, document_w) in wrapper_list:
+        (
+          security_uid_dict,
+          w.optimised_roles_and_users,
+        ) = getSecurityUidDict(document_w)
+        for local_roles_group_id, security_uid in security_uid_dict.iteritems():
           catalog_column = catalog_security_uid_groups_columns_dict.get(
-                local_roles_group_id, default_security_uid_column)
+            local_roles_group_id,
+            default_security_uid_column,
+          )
           setattr(w, catalog_column, security_uid)
+        (
+          w.subject_set_uid,
+          w.optimised_subject_list,
+        ) = getSubjectSetUid(document_w)
 
-        # XXX we should build vars begore building the wrapper
-
-        predicate_property_dict = catalog.getPredicatePropertyDict(object)
-        if predicate_property_dict is not None:
-          w.predicate_property_dict = predicate_property_dict
-        else:
-          w.predicate_property_dict = {}
-
-        (subject_set_uid, optimised_subject_list) = catalog.getSubjectSetUid(document_w)
-        w.optimised_subject_list = optimised_subject_list
-        w.subject_set_uid = subject_set_uid
-
-        return ImplicitAcquisitionWrapper(w, aq_parent(document_object))
+        wrapped_object_list.append(ImplicitAcquisitionWrapper(w, aq_parent(document_object)))
+      return wrapped_object_list
 
     security.declarePrivate('reindexObject')
     def reindexObject(self, object, idxs=None, sql_catalog_id=None,**kw):
