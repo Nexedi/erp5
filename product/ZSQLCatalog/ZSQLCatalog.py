@@ -692,15 +692,14 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     return []
 
-  security.declarePrivate('wrapObject')
-  def wrapObject(self, object, **kw):
+  security.declarePrivate('wrapObjectList')
+  def wrapObjectList(self, object_value_list, catalog_value):
     """
-      Return a wrapped object for reindexing.
+      Return a list of wrapped objects for reindexing.
 
       This method should be overridden if necessary.
     """
-    #LOG('ZSQLCatalog wrapObject', 0, 'object = %r, kw = %r' % (object, kw))
-    return object
+    return object_list
 
   security.declareProtected(manage_zcatalog_entries, 'catalog_object')
   def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None, **kw):
@@ -717,7 +716,6 @@ class ZCatalog(Folder, Persistent, Implicit):
                      (catalog is not None) and \
                      (self.source_sql_catalog_id == catalog.id)
     archiving = self.archive_path is not None
-    wrapped_object_list = []
     failed_object_list = []
     url_list = []
     archive_list = []
@@ -757,6 +755,7 @@ class ZCatalog(Folder, Persistent, Implicit):
       default_catalog = self.getSQLCatalog()
 
     # Construct list of object to catalogged
+    current_catalog_object_list = []
     for obj in object_list:
       if hot_reindexing:
         try:
@@ -794,10 +793,7 @@ class ZCatalog(Folder, Persistent, Implicit):
         goto_current_catalog = 1
 
       if goto_current_catalog:
-        # wrap object only when sure it will be reindex now
-        # thus security uid is also reindex
-        wrap_obj = self.wrapObject(obj, sql_catalog_id=sql_catalog_id)
-        wrapped_object_list.append(wrap_obj)
+        current_catalog_object_list.append(obj)
 
     # run activity or execute for each archive depending on priority
     if catalog_dict:
@@ -806,49 +802,56 @@ class ZCatalog(Folder, Persistent, Implicit):
           # if we reindex in current catalog, do not relaunch an activity for this
           continue
         d = catalog_dict[catalog_id]
-        # build the wrapped object list
-        wrapped_object_list_2 = []
-        for obj in d['obj']:
-          try:
-            wrap_obj = self.wrapObject(obj, sql_catalog_id=catalog_id)
-            wrapped_object_list_2.append(wrap_obj)
-          except ConflictError:
-            raise
-          except:
-            LOG('WARNING ZSQLCatalog', 0, 'wrapObject failed on the object %r' % (obj,), error=sys.exc_info())
-            failed_object_list.append(obj)
-
         # hot_reindexing is True when creating an object during a hot reindex, in this case, we don't want
         # to reindex it in destination catalog, it will be recorded an play only once
         if not hot_reindexing and self.hot_reindexing_state != HOT_REINDEXING_DOUBLE_INDEXING_STATE and \
                self.destination_sql_catalog_id == catalog_id:
           destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
           # reindex objects in destination catalog
-          destination_catalog.catalogObjectList(wrapped_object_list_2, **kw)
+          destination_catalog.catalogObjectList(
+            self.wrapObjectList(
+              object_value_list=d['obj'],
+              catalog_value=destination_catalog,
+            ),
+            **kw
+          )
         else:
           archive_catalog = self.getSQLCatalog(catalog_id)
           if immediate_reindex_archive:
-            archive_catalog.catalogObjectList(wrapped_object_list_2, **kw)
+            archive_catalog.catalogObjectList(
+              self.wrapObjectList(
+                object_value_list=d['obj'],
+                catalog_value=archive_catalog,
+              ),
+              **kw
+            )
           else:
             for obj in d['obj']:
               obj._reindexObject(sql_catalog_id=catalog_id, activate_kw = \
                                  {'priority': d['priority']}, disable_archive=1, **kw)
 
     if catalog is not None:
-      if wrapped_object_list:
-        catalog.catalogObjectList(wrapped_object_list, **kw)
+      if current_catalog_object_list:
+        catalog.catalogObjectList(
+          self.wrapObjectList(
+            object_value_list=current_catalog_object_list,
+            catalog_value=catalog,
+          ),
+          **kw
+        )
       if hot_reindexing:
         destination_catalog = self.getSQLCatalog(self.destination_sql_catalog_id)
         if destination_catalog.id != catalog.id:
           if self.hot_reindexing_state == HOT_REINDEXING_RECORDING_STATE:
             destination_catalog.recordObjectList(url_list, 1)
-          else:
-            wrapped_destination_object_list = []
-            for obj in object_list:
-              wrap_obj = self.wrapObject(obj, sql_catalog_id=self.destination_sql_catalog_id)
-              wrapped_destination_object_list.append(wrap_obj)
-            if wrapped_destination_object_list:
-              destination_catalog.catalogObjectList(wrapped_destination_object_list,**kw)
+          elif object_list:
+            destination_catalog.catalogObjectList(
+              self.wrapObjectList(
+                object_value_list=object_list,
+                catalog_value=destination_catalog,
+              ),
+              **kw
+            )
 
     object_list[:] = failed_object_list
 
