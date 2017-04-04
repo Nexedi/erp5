@@ -102,6 +102,7 @@
             tal:define="search_actions actions/object_search | nothing;
             exchange_actions actions/object_exchange | nothing;
             report_actions actions/object_report | nothing;
+            report_jio_actions actions/object_report_jio | nothing;
             button_actions actions/object_button | nothing;
             fast_input_actions actions/object_fast_input | nothing;
             sort_actions actions/object_sort | nothing;
@@ -220,7 +221,7 @@
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>
         </button>
-        <button tal:condition="report_actions" class="report" type="submit" name="Base_doReport:method" title="Report"
+        <button tal:condition="report_actions | report_jio_actions" class="report" type="submit" name="Base_doReport:method" title="Report"
                 i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Report</span>
