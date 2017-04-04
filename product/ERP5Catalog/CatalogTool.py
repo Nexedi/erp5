@@ -774,10 +774,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         document_object = aq_inner(object)
         w = IndexableObjectWrapper(document_object)
 
-        wf = getToolByName(self, 'portal_workflow')
-        if wf is not None:
-          w.__dict__.update(wf.getCatalogVariablesFor(object))
-
         # Find the parent definition for security
         is_acquired = 0
         while getattr(document_object, 'isRADContent', 0):
