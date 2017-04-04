@@ -3,6 +3,8 @@ actions that does not provide one.
 """
 from Products.PythonScripts.standard import url_quote
 
+if dialog_category == 'object_report':
+  return sorted(actions.get('object_report', []) + actions.get('object_report_jio', []), key=lambda x: x["priority"])
 if dialog_category != 'object_print':
   return actions.get(dialog_category, [])
 
