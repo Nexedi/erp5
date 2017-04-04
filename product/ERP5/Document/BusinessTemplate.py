@@ -3092,7 +3092,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
             new_value.remove(method_id)
             setattr(catalog, catalog_prop['id'], new_value)
 
-      if catalog.filter_dict.has_key(method_id):
+      if method_id in catalog.filter_dict:
         del catalog.filter_dict[method_id]
 
     # uninstall objects
