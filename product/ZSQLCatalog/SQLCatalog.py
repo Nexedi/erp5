@@ -804,7 +804,7 @@ class Catalog(Folder,
         for filt in root.getElementsByTagName("filter"):
           id = str(filt.getAttribute("id"))
           expression = filt.getAttribute("expression")
-          if not self.filter_dict.has_key(id):
+          if id not in self.filter_dict:
             self.filter_dict[id] = PersistentMapping()
           self.filter_dict[id]['filtered'] = 1
           self.filter_dict[id]['type'] = []
@@ -2648,7 +2648,7 @@ class Catalog(Folder,
 
       for id in method_id_list:
         # We will first look if the filter is activated
-        if not self.filter_dict.has_key(id):
+        if id not in self.filter_dict:
           self.filter_dict[id] = PersistentMapping()
 
         if REQUEST.has_key('%s_box' % id):
