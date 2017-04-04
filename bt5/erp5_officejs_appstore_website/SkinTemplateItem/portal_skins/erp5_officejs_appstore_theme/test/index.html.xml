@@ -23,17 +23,6 @@
             </value>
         </item>
         <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<html><body><h1>It works!</h1>\n
-<p>This is the default web page for this server.</p>\n
-<p>The web server software is running but no content has been added, yet.</p>\n
-</body></html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

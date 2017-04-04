@@ -23,67 +23,6 @@
             </value>
         </item>
         <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />\n
-    <meta name="viewport" content="width=device-width, user-scalable=no" />\n
-    <title></title>\n
-\n
-    <link rel="stylesheet" href="css/jquery-mobile/jquery-mobile.latest.css">\n
-    <link rel="stylesheet" href="css/extensions.css">\n
-    <link rel="stylesheet" href="css/fontawesome.css">\n
-    <link rel="stylesheet" href="css/themes.css">\n
-    <link rel="stylesheet" href="css/css.css">\n
-\n
-  </head>\n
-  <body>\n
-\n
-    <!-- global panel -->\n
-\n
-    <!-- global header -->\n
-\n
-    <div id="dashboard" data-role="page" data-theme="slapos-white" data-module="dashboard">\n
-      <div class="ui-content">\n
-        <!-- nothing to see here -->\n
-      </div>\n
-      <div style="text-align:center;">\n
-        <a href="http://www.miibeian.gov.cn/" style="color:white">沪ICP备14008524号</a>\n
-      </div>\n
-    </div>\n
-\n
-    <!-- global footer (not used) -->\n
-\n
-    <!-- global popup -->\n
-\n
-    <!-- JQM -->\n
-    <script src="js/libs/jquery/jquery.js"></script>\n
-    <script src="js/libs/jquery-mobile/jquery-mobile.js"></script>\n
-    <script src="js/extensions.js"></script>\n
-    <!-- JIO -->\n
-    <script src="js/libs/jio/sha256.amd.js"></script>\n
-    <script src="js/libs/jio/rsvp-custom.js"></script>\n
-    <script src="js/libs/jio/jio.js"></script>\n
-    <script src="js/libs/jio/complex_queries.js"></script>\n
-    <script src="js/libs/jio/localstorage.js"></script>\n
-\n
-    <!-- plugins -->\n
-    <script src="js/plugins/validval/jquery.validVal.js"></script>\n
-    <script src="js/plugins/i18next/i18next.js"></script>\n
-\n
-    <!-- stuff happens here -->\n
-    <script src="js/erp5_loader.js"></script>\n
-\n
-  </body>\n
-</html>\n
-
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>

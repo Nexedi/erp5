@@ -11,24 +11,16 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
-            <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts63755750.13</string> </value>
-        </item>
-        <item>
             <key> <string>__name__</string> </key>
             <value> <string>application_sample.json</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/json</string> </value>
+            <value> <string>text/json</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>size</string> </key>
-            <value> <int>4383</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
