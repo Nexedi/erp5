@@ -23,22 +23,6 @@
             </value>
         </item>
         <item>
-            <key> <string>raw</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-<html>\n
-<head>\n
-<script type="text/javascript">\n
-<!--\n
-   window.location="https://github.com/nexedi/jdocman/blob/tutorial/tutorial/TUTORIAL.md";\n
-//-->\n
-</script>\n
-</head>\n
-</html>
-
-]]></string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
