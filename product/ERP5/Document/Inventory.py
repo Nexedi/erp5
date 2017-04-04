@@ -115,12 +115,7 @@ class Inventory(Delivery):
     if sql_catalog_id is not None:
       # try to get connection used in the catalog
       catalog = portal.portal_catalog[sql_catalog_id]
-      for method in catalog.objectValues():
-        if method.meta_type == "Z SQL Method":
-          if 'deferred' not in method.connection_id \
-               and 'transactionless' not in method.connection_id:
-            connection_id = method.connection_id
-            break
+      connection_id = catalog.getConnectionId()
 
     default_inventory_calculation_list = ({ "inventory_params" : {"section": self.getDestinationSection(),
                                                                   "node" : self.getDestination(),

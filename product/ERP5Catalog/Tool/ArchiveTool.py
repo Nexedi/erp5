@@ -126,16 +126,9 @@ class ArchiveTool(BaseTool):
     # Guess connection id from current catalog
     source_catalog = portal_catalog.getSQLCatalog()
     source_catalog_id = source_catalog.getId()
-    if source_connection_id is None or source_deferred_connection_id is None:
-      for method in source_catalog.objectValues():
-        if method.meta_type == "Z SQL Method":
-          if source_deferred_connection_id is None and 'deferred' in method.connection_id:
-            source_deferred_connection_id = method.connection_id
-          elif source_connection_id is None and 'transactionless' not in method.connection_id:
-            source_connection_id = method.connection_id
-          if source_connection_id is not None and \
-             source_deferred_connection_id is not None:
-            break
+
+    source_connection_id = source_catalog.getConnectionId()
+    source_deferred_connection_id = source_catalog.getConnectionId(deferred=True)
 
     if source_connection_id is None or source_deferred_connection_id is None:
       raise ValueError, "Unable to determine connection id for the current catalog"
