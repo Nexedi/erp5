@@ -7,7 +7,7 @@ portal_catalog = portal.portal_catalog
 now = DateTime()
 
 query = AndQuery(
-          Query(portal_type = "Data Ingestion Line"),
+          Query(portal_type = ["Data Ingestion Line", "Data Analysis Line"]),
           Query(**{"stock.quantity": "!=0"}),
           Query(resource_portal_type = "Data Product"),
           # Should be improved to support mor than one analysis per ingestion
@@ -20,6 +20,8 @@ query = AndQuery(
               Query(use_relative_url = "use/big_data/ingestion/stream"))))
 
 for movement in portal_catalog(query):
+  if movement.getQuantity() <= 0:
+    continue
   if movement.DataIngestionLine_hasMissingRequiredItem():
     raise ValueError("Transformation requires movement to have " +
                      "aggregated data ingestion batch")
@@ -80,7 +82,7 @@ for movement in portal_catalog(query):
           else:
             # get related movements only from current data ingestion
             related_movement_list = movement.getParentValue().searchFolder(
-              portal_type="Data Ingestion Line",
+              portal_type=["Data Ingestion Line", "Data Analysis Line"],
               resource_relative_url = resource.getRelativeUrl())
           for related_movement in related_movement_list:
             aggregate_set.update(related_movement.getAggregateSet())
