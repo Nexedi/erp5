@@ -1,7 +1,16 @@
 Changes
 =======
 
+0.4.47 (2016-04-05)
+-------------------
+
+ * erp5.util.testnode:
+
+   - Make it more robust in cases where we have from time to time failures [Sebastien Robin]
+   - cosmetic: avoid -repository suffix [Julien Muchembled]
+
 0.4.46 (2016-09-29)
+-------------------
 
  * erp5.util.testnode:
 
