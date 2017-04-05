@@ -1129,7 +1129,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         }
       for select in select_list:
         if editable_field_dict.has_key(select):
-          REQUEST.set('cell', document)
+          REQUEST.set('cell', sql_document)
   
           if ('default' in editable_field_dict[select].tales):
             tmp_value = None
