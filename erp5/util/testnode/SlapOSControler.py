@@ -294,7 +294,7 @@ class SlapOSControler(object):
     except:
         self.log("SlapOSControler.initializeSlapOSControler, \
                  exception in registerSupply", exc_info=sys.exc_info())
-        raise
+        raise ValueError("Unable to registerSupply")
     # Reset all previously generated software if needed
     if reset_software:
       self._resetSoftware()
