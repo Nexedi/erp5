@@ -41,4 +41,6 @@ return default_web_page.WebPage_viewAsWeb(mapping_dict={
   "language_map": json.dumps({tmp['id']: portal.Base_translateString(tmp['title'], lang = tmp['id']) for tmp in portal.Localizer.get_languages_map() if tmp['id'] in available_language_set}),
   "default_selected_language":  portal.Localizer.get_selected_language(),
   "website_url_set": json.dumps(website_url_set),
+  "site_description": web_section.getLayoutProperty("description", default=""),
+  "site_keywords": web_section.getLayoutProperty("subject", default=""),
 })
