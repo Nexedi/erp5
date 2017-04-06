@@ -144,8 +144,6 @@ UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300 # XXX 300 is arbitrary value of catalog object list
 MAX_PATH_LEN = 255
 
-valid_method_meta_type_list = ('Z SQL Method', 'LDIF Method', 'Script (Python)') # Nicer
-
 manage_addSQLCatalogForm = DTMLFile('dtml/addSQLCatalog',globals())
 
 # Here go uid buffers
@@ -1866,7 +1864,10 @@ class Catalog(Folder,
 
   security.declarePrivate('getCatalogMethodIds')
   def getCatalogMethodIds(self,
-      valid_method_meta_type_list=valid_method_meta_type_list):
+                          valid_method_meta_type_list=('Z SQL Method',
+                                                       'LDIF Method',
+                                                       'Script (Python)')
+                          ):
     """Find Z SQL methods in the current folder and above
     This function return a list of ids.
     """
