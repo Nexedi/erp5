@@ -2,7 +2,7 @@ web_page_module/ckeditor_*
 image_module/ckeditor_*
 web_page_module/gadget_ckeditor_*
 web_page_module/gadget_officejs_*
-web_page_module/jio_mappingstorage_js
+web_page_module/jio_*
 web_site_module/officejs_bookmark_manager
 web_site_module/officejs_bookmark_manager/**
 web_site_module/officejs_text_editor
@@ -22,3 +22,4 @@ web_site_module/officejs_codemirror/**
 web_site_module/officejs_cribjs
 web_site_module/officejs_cribjs/**
 web_site_module/officejs_whiteboard
+web_site_module/officejs_export

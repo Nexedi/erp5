@@ -5,10 +5,12 @@
 
   function AppCacheStorage(spec) {
     this._manifest = spec.manifest;
-    this._url = window.location.origin + window.location.pathname +
+    this._url = spec.url !== undefined ? spec.url :
+      (window.location.origin + window.location.pathname +
       (window.location.pathname.endsWith('/') ? '' : '/') +
-      spec.version + (spec.version.endsWith('/') ? '' : '/');
-    this._url_list = ["/"];
+      ((spec.version !== undefined) ?
+      (spec.version + (spec.version.endsWith('/') ? '' : '/')) : ""));
+    this._url_list = ["/", spec.manifest];
   }
 
   AppCacheStorage.prototype.get = function (url) {
@@ -58,7 +60,6 @@
 
   AppCacheStorage.prototype.repair = function () {
     var storage = this;
-    console.log("start getting cache");
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
