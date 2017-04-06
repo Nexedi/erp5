@@ -79,8 +79,8 @@
                         <string>my_reference</string>
                         <string>my_int_index</string>
                         <string>my_resource_title</string>
-                        <string>my_use</string>
                         <string>my_variation_category_list</string>
+                        <string>my_use</string>
                       </list>
                     </value>
                 </item>
