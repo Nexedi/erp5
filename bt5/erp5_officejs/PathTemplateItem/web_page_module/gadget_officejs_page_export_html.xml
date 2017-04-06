@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,20 +61,18 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>jio_appcachestorage.js</string> </value>
+            <value> <string>gadget_officejs_page_export.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -84,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_appcachestorage_js</string> </value>
+            <value> <string>gadget_officejs_page_export_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -92,7 +90,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -102,13 +100,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>jio_appcachestorage.js</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Gadget OfficeJS jIO Export Page</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -194,7 +186,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487681459.15</float>
+                        <float>1491395389.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -239,7 +231,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.41792.31362.1314</string> </value>
+                <value> <string>958.33099.10317.11264</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +249,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1492082677.03</float>
+                        <float>1491491237.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -314,7 +306,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487582792.27</float>
+                        <float>1491395255.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

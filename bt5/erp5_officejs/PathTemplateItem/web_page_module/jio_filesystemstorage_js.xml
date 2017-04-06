@@ -74,7 +74,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>jio_appcachestorage.js</string> </value>
+            <value> <string>jio_filesystemstorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_appcachestorage_js</string> </value>
+            <value> <string>jio_filesystemstorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -102,7 +102,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>jio_appcachestorage.js</string> </value>
+            <value> <string>jio_filesystemstorage.js</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -194,7 +194,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487681459.15</float>
+                        <float>1491464276.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -239,7 +239,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.41792.31362.1314</string> </value>
+                <value> <string>958.33063.40118.853</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +257,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1492082677.03</float>
+                        <float>1491489660.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -314,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487582792.27</float>
+                        <float>1491400955.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>OfficeJS Export Page</title>
+
+    <link rel="stylesheet" href="gadget_erp5_nojqm.css">
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="jiodev.js"></script>
+    <script src="gadget_global.js"></script>
+
+    <script src="gadget_officejs_page_export.js"></script>
+    <script src="zipfilestorage-with-jszip.js"></script>
+    <script src="jio_filesystemstorage.js"></script>
+    <script src="jio_appcachestorage.js"></script>
+
+  </head>
+
+  <body>
+    <article class="ui-content ui-body-c">
+      <section class="ui-content-header-plain">
+        <h3 class="ui-content-title ui-body-c">
+          <span class="ui-icon ui-icon-custom ui-icon-database">&nbsp;</span>
+          Export
+        </h3>
+      </section>
+      <section class="ui-body-c ui-content-section">
+        <form class="export-form">
+          <div class="ui-form">
+            <div class="ui-field-contain">
+              <label data-i18n="Cache File:">Cache File:</label>
+              <input name="cachefile" required/>
+            </div>
+          </div>
+          <div class="ui-form">
+            <div class="ui-field-contain">
+              <label data-i18n="Site Url:">Site Url:</label>
+              <input name="site_url" required/>
+            </div>
+          </div>
+          <div class="ui-form">
+            <div class="ui-field-contain">
+              <label data-i18n="Storage format for Export:">Storage format for export:</label>
+              <select name="storage_type">
+                <option value="zipfile">Export as zipfile</option>
+              </select>
+            </div>
+          </div>
+          <div class="ui-form">
+            <div class="ui-field-contain">
+              <label data-i18n="File Name:">File Name:</label>
+              <input name="filename"/>
+            </div>
+          </div>
+          <div class="select-storage ui-controlgroup ui-controlgroup-horizontal">
+            <div class="ui-grid-b ui-responsive">
+              <div class="ui-block-a"></div>
+              <div class="ui-block-b"></div>
+              <div class="ui-block-c">
+                <button type="submit" data-i18n="Export" class="ui-btn-btn-right">Export</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </section>
+    </article>
+
+    <div id="global_setting_gadget" style="display: none;"></div>
+  </body>
+</html>
