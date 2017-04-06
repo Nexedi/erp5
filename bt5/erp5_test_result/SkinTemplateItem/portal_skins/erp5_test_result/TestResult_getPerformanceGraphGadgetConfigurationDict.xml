@@ -50,11 +50,11 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>test_title=None, from_date=None, to_date=None, query=None, title=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestResultModule_getTestPerfResultList</string> </value>
+            <value> <string>TestResult_getPerformanceGraphGadgetConfigurationDict</string> </value>
         </item>
       </dictionary>
     </pickle>
