@@ -88,18 +88,19 @@ for movement in portal_catalog(query):
             aggregate_set.update(related_movement.getAggregateSet())
             if related_movement.getUse() == "big_data/ingestion/batch":
               related_movement.getParentValue().deliver()
-        else:
-          # it is an output line
-          # create new item based on item_type
-          item_type = resource.getAggregatedPortalType()
-          module = portal.getDefaultModule(item_type)
-          item = module.newContent(portal_type = item_type,
-                            title = transformation.getTitle(),
-                            reference = "%s-%s" %(transformation.getTitle(),
-                                                 data_ingestion.getReference()),
-                            version = '001')
-          item.validate()
-          aggregate_set.add(item.getRelativeUrl())
+        # create new item based on item_type if it is not already aggregated
+        aggregate_type_set = set(
+          [portal.restrictedTraverse(a).getPortalType() for a in aggregate_set])
+        for item_type in transformation_line.getAggregatedPortalTypeList():
+          if item_type not in aggregate_type_set:
+            module = portal.getDefaultModule(item_type)
+            item = module.newContent(portal_type = item_type,
+                              title = transformation.getTitle(),
+                              reference = "%s-%s" %(transformation.getTitle(),
+                                                   data_ingestion.getReference()),
+                              version = '001')
+            item.validate()
+            aggregate_set.add(item.getRelativeUrl())
 
       data_analysis.newContent(
         portal_type = "Data Analysis Line",
@@ -110,6 +111,7 @@ for movement in portal_catalog(query):
         variation_category_list = transformation_line.getVariationCategoryList(),
         quantity = quantity,
         quantity_unit = transformation_line.getQuantityUnit(),
+        use = transformation_line.getUse(),
         aggregate_set = aggregate_set)
         
     data_analysis.start()
