@@ -77,16 +77,7 @@
     // ready
     /////////////////////////////////////////////////////////////////
     .ready(function (gadget) {
-      gadget.property_dict = {
-        render_deferred: RSVP.defer()
-      };
-    })
-
-    .ready(function (gadget) {
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.property_dict.element = element;
-        });
+      gadget.property_dict = {};
     })
 
     /////////////////////////////////////////////////////////////////
@@ -108,7 +99,7 @@
           graph_data_and_parameter,
           chart;
 
-      container = gadget.property_dict.element.querySelector(".graph-content");
+      container = gadget.element.querySelector(".graph-content");
       graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
       console.log("graph_data_and_parameter", graph_data_and_parameter);
       chart = new Chart(container, graph_data_and_parameter);
@@ -125,7 +116,7 @@
       */
       var gadget = this,
           graph_data_and_parameter,
-          container = gadget.property_dict.element.querySelector(".graph-content"),
+          container = gadget.element.querySelector(".graph-content"),
           chart;
       gadget.property_dict.chart.destroy();
       graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
