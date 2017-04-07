@@ -33,7 +33,10 @@ class _ERP5(ERP5TypeTestSuite):
     component_re = re.compile(".*/([^/]+)/TestTemplateItem/portal_components"
                               "/test\.[^.]+\.([^.]+).py$")
     for test_path in (
-        glob('%s/bt5/erp5_business_package/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        glob('%s/product/*/tests/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
+        glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
+        #glob('%s/bt5/erp5_business_package/TestTemplateItem/portal_components/test.*.test*.py' % path)):
         #glob('%s/product/*/tests/test*.py' % path) +
         #glob('%s/bt5/*/TestTemplateItem/test*.py' % path) +
         #glob('%s/bt5/*/TestTemplateItem/portal_components/test.*.test*.py' % path)):
