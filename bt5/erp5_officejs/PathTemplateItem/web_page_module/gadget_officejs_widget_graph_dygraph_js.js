@@ -127,16 +127,7 @@
     // ready
     /////////////////////////////////////////////////////////////////
     .ready(function (gadget) {
-      gadget.property_dict = {
-        render_deferred: RSVP.defer()
-      };
-    })
-
-    .ready(function (gadget) {
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.property_dict.element = element;
-        });
+      gadget.property_dict = {};
     })
 
     /////////////////////////////////////////////////////////////////
@@ -156,10 +147,10 @@
           container,
           graph_data_and_parameter;
 
-      container = gadget.property_dict.element.querySelector(".graph-content");
+      container = gadget.element.querySelector(".graph-content");
 
       graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
-      gadget.property_dict.graph = new Dygraph(container, 
+      gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);
 
