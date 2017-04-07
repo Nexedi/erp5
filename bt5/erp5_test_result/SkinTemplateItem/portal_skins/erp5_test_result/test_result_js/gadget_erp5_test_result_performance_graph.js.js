@@ -1,6 +1,6 @@
 /*jslint indent: 2, nomen: true */
-/*global window, rJS, RSVP, console, loopEventListener */
-(function (window, rJS, RSVP, loopEventListener) {
+/*global window, rJS, RSVP, console */
+(function (window, rJS, RSVP) {
   "use strict";
 
   var WIDGET_GRAPH_URL = "../gadget_officejs_widget_graph_chart.html";
@@ -23,8 +23,8 @@
   function getCheckDateAndRefreshGraphFunction(gadget) {
     return function checkDateAndRefreshGraph() {
       var from_date, at_date, i;
-      from_date = gadget.property_dict.element.querySelector('[name="from_date"]').value;
-      at_date = gadget.property_dict.element.querySelector('[name="at_date"]').value;
+      from_date = gadget.element.querySelector('[name="from_date"]').value;
+      at_date = gadget.element.querySelector('[name="at_date"]').value;
       if (at_date !== "" && from_date !== "") {
         console.log("will need to get data");
         return gadget.jio_allDocs({
@@ -70,12 +70,8 @@
 
   rJS(window)
     .ready(function (gadget) {
-      gadget.property_dict = {};
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.property_dict.element = element;
-          gadget.property_dict.deferred = RSVP.defer();
-        });
+      gadget.property_dict = {
+      };
     })
 
     //////////////////////////////////////////////
@@ -90,35 +86,22 @@
       console.log("gadget_erp5_test_result_performance_graph, render, options", option_dict);
       var gadget = this;
       gadget.property_dict.option_dict = option_dict.value;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.property_dict.deferred.resolve();
-        });
+      gadget.renderGraph(); //Launch as a service, not blocking, we could run other job if we wish.
     })
     /////////////////////////////////////////
     // Render text content gadget
     /////////////////////////////////////////
-    .declareService(function () {
+    .declareJob("renderGraph", function () {
       var gadget = this,
         graph_gadget = null;
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.property_dict.deferred.promise;
-        })
-        .push(function () {
-          return RSVP.all([
-            gadget.declareGadget(
+      return gadget.declareGadget(
               WIDGET_GRAPH_URL,
               {
                 scope: "graph",
-                element: gadget.property_dict.element.querySelector(".document-content")
-              })
-            ]);
-        })
-
-        .push(function (result) {
-          graph_gadget = result[0];
+                element: gadget.element.querySelector(".document-content")
+      })
+        .push(function (graph_gadget) {
           gadget.property_dict.graph_widget = graph_gadget;
           gadget.property_dict.graph_data_dict = {data: [{
             value_dict: {0: [],
@@ -138,31 +121,18 @@
           var now = new Date(), last_month, tomorrow;
           last_month = new Date(now.valueOf() - 86400 * 1000 * 30); // - 30 days
           tomorrow = new Date(now.valueOf() + 86400 * 1000 * 1); // + 1 day
-          gadget.property_dict.element.querySelector('[name="from_date"]').value = getDateAsString(last_month);
-          gadget.property_dict.element.querySelector('[name="at_date"]').value = getDateAsString(tomorrow);
+          gadget.element.querySelector('[name="from_date"]').value = getDateAsString(last_month);
+          gadget.element.querySelector('[name="at_date"]').value = getDateAsString(tomorrow);
         })
         .push(function () {
-          getCheckDateAndRefreshGraphFunction(gadget)();
+          return getCheckDateAndRefreshGraphFunction(gadget)();
         });
     })
-    .declareService(function () {
-      var gadget = this;
-      return loopEventListener(
-        gadget.property_dict.element.querySelector('[name="from_date"]'),
-        'change',
-        false,
-        function () {
-          getCheckDateAndRefreshGraphFunction(gadget)();
-        });
-    })
-    .declareService(function () {
-      var gadget = this;
-      return loopEventListener(
-        gadget.property_dict.element.querySelector('[name="at_date"]'),
-        'change',
-        false,
-        function () {
-          getCheckDateAndRefreshGraphFunction(gadget)();
-        });
+    .onEvent('change', function (evt) {
+      if (evt.target === this.element.querySelector('[name="from_date"]')) {
+        return getCheckDateAndRefreshGraphFunction(this)();
+      } else if (evt.target === this.element.querySelector('[name="at_date"]')) {
+        return getCheckDateAndRefreshGraphFunction(this)();
+      }
     });
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS, RSVP));
