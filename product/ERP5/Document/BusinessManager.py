@@ -1334,6 +1334,11 @@ class BusinessManagerFolder(BusinessManagerArchive):
     try:
       for root, dirs, files in os.walk(root):
         for file_name in files:
+          # If the item name is Business Item, then only import the files which
+          # mattter for this Business Item
+          if item_name == 'BusinessItem':
+            if not fnmatch.fnmatch(file_name, '%s.*' % item._path.split('/')[-1]):
+              continue
           file_name = join(root, file_name)
           with open(file_name, 'rb') as f:
             file_name = posixpath.normpath(file_name[root_path_len:])
