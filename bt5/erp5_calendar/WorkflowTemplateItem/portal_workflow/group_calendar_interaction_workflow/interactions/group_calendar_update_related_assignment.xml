@@ -27,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>GroupCalendar_callUpdateRelatedAssignment</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>callUpdateRelatedAssignment</string>
+              </list>
             </value>
         </item>
         <item>
@@ -67,9 +67,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Group Calendar</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
