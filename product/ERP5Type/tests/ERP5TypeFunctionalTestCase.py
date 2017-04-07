@@ -46,7 +46,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
 ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
 
@@ -155,10 +154,10 @@ class FunctionalTestRunner:
       firefox_driver = firefox_bin.replace("firefox-slapos", "geckodriver")
       firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
       firefox_capabilities['marionette'] = True
+      firefox_capabilities['binary'] = firefox_bin
       browser = webdriver.Firefox(
         capabilities=firefox_capabilities,
-        executable_path=firefox_driver,
-        firefox_binary=FirefoxBinary(firefox_bin))
+        executable_path=firefox_driver)
       start_time = time.time()
       browser.get(self._getTestURL())
 
