@@ -1899,6 +1899,11 @@ class TemplateTool (BaseTool):
           else:
             # If there is  no item at old state, install the new_item
             new_item = installation_process.getBusinessItemByPath(path)
+            # XXX: Hack for not trying to install the sub-objects from zexp,
+            # This should rather be implemneted while exportign the object,
+            # where we shouldn't export sub-objects in the zexp
+            if new_item._value._tree:
+              del new_item._value._tree
             new_item.install(installation_process)
 
       return error_list
