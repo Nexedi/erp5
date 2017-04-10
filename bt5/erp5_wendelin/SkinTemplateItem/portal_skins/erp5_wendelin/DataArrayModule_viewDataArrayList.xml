@@ -70,6 +70,7 @@
                       <list>
                         <string>listbox_shape</string>
                         <string>listbox_size</string>
+                        <string>listbox_dtype</string>
                       </list>
                     </value>
                 </item>
