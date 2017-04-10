@@ -929,10 +929,9 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_node_module = self.test_node_module
 
     # Subscribe nodes
-    node_list = [self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1"),
-             self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2"),
-             self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3"),
-             self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")]
+    node_list = [
+      ('NODE-%s' % (i,), self.scalability_distributor.subscribeNode("COMP%s-Scalability-Node%s" % (i, i), computer_guid="COMP-%s" % (i,))) for i in range(1,5)
+    ]
     self.tic()
     self._callOptimizeAlarm()
 
@@ -944,10 +943,10 @@ class TestTaskDistribution(ERP5TypeTestCase):
       partition_dict = ""
       for j in range(0,i):
         family_name = ['user', 'activity'][j%2]
-        partition_dict += '"%s-%s":{\n' %(family_name, node_list[j].getReference())
+        partition_dict += '"%s-%s":{\n' %(family_name, node_list[j][0])
         partition_dict += ' "instance-count": {{ count }},\n'
         partition_dict += ' "family": "%s",\n' %family_name
-        partition_dict += ' "computer_guid": "%s"\n' %node_list[j].getReference()
+        partition_dict += ' "computer_guid": "%s"\n' %node_list[j][0]
         partition_dict += '}' 
         if j != i-1:
           partition_dict += ',\n'
@@ -973,17 +972,17 @@ class TestTaskDistribution(ERP5TypeTestCase):
                        graph_coordinate=graph_coordinate, cluster_configuration=cluster_configuration)
     self.tic()
 
-    # Master test node launch startTestSuite
-    for node in node_list:
-      if node.getMaster():
-        test_suite_title = self.scalability_distributor.startTestSuite(title=node.getTitle())
-#        log("test_suite_title: %s" %test_suite_title)
-        break
-    # Get configuration list generated from test suite
-#    configuration_list = self.scalability_distributor.generateConfiguration(test_suite_title)
-   
-    # logs
-#    log(configuration_list)    
+#    # Master test node launch startTestSuite
+#    for node in node_list:
+#      if node.getMaster():
+#        test_suite_title = self.scalability_distributor.startTestSuite(title=node.getTitle())
+##        log("test_suite_title: %s" %test_suite_title)
+#        break
+#    # Get configuration list generated from test suite
+##    configuration_list = self.scalability_distributor.generateConfiguration(test_suite_title)
+#   
+#    # logs
+##    log(configuration_list)    
 
     def test_19_testMultiDistributor(self):
       pass
