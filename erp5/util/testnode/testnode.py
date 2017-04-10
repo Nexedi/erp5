@@ -329,8 +329,18 @@ develop = false
           self.test_suite_portal = taskdistribution.TaskDistributor(
                                                         portal_url,
                                                         logger=DummyLogger(log))
-          self.test_suite_portal.subscribeNode(node_title=config['test_node_title'],
+          node_configuration = self.test_suite_portal.subscribeNode(node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
+          if type(node_configuration) == str:
+            # Backward compatiblity
+            node_configuration = json.loads(node_configuration)
+          if node_configuration is not None and \
+              'process_timeout' in node_configuration \
+              and node_configuration['process_timeout'] is not None:
+            process_timeout = node_configuration['process_timeout']
+            log('Received and using process timeout from master: %i' % (
+              process_timeout))
+            self.process_manager.max_timeout = process_timeout
           test_suite_data = self.test_suite_portal.startTestSuite(
                                                node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
