@@ -262,12 +262,15 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     test_node_module = self._getTestNodeModule()
     portal = self.getPortalObject()
 
+    config = {}
     tag = "%s_%s" % (self.getRelativeUrl(), title)
     if portal.portal_activities.countMessageWithTag(tag) == 0:
       test_node_list = test_node_module.searchFolder(
         portal_type="Test Node",
         title=SimpleQuery(comparison_operator='=', title=title),
       )
+      if getattr(self, 'getProcessTimeout', None) is not None:
+        config['process_timeout'] = self.getProcessTimeout()
       assert len(test_node_list) in (0, 1), "Unable to find testnode : %s" % title
       test_node = None
       if len(test_node_list) == 1:
@@ -283,8 +286,9 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
                                       activate_kw={'tag': tag})
         self.activate(after_tag=tag).optimizeConfiguration()
       test_node.setPingDate()
-      return test_node
-    return None
+    if batch_mode:
+      return config
+    return json.dumps(config)
 
   def _getSortedNodeTestSuiteToRun(self, test_node):
     """
