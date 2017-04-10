@@ -104,6 +104,7 @@
                       <list>
                         <string>my_id</string>
                         <string>my_max_test_suite</string>
+                        <string>my_process_timeout</string>
                       </list>
                     </value>
                 </item>
