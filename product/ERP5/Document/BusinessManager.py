@@ -350,7 +350,7 @@ class BusinessManager(XMLObject):
   __rsub__ = __sub__
 
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
-  def storeTemplateData(self):
+  def storeTemplateData(self, isBuild=False):
     """
     Store data for objects in the ERP5
     """
@@ -361,6 +361,8 @@ class BusinessManager(XMLObject):
 
     if path_item_list:
       path_item_list = [l.split(' | ') for l in path_item_list]
+
+    new_path_item_list = []
 
     for path_item in path_item_list:
 
@@ -373,12 +375,24 @@ class BusinessManager(XMLObject):
         # same layer and sign
         # XXX: Not very effective as it tries to get all the objects which makes
         # it vey slow
-        path_list = self._resolvePath(portal, [], path_item[0].split('/'))
-        for path in path_list:
-          try:
-            self._path_item_list.append(BusinessItem(path, path_item[1], path_item[2]))
-          except IndexError:
-            pass
+        if isBuild:
+          # If build process, then resolve path and then update the path list
+          # and path item list for the BusinessItem
+          path_list = self._resolvePath(portal, [], path_item[0].split('/'))
+          for path in path_list:
+            try:
+              self._path_item_list.append(BusinessItem(path, path_item[1], path_item[2]))
+              resolved_path = (' | ').join((path, path_item[1], path_item[2]))
+              new_path_item_list.append(resolved_path)
+            except IndexError:
+              pass
+        else:
+          # If not build, i.e, import/export, just update the _path_item_list
+          self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
+
+    if isBuild:
+      # If build process, update the path list of the Business Manager
+      self._setTemplatePathList(new_path_item_list)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -443,7 +457,7 @@ class BusinessManager(XMLObject):
     OFS Database"""
     LOG('Business Manager', INFO, 'Building Business Manager')
     if not no_action:
-      self.storeTemplateData()
+      self.storeTemplateData(isBuild=True)
       for path_item in self._path_item_list:
         path_item.build(self, **kw)
       self.status = 'built'
