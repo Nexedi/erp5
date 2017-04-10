@@ -483,7 +483,8 @@ class TaskDistributor(RPCRetry):
       """
         Susbscribes node with the node title and the computer guid.
       """
-      self._retryRPC('subscribeNode', (node_title,computer_guid,))
+      result = self._retryRPC('subscribeNode', (node_title,computer_guid,))
+      return result
 
 
     def generateConfiguration(self, test_suite_title):
