@@ -751,23 +751,59 @@ class TestCMFCategory(ERP5TypeTestCase):
 
   def test_21_AcquiredPortalType(self):
     """Test if acquired_portal_type works correctly."""
+    self.getCategoryTool().newContent(
+        portal_type='Base Category',
+        id='test_acquired_portal_type_base_category',
+        acquisition_base_category_list=('order',),
+        acquisition_portal_type="python: ('Sale Order', )",
+    )
+    def addBaseCategoryToTypeDefinition(type_definition):
+      base_category_set = set(type_definition.getTypeBaseCategoryList())
+      base_category_set.add('test_acquired_portal_type_base_category')
+      type_definition.setTypeBaseCategoryList(tuple(base_category_set))
 
-    order = self.portal.sale_order_module[self.id1]
-    packing_list = self.portal.sale_packing_list_module[self.id1]
-    person = self.getPersonModule()[self.id1]
+    def removeBaseCategoryToTypeDefinition(type_definition):
+      base_category_set = set(type_definition.getTypeBaseCategoryList())
+      base_category_set.discard('test_acquired_portal_type_base_category')
+      type_definition.setTypeBaseCategoryList(tuple(base_category_set))
 
-    person.setTitle('toto')
-    self.assertEqual(person.getTitle(), 'toto')
+    addBaseCategoryToTypeDefinition(self.portal.portal_types['Sale Order'])
+    addBaseCategoryToTypeDefinition(self.portal.portal_types['Sale Packing List'])
+    self.commit()
 
-    order.setDestinationAdministrationValue(person)
-    self.assertEqual(order.getDestinationAdministrationPersonTitle(), 'toto')
+    try:
+      order = self.portal.sale_order_module[self.id1]
+      packing_list = self.portal.sale_packing_list_module[self.id1]
+      person = self.getPersonModule()[self.id1]
 
-    packing_list.setDestinationAdministrationValue(None)
-    packing_list.setOrderValue(None)
-    self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), None)
+      person.setTitle('toto')
 
-    packing_list.setOrderValue(order)
-    self.assertEqual(packing_list.getDestinationAdministrationPersonTitle(), 'toto')
+      order.setTestAcquiredPortalTypeBaseCategoryValue(person)
+      self.assertEqual('toto', order.getTestAcquiredPortalTypeBaseCategoryTitle())
+
+      self.assertEqual(None, packing_list.getTestAcquiredPortalTypeBaseCategoryTitle())
+
+      packing_list.setOrderValue(order)
+      self.assertEqual('toto', packing_list.getTestAcquiredPortalTypeBaseCategoryTitle())
+
+      # category acquisition only acquire from `acquisition_base_category_list`
+      # if the document related through this `acquisition_base_category_list`'s
+      # portal type is in `acquisition_portal_type`
+      self.getCategoryTool().test_acquired_portal_type_base_category.setAcquisitionPortalType(
+          "python:('Person', 'Sale Packing List', )",) # Not Sale Order
+      self.commit()
+      self.assertEqual(None, packing_list.getTestAcquiredPortalTypeBaseCategoryTitle())
+
+      # if `acquisition_portal_type` is empty, acquisition will happen
+      # regardless of the portal type.
+      self.getCategoryTool().test_acquired_portal_type_base_category.setAcquisitionPortalType(
+          "python:()",)
+      self.commit()
+      self.assertEqual('toto', packing_list.getTestAcquiredPortalTypeBaseCategoryTitle())
+    finally:
+      removeBaseCategoryToTypeDefinition(self.portal.portal_types['Sale Order'])
+      removeBaseCategoryToTypeDefinition(self.portal.portal_types['Sale Packing List'])
+      self.commit()
 
   def test_22_UserFriendlyException(self):
     """Test message raise if bad use of setter."""
