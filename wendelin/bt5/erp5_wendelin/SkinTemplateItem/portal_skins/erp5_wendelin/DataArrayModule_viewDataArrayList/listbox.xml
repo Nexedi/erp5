@@ -85,6 +85,14 @@
                           <string>Size</string>
                         </tuple>
                         <tuple>
+                          <string>shape</string>
+                          <string>Shape</string>
+                        </tuple>
+                        <tuple>
+                          <string>dtype</string>
+                          <string>Dtype</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -105,7 +113,7 @@
                         </tuple>
                         <tuple>
                           <string>version</string>
-                          <string>version</string>
+                          <string>Version</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -114,6 +122,10 @@
                         <tuple>
                           <string>shape</string>
                           <string>Shape</string>
+                        </tuple>
+                        <tuple>
+                          <string>dtype</string>
+                          <string>Dtype</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -160,6 +172,10 @@
                         <tuple>
                           <string>size</string>
                           <string>Size</string>
+                        </tuple>
+                        <tuple>
+                          <string>dtype</string>
+                          <string>Dtype</string>
                         </tuple>
                       </list>
                     </value>
