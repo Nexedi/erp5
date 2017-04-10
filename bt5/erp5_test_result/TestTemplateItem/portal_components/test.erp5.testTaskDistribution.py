@@ -149,6 +149,24 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.portal.portal_alarms.test_result_alarm_restarted_stuck_test_result.activeSense()
     self.tic()
 
+  def test_subscribeNode_ReturnValue(self):
+    config = self.distributor.subscribeNode('COMP-X', 'QPK')
+    config = json.loads(config)
+    self.assertEqual(
+      config,
+      {'process_timeout': None}
+    )
+
+    self.distributor.edit(
+      process_timeout=50
+    )
+    config = self.distributor.subscribeNode('COMP-X', 'QPK')
+    config = json.loads(config)
+    self.assertEqual(
+      config,
+      {'process_timeout': 50}
+    )
+
   def test_03_startTestSuiteWithOneTestNode(self):
     config_list = json.loads(self.distributor.startTestSuite(
                              title="COMP32-Node1"))
