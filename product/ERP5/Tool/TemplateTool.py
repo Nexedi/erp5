@@ -386,8 +386,11 @@ class TemplateTool (BaseTool):
       if id is None:
         id = self.generateNewId()
 
-      urltype, path = splittype(url)
-      if WIN and urltype and '\\' in path:
+      urltype, name = splittype(url)
+      # Create a zexp path which would be used for Business Manager files
+      zexp_path = name + '/' + name.split('/')[-1] + '.zexp'
+
+      if WIN and urltype and '\\' in name:
         urltype = None
         path = url
       if urltype and urltype != 'file':
@@ -398,10 +401,13 @@ class TemplateTool (BaseTool):
           del bt.uid
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
+      elif os.path.exists(zexp_path):
+        # If the path exists, we create a Business Manager object after
+        # downloading it from zexp path
+        bt = self._download_local(os.path.normpath(zexp_path), id, format_version=3)
       else:
         template_version_path_list = [
                                       name+'/bp/template_format_version',
-                                      name+'/bm/template_format_version',
                                      ]
 
         for path in template_version_path_list:
