@@ -28,7 +28,7 @@ if data_chunk is not None and reference is not None:
                      Query(validation_state = 'validated'),
                      Query( **{'delivery.stop_date':now,  'range': 'min'}),
                      Query( **{'delivery.start_date':now,  'range': 'max'}),
-                     operator="AND")
+                     logical_operator="AND")
   data_supply = portal_catalog.getResultValue(query=query)
 
   #context.log(data_supply)
