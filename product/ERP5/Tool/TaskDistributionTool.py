@@ -225,7 +225,7 @@ class TaskDistributionTool(BaseTool):
     line = portal.restrictedTraverse(test_path)
     test_result = line.getParentValue()
     if test_result.getSimulationState() == 'started':
-      if line.getSimulationState() == "started":
+      if line.getSimulationState() in ["draft", "started"]:
         line.stop(**status_dict)
       if {"stopped"} == {x.getSimulationState()
           for x in test_result.objectValues(portal_type="Test Result Line")}:
