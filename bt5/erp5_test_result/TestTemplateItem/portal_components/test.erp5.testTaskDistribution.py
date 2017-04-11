@@ -452,6 +452,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
         history_line['time'] = now - 1
     self._callRestartStuckTestResultAlarm()
     checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
+    self.tool.stopUnitTest(line_url, {})
+    checkTestResultLine([('testBar', 'started'), ('testFoo', 'stopped')])
 
   def test_07_reportTaskFailure(self):
     test_result_path, revision = self._createTestResult(node_title="Node0")
