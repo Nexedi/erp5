@@ -1,1 +1,0 @@
-show columns from category
