@@ -170,6 +170,7 @@ var repair = false;
 
     .declareMethod("install", function () {
       var gadget = this;
+      console.log("start sync");
 
       gadget.props.storage = createStorage(
         gadget.props.version_url,
@@ -186,19 +187,11 @@ var repair = false;
           navigator.serviceWorker.onerror = function (event) {
             console.log(event);
           };
+          console.log("finish sync");
           return navigator.serviceWorker.register(
             "gadget_officejs_bootloader_serviceworker.js",
             {"scope": gadget.props.version_url }
           );
-        })
-        .push(function (registration) {
-          if (registration.installing) {
-            gadget.props.serviceWorker = registration.installing;
-          } else if (registration.waiting) {
-            gadget.props.serviceWorker = registration.waiting;
-          } else if (registration.active) {
-            gadget.props.serviceWorker = registration.active;
-          }
         });
     })
 

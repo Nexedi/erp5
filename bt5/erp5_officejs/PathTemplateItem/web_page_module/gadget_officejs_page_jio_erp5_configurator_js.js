@@ -30,7 +30,7 @@
             // Supsended until modification_date is handled for synchronization
               + '" AND modification_date:>="'
               + old_date.toISOString() + '" ',
-            limit: [0, 1234567890]
+            limit: [0, 30]
           },
           use_remote_post: true,
           conflict_handling: 1,
