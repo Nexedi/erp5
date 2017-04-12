@@ -1,3 +1,10 @@
+DELETE FROM
+  predicate
+WHERE
+<dtml-sqltest uid type="int" multiple>
+
+<dtml-var sql_delimiter>
+
 <dtml-let predicate_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isPredicate[loop_item]">
