@@ -1,3 +1,7 @@
+# We don't have good implementation of budget predicate yet, so don't fill predicate table for now.
+return None
+
+
 context = context.asContext(
              _range_criterion = {'start_date': (context.getStartDateRangeMin(),
                                                 context.getStartDateRangeMax())
