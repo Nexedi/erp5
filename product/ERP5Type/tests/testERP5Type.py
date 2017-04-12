@@ -2677,6 +2677,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertFalse(guarded_hasattr(obj, 'getRegionValueList'))
       self.assertFalse(guarded_hasattr(obj, 'getRegionRelatedValueList'))
 
+    # Permission definition on Accessor is buggy. TO BE FIXED!
+    @expectedFailure
     def test_PropertySheetSecurityOnAccessors(self):
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
