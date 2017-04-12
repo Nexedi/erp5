@@ -24,11 +24,11 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_text/development/</td>
+  <td>${base_url}/web_site_module/ooffice_presentation_gadget/</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Local is Enough']</td>
+  <td>//div[@class='loadmask']</td>
   <td></td>
 </tr>
