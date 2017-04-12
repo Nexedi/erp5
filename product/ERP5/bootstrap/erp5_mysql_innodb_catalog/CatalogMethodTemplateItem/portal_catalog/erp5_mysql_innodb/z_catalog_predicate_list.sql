@@ -1,3 +1,12 @@
+DELETE FROM
+  predicate
+WHERE
+<dtml-in uid>
+  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
+</dtml-in>
+;
+<dtml-var "'\0'">
+
 <dtml-let predicate_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "isPredicate[loop_item]">
