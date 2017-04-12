@@ -32,6 +32,7 @@ view_as_web_method = default_web_page.getTypeBasedMethod(
   )
 return view_as_web_method(mapping_dict={
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default="worklist"),
+  "jio_document_page_gadget": web_section.getLayoutProperty("configuration_default_jio_document_page_gadget_url", default="form"),
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),
   "action_view": web_section.getLayoutProperty("configuration_view_action_category", default="object_view"),
   "default_view_reference": web_section.getLayoutProperty("configuration_default_view_action_reference", default="view"),
