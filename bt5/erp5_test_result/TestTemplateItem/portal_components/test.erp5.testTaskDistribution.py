@@ -383,6 +383,19 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.assertEqual("stopped", test_result.getSimulationState())
 
+  def test_05c_createTestResult_with_registered_test_node(self):
+    node_title = 'Node0OinkUink'
+    # "register" Test Node
+    test_node = self.portal.test_node_module.newContent(
+        portal_type='Test Node', title=node_title)
+    self.tic()
+    test_result_path, revision = self._createTestResult(node_title=node_title)
+    # check that Test Node Result used in Test Result is specialised
+    # into registered Test Node
+    test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    test_result_node = test_result.contentValues(portal_type='Test Result Node')[0]
+    self.assertEqual(test_result_node.getSpecialise(), test_node.getRelativeUrl())
+
   def test_06_startStopUnitTest(self):
     """
     We will check methods startUnitTest/stopUnitTest of task distribution tool

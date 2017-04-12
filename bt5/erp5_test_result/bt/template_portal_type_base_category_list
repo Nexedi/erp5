@@ -5,6 +5,7 @@ SlapOS Software Release Unit Test | specialise
 Test Node | aggregate
 Test Node | specialise
 Test Result Module | business_application
+Test Result Node | specialise
 Test Result | source_project
 Test Suite Repository | aggregate
 Test Suite | specialise

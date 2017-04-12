@@ -53,6 +53,15 @@ class TaskDistributionTool(BaseTool):
     """
     return 1
 
+  def _getTestNodeRelativeUrl(self, node_title):
+    portal = self.getPortalObject()
+    test_node_list = portal.portal_catalog(
+        portal_type="Test Node",
+        title=SimpleQuery(comparison_operator='=', title=node_title),
+    )
+    if len(test_node_list) == 1:
+      return test_node_list[0].getRelativeUrl()
+
   def _getTestResultNode(self, test_result, node_title):
     node_list = [x for x in test_result.objectValues(
        portal_type='Test Result Node') if x.getTitle() == node_title]
@@ -86,8 +95,15 @@ class TaskDistributionTool(BaseTool):
       if node_title is not None:
         node = self._getTestResultNode(test_result, node_title)
         if node is None:
+          # Note: specialise might not be set. This is on purpose, in order
+          #       to support cases, when client will call createTestResult
+          #       without calling subscribeNode before, and this is required
+          #       to find Test Node document returned by
+          #       _getTestNodeRelativeUrl.
           node = test_result.newContent(portal_type='Test Result Node',
-                                 title=node_title)
+                                 title=node_title,
+                                 specialise=self._getTestNodeRelativeUrl(
+                                   node_title))
           node.start()
     def createTestResultLineList(test_result, test_name_list):
       duration_list = []
