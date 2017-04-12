@@ -616,6 +616,44 @@ class TestPredicates(TestPredicateMixIn):
     self.assertFalse(getattr(predicate, '_identity_criterion', None) is None)
     self.assertFalse(getattr(predicate, '_range_criterion', None) is None)
 
+    
+  def test_predicateIndexation(self):
+    predicate = self.createPredicate(
+      membership_criterion_base_category_list = ['region'],
+      membership_criterion_category_list = [REGION_FRANCE_PATH]
+    )
+    # Our test document will only be a predicate if title is different
+    # from 'never applies'
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'Predicate_asPredicate',
+      '',
+      """return None if context.getTitle() == 'never applies' else context""")
+    self.tic()
+
+    self.assertEqual(
+      [predicate],
+      [brain.getObject() for brain in self.portal.portal_catalog(
+        **{'predicate.uid': predicate.getUid()})])
+    self.assertEqual(
+      [predicate],
+      [brain.getObject() for brain in self.portal.portal_catalog(
+        **{'predicate_category.uid': predicate.getUid()})])
+
+    predicate.setTitle("never applies")
+    # this predicate is no longer a predicate, so it no longer exist in predicate tables
+    self.tic()
+
+    self.assertEqual(
+      [],
+      [brain.getObject() for brain in self.portal.portal_catalog(
+        **{'predicate.uid': predicate.getUid()})])
+    self.assertEqual(
+      [],
+      [brain.getObject() for brain in self.portal.portal_catalog(
+        **{'predicate_category.uid': predicate.getUid()})])
+
+
 # TODO :
 #  multi membership category
 #  asPredicate scripts
