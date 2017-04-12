@@ -21,6 +21,9 @@
  <portal_type id="Test Result Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Test Result Node">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Test Suite">
   <item>specialise</item>
  </portal_type>
