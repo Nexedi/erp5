@@ -3,6 +3,7 @@
                        div_id string:${id}_ace;
                        mode python: here.Base_getAceEditorMode();
                        container_div_id string:${div_id}_container;
+                       params python: getattr(here, "getParameterSignature", None)
                        '>
   <style type="text/css">
   .ace_scroller {
@@ -149,6 +150,7 @@
   ace_editor_container_div = null;
   ace_editor = null;
   var mode = '${mode}';
+  var params = '${params}';
 
   function maximizeFullscreenRemoveSaveMessage() {
     $('.ace_editor_maximize_fullscreen_message').remove();
@@ -391,17 +393,21 @@
 
     ace.require('ace/ext/language_tools');
     ace_editor.setOptions({ enableBasicAutocompletion: true, enableSnippets: true });
-
+    var data_options = {};
+    if (params !== 'None') {
+      data_options.bound_names = ['context','container','script','traverse_subpath','printed','same_type','string','sequence','random','DateTime','whrandom','reorder','sets','test','math'],
+      data_options.params = params;
+    }
     timer = 0;
     function checkPythonSourceCode() {
       if (timer) {
         window.clearTimeout(timer);
         timer = 0;
       }
+      data_options.code = ace_editor.getSession().getValue();
       timer = window.setTimeout(function() {
         $.post('${portal_url}/ERP5Site_checkPythonSourceCodeAsJSON',
-          {'data': JSON.stringify(
-          { code: ace_editor.getSession().getValue() })},
+          {'data': JSON.stringify(data_options)},
           function(data){
             ace_editor.getSession().setAnnotations(data.annotations);
           }
