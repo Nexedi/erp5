@@ -619,16 +619,19 @@
   function routeDisplay(gadget, command_options) {
     if (command_options.path) {
       if (command_options.args.page === undefined) {
-        return synchronousChangeState(
-          getDisplayUrlFor(command_options.path, {
-            page: 'form',
-            editable: command_options.args.editable,
-            view: command_options.args.view || 'view',
-            selection: command_options.args.selection,
-            selection_index: command_options.args.selection_index,
-            history: command_options.args.history
-          })
-        );
+        return gadget.getSetting("jio_document_page_gadget", "form")
+          .push(function (jio_document_page_gadget) {
+            return synchronousChangeState(
+              getDisplayUrlFor(command_options.path, {
+                page: jio_document_page_gadget,
+                editable: command_options.args.editable,
+                view: command_options.args.view || 'view',
+                selection: command_options.args.selection,
+                selection_index: command_options.args.selection_index,
+                history: command_options.args.history
+              })
+            );
+          });
       }
     }
 
