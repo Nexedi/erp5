@@ -6861,6 +6861,60 @@ class TestBusinessTemplate(BusinessTemplateMixin):
        {'test_document': ('Removed but should be kept', 'Path')},
        new_bt.preinstall())
 
+  def test_update_business_template_with_template_keep_path_list_catalog_method(self):
+    """Tests for `template_keep_path_list` feature for the special case of catalog methods
+    """
+    # Simulate the case where we have an installed business template providing
+    # the catalog method z_fake_method
+    catalog = self.getCatalogTool().getSQLCatalog()
+    catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+        id='z_fake_method',
+        title='',
+        connection_id='erp5_sql_connection',
+        arguments='',
+        template='')
+
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_catalog_method_id_list=['erp5_mysql_innodb/z_fake_method'])
+    self.tic()
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    new_bt.install()
+
+    # In a new version of the business template, this catalog method is no
+    # longer included, but we have configured this path as *keep_path_list*
+    #  (note that the syntax is the actual path of the object, so it includes portal_catalog)
+
+    # build and reimport this business template
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_keep_path_list=('portal_catalog/erp5_mysql_innodb/z_fake_method',),)
+    self.tic()
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    self.assertEqual(
+       {'portal_catalog/erp5_mysql_innodb/z_fake_method':
+         ('Removed but should be kept', 'CatalogMethod')},
+       new_bt.preinstall())
 
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
