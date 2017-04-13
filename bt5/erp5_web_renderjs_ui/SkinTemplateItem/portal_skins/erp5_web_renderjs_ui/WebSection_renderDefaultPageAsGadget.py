@@ -44,6 +44,7 @@ mapping_dict = {
   "jio_gadget": web_section.getLayoutProperty("configuration_jio_gadget_url", default="gadget_jio.html"),
   "translation_gadget": web_section.getLayoutProperty("configuration_translation_gadget_url", default="gadget_translation.html"),
   "manifest_url": web_section.getLayoutProperty("configuration_manifest_url", default="gadget_erp5.appcache"),
+  "service_worker_url": web_section.getLayoutProperty("configuration_service_worker_url", default=""),
   "language_map": json.dumps({tmp['id']: portal.Base_translateString(tmp['title'], lang = tmp['id']) for tmp in portal.Localizer.get_languages_map() if tmp['id'] in available_language_set}),
   "default_selected_language":  portal.Localizer.get_selected_language(),
   "website_url_set": json.dumps(website_url_set),

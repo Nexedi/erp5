@@ -1,19 +1,10 @@
 /*globals window, document, RSVP, rJS,
-          URI, location, XMLHttpRequest, console*/
+          URI, location, XMLHttpRequest, console, navigator*/
 /*jslint indent: 2, maxlen: 80*/
 (function (window, document, RSVP, rJS,
-           XMLHttpRequest, location, console) {
+           XMLHttpRequest, location, console, navigator) {
   "use strict";
 
-  /*
-  if (navigator.hasOwnProperty('serviceWorker')) {
-    // Check if a ServiceWorker already controls the site on load
-    if (!navigator.serviceWorker.controller) {
-      // Register the ServiceWorker
-      navigator.serviceWorker.register('gadget_erp5_serviceworker.js');
-    }
-  }
-  */
   var MAIN_SCOPE = "m";
 
   function renderMainGadget(gadget, url, options) {
@@ -238,6 +229,17 @@
           setting.hateoas_url = (new URI(gadget.props.hateoas_url))
                               .absoluteTo(location.href)
                               .toString();
+
+          if (setting.hasOwnProperty('service_worker_url') &&
+              (setting.service_worker_url !== '')) {
+            if (navigator.serviceWorker !== undefined) {
+              // Check if a ServiceWorker already controls the site on load
+              if (!navigator.serviceWorker.controller) {
+                // Register the ServiceWorker
+                navigator.serviceWorker.register(setting.service_worker_url);
+              }
+            }
+          }
 
           return setting_gadget.put("setting", setting);
         })
@@ -584,4 +586,4 @@
     });
 
 }(window, document, RSVP, rJS,
-  XMLHttpRequest, location, console));
+  XMLHttpRequest, location, console, navigator));
