@@ -30,7 +30,8 @@ view_as_web_method = default_web_page.getTypeBasedMethod(
   "viewAsWeb",
   fallback_script_id="WebPage_viewAsWeb"
   )
-return view_as_web_method(mapping_dict={
+
+mapping_dict = {
   "frontpage_gadget": web_section.getLayoutProperty("configuration_frontpage_gadget_url", default="worklist"),
   "jio_document_page_gadget": web_section.getLayoutProperty("configuration_default_jio_document_page_gadget_url", default="form"),
   "application_title": web_section.getLayoutProperty("configuration_application_title", default="ERP5"),
@@ -48,4 +49,12 @@ return view_as_web_method(mapping_dict={
   "website_url_set": json.dumps(website_url_set),
   "site_description": web_section.getLayoutProperty("description", default=""),
   "site_keywords": web_section.getLayoutProperty("subject", default=""),
-})
+}
+
+configuration_manifest_url = web_section.getLayoutProperty("configuration_manifest_url", default=None)
+if configuration_manifest_url is None:
+  mapping_dict["manifest_attribute"] = ''
+else:
+  mapping_dict["manifest_attribute"] = 'manifest="%s"' % configuration_manifest_url
+
+return view_as_web_method(mapping_dict=mapping_dict)
