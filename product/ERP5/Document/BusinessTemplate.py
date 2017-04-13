@@ -2953,8 +2953,15 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     return xml_data
 
   def preinstall(self, context, installed_item, **kw):
-    modified_object_dict = ObjectTemplateItem.preinstall(self, context, installed_item, **kw)
-    modified_object_dict.update(BaseTemplateItem.preinstall(self, context, installed_item, **kw))
+    """Compute diffs from catalog methods metadata and objects.
+
+    To support `template_keep_path_list`, we give priority to
+    ObjectTemplateItem.preinstall which may return 'Removed but should be kept'
+    """
+    # from catalog methods properies (from generateXML)
+    modified_object_dict = BaseTemplateItem.preinstall(self, context, installed_item, **kw)
+    # diffs from actual objects
+    modified_object_dict.update(ObjectTemplateItem.preinstall(self, context, installed_item, **kw))
     return modified_object_dict
 
   def export(self, context, bta, **kw):
