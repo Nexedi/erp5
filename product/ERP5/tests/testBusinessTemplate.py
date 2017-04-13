@@ -6815,6 +6815,53 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.portal.manage_delObjects(['geek_module'])
       self.tic()
 
+  def test_update_business_template_with_template_keep_path_list(self):
+    """Tests for `template_keep_path_list` feature
+    """
+    # Simulate the case where we have an installed business template providing
+    # the path test_document
+    new_object = self.portal.newContent(portal_type='File', id='test_document')
+
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_path_list=('test_document',),)
+    self.tic()
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    new_bt.install()
+
+    # In a new version of the business template, this path is no longer included
+    # but we have configured this path as *keep_path_list*
+    # build and reimport this business template
+    bt = self.portal.portal_templates.newContent(
+        portal_type='Business Template',
+        title=self.id(),
+        template_keep_path_list=('test_document',),)
+    self.tic()
+    bt.build()
+    self.tic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.tic()
+      new_bt = self.portal.portal_templates.download(
+         url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    self.assertEqual(
+       {'test_document': ('Removed but should be kept', 'Path')},
+       new_bt.preinstall())
+
+
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
     sequence_string = '\
