@@ -97,6 +97,7 @@
                       <list>
                         <string>my_configuration_panel_gadget_url</string>
                         <string>my_configuration_manifest_url</string>
+                        <string>my_configuration_service_worker_url</string>
                         <string>my_configuration_jio_gadget_url</string>
                         <string>my_configuration_translation_gadget_url</string>
                         <string>my_configuration_router_gadget_url</string>
