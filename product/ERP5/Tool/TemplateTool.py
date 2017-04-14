@@ -1908,8 +1908,13 @@ class TemplateTool (BaseTool):
             # XXX: Hack for not trying to install the sub-objects from zexp,
             # This should rather be implemneted while exportign the object,
             # where we shouldn't export sub-objects in the zexp
-            if new_item._value._tree:
-              del new_item._value._tree
+            value =  new_item._value
+            if value is None:
+              continue
+            if value._tree:
+              # This check is required cause only after first access we get the
+              # values from the dict
+              del value._tree
             new_item.install(installation_process)
 
       return error_list
