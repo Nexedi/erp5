@@ -39,6 +39,7 @@ import fnmatch
 import re
 import threading
 import pprint
+
 from copy import deepcopy
 from collections import defaultdict
 from cStringIO import StringIO
@@ -49,19 +50,22 @@ from OFS import SimpleItem, XMLExportImport
 from datetime import datetime
 from itertools import chain
 from operator import attrgetter
+from persistent.list import PersistentList
+from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
+from Acquisition import Implicit, aq_base, aq_inner, aq_parent
+from zLOG import LOG, INFO, WARNING
+
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
-from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from zLOG import LOG, INFO, WARNING
 from Products.ERP5Type.patches.ppml import importXML
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+
 customImporters = {
     XMLExportImport.magic: importXML,
     }
@@ -236,17 +240,14 @@ class BusinessManager(XMLObject):
     final_prop_map = prop_map+self._properties
     return final_prop_map
 
-  security.declareProtected(Permissions.ManagePortal, 'export')
   def export(self, path=None, local=0, bma=None, **kw):
     """
-    Export the object
-
-    XXX: Are we planning to use something like archive for saving the exported
-    objects inside a Business Manager
+    Export the object as zexp file
     """
     if not self.getStatus() == 'built':
       raise ValueError, 'Manager not built properly'
     f = StringIO()
+
     self._p_jar.exportFile(self._p_oid, f)
 
     # XXX: Improve naming
@@ -277,7 +278,7 @@ class BusinessManager(XMLObject):
     connection = self.aq_parent._p_jar
     file = open(path, 'rb')
     obj = connection.importFile(file)
-    self._path_item_list = obj._path_item_list
+    self._path_item_list = obj._path_item_list[:]
     self._setTemplatePathList(obj.getTemplatePathList())
 
   def __add__(self, other):
@@ -319,7 +320,7 @@ class BusinessManager(XMLObject):
     """
     portal = self.getPortalObject()
     LOG('Business Manager', INFO, 'Storing Manager Data')
-    self._path_item_list = []
+    self._path_item_list = PersistentList()
     path_item_list = self.getTemplatePathList()
 
     if path_item_list:
