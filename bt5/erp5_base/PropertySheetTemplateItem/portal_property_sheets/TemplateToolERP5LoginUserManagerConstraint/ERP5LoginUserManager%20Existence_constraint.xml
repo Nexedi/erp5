@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5UserNamager Non Existence_constraint</string> </value>
+            <value> <string>ERP5LoginUserManager Existence_constraint</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>script_id</string> </key>
-            <value> <string>TemplateTool_checkERP5UserManagerNonExistenceConsistency</string> </value>
+            <value> <string>TemplateTool_checkERP5LoginUserManagerExistenceConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>

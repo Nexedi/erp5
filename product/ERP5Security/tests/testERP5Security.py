@@ -484,11 +484,11 @@ class TestUserManagement(ERP5TypeTestCase):
     acl_users= self.portal.acl_users
     acl_users.manage_delObjects(ids=['erp5_login_users'])
     portal_templates = self.portal.portal_templates
-    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
     # call checkConsistency again to check if FIX does not happen by checkConsistency().
-    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
-    portal_templates.fixConsistency(filter={'constraint_type': 'pre_upgrade'})
-    self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'pre_upgrade'}) , [])
+    self.assertNotEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
+    portal_templates.fixConsistency(filter={'constraint_type': 'post_upgrade'})
+    self.assertEqual(portal_templates.checkConsistency(filter={'constraint_type': 'post_upgrade'}) , [])
     self.assertTrue('erp5_login_users' in \
                      [x[0] for x in self.portal.acl_users.plugins.listPlugins(IAuthenticationPlugin)])
     self.assertTrue('erp5_login_users' in \
