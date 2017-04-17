@@ -142,6 +142,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
   security.declarePrivate('extractCredentials')
   def extractCredentials(self, request):
     """ Extract Oauth2 credentials from the request header. """
+    user_dict = {}
     cookie_hash = request.get(self.cookie_name)
     if cookie_hash is not None:
       try:
