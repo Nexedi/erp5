@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>RESPONSE=None</string> </value>
+            <value> <string>sending_mode=\'01\', RESPONSE=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
