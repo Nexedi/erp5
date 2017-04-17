@@ -2,7 +2,6 @@ from Products.ERP5Type.DateUtils import getNumberOfDayInMonth
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \
-   or context.getFormat() is None \
    or context.getQuantity() is None \
    or len(context.getAggregateRelatedIdList()) <= 0:
   return context.REQUEST.response.redirect("%s?portal_status_message=%s" % (context.absolute_url(), "DSN can't be built if some fields are empty"))
