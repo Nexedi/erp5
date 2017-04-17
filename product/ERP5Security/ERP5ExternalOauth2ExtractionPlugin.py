@@ -275,8 +275,6 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
         ).authorize(httplib2.Http())
       service = apiclient.discovery.build("oauth2", "v1", http=http)
       google_entry = service.userinfo().get().execute()
-    except Exception:
-      google_entry = None
     finally:
       socket.setdefaulttimeout(timeout)
     user_entry = {}
