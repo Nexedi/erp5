@@ -1,6 +1,13 @@
 test_result = sci['object']
 kw = sci['kwargs']
 test_result.setStopDate(kw.get('date') or DateTime())
+
+def unexpected(test_result):
+  # We must change to only distinguish SKIP/EXPECTED/UNEXPECTED, instead of
+  # SKIP/FAIL/ERROR. NEO reports EXPECTED as FAIL and we want to mark it as
+  # passed if there's no unexpected failures.
+  return test_result.getSourceProjectTitle() != "NEO R&D"
+
 if test_result.getPortalType() == 'Test Result':
   has_unknown_result = False
   edit_kw = dict(duration=0,
@@ -15,8 +22,11 @@ if test_result.getPortalType() == 'Test Result':
       except TypeError as e:
         context.log("", repr(e))
         has_unknown_result = True
-    has_unknown_result = has_unknown_result or line.getStringIndex() == 'UNKNOWN'
-  if has_unknown_result or edit_kw['errors'] or edit_kw['failures']:
+      else:
+        if line.getStringIndex() == 'UNKNOWN':
+          has_unknown_result = True
+  if has_unknown_result or edit_kw['errors'] or (
+      edit_kw['failures'] and unexpected(test_result)):
     status = 'FAIL'
   else:
     status = 'PASS'
@@ -30,7 +40,7 @@ elif test_result.getPortalType() == 'Test Result Line':
   if all_tests is None:
     status = 'UNKNOWN'
     all_tests = 0
-  elif errors or failures:
+  elif errors or failures and unexpected(test_result.getParentValue()):
     status = 'FAILED'
   else:
     status = 'PASSED'
