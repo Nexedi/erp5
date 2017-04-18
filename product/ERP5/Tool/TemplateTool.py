@@ -1747,7 +1747,8 @@ class TemplateTool (BaseTool):
 
       # Update hashes of item in old state before installation
       for item in old_installation_state._path_item_list:
-        item._sha = self.calculateComparableHash(item._value)
+        value = item.value
+        item._sha = self.calculateComparableHash(value)
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
@@ -1905,7 +1906,7 @@ class TemplateTool (BaseTool):
             # XXX: Hack for not trying to install the sub-objects from zexp,
             # This should rather be implemneted while exportign the object,
             # where we shouldn't export sub-objects in the zexp
-            value =  new_item._value
+            value =  new_item.value
             if value is None:
               continue
             if value._tree:
