@@ -543,8 +543,8 @@ class BusinessManager(XMLObject):
         combined_added_path_item = reduce(lambda x, y: x+y, path_item_list_add)
         combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
 
-        added_value = combined_added_path_item._value
-        subtracted_value = combined_subtracted_path_item._value
+        added_value = combined_added_path_item.value
+        subtracted_value = combined_subtracted_path_item.value
 
         if added_value != subtracted_value:
           # Append the arithmetically combined path_item objects in the final
@@ -552,8 +552,8 @@ class BusinessManager(XMLObject):
           added_value, subtracted_value = \
                   self._simplifyValueIntersection(added_value, subtracted_value)
 
-          combined_added_path_item._value = added_value
-          combined_subtracted_path_item._value = subtracted_value
+          combined_added_path_item.value = added_value
+          combined_subtracted_path_item.value = subtracted_value
 
           # Append the path_item to the final reduced path_item_list after
           # doing required arithmetic on it. Make sure to first append
@@ -592,7 +592,7 @@ class BusinessManager(XMLObject):
 
     return added_value, subtracted_value
 
-class BusinessItem(Implicit, Persistent):
+class BusinessItem(Persistent):
 
   """Saves the path and values for objects, properties, etc, the
     attributes for a path configuration being:
@@ -618,7 +618,7 @@ class BusinessItem(Implicit, Persistent):
     self._path = path
     self._sign = int(sign)
     self._layer = int(layer)
-    self._value = value
+    self.value = value
     if value:
       # Generate hash of from the value
       self._sha = self._generateHash()
@@ -631,20 +631,20 @@ class BusinessItem(Implicit, Persistent):
     Initially, for simplicity, we go on with SHA256 values only
     """
     LOG('Business Manager', INFO, 'Genrating hash')
-    if not self._value:
+    if not self.value:
       # Raise in case there is no value for the BusinessItem object
       raise ValueError, "Value not defined for the %s BusinessItem" % self._path
     elif self.isProperty:
       # In case of property, the value is a PersisitentMapping object, so it
       # can be easily hashed after formatting
-      sha256 = hash(pprint.pformat(self._value))
+      sha256 = hash(pprint.pformat(self.value))
     else:
       # Expects to raise error on case the value for the object
       # is not picklable
       try:
-        sha256 = hashlib.sha256(self._value).hexdigest()
+        sha256 = hashlib.sha256(self.value).hexdigest()
       except TypeError:
-        obj_dict = self._value.__dict__.copy()
+        obj_dict = self.value.__dict__.copy()
         del obj_dict['uid']
         sha256 = hash(pprint.pformat(obj_dict))
     self._sha = sha256
@@ -673,7 +673,7 @@ class BusinessItem(Implicit, Persistent):
       value['name'] = property_id
       value['type'] = property_type
       value['value'] = property_value
-      self._value = value
+      self.value = value
       # Add the value object in the database
       obj._p_jar.add(value)
       # Generate hash for the property value
@@ -691,7 +691,7 @@ class BusinessItem(Implicit, Persistent):
           obj = obj._getCopy(context)
           obj = obj.__of__(context)
           _recursiveRemoveUid(obj)
-          self._value = obj
+          self.value = obj
           # Generate hash for the erp5 object value
           self._generateHash()
       except AttributeError:
@@ -776,7 +776,7 @@ class BusinessItem(Implicit, Persistent):
       self.isProperty = True
       relative_url, property_id = self._path.split('#')
       obj = portal.unrestrictedTraverse(relative_url)
-      prop = self._value
+      prop = self.value
       # First remove the property from the existing path and keep the default
       # empty, and update only if the sign is +1
       obj._delPropValue(prop['name'])
@@ -799,7 +799,7 @@ class BusinessItem(Implicit, Persistent):
       # If sign is +1, set the new object on the container
       if self._sign == 1:
         # install object
-        obj = self._value
+        obj = self.value
         obj = obj._getCopy(container)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
@@ -867,7 +867,7 @@ class BusinessItem(Implicit, Persistent):
     elif self._sign != other._sign:
       raise ValueError, "BusinessItem are incommensurable, have different sign"
     else:
-      self._value = self._mergeValue(value_list=[self._value, other._value])
+      self.value = self._mergeValue(value_list=[self.value, other.value])
       return self
 
   __radd__ = __add__
@@ -1052,10 +1052,10 @@ class BusinessItem(Implicit, Persistent):
     return self._layer
 
   def getBusinessPathValue(self):
-    return self._value
+    return self.value
 
   def setBusinessPathValue(self, value):
-    self._value = value
+    self.value = value
 
   def getBusinessPathSha(self):
     return self._sha
