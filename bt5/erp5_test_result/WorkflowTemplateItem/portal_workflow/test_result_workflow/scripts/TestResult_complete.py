@@ -1,7 +1,6 @@
 test_result = sci['object']
 kw = sci['kwargs']
-stop_date = kw.get('date') or DateTime()
-test_result.setStopDate(stop_date)
+test_result.setStopDate(kw.get('date') or DateTime())
 if test_result.getPortalType() == 'Test Result':
   has_unknown_result = False
   edit_kw = dict(duration=0,
@@ -35,8 +34,9 @@ elif test_result.getPortalType() == 'Test Result Line':
     status = 'FAILED'
   else:
     status = 'PASSED'
-  duration = kw.get('duration') or (
-    stop_date - test_result.getStartDate()) * (24*60*60)
+  duration = kw.get('duration')
+  if duration is None:
+    duration = (test_result.getStopDate() - test_result.getStartDate()) * (24*60*60)
   cmdline = kw.get('command', getattr(test_result, 'cmdline', ''))
   if same_type(cmdline, []):
     cmdline = ' '.join(map(repr, cmdline))
