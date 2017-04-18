@@ -1053,6 +1053,12 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           if not quiet:
             ZopeTestCase._print('Adding %s business template ... ' % bt_title)
         bt = template_tool.download(url)
+
+        # If the bt is Business Manager, update the installation state
+        if bt.getPortalType() == 'Business Manager':
+          template_tool.updateInstallationState([bt])
+          continue
+
         if not quiet:
           ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
           # For unit test, we accept installing business templates with
