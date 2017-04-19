@@ -139,21 +139,6 @@
   <td>552</td>
 </tr>
 <tr>
-  <td>verifyElementPositionRangeTop</td>
-  <td>id=group_1_activity_1_block_1</td>
-  <td>248..266</td>
-</tr>
-<tr>
-  <td>verifyElementPositionRangeTop</td>
-  <td>id=group_2_activity_1_block_1</td>
-  <td>328..346</td>
-</tr>
-<tr>
-  <td>verifyElementPositionRangeTop</td>
-  <td>id=group_3_activity_1_block_1</td>
-  <td>408..426</td>
-</tr>
-<tr>
   <td>verifyElementWidth</td>
   <td>id=group_1_activity_1_block_1</td>
   <td>320</td>
