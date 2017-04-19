@@ -122,7 +122,11 @@
   <td>//button[@title='Report']</td>
   <td></td>
 </tr>
-
+<tr>
+  <td>selectAndWait</td>
+  <td>//select[@name='select_dialog']</td>
+  <td>label=Import Report</td>
+</tr>
 
 <tr>
   <td>clickAndWait</td>
