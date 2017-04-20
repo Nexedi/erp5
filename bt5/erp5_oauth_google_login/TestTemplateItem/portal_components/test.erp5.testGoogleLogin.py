@@ -78,8 +78,6 @@ def getAccessTokenFromCode(code, redirect_uri):
            'user_agent': None
           }
 
-GoogleLoginUtility.getUserId = getUserId
-GoogleLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
 
 class TestGoogleLogin(ERP5TypeTestCase):
 
@@ -141,7 +139,19 @@ class TestGoogleLogin(ERP5TypeTestCase):
     """
       Check if ERP5 set cookie properly after receive code from external service
     """
-    self.logout()
-    self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
-    cookie = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")
-    self.assertEqual("b01533abb684a658dc71c81da4e67546", cookie["value"])
+    _GoogleLoginUtility_getUserId = GoogleLoginUtility.getUserId
+    _GoogleLoginUtility_getAccessFromCode = GoogleLoginUtility.getAccessTokenFromCode
+
+    try:
+      GoogleLoginUtility.getUserId = getUserId
+      GoogleLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
+
+      self.logout()
+      self.portal.ERP5Site_receiveGoogleCallback(code=CODE)
+      cookie = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")
+      self.assertEqual("b01533abb684a658dc71c81da4e67546", cookie["value"])
+    finally:
+      GoogleLoginUtility.getUserId = _GoogleLoginUtility_getUserId
+      GoogleLoginUtility.getAccessTokenFromCode = _GoogleLoginUtility_getAccessFromCode
+
+
