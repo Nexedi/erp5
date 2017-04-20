@@ -1750,8 +1750,9 @@ class TemplateTool (BaseTool):
 
       # Update hashes of item in old state before installation
       for item in old_installation_state._path_item_list:
-        value = item.value
-        item._sha = self.calculateComparableHash(value)
+        print item.value
+        if item.value:
+          item._sha = self.calculateComparableHash(item.value)
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
@@ -1912,10 +1913,10 @@ class TemplateTool (BaseTool):
             value =  new_item.value
             if value is None:
               continue
-            if value._tree:
+            if getattr(value, '_tree', None):
               # This check is required cause only after first access we get the
               # values from the dict
-              del value._tree
+              delattr(value, '_tree')
             new_item.install(installation_process)
 
       return error_list
