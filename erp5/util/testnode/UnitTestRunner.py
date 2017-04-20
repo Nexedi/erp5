@@ -43,6 +43,7 @@ from NodeTestSuite import SlapOSInstance
 from Updater import Updater
 from Utils import dealShebang
 from erp5.util import taskdistribution
+from slapos.grid.utils import md5digest
 
 class UnitTestRunner():
   def __init__(self, testnode):
@@ -142,26 +143,27 @@ class UnitTestRunner():
     run_test_suite_revision = node_test_suite.revision
     # Deal with Shebang size limitation
     invocation_list = dealShebang(run_test_suite_path)
-    invocation_list.extend([run_test_suite_path,
-                           '--test_suite', node_test_suite.test_suite,
-                           '--revision', node_test_suite.revision,
-                           '--test_suite_title', node_test_suite.test_suite_title,
-                           '--node_quantity', config['node_quantity'],
-                           '--master_url', portal_url])
-    firefox_bin_list = glob.glob("%s/soft/*/parts/firefox/firefox-slapos" % \
-        config["slapos_directory"])
-    if len(firefox_bin_list):
-      parameter_list.append('--firefox_bin')
-    xvfb_bin_list = glob.glob("%s/soft/*/parts/xserver/bin/Xvfb" % \
-        config["slapos_directory"])
-    if len(xvfb_bin_list):
-      parameter_list.append('--xvfb_bin')
-    supported_paramater_set = self.testnode.process_manager.getSupportedParameterSet(
-                           run_test_suite_path, parameter_list)
-    if '--firefox_bin' in supported_paramater_set:
-      invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
-    if '--xvfb_bin' in supported_paramater_set:
-      invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
+    invocation_list += (run_test_suite_path,
+      '--master_url', portal_url,
+      '--revision', node_test_suite.revision,
+      '--test_suite', node_test_suite.test_suite,
+      '--test_suite_title', node_test_suite.test_suite_title)
+    supported_parameter_set = set(self.testnode.process_manager
+      .getSupportedParameterList(run_test_suite_path))
+    def part(path):
+        path = config['slapos_directory'] + '/soft/%s/parts/' + path
+        path, = filter(os.path.exists, (path % md5digest(software)
+            for software in config['software_list']))
+        return path
+    for option, value in (
+        ('--firefox_bin', lambda: part('firefox/firefox-slapos')),
+        ('--frontend_url', lambda: config['frontend_url']),
+        ('--node_quantity', lambda: config['node_quantity']),
+        ('--xvfb_bin', lambda: part('xserver/bin/Xvfb')),
+        ):
+      if option in supported_parameter_set:
+        invocation_list += option, value()
+
     # TODO : include testnode correction ( b111682f14890bf )
     if hasattr(node_test_suite,'additional_bt5_repository_id'):
       additional_bt5_path = os.path.join(
