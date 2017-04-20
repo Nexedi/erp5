@@ -37,13 +37,23 @@
                   "description": "label to display on axis n",
                   "type": "string"
                 },
-                "type": {
+                "scale_type": {
                   "description": "type of axis",
                   "enum": [
                     "linear",
                     "logarithmic"
                   ],
                   "default": "linear",
+                  "type": "string"
+                },                },
+                "value_type": {
+                  "description": "value type for data on this axis",
+                  "enum": [
+                    "number",
+                    "date",
+                    "string"
+                  ],
+                  "default": "number",
                   "type": "string"
                 },                },
                 "position": {
@@ -138,9 +148,9 @@
             axis_mapping_id_dict: {"1": "1_2"}
           }
           ],
-   layout: {axis_dict : {"0": {"title": "x axis label", "type": "linear"},
-                         "1_0": {"title": "y axis label for first data set", "type": "log", "side" : "left"},
-                         "1_1": {"title": "y axis label for second data set", "position": "right"}
+   layout: {axis_dict : {"0": {"title": "x axis label", "scale_type": "linear", "value_type": "number"},
+                         "1_1": {"title": "y axis label for first data set", "scale_type": "log", "side" : "left"},
+                         "1_2": {"title": "y axis label for second data set", "position": "right"}
                    },
             title: "Title for my global graph"}
    });
