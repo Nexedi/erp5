@@ -89,6 +89,7 @@ class ERP5TestNode(TestCase):
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
     config["frontend_url"] = "http://frontend/"
+    config["software_list"] = ["foo", "bar"]
 
     return TestNode(self.log, config)
 
@@ -515,12 +516,17 @@ shared = true
 
     checkRunTestSuiteParameters()
 
-    parts = slapos_controler.instance_root + '/a/software_release/parts/'
+    def part(path): # in "bar" SR
+      path = test_node.config['slapos_directory'] \
+        + '/soft/37b51d194a7513e45b56f6524f2d51f2/parts/' + path
+      os.makedirs(os.path.dirname(path))
+      os.close(os.open(path, os.O_CREAT))
+      return path
     for option in (
-        ('--firefox_bin', parts + 'firefox/firefox-slapos'),
+        ('--firefox_bin', part('firefox/firefox-slapos')),
         ('--frontend_url', 'http://frontend/'),
         ('--node_quantity', 3),
-        ('--xvfb_bin', parts + 'xserver/bin/Xvfb'),
+        ('--xvfb_bin', part('xserver/bin/Xvfb')),
       ):
       parser.add_argument(option[0])
       expected_parameter_list += option

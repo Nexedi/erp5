@@ -43,6 +43,7 @@ from NodeTestSuite import SlapOSInstance
 from Updater import Updater
 from Utils import dealShebang
 from erp5.util import taskdistribution
+from slapos.grid.utils import md5digest
 
 class UnitTestRunner():
   def __init__(self, testnode):
@@ -147,16 +148,19 @@ class UnitTestRunner():
       '--test_suite_title', node_test_suite.test_suite_title)
     supported_parameter_set = set(self.testnode.process_manager
       .getSupportedParameterList(run_test_suite_path))
-    parts = os.path.dirname(os.path.dirname(run_test_suite_path))
-    parts += '/software_release/parts/'
-    for option in (
-        ('--firefox_bin', parts + 'firefox/firefox-slapos'),
-        ('--frontend_url', config['frontend_url']),
-        ('--node_quantity', config['node_quantity']),
-        ('--xvfb_bin', parts + 'xserver/bin/Xvfb'),
+    def part(path):
+        path = config['slapos_directory'] + '/soft/%s/parts/' + path
+        path, = filter(os.path.exists, (path % md5digest(software)
+            for software in config['software_list']))
+        return path
+    for option, value in (
+        ('--firefox_bin', lambda: part('firefox/firefox-slapos')),
+        ('--frontend_url', lambda: config['frontend_url']),
+        ('--node_quantity', lambda: config['node_quantity']),
+        ('--xvfb_bin', lambda: part('xserver/bin/Xvfb')),
         ):
-      if option[0] in supported_parameter_set:
-        invocation_list += option
+      if option in supported_parameter_set:
+        invocation_list += option, value()
 
     # TODO : include testnode correction ( b111682f14890bf )
     if hasattr(node_test_suite,'additional_bt5_repository_id'):
