@@ -38,7 +38,7 @@
     }
     label_list.push(x_label);
 
-    /* Dygraph only support 2D, se we assume we have only only two axis for data.
+    /* Dygraph only support 2D, so we assume we have only only two axis for data.
        Then for now we only support series having same x, it can be enhanced later.*/
 
 
@@ -79,7 +79,8 @@
       if (dygraph_data.length === 0) {
         // Initialize x axis
         for (j = 0; j < trace_value_dict[0].length; j = j + 1) {
-          dygraph_data[j] = [trace_value_dict[0][j]];
+          // When used within iframe, we have to recreate date object since the date is now string
+          dygraph_data[j] = [new Date(trace_value_dict[0][j])];
         }
       }
       type = trace.type || 'line';
@@ -153,7 +154,6 @@
       gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);
-
     })
     .declareMethod('updateConfiguration', function (configuration_dict) {
       var gadget = this,
