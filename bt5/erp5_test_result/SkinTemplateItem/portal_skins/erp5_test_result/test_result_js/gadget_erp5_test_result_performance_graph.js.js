@@ -3,7 +3,7 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  var WIDGET_GRAPH_URL = "../gadget_officejs_widget_graph_chart.html";
+  var WIDGET_GRAPH_URL = "../unsafe/gadget_officejs_widget_graph_plotly.html";
 
   function getDateAsString(date) {
     var date_string = "" + date.getFullYear() + "-",
@@ -49,7 +49,7 @@
               property_list.forEach(function (property) {
                 var i, data = {};
                 console.log("property", property);
-                data.type = "line";
+                data.type = "scatter";
                 data.title = property;
                 data.value_dict = {0: [], 1: []};
                 for (i = 0 ; i < line_list.length; i = i + 1) {
@@ -99,6 +99,7 @@
               WIDGET_GRAPH_URL,
               {
                 scope: "graph",
+                sandbox: "iframe",
                 element: gadget.element.querySelector(".document-content")
       })
         .push(function (graph_gadget) {
@@ -106,7 +107,7 @@
           gadget.property_dict.graph_data_dict = {data: [{
             value_dict: {0: [],
                          1: []},
-            type: "line"
+            type: "scatter"
             }],
             layout: {axis_dict : {0: {"title": "commit"},
                               1: {"title": "performance"}
