@@ -278,6 +278,7 @@ class BusinessManager(XMLObject):
     connection = self.aq_parent._p_jar
     file = open(path, 'rb')
     obj = connection.importFile(file)
+    self.title = obj.title
     self._path_item_list = obj._path_item_list[:]
     self._setTemplatePathList(obj.getTemplatePathList())
 
@@ -690,6 +691,7 @@ class BusinessItem(Persistent):
           obj = p.unrestrictedTraverse(relative_url)
           obj = obj._getCopy(context)
           obj = obj.__of__(context)
+          # XXX: '_recursiveRemoveUid' is not working as expected
           _recursiveRemoveUid(obj)
           self.value = obj
           # Generate hash for the erp5 object value
