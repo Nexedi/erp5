@@ -87,6 +87,8 @@ class ERP5TestNode(TestCase):
     config["server_url"] = "http://foo.bar"
     config["httpd_ip"] = "ff:ff:ff:ff:ff:ff:ff:ff"
     config["httpd_software_access_port"] = "9080"
+    config["frontend_url"] = "http://frontend/"
+    config["software_list"] = ["foo", "bar"]
 
     return TestNode(self.log, config)
 
@@ -530,20 +532,21 @@ develop = false
           expected_parameter_list.extend(additional_parameter_list)
         self.assertEqual(call_parameter_list[0]['args'], expected_parameter_list)
 
-      call_parameter_list = []
+    def part(path): # in "bar" SR
+      path = test_node.config['slapos_directory'] \
+        + '/soft/37b51d194a7513e45b56f6524f2d51f2/parts/' + path
+      os.makedirs(os.path.dirname(path))
+      os.close(os.open(path, os.O_CREAT))
+      return path
+    for option in (
+        ('--firefox_bin', part('firefox/firefox-slapos')),
+        ('--frontend_url', 'http://frontend/'),
+        ('--node_quantity', 3),
+        ('--xvfb_bin', part('xserver/bin/Xvfb')),
+      ):
+      parser.add_argument(option[0])
+      expected_parameter_list += option
       checkRunTestSuiteParameters()
-      _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/firefox'),'firefox-slapos')
-      _createPath(os.path.join(test_node.config['slapos_directory'], 'soft/a/parts/xserver/bin'),'Xvfb')
-      call_parameter_list = []
-      checkRunTestSuiteParameters(additional_parameter_list=['--firefox_bin',
-        '%s/soft/a/parts/firefox/firefox-slapos'
-         %(test_node.config['slapos_directory']),
-        '--xvfb_bin',
-        '%s/soft/a/parts/xserver/bin/Xvfb'
-          %(test_node.config['slapos_directory'])])
-    finally:
-      ProcessManager.getSupportedParameterSet = original_getSupportedParameter
-      ProcessManager.spawn = original_spawn
 
   def test_10_prepareSlapOS(self, my_test_type='UnitTest'):
     test_node = self.getTestNode()
