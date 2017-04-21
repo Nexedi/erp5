@@ -389,7 +389,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual("stopped", test_result.getSimulationState())
 
   def test_05c_createTestResult_with_registered_test_node(self):
-    node_title = 'Node0OinkUink'
+    node_title = 'Node0OinkUink' + DateTime().strftime('%Y%m%d%H%M%S')
     # "register" Test Node
     test_node = self.portal.test_node_module.newContent(
         portal_type='Test Node', title=node_title)
