@@ -1,7 +1,14 @@
 Changes
 =======
 
-0.4.47 (2016-04-05)
+0.4.48 (2017-04-20)
+-------------------
+
+ * erp5.util.testnode:
+
+   - fix values of --firefox_bin and --xvfb_bin [Julien Muchembled]
+
+0.4.47 (2017-04-05)
 -------------------
 
  * erp5.util.testnode:
