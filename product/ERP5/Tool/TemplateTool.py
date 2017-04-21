@@ -169,7 +169,9 @@ class TemplateTool (BaseTool):
       """Get the list of installed business templates.
       """
       installed_bts = []
-      for bt in self.contentValues(portal_type=['Business Template', 'Business Package']):
+      for bt in self.contentValues(portal_type=['Business Template',
+                                                'Business Package',
+                                                'Business Manager']):
         if bt.getInstallationState() == 'installed':
           bt5 = bt
           if only_title:
