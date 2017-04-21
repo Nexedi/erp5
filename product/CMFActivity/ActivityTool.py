@@ -503,10 +503,10 @@ class Method(object):
       request=self._request,
       portal_activities=portal_activities,
     )
-    if portal_activities.activity_tracking:
-      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     portal_activities.getActivityBuffer().deferredQueueMessage(
       portal_activities, activity_dict[self._activity], m)
+    if portal_activities.activity_tracking and m.is_registered:
+      activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self._activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
 
 allow_class(Method)
 
