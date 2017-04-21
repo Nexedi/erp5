@@ -243,6 +243,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
       if stop_count == 2:
         self.tool.stopUnitTest(next_line_url, status_dict)
       test_result = self.portal.restrictedTraverse(test_result_path)
+      self.assertEqual(test_result.getSimulationState(), "started")
+      self.tic()
       if stop_count == 2:
         self.assertEquals(test_result.getSimulationState(), "stopped")
       else:
@@ -366,12 +368,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
     status_dict = {}
     self.tool.stopUnitTest(line_url, status_dict)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
     # launch test r0=a
     test_result_path, revision = self._createTestResult(revision="r0=a", test_list=["testFoo"])
     line_url, test = self.tool.startUnitTest(test_result_path)
     self.tool.stopUnitTest(line_url, status_dict)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
     # Make sure we do not relaunch test with revision r0=b
     result = self._createTestResult(revision="r0=b", test_list=["testFoo"])
@@ -381,6 +385,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     line_url, test = self.tool.startUnitTest(test_result_path)
     self.tool.stopUnitTest(line_url, status_dict)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+    self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
 
   def test_05c_createTestResult_with_registered_test_node(self):
@@ -426,6 +431,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     next_line.duration = line.duration + 1
     # So if we launch another unit test, it will process first the
     # one which is the slowest
+    self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
     self.tic()
     next_test_result_path, revision = self._createTestResult(
@@ -507,11 +513,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
     if tic:
       self.tic()
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
-    self.assertEqual("stopped", test_result.getSimulationState())
     self.assertEqual(None, self._createTestResult(test_list=["testFoo"]))
     next_test_result_path, next_revision = self._createTestResult(
       test_list=["testFoo"], allow_restart=True)
     self.assertTrue(next_test_result_path != test_result_path)
+    self.tic()
+    self.assertEqual("stopped", test_result.getSimulationState())
 
   def test_09_checkCreateTestResultAndAllowRestartWithoutTic(self):
     """

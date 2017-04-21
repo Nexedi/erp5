@@ -243,9 +243,9 @@ class TaskDistributionTool(BaseTool):
     if test_result.getSimulationState() == 'started':
       if line.getSimulationState() in ["draft", "started"]:
         line.stop(**status_dict)
-      if {"stopped"} == {x.getSimulationState()
-          for x in test_result.objectValues(portal_type="Test Result Line")}:
-        test_result.stop()
+      # Check by activity is all lines are finished. Do not check synchrnonously
+      # in case another test line is stopped in parallel
+      test_result.activate().TestResult_stopIfFinished()
 
   def _extractXMLRPCDict(self, xmlrpc_dict):
     """
