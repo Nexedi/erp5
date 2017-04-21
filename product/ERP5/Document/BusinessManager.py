@@ -196,6 +196,9 @@ class BusinessManager(XMLObject):
     """
     return self.status
 
+  def getInstallationState(self):
+    return self.status
+
   def setStatus(self, status=None):
     if not status:
       raise ValueError, 'No status provided'
