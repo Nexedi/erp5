@@ -40,11 +40,12 @@ from AccessControl import SpecialUsers
 from Shared.DC.ZRDB.DA import DatabaseError
 from zLOG import LOG, ERROR
 
+SYSTEM_USER_USER_NAME = SpecialUsers.system.getUserName()
 # To prevent login thieves
 SPECIAL_USER_NAME_SET = (
   ERP5Security.SUPER_USER,
   SpecialUsers.nobody.getUserName(),
-  SpecialUsers.system.getUserName(),
+  SYSTEM_USER_USER_NAME,
   # Note: adding emergency_user is pointless as its login is variable, so no
   # way to prevent another user from stealing its login.
 )
@@ -196,6 +197,10 @@ class ERP5LoginUserManager(BasePlugin):
       # PluggableAuthService.searchUsers.
       if isinstance(id, str):
         id = (id, )
+      # Short-cut "System Processes" as not being searchable by user_id.
+      # This improves performance in proxy-role'd execution by avoiding an
+      # sql query expected to find no user.
+      id = [x for x in id if x != SYSTEM_USER_USER_NAME]
       if id:
         if exact_match:
           requested = set(id).__contains__
