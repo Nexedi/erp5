@@ -2,3 +2,4 @@ DSN Change Block | Data
 DSN Change Block | Event
 DSN Enrollment Record | DsnEnrollmentRecord
 DSN Monthly Report | Amount
+Organisation | DSNReportConfiguration
