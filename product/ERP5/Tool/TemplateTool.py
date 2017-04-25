@@ -1427,10 +1427,8 @@ class TemplateTool (BaseTool):
                                               template_title_list,
                                               with_test_dependency_list=False):
       available_bt5_list = self.getRepositoryBusinessTemplateList()
-
       template_title_list = set(template_title_list)
       installed_bt5_title_list = self.getInstalledBusinessTemplateTitleList()
-
       bt5_set = set()
       for available_bt5 in available_bt5_list:
         if available_bt5.title in template_title_list:
@@ -1747,24 +1745,24 @@ class TemplateTool (BaseTool):
       # Add the removed path with negative sign in the to_install_path_item_list
       for path in removed_path_list:
         old_item = old_installation_state.getBusinessItemByPath(path)
-        old_item._sign = -1
+        old_item.sign = -1
         to_install_path_item_list.append(old_item)
 
       # Update hashes of item in old state before installation
       for item in old_installation_state._path_item_list:
         print item.value
         if item.value:
-          item._sha = self.calculateComparableHash(item.value)
+          item.sha = self.calculateComparableHash(item.value)
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
       for item in new_installation_state._path_item_list:
         # If the path has been removed, then add it with sign = -1
-        old_item = old_installation_state.getBusinessItemByPath(item._path)
+        old_item = old_installation_state.getBusinessItemByPath(item.path)
         if old_item:
           # If the old_item exists, we match the hashes and if it differs, then
           # add the new item
-          if old_item._sha != item._sha:
+          if old_item.sha != item.sha:
             to_install_path_item_list.append(item)
         else:
           to_install_path_item_list.append(item)
@@ -1849,13 +1847,13 @@ class TemplateTool (BaseTool):
           if old_item:
             # Compare hash with ZODB
 
-            if old_item._sha == obj_sha:
+            if old_item.sha == obj_sha:
               # No change at ZODB on old item, so get the new item
               new_item = installation_process.getBusinessItemByPath(path)
               # Compare new item hash with ZODB
 
-              if new_item._sha == obj_sha:
-                if new_item._sign == -1:
+              if new_item.sha == obj_sha:
+                if new_item.sign == -1:
                   # If the sign is negative, remove the value from the path
                   new_item.install(installation_process)
                 else:
@@ -1871,7 +1869,7 @@ class TemplateTool (BaseTool):
               new_item = installation_process.getBusinessItemByPath(path)
               # Compare new item hash with ZODB
 
-              if new_item._sha == obj_sha:
+              if new_item.sha == obj_sha:
                 # If same hash, do nothing
                 continue
 
@@ -1884,7 +1882,7 @@ class TemplateTool (BaseTool):
             # Compare with the new_item
 
             new_item = installation_process.getBusinessItemByPath(path)
-            if new_item._sha == obj_sha:
+            if new_item.sha == obj_sha:
               # If same hash, do nothing
               continue
 
@@ -1903,7 +1901,7 @@ class TemplateTool (BaseTool):
             new_item = installation_process.getBusinessItemByPath(path)
             # Check sign of new_item
 
-            if new_item._sign == 1:
+            if new_item.sign == 1:
               error_list.append('Object at %s removed by user' % path)
 
           else:
@@ -1923,6 +1921,19 @@ class TemplateTool (BaseTool):
 
       return error_list
 
+    def migrateBTToBM(self, template_path, REQUEST=None, **kw):
+      """
+      Migrate Business Template to Business Manager object.
+      * Download from path
+      * Build the template
+      * Create zexp file from the built object
+      * Save the zexp in the path
+      """
+      template_downloaded = self.download(template_path)
+      if template_downloaded.getPortalType() == 'Business Manager':
+        LOG(template_downloaded.getTitle(), 0, 'Already migrated')
+        return
+
     security.declareProtected(Permissions.ManagePortal,
             'createNewInstallationState')
     def createNewInstallationState(self, bm_list, old_installation_state):
@@ -1939,9 +1950,9 @@ class TemplateTool (BaseTool):
 
       for bm in new_bm_list:
         forbidden_bm_title_list.append(bm.title)
-        for item in bm._path_item_list:
-          path_list.append(item._path)
-          sha_list.append(item._sha)
+        for item in bm.path_item_list:
+          path_list.append(item.path)
+          sha_list.append(item.sha)
 
       installed_bm_list = [l for l
                            in self.getInstalledBusinessManagerList()
@@ -1965,7 +1976,7 @@ class TemplateTool (BaseTool):
       removable_path_list = []
 
       for item in old_installation_state._path_item_list:
-        if item._path in path_list and item._sha in sha_list:
+        if item.path in path_list and item.sha in sha_list:
           # If there is Business Item which have no change on updation, then
           # no need to reinstall it, cause in that case we prefer the changes
           # at ZODB
@@ -1973,12 +1984,12 @@ class TemplateTool (BaseTool):
           # XXX: BAD DESIGN: Should compare both path as well as hash and keep
           # them together in a dictionary,using them separately can lead to
           # conflict in case two paths have same hash.
-          removable_sha_list.append(item._sha)
-          removable_path_list.append(item._path)
+          removable_sha_list.append(item.sha)
+          removable_path_list.append(item.path)
         else:
           # If there is update of path item, change the sign of the last
           # version of that Business Item and add it to final_path_item_list
-          item._sign = -1
+          item.sign = -1
           final_path_item_list.append(item)
 
       final_path_list.extend(old_installation_state.getTemplatePathList())
@@ -1991,9 +2002,9 @@ class TemplateTool (BaseTool):
 
       final_path_item_list = [item for item
                               in final_path_item_list
-                              if item._sha not in removable_sha_list]
+                              if item.sha not in removable_sha_list]
 
-      final_path_item_list.sort(key=lambda x: x._sign)
+      final_path_item_list.sort(key=lambda x: x.sign)
 
       # Remove the old installation state
       self._delObject(old_installation_state.getId())
@@ -2034,12 +2045,12 @@ class TemplateTool (BaseTool):
       # XXX: BAD DESIGN: Should compare both path as well as hash, just path
       # can lead to conflict in case two paths have same sha.
       built_item_dict = {
-                        item._path: item._sha for item
+                        item.path: item.sha for item
                         in buildBM._path_item_list
                         }
 
       old_item_dict = {
-                      item._path: item._sha for item
+                      item.path: item.sha for item
                       in old_installation_state._path_item_list
                       }
 
@@ -2047,22 +2058,22 @@ class TemplateTool (BaseTool):
       # property as there can be case where we have path but not path_item as
       # the new state already gets filtered while creation
       new_item_dict = {
-                      item._path: item._sha for item
+                      item.path: item.sha for item
                       in new_installation_state._path_item_list
-                      if item._sign == 1
+                      if item.sign == 1
                       }
 
       build_sha_list = built_item_dict.values()
       final_item_list = []
 
       for item in new_installation_state._path_item_list:
-        if item._sign == 1:
+        if item.sign == 1:
           if path in old_item_dict.keys():
-            if old_item_dict[path] == item._sha:
+            if old_item_dict[path] == item.sha:
               pass
 
       for item in new_installation_state._path_item_list:
-        if item._sha in build_sha_list and item._sign == 1:
+        if item.sha in build_sha_list and item.sign == 1:
           # No need to install value which we already have
           continue
         else:
@@ -2098,7 +2109,7 @@ class TemplateTool (BaseTool):
       final_path_item_list = []
 
       for item in installation_state._path_item_list:
-        if item._sign == 1:
+        if item.sign == 1:
           final_path_item_list.append(item)
 
       installation_state._path_item_list = final_path_item_list
