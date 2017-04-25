@@ -56,6 +56,8 @@ from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from zLOG import LOG, INFO, WARNING
 
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Globals import InitializeClass
+from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.dynamic.lazy_class import ERP5BaseBroken
@@ -135,7 +137,7 @@ def _recursiveRemoveUid(obj):
     _recursiveRemoveUid(subobj)
 
 
-class BusinessManager(XMLObject):
+class BusinessManager(Folder):
 
   """Business Manager is responsible for saving objects and properties in
   an ERP5Site. Everything will be saved just via path"""
@@ -143,11 +145,13 @@ class BusinessManager(XMLObject):
   meta_type = 'ERP5 Business Manager'
   portal_type = 'Business Manager'
   add_permission = Permissions.AddPortalContent
+  allowed_types = ('Business Item',)
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  """
   _properties = (
     {'id': 'template_path_list',
      'type': 'lines',
@@ -168,6 +172,7 @@ class BusinessManager(XMLObject):
      'override': 1,
      'mode': 'w'},
      )
+  """
 
   template_path_list = ()
   template_format_version = 3
@@ -225,6 +230,12 @@ class BusinessManager(XMLObject):
   def getTemplatePathList(self):
     return self.template_path_list
 
+  def getPathItemList(self):
+    try:
+      return self._path_item_list
+    except AttributeError:
+      return []
+
   security.declareProtected(Permissions.ManagePortal, '_getTemplatePathList')
   def _getTemplatePathList(self):
     result = self.getTemplatePathList()
@@ -232,6 +243,7 @@ class BusinessManager(XMLObject):
       result = tuple(result)
     return result
 
+  security.declareProtected(Permissions.ManagePortal, 'getTemplateFormatVersion')
   def getTemplateFormatVersion(self):
     return self.template_format_version
 
@@ -301,16 +313,16 @@ class BusinessManager(XMLObject):
     Override subtract to find difference b/w the values in different cases.
     """
     # Create the sha list for all path item list available in current object
-    sha_list = [item._sha for item in self._path_item_list]
+    sha_list = [item.sha for item in self._path_item_list]
     # Reverse the sign of Business Item objects for the old Business Manager
     # Trying comparing/subtracting ZODB with old installed object
     for path_item in other._path_item_list:
-      if path_item._sha in sha_list:
+      if path_item.sha in sha_list:
         self._path_item_list = [item for item
                                 in self._path_item_list
-                                if item._sha != path_item._sha]
+                                if item.sha != path_item.sha]
       else:
-        path_item._sign = -1
+        path_item.sign = -1
         self._path_item_list.append(path_item)
 
     return self
@@ -333,10 +345,15 @@ class BusinessManager(XMLObject):
     new_path_item_list = []
 
     for path_item in path_item_list:
-
       if '#' in  str(path_item[0]):
+        PathItem = self.newContent(portal_type='Business Item')
         # If its a property, no need to resolve the path
-        self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
+        PathItem.edit(
+          path=path_item[0],
+          sign=path_item[1],
+          layer=path_item[2]
+          )
+        self._path_item_list.append(PathItem)
       else:
         # Here we check for the path which also add sub-objects, in that case,
         # we create separate BusinessItem objects for each sub-object with
@@ -349,14 +366,26 @@ class BusinessManager(XMLObject):
           path_list = self._resolvePath(portal, [], path_item[0].split('/'))
           for path in path_list:
             try:
-              self._path_item_list.append(BusinessItem(path, path_item[1], path_item[2]))
+              PathItem = self.newContent(portal_type='Business Item')
+              PathItem.edit(
+                path=path,
+                sign=path_item[1],
+                layer=path_item[2]
+                )
+              self._path_item_list.append(PathItem)
               resolved_path = (' | ').join((path, path_item[1], path_item[2]))
               new_path_item_list.append(resolved_path)
             except IndexError:
               pass
         else:
+          PathItem = self.newContent(portal_type='Business Item')
+          PathItem.edit(
+            path=path_item[0],
+            sign=path_item[1],
+            layer=path_item[2]
+            )
           # If not build, i.e, import/export, just update the _path_item_list
-          self._path_item_list.append(BusinessItem(path_item[0], path_item[1], path_item[2]))
+          self._path_item_list.append(PathItem)
 
     if isBuild:
       # If build process, update the path list of the Business Manager
@@ -396,21 +425,21 @@ class BusinessManager(XMLObject):
   def getPathList(self):
     path_list = []
     for item in self._path_item_list:
-      path_list.append(item._path)
+      path_list.append(item.path)
     return path_list
 
   def getPathShaDict(self):
     path_sha_dict = {}
     # TODO: Handle error for BM with multiple items at same path
     for item in self._path_item_list:
-      path_sha_dict[item._path] = item._sha
+      path_sha_dict[item.path] = item.sha
     return path_item_dict
 
   def getPathItemDict(self):
     path_item_dict = {}
     # TODO: Handle error for BM with multiple items at same path
     for item in self._path_item_list:
-      path_item_dict[item._path] = item
+      path_item_dict[item.path] = item
     return path_item_dict
 
   def getBusinessItemByPath(self, path):
@@ -476,11 +505,11 @@ class BusinessManager(XMLObject):
     else:
       path_list = self.getTemplatePathList()
       for path_item in self._path_item_list:
-        path = path_item._path
-        layer = path_item._layer
+        path = path_item.path
+        layer = path_item.layer
         # Flatten the BusinessItem to the lowest layer ?? Why required, no change
         if layer != 0:
-          path_item._layer = 0
+          path_item.layer = 0
       self.status = 'flattened'
 
   def reduceBusinessManager(self):
@@ -516,10 +545,10 @@ class BusinessManager(XMLObject):
     seen_path_dict = {path: [] for path in seen_path_list}
 
     for path_item in self._path_item_list:
-      if path_item._path in seen_path_list:
+      if path_item.path in seen_path_list:
         # In case the path is repeated keep the path_item in a separate dict
         # for further arithmetic
-        seen_path_dict[path_item._path].append(path_item)
+        seen_path_dict[path_item.path].append(path_item)
       else:
         # If the path is unique, add them in the list of reduced Business Item
         reduced_path_item_list.append(path_item)
@@ -528,21 +557,21 @@ class BusinessManager(XMLObject):
     for path, path_item_list in seen_path_dict.items():
 
       # Create separate list of list items with highest priority
-      higest_priority_layer = max(path_item_list, key=attrgetter('_layer'))._layer
+      higest_priority_layer = max(path_item_list, key=attrgetter('layer')).layer
       prioritized_path_item = [path_item for path_item
                                in path_item_list
-                               if path_item._layer == higest_priority_layer]
+                               if path_item.layer == higest_priority_layer]
 
       # Separate the positive and negative sign path_item
       if len(prioritized_path_item) > 1:
 
         path_item_list_add = [item for item
                               in prioritized_path_item
-                              if item._sign > 0]
+                              if item.sign > 0]
 
         path_item_list_subtract = [item for item
                                    in prioritized_path_item
-                                   if item._sign < 0]
+                                   if item.sign < 0]
 
         combined_added_path_item = reduce(lambda x, y: x+y, path_item_list_add)
         combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
@@ -596,7 +625,7 @@ class BusinessManager(XMLObject):
 
     return added_value, subtracted_value
 
-class BusinessItem(Persistent):
+class BusinessItem(XMLObject):
 
   """Saves the path and values for objects, properties, etc, the
     attributes for a path configuration being:
@@ -612,22 +641,44 @@ class BusinessItem(Persistent):
     - value (a set of pickable value in python)
     - hash of the value"""
 
+  add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  portal_type = 'Business Item'
+  meta_type = 'Business Item'
   isProperty = False
+  isIndexable = False
 
   def __init__(self, path, sign=1, layer=0, value=None, *args, **kw):
     """
     Initialize/update the attributes
     """
     self.__dict__.update(kw)
-    self._path = path
-    self._sign = int(sign)
-    self._layer = int(layer)
+    self.path = path
+    self.sign = int(sign)
+    self.layer = int(layer)
     self.value = value
     if value:
       # Generate hash of from the value
-      self._sha = self._generateHash()
+      self.sha = self._generateHash()
     else:
-      self._sha = ''
+      self.sha = ''
+
+  def _edit(self, **kw):
+    """
+    Overriden function so that we can update attributes for BusinessItem objects
+    """
+    self.path = kw.get('path', '')
+    self.sign = int(kw.get('sign', 1))
+    self.layer = int(kw.get('layer', 0))
+    self.value = kw.get('value', None)
+    if self.value:
+      # Generate hash of from the value
+      self.sha = self._generateHash()
+    else:
+      self.sha = ''
 
   def _generateHash(self):
     """
@@ -637,7 +688,7 @@ class BusinessItem(Persistent):
     LOG('Business Manager', INFO, 'Genrating hash')
     if not self.value:
       # Raise in case there is no value for the BusinessItem object
-      raise ValueError, "Value not defined for the %s BusinessItem" % self._path
+      raise ValueError, "Value not defined for the %s BusinessItem" % self.path
     elif self.isProperty:
       # In case of property, the value is a PersisitentMapping object, so it
       # can be easily hashed after formatting
@@ -651,7 +702,7 @@ class BusinessItem(Persistent):
         obj_dict = self.value.__dict__.copy()
         del obj_dict['uid']
         sha256 = hash(pprint.pformat(obj_dict))
-    self._sha = sha256
+    self.sha = sha256
 
   def build(self, context, **kw):
     """
@@ -665,7 +716,7 @@ class BusinessItem(Persistent):
     """
     LOG('Business Manager', INFO, 'Building Business Item')
     p = context.getPortalObject()
-    path = self._path
+    path = self.path
     if '#' in str(path):
       self.isProperty = True
       relative_url, property_id = path.split('#')
@@ -777,18 +828,18 @@ class BusinessItem(Persistent):
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
     portal = context.getPortalObject()
-    if '#' in str(self._path):
+    if '#' in str(self.path):
       self.isProperty = True
-      relative_url, property_id = self._path.split('#')
+      relative_url, property_id = self.path.split('#')
       obj = portal.unrestrictedTraverse(relative_url)
       prop = self.value
       # First remove the property from the existing path and keep the default
       # empty, and update only if the sign is +1
       obj._delPropValue(prop['name'])
-      if self._sign == 1:
+      if self.sign == 1:
         obj.setProperty(prop['name'], prop['value'], prop['type'])
     else:
-      path_list = self._path.split('/')
+      path_list = self.path.split('/')
       container_path = path_list[:-1]
       object_id = path_list[-1]
       try:
@@ -802,7 +853,7 @@ class BusinessItem(Persistent):
         container._delObject(object_id)
       # Create a new object only if sign is +1
       # If sign is +1, set the new object on the container
-      if self._sign == 1:
+      if self.sign == 1:
         # install object
         obj = self.value
         obj = obj._getCopy(container)
@@ -867,9 +918,9 @@ class BusinessItem(Persistent):
     """
     Add the values from the path when the path is same for 2 objects
     """
-    if self._path != other._path:
+    if self.path != other.path:
       raise ValueError, "BusinessItem are incommensurable, have different path"
-    elif self._sign != other._sign:
+    elif self.sign != other.sign:
       raise ValueError, "BusinessItem are incommensurable, have different sign"
     else:
       self.value = self._mergeValue(value_list=[self.value, other.value])
@@ -1048,13 +1099,13 @@ class BusinessItem(Persistent):
     return obj
 
   def getBusinessPath(self):
-    return self._path
+    return self.path
 
   def getBusinessPathSign(self):
-    return self._sign
+    return self.sign
 
   def getBusinessPathLayer(self):
-    return self._layer
+    return self.layer
 
   def getBusinessPathValue(self):
     return self.value
@@ -1063,7 +1114,7 @@ class BusinessItem(Persistent):
     self.value = value
 
   def getBusinessPathSha(self):
-    return self._sha
+    return self.sha
 
   def getParentBusinessManager(self):
     return self.aq_parent
@@ -1075,3 +1126,5 @@ class bm(dict):
 
   def _importFile(self, file_name, file, parent):
     self[file_name] = file.read()
+
+#InitializeClass(BusinessItem)
