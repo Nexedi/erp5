@@ -39,6 +39,7 @@ for inventory in portal.portal_simulation.getInventoryList(
                     precision=precision,
                     from_date=from_date,
                     at_date=at_date,
+                    only_accountable=False,
                     group_by_resource=0,
                     group_by_node=1,
                     ledger=ledger, ):

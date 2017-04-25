@@ -5,6 +5,7 @@ getobject = portal.portal_catalog.getobject
 for x in portal.portal_simulation.getInventoryList(
                               portal_type=('Pay Sheet Cell',
                                            'Pay Sheet Line'),
+                              only_accountable=False,
                               group_by_resource=0,
                               group_by_section=0,
                               group_by_mirror_section=1):
