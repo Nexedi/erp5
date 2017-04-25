@@ -1293,22 +1293,22 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertTrue('Trying to remove changes at ZODB at test_folder#short_title'
                      in context.exception)
 
-  def _migrateCatalogBTToBM(self):
+  def test_migrateCatalogBTToBM(self):
     """
     Try to export-import-install erp5_mysql_innodb_catalog BT to BM. This
     would help to keep track of the erp5_catalog which we use.
     """
     portal_templates = self.portal.portal_templates
-    managerA = self._createBusinessManager()
+    managerA = self._createBusinessManager(title='erp5_performance_test')
 
-    path_list = ['portal_catalog/erp5_mysql_innodb | 1 | 1',
-                 'portal_catalog/erp5_mysql_innodb/** | 1 | 1']
-
+    path_list = ['portal_skins/erp5_core_proxy_field_legacy | 1 | 1']
+    import pdb; pdb.set_trace()
     # Set catalog path item as path_item in managerA
     managerA._setTemplatePathList(path_list)
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
+    import pdb; pdb.set_trace()
     path  = self._exportBusinessManager(managerA_new)
     imported_manager = self._importBusinessManager(managerA, path, 1)
 
