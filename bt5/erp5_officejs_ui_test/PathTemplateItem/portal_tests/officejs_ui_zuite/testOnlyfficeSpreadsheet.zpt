@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_presentation/</td>
+  <td>${base_url}/web_site_module/ooffice_spreadsheet/development/</td>
   <td></td>
 </tr>
 <tr>
