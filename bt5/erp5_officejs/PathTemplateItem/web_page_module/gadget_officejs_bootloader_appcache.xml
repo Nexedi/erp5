@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -10,11 +10,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -27,6 +24,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +44,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -53,13 +52,18 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/1</string>
               </tuple>
             </value>
         </item>
@@ -71,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_bootloader.js</string> </value>
+            <value> <string>gadget_officejs_bootloader.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_bootloader_js</string> </value>
+            <value> <string>gadget_officejs_bootloader_appcache</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -89,7 +93,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -98,8 +102,28 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Wed, 26 Apr 2017 11:45:33 +0000\n
+# XXX + fonts\n
+# images/ajax-loader.gif\n
+CACHE:\n
+gadget_officejs_bootloader.html\n
+gadget_officejs_bootloader.js\n
+gadget_officejs_bootloader_presentation.html\n
+gadget_officejs_bootloader_presentation.js\n
+gadget_officejs_bootloader_presentation.css\n
+gadget_officejs_bootloader_serviceworker.js\n
+rsvp.js\n
+renderjs.js\n
+jiodev.js\n
+jio_appcachestorage.js\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs BootLoader Gadget JS</string> </value>
+            <value> <string>Gadget Bootloader AppCache</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -165,7 +189,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -191,7 +217,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485781629.44</float>
+                        <float>1493199934.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -200,7 +226,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>draft</string> </value>
             </item>
           </dictionary>
         </list>
@@ -236,7 +262,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.61634.43604.13073</string> </value>
+                <value> <string>958.61669.49524.12151</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +280,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1493203361.07</float>
+                        <float>1493205476.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +337,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485769967.8</float>
+                        <float>1493199934.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

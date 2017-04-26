@@ -49,8 +49,9 @@
           document: site_url,
           sub_storage: {
             type: "appcache",
+            take_installer: true,
             manifest: cache_file,
-            url: site_url
+            origin_url: site_url
           }
         },
         signature_storage: {
