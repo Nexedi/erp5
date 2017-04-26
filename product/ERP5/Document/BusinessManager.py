@@ -177,6 +177,7 @@ class BusinessManager(Folder):
   template_path_list = ()
   template_format_version = 3
   status = 'uninstalled'
+  _path_item_list = PersistentList()
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -255,7 +256,7 @@ class BusinessManager(Folder):
     final_prop_map = prop_map+self._properties
     return final_prop_map
 
-  def export(self, path=None, local=0, bma=None, **kw):
+  def export(self, path=None, **kw):
     """
     Export the object as zexp file
     """
@@ -336,8 +337,13 @@ class BusinessManager(Folder):
     """
     portal = self.getPortalObject()
     LOG('Business Manager', INFO, 'Storing Manager Data')
-    self._path_item_list = PersistentList()
     path_item_list = self.getTemplatePathList()
+    # Delete all the older Business Item objects while rebuilding
+    exisiting_path_item_id_list = [l for l in self.objectIds()]
+    self.manage_delObjects(ids=exisiting_path_item_id_list)
+
+    # Create an empty _path_item_list everytime we storeTemplateData
+    self._path_item_list = PersistentList()
 
     if path_item_list:
       path_item_list = [l.split(' | ') for l in path_item_list]
@@ -349,9 +355,9 @@ class BusinessManager(Folder):
         PathItem = self.newContent(portal_type='Business Item')
         # If its a property, no need to resolve the path
         PathItem.edit(
-          path=path_item[0],
-          sign=path_item[1],
-          layer=path_item[2]
+          item_path=path_item[0],
+          item_sign=path_item[1],
+          item_layer=path_item[2]
           )
         self._path_item_list.append(PathItem)
       else:
@@ -368,9 +374,9 @@ class BusinessManager(Folder):
             try:
               PathItem = self.newContent(portal_type='Business Item')
               PathItem.edit(
-                path=path,
-                sign=path_item[1],
-                layer=path_item[2]
+                item_path=path,
+                item_sign=path_item[1],
+                item_layer=path_item[2]
                 )
               self._path_item_list.append(PathItem)
               resolved_path = (' | ').join((path, path_item[1], path_item[2]))
@@ -380,9 +386,9 @@ class BusinessManager(Folder):
         else:
           PathItem = self.newContent(portal_type='Business Item')
           PathItem.edit(
-            path=path_item[0],
-            sign=path_item[1],
-            layer=path_item[2]
+            item_path=path_item[0],
+            item_sign=path_item[1],
+            item_layer=path_item[2]
             )
           # If not build, i.e, import/export, just update the _path_item_list
           self._path_item_list.append(PathItem)
@@ -651,58 +657,38 @@ class BusinessItem(XMLObject):
   isProperty = False
   isIndexable = False
 
-  def __init__(self, path, sign=1, layer=0, value=None, *args, **kw):
-    """
-    Initialize/update the attributes
-    """
-    self.__dict__.update(kw)
-    self.path = path
-    self.sign = int(sign)
-    self.layer = int(layer)
-    self.value = value
-    if value:
-      # Generate hash of from the value
-      self.sha = self._generateHash()
-    else:
-      self.sha = ''
-
-  def _edit(self, **kw):
+  def _edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    self.path = kw.get('path', '')
-    self.sign = int(kw.get('sign', 1))
-    self.layer = int(kw.get('layer', 0))
-    self.value = kw.get('value', None)
-    if self.value:
-      # Generate hash of from the value
-      self.sha = self._generateHash()
-    else:
-      self.sha = ''
+    return super(BusinessItem, self)._edit(item_path=item_path,
+                                           item_sign=item_sign,
+                                           item_layer=item_layer,
+                                           **kw)
 
-  def _generateHash(self):
+  def _generateHash(self, item_value=None):
     """
     Generate hash based on value for the object.
     Initially, for simplicity, we go on with SHA256 values only
     """
     LOG('Business Manager', INFO, 'Genrating hash')
-    if not self.value:
+    if not item_value:
       # Raise in case there is no value for the BusinessItem object
-      raise ValueError, "Value not defined for the %s BusinessItem" % self.path
+      raise ValueError, "Value not defined for the BusinessItem"
     elif self.isProperty:
       # In case of property, the value is a PersisitentMapping object, so it
       # can be easily hashed after formatting
-      sha256 = hash(pprint.pformat(self.value))
+      sha256 = hash(pprint.pformat(item_value))
     else:
       # Expects to raise error on case the value for the object
       # is not picklable
       try:
-        sha256 = hashlib.sha256(self.value).hexdigest()
+        sha256 = hashlib.sha256(item_value).hexdigest()
       except TypeError:
-        obj_dict = self.value.__dict__.copy()
+        obj_dict = item_value.__dict__.copy()
         del obj_dict['uid']
         sha256 = hash(pprint.pformat(obj_dict))
-    self.sha = sha256
+    return sha256
 
   def build(self, context, **kw):
     """
@@ -716,7 +702,7 @@ class BusinessItem(XMLObject):
     """
     LOG('Business Manager', INFO, 'Building Business Item')
     p = context.getPortalObject()
-    path = self.path
+    path = self.getProperty('item_path')
     if '#' in str(path):
       self.isProperty = True
       relative_url, property_id = path.split('#')
@@ -728,11 +714,9 @@ class BusinessItem(XMLObject):
       value['name'] = property_id
       value['type'] = property_type
       value['value'] = property_value
-      self.value = value
+      self.setProperty('item_value', value)
       # Add the value object in the database
       obj._p_jar.add(value)
-      # Generate hash for the property value
-      self._generateHash()
     else:
       try:
         # XXX: After we apply _resolve path list while storing Data for the
@@ -747,9 +731,8 @@ class BusinessItem(XMLObject):
           obj = obj.__of__(context)
           # XXX: '_recursiveRemoveUid' is not working as expected
           _recursiveRemoveUid(obj)
-          self.value = obj
-          # Generate hash for the erp5 object value
-          self._generateHash()
+          obj = aq_base(obj)
+          self._setObject(obj.getId(), obj)
       except AttributeError:
         # In case the object doesn't exist, just pass without raising error
         pass
@@ -828,18 +811,19 @@ class BusinessItem(XMLObject):
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
     portal = context.getPortalObject()
-    if '#' in str(self.path):
+    path = self.getProperty('item_path')
+    if '#' in str(path):
       self.isProperty = True
-      relative_url, property_id = self.path.split('#')
+      relative_url, property_id = path.split('#')
       obj = portal.unrestrictedTraverse(relative_url)
-      prop = self.value
+      prop = self.getProperty('value')
       # First remove the property from the existing path and keep the default
       # empty, and update only if the sign is +1
       obj._delPropValue(prop['name'])
-      if self.sign == 1:
+      if self.getProperty('item_sign') == 1:
         obj.setProperty(prop['name'], prop['value'], prop['type'])
     else:
-      path_list = self.path.split('/')
+      path_list = path.split('/')
       container_path = path_list[:-1]
       object_id = path_list[-1]
       try:
@@ -855,7 +839,7 @@ class BusinessItem(XMLObject):
       # If sign is +1, set the new object on the container
       if self.sign == 1:
         # install object
-        obj = self.value
+        obj = self.getProperty('item_value')
         obj = obj._getCopy(container)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
@@ -1099,32 +1083,13 @@ class BusinessItem(XMLObject):
     return obj
 
   def getBusinessPath(self):
-    return self.path
+    return self.getProperty('item_path')
 
   def getBusinessPathSign(self):
-    return self.sign
+    return self.getProperty('item_sign')
 
   def getBusinessPathLayer(self):
-    return self.layer
-
-  def getBusinessPathValue(self):
-    return self.value
-
-  def setBusinessPathValue(self, value):
-    self.value = value
-
-  def getBusinessPathSha(self):
-    return self.sha
+    return self.getProperty('item_layer')
 
   def getParentBusinessManager(self):
     return self.aq_parent
-
-class bm(dict):
-  """
-  Fake 'bm' item to read bm/* files through BusinessManagerArchive
-  """
-
-  def _importFile(self, file_name, file, parent):
-    self[file_name] = file.read()
-
-#InitializeClass(BusinessItem)
