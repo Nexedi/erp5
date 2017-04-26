@@ -249,12 +249,33 @@ user_pref("pdfjs.migrationVersion", 42);
 """ % (self.host, self.port,
        os.path.join(getConfiguration().instancehome, 'var'))
 
+class PhantomJS(Browser):
+  def _createRunJS(self):
+    run_js = """
+var page = new WebPage(),
+    address;
+
+address = phantom.args[0];
+page.open(address, function (status) {
+  if (status !== 'success') {
+    console.log('FAIL to load the address');
+  } else {
+    console.log('SUCCESS load the address');
+  }
+  phantom.exit();
+});
+"""
+    return self._createFile('run.js', run_js)
+
+  def _run(self, url):
+    self._runCommand("phantomjs", self._createRunJS(), url)
+
 class FunctionalTestRunner:
 
   # There is no test that can take more than 6 hours
   timeout = 6.0 * 3600
 
-  def __init__(self, host, port, portal, run_only=''):
+  def __init__(self, host, port, portal, run_only='', use_phanthom=False):
     self.instance_home = os.environ['INSTANCE_HOME']
 
     # Such information should be automatically loaded
@@ -263,7 +284,10 @@ class FunctionalTestRunner:
     self.run_only = run_only
     profile_dir = os.path.join(self.instance_home, 'profile')
     self.portal = portal
-    self.browser = Firefox(profile_dir, host, int(port))
+    if use_phanthom:
+      self.browser = PhantomJS(profile_dir, host, int(port))
+    else:
+      self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
     transaction.begin()
@@ -334,6 +358,7 @@ class FunctionalTestRunner:
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
   foreground = 0
+  use_phanthom = False
   remote_code_url_list = None
 
   def getTitle(self):
@@ -351,7 +376,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.tic()
     host, port = self.startZServer()
     self.runner = FunctionalTestRunner(host, port,
-                                self.portal, self.run_only)
+                                self.portal, self.run_only, self.use_phanthom)
 
   def setSystemPreference(self):
     conversion_dict = _getConversionServerDict()
