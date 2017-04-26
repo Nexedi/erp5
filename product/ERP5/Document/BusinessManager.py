@@ -153,7 +153,7 @@ class BusinessManager(Folder):
 
   """
   _properties = (
-    {'id': 'template_path_list',
+    {'id': 'manager_path_list',
      'type': 'lines',
      'default': 'python: ()',
      'acquisition_base_category': (),
@@ -174,10 +174,8 @@ class BusinessManager(Folder):
      )
   """
 
-  template_path_list = ()
   template_format_version = 3
   status = 'uninstalled'
-  _path_item_list = PersistentList()
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -216,26 +214,18 @@ class BusinessManager(Folder):
     portal = self.getPortalObject()
     pass
 
-  def edit(self, **kw):
+  def edit(self, manager_path_list=[], **kw):
     """
     Explicilty edit the class instance
     XXX: No need of this class ? as we already have _edit from ERP5Type.Folder
     """
-    if 'template_path_list' in kw:
-      path_item_list = kw.pop('template_path_list')
-      self._setTemplatePathList(path_item_list)
-
-  def _setTemplatePathList(self, path_item_list):
-    self.template_path_list = path_item_list
+    super(BusinessManager, self).edit(manager_path_list=manager_path_list, **kw)
 
   def getTemplatePathList(self):
-    return self.template_path_list
+    return self.getProperty('manager_path_list')
 
   def getPathItemList(self):
-    try:
-      return self._path_item_list
-    except AttributeError:
-      return []
+    return self.objectValues()
 
   security.declareProtected(Permissions.ManagePortal, '_getTemplatePathList')
   def _getTemplatePathList(self):
@@ -244,10 +234,12 @@ class BusinessManager(Folder):
       result = tuple(result)
     return result
 
+  # XXX: Change into property
   security.declareProtected(Permissions.ManagePortal, 'getTemplateFormatVersion')
   def getTemplateFormatVersion(self):
     return self.template_format_version
 
+  # XXX: Change into property
   def _setTemplateFormatVersion(self, value):
     self.template_format_version = int(value)
 
@@ -293,18 +285,19 @@ class BusinessManager(Folder):
     """
     connection = self.aq_parent._p_jar
     file = open(path, 'rb')
-    obj = connection.importFile(file)
-    self.title = obj.title
-    self._path_item_list = obj._path_item_list[:]
-    self._setTemplatePathList(obj.getTemplatePathList())
+    imported_manager = connection.importFile(file)
+    self.title = imported_manager.title
+    for obj in imported_manager.objectValues():
+      self._setObject(obj.getId(), obj)
+    self.setProperty('manager_path_list', obj.getTemplatePathList())
 
   def __add__(self, other):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
     self._path_item_list.extend(other._path_item_list)
-    template_path_list = list(self.template_path_list)+list(other.template_path_list)
-    self.template_path_list = template_path_list
+    manager_path_list = list(self.manager_path_list)+list(other.manager_path_list)
+    self.manager_path_list = manager_path_list
     return self
 
   __radd__ = __add__
@@ -342,9 +335,6 @@ class BusinessManager(Folder):
     exisiting_path_item_id_list = [l for l in self.objectIds()]
     self.manage_delObjects(ids=exisiting_path_item_id_list)
 
-    # Create an empty _path_item_list everytime we storeTemplateData
-    self._path_item_list = PersistentList()
-
     if path_item_list:
       path_item_list = [l.split(' | ') for l in path_item_list]
 
@@ -359,7 +349,6 @@ class BusinessManager(Folder):
           item_sign=path_item[1],
           item_layer=path_item[2]
           )
-        self._path_item_list.append(PathItem)
       else:
         # Here we check for the path which also add sub-objects, in that case,
         # we create separate BusinessItem objects for each sub-object with
@@ -378,7 +367,6 @@ class BusinessManager(Folder):
                 item_sign=path_item[1],
                 item_layer=path_item[2]
                 )
-              self._path_item_list.append(PathItem)
               resolved_path = (' | ').join((path, path_item[1], path_item[2]))
               new_path_item_list.append(resolved_path)
             except IndexError:
@@ -390,12 +378,10 @@ class BusinessManager(Folder):
             item_sign=path_item[1],
             item_layer=path_item[2]
             )
-          # If not build, i.e, import/export, just update the _path_item_list
-          self._path_item_list.append(PathItem)
 
     if isBuild:
       # If build process, update the path list of the Business Manager
-      self._setTemplatePathList(new_path_item_list)
+      self.setProperty('manager_path_list', new_path_item_list)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -430,15 +416,15 @@ class BusinessManager(Folder):
 
   def getPathList(self):
     path_list = []
-    for item in self._path_item_list:
-      path_list.append(item.path)
+    for item in self.objectValues():
+      path_list.append(item.getProperty('path'))
     return path_list
 
   def getPathShaDict(self):
     path_sha_dict = {}
     # TODO: Handle error for BM with multiple items at same path
-    for item in self._path_item_list:
-      path_sha_dict[item.path] = item.sha
+    for item in self.objectValues():
+      path_sha_dict[item.getProperty('path')] = item.getProperty('sha')
     return path_item_dict
 
   def getPathItemDict(self):
@@ -461,39 +447,10 @@ class BusinessManager(Folder):
     LOG('Business Manager', INFO, 'Building Business Manager')
     if not no_action:
       self.storeTemplateData(isBuild=True)
-      for path_item in self._path_item_list:
+      for path_item in self.objectValues():
         path_item.build(self, **kw)
       self.status = 'built'
     return self
-
-  def install(self):
-    """
-    Installs the Business Manager in steps:
-
-      1. Reduction of the BT
-      2. Flattenning the BT
-      3. Copying the object at the path mentioned in BT
-    """
-    if self.status == 'uninstalled':
-      self.reduceBusinessManager()
-    #elif self.status == 'reduced':
-    #  self.flattenBusinessManager()
-    self._install()
-
-  def _install(self):
-    """
-    Run installation
-    """
-    if self.status != 'reduced':
-      self.install()
-    else:
-      # Invoke install on every BusinessItem object
-      for path_item in self._path_item_list:
-        path_item.install()
-
-  def upgrade(self):
-    """Upgrade the Business Manager"""
-    pass
 
   def flattenBusinessManager(self):
     """
