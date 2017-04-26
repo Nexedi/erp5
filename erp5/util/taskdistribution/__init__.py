@@ -95,6 +95,16 @@ def patchRPCParser(error_handler):
                 raise
     parser_klass.feed = verbose_feed
 
+def binarize_args(arg):
+  # Converts recursively basestring arg into Binary
+  if isinstance(arg, basestring):
+    return xmlrpclib.Binary(arg.encode('utf-8'))
+  if isinstance(arg, (list, tuple)):
+    return map(binarize_args, arg)
+  if isinstance(arg, dict):
+    return {k: binarize_args(v) for k, v in arg.iteritems()}
+  return arg
+
 class RPCRetry(object):
     def __init__(self, proxy, retry_time, logger):
         super(RPCRetry, self).__init__()
@@ -107,6 +117,9 @@ class RPCRetry(object):
 
     def _retryRPC(self, func_id, args=()):
         retry_time = self._retry_time
+        # Wrap basestrings into xmlrpclib.Binary, as they can contain
+        # non-XML allowed characters
+        args = binarize_args(args)
         while True:
             try:
                 return self._RPC(func_id, args)
