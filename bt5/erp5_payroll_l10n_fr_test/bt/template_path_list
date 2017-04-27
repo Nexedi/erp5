@@ -50,6 +50,7 @@ portal_categories/region/europe
 portal_categories/region/europe/west
 portal_categories/region/europe/west/france
 portal_categories/social_title/mr
+portal_categories/use/social_declaration/l10n/fr/leave/illness
 service_module/127
 service_module/130
 service_module/132
@@ -128,6 +129,7 @@ service_module/abondement_pee
 service_module/abondement_pee/**
 service_module/complementalloc
 service_module/csg_non_deductible_pee
+service_module/illness_period
 service_module/mutuellecic
 service_module/ticket_restaurant
 service_module/ticket_restaurant/**

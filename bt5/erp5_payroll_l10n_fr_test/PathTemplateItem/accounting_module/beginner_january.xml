@@ -84,6 +84,7 @@
                 <string>ledger/accounting/general</string>
                 <string>resource/currency_module/EUR</string>
                 <string>specialise/paysheet_model_module/paysheet_model</string>
+                <string>destination_trade/organisation_module/nexedi</string>
               </tuple>
             </value>
         </item>
