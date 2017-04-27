@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import getIntervalBetweenDates, getNumberOfDayInMonth
+from Products.ERP5Type.DateUtils import addToDate, getIntervalBetweenDates, getNumberOfDayInMonth
 
 portal = context.getPortalObject()
 portal_categories = context.portal_categories
@@ -159,27 +159,32 @@ if block_id == 'S21.G00.15':
 if block_id == 'S21.G00.20':
   payment_transaction = target
   bank_account = target.getSourcePaymentValue()
+  payment_source_section = payment_transaction.getSourceSectionValue()
   payment_source_trade = payment_transaction.getSourceTradeValue()
+  amount = (kw['amount'] if 'amount' in kw else payment_transaction.AccountingTransactionLine_statSourceDebit())
 
-  if kw['establishment'] == payment_source_trade:
+  if payment_source_trade == kw['payer'] == kw['establishment']:
+    payment_mode = payment_transaction.getPaymentModeValue()
+    assert payment_mode is not None, "No payment mode defined on %s" % payment_transaction.absolute_url()
+    # Establishment pays for itself
+    rubric_value_dict['S21.G00.20.003'] = ''.join(bank_account.getBicCode().split(' '))
+    rubric_value_dict['S21.G00.20.004'] = ''.join(bank_account.getIban().split(' '))
+    rubric_value_dict['S21.G00.20.005'] = amount
+    rubric_value_dict['S21.G00.20.010'] = payment_mode.getCodification()
+    if payment_source_trade is not None and payment_source_trade != payment_source_section:
+      # Establishment pays also for another one
+      rubric_value_dict['S21.G00.20.012'] = ''.join(kw['establishment'].getCorporateRegistrationCode().split(' '))
+  else:
     # A main establishment is paying for this one
     rubric_value_dict['S21.G00.20.005'] = formatFloat(0.)
     rubric_value_dict['S21.G00.20.010'] = '06'
-    rubric_value_dict['S21.G00.20.012'] = ''.join(payment_transaction.getSourceSectionValue().getCorporateRegistrationCode().split(' '))
-  elif kw['establishment'] == payment_transaction.getSourceSectionValue():
-    # Establishment pays for itself
-    rubric_value_dict['S21.G00.20.003'] = bank_account.getBicCode()
-    rubric_value_dict['S21.G00.20.004'] = bank_account.getIban()
-    rubric_value_dict['S21.G00.20.005'] = payment_transaction.AccountingTransactionLine_statSourceDebit()
-    rubric_value_dict['S21.G00.20.010'] = payment_transaction.getPaymentModeValue().getCodification()
-    if payment_source_trade is not None:
-      # Establishment pays also for another one
-      rubric_value_dict['S21.G00.20.012'] = ''.join(kw['establishment'].getCorporateRegistrationCode().split(' '))
+    rubric_value_dict['S21.G00.20.012'] = ''.join(payment_source_section.getCorporateRegistrationCode().split(' '))
 
   rubric_value_dict['S21.G00.20.001'] = kw['corporate_registration_code']
-  rubric_value_dict['S21.G00.20.002'] = ''.join(kw['establishment'].getCorporateRegistrationCode().split(' ')) # TODO: Check if it is always needed
-  rubric_value_dict['S21.G00.20.006'] = formatDate(payment_transaction.getStartDate()) # TODO: check simulation correctly sets it
-  rubric_value_dict['S21.G00.20.007'] = formatDate(payment_transaction.getStopDate())
+  rubric_value_dict['S21.G00.20.002'] = ''.join(kw['establishment'].getCorporateRegistrationCode().split(' '))
+  start_date = kw['first_date_of_month']
+  rubric_value_dict['S21.G00.20.006'] = formatDate(start_date)
+  rubric_value_dict['S21.G00.20.007'] = formatDate(kw['last_date_of_month'])
   rubric_value_dict['S21.G00.20.008'] = ''
 
 # Bordereau de cotisation due
@@ -189,7 +194,7 @@ if block_id == 'S21.G00.22':
   rubric_value_dict['S21.G00.22.002'] = ''.join(kw['establishment'].getCorporateRegistrationCode().split(' '))
   rubric_value_dict['S21.G00.22.003'] = formatDate(kw['start_date'])
   rubric_value_dict['S21.G00.22.004'] = formatDate(kw['stop_date'])
-  rubric_value_dict['S21.G00.22.005'] = payment_transaction.AccountingTransactionLine_statSourceDebit()
+  rubric_value_dict['S21.G00.22.005'] = formatFloat(kw['amount'])
 
 if block_id == 'S21.G00.23':
   rubric_value_dict['S21.G00.23.001'] = target['code'][:3]
@@ -197,16 +202,17 @@ if block_id == 'S21.G00.23':
   rubric_value_dict['S21.G00.23.003'] = ('' if not target['rate'] else formatFloat(target['rate']))
   if target['quantity']:
     assert target['quantity'] > 0
-    rubric_value_dict['S21.G00.23.005'] = formatFloat(target['quantity'])
+    rubric_value_dict['S21.G00.23.005'] = formatFloat(round(target['quantity']))
   else:
-    rubric_value_dict['S21.G00.23.004'] = formatFloat(target['base'])
+    rubric_value_dict['S21.G00.23.004'] = formatFloat(round(target['base']))
   rubric_value_dict['S21.G00.23.006'] = target['zip_code']
 
 # Individu
 if block_id == 'S21.G00.30':
   birth_country_code = getCountryCode(target)
   address = target.getDefaultAddressStreetAddress().strip().split('\n')
-  rubric_value_dict["S21.G00.30.001"] = "".join(target.getSocialCode('').split(' '))[:13]
+  social_code = target.getSocialCode('')
+  rubric_value_dict["S21.G00.30.001"] = ("" if not social_code else "".join(social_code.split(' '))[:13])
   rubric_value_dict["S21.G00.30.002"] = target.getLastName()
   rubric_value_dict["S21.G00.30.003"] = ''
   rubric_value_dict["S21.G00.30.004"] = " ".join([target.getFirstName(), target.getMiddleName() or '']).strip()
@@ -248,7 +254,10 @@ if block_id == 'S21.G00.40':
   rubric_value_dict["S21.G00.40.016"] = enrollment_record.getLocalScheme()
   rubric_value_dict["S21.G00.40.017"] = target.getCollectiveAgreementTitle()
   rubric_value_dict["S21.G00.40.018"] = enrollment_record.getMedicalScheme()
-  rubric_value_dict["S21.G00.40.019"] = ''.join(target.getDestinationValue().getCorporateRegistrationCode().split(' '))[-5:]
+  try:
+    rubric_value_dict["S21.G00.40.019"] = ''.join(target.getDestinationValue().getCorporateRegistrationCode().split(' '))[-5:]
+  except AttributeError:
+    raise AttributeError(target, target.getDestinationValue())
   rubric_value_dict["S21.G00.40.020"] = enrollment_record.getRetirementScheme()
   rubric_value_dict["S21.G00.40.021"] = enrollment_record.getEnrollmentCausality()
   rubric_value_dict["S21.G00.40.022"] = ''
@@ -278,9 +287,9 @@ if block_id == 'S21.G00.40':
 if block_id == 'S21.G00.50':
   # target is a paysheet
   rubric_value_dict['S21.G00.50.001'] = formatDate(context.getEffectiveDate())
-  rubric_value_dict['S21.G00.50.002'] = kw['net_taxable_salary']
+  rubric_value_dict['S21.G00.50.002'] = formatFloat(kw['net_taxable_salary'])
   rubric_value_dict['S21.G00.50.003'] = ''
-  rubric_value_dict['S21.G00.50.004'] = kw['net_salary']
+  rubric_value_dict['S21.G00.50.004'] = formatFloat(kw['net_salary'])
 
 if block_id == 'S21.G00.52':
   rubric_value_dict['S21.G00.52.001'] = target['code']
@@ -304,14 +313,14 @@ if block_id == 'S21.G00.55':
   if corporate_registration_code not in ('ORGANISATION1', 'ORGANISATION2'):
     return {}
   payment_source_trade = target.getSourceTradeValue()
-  if kw['establishment'] == payment_source_trade:
-    rubric_value_dict['S21.G00.55.001'] = formatFloat(0.)
-  elif kw['establishment'] == target.getSourceSectionValue():
+  if kw['establishment'] == target.getSourceSectionValue():
     rubric_value_dict['S21.G00.55.001'] = target.AccountingTransactionLine_statSourceDebit()
+  else:
+    rubric_value_dict['S21.G00.55.001'] = formatFloat(0.)
 
   rubric_value_dict['S21.G00.55.002'] = ''
   rubric_value_dict['S21.G00.55.003'] = 'REF_CONTRACT' + corporate_registration_code[-1]
-  rubric_value_dict['S21.G00.55.004'] = getPaymentPeriod(target.getStopDate(), 'M')
+  rubric_value_dict['S21.G00.55.004'] = getPaymentPeriod(context.getEffectiveDate(), 'M')
 
 # Fin du contrat
 if block_id == 'S21.G00.62':
@@ -341,20 +350,23 @@ if block_id == 'S21.G00.65':
 
 # Affiliation Prevoyance
 if block_id == 'S21.G00.70':
+  if enrollment_record.getContractType() == '29':
+    return rubric_value_dict
   # XXX: Hack as some organisations may have several contracts
-  return [
-    {
+  if kw['contract_id'] == '1':
+    return {
       'S21.G00.70.004': 'Option1',
       'S21.G00.70.005': '',
       'S21.G00.70.012': '1',
       'S21.G00.70.013': '1',
-    },
-    {
+    }
+  elif kw['contract_id'] == '2':
+    return {
       'S21.G00.70.004': 'Option2',
       'S21.G00.70.005': '1',
       'S21.G00.70.012': '2',
       'S21.G00.70.013': '2',
-    }]
+    }
 
 # Retraite complementaire
 if block_id == 'S21.G00.71':
@@ -394,13 +406,13 @@ if block_id == 'S21.G00.86':
   seniority = getIntervalBetweenDates(career_start_date, DateTime())
   if seniority['year'] != 0:
     rubric_value_dict['S21.G00.86.002'] = '03'
-    rubric_value_dict['S21.G00.86.003'] = seniority['year']
+    rubric_value_dict['S21.G00.86.003'] = int(seniority['year'])
   elif seniority['month'] != 0:
     rubric_value_dict['S21.G00.86.002'] = '02'
-    rubric_value_dict['S21.G00.86.003'] = seniority['month']
+    rubric_value_dict['S21.G00.86.003'] = int(seniority['month'])
   elif seniority['day'] != 0:
     rubric_value_dict['S21.G00.86.002'] = '01'
-    rubric_value_dict['S21.G00.86.003'] = seniority['day']
+    rubric_value_dict['S21.G00.86.003'] = int(seniority['day'])
   rubric_value_dict['S21.G00.86.001'] = '01'
   rubric_value_dict['S21.G00.86.005'] = '00000'
 

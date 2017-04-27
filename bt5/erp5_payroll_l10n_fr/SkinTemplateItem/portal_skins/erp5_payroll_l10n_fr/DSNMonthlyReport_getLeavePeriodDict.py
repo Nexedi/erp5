@@ -13,16 +13,10 @@ result = portal.portal_catalog(portal_type="DSN Monthly Report",
                                simulation_state="validated",
                                sort_on=[("creation_date", "descending")])
 
-if len(result) != 0:
-  # if there is a previous DSN, we report leave requests from last end-of-pay date
-  last_dsn = result[0].getObject()
-  from_date = last_dsn.getEffectiveDate()
-else:
-  # else we get 1st day of current month
-  from_date = DateTime(effective_date.year(), effective_date.month(), 1)
+from_date = DateTime(effective_date.year(), effective_date.month(), 1)
 
 # We report leave periods which are not over yet ...
-result = portal.portal_catalog(query=SimpleQuery(expiration_date=None), portal_type='Leave Request Period')
+result = portal.portal_catalog(SimpleQuery(expiration_date=None), portal_type='Leave Request Period')
 leave_period_list = [period.getObject() for period in result]
 
 # ... And leave periods which ended during last period
@@ -34,9 +28,9 @@ leave_period_list.extend([period.getObject() for period in result if period.getE
 def formatDate(datetime):
   return "%02d%02d%04d" % (datetime.day(), datetime.month(), datetime.year())
 
-def getLeaveBlocAsDict(leave_period):
+def getLeaveBlocAsDict(leave_period, leave_category):
   bloc = {}
-  bloc['S21.G00.60.001'] = leave_period.getResourceValue().getCodification()
+  bloc['S21.G00.60.001'] = leave_category.getCodification()
   bloc['S21.G00.60.002'] = formatDate(leave_period.getStartDate())
   bloc['S21.G00.60.003'] = formatDate(leave_period.getStopDate())
   # employee left during this period
@@ -46,7 +40,6 @@ def getLeaveBlocAsDict(leave_period):
     bloc['S21.G00.60.005'] = formatDate(first_subrogation_day)
     # 3 months of subrogation, as defined in the collective agreement
     bloc['S21.G00.60.006'] = formatDate(addToDate(first_subrogation_day, month=3, days=-1))
-    bank_account = payment_transaction.getSourcePaymentValue()
     bloc['S21.G00.60.007'] = bank_account.getIban()
     bloc['S21.G00.60.008'] = bank_account.getBicCode()
   else:
@@ -57,18 +50,22 @@ def getLeaveBlocAsDict(leave_period):
     bloc['S21.G00.60.011'] = '01' # Restart normally
   return bloc
 
-leave_period_type_list = portal_categories.calendar_period_type.social_declaration.l10n.fr.getCategoryChildValueList()
+leave_period_type_set = set(portal_categories.use.social_declaration.l10n.fr.leave.getCategoryChildValueList())
 
 # Create dict containing a DSN leave blocs, grouped by employee
 leave_dict = {}
 for period in leave_period_list:
   # some leave periods don't have to be reported in DSN
-  if period.getResourceValue() not in leave_period_type_list:
+  period_resource = period.getResourceValue()
+  assert period_resource is not None, 'No type set on Leave Request %s' % period.absolute_url()
+  leave_category = set(period.getResourceValue().getUseValueList()).intersection(leave_period_type_set)
+  if not leave_category:
     continue
   # Let's make a DSN Bloc for this leave period
+  leave_category = leave_category.pop()
   if period.getDestinationValue() in leave_dict.keys():
-    leave_dict[period.getDestination()].append(getLeaveBlocAsDict(period))
+    leave_dict[period.getDestination()].append(getLeaveBlocAsDict(period, leave_category))
   else:
-    leave_dict[period.getDestination()] = [getLeaveBlocAsDict(period),]
+    leave_dict[period.getDestination()] = [getLeaveBlocAsDict(period, leave_category),]
 
 return leave_dict
