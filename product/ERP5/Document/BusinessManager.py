@@ -153,7 +153,7 @@ class BusinessManager(Folder):
 
   """
   _properties = (
-    {'id': 'manager_path_list',
+    {'id': 'template_path_list',
      'type': 'lines',
      'default': 'python: ()',
      'acquisition_base_category': (),
@@ -214,25 +214,15 @@ class BusinessManager(Folder):
     portal = self.getPortalObject()
     pass
 
-  def edit(self, manager_path_list=[], **kw):
+  def edit(self, template_path_list=[], **kw):
     """
     Explicilty edit the class instance
     XXX: No need of this class ? as we already have _edit from ERP5Type.Folder
     """
-    super(BusinessManager, self).edit(manager_path_list=manager_path_list, **kw)
-
-  def getTemplatePathList(self):
-    return self.getProperty('manager_path_list')
+    super(BusinessManager, self).edit(template_path_list=template_path_list, **kw)
 
   def getPathItemList(self):
     return self.objectValues()
-
-  security.declareProtected(Permissions.ManagePortal, '_getTemplatePathList')
-  def _getTemplatePathList(self):
-    result = self.getTemplatePathList()
-    if not isinstance(result, tuple):
-      result = tuple(result)
-    return result
 
   # XXX: Change into property
   security.declareProtected(Permissions.ManagePortal, 'getTemplateFormatVersion')
@@ -289,15 +279,15 @@ class BusinessManager(Folder):
     self.title = imported_manager.title
     for obj in imported_manager.objectValues():
       self._setObject(obj.getId(), obj)
-    self.setProperty('manager_path_list', obj.getTemplatePathList())
+    self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
 
   def __add__(self, other):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
     self._path_item_list.extend(other._path_item_list)
-    manager_path_list = list(self.manager_path_list)+list(other.manager_path_list)
-    self.manager_path_list = manager_path_list
+    template_path_list = list(self.template_path_list)+list(other.template_path_list)
+    self.template_path_list = template_path_list
     return self
 
   __radd__ = __add__
@@ -330,7 +320,9 @@ class BusinessManager(Folder):
     """
     portal = self.getPortalObject()
     LOG('Business Manager', INFO, 'Storing Manager Data')
-    path_item_list = self.getTemplatePathList()
+    path_item_list = self.getProperty('template_path_list')
+    if not path_item_list:
+      path_item_list = ()
     # Delete all the older Business Item objects while rebuilding
     exisiting_path_item_id_list = [l for l in self.objectIds()]
     self.manage_delObjects(ids=exisiting_path_item_id_list)
@@ -381,7 +373,7 @@ class BusinessManager(Folder):
 
     if isBuild:
       # If build process, update the path list of the Business Manager
-      self.setProperty('manager_path_list', new_path_item_list)
+      self.setProperty('template_path_list', new_path_item_list)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -417,21 +409,14 @@ class BusinessManager(Folder):
   def getPathList(self):
     path_list = []
     for item in self.objectValues():
-      path_list.append(item.getProperty('path'))
+      path_list.append(item.getProperty('item_path'))
     return path_list
-
-  def getPathShaDict(self):
-    path_sha_dict = {}
-    # TODO: Handle error for BM with multiple items at same path
-    for item in self.objectValues():
-      path_sha_dict[item.getProperty('path')] = item.getProperty('sha')
-    return path_item_dict
 
   def getPathItemDict(self):
     path_item_dict = {}
     # TODO: Handle error for BM with multiple items at same path
-    for item in self._path_item_list:
-      path_item_dict[item.path] = item
+    for item in self.objectValues():
+      path_item_dict[item.getProperty('item_path')] = item
     return path_item_dict
 
   def getBusinessItemByPath(self, path):
@@ -794,9 +779,9 @@ class BusinessItem(XMLObject):
         container._delObject(object_id)
       # Create a new object only if sign is +1
       # If sign is +1, set the new object on the container
-      if self.sign == 1:
+      if int(self.getProperty('item_sign')) == 1:
         # install object
-        obj = self.getProperty('item_value')
+        obj = self.objectValues()[0]
         obj = obj._getCopy(container)
         container._setObject(object_id, obj)
         obj = container._getOb(object_id)
