@@ -24,7 +24,22 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/officejs_text_editor/</td>
+  <td>${base_url}/web_site_module/ooffice_text/development/#page=jio_configurator</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Local is Enough']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Local is Enough']</td>
   <td></td>
 </tr>
 <tr>

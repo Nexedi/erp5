@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_text/development/</td>
+  <td>${base_url}/web_site_module/ooffice_text/development/#page=jio_configurator</td>
   <td></td>
 </tr>
 <tr>
