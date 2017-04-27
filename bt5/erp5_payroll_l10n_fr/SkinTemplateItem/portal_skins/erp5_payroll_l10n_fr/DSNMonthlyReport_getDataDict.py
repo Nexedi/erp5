@@ -31,9 +31,9 @@ def getPaymentPeriod(date, period_type):
   if period_type == 'M':
     denominator = 1
   elif period_type == 'T':
-    denominator = 3
+    denominator = 3.
   elif period_type == 'S':
-    denominator = 6
+    denominator = 6.
   else:
     raise ValueError('Unknown denominator type : %s' % period_type)
   return "%d%s%02d" % (date.year(), period_type, math.ceil(date.month() / denominator))
@@ -163,7 +163,8 @@ if block_id == 'S21.G00.20':
   payment_source_trade = payment_transaction.getSourceTradeValue()
   amount = (kw['amount'] if 'amount' in kw else payment_transaction.AccountingTransactionLine_statSourceDebit())
 
-  if payment_source_trade == kw['payer'] == kw['establishment']:
+  if payment_source_trade == kw['payer'] == kw['establishment'] \
+      or payment_source_section == kw['payer'] == kw['establishment']:
     payment_mode = payment_transaction.getPaymentModeValue()
     assert payment_mode is not None, "No payment mode defined on %s" % payment_transaction.absolute_url()
     # Establishment pays for itself
