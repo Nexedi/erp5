@@ -5,6 +5,10 @@ if response is None:
 
 web_page = context
 web_section = REQUEST.get("current_web_section")
+if web_section is None:
+  parent_value = context.getParentValue()
+  if parent_value.getPortalType() == "Web Section":
+    web_section = parent_value
 
 if REQUEST.getHeader('If-Modified-Since', '') == web_page.getModificationDate().rfc822():
   response.setStatus(304)
