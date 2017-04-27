@@ -1,5 +1,5 @@
 from Products.ERP5Type.DateUtils import addToDate
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import Query
 
 portal = context.getPortalObject()
 portal_categories = portal.portal_categories
@@ -16,7 +16,7 @@ result = portal.portal_catalog(portal_type="DSN Monthly Report",
 from_date = DateTime(effective_date.year(), effective_date.month(), 1)
 
 # We report leave periods which are not over yet ...
-result = portal.portal_catalog(SimpleQuery(expiration_date=None), portal_type='Leave Request Period')
+result = portal.portal_catalog(portal_type='Leave Request Period', query=Query(expiration_date=None))
 leave_period_list = [period.getObject() for period in result]
 
 # ... And leave periods which ended during last period
