@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>payment_transaction</string> </value>
+            <value> <string>bank_account</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

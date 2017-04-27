@@ -24,6 +24,7 @@ all_taxable_base_set = set(portal_categories.getCategoryValue('base_amount/payro
 all_taxable_base_component_set = set(portal_categories.getCategoryValue('base_amount/payroll/l10n/fr/taxable_base_component').objectValues(portal_type='Category'))
 all_other_income_set = set(portal_categories.getCategoryValue('base_amount/payroll/l10n/fr/other_income').objectValues(portal_type='Category'))
 all_other_bonus_set = set(portal_categories.getCategoryValue('base_amount/payroll/l10n/fr/other_bonus').objectValues(portal_type='Category'))
+trainee_base_contribution = portal_categories.getCategoryValue('base_amount/payroll/l10n/fr/base/gratification_stage')
 
 def formatDate(datetime):
   return "%02d%02d%04d" % (datetime.day(), datetime.month(), datetime.year())
@@ -54,17 +55,20 @@ ZIP_CODE = context.getDestinationSectionValue().getDefaultAddressZipCode()
 INSEE_CODE = getINSEECode(ZIP_CODE)
 
 def makeCTPBlock(movement, category):
-    return {
-      'code': category,
-      'corporate_registration_code': movement.getSourceSectionValue().getCorporateRegistrationCode(),
-      'cap': ('921' if category[-1] == 'P' else '920'),
-      'rate': (abs(getattr(movement, 'employer_price') * 100) if category in ('100A', '900D', '901D', '863A') else ''),
-      'base': round(movement.base),
-      'quantity': ((getattr(movement, 'employer_total_price', 0.) + getattr(movement, 'employee_total_price', 0.)) if category[:3] in ('437', '671') else ''),
-      'zip_code': (INSEE_CODE if category == '900T' else ''),
-      'start_date': movement.getStartDate(),
-      'stop_date': movement.getStopDate(),
-    }
+  quantity = 0.
+  if category[:3] in ('437', '671'):
+    quantity = getattr(movement, 'employer_total_price', 0.) + getattr(movement, 'employee_total_price', 0.)
+  return {
+    'code': category,
+    'corporate_registration_code': movement.getSourceSectionValue(),
+    'cap': ('921' if category[-1] == 'P' else '920'),
+    'rate': (abs(getattr(movement, 'employer_price') * 100) if category in ('100A', '900D', '901D', '863A') else ''),
+    'base': movement.base,
+    'quantity': quantity,
+    'zip_code': (INSEE_CODE if category == '900T' else ''),
+    'start_date': movement.getStartDate(),
+    'stop_date': movement.getStopDate(),
+  }
 
 def makeTaxableBaseBlock(movement, category):
   return {
@@ -143,6 +147,7 @@ for movement in context.PaySheetTransaction_getMovementList():
     contribution_dict = makeCTPBlock(movement, category)
     if category in result["ctp"]:
       result['ctp'][category]['base'] = result['ctp'][category]['base'] + contribution_dict['base']
+      result['ctp'][category]['quantity'] = result['ctp'][category]['quantity'] + contribution_dict['quantity']
     else:
       result['ctp'][category] = contribution_dict
   
@@ -178,22 +183,67 @@ for movement in context.PaySheetTransaction_getMovementList():
   for category in other_income_set:
     category = category.getCodification()
     contribution_dict = makeOtherIncomeBlock(movement, category)
-    if category in result["other_income"]:
-      result['other_income'][category]['base'] = result['other_income'][category]['base'] + contribution_dict['base']
-    else:
-      result['other_income'][category] = contribution_dict
+    if contribution_dict['quantity']:
+      if category in result["other_income"]:
+        result['other_income'][category]['quantity'] = result['other_income'][category]['quantity'] + contribution_dict['quantity']
+      else:
+        result['other_income'][category] = contribution_dict
 
   other_bonus_set = all_other_bonus_set.intersection(contribution_set)
   total_bonus = 0.0
   for category in other_bonus_set:
     category = category.getCodification()
     contribution_dict = makeOtherBonusBlock(movement, category)
-    if category in result["other_bonus"]:
-      result['other_bonus'][category]['base'] = result['other_bonus'][category]['base'] + contribution_dict['base']
-    else:
-      result['other_bonus'][category] = contribution_dict
-    total_bonus += contribution_dict['quantity']
+    if contribution_dict['quantity']:
+      if category in result["other_bonus"]:
+        result['other_bonus'][category]['quantity'] = result['other_bonus'][category]['quantity'] + contribution_dict['quantity']
+      else:
+        result['other_bonus'][category] = contribution_dict
+      total_bonus += contribution_dict['quantity']
 
+  if trainee_base_contribution in contribution_set:
+    trainee_bonus = movement.base
+    result['taxable_base'][('02', '')] = {
+      'code': '02',
+      'start_date': '',
+      'stop_date': '',
+      'base': 0.,
+      'contract_id': ''
+    }
+    result['taxable_base'][('03', '')] = {
+      'code': '03',
+      'start_date': '',
+      'stop_date': '',
+      'base': 0.,
+      'contract_id': ''
+    }
+    result['individual_contribution'][('022', '')] = {
+      'code': '022',
+      'corporate_registration_code': '',
+      'base': trainee_bonus,
+      'quantity': 0.,
+      'zip_code': '',
+      'contract_id': '',
+    }
+
+# Let's try to calculate CTP 400D, which doesn't appear in the paysheet
+
+if len(result['ctp']):
+  year_to_date_gross_salary = float(other_information_data_dict['year_to_date_gross_salary'])
+  try:
+    minimum_salary = float(context.getRatioQuantityFromReference('salaire_minimum_mensuel'))
+  except:
+    raise AttributeError(context.getUrl())
+  if year_to_date_gross_salary < 2.5 * minimum_salary * int(context.getStopDate().month()):
+    category = '400D'
+    result['ctp'][category] = {
+      'code': category,
+      'cap': ('921' if category[-1] == 'P' else '920'),
+      'rate': '',
+      'base': year_to_date_gross_salary,
+      'quantity': 0,
+      'zip_code': ''
+    }
 
 ######################################################################
 # Remuneration and Activity
@@ -210,6 +260,8 @@ def getRemunerationBlockAsDict(remuneration_type, amount):
   # Corporate executives and trainees don't contribute to unemployment fee
   if is_corporate_executive and remuneration_type == '002':
     amount = 0.
+  elif is_trainee and remuneration_type == '001':
+    amount = trainee_bonus
   elif is_trainee and remuneration_type == '002':
     amount = 0.
   # Nexedi trainees don't pay social fees

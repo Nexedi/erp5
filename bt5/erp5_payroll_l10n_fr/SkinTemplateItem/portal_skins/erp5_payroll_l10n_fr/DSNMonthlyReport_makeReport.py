@@ -1,4 +1,4 @@
-from Products.ERP5Type.DateUtils import getNumberOfDayInMonth
+from Products.ERP5Type.DateUtils import addToDate, getNumberOfDayInMonth
 
 if context.getSourceAdministration() is None \
    or context.getEffectiveDate() is None \
@@ -18,6 +18,11 @@ def getLastDateOfMonth(date):
 declared_month = context.getEffectiveDate().month()
 declared_year = context.getEffectiveDate().year()
 
+last_date_of_month = getLastDateOfMonth(context.getEffectiveDate())
+first_date_of_month = DateTime(context.getEffectiveDate().year(),
+                               context.getEffectiveDate().month(),
+                               1)
+
 # Get all paysheets for requested month
 related_accounting_transaction_list = context.getAggregateRelatedValueList()
 payment_transaction_list = sorted([transaction for transaction in related_accounting_transaction_list
@@ -29,19 +34,29 @@ paysheet_id_list =  [transaction.getId() for transaction in paysheet_list]
 change_block_dict = context.DSNMonthlyReport_getChangeBlockDict()
 
 organisation_contact = context.getSourceAdministrationValue()
-establishment = accounting_module.restrictedTraverse(paysheet_id_list[0]).getDestinationSectionValue()
+establishment = accounting_module.restrictedTraverse(paysheet_id_list[0]).getDestinationTradeValue()
 establishment_registration_code = ''.join(establishment.getCorporateRegistrationCode().split(' '))
+
 # Finds the head office of the comany
-organisation = payment_transaction_list[0].getSourceSectionValue()
+if len(payment_transaction_list):
+  organisation = payment_transaction_list[0].getSourceSectionValue()
+else:
+  organisation = paysheet_list[0].getDestinationSectionValue()
 
 
 # Variable containing all the record of the DSN
 dsn_file = []
-dsn_order = 1 # Increment for each DSN
+nb_dsn = 1 # Increment for each DSN
 
 # XXX: for the moment just use one of the payment transactions to retrieve
 # the bank account. Later, a special accounting document should be provided
-leave_period_dict = context.DSNMonthlyReport_getLeavePeriodDict(payment_transaction_list[0])
+if len(payment_transaction_list):
+  bank_account = payment_transaction_list[0].getSourcePaymentValue()
+else:
+  bank_account, = [bank_account for bank_account
+                   in organisation.objectValues(portal_type='Bank Account')
+                   if bank_account.getValidationState() == 'validated']
+leave_period_dict = context.DSNMonthlyReport_getLeavePeriodDict(bank_account)
 employee_list = []
 
 # DSN HEADERS
@@ -50,16 +65,12 @@ dsn_file.append(getDSNBlockDict(block_id='S10.G00.01', target=organisation))
 dsn_file.append(getDSNBlockDict(block_id='S10.G00.02', target=organisation_contact))
 
 # Monthly DSN
-dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=dsn_order))
+dsn_file.append(getDSNBlockDict(block_id='S20.G00.05', year=declared_year, month=declared_month, order=nb_dsn))
 
 dsn_file.append(getDSNBlockDict(block_id='S21.G00.06', target=organisation))
 
 dsn_file.append(getDSNBlockDict(block_id='S21.G00.11', target=establishment, manpower=len(paysheet_id_list)))
 collective_contract = getDSNBlockDict(block_id='S21.G00.15')
-if isinstance(collective_contract, list):
-  dsn_file.extend(collective_contract)
-else:
-  dsn_file.append(collective_contract)
 
 # Print aggregated cotisations
 employee_result_list = [
@@ -69,6 +80,14 @@ employee_result_list = [
 ]
 
 employee_data_list, paysheet_data_list = zip(*employee_result_list)
+
+for employee_data_dict, paysheet_data_dict in employee_result_list:
+  insurance_contract_id_list = set([x[1] for x in paysheet_data_dict['taxable_base']])
+
+collective_contract_list = getDSNBlockDict(block_id='S21.G00.15')
+for collective_contract in collective_contract_list:
+  if collective_contract['S21.G00.15.005'] in insurance_contract_id_list:
+    dsn_file.append(collective_contract)
 
 # Generate aggregated contributions
 aggregated_social_contribution_dict = {}
@@ -85,32 +104,92 @@ for employee_result in paysheet_data_list:
     if ctp_code not in aggregated_social_contribution_dict:
       aggregated_social_contribution_dict[ctp_code] = employee_ctp[ctp_code].copy()
     else:
-      aggregated_social_contribution_dict[ctp_code]['base'] = \
-        aggregated_social_contribution_dict[ctp_code]['base'] + employee_ctp[ctp_code]['base']
+      for summing_parameter in ('base', 'quantity'):
+        aggregated_social_contribution_dict[ctp_code][summing_parameter] = \
+          aggregated_social_contribution_dict[ctp_code][summing_parameter] + employee_ctp[ctp_code][summing_parameter]
 
 # Find the payment transaction for the social contributions
-for payment in payment_transaction_list:
-  if payment.getDestinationSectionValue().getCorporateRegistrationCode() == social_contribution_organisation:
-    dsn_file.append(getDSNBlockDict(block_id='S21.G00.20',
-                                    target=payment,
-                                    corporate_registration_code=social_contribution_organisation,
-                                    establishment=establishment))
-    dsn_file.append(getDSNBlockDict(block_id='S21.G00.22',
-                                    target=payment,
-                                    corporate_registration_code=social_contribution_organisation,
-                                    establishment=establishment,
-                                    start_date=social_contribution_start_date,
-                                    stop_date=social_contribution_stop_date))
-    for ctp_code in aggregated_social_contribution_dict:
-      dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
-                                      target=aggregated_social_contribution_dict[ctp_code]))
-  else:
+if len(payment_transaction_list):
+  for payment in payment_transaction_list:
     corporate_registration_code = payment.getDestinationSectionValue().getCorporateRegistrationCode()
-    dsn_file.append(getDSNBlockDict(block_id='S21.G00.20',
-                                    target=payment,
-                                    corporate_registration_code=corporate_registration_code,
-                                    establishment=establishment))
-    dsn_file.append(getDSNBlockDict(block_id='S21.G00.55', target=payment, establishment=establishment))
+    if corporate_registration_code == social_contribution_organisation.getCorporateRegistrationCode():
+      if establishment.isQuaterlyPayment():
+        amount_list = []
+        for i in range(3):
+          start_date = addToDate(first_date_of_month, month=-i)
+          stop_date = addToDate(last_date_of_month, month=-i) + 1
+          amount = -1. * portal.portal_simulation.getInventory(
+            from_date=start_date,
+            to_date=stop_date,
+            section_uid=organisation.getUid(),
+            mirror_section_uid=social_contribution_organisation.getUid(),
+            node_uid=portal.account_module['securite_sociale'].getUid(),
+            ledger_uid=portal.portal_categories.ledger.accounting.general.getUid(),
+            parent_portal_type='Accounting Transaction',
+          )
+          amount_list.append(amount)
+          dsn_file.append(getDSNBlockDict(block_id='S21.G00.20',
+                                          target=payment,
+                                          corporate_registration_code=social_contribution_organisation.getCorporateRegistrationCode(),
+                                          first_date_of_month=start_date,
+                                          last_date_of_month=getLastDateOfMonth(start_date),
+                                          establishment=establishment,
+                                          payer=establishment,
+                                          amount=amount_list[-1]))
+        # Let's check that difference is < 1 cts
+        assert sum(amount_list) - payment.AccountingTransactionLine_statSourceDebit() * 100 < 1, 'Error, URSSAF Amount to Pay for each month is different for URSSAF Amount to pay in total'
+        amount = amount_list[0]
+      else:
+        amount = payment.AccountingTransactionLine_statSourceDebit()
+        dsn_file.append(getDSNBlockDict(block_id='S21.G00.20',
+                                        target=payment,
+                                        corporate_registration_code=social_contribution_organisation.getCorporateRegistrationCode(),
+                                        first_date_of_month=first_date_of_month,
+                                        last_date_of_month=last_date_of_month,
+                                        establishment=establishment,
+                                        payer=establishment))
+      dsn_file.append(getDSNBlockDict(block_id='S21.G00.22',
+                                      corporate_registration_code=corporate_registration_code,
+                                      establishment=establishment,
+                                      start_date=social_contribution_start_date,
+                                      stop_date=social_contribution_stop_date,
+                                      amount=amount))
+      for ctp_code in aggregated_social_contribution_dict:
+        dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
+                                        target=aggregated_social_contribution_dict[ctp_code]))
+    else:
+      if organisation.isQuaterlyPayment():
+        start_date = addToDate(first_date_of_month, month=-2)
+      else:
+        start_date = first_date_of_month
+      dsn_file.append(getDSNBlockDict(block_id='S21.G00.20',
+                                      target=payment,
+                                      corporate_registration_code=corporate_registration_code,
+                                      first_date_of_month=start_date,
+                                      last_date_of_month=last_date_of_month,
+                                      establishment=establishment,
+                                      payer=organisation))
+      dsn_file.append(getDSNBlockDict(block_id='S21.G00.55', target=payment, establishment=establishment))
+else:
+  # If there is no Payment Transaction, then the organisation pays quaterly
+  amount = -1. * portal.portal_simulation.getInventory(
+    from_date=first_date_of_month,
+    to_date=last_date_of_month + 1,
+    section_uid=establishment.getUid(),
+    mirror_section_uid=social_contribution_organisation.getUid(),
+    node_uid=portal.account_module['securite_sociale'].getUid(),
+    ledger_uid=portal.portal_categories.ledger.accounting.general.getUid(),
+    parent_portal_type='Accounting Transaction',
+  )
+  dsn_file.append(getDSNBlockDict(block_id='S21.G00.22',
+                                  corporate_registration_code=social_contribution_organisation.getCorporateRegistrationCode(),
+                                  establishment=establishment,
+                                  start_date=first_date_of_month,
+                                  stop_date=last_date_of_month,
+                                  amount=amount))
+  for ctp_code in aggregated_social_contribution_dict:
+    dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
+                                    target=aggregated_social_contribution_dict[ctp_code]))
 
 for employee_data_dict, paysheet_data_dict in employee_result_list:
   enrollment_record = employee_data_dict['enrollment_record']
@@ -146,11 +225,16 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
                                      'S21.G00.60.012')}
       dsn_file.append(leave_block)
 
-  death_insurance_contract = getDSNBlockDict(block_id='S21.G00.70', enrollment_record=enrollment_record)
-  if isinstance(death_insurance_contract, list):
-    dsn_file.extend(death_insurance_contract)
-  else:
-    dsn_file.append(death_insurance_contract)
+  # All employees don't share all the insurance contract, so here we need to 
+  # know to which the employee contributes. Let's loop over the keys of
+  # paysheet_data_dict['taxable_base'],
+  # which are of the form : (contribution_category, contract_id)
+  insurance_contract_id_list = set([x[1] for x in paysheet_data_dict['taxable_base']])
+
+  for insurance_contract_id in insurance_contract_id_list:
+    dsn_file.append(getDSNBlockDict(block_id='S21.G00.70',
+                                    enrollment_record=enrollment_record,
+                                    contract_id=insurance_contract_id))
 
   dsn_file.append(getDSNBlockDict(block_id='S21.G00.71', enrollment_record=enrollment_record))
 
@@ -180,9 +264,9 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
         del paysheet_data_dict['individual_contribution'][('018', '')]
 
     if taxable_base_category['code'] == '03': # Assiette Brute deplafonnee
-      if ('03', '') in paysheet_data_dict['taxable_base_component']:
-        dsn_file.append(getDSNBlockDict(block_id='S21.G00.79', target=paysheet_data_dict['taxable_base_component'][('03', '')]))
-        del paysheet_data_dict['taxable_base_component'][('03', '')]
+      if ('01', '') in paysheet_data_dict['taxable_base_component']:
+        dsn_file.append(getDSNBlockDict(block_id='S21.G00.79', target=paysheet_data_dict['taxable_base_component'][('01', '')]))
+        del paysheet_data_dict['taxable_base_component'][('01', '')]
       if ('064', '') in paysheet_data_dict['individual_contribution']:
         dsn_file.append(getDSNBlockDict(block_id='S21.G00.81', target=paysheet_data_dict['individual_contribution'][('064', '')]))
         del paysheet_data_dict['individual_contribution'][('064', '')]
@@ -213,23 +297,21 @@ for employee_data_dict, paysheet_data_dict in employee_result_list:
   dsn_file.append(employee_data_dict['seniority'])
 
 # Add leave event DSN if needed
-last_date_of_month = getLastDateOfMonth(context.getEffectiveDate())
-first_date_of_month = DateTime(context.getEffectiveDate().year(),
-                               context.getEffectiveDate().month(),
-                               1)
-
 if len(leave_period_dict):
   for employee in leave_period_dict:
     for period in leave_period_dict[employee]:
-      leave_date_as_string = period['S21.G00.60.002']
-      year = int(leave_date_as_string[4:])
-      month = int(leave_date_as_string[2:4])
-      day = int(leave_date_as_string[:2])
-      leave_date = DateTime(year, month, day)
-      if leave_date < first_date_of_month:
-        continue
+      #leave_date_as_string = period['S21.G00.60.002']
+      #year = int(leave_date_as_string[4:])
+      #month = int(leave_date_as_string[2:4])
+      #day = int(leave_date_as_string[:2])
+      #leave_date = DateTime(year, month, day)
+      #if leave_date < first_date_of_month:
+      #  continue
       if employee in employee_list:
-        dsn_order += 1
+        nb_dsn += 1
+        dsn_order = portal.portal_ids.generateNewId(
+          id_generator='continuous_integer_increasing',
+          id_group='dsn_event_counter')
         employee = portal.restrictedTraverse(employee)
         dsn_file.append(getEventDSNBlockDict(block_id='S20.G00.05', dsn_type='04', order=dsn_order)) #'04' is DSN Leave Event
         dsn_file.append(getEventDSNBlockDict(block_id='S20.G00.07', target=organisation_contact))
@@ -264,7 +346,7 @@ for block in dsn_file:
       dsn_report_string += "%s,'%s'\n" % (rubric, block[rubric])
 
 # Footer block
-footer = getDSNBlockDict(block_id='S90.G00.90', length=rubric_counter, dsn_record_counter=dsn_order)
+footer = getDSNBlockDict(block_id='S90.G00.90', length=rubric_counter, dsn_record_counter=nb_dsn)
 for rubric in sorted(footer.keys()):
   dsn_report_string += "%s,'%s'\n" % (rubric, footer[rubric])
 
