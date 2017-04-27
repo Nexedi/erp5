@@ -99,7 +99,10 @@ for movement in portal_catalog(query):
                               reference = "%s-%s" %(transformation.getTitle(),
                                                    data_ingestion.getReference()),
                               version = '001')
-            item.validate()
+            try:
+              item.validate()
+            except AttributeError:
+              pass
             aggregate_set.add(item.getRelativeUrl())
 
       data_analysis.newContent(
