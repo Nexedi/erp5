@@ -1703,7 +1703,7 @@ class TemplateTool (BaseTool):
                                   title='Old Installation State',
                                   )
       for item in combined_installed_path_item:
-        old_installation_state._setObject(item.getId(), item)
+        old_installation_state._setObject(item.getId(), aq_base(item))
 
       forbidden_bm_title_list = ['Old Installation State',]
       for bm in bm_list:
@@ -1723,8 +1723,9 @@ class TemplateTool (BaseTool):
                                   portal_type='Business Manager',
                                   title='New Installation State',
                                   )
+
       for item in combined_new_path_item:
-        new_installation_state._setObject(item.getId(), item)
+        new_installation_state._setObject(item.getId(), aq_base(item))
 
       # Create installation process, which have the changes to be made in the
       # OFS during installation. Importantly, it should also be a Business Manager
@@ -1774,7 +1775,7 @@ class TemplateTool (BaseTool):
           to_install_path_item_list.append(item)
 
       for item in to_install_path_item_list:
-        installation_process._setObject(item.getId(), item)
+        installation_process._setObject(item.getId(), aq_base(item))
 
       error_list = self.compareOldStateToOFS(installation_process, old_installation_state)
 
@@ -1925,10 +1926,6 @@ class TemplateTool (BaseTool):
               value =  new_item.objectValues()[0]
             except IndexError:
               continue
-            if getattr(value, '_tree', None):
-              # This check is required cause only after first access we get the
-              # values from the dict
-              delattr(value, '_tree')
             new_item.install(installation_process)
 
       return error_list

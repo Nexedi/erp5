@@ -278,7 +278,7 @@ class BusinessManager(Folder):
     imported_manager = connection.importFile(file)
     self.title = imported_manager.title
     for obj in imported_manager.objectValues():
-      self._setObject(obj.getId(), obj)
+      self._setObject(obj.getId(), aq_base(obj))
     self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
 
   def __add__(self, other):
