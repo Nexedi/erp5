@@ -10,7 +10,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>resource/calendar_period_type/social_declaration/l10n/fr/illness</string>
+                <string>resource/service_module/illness_period</string>
                 <string>aggregate/social_declaration_report_module/test_model</string>
               </tuple>
             </value>
