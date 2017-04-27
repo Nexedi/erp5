@@ -1695,14 +1695,15 @@ class TemplateTool (BaseTool):
       installed_bm_list = self.getInstalledBusinessManagerList()
       combined_installed_path_item = [item for bm
                                       in installed_bm_list
-                                      for item in bm._path_item_list]
+                                      for item in bm.objectValues()]
 
       # Create BM for old installation state and update its path item list
       old_installation_state = self.newContent(
                                   portal_type='Business Manager',
                                   title='Old Installation State',
                                   )
-      old_installation_state._path_item_list = combined_installed_path_item
+      for item in combined_installed_path_item:
+        old_installation_state._setObject(item.getId(), item)
 
       forbidden_bm_title_list = ['Old Installation State',]
       for bm in bm_list:
@@ -1715,14 +1716,15 @@ class TemplateTool (BaseTool):
 
       combined_new_path_item = [item for bm
                                 in new_installed_bm_list
-                                for item in bm._path_item_list]
+                                for item in bm.objectValues()]
 
       # Create BM for new installation state and update its path item list
       new_installation_state = self.newContent(
                                   portal_type='Business Manager',
                                   title='New Installation State',
                                   )
-      new_installation_state._path_item_list = combined_new_path_item
+      for item in combined_new_path_item:
+        new_installation_state._setObject(item.getId(), item)
 
       # Create installation process, which have the changes to be made in the
       # OFS during installation. Importantly, it should also be a Business Manager
@@ -1745,29 +1747,34 @@ class TemplateTool (BaseTool):
       # Add the removed path with negative sign in the to_install_path_item_list
       for path in removed_path_list:
         old_item = old_installation_state.getBusinessItemByPath(path)
-        old_item.sign = -1
+        old_item.setProperty('item_sign', '-1')
         to_install_path_item_list.append(old_item)
 
+      # XXX: At this point, we expect all the Business Manager objects as 'reduced',
+      # thus all the BusinessItem sub-objects should have single value
       # Update hashes of item in old state before installation
-      for item in old_installation_state._path_item_list:
-        print item.value
-        if item.value:
-          item.sha = self.calculateComparableHash(item.value)
+      for item in old_installation_state.objectValues():
+        value_list = item.objectValues()
+        if value_list:
+          item.setProperty('item_sha', self.calculateComparableHash(value_list[0]))
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
-      for item in new_installation_state._path_item_list:
+      for item in new_installation_state.objectValues():
         # If the path has been removed, then add it with sign = -1
-        old_item = old_installation_state.getBusinessItemByPath(item.path)
+        old_item = old_installation_state.getBusinessItemByPath(item.getProperty('item_path'))
+        # Calculate sha for the items in new_insatallation_state
+        item.setProperty('item_sha', self.calculateComparableHash(item.objectValues()[0]))
         if old_item:
           # If the old_item exists, we match the hashes and if it differs, then
           # add the new item
-          if old_item.sha != item.sha:
+          if old_item.getProperty('item_sha') != item.getProperty('item_sha'):
             to_install_path_item_list.append(item)
         else:
           to_install_path_item_list.append(item)
 
-      installation_process._path_item_list = to_install_path_item_list
+      for item in to_install_path_item_list:
+        installation_process._setObject(item.getId(), item)
 
       error_list = self.compareOldStateToOFS(installation_process, old_installation_state)
 
@@ -1799,8 +1806,12 @@ class TemplateTool (BaseTool):
                                 if attr.startswith('_v')]
 
         removable_attributes.append('uid')
+        removable_attributes.append('_owner')
         for attr in removable_attributes:
-          del obj_dict[attr]
+          try:
+            del obj_dict[attr]
+          except KeyError:
+            continue
 
       obj_sha = hash(pprint.pformat(obj_dict))
       return obj_sha
@@ -1847,13 +1858,13 @@ class TemplateTool (BaseTool):
           if old_item:
             # Compare hash with ZODB
 
-            if old_item.sha == obj_sha:
+            if old_item.getProperty('item_sha') == obj_sha:
               # No change at ZODB on old item, so get the new item
               new_item = installation_process.getBusinessItemByPath(path)
               # Compare new item hash with ZODB
 
-              if new_item.sha == obj_sha:
-                if new_item.sign == -1:
+              if new_item.getProperty('item_sha') == obj_sha:
+                if int(new_item.getProperty('item_sign')) == -1:
                   # If the sign is negative, remove the value from the path
                   new_item.install(installation_process)
                 else:
@@ -1869,7 +1880,7 @@ class TemplateTool (BaseTool):
               new_item = installation_process.getBusinessItemByPath(path)
               # Compare new item hash with ZODB
 
-              if new_item.sha == obj_sha:
+              if new_item.getProperty('item_sha') == obj_sha:
                 # If same hash, do nothing
                 continue
 
@@ -1882,7 +1893,7 @@ class TemplateTool (BaseTool):
             # Compare with the new_item
 
             new_item = installation_process.getBusinessItemByPath(path)
-            if new_item.sha == obj_sha:
+            if new_item.getProperty('item_sha') == obj_sha:
               # If same hash, do nothing
               continue
 
@@ -1901,17 +1912,18 @@ class TemplateTool (BaseTool):
             new_item = installation_process.getBusinessItemByPath(path)
             # Check sign of new_item
 
-            if new_item.sign == 1:
+            if int(new_item.getProperty('item_sign')) == 1:
               error_list.append('Object at %s removed by user' % path)
 
           else:
             # If there is  no item at old state, install the new_item
             new_item = installation_process.getBusinessItemByPath(path)
             # XXX: Hack for not trying to install the sub-objects from zexp,
-            # This should rather be implemneted while exportign the object,
+            # This should rather be implemented while exporting the object,
             # where we shouldn't export sub-objects in the zexp
-            value =  new_item.value
-            if value is None:
+            try:
+              value =  new_item.objectValues()[0]
+            except IndexError:
               continue
             if getattr(value, '_tree', None):
               # This check is required cause only after first access we get the
