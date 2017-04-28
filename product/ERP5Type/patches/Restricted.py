@@ -191,11 +191,11 @@ allow_type(type(f_StringIO))
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
 allow_module('datetime')
 import datetime
-ContainerAssertions[datetime.datetime] = 1
-ContainerAssertions[datetime.time] = 1
-ContainerAssertions[datetime.date] = 1
-ContainerAssertions[datetime.timedelta] = 1
-ContainerAssertions[datetime.tzinfo] = 1
+allow_type(type(datetime.datetime))
+allow_type(type(datetime.time))
+allow_type(type(datetime.date))
+allow_type(type(datetime.timedelta))
+allow_type(type(datetime.tzinfo))
 allow_module('difflib')
 allow_module('hashlib')
 import hashlib
