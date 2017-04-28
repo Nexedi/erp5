@@ -50,38 +50,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>delivery = state_change[\'object\']\n
+draft_solver_process = None\n
+for solver_process in delivery.getSolverValueList():\n
+  validation_state = solver_process.getValidationState()\n
+  if validation_state == \'solving\':\n
+    # Currently solving Divergences through solve() Activity\n
+    return\n
+  elif solver_process.getValidationState() == \'draft\':\n
+    draft_solver_process = solver_process\n
 \n
-solver_process = context.getSolverValueList()[-1]\n
-if solver_process.getValidationState() == \'solving\':\n
-  return\n
-\n
-solver_decision_uid = int(solver_decision_uid)\n
-solver_decision = None\n
-for solver_decision in solver_process.objectValues(portal_type="Solver Decision"):\n
-  if solver_decision.getUid() == solver_decision_uid:\n
-    break\n
-assert solver_decision is not None, \\\n
-  "unable to find solver decision with uid : %r on %r" % (\n
-    solver_decision_uid, solver)\n
-solver_value = None\n
-if solver:\n
-  solver_value = portal.restrictedTraverse(solver)\n
-  solver_decision.setSolverValue(solver_value)\n
+if draft_solver_process is not None:\n
+  draft_solver_process.buildSolverDecisionList(delivery)\n
 else:\n
-  solver_decision.setSolverList([])\n
-\n
-#return solver_decision.Delivery_viewSolveDivergenceDialog.listbox_solver_configuration.widget.render(\n
-return solver_decision.SolverDecision_renderSolverConfiguration(context)\n
+  delivery.getPortalObject().portal_solver_processes.newSolverProcess(delivery)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>solver=None, solver_decision_uid=None</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_getSolveDivergenceDialogParameterFormBox</string> </value>
+            <value> <string>Delivery_diverge</string> </value>
         </item>
       </dictionary>
     </pickle>
