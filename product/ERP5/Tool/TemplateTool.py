@@ -46,6 +46,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.genbt5list import generateInformation
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
@@ -1703,7 +1704,9 @@ class TemplateTool (BaseTool):
                                   title='Old Installation State',
                                   )
       for item in combined_installed_path_item:
-        old_installation_state._setObject(item.getId(), aq_base(item))
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        old_installation_state._setObject(item.getId(), aq_base(item),
+                                          suppress_events=True)
 
       forbidden_bm_title_list = ['Old Installation State',]
       for bm in bm_list:
@@ -1725,7 +1728,9 @@ class TemplateTool (BaseTool):
                                   )
 
       for item in combined_new_path_item:
-        new_installation_state._setObject(item.getId(), aq_base(item))
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        new_installation_state._setObject(item.getId(), aq_base(item),
+                                          suppress_events=True)
 
       # Create installation process, which have the changes to be made in the
       # OFS during installation. Importantly, it should also be a Business Manager
@@ -1775,7 +1780,9 @@ class TemplateTool (BaseTool):
           to_install_path_item_list.append(item)
 
       for item in to_install_path_item_list:
-        installation_process._setObject(item.getId(), aq_base(item))
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        installation_process._setObject(item.getId(), aq_base(item),
+                                        suppress_events=True)
 
       error_list = self.compareOldStateToOFS(installation_process, old_installation_state)
 

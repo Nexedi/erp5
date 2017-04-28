@@ -278,7 +278,9 @@ class BusinessManager(Folder):
     imported_manager = connection.importFile(file)
     self.title = imported_manager.title
     for obj in imported_manager.objectValues():
+      delattr(obj, '__ac_local_roles__')
       self._setObject(obj.getId(), aq_base(obj))
+      obj.isIndexable = ConstantGetter('isIndexable', value=False)
     self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
 
   def __add__(self, other):
@@ -674,7 +676,8 @@ class BusinessItem(XMLObject):
           # XXX: '_recursiveRemoveUid' is not working as expected
           _recursiveRemoveUid(obj)
           obj = aq_base(obj)
-          self._setObject(obj.getId(), obj)
+          obj.isIndexable = ConstantGetter('isIndexable', value=False)
+          self._setObject(obj.getId(), obj, suppress_events=True)
       except AttributeError:
         # In case the object doesn't exist, just pass without raising error
         pass
@@ -783,13 +786,18 @@ class BusinessItem(XMLObject):
         # install object
         obj = self.objectValues()[0]
         obj = obj._getCopy(container)
-        container._setObject(object_id, obj)
-        obj = container._getOb(object_id)
+        # Before making `obj` a sub-object of `container`, we should the acquired
+        # roles on obj
         obj.isIndexable = ConstantGetter('isIndexable', value=False)
+        delattr(obj, '__ac_local_roles__')
+        container._setObject(object_id, obj, suppress_events=True)
+        obj = container._getOb(object_id)
+        """
         aq_base(obj).uid = portal.portal_catalog.newUid()
         del obj.isIndexable
         if getattr(aq_base(obj), 'reindexObject', None) is not None:
           obj.reindexObject()
+        """
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
