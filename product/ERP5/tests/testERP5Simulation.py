@@ -30,12 +30,17 @@ This test is experimental for new simulation implementation.
 """
 
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
 
+from Products.PythonScripts.Utility import allow_class
+class DummySolverConfiguration(object):
+  def as_dict(self):
+    return {'tested_property_list': ['quantity']}
+allow_class(DummySolverConfiguration)
 
-class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
+class TestERP5Simulation(TestPackingListMixin, SecurityTestCase):
   run_all_test = 1
   quiet = 0
 
@@ -325,6 +330,108 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
                       stepCheckPackingListSplittedForTest02 \
                       stepCheckPackingListIsSolved \
                       stepCheckSolverIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def _getPortalStatusMessage(self, url):
+    return url.rsplit('=', 1)[-1].replace('%20', ' ')
+
+  def stepSolveDivergenceThroughDialog(self,
+                                       sequence=None,
+                                       sequence_list=None):
+    packing_list = sequence.get('packing_list')
+
+    # 'Solve Divergences' Action (Delivery_viewSolveDivergenceDialog)
+    self.assertUserCanPassWorkflowTransition('ERP5TypeTestCase',
+                                             'solve_divergence_action',
+                                             packing_list)
+    solver_decision_list = packing_list.Delivery_getSolverDecisionList()
+    self.assertEqual(len(solver_decision_list), 1)
+
+    # Choose 'Divergence Resolution' (Adopt Prevision)
+    solver_decision = solver_decision_list[0]
+    packing_list.REQUEST['listbox'] = {
+      solver_decision.getPath():
+      {'comment': '',
+       'solver_configuration': DummySolverConfiguration(),
+       'solver': 'portal_solvers/Adopt Solver'}}
+
+    packing_list.Delivery_updateSolveDivergenceDialog()
+
+    # Solve Divergences
+    self.assertEqual(
+      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog()),
+      'Divergence solvers started in background.')
+
+    # SolverProcess.solve() called
+    # => SolverProcess.startSolving()
+    #    => solve() activity created
+    self.assertEqual(solver_decision.getValidationState(), 'solving')
+    sequence.edit(solver_decision=solver_decision)
+
+  def stepCheckOnlyOneSolverProcessCreated(self,
+                                           sequence=None,
+                                           sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    solver_decision = sequence.get('solver_decision')
+
+    # 'Solve Divergences' Action should not be available anymore
+    self.failIfUserCanPassWorkflowTransition('ERP5TypeTestCase',
+                                             'solve_divergence_action',
+                                             packing_list)
+
+    # Solver Process is in 'solving' state, so no new Solver Process should be
+    # created and this should return nothing
+    self.assertEqual(len(packing_list.getSolverValueList()), 1)
+    self.assertEqual(len(packing_list.Delivery_getSolverDecisionList()), 0)
+
+    packing_list.REQUEST['listbox'] = {
+      solver_decision.getPath():
+      {'comment': '',
+       'solver_configuration': DummySolverConfiguration(),
+       'solver': 'portal_solvers/Adopt Solver'}}
+
+    self.assertEqual(
+      self._getPortalStatusMessage(packing_list.Delivery_updateSolveDivergenceDialog()),
+      'Workflow state may have been updated by other user. Please try again.')
+
+    self.assertEqual(
+      self._getPortalStatusMessage(packing_list.Delivery_submitSolveDivergenceDialog()),
+      'Workflow state may have been updated by other user. Please try again.')
+
+    self.tic()
+    self.assertEqual(packing_list.getCausalityState(), 'solved')
+
+  def test_03_solverProcessCreatedOnlyOnce(self, quiet=quiet, run=run_all_test):
+    """
+    Solver Process used to be created after selecting 'Solve Divergences' Action:
+      1. Select 'Solve Divergences' Action.
+      2. Dialog is displayed and new 'draft' 'Solver Process' is created if it
+         does not exist yet.
+      3. Adopt Prevision/Accept Decision is selected: this creates a 'solve'
+         Activity after changing Solver Process workflow state to 'solving'
+
+    Until 'solve' Activity is processed:
+      => 2. meant that there was no more 'Solver Process' in 'draft' state and
+         thus a new one may be created.
+      => The 'Solve Divergences' Action was still available.
+
+    Now Solver Process is created when causality_state changed to diverged and
+    'Solve Divergences' Action is not displayed unless its state is 'draft'.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      stepIncreasePackingListLineQuantity1000 \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepSolveDivergenceThroughDialog \
+                      stepCheckOnlyOneSolverProcessCreated \
                       '
     sequence_list.addSequenceString(sequence_string)
 

@@ -1,5 +1,8 @@
 portal = context.getPortalObject()
 solver_process = context.getSolverValueList()[-1]
+if solver_process.getValidationState() == 'solving':
+  return
+
 solver_decision_uid = int(solver_decision_uid)
 solver_decision = None
 for solver_decision in solver_process.objectValues(portal_type="Solver Decision"):
