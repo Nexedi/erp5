@@ -763,10 +763,6 @@ class SimulationTool(BaseTool):
         if related_group_by:
           new_kw['related_key_dict_passthrough']['group_by_list'] = related_group_by
 
-      #variation_category_uid_list = self._generatePropertyUidList(variation_category)
-      #if len(variation_category_uid_list) :
-      #  new_kw['variationCategory'] = variation_category_uid_list
-
       new_kw['simulation_dict'] = self._getSimulationStateDict(
         simulation_state=simulation_state,
         omit_transit=omit_transit,
