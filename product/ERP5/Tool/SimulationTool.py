@@ -1005,8 +1005,6 @@ class SimulationTool(BaseTool):
 
       variation_text -  only take rows in stock table with specified
                         variation_text.
-                        This needs to be extended with some kind of
-                        variation_category ?
                         XXX this way of implementing variation selection is far
                         from perfect
 
@@ -2132,7 +2130,6 @@ class SimulationTool(BaseTool):
       section_category        -  only take rows in stock table which section_uid is in section_category
 
       variation_text - only take rows in stock table with specified variation_text
-                       this needs to be extended with some kind of variation_category ?
                        XXX this way of implementing variation selection is far from perfect
 
       variation_category - variation or list of possible variations
