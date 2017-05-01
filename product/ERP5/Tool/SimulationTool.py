@@ -726,6 +726,16 @@ class SimulationTool(BaseTool):
 
       column_value_dict.setUIDList('section_uid', section)
       column_value_dict.setUIDList('mirror_section_uid', mirror_section)
+
+      # Handle variation_category as variation_text
+      if variation_category:
+        if variation_text:
+          raise ValueError(
+              "Passing both variation_category and variation_text is not supported")
+        if isinstance(variation_category, basestring):
+          variation_category = (variation_category,)
+        variation_text = ["%{}%".format(x) for x in variation_category]
+
       column_value_dict.setUIDList('variation_text', variation_text,
                                    as_text=1)
       column_value_dict.setUIDList('sub_variation_text', sub_variation_text,
@@ -837,28 +847,6 @@ class SimulationTool(BaseTool):
           },
           'simulation_dict': self._getSimulationStateDict(**reserved_kw),
         }
-      # It is necessary to use here another SQL query (or at least a subquery)
-      # to get _DISTINCT_ uid from predicate_category table.
-      # Otherwise, by using a where_expression, cells which fit conditions
-      # more than one time are counted more than one time, and the resulting
-      # inventory is false
-      # XXX Perhaps is there a better solution
-      add_kw = {}
-      if variation_category is not None and variation_category:
-        where_expression = self.getPortalObject().portal_categories\
-          .buildSQLSelector(
-            category_list = variation_category,
-            query_table = 'predicate_category')
-        if where_expression != '':
-          add_kw['where_expression'] = where_expression
-          add_kw['predicate_category.uid'] = '!=NULL'
-          add_kw['group_by_expression'] = 'uid'
-          add_query = self.portal_catalog(**add_kw)
-          uid_list = []
-          for line in add_query:
-            uid_list.append(line.uid)
-          new_kw['where_expression'] = '( %s )' % ' OR '.join(
-                      ['catalog.uid=%s' % uid for uid in uid_list])
 
       # build the group by expression
       # if we group by a criterion, we also add this criterion to the select
