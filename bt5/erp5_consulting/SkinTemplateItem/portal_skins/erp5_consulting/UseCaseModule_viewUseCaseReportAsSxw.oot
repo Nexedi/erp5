@@ -88,7 +88,7 @@
     
     <text:p text:style-name='Text body'>Nexedi SA</text:p>
     
-    <div tal:omit-tag='' tal:repeat='usecase  python:here.searchFolder(portal_type="Use Case",sort_on=(("int_index",),), validation_state="validated") or (context,)'>
+    <div tal:omit-tag='' tal:repeat='usecase  python:here.getPortalObject().portal_selections.callSelectionFor("use_case_selection")'>
         <text:h text:style-name='Heading 2' text:level='2' i18n:domain="ui" i18n:translate="">Use Case : <span tal:replace='usecase/getTitle'>Title</span></text:h>
         
         <text:p text:style-name='Text body' tal:replace="structure python: render_text(usecase.getDescription(), {'{http://openoffice.org/2000/text}style-name': 'Text body'})">Use Case Description</text:p>
@@ -105,8 +105,9 @@
               svg:width="12cm"
               svg:height="7.516cm" 
               xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"
-              tal:attributes="xlink:href python:request.oo_builder.addImage(image.index_html(None,None));
-                              svg:height python:'%scm' % (12 * float(image.height()) / max(float(image.width()),0))" />
+              tal:condition="python: image.width != 0"
+              tal:attributes="xlink:href python:ooo_builder.addImage(image.index_html(None,None));
+                              svg:height python:'%scm' % (12 * float(image.height) / max(float(image.width),0))" />
             </text:p>
           </tal:block>
           
