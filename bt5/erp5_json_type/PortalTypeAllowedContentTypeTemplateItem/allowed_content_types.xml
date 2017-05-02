@@ -3,4 +3,7 @@
   <item>Action Information</item>
   <item>Role Information</item>
  </portal_type>
+ <portal_type id="Types Tool">
+  <item>JSON Type</item>
+ </portal_type>
 </allowed_content_type_list>
