@@ -133,6 +133,10 @@ def _recursiveRemoveUid(obj):
   """
   if getattr(aq_base(obj), 'uid', _MARKER) is not _MARKER:
     obj.uid = None
+    # Make all objects and sub-object un-indexable
+    # XXX: Should be moved into another function or change the name and desc
+    # of this function
+    obj.isIndexable = ConstantGetter('isIndexable', value=False)
   for subobj in obj.objectValues():
     _recursiveRemoveUid(subobj)
 
