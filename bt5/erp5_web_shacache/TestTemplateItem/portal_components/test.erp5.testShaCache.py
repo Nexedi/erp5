@@ -70,8 +70,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     parsed = urlparse.urlparse(self.shacache_url)
     connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
     try:
-      connection.request('GET', '/'.join([parsed.path, key]), None,
-        self.header_dict)
+      connection.request('GET', '/'.join([parsed.path, key]), None, {})
       result = connection.getresponse()
       data = result.read()
     finally:
