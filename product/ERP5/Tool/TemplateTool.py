@@ -947,21 +947,36 @@ class TemplateTool (BaseTool):
         finally:
           f.close()
 
-        #XXX: Hardcoding 'erp5_mysql_innodb_catalog' BP in the list
+        #XXX: Hardcoding 'erp5_core_proxy_field_legacy' BP in the list
         bp_dict ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_core_proxy_field_legacy',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_core_proxy_field_legacy',
+          'version': '1.0'}
+        if repository.endswith('/bt5'):
+          property_dict_list.append(bp_dict)
+
+        bm_dict ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': [],
           'description': '',
           'force_install': 0,
           'id': 'erp5_mysql_innodb_catalog',
           'license': 'GPL',
-          'provision_list': ['erp5_catalog'],
           'revision': '',
           'test_dependency_list': [],
+          'provision_list': ['erp5_catalog'],
           'title': 'erp5_mysql_innodb_catalog',
           'version': '1.0'}
-        if repository.endswith('/bt5'):
-          property_dict_list.append(bp_dict)
+        if repository.endswith('/bootstrap'):
+          property_dict_list.append(bm_dict)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
