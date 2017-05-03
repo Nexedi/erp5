@@ -159,7 +159,11 @@ class Alarm(XMLObject, PeriodicityMixin):
           # Old API
           getattr(self.activate(**activate_kw), method_id)()
         if self.isAlarmNotificationMode():
-          self.activate(after_tag=tag).notify(include_active=True, params=params)
+          notification_tag=self.__getTag(True)
+          self.activate(tag=notification_tag, after_tag=tag) \
+            .notify(include_active=True, params=params)
+          return notification_tag
+        return tag
 
     # switch to nobody temporarily so that unrestricted _activeSense
     # is always invoked by system user.
@@ -170,7 +174,7 @@ class Alarm(XMLObject, PeriodicityMixin):
       activate_kw = {}
 
     try:
-      _activeSense()
+      return _activeSense()
     finally:
       # Restore the original user.
       setSecurityManager(sm)
