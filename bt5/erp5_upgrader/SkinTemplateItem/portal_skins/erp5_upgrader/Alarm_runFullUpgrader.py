@@ -15,27 +15,39 @@ post_upgrade_tag = '%s-postupgrade' % tag
 active_process = context.newActiveProcess()
 
 
-portal_alarms.upgrader_check_pre_upgrade.activate(
-  activity='SQLQueue',
-  tag=pre_upgrade_tag,
-).activeSense(fixit=fixit, params={'tag': pre_upgrade_tag})
+portal_alarms.upgrader_check_pre_upgrade.activeSense(
+  fixit=fixit,
+  activate_kw={
+    'activity': 'SQLQueue',
+    'tag': pre_upgrade_tag,
+  },
+  params={'tag': pre_upgrade_tag},
+)
 
-portal_alarms.upgrader_check_upgrader.activate(
-  activity='SQLQueue',
-  tag=upgrade_tag,
-  after_tag=pre_upgrade_tag,
- ).activeSense(fixit=fixit, params={'tag': upgrade_tag})
+portal_alarms.upgrader_check_upgrader.activeSense(
+  fixit=fixit,
+  activate_kw={
+    'activity': 'SQLQueue',
+    'tag': upgrade_tag,
+    'after_tag': pre_upgrade_tag,
+  },
+  params={'tag': upgrade_tag},
+)
 
 # If we are not running the real upgrade, not need to run activeSense
 # of the post-upgrade step : post-upgrade constraints will be run on
 # what are *currently* installed, and not on the result of the previous
 # steps, which lead to a wrong and misleading consistency check
 if fixit:
-  portal_alarms.upgrader_check_post_upgrade.activate(
-    activity='SQLQueue',
-    tag=post_upgrade_tag,
-    after_tag=upgrade_tag,
-  ).activeSense(fixit=fixit, params={'tag': post_upgrade_tag})
+  portal_alarms.upgrader_check_post_upgrade.activeSense(
+    fixit=fixit,
+    activate_kw={
+      'activity': 'SQLQueue',
+      'tag': post_upgrade_tag,
+      'after_tag': upgrade_tag,
+    },
+    params={'tag': post_upgrade_tag},
+  )
 else:
   detail = "Post-upgrade constraints are not run as their results may differ after "
   detail += "upgrader's alarm is solved. To dry-run post-upgrade alarm, please run the pre-ugprade "
@@ -49,7 +61,7 @@ else:
 
 
 # start another activity to collect the results from each upgrader step
-context.activate(after_tag=post_upgrade_tag).Alarm_postFullUpgradeNeed(
+context.activate(after_tag=(upgrade_tag, post_upgrade_tag)).Alarm_postFullUpgradeNeed(
   active_process=active_process.getRelativeUrl())
 
 # Nothing else to do, so we can disable.
