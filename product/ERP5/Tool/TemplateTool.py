@@ -1776,12 +1776,14 @@ class TemplateTool (BaseTool):
       # Update hashes of item in old state before installation
       for item in old_installation_state.objectValues():
         if item.isProperty:
-          value_list = item.getProperty('value')
+          value = item.getProperty('item_property_value')
         else:
           value_list = item.objectValues()
-        if value_list:
+          if value_list:
+            value = value_list[0]
+        if value:
           item.setProperty('item_sha', self.calculateComparableHash(
-                                                              value_list[0],
+                                                              value,
                                                               item.isProperty,
                                                               ))
 
@@ -1791,9 +1793,8 @@ class TemplateTool (BaseTool):
         # If the path has been removed, then add it with sign = -1
         old_item = old_installation_state.getBusinessItemByPath(item.getProperty('item_path'))
         # Calculate sha for the items in new_insatallation_state
-        import pdb; pdb.set_trace()
         if item.isProperty:
-          value = item.getProperty('value')
+          value = item.getProperty('item_property_value')
         else:
           value = item.objectValues()[0]
         item.setProperty('item_sha', self.calculateComparableHash(
@@ -1956,10 +1957,11 @@ class TemplateTool (BaseTool):
             # XXX: Hack for not trying to install the sub-objects from zexp,
             # This should rather be implemented while exporting the object,
             # where we shouldn't export sub-objects in the zexp
-            try:
-              value =  new_item.objectValues()[0]
-            except IndexError:
-              continue
+            if not isProperty:
+              try:
+                value =  new_item.objectValues()[0]
+              except IndexError:
+                continue
             new_item.install(installation_process)
 
       return error_list

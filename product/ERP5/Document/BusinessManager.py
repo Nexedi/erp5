@@ -339,7 +339,6 @@ class BusinessManager(Folder):
 
     for path_item in path_item_list:
       if '#' in  str(path_item[0]):
-        import pdb; pdb.set_trace()
         PathItem = self.newContent(portal_type='Business Property Item')
         # If its a property, no need to resolve the path
         PathItem.edit(
@@ -922,18 +921,18 @@ class BusinessPropertyItem(XMLObject):
     obj = p.unrestrictedTraverse(relative_url)
     property_value = obj.getProperty(property_id)
     property_type = obj.getPropertyType(property_id)
-    self.setProperty('name', property_id)
-    self.setProperty('type', property_type)
-    self.setProperty('value', property_value)
+    self.setProperty('item_property_name', property_id)
+    self.setProperty('item_property_type', property_type)
+    self.setProperty('item_property_value', property_value)
 
   def install(self, context):
     portal = context.getPortalObject()
     path = self.getProperty('item_path')
     relative_url, property_id = path.split('#')
     obj = portal.unrestrictedTraverse(relative_url)
-    property_name = self.getProperty('name')
-    property_type = self.getProperty('type')
-    property_value = self.getProperty('value')
+    property_name = self.getProperty('item_property_name')
+    property_type = self.getProperty('item_property_type')
+    property_value = self.getProperty('item_property_value')
     # First remove the property from the existing path and keep the default
     # empty, and update only if the sign is +1
     obj._delPropValue(property_name)
