@@ -56,7 +56,6 @@ from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from zLOG import LOG, INFO, WARNING
 
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
@@ -149,7 +148,7 @@ class BusinessManager(Folder):
   meta_type = 'ERP5 Business Manager'
   portal_type = 'Business Manager'
   add_permission = Permissions.AddPortalContent
-  allowed_types = ('Business Item',)
+  allowed_types = ('Business Item', 'Business Property Item',)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -340,7 +339,8 @@ class BusinessManager(Folder):
 
     for path_item in path_item_list:
       if '#' in  str(path_item[0]):
-        PathItem = self.newContent(portal_type='Business Item')
+        import pdb; pdb.set_trace()
+        PathItem = self.newContent(portal_type='Business Property Item')
         # If its a property, no need to resolve the path
         PathItem.edit(
           item_path=path_item[0],
@@ -584,16 +584,15 @@ class BusinessItem(XMLObject):
   """Saves the path and values for objects, properties, etc, the
     attributes for a path configuration being:
 
-    - path  (similar to an xpath expression)
+    - item_path  (similar to an xpath expression)
         Examples of path :
           portal_type/Person
           portal_type/Person#title
           portal_type/Person#property_sheet?ancestor=DublinCore
           portal_type/Person#property_sheet?position=2
-    - sign  (+1/-1)
-    - layer (0, 1, 2, 3, etc.)
-    - value (a set of pickable value in python)
-    - hash of the value"""
+    - item_sign  (+1/-1)
+    - item_layer (0, 1, 2, 3, etc.)
+    - item_value (a set of pickable value in python)"""
 
   add_permission = Permissions.AddPortalContent
   # Declarative security
@@ -614,30 +613,6 @@ class BusinessItem(XMLObject):
                                            item_layer=item_layer,
                                            **kw)
 
-  def _generateHash(self, item_value=None):
-    """
-    Generate hash based on value for the object.
-    Initially, for simplicity, we go on with SHA256 values only
-    """
-    LOG('Business Manager', INFO, 'Genrating hash')
-    if not item_value:
-      # Raise in case there is no value for the BusinessItem object
-      raise ValueError, "Value not defined for the BusinessItem"
-    elif self.isProperty:
-      # In case of property, the value is a PersisitentMapping object, so it
-      # can be easily hashed after formatting
-      sha256 = hash(pprint.pformat(item_value))
-    else:
-      # Expects to raise error on case the value for the object
-      # is not picklable
-      try:
-        sha256 = hashlib.sha256(item_value).hexdigest()
-      except TypeError:
-        obj_dict = item_value.__dict__.copy()
-        del obj_dict['uid']
-        sha256 = hash(pprint.pformat(obj_dict))
-    return sha256
-
   def build(self, context, **kw):
     """
     Extract value for the given path from the OFS
@@ -651,40 +626,25 @@ class BusinessItem(XMLObject):
     LOG('Business Manager', INFO, 'Building Business Item')
     p = context.getPortalObject()
     path = self.getProperty('item_path')
-    if '#' in str(path):
-      self.isProperty = True
-      relative_url, property_id = path.split('#')
-      obj = p.unrestrictedTraverse(relative_url)
-      property_value = obj.getProperty(property_id)
-      property_type = obj.getPropertyType(property_id)
-      # Create a persistent object which can be saved inside ZODB for the value
-      value = PersistentMapping()
-      value['name'] = property_id
-      value['type'] = property_type
-      value['value'] = property_value
-      self.setProperty('item_value', value)
-      # Add the value object in the database
-      obj._p_jar.add(value)
-    else:
-      try:
-        # XXX: After we apply _resolve path list while storing Data for the
-        # Business Manager, this should be of no use as there will be no path
-        # where we are going to achieve something different for relative_path
-        # from the result of _resolvePath on a given path.
-        # TODO: Remove this after checking successfull implementation of
-        # _resolve path in Business Manager in storeTemplateData
-        for relative_url in self._resolvePath(p, [], path.split('/')):
-          obj = p.unrestrictedTraverse(relative_url)
-          obj = obj._getCopy(context)
-          obj = obj.__of__(context)
-          # XXX: '_recursiveRemoveUid' is not working as expected
-          _recursiveRemoveUid(obj)
-          obj = aq_base(obj)
-          obj.isIndexable = ConstantGetter('isIndexable', value=False)
-          self._setObject(obj.getId(), obj, suppress_events=True)
-      except AttributeError:
-        # In case the object doesn't exist, just pass without raising error
-        pass
+    try:
+      # XXX: After we apply _resolve path list while storing Data for the
+      # Business Manager, this should be of no use as there will be no path
+      # where we are going to achieve something different for relative_path
+      # from the result of _resolvePath on a given path.
+      # TODO: Remove this after checking successfull implementation of
+      # _resolve path in Business Manager in storeTemplateData
+      for relative_url in self._resolvePath(p, [], path.split('/')):
+        obj = p.unrestrictedTraverse(relative_url)
+        obj = obj._getCopy(context)
+        obj = obj.__of__(context)
+        # XXX: '_recursiveRemoveUid' is not working as expected
+        _recursiveRemoveUid(obj)
+        obj = aq_base(obj)
+        obj.isIndexable = ConstantGetter('isIndexable', value=False)
+        self._setObject(obj.getId(), obj, suppress_events=True)
+    except AttributeError:
+      # In case the object doesn't exist, just pass without raising error
+      pass
 
   def applyValueToPath(self):
     """
@@ -734,25 +694,6 @@ class BusinessItem(XMLObject):
             relative_url_list + [object_id], id_list[1:]))
     return path_list
 
-  def setPropertyToPath(self, path, property_name, value):
-    """
-    Set property for the object at given path
-    """
-    portal = self.getPortalObject()
-    obj = portal.unrestrictedTraverse(path)
-    obj.setProperty(property_name, value)
-
-  def generateXML(self):
-    """
-    Generate XML for different objects/type/properties differently.
-    1. Objects: Use XMLImportExport from ERP5Type
-    2. For properties, first get the property type, then create XML object
-    for the different property differenty(Use ObjectPropertyItem from BT5)
-    3. For attributes, we can export part of the object, rather than exporting
-    whole of the object
-    """
-    pass
-
   def install(self, context):
     """
     Set the value to the defined path.
@@ -761,47 +702,30 @@ class BusinessItem(XMLObject):
     # ObjectTemplateItem and handle the installation there.
     portal = context.getPortalObject()
     path = self.getProperty('item_path')
-    if '#' in str(path):
-      self.isProperty = True
-      relative_url, property_id = path.split('#')
-      obj = portal.unrestrictedTraverse(relative_url)
-      prop = self.getProperty('value')
-      # First remove the property from the existing path and keep the default
-      # empty, and update only if the sign is +1
-      obj._delPropValue(prop['name'])
-      if self.getProperty('item_sign') == 1:
-        obj.setProperty(prop['name'], prop['value'], prop['type'])
-    else:
-      path_list = path.split('/')
-      container_path = path_list[:-1]
-      object_id = path_list[-1]
-      try:
-        container = self.unrestrictedResolveValue(portal, container_path)
-      except KeyError:
-        # parent object can be set to nothing, in this case just go on
-        container_url = '/'.join(container_path)
-      old_obj = container._getOb(object_id, None)
-      # delete the old object before installing a new object
-      if old_obj:
-        container._delObject(object_id)
-      # Create a new object only if sign is +1
-      # If sign is +1, set the new object on the container
-      if int(self.getProperty('item_sign')) == 1:
-        # install object
-        obj = self.objectValues()[0]
-        obj = obj._getCopy(container)
-        # Before making `obj` a sub-object of `container`, we should the acquired
-        # roles on obj
-        obj.isIndexable = ConstantGetter('isIndexable', value=False)
-        delattr(obj, '__ac_local_roles__')
-        container._setObject(object_id, obj, suppress_events=True)
-        obj = container._getOb(object_id)
-        """
-        aq_base(obj).uid = portal.portal_catalog.newUid()
-        del obj.isIndexable
-        if getattr(aq_base(obj), 'reindexObject', None) is not None:
-          obj.reindexObject()
-        """
+    path_list = path.split('/')
+    container_path = path_list[:-1]
+    object_id = path_list[-1]
+    try:
+      container = self.unrestrictedResolveValue(portal, container_path)
+    except KeyError:
+      # parent object can be set to nothing, in this case just go on
+      container_url = '/'.join(container_path)
+    old_obj = container._getOb(object_id, None)
+    # delete the old object before installing a new object
+    if old_obj:
+      container._delObject(object_id)
+    # Create a new object only if sign is +1
+    # If sign is +1, set the new object on the container
+    if int(self.getProperty('item_sign')) == 1:
+      # install object
+      obj = self.objectValues()[0]
+      obj = obj._getCopy(container)
+      # Before making `obj` a sub-object of `container`, we should the acquired
+      # roles on obj
+      obj.isIndexable = ConstantGetter('isIndexable', value=False)
+      delattr(obj, '__ac_local_roles__')
+      container._setObject(object_id, obj, suppress_events=True)
+      obj = container._getOb(object_id)
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
@@ -904,87 +828,6 @@ class BusinessItem(XMLObject):
 
     return merged_value
 
-  def _guessFilename(self, document, key, data):
-    """
-    Try to guess the extension based on the id of the document
-    """
-    yield key
-    document_base = aq_base(document)
-    # Try to guess the extension based on the reference of the document
-    if hasattr(document_base, 'getReference'):
-      yield document.getReference()
-    elif isinstance(document_base, ERP5BaseBroken):
-      yield getattr(document_base, "reference", None)
-    # Try to guess the extension based on the title of the document
-    yield getattr(document_base, "title", None)
-    # Try to guess from content
-    if data:
-      for test in imghdr.tests:
-        extension = test(data, None)
-        if extension:
-          yield 'x.' + extension
-
-  def guessExtensionOfDocument(self, document, key, data=None):
-    """
-    Guesses and returns the extension of an ERP5 document.
-
-    The process followed is:
-    1. Try to guess extension by the id of the document
-    2. Try to guess extension by the title of the document
-    3. Try to guess extension by the reference of the document
-    4. Try to guess from content (only image data is tested)
-
-    If there's a content type, we only return an extension that matches.
-
-    In case everything fails then:
-    - '.bin' is returned for binary files
-    - '.txt' is returned for text
-    """
-    document_base = aq_base(document)
-    # XXX Zope items like DTMLMethod would not implement getContentType method
-    mime = None
-    if hasattr(document_base, 'getContentType'):
-      content_type = document.getContentType()
-    elif isinstance(document_base, ERP5BaseBroken):
-      content_type = getattr(document_base, "content_type", None)
-    else:
-      content_type = None
-    # For stable export, people must have a MimeTypes Registry, so do not
-    # fallback on mimetypes. We prefer the mimetypes_registry because there
-    # are more extensions and we can have preferred extensions.
-    # See also https://bugs.python.org/issue1043134
-    mimetypes_registry = self.getPortalObject()['mimetypes_registry']
-    if content_type:
-      try:
-        mime = mimetypes_registry.lookup(content_type)[0]
-      except (IndexError, MimeTypeException):
-        pass
-
-    for key in self._guessFilename(document, key, data):
-      if key:
-        ext = os.path.splitext(key)[1][1:].lower()
-        if ext and (mimetypes_registry.lookupExtension(ext) is mime if mime
-                    else mimetypes_registry.lookupExtension(ext)):
-          return ext
-
-    if mime:
-      # return first registered extension (if any)
-      if mime.extensions:
-        return mime.extensions[0]
-      for ext in mime.globs:
-        if ext[0] == "*" and ext.count(".") == 1:
-          return ext[2:].encode("utf-8")
-
-    # in case we could not read binary flag from mimetypes_registry then return
-    # '.bin' for all the Portal Types where exported_property_type is data
-    # (File, Image, Spreadsheet). Otherwise, return .bin if binary was returned
-    # as 1.
-    binary = getattr(mime, 'binary', None)
-    if binary or binary is None is not data:
-      return 'bin'
-    # in all other cases return .txt
-    return 'txt'
-
   def removeProperties(self,
                        obj,
                        export,
@@ -1047,3 +890,52 @@ class BusinessItem(XMLObject):
 
   def getParentBusinessManager(self):
     return self.aq_parent
+
+class BusinessPropertyItem(XMLObject):
+
+  """Class to deal with path(s) which refer to property of an ERP5 object.
+  Used to store property name, type and value for a given object and property"""
+
+  add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  portal_type = 'Business Property Item'
+  meta_type = 'Business Property Item'
+  isIndexable = False
+  isProperty = True
+
+  def _edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
+    """
+    Overriden function so that we can update attributes for BusinessItem objects
+    """
+    return super(BusinessPropertyItem, self)._edit(item_path=item_path,
+                                                   item_sign=item_sign,
+                                                   item_layer=item_layer,
+                                                   **kw)
+
+  def build(self, context, **kw):
+    p = context.getPortalObject()
+    path = self.getProperty('item_path')
+    relative_url, property_id = path.split('#')
+    obj = p.unrestrictedTraverse(relative_url)
+    property_value = obj.getProperty(property_id)
+    property_type = obj.getPropertyType(property_id)
+    self.setProperty('name', property_id)
+    self.setProperty('type', property_type)
+    self.setProperty('value', property_value)
+
+  def install(self, context):
+    portal = context.getPortalObject()
+    path = self.getProperty('item_path')
+    relative_url, property_id = path.split('#')
+    obj = portal.unrestrictedTraverse(relative_url)
+    property_name = self.getProperty('name')
+    property_type = self.getProperty('type')
+    property_value = self.getProperty('value')
+    # First remove the property from the existing path and keep the default
+    # empty, and update only if the sign is +1
+    obj._delPropValue(property_name)
+    if int(self.getProperty('item_sign')) == 1:
+      obj.setProperty(property_name, property_value, property_type)

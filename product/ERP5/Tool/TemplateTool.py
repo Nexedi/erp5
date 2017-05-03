@@ -1775,9 +1775,15 @@ class TemplateTool (BaseTool):
       # thus all the BusinessItem sub-objects should have single value
       # Update hashes of item in old state before installation
       for item in old_installation_state.objectValues():
-        value_list = item.objectValues()
+        if item.isProperty:
+          value_list = item.getProperty('value')
+        else:
+          value_list = item.objectValues()
         if value_list:
-          item.setProperty('item_sha', self.calculateComparableHash(value_list[0]))
+          item.setProperty('item_sha', self.calculateComparableHash(
+                                                              value_list[0],
+                                                              item.isProperty,
+                                                              ))
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
@@ -1785,7 +1791,15 @@ class TemplateTool (BaseTool):
         # If the path has been removed, then add it with sign = -1
         old_item = old_installation_state.getBusinessItemByPath(item.getProperty('item_path'))
         # Calculate sha for the items in new_insatallation_state
-        item.setProperty('item_sha', self.calculateComparableHash(item.objectValues()[0]))
+        import pdb; pdb.set_trace()
+        if item.isProperty:
+          value = item.getProperty('value')
+        else:
+          value = item.objectValues()[0]
+        item.setProperty('item_sha', self.calculateComparableHash(
+                                                                value,
+                                                                item.isProperty,
+                                                                ))
         if old_item:
           # If the old_item exists, we match the hashes and if it differs, then
           # add the new item
@@ -1810,7 +1824,7 @@ class TemplateTool (BaseTool):
 
     installMultipleBusinessManager = updateInstallationState
 
-    def calculateComparableHash(self, object):
+    def calculateComparableHash(self, object, isProperty=False):
       """
       Remove some attributes before comparing hashses
       and return hash of the comparable object dict, in case the object is
@@ -1820,7 +1834,7 @@ class TemplateTool (BaseTool):
       attributes which changes at small updation, like workflow_history,
       uid, volatile attributes(which starts with _v)
       """
-      if object.__class__.__name__ == 'PersistentMapping':
+      if isProperty:
         obj_dict = object
       else:
         obj_dict = object.__dict__.copy()
@@ -1830,6 +1844,7 @@ class TemplateTool (BaseTool):
 
         removable_attributes.append('uid')
         removable_attributes.append('_owner')
+        removable_attributes.append('isIndexable')
         for attr in removable_attributes:
           try:
             del obj_dict[attr]
@@ -1851,6 +1866,7 @@ class TemplateTool (BaseTool):
 
         try:
           if '#' in str(path):
+            isProperty = True
             relative_url, property_id = path.split('#')
             obj = portal.restrictedTraverse(relative_url)
             property_value = obj.getProperty(property_id)
@@ -1863,16 +1879,12 @@ class TemplateTool (BaseTool):
             if not property_value:
               raise KeyError
             property_type = obj.getPropertyType(property_id)
-            # Create a persistent object to compare the hash
-            value = PersistentMapping()
-            value['name'] = property_id
-            value['type'] = property_type
-            value['value'] = property_value
-            obj = value
+            obj = property_value
           else:
+            isProperty = False
             obj = portal.restrictedTraverse(path)
 
-          obj_sha = self.calculateComparableHash(obj)
+          obj_sha = self.calculateComparableHash(obj, isProperty)
 
           # Get item at old state
           old_item = old_state.getBusinessItemByPath(path)
