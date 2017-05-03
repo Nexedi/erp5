@@ -1327,6 +1327,8 @@ class ActivityTool (Folder, UniqueObject):
       expanded_object_list = sum(message_dict.itervalues(), [])
       try:
         if expanded_object_list:
+          # Store site info
+          setSite(self.getParentValue())
           traverse = self.getPortalObject().unrestrictedTraverse
           # FIXME: how to apply security here?
           # NOTE: The callee must update each processed item of
