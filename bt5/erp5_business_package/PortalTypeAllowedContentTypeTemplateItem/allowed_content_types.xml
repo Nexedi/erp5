@@ -1,5 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Business Manager">
   <item>Business Item</item>
+  <item>Business Property Item</item>
  </portal_type>
 </allowed_content_type_list>
