@@ -140,6 +140,22 @@ def _recursiveRemoveUid(obj):
     _recursiveRemoveUid(subobj)
 
 
+# New BusinessItem addition function
+def manage_addBusinessItem(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
+  # Create BusinessItem object container
+  c = BusinessItem(item_path, item_sign, item_layer)
+
+  return c
+
+
+# New BusinessPropertyItem addition function
+def manage_addBusinessPropertyItem(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
+  # Create BusinessPathItem object container
+  c = BusinessPropertyItem(item_path, item_sign, item_layer)
+
+  return c
+
+
 class BusinessManager(Folder):
 
   """Business Manager is responsible for saving objects and properties in
@@ -597,9 +613,10 @@ class BusinessItem(XMLObject):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
+  constructors = (manage_addBusinessItem,)
   portal_type = 'Business Item'
   meta_type = 'Business Item'
+  icon = None
   isProperty = False
   isIndexable = False
 
@@ -902,8 +919,10 @@ class BusinessPropertyItem(XMLObject):
 
   portal_type = 'Business Property Item'
   meta_type = 'Business Property Item'
+  icon = None
   isIndexable = False
   isProperty = True
+  constructors = (manage_addBusinessPropertyItem,)
 
   def _edit(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
     """
