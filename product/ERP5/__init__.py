@@ -58,6 +58,7 @@ object_classes = ( ERP5Site.ERP5Site,
                    PythonScript.PythonScriptThroughZMI,
                    SQLMethod.SQLMethod,
                    BusinessManager.BusinessItem,
+                   BusinessManager.BusinessPropertyItem,
                  )
 portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,
