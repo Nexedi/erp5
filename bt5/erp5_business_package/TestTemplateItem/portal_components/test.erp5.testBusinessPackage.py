@@ -197,7 +197,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     folder_path = test_folder.getRelativeUrl()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list', [])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -227,7 +227,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     folder_path = test_folder.getRelativeUrl()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list', [])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -256,7 +256,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     folder_path = test_folder.getRelativeUrl()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list', [])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -286,7 +286,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list', [])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -303,7 +303,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -327,7 +327,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -345,7 +345,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -367,7 +367,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list', [])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -384,7 +384,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list', path_item_list)
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -405,7 +405,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -424,7 +424,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -444,7 +444,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -463,7 +463,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     test_folder.edit(title='new_couscous')
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
     managerA_new.setStatus('uninstalled')
@@ -484,7 +484,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager()
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -503,7 +503,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -532,7 +532,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -546,7 +546,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.portal.manage_delObjects([installed_test_folder.getId(),])
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -572,7 +572,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -591,7 +591,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     test_folder.setProperty('short_title', '')
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -616,7 +616,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list', path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -657,7 +657,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -693,7 +693,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list', path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -739,7 +739,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -782,7 +782,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -798,7 +798,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertEquals(installed_test_folder.getTitle(), 'couscous')
 
     # Set empty path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -825,7 +825,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -839,7 +839,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertEquals(test_folder.getProperty('short_title'), 'foo')
 
     # Set empty path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -867,7 +867,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -911,7 +911,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -951,7 +951,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -999,7 +999,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -1040,7 +1040,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -1058,7 +1058,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     installed_test_folder.edit(title='new_couscous')
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
     # Copy the Business Manager object, updated version of managerA
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -1086,7 +1086,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -1102,7 +1102,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     test_folder.setProperty('short_title', 'new_foo')
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList([])
+    managerA.setProperty('template_path_list',[])
     # Copy the Business Manager object, updated version of managerA
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -1131,7 +1131,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -1176,7 +1176,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
 
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
@@ -1217,7 +1217,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -1264,7 +1264,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_item_list)
+    managerA.setProperty('template_path_list',path_item_list)
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
@@ -1302,15 +1302,13 @@ class TestBusinessPackage(ERP5TypeTestCase):
     managerA = self._createBusinessManager(title='erp5_performance_test')
 
     path_list = ['portal_skins/erp5_core_proxy_field_legacy | 1 | 1']
-    import pdb; pdb.set_trace()
     # Set catalog path item as path_item in managerA
-    managerA._setTemplatePathList(path_list)
+    managerA.setProperty('template_path_list', path_list)
     # Copy the Business Manager object
     managerA_new, = self._copyBusinessManager([managerA.id,])
     managerA_new.build()
-    import pdb; pdb.set_trace()
     path  = self._exportBusinessManager(managerA_new)
-    imported_manager = self._importBusinessManager(managerA, path, 1)
+    imported_manager = self._importBusinessManager(managerA_new, path, 1)
 
   def _globalInstallationOfBusinessTemplate(self):
     """
@@ -1343,7 +1341,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_list = [path_item_folder]
 
     # Set catalog path item as path_item in managerB
-    managerB._setTemplatePathList(path_item_list)
+    managerB.setProperty('template_path_list',path_item_list)
 
     managerA_new, managerB_new = self._copyBusinessManager([
                                                             managerA.id,
@@ -1381,8 +1379,8 @@ class TestBusinessPackage(ERP5TypeTestCase):
                       'couscous')
 
     # Add catalog_path to managerA and remove the catalog_path from managerB
-    managerA._setTemplatePathList(path_item_list)
-    managerB._setTemplatePathList([])
+    managerA.setProperty('template_path_list',path_item_list)
+    managerB.setProperty('template_path_list',[])
 
     managerA_new, managerB_new = self._copyBusinessManager([
                                                             managerA.id,
@@ -1440,7 +1438,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_catalog_1 = '%s | %s | %s'%(path_catalog_1, 1, 1)
     path_item_list = [path_item_catalog_1]
 
-    manager._setTemplatePathList(path_item_list)
+    manager.setProperty('template_path_list',path_item_list)
     built_manager = manager.build()
 
     bm_list = []
@@ -1476,7 +1474,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     path_item_catalog_1 = '%s | %s | %s'%(path_catalog_1, 1, 1)
     path_item_list_1 = [path_item_catalog_1]
 
-    manager_1._setTemplatePathList(path_item_list_1)
+    manager_1.setProperty('template_path_list',path_item_list_1)
     built_manager_1 = manager_1.build()
 
     test_catalog_1.edit(
