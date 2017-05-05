@@ -2344,6 +2344,7 @@ class ERP5Generator(PortalGenerator):
           continue
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
+
         if bt.getPortalType() == 'Business Manager':
           template_tool.updateInstallationState([bt])
         else:

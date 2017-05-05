@@ -335,7 +335,7 @@ class BusinessManager(Folder):
   __rsub__ = __sub__
 
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
-  def storeTemplateData(self, isBuild=False):
+  def storeTemplateData(self, isBuild=False, **kw):
     """
     Store data for objects in the ERP5
     """
@@ -451,10 +451,16 @@ class BusinessManager(Folder):
     """Creates new values for business item from the values from
     OFS Database"""
     LOG('Business Manager', INFO, 'Building Business Manager')
+    removable_sub_object_path_list = kw.get('removable_sub_object_path', [])
+    removable_property_dict = kw.get('removable_property', {})
     if not no_action:
-      self.storeTemplateData(isBuild=True)
+      self.storeTemplateData(isBuild=True, **kw)
       for path_item in self.objectValues():
-        path_item.build(self, **kw)
+        kwargs = {}
+        item_path = path_item.getProperty('item_path')
+        kwargs['removable_property_list'] = removable_property_dict.get(item_path, [])
+        kwargs['remove_sub_objects'] = item_path in removable_sub_object_path_list
+        path_item.build(self, **kwargs)
       self.status = 'built'
     return self
 
@@ -652,6 +658,19 @@ class BusinessItem(XMLObject):
       for relative_url in self._resolvePath(p, [], path.split('/')):
         obj = p.unrestrictedTraverse(relative_url)
         obj = obj._getCopy(context)
+
+        # We should remove the extra properties of object so that there
+        # shouldn't be redundancy of the proeprties
+        removable_property_list = kw.get('removable_property_list')
+
+        # We should also add extra parameter to remove sub-objects by removing
+        # `_tree` for any erp5 object. This way we can have control over adding
+        # sub-objects as new Business Item objects
+        remove_sub_objects = kw.get('remove_sub_objects')
+        if remove_sub_objects:
+          removable_property_list.append('_tree')
+
+        obj = self.removeProperties(obj, 1, properties=removable_property_list)
         obj = obj.__of__(context)
         # XXX: '_recursiveRemoveUid' is not working as expected
         _recursiveRemoveUid(obj)
@@ -888,7 +907,13 @@ class BusinessItem(XMLObject):
 
     for attr in obj.__dict__.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_'):
-        delattr(obj, attr)
+        try:
+          delattr(obj, attr)
+        except AttributeError:
+          # XXX: Continue in cases where we want to delete some properties which
+          # are not in attribute list
+          # Raise an error
+          continue
 
     if classname == 'PDFForm':
       if not obj.getProperty('business_template_include_content', 1):
