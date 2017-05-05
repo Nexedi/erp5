@@ -306,6 +306,11 @@ class TestUpgrader(ERP5TypeTestCase):
       alarm_id="promise_check_upgrade")
     self.assertTrue(sense, detail_list)
 
+  def stepCheckFullUpgradeNotRequired(self, sequence=None):
+    sense, detail_list = self._checkAlarmSense(
+      alarm_id="promise_check_upgrade")
+    self.assertFalse(sense, detail_list)
+
   def stepCheckPostUpgradeNotRequired(self, sequence=None):
     sense, detail_list = self._checkAlarmSense(
       alarm_id="upgrader_check_post_upgrade")
@@ -740,6 +745,26 @@ class TestUpgrader(ERP5TypeTestCase):
       stepTic
       stepCheckOrganisationObjectUpdatedAfterCategoryMoving
       stepRemoveCustomUpgradeCategoryList
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_sense_full_upgrade_do_not_sense_post_upgrade(self):
+    """
+    Check that the post-upgrade consistency check is not run
+    when running the activeSense method of the full-upgrade alarm,
+    as post-upgrade will give inconsistent result
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      stepRunUpgrader
+      stepTic
+      stepCreatePerson
+      stepValidatePerson
+      stepSetConstraintInPersonModulePortalType
+      stepTic
+      stepCheckFullUpgradeNotRequired
+      stepCheckPostUpgradeRequired
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
