@@ -40,11 +40,12 @@ from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFActivity.ActiveResult import ActiveResult
+from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import transactional_cached
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5.genbt5list import generateInformation
@@ -580,25 +581,25 @@ class TemplateTool (BaseTool):
               self.activate(activity='SQLQueue').\
                 importAndReExportBusinessTemplateFromPath(template_path)
 
-    security.declareProtected( 'Import/Export objects', 'migrateBTToBP')
-    def migrateBTToBP(self, template_path, REQUEST=None, **kw):
+    security.declareProtected( 'Import/Export objects', 'migrateBTToBM')
+    def migrateBTToBM(self, template_path, REQUEST=None, **kw):
       """
-        Migrate business template repository to Business Package repo.
-        Business Package completely rely only on PathTemplateItem and to show
+        Migrate business template repository to Business Manager repo.
+        Business Manager completely rely only on BusinessItem and to show
         the difference between both of them
 
         So, the steps should be:
         1. Install the business template which is going to be migrated
-        2. Create a new Business Package with random id and title
+        2. Create a new Business Manager with random id and title
         3. Add the path, build and export the template
         4. Remove the business template from the directory and add the business
-        package there instead
-        5. Change the ID and title of the business package
-        6. Export the business package to the directory, leaving anything in
+        manager there instead
+        5. Change the ID and title of the business manager
+        6. Export the business manager to the directory, leaving anything in
         the installed erp5 unchanged
       """
       import_template = self.download(url=template_path)
-      if import_template.getPortalType == 'Business Package':
+      if import_template.getPortalType() == 'Business Manager':
         LOG(import_template.getTitle(),0,'Already migrated')
         return
 
@@ -613,7 +614,7 @@ class TemplateTool (BaseTool):
         import_template.install(**kw)
         is_installed = True
 
-      # Make list of object paths which needs to be added in the bp5
+      # Make list of object paths which needs to be added in the bm5
       # This can be decided by looping over every type of items we do have in
       # bt5 and checking if there have been any changes being made to it via this
       # bt5 installation or not.
@@ -629,30 +630,31 @@ class TemplateTool (BaseTool):
 
       # For modules, we don't need to create path for the module
       module_list = import_template.getTemplateModuleIdList()
-      template_path_list.extend(module_list)
+      for path in module_list:
+        template_path_list.append(path + ' | 1 | 1')
 
-      # For portal_types, we have to add path and subobjetcs
+      # For portal_types, we have to add path and subobjects
       portal_type_id_list = import_template.getTemplatePortalTypeIdList()
       portal_type_path_list = []
       for id in portal_type_id_list:
-        portal_type_path_list.append('portal_types/'+id)
-        portal_type_path_list.append('portal_types/'+id+'/**')
+        portal_type_path_list.append('portal_types/'+id + ' | 1 | 1')
+        #portal_type_path_list.append('portal_types/'+id+'/**')
       template_path_list.extend(portal_type_path_list)
 
       # For categories, we create path for category objects as well as the subcategories
       category_list = import_template.getTemplateBaseCategoryList()
       category_path_list = []
       for base_category in category_list:
-        category_path_list.append('portal_categories/'+base_category)
-        category_path_list.append('portal_categories/'+base_category+'/**')
+        category_path_list.append('portal_categories/'+base_category + ' | 1 | 1')
+        #category_path_list.append('portal_categories/'+base_category+'/**')
       template_path_list.extend(category_path_list)
 
       # For portal_skins, we export the folder
       portal_skin_list = import_template.getTemplateSkinIdList()
       portal_skin_path_list = []
       for skin in portal_skin_list:
-        portal_skin_path_list.append('portal_skins/'+skin)
-        portal_skin_path_list.append('portal_skins/'+skin+'/**')
+        portal_skin_path_list.append('portal_skins/'+skin + ' | 1 | 1')
+        #portal_skin_path_list.append('portal_skins/'+skin+'/**')
       template_path_list.extend(portal_skin_path_list)
 
       # For workflow chains,
@@ -665,18 +667,20 @@ class TemplateTool (BaseTool):
       workflow_id_list = import_template.getTemplateWorkflowIdList()
       workflow_path_list = []
       for workflow in workflow_id_list:
-        workflow_path_list.append('portal_workflow/' + workflow)
-        workflow_path_list.append('portal_workflow/' + workflow + '/**')
+        workflow_path_list.append('portal_workflow/' + workflow + ' | 1 | 1')
+        #workflow_path_list.append('portal_workflow/' + workflow + '/**')
       template_path_list.extend(workflow_path_list)
 
       # For paths, we add them directly to the path list
-      template_path_list.extend(import_template.getTemplatePathList())
+      path_list = import_template.getTemplatePathList()
+      for path in path_list:
+        template_path_list.append(path  + ' | 1 | 1')
 
       # Catalog methods would be added as sub objects
       catalog_method_item_list = import_template.getTemplateCatalogMethodIdList()
       catalog_method_path_list = []
       for method in catalog_method_item_list:
-        catalog_method_path_list.append('portal_catalog/' + method)
+        catalog_method_path_list.append('portal_catalog/' + method + ' | 1 | 1')
       template_path_list.extend(catalog_method_path_list)
 
       # For catalog objects, we check if there is any catalog object, and then
@@ -685,6 +689,7 @@ class TemplateTool (BaseTool):
       template_catalog_full_text_key  = import_template.getTemplateCatalogFullTextKeyList()
       template_catalog_keyword_key    = import_template.getTemplateCatalogKeywordKeyList()
       template_catalog_local_role_key = import_template.getTemplateCatalogLocalRoleKeyList()
+      template_catalog_method_id      = import_template.getTemplateCatalogMethodIdList()
       template_catalog_multivalue_key = import_template.getTemplateCatalogMultivalueKeyList()
       template_catalog_related_key    = import_template.getTemplateCatalogRelatedKeyList()
       template_catalog_request_key    = import_template.getTemplateCatalogRequestKeyList()
@@ -701,6 +706,7 @@ class TemplateTool (BaseTool):
         template_catalog_full_text_key,
         template_catalog_keyword_key,
         template_catalog_local_role_key,
+        template_catalog_method_id,
         template_catalog_multivalue_key,
         template_catalog_related_key,
         template_catalog_request_key,
@@ -719,6 +725,7 @@ class TemplateTool (BaseTool):
         'sql_catalog_full_text_search_keys_list',
         'sql_catalog_keyword_search_keys_list',
         'sql_catalog_local_role_keys_list',
+        'sql_catalog_method_id_list',
         'sql_catalog_multivalue_keys_list',
         'sql_catalog_related_keys_list',
         'sql_catalog_request_keys_list',
@@ -728,54 +735,88 @@ class TemplateTool (BaseTool):
         'sql_catalog_scriptable_keys_list',
         'sql_catalog_search_keys_list',
         'sql_catalog_security_uid_columns_list',
-        'sql_catalog_topic_search_keys_list'
+        'sql_catalog_topic_search_keys_list',
         ]
 
       removable_property = {}
+      removable_sub_object_path = []
 
       if is_property_added:
         if catalog_method_path_list:
           catalog_path = catalog_method_path_list[0].rsplit('/', 1)[0]
         else:
           catalog_path = 'portal_catalog/erp5_mysql_innodb'
-        template_path_list.append(catalog_path)
+          removable_sub_object_path.append(catalog_path)
+        template_path_list.append(catalog_path + ' | 1 | 1')
         removable_property[catalog_path] = properties_removed
         for prop in properties_removed:
-            property_path_list.append(catalog_path + ' | ' + prop)
+            property_path_list.append('%s#%s | 1 | 1' % (catalog_path, prop))
 
       # Add these catalog items in the object_property instead of adding
       # dummy path item for them
       if import_template.getTitle() == 'erp5_mysql_innodb_catalog':
-        template_path_list.extend('portal_catalog/erp5_mysql_innodb')
+        template_path_list.extend('portal_catalog/erp5_mysql_innodb | 1 | 1')
 
       # Add portal_property_sheets
       property_sheet_id_list = import_template.getTemplatePropertySheetIdList()
       property_sheet_path_list = []
       for property_sheet in property_sheet_id_list:
-        property_sheet_path_list.append('portal_property_sheets/' + property_sheet)
-        property_sheet_path_list.append('portal_property_sheets/' + property_sheet + '/**')
+        property_sheet_path_list.append('portal_property_sheets/' + property_sheet + ' | 1 | 1')
+        #property_sheet_path_list.append('portal_property_sheets/' + property_sheet + '/**')
       template_path_list.extend(property_sheet_path_list)
 
       # Create new objects for business package
-      bp5_package = self.newContent(
-                                    portal_type='Business Package',
+      migrated_bm = self.newContent(
+                                    portal_type='Business Manager',
                                     title=import_template.getTitle()
                                     )
 
-      bp5_package.edit(
-        template_path_list=template_path_list,
-        template_object_property_list=property_path_list
-        )
+      template_path_list.extend(property_path_list)
+      template_path_list = self.cleanTemplatePathList(template_path_list)
+      migrated_bm.setProperty('template_path_list', template_path_list)
 
       kw['removable_property'] = removable_property
-      bp5_package.build(**kw)
+      kw['removable_sub_object_path'] = removable_sub_object_path
+
+      migrated_bm.build(**kw)
+
       # Export the newly built business package to the export directory
-      bp5_package.export(path=export_dir, local=True)
+      migrated_bm.export(path=export_dir, local=True)
+
       if is_installed:
         import_template.uninstall()
 
-    security.declareProtected( 'Import/Export objects', 'migrateBTListToBP')
-    def migrateBTListToBP(self, repository_list, REQUEST=None, **kw):
+    def cleanTemplatePathList(self, path_list):
+      """
+      Remove redundant paths and sub-objects' path if the object path already
+      exist.
+      """
+      # Remove layer and sign
+      a1 = [l.split(' | ')[0] for l in path_list]
+      # Split path into list
+      a2 = [l.split('/') for l in a1]
+      # Create new list for paths with **
+      a3 = [l for l in a2 if l[-1] == '**']
+      # Create new list for paths without **
+      a4 = [l for l in a2 if l[-1] != '**']
+      # Remove ** from paths in a3
+      reserved_id = ('portal_transforms', 'portal_ids')
+      a3 = [l[:-1] for l in a3 if l[0] not in reserved_id] + [l for l in a3 if l[0] in reserved_id]
+      # Create new final path list
+      a2 = a3+a4
+      # Join the path list
+      a2 = [('/').join(l) for l in a2]
+      # Remove the redundant paths
+      a2 = list(set(a2))
+      # Sort the path list
+      a2.sort()
+      # Add the layer and signs, for now all 1
+      a2 = [l+' | 1 | 1' for l in a2]
+
+      return a2
+
+    security.declareProtected( 'Import/Export objects', 'migrateBTListToBM')
+    def migrateBTListToBM(self, repository_list, REQUEST=None, **kw):
       """
       Run migration for BT5 one by one in a given repository. This will be done
       via activities.
@@ -801,7 +842,7 @@ class TemplateTool (BaseTool):
             if not os.path.exists((os.path.join(template_path, 'bt'))):
               LOG(business_template_id,0,'has no bt sub-folder, so it is skipped')
             else:
-              self.migrateBTToBP(template_path)
+              self.migrateBTToBM(template_path)
               #self.activate(activity='SQLQueue').\
               #  migrateBTToBP(template_path)
 
@@ -1707,7 +1748,7 @@ class TemplateTool (BaseTool):
       6. If conflict while comaprison at 3, raise the error
       7. In all other case, install the BM List
       """
-      # Create old installation state from Instsalled Business Manager
+      # Create old installation state from Installed Business Manager
       installed_bm_list = self.getInstalledBusinessManagerList()
       combined_installed_path_item = [item for bm
                                       in installed_bm_list
@@ -1744,7 +1785,8 @@ class TemplateTool (BaseTool):
 
       for item in combined_new_path_item:
         item.isIndexable = ConstantGetter('isIndexable', value=False)
-        new_installation_state._setObject(item.getId(), aq_base(item),
+        new_id = new_installation_state.generateNewId()
+        new_installation_state._setObject(new_id, aq_base(item),
                                           suppress_events=True)
 
       # Create installation process, which have the changes to be made in the
@@ -1781,6 +1823,8 @@ class TemplateTool (BaseTool):
           value_list = item.objectValues()
           if value_list:
             value = value_list[0]
+          else:
+            value = ''
         if value:
           item.setProperty('item_sha', self.calculateComparableHash(
                                                               value,
@@ -1796,8 +1840,13 @@ class TemplateTool (BaseTool):
         if item.isProperty:
           value = item.getProperty('item_property_value')
         else:
-          value = item.objectValues()[0]
-        item.setProperty('item_sha', self.calculateComparableHash(
+          value_list = item.objectValues()
+          if value_list:
+            value = value_list[0]
+          else:
+            value = ''
+        if value:
+          item.setProperty('item_sha', self.calculateComparableHash(
                                                                 value,
                                                                 item.isProperty,
                                                                 ))
@@ -1838,19 +1887,35 @@ class TemplateTool (BaseTool):
       if isProperty:
         obj_dict = object
       else:
+        klass = object.__class__
+        classname = klass.__name__
         obj_dict = object.__dict__.copy()
-        removable_attributes = [attr for attr
-                                in obj_dict.keys()
-                                if attr.startswith('_v')]
+        attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
+                    'last_id', 'uid',
+                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
 
-        removable_attributes.append('uid')
-        removable_attributes.append('_owner')
-        removable_attributes.append('isIndexable')
-        for attr in removable_attributes:
+        attr_set.update(('isIndexable',))
+
+        if classname in ('File', 'Image'):
+          attr_set.update(('_EtagSupport__etag', 'size'))
+        elif classname == 'Types Tool' and klass.__module__ == 'erp5.portal_type':
+          attr_set.add('type_provider_list')
+
+        for attr in object.__dict__.keys():
+          if attr in attr_set or attr.startswith('_cache_cookie_') or attr.startswith('_v'):
+            try:
+              del obj_dict[attr]
+            except AttributeError:
+              # XXX: Continue in cases where we want to delete some properties which
+              # are not in attribute list
+              # Raise an error
+              continue
+
+        if 'data' in obj_dict:
           try:
-            del obj_dict[attr]
-          except KeyError:
-            continue
+            obj_dict['data'] = obj_dict.get('data').__dict__
+          except AttributeError:
+            pass
 
       obj_sha = hash(pprint.pformat(obj_dict))
       return obj_sha
@@ -1864,7 +1929,6 @@ class TemplateTool (BaseTool):
       error_list = []
 
       for path in to_update_path_list:
-
         try:
           if '#' in str(path):
             isProperty = True
@@ -1965,19 +2029,6 @@ class TemplateTool (BaseTool):
             new_item.install(installation_process)
 
       return error_list
-
-    def migrateBTToBM(self, template_path, REQUEST=None, **kw):
-      """
-      Migrate Business Template to Business Manager object.
-      * Download from path
-      * Build the template
-      * Create zexp file from the built object
-      * Save the zexp in the path
-      """
-      template_downloaded = self.download(template_path)
-      if template_downloaded.getPortalType() == 'Business Manager':
-        LOG(template_downloaded.getTitle(), 0, 'Already migrated')
-        return
 
     security.declareProtected(Permissions.ManagePortal,
             'createNewInstallationState')
