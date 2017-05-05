@@ -24,7 +24,7 @@ portal_alarms.upgrader_check_pre_upgrade.activeSense(
   params={'tag': pre_upgrade_tag},
 )
 
-portal_alarms.upgrader_check_upgrader.activeSense(
+notify_tag = portal_alarms.upgrader_check_upgrader.activeSense(
   fixit=fixit,
   activate_kw={
     'activity': 'SQLQueue',
@@ -39,7 +39,7 @@ portal_alarms.upgrader_check_upgrader.activeSense(
 # what are *currently* installed, and not on the result of the previous
 # steps, which lead to a wrong and misleading consistency check
 if fixit:
-  portal_alarms.upgrader_check_post_upgrade.activeSense(
+  notify_tag = portal_alarms.upgrader_check_post_upgrade.activeSense(
     fixit=fixit,
     activate_kw={
       'activity': 'SQLQueue',
@@ -61,7 +61,7 @@ else:
 
 
 # start another activity to collect the results from each upgrader step
-context.activate(after_tag=(upgrade_tag, post_upgrade_tag)).Alarm_postFullUpgradeNeed(
+context.activate(after_tag=(upgrade_tag, post_upgrade_tag, notify_tag)).Alarm_postFullUpgradeNeed(
   active_process=active_process.getRelativeUrl())
 
 # Nothing else to do, so we can disable.
