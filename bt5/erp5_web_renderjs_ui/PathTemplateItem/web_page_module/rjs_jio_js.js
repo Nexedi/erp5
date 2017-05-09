@@ -12527,35 +12527,30 @@ return new Parser;
     return tx;
   }
 
-  function handleCursor(request, callback) {
-    function resolver(resolve, reject) {
-      // Open DB //
-      request.onerror = function (error) {
-        if (request.transaction) {
-          request.transaction.abort();
-        }
-        reject(error);
-      };
+  function handleCursor(request, callback, resolve, reject) {
+    request.onerror = function (error) {
+      if (request.transaction) {
+        request.transaction.abort();
+      }
+      reject(error);
+    };
 
-      request.onsuccess = function (evt) {
-        var cursor = evt.target.result;
-        if (cursor) {
-          // XXX Wait for result
-          try {
-            callback(cursor);
-          } catch (error) {
-            reject(error);
-          }
-
-          // continue to next iteration
-          cursor["continue"]();
-        } else {
-          resolve();
+    request.onsuccess = function (evt) {
+      var cursor = evt.target.result;
+      if (cursor) {
+        // XXX Wait for result
+        try {
+          callback(cursor);
+        } catch (error) {
+          reject(error);
         }
-      };
-    }
-    // XXX Canceller???
-    return new RSVP.Promise(resolver);
+
+        // continue to next iteration
+        cursor["continue"]();
+      } else {
+        resolve();
+      }
+    };
   }
 
   IndexedDBStorage.prototype.buildQuery = function (options) {
@@ -12577,40 +12572,45 @@ return new Parser;
     }
     return openIndexedDB(this)
       .push(function (db) {
-        var tx = openTransaction(db, ["metadata"], "readonly");
-        if (options.include_docs === true) {
-          return handleCursor(tx.objectStore("metadata").index("_id")
-                              .openCursor(), pushIncludedMetadata);
-        }
-        return handleCursor(tx.objectStore("metadata").index("_id")
-                            .openKeyCursor(), pushMetadata);
+        return new RSVP.Promise(function (resolve, reject) {
+          var tx = openTransaction(db, ["metadata"], "readonly");
+          if (options.include_docs === true) {
+            handleCursor(tx.objectStore("metadata").index("_id").openCursor(),
+              pushIncludedMetadata, resolve, reject);
+          } else {
+            handleCursor(tx.objectStore("metadata").index("_id")
+                            .openKeyCursor(), pushMetadata, resolve, reject);
+          }
+        });
       })
       .push(function () {
         return result_list;
       });
-
   };
 
-  function handleGet(request) {
-    function resolver(resolve, reject) {
-      request.onerror = reject;
-      request.onsuccess = function () {
-        if (request.result) {
-          resolve(request.result);
-        }
+  function handleGet(request, resolve, reject) {
+    request.onerror = reject;
+    request.onsuccess = function () {
+      if (request.result) {
+        resolve(request.result);
+      } else {
         // XXX How to get ID
         reject(new jIO.util.jIOError("Cannot find document", 404));
-      };
-    }
-    return new RSVP.Promise(resolver);
+      }
+    };
   }
 
   IndexedDBStorage.prototype.get = function (id) {
     return openIndexedDB(this)
       .push(function (db) {
-        var transaction = openTransaction(db, ["metadata"],
-                                          "readonly");
-        return handleGet(transaction.objectStore("metadata").get(id));
+        return new RSVP.Promise(function (resolve, reject) {
+          var transaction = openTransaction(db, ["metadata"], "readonly");
+          handleGet(
+            transaction.objectStore("metadata").get(id),
+            resolve,
+            reject
+          );
+        });
       })
       .push(function (result) {
         return result.doc;
@@ -12626,37 +12626,51 @@ return new Parser;
 
     return openIndexedDB(this)
       .push(function (db) {
-        var transaction = openTransaction(db, ["metadata", "attachment"],
-                                          "readonly");
-        return RSVP.all([
-          handleGet(transaction.objectStore("metadata").get(id)),
-          handleCursor(transaction.objectStore("attachment").index("_id")
-                       .openCursor(IDBKeyRange.only(id)), addEntry)
-        ]);
+        return new RSVP.Promise(function (resolve, reject) {
+          var transaction = openTransaction(db, ["metadata", "attachment"],
+            "readonly");
+          function getAttachments() {
+            handleCursor(
+              transaction.objectStore("attachment").index("_id")
+                .openCursor(IDBKeyRange.only(id)),
+              addEntry,
+              resolve,
+              reject
+            );
+          }
+          handleGet(
+            transaction.objectStore("metadata").get(id),
+            getAttachments,
+            reject
+          );
+        });
       })
       .push(function () {
         return attachment_dict;
       });
   };
 
-  function handleRequest(request) {
-    function resolver(resolve, reject) {
-      request.onerror = reject;
-      request.onsuccess = function () {
-        resolve(request.result);
-      };
-    }
-    return new RSVP.Promise(resolver);
+  function handleRequest(request, resolve, reject) {
+    request.onerror = reject;
+    request.onsuccess = function () {
+      resolve(request.result);
+    };
   }
 
   IndexedDBStorage.prototype.put = function (id, metadata) {
     return openIndexedDB(this)
       .push(function (db) {
-        var transaction = openTransaction(db, ["metadata"], "readwrite");
-        return handleRequest(transaction.objectStore("metadata").put({
-          "_id": id,
-          "doc": metadata
-        }));
+        return new RSVP.Promise(function (resolve, reject) {
+          var transaction = openTransaction(db, ["metadata"], "readwrite");
+          handleRequest(
+            transaction.objectStore("metadata").put({
+              "_id": id,
+              "doc": metadata
+            }),
+            resolve,
+            reject
+          );
+        });
       });
   };
 
@@ -12665,19 +12679,38 @@ return new Parser;
   }
 
   IndexedDBStorage.prototype.remove = function (id) {
+    var resolved_amount = 0;
     return openIndexedDB(this)
       .push(function (db) {
-        var transaction = openTransaction(db, ["metadata", "attachment",
-                                          "blob"], "readwrite");
-        return RSVP.all([
-          handleRequest(transaction
-                        .objectStore("metadata")["delete"](id)),
+        return new RSVP.Promise(function (resolve, reject) {
+          function resolver() {
+            if (resolved_amount < 2) {
+              resolved_amount += 1;
+            } else {
+              resolve();
+            }
+          }
+          var transaction = openTransaction(db, ["metadata", "attachment",
+                                            "blob"], "readwrite");
+          handleRequest(
+            transaction.objectStore("metadata")["delete"](id),
+            resolver,
+            reject
+          );
           // XXX Why not possible to delete with KeyCursor?
           handleCursor(transaction.objectStore("attachment").index("_id")
-                       .openCursor(IDBKeyRange.only(id)), deleteEntry),
+              .openCursor(IDBKeyRange.only(id)),
+            deleteEntry,
+            resolver,
+            reject
+            );
           handleCursor(transaction.objectStore("blob").index("_id")
-                       .openCursor(IDBKeyRange.only(id)), deleteEntry)
-        ]);
+              .openCursor(IDBKeyRange.only(id)),
+            deleteEntry,
+            resolver,
+            reject
+            );
+        });
       });
   };
 
@@ -12691,48 +12724,64 @@ return new Parser;
     }
     return openIndexedDB(this)
       .push(function (db) {
-        transaction = openTransaction(db, ["attachment", "blob"], "readonly");
-        // XXX Should raise if key is not good
-        return handleGet(transaction.objectStore("attachment")
-                         .get(buildKeyPath([id, name])));
-      })
-      .push(function (attachment) {
-        var total_length = attachment.info.length,
-          i,
-          promise_list = [],
-          store = transaction.objectStore("blob"),
-          start_index,
-          end_index;
-
-        type = attachment.info.content_type;
-        start = options.start || 0;
-        end = options.end || total_length;
-        if (end > total_length) {
-          end = total_length;
-        }
-
-        if (start < 0 || end < 0) {
-          throw new jIO.util.jIOError("_start and _end must be positive",
-                                      400);
-        }
-        if (start > end) {
-          throw new jIO.util.jIOError("_start is greater than _end",
-                                      400);
-        }
-
-        start_index = Math.floor(start / UNITE);
-        end_index =  Math.floor(end / UNITE);
-        if (end % UNITE === 0) {
-          end_index -= 1;
-        }
-
-        for (i = start_index; i <= end_index; i += 1) {
-          promise_list.push(
-            handleGet(store.get(buildKeyPath([id,
-                                name, i])))
+        return new RSVP.Promise(function (resolve, reject) {
+          transaction = openTransaction(
+            db,
+            ["attachment", "blob"],
+            "readonly"
           );
-        }
-        return RSVP.all(promise_list);
+          function getBlob(attachment) {
+            var total_length = attachment.info.length,
+              result_list = [],
+              store = transaction.objectStore("blob"),
+              start_index,
+              end_index;
+            type = attachment.info.content_type;
+            start = options.start || 0;
+            end = options.end || total_length;
+            if (end > total_length) {
+              end = total_length;
+            }
+            if (start < 0 || end < 0) {
+              throw new jIO.util.jIOError(
+                "_start and _end must be positive",
+                400
+              );
+            }
+            if (start > end) {
+              throw new jIO.util.jIOError("_start is greater than _end",
+                                          400);
+            }
+            start_index = Math.floor(start / UNITE);
+            end_index =  Math.floor(end / UNITE) - 1;
+            if (end % UNITE === 0) {
+              end_index -= 1;
+            }
+            function resolver(result) {
+              result_list.push(result);
+              resolve(result_list);
+            }
+            function getPart(i) {
+              return function (result) {
+                if (result) {
+                  result_list.push(result);
+                }
+                i += 1;
+                handleGet(store.get(buildKeyPath([id, name, i])),
+                  (i <= end_index) ? getPart(i) : resolver,
+                  reject
+                  );
+              };
+            }
+            getPart(start_index - 1)();
+          }
+        // XXX Should raise if key is not good
+          handleGet(transaction.objectStore("attachment")
+                         .get(buildKeyPath([id, name])),
+            getBlob,
+            reject
+            );
+        });
       })
       .push(function (result_list) {
         var array_buffer_list = [],
@@ -12753,19 +12802,24 @@ return new Parser;
       });
   };
 
-  function removeAttachment(transaction, id, name) {
-    return RSVP.all([
+  function removeAttachment(transaction, id, name, resolve, reject) {
       // XXX How to get the right attachment
-      handleRequest(transaction.objectStore("attachment")["delete"](
+    function deleteContent() {
+      handleCursor(
+        transaction.objectStore("blob").index("_id_attachment")
+          .openCursor(IDBKeyRange.only([id, name])),
+        deleteEntry,
+        resolve,
+        reject
+      );
+    }
+    handleRequest(
+      transaction.objectStore("attachment")["delete"](
         buildKeyPath([id, name])
-      )),
-      handleCursor(transaction.objectStore("blob").index("_id_attachment")
-                   .openCursor(IDBKeyRange.only(
-          [id, name]
-        )),
-          deleteEntry
-        )
-    ]);
+      ),
+      deleteContent,
+      reject
+    );
   }
 
   IndexedDBStorage.prototype.putAttachment = function (id, name, blob) {
@@ -12793,38 +12847,43 @@ return new Parser;
 
         // Remove previous attachment
         transaction = openTransaction(db, ["attachment", "blob"], "readwrite");
-        return removeAttachment(transaction, id, name);
-      })
-      .push(function () {
-
-        var promise_list = [
-            handleRequest(transaction.objectStore("attachment").put({
-              "_key_path": buildKeyPath([id, name]),
-              "_id": id,
-              "_attachment": name,
-              "info": {
-                "content_type": blob.type,
-                "length": blob.size
-              }
-            }))
-          ],
-          len = blob_part.length,
-          blob_store = transaction.objectStore("blob"),
-          i;
-        for (i = 0; i < len; i += 1) {
-          promise_list.push(
-            handleRequest(blob_store.put({
-              "_key_path": buildKeyPath([id, name,
-                                         i]),
-              "_id" : id,
-              "_attachment" : name,
-              "_part" : i,
-              "blob": blob_part[i]
-            }))
-          );
-        }
-        // Store all new data
-        return RSVP.all(promise_list);
+        return new RSVP.Promise(function (resolve, reject) {
+          function write() {
+            var len = blob_part.length - 1,
+              attachment_store = transaction.objectStore("attachment"),
+              blob_store = transaction.objectStore("blob");
+            function putBlobPart(i) {
+              return function () {
+                i += 1;
+                handleRequest(
+                  blob_store.put({
+                    "_key_path": buildKeyPath([id, name, i]),
+                    "_id" : id,
+                    "_attachment" : name,
+                    "_part" : i,
+                    "blob": blob_part[i]
+                  }),
+                  (i < len) ? putBlobPart(i) : resolve,
+                  reject
+                );
+              };
+            }
+            handleRequest(
+              attachment_store.put({
+                "_key_path": buildKeyPath([id, name]),
+                "_id": id,
+                "_attachment": name,
+                "info": {
+                  "content_type": blob.type,
+                  "length": blob.size
+                }
+              }),
+              putBlobPart(-1),
+              reject
+            );
+          }
+          removeAttachment(transaction, id, name, write, reject);
+        });
       });
   };
 
@@ -12833,7 +12892,9 @@ return new Parser;
       .push(function (db) {
         var transaction = openTransaction(db, ["attachment", "blob"],
                                           "readwrite");
-        return removeAttachment(transaction, id, name);
+        return new RSVP.Promise(function (resolve, reject) {
+          removeAttachment(transaction, id, name, resolve, reject);
+        });
       });
   };
 
