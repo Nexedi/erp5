@@ -6,7 +6,10 @@
   function FileSystemStorage(spec) {
     this._document = spec.document;
     this._sub_storage = jIO.createJIO(spec.sub_storage);
-    this._id_dict = {"/": {"index.html": {}}};
+    this._id_dict = {
+      "/": {"index.html": {}},
+      "/development/": {"index.html": {}}
+    };
   }
 
   FileSystemStorage.prototype.get = function (url) {
@@ -20,9 +23,9 @@
   FileSystemStorage.prototype.getAttachment = function (doc_id, attachment_id) {
     return this._sub_storage.getAttachment(
       this._document,
-      (attachment_id === "index.html") ?
-        "/" : (doc_id === "/") ?
-          attachment_id : doc_id + attachment_id
+      (attachment_id === "index.html") ? ((doc_id === "/") ?
+        "/" : "development/") : ((doc_id === "/") ?
+          attachment_id : doc_id + attachment_id)
     );
   };
 
@@ -66,9 +69,8 @@
             }
             if (!context._id_dict.hasOwnProperty(path)) {
               context._id_dict[path] = {};
-            } else {
-              context._id_dict[path][filename] = {};
             }
+            context._id_dict[path][filename] = {};
           }
         }
       });

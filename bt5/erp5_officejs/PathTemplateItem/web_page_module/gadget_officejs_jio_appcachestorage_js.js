@@ -5,12 +5,28 @@
 
   function AppCacheStorage(spec) {
     this._manifest = spec.manifest;
+    this._take_installer = spec.take_installer || false;
     this._origin_url = spec.origin_url !== undefined ? spec.origin_url :
       (window.location.origin + window.location.pathname +
       (window.location.pathname.endsWith('/') ? '' : '/') +
       ((spec.version !== undefined) ?
       (spec.version + (spec.version.endsWith('/') ? '' : '/')) : ""));
     this._relative_url_list = [this._origin_url, spec.manifest];
+    if (this._take_installer) {
+      this._relative_url_list = [
+        this._origin_url,
+        "development/" + spec.manifest,
+        this._origin_url + "development/",
+        "gadget_officejs_bootloader.js",
+        "gadget_officejs_bootloader.appcache",
+        "gadget_officejs_bootloader_presentation.html",
+        "gadget_officejs_bootloader_presentation.js",
+        "gadget_officejs_bootloader_presentation.css",
+        "gadget_officejs_bootloader_serviceworker.js",
+        "gadget_erp5_nojqm.css",
+        "jio_appcachestorage.js"
+      ];
+    }
   }
 
   AppCacheStorage.prototype.get = function (id) {
@@ -50,7 +66,8 @@
   };
 
   AppCacheStorage.prototype.repair = function () {
-    var storage = this;
+    var storage = this,
+      prefix = storage._take_installer ? "development/" : "";
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
@@ -78,7 +95,7 @@
               relative_url_list[i].charAt(0) !== '#' &&
               relative_url_list[i].charAt(0) !== ' ') {
             relative_url_list[i].replace("\r", "");
-            storage._relative_url_list.push(relative_url_list[i]);
+            storage._relative_url_list.push(prefix + relative_url_list[i]);
           }
           if (relative_url_list[i].indexOf("CACHE:") >= 0) {
             take = true;

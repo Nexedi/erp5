@@ -141,6 +141,7 @@ var repair = false;
           if (!gadget.props.sub) {
             window.location.pathname += gadget.props.version_url;
           }
+          return;
         })
         .push(undefined, function (error) {
           if (error instanceof ProgressEvent) {
