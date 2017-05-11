@@ -19,18 +19,13 @@
           portal_type = result[0],
           attachment_synchro = result[1] !== undefined,
           extended_attachment_url = result[1];
-        // We are looking for documents modified in the past 3 month
-        old_date = new Date(old_date.getFullYear(), old_date.getMonth(), old_date.getDate() - 15);
         configuration = {
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
-            query: 'portal_type:"' + portal_type
-            // XX Synchonizing the whole module is too much, here is a way to start quietly
-            // Supsended until modification_date is handled for synchronization
-              + '" AND modification_date:>="'
-              + old_date.toISOString() + '" ',
-            limit: [0, 1234567890]
+            query: 'portal_type:"' + portal_type + '"',
+            limit: [0, 30],
+            sort_on: [["modification_date", "descending"]]
           },
           use_remote_post: true,
           conflict_handling: 1,
