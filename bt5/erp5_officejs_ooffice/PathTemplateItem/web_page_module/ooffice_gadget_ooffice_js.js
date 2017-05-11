@@ -239,7 +239,8 @@ if (Common === undefined) {
       g.props.jio_key = options.jio_key;
       g.props.key = options.key || "text_content";
       g.props.value = options.value;
-      if (g.props.value === "data:") {
+      if (g.props.value === "data:" ||
+          g.props.value === "data:application/octet-stream;base64,") {
         g.props.value = undefined;
       }
       if (g.props.value) {
