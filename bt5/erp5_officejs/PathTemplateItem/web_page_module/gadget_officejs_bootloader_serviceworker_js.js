@@ -14,7 +14,7 @@ var global = self, window = self;
   self.DOMError = {};
   self.postMessage = function () {return; };
 
-  self.importScripts('rsvp.js', 'jiodev.js');
+  self.importScripts('development/rsvp.js', 'development/jiodev.js');
 
   self.storage = {};
 

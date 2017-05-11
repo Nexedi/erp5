@@ -38,6 +38,8 @@
       var gadget = this,
         file_storage = jIO.createJIO({
         type: "replicate",
+        parallel_operation_attachment_amount: 400,
+        parallel_operation_amount: 400,
         check_remote_attachment_creation: true,
         check_local_creation: false,
         check_local_modification: false,
@@ -49,8 +51,9 @@
           document: site_url,
           sub_storage: {
             type: "appcache",
+            take_installer: true,
             manifest: cache_file,
-            url: site_url
+            origin_url: site_url
           }
         },
         signature_storage: {
