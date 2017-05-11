@@ -5,6 +5,8 @@ var global = self, window = self;
 (function (self, fetch, Request, Response) {
   "use strict";
 
+  self.IDBTransaction = self.IDBTransaction || self.webkitIDBTransaction || self.msIDBTransaction || {READ_WRITE: "readwrite"};
+  self.IDBKeyRange = self.IDBKeyRange || self.webkitIDBKeyRange || self.msIDBKeyRange;
   self.DOMParser = {};
   self.sessionStorage = {};
   self.localStorage = {};
@@ -20,15 +22,10 @@ var global = self, window = self;
 
   function createStorage(database) {
     return self.jIO.createJIO({
-      type: "uuid",
-      sub_storage: {
-        type: "indexeddb",
-        database: database
-      }
+      type: "indexeddb",
+      database: database
     });
   }
-
-  self.setting_storage = createStorage("serviceWorker_settings");
 
   self.addEventListener('install', function (event) {
     event.waitUntil(self.skipWaiting());
@@ -41,12 +38,7 @@ var global = self, window = self;
     var relative_url = event.request.url.replace(self.registration.scope, "")
       .replace(self.version_url, "");
     if (relative_url === "") {
-      relative_url = "/";
-    }
-    if (relative_url.indexOf("ooffice/") !== -1) {
-      if (self.cache_list.indexOf(relative_url) < 0) {
-        self.cache_list.push(relative_url);
-      }
+      relative_url = self.registration.scope;
     }
     event.respondWith(
       new self.RSVP.Queue()
@@ -54,7 +46,7 @@ var global = self, window = self;
           if (self.storage.get === undefined) {
             self.storage = createStorage("officejs_code_source");
           }
-          return self.storage.getAttachment(self.registration.scope, relative_url)
+          return self.storage.getAttachment("/", relative_url)
             .push(function (blob) {
               return new Response(blob, {
                 'headers': {
@@ -70,14 +62,6 @@ var global = self, window = self;
             "\nCause: ",
             error.message
           );
-          if (relative_url === "cache_file_list") {
-            self.cache_list.sort();
-            return new Response(self.cache_list.join('<br>'), {
-              'headers': {
-                'content-type': 'text/html'
-              }
-            });
-          }
           return fetch(event.request);
         })
     );
