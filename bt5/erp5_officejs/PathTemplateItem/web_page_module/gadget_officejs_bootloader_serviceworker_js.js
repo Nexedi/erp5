@@ -56,13 +56,16 @@ var global = self, window = self;
             });
         })
         .push(undefined, function (error) {
-          self.console.log(
-            "Relative_Url: ",
-            relative_url,
-            "\nCause: ",
-            error.message
-          );
-          return fetch(event.request);
+          if (error instanceof self.jIO.util.jIOError) {
+            self.console.log(
+              "Relative_Url: ",
+              relative_url,
+              "\nCause: ",
+              error.message
+            );
+            return fetch(event.request);
+          }
+          return new Response(error, {"statusText": error.message, "status": 500});
         })
     );
   });
