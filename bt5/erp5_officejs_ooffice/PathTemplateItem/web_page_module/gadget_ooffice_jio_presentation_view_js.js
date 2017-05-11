@@ -50,7 +50,7 @@
         if (gadget.options.doc.content_type === undefined ||
             gadget.options.doc.content_type.indexOf("application/x-asc") === 0
             ) {
-          gadget.options.doc.content_type = "application/x-asc-spreadsheet";
+          gadget.options.doc.content_type = "application/x-asc-presentation";
           return gadget.getDeclaredGadget("my_text_content");
         }
         return undefined;
