@@ -5,13 +5,7 @@ var repair = false;
   ProgressEvent, console) {
   "use strict";
 
-  var serviceWorker_setting_storage = jIO.createJIO({
-    type: "uuid",
-    sub_storage: {
-      type: "indexeddb",
-      database: "serviceWorker_settings"
-    }
-  }), remote_storage = {
+  var remote_storage = {
     type: "erp5",
     url: window.location.origin +
       window.location.pathname + "hateoasnoauth",
@@ -149,7 +143,6 @@ var repair = false;
           }
         })
         .push(undefined, function (error) {
-          console.log(error);
           if (error instanceof ProgressEvent) {
             if (gadget.props.sub === undefined) {
               window.location.pathname += gadget.props.version_url;
@@ -183,30 +176,27 @@ var repair = false;
               document.querySelector("base")
             );
           }
-          navigator.serviceWorker.onerror = function (event) {
-            console.log(event);
-          };
           return navigator.serviceWorker.register(
-            "gadget_officejs_bootloader_serviceworker.js",
-            {"scope": gadget.props.version_url }
-          );
+              "gadget_officejs_bootloader_serviceworker.js",
+              {"scope": gadget.props.version_url}
+            );
         })
         .push(function (registration) {
-          if (registration.installing) {
-            gadget.props.serviceWorker = registration.installing;
-          } else if (registration.waiting) {
-            gadget.props.serviceWorker = registration.waiting;
-          } else if (registration.active) {
-            gadget.props.serviceWorker = registration.active;
-          }
-        });
+            if (registration.installing) {
+              gadget.props.serviceWorker = registration.installing;
+            } else if (registration.waiting) {
+              gadget.props.serviceWorker = registration.waiting;
+            } else if (registration.active) {
+              gadget.props.serviceWorker = registration.active;
+            }
+          });
     })
 
     .declareService(function () {
       var gadget = this;
 
       function redirect() {
-        window.location.href = gadget.props.redirect_url;
+        window.location.pathname += gadget.props.version_url;
       }
 
       if (navigator.serviceWorker === undefined) {
