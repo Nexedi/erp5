@@ -64,6 +64,8 @@ def log(description, content=marker_, level=INFO):
             break
         if frame[0] == 'Script (Python)': # does anybody log from ZPT or dtml?
             head.append('%s, %d' % (frame[2], frame[1]))
+        elif frame[0] == 'ERP5 Python Script':
+            head.append('%s, %d' % (frame[2], frame[1]))
     del st # Prevent cycling references.
     head = ' -> '.join(head)
     description = '%s: %s' % (head, description)
