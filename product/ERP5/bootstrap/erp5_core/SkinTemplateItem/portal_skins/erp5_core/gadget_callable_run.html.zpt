@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="jio.js" type="text/javascript"></script>
+    <script src="handlebars.js" type="text/javascript"></script>
+    <script id="run" type="text/x-handlebars-template">
+        {{#each param_list}}
+         <div class="field">
+          <label>{{this}}</label>
+          <input class="{{this}}" type="text">
+        </div>
+        {{/each}}
+        <div class="field">
+          <textarea rows="30" cols="120" class="test_output">
+          </textarea>
+          <div class="test_error"></div>
+          <button>Run</button>
+        </div>
+    </script>
+
+    <script src="gadget_callable_run.js" type="text/javascript"></script>
+  </head>
+
+  <body>
+     <form></form>
+  </body>
+</html>
