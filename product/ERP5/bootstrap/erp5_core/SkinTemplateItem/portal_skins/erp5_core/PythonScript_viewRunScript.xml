@@ -120,7 +120,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ScriptPython_view</string> </value>
+            <value> <string>PythonScriptRun_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -136,7 +136,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>PythonScript Run</string> </value>
+            <value> <string>Python Script Run</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
