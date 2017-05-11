@@ -102,6 +102,12 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>Officejs BootLoader Presentation Gadget</string> </value>
         </item>
@@ -240,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64506.921.51985</string> </value>
+                <value> <string>958.64452.27945.28586</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485770530.16</float>
+                        <float>1493372430.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
