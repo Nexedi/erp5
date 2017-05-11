@@ -169,7 +169,23 @@ var repair = false;
         gadget.props.version_url,
         gadget.props.cache_file
       );
-      return gadget.props.storage.repair()
+      return new RSVP.Queue()
+        .push(function () {
+          return navigator.serviceWorker.register(
+              "gadget_officejs_bootloader_serviceworker.js",
+              {"scope": gadget.props.version_url}
+            );
+        })
+        .push(function (registration) {
+          if (registration.installing) {
+            gadget.props.serviceWorker = registration.installing;
+          } else if (registration.waiting) {
+            gadget.props.serviceWorker = registration.waiting;
+          } else if (registration.active) {
+            gadget.props.serviceWorker = registration.active;
+          }
+          return gadget.props.storage.repair();
+        })
         .push(function () {
           // remove base if present
           if (document.querySelector("base")) {
@@ -177,20 +193,7 @@ var repair = false;
               document.querySelector("base")
             );
           }
-          return navigator.serviceWorker.register(
-              "gadget_officejs_bootloader_serviceworker.js",
-              {"scope": gadget.props.version_url}
-            );
-        })
-        .push(function (registration) {
-            if (registration.installing) {
-              gadget.props.serviceWorker = registration.installing;
-            } else if (registration.waiting) {
-              gadget.props.serviceWorker = registration.waiting;
-            } else if (registration.active) {
-              gadget.props.serviceWorker = registration.active;
-            }
-          });
+        });
     })
 
     .declareService(function () {
