@@ -23,3 +23,5 @@ for assignment in context.contentValues(portal_type='Assignment'):
   if group:
     preference.setPreferredSectionCategory(group)
     preference.setPreferredAccountingTransactionSectionCategory(group)
+
+return preference
