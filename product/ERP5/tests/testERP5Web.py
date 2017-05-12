@@ -1264,6 +1264,8 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
+    # clear cache used in Base_getWebDocumentDrivenModificationDate
+    self.portal.portal_caches.clearAllCache()
     self.tic()
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     # test Different Policy installed by erp5_web
