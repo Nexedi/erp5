@@ -77,9 +77,6 @@ class TestPreferences(PropertySheetTestCase):
         id='site', portal_type='Preference')
     site.setPriority(Priority.SITE)
 
-    # commit transaction
-    self.commit()
-    self.getPreferenceTool().recursiveReindexObject()
     self.tic()
 
     # check preference levels are Ok
