@@ -1157,7 +1157,7 @@ class TestERP5Base(ERP5TypeTestCase):
   def test_user_creation(self):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment',
-                                   group='nexedi')
+                                   group='nexedi/storever')
     self.assertNotEquals(None, assignment.getGroupValue())
     assignment.open()
     self.portal.portal_workflow.doActionFor(person, 'create_user_action',
@@ -1170,13 +1170,21 @@ class TestERP5Base(ERP5TypeTestCase):
     user = self.portal.acl_users.getUser('user_login')
     self.assertNotEquals(None, user)
 
-    # and this user has a preference created
+    # This user does not have a preference created automatically ...
     newSecurityManager(None, user.__of__(self.portal.acl_users))
+    self.assertEquals(None,
+        self.portal.portal_catalog.getResultValue(portal_type='Preference',
+                                                  owner=user.getId()))
+    # ... but only when `getActiveUserPreference`
+    preference = self.portal.portal_preferences.getActiveUserPreference()
+    self.assertNotEquals(None, preference)
+    self.tic()
     self.assertNotEquals(None,
         self.portal.portal_catalog.getResultValue(portal_type='Preference',
                                                   owner=user.getId()))
-    # for his assignent group
-    self.assertEqual('group/nexedi',
+
+    # for his assignment group
+    self.assertEqual('group/nexedi/storever',
         self.portal.portal_preferences.getPreferredSectionCategory())
 
   def test_default_address_acquisition(self):
