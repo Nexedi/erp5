@@ -1,5 +1,6 @@
-request = context.REQUEST
-return request.RESPONSE.redirect( "%s/Preference_viewAccounting" %
-  context.portal_preferences.getActivePreference().absolute_url())
+portal = context.getPortalObject()
+active_preference = portal.portal_preferences.getActiveUserPreference()
+if not active_preference:
+  active_preference = portal.portal_preferences.getActivePreference()
 
-# vim: syntax=python
+return active_preference.Base_redirect(form_id='Preference_viewAccounting')

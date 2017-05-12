@@ -4,7 +4,7 @@ if context.portal_membership.isAnonymousUser():
   return dumps(None)
 
 portal_preferences = context.portal_preferences
-preference = portal_preferences.getActivePreference()
+preference = portal_preferences.getActiveUserPreference()
 
 preference_dict = {}
 
