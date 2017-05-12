@@ -241,19 +241,6 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEqual(None, p.getPassword())
     self.assertEqual('default', p.getPassword('default'))
 
-  def testPreferenceInteractionWorkflow(self):
-    """ when setting reference, a script create preference is
-        called by activities, check this behavior. """
-    person_module = self.getPersonModule()
-    title = "Séb"
-    person = person_module.newContent(portal_type='Person', title=title)
-    person.setReference('test_seb')
-    self.tic()
-    portal = self.getPortal()
-    last_id = portal.portal_preferences.getLastId()
-    last_preference = portal.portal_preferences[last_id]
-    self.assertTrue("Séb" in last_preference.getTitle())
-
 
 def test_suite():
   suite = unittest.TestSuite()
