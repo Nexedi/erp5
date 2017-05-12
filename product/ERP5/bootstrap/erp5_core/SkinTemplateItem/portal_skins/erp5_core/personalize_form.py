@@ -2,9 +2,9 @@
 
 preference_tool = context.getPortalObject().portal_preferences
 
-preference = preference_tool.getActivePreference()
+preference = preference_tool.getActiveUserPreference()
 
-if preference is not None and preference.getPriority() == 3: # XXX: 3 is Priority.USER
+if preference is not None:
   return preference.Base_redirect('view')
 
 return preference_tool.Base_redirect('view')
