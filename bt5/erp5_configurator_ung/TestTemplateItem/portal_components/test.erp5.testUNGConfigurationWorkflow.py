@@ -98,7 +98,7 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
      stepTic
      stepCheckUNGWebSiteAfterInstallation
      stepCheckSystemPreferenceAfterInstallation
-     stepCheckUserPreferenceAfterInstallation
+     stepCheckSitePreferenceAfterInstallation
      stepCheckWebSiteRoles
      stepCheckKnowledgePadRole
      stepCheckCreateNewEvent
@@ -216,18 +216,8 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEqual(system_preference.getPreferredDocumentConversionServerUrl(),
                       conversion_dict['url'])
 
-  def stepCheckUserPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
-    """ Check System Preference"""
-    portal_catalog = self.portal.portal_catalog
-    preference = portal_catalog.getResultValue(portal_type="Preference",
-                                               title='Preference for Person Assignor')
-    self.assertEqual(preference.getPreferenceState(), "enabled")
-    preference = portal_catalog.getResultValue(portal_type="Preference",
-                                               title='Preference for Person Assignee')
-    self.assertEqual(preference.getPreferenceState(), "enabled")
-    preference = portal_catalog.getResultValue(portal_type="Preference",
-                                               title='Preference for Person Creator')
-    self.assertEqual(preference.getPreferenceState(), "enabled")
+  def stepCheckSitePreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
+    """ Check Site Preference"""
     preference = self.portal.portal_preferences.ung_preference
     self.assertEqual(preference.getPreferenceState(), "global")
   
