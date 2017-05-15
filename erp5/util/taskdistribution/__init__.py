@@ -96,7 +96,8 @@ def patchRPCParser(error_handler):
     parser_klass.feed = verbose_feed
 
 def binarize_args(arg):
-  # Converts recursively basestring arg into Binary
+  # Converts recursively basestring arg into xmlrpclib.Binary, as they can
+  # contain non-XML allowed characters
   if isinstance(arg, basestring):
     if isinstance(arg, unicode):
       arg = arg.encode('utf-8')
@@ -119,9 +120,6 @@ class RPCRetry(object):
 
     def _retryRPC(self, func_id, args=()):
         retry_time = self._retry_time
-        # Wrap basestrings into xmlrpclib.Binary, as they can contain
-        # non-XML allowed characters
-        args = binarize_args(args)
         while True:
             try:
                 return self._RPC(func_id, args)
@@ -185,16 +183,16 @@ class TestResultLineProxy(RPCRetry):
             ('skip_count',  skip_count),
             ('duration',  duration),
             ('date',  date),
-            ('command',  command),
-            ('stdout',  stdout),
-            ('stderr',  stderr),
-            ('html_test_result',  html_test_result),
+            ('command',  binarize_args(command)),
+            ('stdout',  binarize_args(stdout)),
+            ('stderr',  binarize_args(stderr)),
+            ('html_test_result',  binarize_args(html_test_result)),
         ) if x[1] is not None)
         if kw:
             self._logger.info('Extra parameters provided: %r', kw)
             status_dict.update(kw)
         self._retryRPC('stopUnitTest', (self._test_result_line_path,
-            status_dict))
+            binarize_args(status_dict)))
 
 class TestResultProxy(RPCRetry):
     """
@@ -244,7 +242,7 @@ class TestResultProxy(RPCRetry):
         do.
         """
         result = self._retryRPC('startUnitTest', (self._test_result_path,
-            exclude_list))
+            binarize_args(exclude_list)))
         if result:
             line_url, test_name = result
             result = TestResultLineProxy(self._proxy, self._retry_time,
@@ -267,7 +265,7 @@ class TestResultProxy(RPCRetry):
         if stderr is not None:
             status_dict['stderr'] = stderr
         self._retryRPC('reportTaskFailure', args=(self._test_result_path,
-            status_dict, self._node_title))
+            binarize_args(status_dict), self._node_title))
 
     def reportStatus(self, command, stdout, stderr):
         """
