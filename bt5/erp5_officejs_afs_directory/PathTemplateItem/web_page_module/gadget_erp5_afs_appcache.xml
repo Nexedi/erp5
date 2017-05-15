@@ -106,7 +106,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Tue, 29 Jul 2016 13:00:00 GMT .\n
+# generated on Tue, 15 Nov 2016 13:00:00 GMT .\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -243,25 +243,6 @@ gadget_erp5_afs.css\n
 gadget_erp5_afs_storage.js\n
 gadget_erp5_page_afs_software_list.html\n
 gadget_erp5_page_afs_software_list.js\n
-# CUSTOM AFS raw data\n
-publisher_list.txt\n
-alfresco.json\n
-apple.json\n
-bluemind.json\n
-commerceguys.json\n
-google.json\n
-linagora.json\n
-magento.json\n
-mariadb.json\n
-microsoft.json\n
-mongodb.json\n
-nexedi.json\n
-odoo.json\n
-pentaho.json\n
-prestashop.json\n
-sensiolabs.json\n
-talend.json\n
-xwiki.json\n
 NETWORK:\n
 *
 
@@ -400,7 +381,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.59519.51030.51865</string> </value>
+                <value> <string>955.22266.33108.62037</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -418,7 +399,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1473866182.32</float>
+                        <float>1479390416.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
