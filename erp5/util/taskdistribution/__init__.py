@@ -101,7 +101,7 @@ def binarize_args(arg):
     if isinstance(arg, unicode):
       arg = arg.encode('utf-8')
     return xmlrpclib.Binary(arg)
-  if isinstance(arg, (list, tuple)):
+  if isinstance(arg, (list, tuple, set)):
     return map(binarize_args, arg)
   if isinstance(arg, dict):
     return {k: binarize_args(v) for k, v in arg.iteritems()}
