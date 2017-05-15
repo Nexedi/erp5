@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -79,7 +76,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
+            <value> <string>gadget_officejs_illustration.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +86,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_appcache</string> </value>
+            <value> <string>gadget_officejs_illustration_appcache</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -120,6 +117,7 @@ https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+svg_editor_landing_page.html\n
 URI.js\n
 dygraph.js\n
 gadget_erp5.css\n
@@ -171,10 +169,7 @@ gadget_officejs_webrtc_jio.js\n
 gadget_officejs_widget_listbox.js\n
 erp5_launcher.js\n
 erp5_launcher.html\n
-gadget_officejs_text_editor_router.html\n
 gadget_officejs_svg_editor_router.html\n
-gadget_officejs_jio_web_page_view.html\n
-gadget_officejs_jio_web_page_view.js\n
 gadget_officejs_jio_web_illustration_view.html\n
 gadget_officejs_jio_web_illustration_view.js\n
 gadget_officejs_liberator.js\n
@@ -229,6 +224,12 @@ NETWORK:\n
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -246,11 +247,11 @@ NETWORK:\n
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -272,7 +273,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1442854040.74</float>
+                        <float>1486561451.93</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -281,7 +282,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -317,7 +318,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64903.6566.48281</string> </value>
+                <value> <string>957.12152.13094.136</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -335,7 +336,64 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486567953.94</float>
+                        <float>1486567936.18</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>detect_converted_file</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>converted</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1486559582.49</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -98,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/hateoas</string>
+                        <string>ERP5 Web Section/hateoasnoauth</string>
                       </tuple>
                     </key>
                     <value>
@@ -265,7 +265,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>hateoas</string> </value>
+            <value> <string>hateoasnoauth</string> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
@@ -289,7 +289,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Restricted Hateoas</string> </value>
+            <value> <string>UnRestricted Hateoas</string> </value>
         </item>
         <item>
             <key> <string>view_action_category</string> </key>
@@ -298,6 +298,12 @@
         <item>
             <key> <string>visible</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -338,6 +344,87 @@
             </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>957.12116.46963.2030</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1486560246.34</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>

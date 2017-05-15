@@ -119,6 +119,8 @@ gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
 gadget_officejs_jio.html\n
 gadget_officejs_jio.js\n
+gadget_officejs_liberator.js\n
+gadget_officejs_liberator.html\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -247,7 +249,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -261,7 +263,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.60876.58662.9011</string> </value>
+                <value> <string>956.64903.6566.48281</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -279,7 +281,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1466151776.84</float>
+                        <float>1486567918.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

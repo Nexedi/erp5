@@ -87,7 +87,7 @@
       return wrapJioCall(this, 'remove', arguments);
     })
     .declareMethod('getAttachment', function () {
-      return wrapJioCall(this, 'gettAttachment', arguments);
+      return wrapJioCall(this, 'getAttachment', arguments);
     })
     .declareMethod('putAttachment', function () {
       return wrapJioCall(this, 'putAttachment', arguments);

@@ -12,3 +12,7 @@ web_site_module/officejs_setting_gadget
 web_site_module/officejs_setting_gadget/**
 web_site_module/officejs_ckeditor_gadget
 web_site_module/officejs_ckeditor_gadget/**
+web_site_module/officejs_svg_editor
+web_site_module/officejs_svg_editor/**
+web_site_module/officejs_svg_editor_gadget
+web_site_module/officejs_svg_editor_gadget/**

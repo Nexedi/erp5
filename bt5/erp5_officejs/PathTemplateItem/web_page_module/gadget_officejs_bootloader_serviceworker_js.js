@@ -75,7 +75,7 @@ var global = self, window = self;
                           self.console.log("Saved: ", url);
                         })
                         .push(undefined, function (error) {
-                          event.ports[0].postMessage(error);
+                          self.console.log(url, error);
                         });
                     })
                 );

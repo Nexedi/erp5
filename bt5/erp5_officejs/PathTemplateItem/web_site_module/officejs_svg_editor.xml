@@ -299,6 +299,56 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_document_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_cache_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_landing_page</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_sub_gadget_installer</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -332,8 +382,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
                 <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/gadget_officejs_bootloader.html</string>
               </tuple>
             </value>
         </item>
@@ -342,8 +392,12 @@
             <value> <string>Illustration Editor</string> </value>
         </item>
         <item>
+            <key> <string>configuration_cache_file</string> </key>
+            <value> <string>gadget_officejs_illustration.appcache</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -370,6 +424,18 @@
             <value> <string>gadget_officejs_jio.html</string> </value>
         </item>
         <item>
+            <key> <string>configuration_landing_page</string> </key>
+            <value> <string>svg_editor_landing_page.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_document_version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_version</string> </key>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_manifest_url</string> </key>
             <value> <string>gadget_officejs.appcache</string> </value>
         </item>
@@ -380,6 +446,10 @@
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
             <value> <string>gadget_officejs_svg_editor_router.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_sub_gadget_installer</string> </key>
+            <value> <string>../officejs_svg_editor_gadget/</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -397,15 +467,15 @@
         </item>
         <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -423,7 +493,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+            <value> <string>WebSection_viewOfficeJSApplicationPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -437,7 +507,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJS</string> </value>
+            <value> <string>RJSVersioning</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -450,6 +520,12 @@
         <item>
             <key> <string>visible</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -512,6 +588,146 @@
     </pickle>
     <pickle>
       <none/>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>category_publication_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>edit_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="9" aka="AAAAAAAAAAk=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>publish</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1486567647.59</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>published</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="10" aka="AAAAAAAAAAo=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>957.12132.6954.3993</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1486560317.03</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>

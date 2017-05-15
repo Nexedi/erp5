@@ -111,6 +111,8 @@ rsvp.js\n
 jiodev.js\n
 gadget_ckeditor.js\n
 gadget_ckeditor.html\n
+gadget_officejs_liberator.js\n
+gadget_officejs_liberator.html\n
 gadget_erp5_nojqm.css\n
 ckeditor/CHANGES.md\n
 ckeditor/LICENSE.md\n
@@ -575,7 +577,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64903.6566.48281</string> </value>
+                <value> <string>957.4929.54910.23296</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -593,7 +595,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486128110.21</float>
+                        <float>1486568027.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
