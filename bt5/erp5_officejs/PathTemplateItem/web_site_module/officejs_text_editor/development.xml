@@ -98,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/rjsunsafe</string>
+                        <string>ERP5 Web Section/development</string>
                       </tuple>
                     </key>
                     <value>
@@ -121,6 +121,113 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_router_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_application_title</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_jio_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_panel_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_translation_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_header_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_hateoas_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
@@ -131,8 +238,53 @@
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_application_title</string> </key>
+            <value> <string>Text Editor</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_hateoas_url</string> </key>
+            <value> <string>hateoas/</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_gadget_url</string> </key>
+            <value> <string>gadget_officejs_header.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_jio_gadget_url</string> </key>
+            <value> <string>gadget_officejs_jio.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_manifest_url</string> </key>
+            <value> <string>gadget_officejs.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_panel_gadget_url</string> </key>
+            <value> <string>gadget_officejs_application_panel.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_router_gadget_url</string> </key>
+            <value> <string>gadget_officejs_text_editor_router.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_translation_gadget_url</string> </key>
+            <value> <string>gadget_translation.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>SAMEORIGIN</string> </value>
+        </item>
+        <item>
+            <key> <string>custom_render_method_id</string> </key>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -146,7 +298,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjsunsafe</string> </value>
+            <value> <string>development</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -160,11 +312,11 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJSUnsafe</string> </value>
+            <value> <string>RJS</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RJS Unsafe</string> </value>
+            <value> <string>Text Editor dev</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -315,7 +467,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -329,7 +481,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.6527.32664.14592</string> </value>
+                <value> <string>957.4916.21530.42257</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -347,7 +499,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1460562484.03</float>
+                        <float>1486127358.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
