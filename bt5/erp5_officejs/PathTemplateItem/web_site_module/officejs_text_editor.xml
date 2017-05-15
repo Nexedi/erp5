@@ -299,6 +299,66 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_document_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_cache_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_redirect_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_landing_page</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_sub_gadget_installer</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -332,8 +392,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
                 <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/gadget_officejs_bootloader.html</string>
               </tuple>
             </value>
         </item>
@@ -342,8 +402,12 @@
             <value> <string>Text Editor</string> </value>
         </item>
         <item>
+            <key> <string>configuration_cache_file</string> </key>
+            <value> <string>gadget_officejs_text_editor.appcache</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -370,6 +434,18 @@
             <value> <string>gadget_officejs_jio.html</string> </value>
         </item>
         <item>
+            <key> <string>configuration_landing_page</string> </key>
+            <value> <string>text_editor_landing_page.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_document_version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_version</string> </key>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_manifest_url</string> </key>
             <value> <string>gadget_officejs.appcache</string> </value>
         </item>
@@ -378,8 +454,16 @@
             <value> <string>gadget_officejs_application_panel.html</string> </value>
         </item>
         <item>
+            <key> <string>configuration_redirect_url</string> </key>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_router_gadget_url</string> </key>
             <value> <string>gadget_officejs_text_editor_router.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_sub_gadget_installer</string> </key>
+            <value> <string>../officejs_ckeditor_gadget/</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -397,15 +481,15 @@
         </item>
         <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -423,7 +507,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+            <value> <string>WebSection_viewOfficeJSApplicationPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -437,7 +521,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJS</string> </value>
+            <value> <string>RJSVersioning</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -630,7 +714,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64450.52709.9386</string> </value>
+                <value> <string>957.4934.13334.21998</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -648,7 +732,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486040963.94</float>
+                        <float>1486128561.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
