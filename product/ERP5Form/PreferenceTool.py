@@ -270,14 +270,14 @@ class PreferenceTool(BaseTool):
 
   security.declareProtected(Permissions.ManagePortal,
                             'createPreferenceForUser')
-  def createPreferenceForUser(self, username, enable=True):
+  def createPreferenceForUser(self, user_id, enable=True):
     """Creates a preference for a given user, and optionnally enable the
     preference.
     """
     user_folder = self.acl_users
-    user = user_folder.getUserById(username)
+    user = user_folder.getUserById(user_id)
     if user is None:
-      raise ValueError("User %r not found" % (username, ))
+      raise ValueError("User %r not found" % (user_id, ))
     security_manager = getSecurityManager()
     try:
       newSecurityManager(None, user.__of__(user_folder))
