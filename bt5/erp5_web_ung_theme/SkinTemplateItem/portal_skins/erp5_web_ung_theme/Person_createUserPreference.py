@@ -14,7 +14,7 @@ if not context.Person_getUserId():
 
 from Products.ERP5Type.Message import translateString
 preference = portal.portal_preferences.createPreferenceForUser(
-                                  context.getReference(), enable=True)
+                                  context.Person_getUserId(), enable=True)
 
 preference.setTitle(translateString('Preference for ${name}',
                      mapping=dict(name=context.getTitle().decode('utf-8'))))
