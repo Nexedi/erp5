@@ -35,6 +35,24 @@
     return gadget.redirect({page: 'jio_dav_configurator'});
   }
 
+  function get_redirect_uri() {
+		return window.location.origin;
+	}
+
+  function setDroboxConfiguration(gadget) {
+    return new RSVP.Queue()
+      .push(function () {
+        return gadget.getSetting('dropbox_app_key');
+      })
+      .push(function (app_key) {
+        window.location = 'https://www.dropbox.com/1/oauth2/authorize?client_id='
+													+ encodeURIComponent(app_key)
+													+ '&response_type=token&redirect_uri=' 
+													+ encodeURIComponent(get_redirect_uri());
+
+      });
+  }
+
   var gadget_klass = rJS(window);
 
   gadget_klass
@@ -71,6 +89,9 @@
           break;
         case "LOCAL":
           gadget.props.element.querySelector("form.select-local-form button").classList.add("ui-btn-active");
+          break;
+        case "DROPBOX":
+          gadget.props.element.querySelector("form.select-dropbox-form button").classList.add("ui-btn-active");
           break;
         default:
           gadget.props.element.querySelector(".message h3").appendChild(document.createTextNode("Welcome in OfficeJS " + setting_list[1] + ". Please start by choosing a storage."));
@@ -118,6 +139,14 @@
               true,
               function () {
                 return setDAVConfiguration(gadget);
+              }
+            ),
+            loopEventListener(
+              gadget.props.element.querySelector('form.select-dropbox-form'),
+              'submit',
+              true,
+              function () {
+                return setDroboxConfiguration(gadget);
               }
             )
           ]);

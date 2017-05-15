@@ -43,7 +43,6 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         portal_type = null,
-        gadget_option_dict = options,
         option = {
           auto_redirect: false,
           search_engine: ""
@@ -66,7 +65,7 @@
             });
         })
         .push(function () {
-          var search = gadget_option_dict.search,
+          var search = window.decodeURIComponent(getSearchedString()),
             query = "";
           if (search) {
             query = {

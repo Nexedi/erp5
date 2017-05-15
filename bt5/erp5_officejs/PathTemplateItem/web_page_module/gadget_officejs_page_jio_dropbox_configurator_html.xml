@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_url_view.html</string> </value>
+            <value> <string>gadget_officejs_page_jio_dropbox_configurator.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_url_view_html</string> </value>
+            <value> <string>gadget_officejs_page_jio_dropbox_configurator_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -98,20 +98,18 @@
             <value> <string>Web Page</string> </value>
         </item>
         <item>
-            <key> <string>short_title</string> </key>
+            <key> <string>title</string> </key>
+            <value> <string>OfficeJS jIO Dropbox Configurator Page</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Bookmark View</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -193,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468958515.0</float>
+                        <float>1485780483.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -238,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.49823.4948.58316</string> </value>
+                <value> <string>956.64672.3552.2918</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1480959906.78</float>
+                        <float>1485780527.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -279,7 +277,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -295,7 +295,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -313,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468958471.49</float>
+                        <float>1485779368.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

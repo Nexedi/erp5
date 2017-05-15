@@ -78,6 +78,7 @@
                         <string>my_configuration_resource_base_url</string>
                         <string>my_configuration_x_frame_options</string>
                         <string>my_configuration_cache_file</string>
+                        <string>my_configuration_landing_page</string>
                         <string>my_configuration_sub_gadget_installer</string>
                         <string>my_configuration_redirect_url</string>
                       </list>

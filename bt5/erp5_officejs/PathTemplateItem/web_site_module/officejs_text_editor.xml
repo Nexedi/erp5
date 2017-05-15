@@ -343,7 +343,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data: *.app.officejs.com</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -616,7 +616,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -630,7 +630,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.17228.62546.5000</string> </value>
+                <value> <string>956.64450.52709.9386</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -648,7 +648,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1475245019.47</float>
+                        <float>1486040963.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

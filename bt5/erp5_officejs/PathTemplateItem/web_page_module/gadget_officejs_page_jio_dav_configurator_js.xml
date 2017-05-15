@@ -105,7 +105,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>gadget_officejs_page_jio_dav_configurator.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.4046.59099.17288</string> </value>
+                <value> <string>956.64903.6566.48281</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482142993.78</float>
+                        <float>1486042968.05</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -64,14 +64,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -80,14 +72,6 @@
         <item>
             <key> <string>content_type</string> </key>
             <value> <string>text/html</string> </value>
-        </item>
-        <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -110,43 +94,22 @@
             </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284351.6</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS jIO ERP5 Configurator Page</string> </value>
         </item>
         <item>
-            <key> <string>version</string> </key>
+            <key> <string>url_string</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -206,7 +169,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -228,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1466088843.02</float>
+                        <float>1485780407.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -273,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.38565.29657.34116</string> </value>
+                <value> <string>956.64653.28215.17971</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -291,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476436854.76</float>
+                        <float>1485780401.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -314,11 +277,13 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -330,7 +295,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -348,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1466085053.26</float>
+                        <float>1485779365.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

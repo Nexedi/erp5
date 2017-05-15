@@ -107,14 +107,22 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
+            <value> <string encoding="cdata"><![CDATA[
+
+CACHE MANIFEST\n
 # generated on Fri, 09 Dec 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
 https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
+https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+jio_mappingstorage.js\n
 erp5_launcher.js\n
+bookmark_manager_landing_page.html\n
 gadget_erp5.css\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
@@ -126,10 +134,14 @@ gadget_officejs_bookmark_manager_panel.html\n
 gadget_officejs_bookmark_manager_router.html\n
 gadget_officejs_header.html\n
 gadget_officejs_header.js\n
+gadget_officejs_page_document_list.html\n
+gadget_officejs_page_document_list.js\n
 gadget_officejs_jio.html\n
 gadget_officejs_jio.js\n
 gadget_officejs_jio_url_view.html\n
 gadget_officejs_jio_url_view.js\n
+gadget_officejs_page_add_document.html\n
+gadget_officejs_page_add_document.js\n
 gadget_officejs_page_add_bookmark.html\n
 gadget_officejs_page_add_bookmark.js\n
 gadget_officejs_page_bookmark_dispatcher.html\n
@@ -142,6 +154,10 @@ gadget_officejs_page_jio_configurator.html\n
 gadget_officejs_page_jio_configurator.js\n
 gadget_officejs_page_jio_dav_configurator.html\n
 gadget_officejs_page_jio_dav_configurator.js\n
+gadget_officejs_page_jio_erp5_configurator.js\n
+gadget_officejs_page_jio_erp5_configurator.html\n
+gadget_officejs_page_jio_dropbox_configurator.html\n
+gadget_officejs_page_jio_dropbox_configurator.js\n
 gadget_officejs_page_sync.html\n
 gadget_officejs_page_sync.js\n
 gadget_officejs_router.js\n
@@ -150,6 +166,8 @@ gadget_officejs_widget_listbox.js\n
 gadget_translation_data.js\n
 gadget_translation.html\n
 gadget_translation.js\n
+gadget_officejs_liberator.html\n
+gadget_officejs_liberator.js\n
 handlebars.js\n
 jiodev.js\n
 jquery.js\n
@@ -158,11 +176,19 @@ jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
 NETWORK:\n
-*</string> </value>
+*
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>RenderJS Gadget OfficeJS Bookmark Manager AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -293,7 +319,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.55156.38503.48725</string> </value>
+                <value> <string>957.11988.60494.51524</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -311,7 +337,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481277406.23</float>
+                        <float>1486551690.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

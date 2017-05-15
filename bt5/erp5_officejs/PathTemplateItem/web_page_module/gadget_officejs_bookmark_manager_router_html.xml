@@ -141,6 +141,12 @@
             <value> <string>OfficeJS Bookmark Manager router Gadget</string> </value>
         </item>
         <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value> <string>001</string> </value>
         </item>
@@ -269,7 +275,10 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.62288.29074.44236</string> </value>
+                <value> <string>957.377.3106.25634</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +296,9 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1479657727.07</float>
+                        <float>1486569400.95</float>
+                        <string>UTC</string>
+                      </tuple>
                         <string>UTC</string>
                       </tuple>
                     </state>

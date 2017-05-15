@@ -14,5 +14,6 @@ return default_web_page.WebPage_viewAsWeb(mapping_dict={
   "redirect_url": web_section.getLayoutProperty("configuration_redirect_url", default=""),
   "cache_file": web_section.getLayoutProperty("configuration_cache_file", default=""),
   "application_name": web_section.getTitle(),
-  "sub_gadget_installer": web_section.getLayoutProperty("configuration_sub_gadget_installer", default="")
+  "sub_gadget_installer": web_section.getLayoutProperty("configuration_sub_gadget_installer", default=""),
+  "landing_page": web_section.getLayoutProperty("configuration_landing_page", default="/")
 })
