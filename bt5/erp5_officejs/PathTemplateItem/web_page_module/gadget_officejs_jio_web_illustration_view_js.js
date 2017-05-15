@@ -127,7 +127,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "rjsunsafe/method-draw/method-draw.gadget.html?auto_focus=1",
+            "../../officejs_svg_editor_gadget/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",
