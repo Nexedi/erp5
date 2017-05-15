@@ -397,7 +397,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com https://localhost:5000 mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://localhost:5000 mail.tiolive.com data:; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -700,7 +700,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.2063.41353.16093</string> </value>
+                <value> <string>957.2071.56258.37990</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -718,7 +718,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485956631.49</float>
+                        <float>1486128580.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
