@@ -5,6 +5,7 @@
   "use strict";
 
   function setjIODAVConfiguration(gadget) {
+    var dav_url = gadget.props.element.querySelector("input[name='dav_url']").value;
     return gadget.getSetting("portal_type")
       .push(function (portal_type) {
         var old_date = new Date(),
@@ -30,25 +31,52 @@
           check_remote_creation: true,
           check_remote_deletion: true,
           local_sub_storage: {
-            type: "query",
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
             sub_storage: {
-              type: "uuid",
+              type: "query",
               sub_storage: {
-                type: "indexeddb",
-                database: "officejs-dav"
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-dav"
+                }
               }
             }
           },
           remote_sub_storage: {
-            type: "query",
+            type: "mapping",
+            attachment: {
+              'data': {
+                get: {uri_template: 'enclosure'},
+                put: {uri_template: 'enclosure'}
+              }
+            },
             sub_storage: {
-              type: "drivetojiomapping",
+              type: "query",
               sub_storage: {
-                type: "dav",
-                url: gadget.props.element.querySelector("input[name='dav_url']").value,
-                basic_login: btoa(gadget.props.element.querySelector("input[name='dav_username']").value
-                  + ':' + gadget.props.element.querySelector("input[name='dav_password']").value),
-                with_credentials: true
+                type: "drivetojiomapping",
+                sub_storage: {
+                  type: "mapping",
+                  property: {
+                    "portal_type": [
+                      "switchPropertyValue",
+                      {"PDF":"pdf", "Web Page": "txt"}
+                    ]
+                  },
+                  sub_storage: {
+                    type: "dav",
+                    url: gadget.props.element.querySelector("input[name='dav_url']").value,
+                    basic_login: btoa(gadget.props.element.querySelector("input[name='dav_username']").value
+                      + ':' + gadget.props.element.querySelector("input[name='dav_password']").value),
+                    with_credentials: true
+                  }
+                }
               }
             }
           }
@@ -57,6 +85,9 @@
       })
       .push(function () {
         return gadget.setSetting('jio_storage_name', "DAV");
+      })
+      .push(function () {
+        return gadget.setGlobalSetting('dav_url', dav_url);
       })
       .push(function () {
         return gadget.setSetting('sync_reload', true);
@@ -92,6 +123,20 @@
     .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareMethod("getGlobalSetting", function (key) {
+      var gadget = this;
+      return gadget.getDeclaredGadget("global_setting_gadget")
+        .push(function (global_setting_gadget) {
+          return global_setting_gadget.getSetting(key);
+        });
+    })
+    .declareMethod("setGlobalSetting", function (key, value) {
+      var gadget = this;
+      return gadget.getDeclaredGadget("global_setting_gadget")
+        .push(function (global_setting_gadget) {
+          return global_setting_gadget.setSetting(key, value);
+        });
+    })
     .declareMethod("render", function () {
       var gadget = this;
       return gadget.updateHeader({
@@ -123,7 +168,39 @@
             }
           );
         });
-    });
+    })
 
+    .declareService(function () {
+      var gadget = this;
+
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.props.deferred.promise;
+        })
+        .push(function () {
+          return gadget.getSetting("global_setting_gadget_url");
+        })
+        .push(function (global_setting_gadget_url) {
+          return gadget.declareGadget(
+            global_setting_gadget_url,
+            {
+              scope: "global_setting_gadget",
+              sandbox: "iframe",
+              element: gadget.props.element.querySelector(".global_setting_gadget")
+            }
+          );
+        })
+        .push(function (global_setting_gadget) {
+          return global_setting_gadget.getSetting("dav_url");
+        })
+        .push(function (dav_url) {
+          var erp5_url_input =
+            gadget.props.element.querySelector("input[name='dav_url']");
+          erp5_url_input.value = dav_url || "https://www.example.com";
+          erp5_url_input.removeAttribute("disabled");
+          erp5_url_input.parentNode.classList.remove('ui-state-disabled');
+          erp5_url_input.focus();
+        });
+    });
 
 }(window, rJS, RSVP));
