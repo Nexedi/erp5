@@ -97,9 +97,9 @@ def patchRPCParser(error_handler):
 
 def binarize_args(arg):
   # Converts recursively basestring arg into Binary
-  if isinstance(arg, unicode):
-    arg = arg.encode('utf-8')
   if isinstance(arg, basestring):
+    if isinstance(arg, unicode):
+      arg = arg.encode('utf-8')
     return xmlrpclib.Binary(arg)
   if isinstance(arg, (list, tuple)):
     return map(binarize_args, arg)
