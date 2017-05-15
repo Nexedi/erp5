@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,8 +70,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio_url_view.js</string> </value>
+            <value> <string>gadget_officejs_jio_bookmark_view.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_jio_url_view_js</string> </value>
+            <value> <string>gadget_officejs_jio_bookmark_view_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -91,23 +95,21 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Jio Bookmark view JS</string> </value>
+            <value> <string>OfficeJS Jio Bookmark View</string> </value>
         </item>
         <item>
-            <key> <string>version</string> </key>
+            <key> <string>url_string</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -189,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468958553.47</float>
+                        <float>1485781391.48</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -234,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.49845.11611.51046</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1480959915.54</float>
+                        <float>1493732989.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,7 +277,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -291,7 +295,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -309,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468958530.09</float>
+                        <float>1485779339.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
