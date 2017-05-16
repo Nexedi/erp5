@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.49 (2017-05-11)
+-------------------
+
+  * erp5.util.taskdistribution:
+
+    - Wrap in xmlrpclib.Binary if needed
+
 0.4.48 (2017-04-20)
 -------------------
 
