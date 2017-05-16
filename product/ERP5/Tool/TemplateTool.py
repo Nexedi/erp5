@@ -1038,8 +1038,23 @@ class TemplateTool (BaseTool):
           'title': 'erp5_xhtml_style',
           'version': '1.0'}
 
+        bm_dict_3 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_mysql_ndb_catalog',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_catalog'],
+          'title': 'erp5_mysql_ndb_catalog',
+          'version': '1.0'}
+
         if repository.endswith('/bootstrap'):
           property_dict_list.append(bm_dict_1)
+          property_dict_list.append(bm_dict_2)
+          property_dict_list.append(bm_dict_3)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
