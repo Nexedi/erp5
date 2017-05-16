@@ -649,6 +649,13 @@ class TemplateTool (BaseTool):
         #category_path_list.append('portal_categories/'+base_category+'/**')
       template_path_list.extend(category_path_list)
 
+      # Adding business template skin selection property on the portal_tempaltes
+      template_skin_selection_list = import_template.getTemplateRegisteredSkinSelectionList()
+      selection_list = []
+      for selection in template_skin_selection_list:
+        skin, selection = selection.split(' | ')
+        selection_list.append('portal_skins/%s#business_template_registered_skin_selections'%skin)
+
       # For portal_skins, we export the folder
       portal_skin_list = import_template.getTemplateSkinIdList()
       portal_skin_path_list = []
@@ -772,6 +779,7 @@ class TemplateTool (BaseTool):
                                     )
 
       template_path_list.extend(property_path_list)
+      template_path_list.extend(selection_list)
       template_path_list = self.cleanTemplatePathList(template_path_list)
       migrated_bm.setProperty('template_path_list', template_path_list)
 
@@ -1004,7 +1012,7 @@ class TemplateTool (BaseTool):
         if repository.endswith('/bt5'):
           property_dict_list.append(bp_dict)
 
-        bm_dict ={
+        bm_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': [],
           'description': '',
@@ -1016,8 +1024,22 @@ class TemplateTool (BaseTool):
           'provision_list': ['erp5_catalog'],
           'title': 'erp5_mysql_innodb_catalog',
           'version': '1.0'}
+
+        bm_dict_2 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_core'],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_xhtml_style',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_view_style'],
+          'title': 'erp5_xhtml_style',
+          'version': '1.0'}
+
         if repository.endswith('/bootstrap'):
-          property_dict_list.append(bm_dict)
+          property_dict_list.append(bm_dict_1)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
