@@ -1,0 +1,46 @@
+<tal:block tal:define="barcode_type python:request.get('barcode_type', 'code128');
+                       supply_path_type python:request.get('supply_path_type', 'Sale Supply Line');
+                       resource here/Item_getResourceValue;
+                       portal_title python: here.getPortalObject().getTitle();
+                       last python:request.get('last', 0);
+                       image_base_url python: here.getPortalObject().absolute_url() + '/Base_generateBarcodeImage?barcode_type=%s&data=%s'">
+
+  <div class="barcode not_last" tal:condition="python: not last">
+    <div class="barcode_header" tal:content="portal_title">
+
+    </div>
+    <div class="barcode_image">
+      <img src="" tal:attributes="src python: image_base_url % (barcode_type,  here.getReference())" />
+    </div>
+    <br />
+    <div class="info">
+      <div class="item_reference" tal:content="here/getReference"> REFERENCE </div>
+      <div class="resource_title">
+        <span tal:content="here/Item_getLabelTitle"> Item Title </span>
+        <br />
+        <tal:block tal:condition="python: resource is not None">
+          <span tal:content="python: context.Item_getLabelPrice(resource, supply_path_type)"> Price </span>
+        </tal:block>
+      </div>
+    </div>
+  </div>
+  <div class="barcode last" tal:condition="last">
+    <div class="barcode_header" tal:content="portal_title">
+
+    </div>
+    <div class="barcode_image">
+      <img src="" tal:attributes="src python: image_base_url % (barcode_type, here.getReference())" />
+    </div>
+    <br />
+    <div class="info">
+      <div class="item_reference" tal:content="here/getReference"> REFERENCE </div>
+      <div class="resource_title">
+        <span tal:content="here/Item_getLabelTitle"> Item Title </span>
+        <br />
+        <tal:block tal:condition="python: resource is not None">
+          <span tal:content="python: context.Item_getLabelPrice(resource, supply_path_type)"> Price </span>
+        </tal:block>
+      </div>
+    </div>
+  </div>
+</tal:block>

@@ -1226,6 +1226,12 @@ class TestItemScripts(ERP5TypeTestCase):
         self.item.Item_getVariationRangeCategoryItemList(
                           at_date=DateTime() - 2))
 
+  def test_Item_getLabelPrice(self):
+    raise NotImplementedError
+
+  def test_Item_getLabelTitle(self):
+    raise NotImplementedError
+
 
 def test_suite():
   suite = unittest.TestSuite()
