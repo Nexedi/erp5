@@ -183,10 +183,10 @@ class TestResultLineProxy(RPCRetry):
             ('skip_count',  skip_count),
             ('duration',  duration),
             ('date',  date),
-            ('command',  binarize_args(command)),
-            ('stdout',  binarize_args(stdout)),
-            ('stderr',  binarize_args(stderr)),
-            ('html_test_result',  binarize_args(html_test_result)),
+            ('command',  command),
+            ('stdout',  stdout),
+            ('stderr',  stderr),
+            ('html_test_result',  html_test_result),
         ) if x[1] is not None)
         if kw:
             self._logger.info('Extra parameters provided: %r', kw)
