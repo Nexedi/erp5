@@ -761,6 +761,9 @@ class BusinessItem(XMLObject):
       delattr(obj, '__ac_local_roles__')
       container._setObject(object_id, obj, suppress_events=True)
       obj = container._getOb(object_id)
+      skin_tool = portal.portal_skins
+      if obj.aq_parent.meta_type == 'CMF Skins Tool':
+        registerSkinFolder(skin_tool, obj)
 
   def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
                                restricted=0):
@@ -982,3 +985,100 @@ class BusinessPropertyItem(XMLObject):
     obj._delPropValue(property_name)
     if int(self.getProperty('item_sign')) == 1:
       obj.setProperty(property_name, property_value, property_type)
+
+def registerSkinFolder(skin_tool, skin_folder):
+  request = skin_tool.REQUEST
+  # XXX: Getting parameter from request instead of dialog is bad
+  # XXX: This is even non consistent with rest of parameters selected by user
+  #      (like update_translation or update_catalog)
+  register_skin_selection = request.get('your_register_skin_selection', 1)
+  reorder_skin_selection = request.get('your_reorder_skin_selection', 1)
+  skin_layer_list = request.get('your_skin_layer_list',
+                                skin_tool.getSkinSelections())
+
+  skin_folder_id = skin_folder.getId()
+
+  try:
+    skin_selection_list = skin_folder.getProperty(
+                 'business_template_registered_skin_selections',
+                 skin_tool.getSkinSelections()
+                 )
+  except AttributeError:
+    skin_selection_list = skin_tool.getSkinSelections()
+
+  if isinstance(skin_selection_list, basestring):
+    skin_selection_list = skin_selection_list.split()
+
+  def skin_sort_key(skin_folder_id):
+    obj = skin_tool._getOb(skin_folder_id, None)
+    if obj is None:
+      return 0, skin_folder_id
+    return -obj.getProperty('business_template_skin_layer_priority',
+      obj.meta_type == 'Filesystem Directory View' and -1 or 0), skin_folder_id
+
+  for skin_name in skin_selection_list:
+
+    if (skin_name not in skin_tool.getSkinSelections()) and \
+                                          register_skin_selection:
+      createSkinSelection(skin_tool, skin_name)
+      # add newly created skins to list of skins we care for
+      skin_layer_list.append(skin_name)
+
+    selection = skin_tool.getSkinPath(skin_name) or ''
+    selection_list = selection.split(',')
+    if (skin_folder_id not in selection_list):
+      selection_list.insert(0, skin_folder_id)
+    if reorder_skin_selection:
+      # Sort by skin priority and ID
+      selection_list.sort(key=skin_sort_key)
+    if (skin_name in skin_layer_list):
+      skin_tool.manage_skinLayers(skinpath=selection_list,
+                                  skinname=skin_name, add_skin=1)
+      skin_tool.getPortalObject().changeSkin(None)
+
+def createSkinSelection(skin_tool, skin_name):
+  # This skin selection does not exist, so we create a new one.
+  # We'll initialize it with all skin folders, unless:
+  #  - they explictly define a list of
+  #    "business_template_registered_skin_selections", and we
+  #    are not in this list.
+  #  - they are not registered in the default skin selection
+  skin_path = ''
+  for skin_folder in skin_tool.objectValues():
+    if skin_name in skin_folder.getProperty(
+             'business_template_registered_skin_selections',
+             (skin_name, )):
+      if skin_folder.getId() in \
+          skin_tool.getSkinPath(skin_tool.getDefaultSkin()):
+        if skin_path:
+          skin_path = '%s,%s' % (skin_path, skin_folder.getId())
+        else:
+          skin_path= skin_folder.getId()
+  # add newly created skins to list of skins we care for
+  skin_tool.addSkinSelection(skin_name, skin_path)
+  skin_tool.getPortalObject().changeSkin(None)
+
+def deleteSkinSelection(skin_tool, skin_name):
+  # Do not delete default skin
+  if skin_tool.getDefaultSkin() != skin_name:
+    for skin_folder in skin_tool.objectValues():
+      try:
+        if skin_name in skin_folder.getProperty(
+               'business_template_registered_skin_selections', ()):
+          break
+      except AttributeError:
+        pass
+    else:
+      skin_tool.manage_skinLayers(chosen=[skin_name], del_skin=1)
+      skin_tool.getPortalObject().changeSkin(None)
+
+def unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list):
+  for skin_selection in skin_selection_list:
+    selection = skin_tool.getSkinPath(skin_selection)
+    selection = selection.split(',')
+    if (skin_folder_id in selection):
+      selection.remove(skin_folder_id)
+      skin_tool.manage_skinLayers(skinpath=tuple(selection),
+                                  skinname=skin_selection, add_skin=1)
+      deleteSkinSelection(skin_tool, skin_selection)
+      skin_tool.getPortalObject().changeSkin(None)
