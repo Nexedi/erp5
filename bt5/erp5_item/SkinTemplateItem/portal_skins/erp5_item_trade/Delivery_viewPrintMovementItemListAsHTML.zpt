@@ -1,0 +1,21 @@
+<html>
+ <head>
+   <link rel=stylesheet type=text/css tal:attributes="href python: here.getPortalObject().absolute_url() + '/item_barcode.css'">
+ </head>
+ <body tal:define="barcode_type python:request.get('barcode_type', 'code128');
+                   barcode_per_line python:request.get('barcode_per_line', '5');
+                   line_per_page python: 13">
+     <tal:block tal:repeat="item here/Delivery_getAggregatedItemValueList">
+       <tal:block tal:define="last python:(repeat['item'].number() % int(barcode_per_line)) == 0;
+                              dummy python: context.REQUEST.set('last', int(last));">
+         <tal:block tal:replace="structure item/Item_viewAsLabel">
+           Item as Label
+         </tal:block>
+         <div class="newline"
+              tal:condition="last" > </div>
+         <div class="newpage"
+              tal:condition="python:(repeat['item'].number() % (int(line_per_page)*int(barcode_per_line))) == 0"> </div>
+       </tal:block>
+     </tal:block>
+ </body>
+</html>

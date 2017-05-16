@@ -12,6 +12,7 @@ Purchase Order Line | item_creation
 Purchase Order | aggregate_item
 Purchase Packing List Line | item_creation
 Purchase Packing List | aggregate_item
+Purchase Packing List | label_sheet_print
 Returned Purchase Packing List Line | item_creation
 Returned Purchase Packing List | aggregate_item
 Returned Sale Packing List Line | item_creation

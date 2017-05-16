@@ -1,0 +1,60 @@
+div.barcode {
+  text-align:center;
+  font-size: 6pt;
+  width: 38.1mm;
+  max-height: 21.4mm;
+}
+
+.resource_price,
+.resource_title,
+.item_number {
+ clear: both;
+ text-transform: uppercase;
+}
+div.barcode img {
+ width: 36.1mm;
+ max-height: 9mm;
+}
+div.barcode div.info {
+  margin-top: -3mm;
+}
+
+@page {
+ size: 210.0mm 297.0mm;
+ margin-top: 10.9mm;
+ margin-left: 0mm;
+/* margin-left: 0mm; by rafael /*
+ margin-right: 0mm; /* by jps */
+ margin-bottom: 0mm;
+}
+
+body {
+ width: 210.0mm;
+ margin-left: 4.5mm;
+}
+
+div.barcode {
+ text-align:center; 
+ float: left;
+ width: 36.0mm;
+ height: 21.1mm;
+ max-height:21.0mm;
+ /* margin-right: 6.0mm; rafael */
+ margin-right: 5.5mm;
+ margin-left: 0.9mm;
+ font-size: 6pt;
+ margin-bottom:1mm;
+}
+
+div.barcode.last {
+/* margin-right: 0.0mm; */
+  margin-right: 0.0mm; /* by jps */
+}
+
+
+div.newline {
+ clear: both;
+}
+div.newpage {
+ page-break-after:always;
+}
