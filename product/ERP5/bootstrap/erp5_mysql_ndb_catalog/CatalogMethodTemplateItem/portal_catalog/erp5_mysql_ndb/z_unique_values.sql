@@ -1,1 +1,0 @@
-SELECT DISTINCT <dtml-var column> FROM catalog
