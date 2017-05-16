@@ -969,6 +969,213 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.assertEqual([item], cell.getAggregateValueList())
 
 
+  def test_16_CreateItemsFromPackingListWithVariationDefined(self):
+    quantity = 2
+    organisation = self.createOrganisation()
+    self.tic()
+
+    resource = self.createVariatedResource()
+    resource_relative_url = resource.getRelativeUrl()
+    self.tic()
+
+    packing_list = self.createPackingList(organisation=organisation)
+    packing_list_line = self.createPackingListLine(
+        packing_list=packing_list,
+        resource=resource)
+    packing_list_line.setVariationCategoryList(
+        ['size/%s/3' % (resource_relative_url,)])
+    # XXX: Setting cell quantity without any API
+    base_id = 'movement'
+    cell_key_list = list(packing_list_line.getCellKeyList(base_id=base_id))
+    self.assertEqual(1, len(cell_key_list))
+    cell_key = cell_key_list[0]
+    packing_list_cell = packing_list_line.newCell(
+      base_id=base_id, portal_type='Purchase Packing List Cell', *cell_key)
+    packing_list_cell.edit(mapped_value_property_list=['quantity'], quantity=quantity,
+              predicate_category_list=cell_key, variation_category_list=cell_key)
+    self.tic()
+
+    packing_list.Delivery_createItemList()
+    self.tic()
+
+    item_value_list = packing_list_cell.getAggregateValueList()
+    self.assertEqual(2, len(item_value_list))
+
+    item_1 = item_value_list[0]
+    item_2 = item_value_list[1]
+
+    item_1_title = item_1.getTitle()
+    item_2_title = item_2.getTitle()
+
+    self.assertTrue(item_1_title.startswith(resource.getTitle()))
+    self.assertTrue(item_2_title.startswith(resource.getTitle()))
+    self.assertTrue('SizeVariation2' in item_1_title)
+    self.assertTrue('SizeVariation2' in item_2_title)
+
+    self.assertNotEqual(item_1.getTitle(), item_2.getTitle())
+    self.assertNotEqual(item_1.getReference(), item_2.getReference())
+
+    self.assertEqual(packing_list_line.getTotalQuantity(), quantity)
+
+
+  def test_17_CreateItemsFromPackingListWithNotVariatedResource(self):
+    quantity = 2
+    organisation = self.createOrganisation()
+    self.tic()
+    resource = self.createNotVariatedResource()
+    self.tic()
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation)
+
+    packing_list_line = self.createPackingListLine(packing_list=packing_list,
+                                                   resource=resource)
+    packing_list_line.setQuantity(quantity)
+    self.tic()
+
+    # make sure we can render the dialog
+    packing_list.Delivery_viewCreateItemListDialog()
+
+    # generate items
+    packing_list.Delivery_createItemList()
+
+    self.tic()
+
+    item_value_list = packing_list_line.getAggregateValueList()
+    self.assertEqual(2, len(item_value_list))
+
+    item_1 = item_value_list[0]
+    item_2 = item_value_list[1]
+
+    self.assertTrue(item_1.getTitle().startswith(resource.getTitle()))
+    self.assertTrue(item_2.getTitle().startswith(resource.getTitle()))
+
+    self.assertEqual(packing_list_line.getVariationCategoryList(), [])
+    movement_cell_list = packing_list_line.contentValues(
+                                    portal_type='Purchase Packing List Cell')
+    self.assertEqual(movement_cell_list,[])
+
+    self.assertNotEqual(item_1.getTitle(), item_2.getTitle())
+    self.assertNotEqual(item_1.getReference(), item_2.getReference())
+
+    self.assertEqual(packing_list_line.getTotalQuantity(), quantity)
+
+
+  def test_18_CreateItemsFromPackingListWithExistingItem(self):
+    quantity = 2
+    title = self.id()
+    reference = self.id()
+    organisation = self.createOrganisation()
+    self.tic()
+    resource = self.createNotVariatedResource()
+    self.tic()
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation)
+
+    packing_list_line = self.createPackingListLine(packing_list=packing_list,
+                                                   resource=resource)
+    packing_list_line.setQuantity(quantity)
+    self.tic()
+
+    # Associate Item with delivery line
+    packing_list_line.DeliveryLine_createItemList(
+      type=self.item_portal_type,
+      listbox=[
+        {
+          'listbox_key': '001',
+          'reference': reference,
+          'title': title,
+          'quantity': 1.0
+        }
+      ]
+    )
+    self.tic()
+
+    # Reset quantity to 2
+    packing_list_line.setQuantity(quantity)
+
+    # generate items
+    packing_list.Delivery_createItemList()
+    self.tic()
+
+    item_by_hand_value_list = [q for q in
+        packing_list_line.getAggregateValueList()
+        if q.getReference() == reference]
+    item_by_dialog_value_list = [q for q in
+        packing_list_line.getAggregateValueList()
+        if q.getReference() != reference]
+
+    self.assertEqual(1, len(item_by_hand_value_list))
+    self.assertEqual(1, len(item_by_dialog_value_list))
+
+    item_by_hand = item_by_hand_value_list[0]
+    item_by_dialog = item_by_dialog_value_list[0]
+
+    self.assertTrue(item_by_dialog.getTitle().startswith(resource.getTitle()))
+
+    self.assertEqual(packing_list_line.getVariationCategoryList(), [])
+    movement_cell_list = packing_list_line.contentValues(
+                                    portal_type='Purchase Packing List Cell')
+    self.assertEqual(movement_cell_list,[])
+    self.assertEqual(packing_list_line.getTotalQuantity(), quantity)
+
+
+  def test_19_CreateItemsFromPackingListWithMoreItemThanQuantity(self):
+    quantity = 1
+    title = self.id()
+    reference = self.id()
+    organisation = self.createOrganisation()
+    self.tic()
+    resource = self.createNotVariatedResource()
+    self.tic()
+    packing_list = self.createPackingList(resource=resource,
+                                          organisation=organisation)
+
+    packing_list_line = self.createPackingListLine(packing_list=packing_list,
+                                                   resource=resource)
+    packing_list_line.setQuantity(quantity)
+    self.tic()
+
+    # Associate Items with delivery line
+    packing_list_line.DeliveryLine_createItemList(
+      type=self.item_portal_type,
+      listbox=[
+        {
+          'listbox_key': '001',
+          'reference': reference,
+          'title': title,
+          'quantity': 1.0
+        },
+        {
+          'listbox_key': '002',
+          'reference': reference+'B',
+          'title': title+'B',
+          'quantity': 1.0
+        }
+      ]
+    )
+    self.tic()
+
+    # Reset quantity to 1
+    packing_list_line.setQuantity(quantity)
+    self.tic()
+
+    # generate items, expect no-op
+    packing_list.Delivery_createItemList()
+    self.tic()
+
+    item_value_list = [q for q in
+        packing_list_line.getAggregateValueList()
+        if q.getReference() == reference]
+    item_2_value_list = [q for q in
+        packing_list_line.getAggregateValueList()
+        if q.getReference() == reference+'B']
+
+    self.assertEqual(1, len(item_value_list))
+    self.assertEqual(1, len(item_2_value_list))
+
+    self.assertEqual(packing_list_line.getTotalQuantity(), quantity)
+
+
 class TestItemScripts(ERP5TypeTestCase):
   """Test scripts from erp5_item.
   """
