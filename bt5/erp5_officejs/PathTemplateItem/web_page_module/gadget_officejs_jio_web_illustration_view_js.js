@@ -40,8 +40,8 @@
       iframe.setAttribute('class', iframe_class_string);
       return;
     }
-    iframe_class_string = iframe_class_string.substring(0, class_index)
-      + iframe_class_string.substring(class_index + class_name.length);
+    iframe_class_string = iframe_class_string.substring(0, class_index) +
+      iframe_class_string.substring(class_index + class_name.length);
     iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
     iframe.setAttribute('class', iframe_class_string);
     return;
@@ -127,7 +127,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "../../officejs_svg_editor_gadget/development/",
+            "../officejs_svg_editor_gadget/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",
