@@ -15,9 +15,9 @@
     this._prefix = spec.prefix;
     if (this._take_installer) {
       this._relative_url_list = [
-        this._origin_url,
-        "development/" + spec.manifest,
-        this._origin_url + "development/",
+        this._prefix || "/",
+        this._prefix + "development/" + spec.manifest,
+        this._prefix + "development/",
         this._prefix + "gadget_officejs_bootloader.js",
         this._prefix + "gadget_officejs_bootloader.appcache",
         this._prefix + "gadget_officejs_bootloader_presentation.html",
