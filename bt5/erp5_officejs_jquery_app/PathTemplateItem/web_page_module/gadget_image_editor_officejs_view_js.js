@@ -1,13 +1,12 @@
-/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, URL*/
+/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, jIO, Blob*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, RSVP, rJS, Handlebars, loopEventListener, URL) {
+(function (window, RSVP, rJS, Handlebars, loopEventListener, jIO, Blob) {
   "use strict";
 
   function saveContent(gadget, submit_event) {
     var i,
       doc = gadget.options.doc,
-      now = new Date(),
-      blob;
+      now = new Date();
     doc.parent_relative_url = "image_module";
     doc.portal_type = "Image";
     doc.modification_date = now.toISOString();
@@ -28,7 +27,7 @@
       .push(function (dataURI) {
         return jIO.util.dataURItoBlob(dataURI);
       })
-      .push(function(blob) {
+      .push(function (blob) {
         console.log(gadget.options.jio_key);
         return RSVP.all([
           gadget.put(gadget.options.jio_key, doc),
@@ -48,8 +47,8 @@
       iframe.setAttribute('class', iframe_class_string);
       return;
     }
-    iframe_class_string = iframe_class_string.substring(0, class_index)
-      + iframe_class_string.substring(class_index + class_name.length);
+    iframe_class_string = iframe_class_string.substring(0, class_index) +
+      iframe_class_string.substring(class_index + class_name.length);
     iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
     iframe.setAttribute('class', iframe_class_string);
     return;
@@ -131,20 +130,22 @@
             maximized: gadget.options.doc.title !== ""
           });
         })
-        .push(function() {
+        .push(function () {
           return gadget.getAttachment(gadget.options.jio_key, "data");
         })
         .push(
           function (blob_result) {
             gadget.props.blob = blob_result;
             return gadget.props.deferred.resolve();
-          }, function (error) {
+          },
+          function (error) {
             if (error.status_code === 404) {
               gadget.props.blob = new Blob([''], {type: 'image/png'});
               return gadget.props.deferred.resolve();
             }
             throw new Error(error);
-        });
+          }
+        );
     })
 
     /////////////////////////////////////////
@@ -160,7 +161,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "../../officejs_image_editor_gadget/development/",
+            "../officejs_image_editor_gadget/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",
@@ -196,8 +197,8 @@
               gadget.props.element.querySelector(
                 "form div.center"
               );
-            display_error_element.innerHTML = 
-                  '<br/><p style="color: red"></p><br/><br/>' + 
+            display_error_element.innerHTML =
+                  '<br/><p style="color: red"></p><br/><br/>' +
                   display_error_element.innerHTML;
             display_error_element.querySelector('p').textContent =
               "TIMEOUT: The editor gadget is taking too long to load but is" +
@@ -231,4 +232,4 @@
         });
     });
 
-}(window, RSVP, rJS, Handlebars, loopEventListener, URL));
+}(window, RSVP, rJS, Handlebars, loopEventListener, jIO, Blob));

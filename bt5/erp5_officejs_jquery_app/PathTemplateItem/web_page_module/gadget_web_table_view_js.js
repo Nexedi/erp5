@@ -40,8 +40,8 @@
       iframe.setAttribute('class', iframe_class_string);
       return;
     }
-    iframe_class_string = iframe_class_string.substring(0, class_index)
-      + iframe_class_string.substring(class_index + class_name.length);
+    iframe_class_string = iframe_class_string.substring(0, class_index) +
+      iframe_class_string.substring(class_index + class_name.length);
     iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
     iframe.setAttribute('class', iframe_class_string);
     return;
@@ -140,7 +140,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "../../officejs_web_table_editor_gadget/development/",
+            "../officejs_web_table_editor_gadget/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",
@@ -164,15 +164,15 @@
           return text_gadget.getElement();
         }, function (error) {
           var display_error_element;
-          if (error.message.indexOf("Timeout while loading:") === 0  
-              || error.indexOf("Timed out after ") === 0) {
+          if (error.message.indexOf("Timeout while loading:") === 0 ||
+              error.indexOf("Timed out after ") === 0) {
 
             display_error_element =
               gadget.props.element.querySelector(
                 "form div.center"
               );
-            display_error_element.innerHTML = 
-                  '<br/><p style="color: red"></p><br/><br/>' + 
+            display_error_element.innerHTML =
+                  '<br/><p style="color: red"></p><br/><br/>' +
                   display_error_element.innerHTML;
             display_error_element.querySelector('p').textContent =
               "TIMEOUT: The editor gadget is taking too long to load but is" +
