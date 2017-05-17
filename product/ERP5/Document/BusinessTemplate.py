@@ -2519,8 +2519,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     force = kw.get('force')
     installed_bt = kw.get('installed_bt')
     if installed_bt is not None:
-      previous_portal_type_workflow_chain_list = list(installed_bt\
+      try:
+        previous_portal_type_workflow_chain_list = list(installed_bt\
           .getTemplatePortalTypeWorkflowChainList())
+      except Exception:
+        # This will happen in case the `installed_bt` is Business Manager, so
+        # we won't need to goto the further installation process
+        return
     else:
       previous_portal_type_workflow_chain_list = []
     # We now need to setup the list of workflows corresponding to

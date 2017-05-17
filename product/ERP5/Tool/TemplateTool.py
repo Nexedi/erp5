@@ -138,7 +138,13 @@ class TemplateTool (BaseTool):
       # potential danger because business templates may exchange catalog
       # methods, so the database could be broken temporarily.
       last_bt = last_time = None
-      for bt in self.objectValues(portal_type=['Business Template', 'Business Package']):
+      for bt in self.objectValues(portal_type=['Business Template',
+                                               'Business Package',
+                                               'Business Manager']):
+        if bt.getPortalType() == 'Business Manager':
+          if bt.getStatus() == 'installed':
+            return bt
+          return None
         if bt.getTitle() == title or title in bt.getProvisionList():
           state = bt.getInstallationState()
           if state == 'installed':
