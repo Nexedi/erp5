@@ -1,0 +1,138 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test AFS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/afs/</td>
+  <td></td>
+</tr>
+
+<!-- Basic Menu Navigation -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Publishers']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Publishers']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Publisher List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Software Products']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Software Products']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Software List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Success Cases']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Success Cases']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Success Story List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Directory']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Directory']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Free Software Publisher Directory']</td>
+  <td></td>
+</tr>
+
+
+</tbody></table>
+</body>
+</html>
