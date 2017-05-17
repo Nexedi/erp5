@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>title</string>
+                <string>width</string>
               </list>
             </value>
         </item>
@@ -73,11 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_reference</string> </value>
+                    <value> <string>my_text_area_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>input_type</string> </key>
+                    <value> <string>textarea</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -86,6 +91,10 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Sub Gadget Installer</string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>33</int> </value>
                 </item>
               </dictionary>
             </value>
