@@ -119,6 +119,7 @@ gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
 miniPaint/config.js\n
 miniPaint/img/right.png\n
+miniPaint/img/logo.png\n
 miniPaint/img/colorwheel.png\n
 miniPaint/img/favicon.png\n
 miniPaint/img/preview.jpg\n
@@ -314,7 +315,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24493.29776.9796</string> </value>
+                <value> <string>958.44228.61941.16025</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -332,7 +333,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491383625.45</float>
+                        <float>1495106980.18</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

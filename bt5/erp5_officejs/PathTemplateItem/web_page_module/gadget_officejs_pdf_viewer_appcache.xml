@@ -104,19 +104,17 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Fri, 09 Jun 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 jio_mappingstorage.js\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
@@ -177,9 +175,7 @@ gadget_officejs_pdf_viewer_router.html\n
 gadget_officejs_jio_pdf_view.html\n
 gadget_officejs_jio_pdf_view.js\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -320,7 +316,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.31303.55007.33604</string> </value>
+                <value> <string>959.28053.52424.21435</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -338,7 +334,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491385007.69</float>
+                        <float>1495094528.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
