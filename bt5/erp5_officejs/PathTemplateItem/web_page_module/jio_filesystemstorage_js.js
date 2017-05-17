@@ -6,10 +6,7 @@
   function FileSystemStorage(spec) {
     this._document = spec.document;
     this._sub_storage = jIO.createJIO(spec.sub_storage);
-    this._id_dict = {
-      "/": {"index.html": {}},
-      "/development/": {"index.html": {}}
-    };
+    this._id_dict = {};
   }
 
   FileSystemStorage.prototype.get = function (url) {
@@ -23,9 +20,8 @@
   FileSystemStorage.prototype.getAttachment = function (doc_id, attachment_id) {
     return this._sub_storage.getAttachment(
       this._document,
-      (attachment_id === "index.html") ? ((doc_id === "/") ?
-        "/" : "development/") : ((doc_id === "/") ?
-          attachment_id : doc_id + attachment_id)
+      doc_id + ((attachment_id === "index.html") ?
+        (doc_id.endsWith("imagelib/") ? "index.html" : "") : attachment_id)
     );
   };
 
@@ -51,19 +47,19 @@
         return context._sub_storage.allAttachments(context._document);
       })
       .push(function (result) {
-        var id, path, last_slash_index, filename;
+        var id, path, last_index, filename;
         for (id in result) {
           if (result.hasOwnProperty(id)) {
-            last_slash_index = id.lastIndexOf("/") + 1;
-            if (last_slash_index === 0) {
-              path = "/";
-              filename = id;
+            last_index = id.lastIndexOf("/") + 1;
+            if (last_index === id.length) {
+              path = id || "/";
+              filename = "index.html";
             } else {
-              path = id.substring(0, last_slash_index);
-              filename = id.substring(last_slash_index);
+              path = id.substring(0, last_index);
+              filename = id.substring(last_index);
             }
           }
-          if (!path.startsWith("http") && id !== "/") {
+          if (!id.includes("http")) {
             if (path.charAt(0) !== '/') {
               path = '/' + path;
             }
