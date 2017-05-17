@@ -4,6 +4,13 @@
    ================================ fonts  =================================
    =========================================================================
 */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('font-awesome/font-awesome-webfont.eot');
+  src: url('font-awesome/font-awesome-webfont.eot') format('embedded-opentype'), url('font-awesome/font-awesome-webfont.woff2') format('woff2'), url('font-awesome/font-awesome-webfont.woff') format('woff'), url('font-awesome/font-awesome-webfont.ttf') format('truetype'), url('font-awesome/font-awesome-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
 /* global reference font-size (.9em = 14.4px) */
 html.ui-mobile body div p,
 html.ui-mobile body div a,
