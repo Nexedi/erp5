@@ -111,6 +111,7 @@
 CACHE:\n
 rsvp.js\n
 renderjs.js\n
+jiodev.js\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 method-draw/browser-not-supported.html\n
@@ -509,7 +510,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>958.44217.46814.8652</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -527,7 +528,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491383496.82</float>
+                        <float>1495033633.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

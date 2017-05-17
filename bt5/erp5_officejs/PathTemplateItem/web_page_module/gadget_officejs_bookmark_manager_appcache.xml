@@ -107,19 +107,17 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Fri, 09 Dec 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 jio_mappingstorage.js\n
 erp5_launcher.js\n
 gadget_erp5.css\n
@@ -137,8 +135,8 @@ gadget_officejs_page_document_list.html\n
 gadget_officejs_page_document_list.js\n
 gadget_officejs_jio.html\n
 gadget_officejs_jio.js\n
-gadget_officejs_jio_url_view.html\n
-gadget_officejs_jio_url_view.js\n
+gadget_officejs_jio_bookmark_view.html\n
+gadget_officejs_jio_bookmark_view.js\n
 gadget_officejs_page_add_document.html\n
 gadget_officejs_page_add_document.js\n
 gadget_officejs_page_add_bookmark.html\n
@@ -175,9 +173,7 @@ jquerymobile.js\n
 renderjs.js\n
 rsvp.js\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -318,7 +314,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>959.29057.8406.2082</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -336,7 +332,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491383463.37</float>
+                        <float>1495097632.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

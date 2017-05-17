@@ -104,21 +104,13 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Fri, 06 Feb 2015 15:31:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 # XXX Adding gadget_ckeditor first is not a good idea\n
-# XXX Make sure to have ckeditor timestamp set to \n
+# XXX Make sure to have ckeditor timestamp set to\n
 CACHE:\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 rsvp.js\n
 renderjs.js\n
 jiodev.js\n
@@ -602,9 +594,7 @@ ooffice_fonts/ktwsh55ufijgk35iptozrmuwqtuy.js\n
 ooffice_fonts/ktwsh55ufirzeamcpft1h7dwca.js\n
 ooffice_fonts/p7agk5uum7xi6muwqtuy.js\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -745,7 +735,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>959.27910.57959.65194</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -763,7 +753,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491383545.73</float>
+                        <float>1495097874.72</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

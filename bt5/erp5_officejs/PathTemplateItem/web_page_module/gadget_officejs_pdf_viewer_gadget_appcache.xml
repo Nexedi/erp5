@@ -104,24 +104,17 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
+            <value> <string>CACHE MANIFEST\n
 # generated on Fri, 09 Jun 2016 11:45:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-https://netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
 handlebars.js\n
 rsvp.js\n
 renderjs.js\n
+jiodev.js\n
 gadget_officejs_pdf_viewer.js\n
 pdf_js/images/toolbarButton-pageUp.png\n
 pdf_js/images/annotation-insert.svg\n
@@ -353,9 +346,7 @@ pdf_js/cmaps/KSC-EUC-H.bcmap\n
 pdf_js/cmaps/EUC-V.bcmap\n
 pdf_js/debugger.js\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -496,7 +487,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>959.27905.14969.32017</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -514,7 +505,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491383502.35</float>
+                        <float>1495033698.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
