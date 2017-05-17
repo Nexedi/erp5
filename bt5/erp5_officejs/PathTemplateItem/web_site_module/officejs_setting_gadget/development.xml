@@ -98,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/hateoas</string>
+                        <string>ERP5 Web Section/development</string>
                       </tuple>
                     </key>
                     <value>
@@ -127,7 +127,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>default_view_action_reference</string> </value>
+                      <value> <string>configuration_router_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -137,7 +137,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>view_action_category</string> </value>
+                      <value> <string>configuration_jio_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -147,7 +147,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>frontpage_gadget</string> </value>
+                      <value> <string>configuration_panel_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -157,7 +157,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>frontpage_gadget_url</string> </value>
+                      <value> <string>configuration_translation_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -167,7 +167,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_frontpage_gadget_url</string> </value>
+                      <value> <string>configuration_header_gadget_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -177,7 +177,27 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_application_title</string> </value>
+                      <value> <string>configuration_hateoas_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_manifest_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -207,43 +227,70 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/hateoas</string>
+                <string>caching_policy/must-revalidate</string>
+                <string>aggregate/web_page_module/gadget_officejs_setting_html</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>configuration_application_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_hateoas_url</string> </key>
+            <value> <string>hateoas</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_header_gadget_url</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>configuration_frontpage_gadget_url</string> </key>
+            <key> <string>configuration_jio_gadget_url</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>configuration_manifest_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_panel_gadget_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_router_gadget_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_translation_gadget_url</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>ALLOW-FROM-ALL</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>ERP5Document_getHateoas</string> </value>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>ERP5Document_getHateoas</string> </value>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>ERP5Document_getHateoas</string> </value>
-        </item>
-        <item>
-            <key> <string>default_view_action_reference</string> </key>
-            <value> <string>view</string> </value>
+            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -256,22 +303,12 @@
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>frontpage_gadget</string> </key>
-            <value> <string>gadget_woelfel_pt_frontpage.html</string> </value>
-        </item>
-        <item>
-            <key> <string>frontpage_gadget_url</string> </key>
-            <value> <string>gadget_woelfel_pt_frontpage.html</string> </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>hateoas</string> </value>
+            <value> <string>development</string> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>WebSection_viewRenderJSPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -285,19 +322,15 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>HalRestricted</string> </value>
+            <value> <string>RJS</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Restricted Hateoas</string> </value>
-        </item>
-        <item>
-            <key> <string>view_action_category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>Setting Gadget Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -413,7 +446,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481190889.39</float>
+                        <float>1494929225.66</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -458,7 +491,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.53714.54023.11622</string> </value>
+                <value> <string>959.26303.58536.40618</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -476,7 +509,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481194968.59</float>
+                        <float>1494929303.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
