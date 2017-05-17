@@ -1,0 +1,207 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test AFS UI List Navigation</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/afs/</td>
+  <td></td>
+</tr>
+
+<!-- Basic Menu Navigation -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Publishers']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Publishers']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Publisher List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>Nexedi</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='1 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/th[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='custom-software-profile-image-wrapper']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Software Products']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Software Products']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Software List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>ERP5</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='1 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/th[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='custom-software-profile-image-wrapper']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Success Cases']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Success Cases']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Success Story List']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>Airbus</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='1 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/th[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='custom-success-story-image-wrapper']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
