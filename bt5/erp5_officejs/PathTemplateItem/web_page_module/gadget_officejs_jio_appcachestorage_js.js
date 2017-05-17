@@ -12,19 +12,20 @@
       ((spec.version !== undefined) ?
       (spec.version + (spec.version.endsWith('/') ? '' : '/')) : ""));
     this._relative_url_list = [this._origin_url, spec.manifest];
+    this._prefix = spec.prefix;
     if (this._take_installer) {
       this._relative_url_list = [
-        this._origin_url,
-        "development/" + spec.manifest,
-        this._origin_url + "development/",
-        "gadget_officejs_bootloader.js",
-        "gadget_officejs_bootloader.appcache",
-        "gadget_officejs_bootloader_presentation.html",
-        "gadget_officejs_bootloader_presentation.js",
-        "gadget_officejs_bootloader_presentation.css",
-        "gadget_officejs_bootloader_serviceworker.js",
-        "gadget_erp5_nojqm.css",
-        "jio_appcachestorage.js"
+        this._prefix || "/",
+        this._prefix + "development/" + spec.manifest,
+        this._prefix + "development/",
+        this._prefix + "gadget_officejs_bootloader.js",
+        this._prefix + "gadget_officejs_bootloader.appcache",
+        this._prefix + "gadget_officejs_bootloader_presentation.html",
+        this._prefix + "gadget_officejs_bootloader_presentation.js",
+        this._prefix + "gadget_officejs_bootloader_presentation.css",
+        this._prefix + "gadget_officejs_bootloader_serviceworker.js",
+        this._prefix + "gadget_erp5_nojqm.css",
+        this._prefix + "jio_appcachestorage.js"
       ];
     }
   }
@@ -67,7 +68,7 @@
 
   AppCacheStorage.prototype.repair = function () {
     var storage = this,
-      prefix = storage._take_installer ? "development/" : "";
+      prefix = storage._take_installer ? this._prefix + "development/" : "";
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
