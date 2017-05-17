@@ -8,7 +8,7 @@
       doc = gadget.options.doc,
       now = new Date(),
       dict_map = {"text/html": "Web Page", "text/javascript": "Web Script", "text/css": "Web Style", "text/cache-manifest": "Web Manifest"};
-    
+
     doc.modification_date = now.toISOString();
     for (i = 0; i < submit_event.target.length; i += 1) {
       // XXX Should check input type instead
@@ -44,7 +44,6 @@
         return gadget.getSetting("edited_application_name");
       })
       .push(function (app_name) {
-        
         return gadget.updateHeader({
           title: doc.reference + ' | ' + app_name
         });
@@ -159,7 +158,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "../../officejs_codemirror/development/",
+            "../officejs_codemirror/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",

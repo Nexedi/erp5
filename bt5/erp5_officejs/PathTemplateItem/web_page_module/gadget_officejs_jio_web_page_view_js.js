@@ -128,7 +128,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "../../officejs_ckeditor_gadget/development/",
+            "../officejs_ckeditor_gadget/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",

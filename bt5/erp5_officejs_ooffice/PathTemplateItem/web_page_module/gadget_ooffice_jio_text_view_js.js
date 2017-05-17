@@ -1,6 +1,7 @@
-/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, document, jIO*/
+/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, document, jIO, Blob*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, document, RSVP, rJS, Handlebars, loopEventListener, jIO) {
+(function (window, document, RSVP, rJS, Handlebars, loopEventListener, jIO,
+            Blob) {
   "use strict";
 
   function this_func_link(name) {
@@ -12,7 +13,7 @@
   function renderOnlyOfficeGadget(gadget) {
     var text_gadget;
     return gadget.declareGadget(
-      "../../ooffice_text_gadget/development/",
+      "../ooffice_text_gadget/development/",
       {
         scope: "my_text_content",
         sandbox: "iframe",
@@ -61,7 +62,7 @@
         }
         return undefined;
       })
-      .push(function(datauri) {
+      .push(function (datauri) {
         if (datauri !== undefined) {
           return gadget.jio_putAttachment(gadget.options.jio_key, 'data',
             jIO.util.dataURItoBlob(datauri.text_content));
@@ -108,8 +109,8 @@
       iframe.setAttribute('class', iframe_class_string);
       return true;
     }
-    iframe_class_string = iframe_class_string.substring(0, class_index)
-      + iframe_class_string.substring(class_index + class_name.length);
+    iframe_class_string = iframe_class_string.substring(0, class_index) +
+      iframe_class_string.substring(class_index + class_name.length);
     iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
     iframe.setAttribute('class', iframe_class_string);
     return false;
@@ -240,9 +241,9 @@
         })
         .push(function () {
           var iframe;
-          if (gadget.options.doc.content_type === undefined
-              || gadget.options.doc.content_type.indexOf("application/x-asc")
-                 === 0) {
+          if (gadget.options.doc.content_type === undefined ||
+              gadget.options.doc.content_type.indexOf("application/x-asc") === 0
+              ) {
             return renderOnlyOfficeGadget(gadget);
           }
           iframe = document.createElement("iframe");
@@ -284,4 +285,4 @@
         });
     });
 
-}(window, document, RSVP, rJS, Handlebars, loopEventListener, jIO));
+}(window, document, RSVP, rJS, Handlebars, loopEventListener, jIO, Blob));

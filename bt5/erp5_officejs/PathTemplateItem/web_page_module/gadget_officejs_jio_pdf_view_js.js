@@ -1,13 +1,12 @@
-/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, URL*/
+/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, Blob, jIO*/
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, RSVP, rJS, Handlebars, loopEventListener, URL) {
+(function (window, RSVP, rJS, Handlebars, loopEventListener, Blob, jIO) {
   "use strict";
 
   function saveContent(gadget, submit_event) {
     var i,
       doc = gadget.options.doc,
-      now = new Date(),
-      blob;
+      now = new Date();
     doc.parent_relative_url = "document_module";
     doc.portal_type = "PDF";
     doc.modification_date = now.toISOString();
@@ -29,9 +28,9 @@
         if (dataURI.text_content === "data:") {
           return new Blob([''], {type: 'application/pdf'});
         }
-        return jIO.util.dataURItoBlob(dataURI['text_content']);
+        return jIO.util.dataURItoBlob(dataURI.text_content);
       })
-      .push(function(blob) {
+      .push(function (blob) {
         return RSVP.all([
           gadget.put(gadget.options.jio_key, doc),
           gadget.putAttachment(gadget.options.jio_key, "data", blob)
@@ -50,8 +49,8 @@
       iframe.setAttribute('class', iframe_class_string);
       return;
     }
-    iframe_class_string = iframe_class_string.substring(0, class_index)
-      + iframe_class_string.substring(class_index + class_name.length);
+    iframe_class_string = iframe_class_string.substring(0, class_index) +
+      iframe_class_string.substring(class_index + class_name.length);
     iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
     iframe.setAttribute('class', iframe_class_string);
     return;
@@ -133,20 +132,22 @@
             maximized: gadget.options.doc.title !== ""
           });
         })
-        .push(function() {
+        .push(function () {
           return gadget.getAttachment(gadget.options.jio_key, "data");
         })
         .push(
           function (blob_result) {
             gadget.props.blob = blob_result;
             return gadget.props.deferred.resolve();
-          }, function (error) {
+          },
+          function (error) {
             if (error.status_code === 404) {
               gadget.props.blob = new Blob([''], {type: 'application/pdf'});
               return gadget.props.deferred.resolve();
             }
             throw new Error(error);
-        });
+          }
+        );
     })
 
     /////////////////////////////////////////
@@ -162,7 +163,7 @@
         })
         .push(function () {
           return gadget.declareGadget(
-            "../../officejs_pdf_viewer_gadget/development/",
+            "../officejs_pdf_viewer_gadget/development/",
             {
               scope: "my_text_content",
               sandbox: "iframe",
@@ -177,16 +178,16 @@
             'style',
             'width:100%; border: 0 none; height: 600px'
           );
-          iframe.setAttribute(
-            'allowFullScreen',''
-          )
+          iframe.setAttribute('allowFullScreen', '');
           return jIO.util.readBlobAsDataURL(gadget.props.blob);
         })
         .push(function (dataURL) {
           if (dataURL.target.result.split('data:')[1] === '') {
             dataURL = '';
           } else {
-            dataURL = dataURL.target.result.split(/data:application\/.*;base64,/)[1];
+            dataURL = dataURL.target.result.split(
+              /data:application\/.*;base64,/
+            )[1];
           }
           return image_content_gadget.render({
             "key": 'text_content',
@@ -206,8 +207,8 @@
               gadget.props.element.querySelector(
                 "form div.center"
               );
-            display_error_element.innerHTML = 
-                  '<br/><p style="color: red"></p><br/><br/>' + 
+            display_error_element.innerHTML =
+                  '<br/><p style="color: red"></p><br/><br/>' +
                   display_error_element.innerHTML;
             display_error_element.querySelector('p').textContent =
               "TIMEOUT: The editor gadget is taking too long to load but is" +
@@ -241,4 +242,4 @@
         });
     });
 
-}(window, RSVP, rJS, Handlebars, loopEventListener, URL));
+}(window, RSVP, rJS, Handlebars, loopEventListener, Blob, jIO));
