@@ -79,18 +79,18 @@ else:
                          Query(birth_date = [DateTime(person_start_date.year(), 1, 1), DateTime(person_start_date.year(), 12, 31),],range = 'minmax'),
                          logical_operator = "AND"),
                          logical_operator = "OR")
-select_expression = \
-"""((title ="%s"))AS result_order
-""" % (person_title)
 #select_expression = \
 #"""((title ="%s") + (start_date ="%s") + (birthplace_city ="%s"))AS result_order
 #""" % (person_title, person_start_date, person_birthplace)
 
-candidate_list = context.portal_catalog(portal_type = 'Person',
-                                        query = query,
-                                        select_expression = select_expression,
-                                        sort_on = (('result_order', 'DESC', 'int'),),
-                                        select_expression_key = 'result_order')
+candidate_list = sorted(
+  context.portal_catalog(
+    portal_type='Person',
+    query=query,
+    select_list=['title'],
+  ),
+  key=lambda x: x.title == person_title
+)
 
 for candidate in candidate_list:
   candidate_first_name = candidate.getFirstName()

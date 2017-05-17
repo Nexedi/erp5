@@ -47,14 +47,12 @@ elif to_date is not None:
     'range': 'ngt',
     'query': to_date,
   }
-select_expression = {'date' : 'DATE_FORMAT(creation_date, "%s")'%sql_format}
-group_by = ['DATE_FORMAT(creation_date, "%s")' % sql_format,]
 
 # count number of object created by the user for each type of document
-result_list = context.portal_catalog.countResults(select_expression=select_expression,
+result_list = context.portal_catalog.countResults(select_dict={'date': 'DATE_FORMAT(creation_date, "%s")' % sql_format},
                                                   portal_type=portal_type_list,limit=None,
                                                   owner=context.Person_getUserId(),
-                                                  group_by_expression=group_by,
+                                                  group_by=['DATE_FORMAT(creation_date, "%s")' % sql_format],
                                                   **count_kw)
 
 # build result dict per portal_type then period
