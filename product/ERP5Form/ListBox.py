@@ -1368,11 +1368,11 @@ class ListBoxRenderer:
       return DomainSelection(domain_dict = root_dict).__of__(self.getContext())
 
   @lazyMethod
-  def getStatSelectExpression(self):
-    """Return a string which expresses the information retrieved by SELECT for
+  def getStatSelectDict(self):
+    """Return a dict which expresses the information retrieved by SELECT for
     the statistics.
     """
-    select_expression_list = []
+    select_dict = {}
     if self.showStat():
       stats = self.getSelectionTool().getSelectionStats(self.getSelectionName(), REQUEST = self.request)
       stat_column_list = self.getStatColumnList()
@@ -1387,13 +1387,13 @@ class ListBoxRenderer:
         if (column is not None) and (column[0] == column[1]):
           try:
             if stats[index] != ' ':
-              select_expression_list.append('%s(%s) AS %s' % (stats[index], sql, alias))
+              select_dict[alias] = '%s(%s)' % (stats[index], sql)
             else:
-              select_expression_list.append("'' AS %s" % alias)
+              select_dict[alias] = "''"
           except IndexError:
-            select_expression_list.append("'' AS %s" % alias)
+            select_dict[alias] = "''"
 
-    return ', '.join(select_expression_list)
+    return select_dict
 
   def makeReportTreeList(self, root_dict = None, report_path = None, base_category = None, depth = 0,
                          unfolded_list = (), is_report_opened = True, sort_on = (('id', 'ASC'),),
@@ -1619,7 +1619,7 @@ class ListBoxRenderer:
     # First, get the statitics by the global stat method.
     param_dict = self.getParamDict()
     new_param_dict = param_dict.copy()
-    new_param_dict['select_expression'] = self.getStatSelectExpression()
+    new_param_dict['select_dict'] = self.getStatSelectDict()
     selection = self.getSelection()
     selection.edit(params = new_param_dict)
 
@@ -1703,7 +1703,7 @@ class ListBoxRenderer:
     selection = self.getSelection()
     selection_tool = self.getSelectionTool()
     report_list = selection.getReportList()
-    stat_select_expression = self.getStatSelectExpression()
+    stat_select_dict = self.getStatSelectDict()
     stat_method = self.getStatMethod()
     count_method = self.getCountMethod()
     list_method = self.getListMethod()
@@ -1769,9 +1769,9 @@ class ListBoxRenderer:
             stat_method)
 
         if report_tree.is_pure_summary and self.showStat():
-          # Push a new select_expression.
+          # Push a new select_dict.
           new_param_dict = param_dict.copy()
-          new_param_dict['select_expression'] = stat_select_expression
+          new_param_dict['select_dict'] = stat_select_dict
           selection.edit(params = new_param_dict)
 
           # Query the stat.
