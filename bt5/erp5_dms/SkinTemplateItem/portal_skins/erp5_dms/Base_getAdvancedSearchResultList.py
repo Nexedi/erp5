@@ -9,6 +9,7 @@
     - if requested, filters result so that only the user's docs are returned
     - if requested, filters result to return only the newest versions
 """
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 portal = context.getPortalObject()
 
 query_kw = {}
@@ -49,25 +50,21 @@ for key in ('reference', 'version', 'language',):
   if value is not None:
     query_kw[key] = value
 
-where_expression_list = []
+query_list = []
 creation_from = parsed_search_string.get('creation_from', None)
 creation_to = parsed_search_string.get('creation_to', None)
 modification_from = parsed_search_string.get('modification_from', None)
 modification_to = parsed_search_string.get('modification_to', None)
 if creation_from:
-  where_expression_list.append('catalog.creation_date >= "%s"' \
-                                 %creation_from.strftime(date_format))
+  query_list.append(SimpleQuery(creation_date=creation_from.strftime('>=' + date_format)))
 if creation_to:
-  where_expression_list.append('catalog.creation_date <= "%s"' \
-                                 %creation_to.strftime(date_format))
+  query_list.append(SimpleQuery(creation_date=creation_to.strftime('<=' + date_format)))
 if modification_from:
-  where_expression_list.append('catalog.modification_date >= "%s"' \
-                                 %modification_from.strftime(date_format))
+  query_list.append(SimpleQuery(modification_date=modification_from.strftime('>=' + date_format)))
 if modification_to:
-  where_expression_list.append('catalog.modification_date <= "%s"' \
-                                 %modification_to.strftime(date_format))
-if len(where_expression_list):
-  query_kw['where_expression'] = ' AND '.join(where_expression_list)
+  query_list.append(SimpleQuery(modification_date=modification_to.strftime('<=' + date_format)))
+if query_list:
+  query_kw['query'] = ComplexQuery(query_list, logical_operator='and')
 
 if parsed_search_string.get('mine', None) is not None:
   # user wants only his documents
