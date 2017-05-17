@@ -156,6 +156,73 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_document_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_latest_version</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_redirect_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_cache_file</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
@@ -185,21 +252,45 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/gadget_officejs_setting_html</string>
+                <string>aggregate/web_page_module/gadget_officejs_bootloader.html</string>
               </tuple>
             </value>
         </item>
         <item>
+            <key> <string>configuration_cache_file</string> </key>
+            <value> <string>gadget_officejs_setting.appcache</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_document_version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_latest_version</string> </key>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_redirect_url</string> </key>
+            <value> <string>development</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>SAMEORIGIN</string> </value>
+        </item>
+        <item>
             <key> <string>container_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>content_layout</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>custom_render_method_id</string> </key>
-            <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -213,7 +304,7 @@
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewRenderJSPreference</string> </value>
+            <value> <string>WebSection_viewOfficeJSApplicationPreference</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -225,7 +316,7 @@
         </item>
         <item>
             <key> <string>skin_selection_name</string> </key>
-            <value> <string>RJS</string> </value>
+            <value> <string>Officejs</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
@@ -418,7 +509,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>955.53737.30951.6877</string> </value>
+                <value> <string>959.26294.27678.4522</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -436,7 +527,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1481194968.62</float>
+                        <float>1494929303.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
