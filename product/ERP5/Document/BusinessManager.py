@@ -487,6 +487,9 @@ class BusinessManager(Folder):
           path_item.layer = 0
       self.status = 'flattened'
 
+  def preinstall(self, check_dependencies=1, **kw):
+    pass
+
   def reduceBusinessManager(self):
     """
     Reduction is a function that takes a Business Manager as input and returns
