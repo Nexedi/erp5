@@ -465,7 +465,8 @@
         </item>
         <item>
             <key> <string>configuration_sub_gadget_installer</string> </key>
-            <value> <string>../ooffice_presentation_gadget/</string> </value>
+            <value> <string>../ooffice_presentation_gadget/\n
+../officejs_setting_gadget/</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -716,7 +717,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.34158.24639.31624</string> </value>
+                <value> <string>958.44217.46814.8652</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -734,7 +735,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491989498.21</float>
+                        <float>1495030640.84</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

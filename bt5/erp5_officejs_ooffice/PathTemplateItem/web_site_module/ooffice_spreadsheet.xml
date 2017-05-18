@@ -465,7 +465,8 @@
         </item>
         <item>
             <key> <string>configuration_sub_gadget_installer</string> </key>
-            <value> <string>../ooffice_spreadsheet_gadget/</string> </value>
+            <value> <string>../ooffice_spreadsheet_gadget/\n
+../officejs_setting_gadget/</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -531,7 +532,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Office JS Spreadsheet</string> </value>
+            <value> <string>Onlyoffice Spreadsheet</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -716,7 +717,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.34158.24639.31624</string> </value>
+                <value> <string>959.27989.41545.30822</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -734,7 +735,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491989468.97</float>
+                        <float>1495030647.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
