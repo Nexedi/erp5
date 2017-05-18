@@ -112,11 +112,12 @@
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-font-awesome/font-awesome.min.css\n
-font-awesome/fontawesome-webfont.eot\n
-font-awesome/fontawesome-webfont.woff\n
-font-awesome/fontawesome-webfont.ttf\n
-font-awesome/fontawesome-webfont.svg\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 URI.js\n
 dygraph.js\n
 gadget_erp5.css\n
@@ -312,7 +313,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.44217.46814.8652</string> </value>
+                <value> <string>959.28053.22886.7526</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -330,7 +331,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495025613.19</float>
+                        <float>1495094344.5</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

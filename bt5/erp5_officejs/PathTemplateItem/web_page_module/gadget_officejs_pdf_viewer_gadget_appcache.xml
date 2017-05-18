@@ -114,6 +114,7 @@ gadget_officejs_liberator.html\n
 handlebars.js\n
 rsvp.js\n
 renderjs.js\n
+jiodev.js\n
 gadget_officejs_pdf_viewer.js\n
 pdf_js/images/toolbarButton-pageUp.png\n
 pdf_js/images/annotation-insert.svg\n
@@ -486,7 +487,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.44217.46814.8652</string> </value>
+                <value> <string>959.27905.14969.32017</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -504,7 +505,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495025353.68</float>
+                        <float>1495033698.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
