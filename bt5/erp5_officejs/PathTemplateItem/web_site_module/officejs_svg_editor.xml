@@ -451,7 +451,8 @@
         </item>
         <item>
             <key> <string>configuration_sub_gadget_installer</string> </key>
-            <value> <string>../officejs_svg_editor_gadget/</string> </value>
+            <value> <string>../officejs_svg_editor_gadget/\n
+../officejs_setting_gadget/</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -702,7 +703,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.28726.6043.29081</string> </value>
+                <value> <string>958.44217.46814.8652</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -720,7 +721,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491232484.01</float>
+                        <float>1495026508.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
