@@ -109,11 +109,12 @@
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-font-awesome/font-awesome.min.css\n
-font-awesome/fontawesome-webfont.eot\n
-font-awesome/fontawesome-webfont.woff\n
-font-awesome/fontawesome-webfont.ttf\n
-font-awesome/fontawesome-webfont.svg\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 jio_mappingstorage.js\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
@@ -309,7 +310,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.44228.61941.16025</string> </value>
+                <value> <string>959.28059.10542.30054</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -327,7 +328,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495025769.97</float>
+                        <float>1495094557.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
