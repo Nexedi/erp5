@@ -79,22 +79,7 @@ for line in kw.get('listbox'):
       movement_to_update.setAggregateValueList(
         movement_to_update.getAggregateValueList() + [item])
 
-
-if context.isMovement():
-  movement_list = context,
-else:
-  movement_list = context.getCellValueList(base_id='movement')
-for movement in movement_list:
-  quantity = 0
-  item_list = movement.getAggregateValueList()
-  for item in item_list:
-    if item.getQuantityUnit() != movement.getQuantityUnit():
-      if len(item_list) > 1:
-        raise NotImplementedError(
-          'Quantity unit from the movement differs from quantity'
-          ' unit on the item')
-    quantity += item.getQuantity(at_date=DateTime())
-  movement.setQuantity(quantity)
+context.Movement_updateQuantityFromAggregateList(at_date=DateTime())
 
 return context.Base_redirect(form_id, keep_items=dict(
       portal_status_message=translateString('Items created')))
