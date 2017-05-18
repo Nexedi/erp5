@@ -20,7 +20,8 @@
   FileSystemStorage.prototype.getAttachment = function (doc_id, attachment_id) {
     return this._sub_storage.getAttachment(
       this._document,
-      doc_id + ((attachment_id === "index.html") ? "" : attachment_id)
+      doc_id + ((attachment_id === "index.html") ?
+        (doc_id.endsWith("imagelib/") ? "index.html" : "") : attachment_id)
     );
   };
 

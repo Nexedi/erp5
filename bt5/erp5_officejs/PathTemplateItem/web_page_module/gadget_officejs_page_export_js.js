@@ -8,15 +8,90 @@
     "officejs_export/", ""),
     application_dict = {
     "Text Editor": {
-      "url": origin_url + "officejs_text_editor/",
+      "url": "officejs_text_editor/",
       "cache": "gadget_officejs_text_editor.appcache",
       "sub_gadget": ["officejs_ckeditor_gadget", "officejs_setting_gadget"]
+    },
+    "Illustration Editor": {
+      "url": "officejs_svg_editor/",
+      "cache": "gadget_officejs_illustration.appcache",
+      "sub_gadget": ["officejs_svg_editor_gadget", "officejs_setting_gadget"]
+    },
+    "PDF Viewer": {
+      "url": "officejs_pdf_viewer/",
+      "cache": "gadget_officejs_pdf_viewer.appcache",
+      "sub_gadget": ["officejs_pdf_viewer_gadget", "officejs_setting_gadget"]
+    },
+    "Cribjs": {
+      "url": "officejs_cribjs/",
+      "cache": "gadget_officejs_crib.appcache",
+      "sub_gadget": ["officejs_codemirror", "officejs_setting_gadget"]
+    },
+    "Bookmark Manager": {
+      "url": "officejs_bookmark_manager/",
+      "cache" : "gadget_officejs_bookmark_manager.appcache",
+      "sub_gadget": []
+    },
+    "Onlyoffice Text": {
+      "url": "ooffice_text/",
+      "cache": "gadget_ooffice_text.appcache",
+      "sub_gadget": ["ooffice_text_gadget", "officejs_setting_gadget"]
+    },
+    "Onlyoffice Spreadsheet": {
+      "url": "ooffice_spreadsheet/",
+      "cache": "gadget_ooffice_spreadsheet.appcache",
+      "sub_gadget": ["ooffice_spreadsheet_gadget", "officejs_setting_gadget"]
+    },
+    "Onlyoffice Presentation": {
+      "url": "ooffice_presentation/",
+      "cache": "gadget_ooffice_presentation.appcache",
+      "sub_gadget": ["ooffice_presentation_gadget", "officejs_setting_gadget"]
+    },
+    "Web Table Editor": {
+      "url": "officejs_web_table_editor/",
+      "cache": "gadget_officejs_web_table.appcache",
+      "sub_gadget": [
+        "officejs_web_table_editor_gadget",
+        "officejs_setting_gadget"
+      ]
+    },
+    "Image Editor": {
+      "url": "officejs_image_editor/",
+      "cache": "gadget_officejs_image_editor.appcache",
+      "sub_gadget": [
+        "officejs_image_editor_gadget",
+        "officejs_setting_gadget"
+      ]
     },
     "officejs_ckeditor_gadget": {
       "cache": "gadget_ckeditor.appcache"
     },
     "officejs_setting_gadget": {
       "cache": "gadget_officejs_setting.appcache"
+    },
+    "officejs_svg_editor_gadget": {
+      "cache": "gadget_officejs_svg_editor.appcache"
+    },
+    "officejs_pdf_viewer_gadget": {
+      "cache": "gadget_officejs_pdf_viewer_gadget.appcache"
+    },
+    "officejs_codemirror": {
+      "cache": "gadget_officejs_codemirror.appcache"
+    },
+    "ooffice_text_gadget": {
+      "cache": "gadget_ooffice_text_gadget.appcache"
+    },
+    "ooffice_spreadsheet_gadget": {
+      "cache": "gadget_ooffice_spreadsheet_gadget.appcache"
+    },
+    "ooffice_presentation_gadget": {
+      "cache": "gadget_ooffice_presentation_gadget.appcache"
+    },
+    "officejs_web_table_editor_gadget": {
+      "cache": "gadget_officejs_web_table_editor.appcache"
+    },
+    "officejs_image_editor_gadget": {
+      "cache": "gadget_officejs_image_editor_gadget.appcache"
     }
   };
 
@@ -39,7 +114,7 @@
         var sub_app = app.sub_gadget[i];
         return gadget.fillZip(
           application_dict[sub_app].cache,
-          app.url,
+          origin_url + app.url,
           zip_file,
           sub_app + "/"
         )
@@ -51,7 +126,7 @@
       return zip_file;
     }
 
-    return gadget.fillZip(app.cache, app.url)
+    return gadget.fillZip(app.cache, origin_url + app.url)
       .push(function (zip_file) {
         return fill(zip_file);
       })
