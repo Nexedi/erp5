@@ -412,8 +412,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     organisation = self.createOrganisation(title='Organisation I')
     self.tic()
     resource = self.createVariatedResource()
-    # XXX this tests depends on the relative url of the resource
-    self.assertEqual('product_module/1', resource.getRelativeUrl())
+    size_base = 'size/%s' % (resource.getRelativeUrl(),)
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
@@ -428,19 +427,19 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'title': 'Lot A',
               'reference': '20_05_09_LA',
               'quantity': 20.0,
-              'line_variation_category_list': 'size/product_module/1/3',
+              'line_variation_category_list': size_base + '/3',
               },
               { 'listbox_key': '001',
               'title': 'Lot B',
               'reference': '20_05_09_LB',
               'quantity': 10.0,
-              'line_variation_category_list': 'size/product_module/1/2',
+              'line_variation_category_list': size_base + '/2',
               },
               { 'listbox_key': '002',
               'title': 'Lot C',
               'reference': '20_05_09_LC',
               'quantity': 15.0,
-              'line_variation_category_list': 'size/product_module/1/1',
+              'line_variation_category_list': size_base + '/1',
               },
               )
 
@@ -461,9 +460,9 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     self.assertEqual(packing_list_line.getTotalQuantity(), 45.0)
     self.assertEqual(sorted(packing_list_line.getVariationCategoryList()),
-                      sorted(['size/product_module/1/3',
-                              'size/product_module/1/2',
-                              'size/product_module/1/1']))
+                      sorted([size_base + '/3',
+                              size_base + '/2',
+                              size_base + '/1']))
     self.assertEqual(packing_list_line.getAggregateTitleList(), [])
 
     movement_cell_list = packing_list_line.contentValues(
@@ -471,17 +470,17 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.assertEqual(3, len(movement_cell_list))
 
     cell = packing_list_line.getCell(base_id='movement',
-                                     *('size/product_module/1/3', ))
+                                     *(size_base + '/3', ))
     self.assertEqual(cell.getQuantity(), 20)
     self.assertEqual(['Lot A'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
-                                     *('size/product_module/1/2', ))
+                                     *(size_base + '/2', ))
     self.assertEqual(cell.getQuantity(), 10)
     self.assertEqual(['Lot B'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
-                                     *('size/product_module/1/1', ))
+                                     *(size_base + '/1', ))
     self.assertEqual(cell.getQuantity(), 15)
     self.assertEqual(['Lot C'], cell.getAggregateTitleList())
 
@@ -490,9 +489,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     organisation = self.createOrganisation(title='Organisation II')
     self.tic()
     resource = self.createVariatedResource()
-    # XXX this tests depends on the relative url of the resource
-    self.assertEqual('product_module/2', resource.getRelativeUrl())
-
+    size_base = 'size/%s' % (resource.getRelativeUrl(),)
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
 
@@ -504,12 +501,12 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'title': 'Lot A2',
               'reference': '25_05_09_LA2',
               'quantity': 20.0,
-              'line_variation_category_list': 'size/product_module/2/3',
+              'line_variation_category_list': size_base + '/3',
               },
               )
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.assertEqual(packing_list_line.getVariationCategoryList(),
-                      ['size/product_module/2/3'])
+                      [size_base + '/3'])
     self.assertEqual(packing_list_line.getTotalQuantity(), 20)
 
     # create listbox a second time
@@ -517,13 +514,13 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'title': 'Lot B2',
               'reference': '25_05_09_LB2',
               'quantity': 20.0,
-              'line_variation_category_list': 'size/product_module/2/1',
+              'line_variation_category_list': size_base + '/1',
               },
               { 'listbox_key': '001',
               'title': 'Lot C2',
               'reference': '25_05_09_LC2',
               'quantity': 15.0,
-              'line_variation_category_list': 'size/product_module/2/2',
+              'line_variation_category_list': size_base + '/2',
               },
               )
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
@@ -531,26 +528,26 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     self.assertEqual(packing_list_line.getTotalQuantity(), 55.0)
     self.assertEqual(sorted(packing_list_line.getVariationCategoryList()),
-                      sorted(['size/product_module/2/1',
-                              'size/product_module/2/2',
-                              'size/product_module/2/3']))
+                      sorted([size_base + '/1',
+                              size_base + '/2',
+                              size_base + '/3']))
 
     movement_cell_list = packing_list_line.contentValues(
                                     portal_type='Purchase Packing List Cell')
     self.assertEqual(3, len(movement_cell_list))
 
     cell = packing_list_line.getCell(base_id='movement',
-                                     *('size/product_module/2/3', ))
+                                     *(size_base + '/3', ))
     self.assertEqual(cell.getQuantity(), 20)
     self.assertEqual(['Lot A2'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
-                                     *('size/product_module/2/1', ))
+                                     *(size_base + '/1', ))
     self.assertEqual(cell.getQuantity(), 20)
     self.assertEqual(['Lot B2'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
-                                     *('size/product_module/2/2', ))
+                                     *(size_base + '/2', ))
     self.assertEqual(cell.getQuantity(), 15)
     self.assertEqual(['Lot C2'], cell.getAggregateTitleList())
 
@@ -614,9 +611,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     organisation = self.createOrganisation(title='Organisation VI')
     self.tic()
     resource = self.createVariatedResource()
-    # XXX this tests depends on the relative url of the resource
-    self.assertEqual('product_module/4', resource.getRelativeUrl())
-
+    size_base = 'size/%s' % (resource.getRelativeUrl(),)
     self.tic()
     packing_list = self.createPackingList(resource=resource,organisation=organisation)
 
@@ -629,7 +624,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               'title': 'Lot A10',
               'reference': '1070110000015',
               'quantity': 20.0,
-              'line_variation_category_list': 'size/product_module/4/3'
+              'line_variation_category_list': size_base + '/3'
               },
               )
 
