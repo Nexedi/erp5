@@ -54,14 +54,18 @@ class StaticWebSection(WebSection):
 
     if isinstance(name, list):
       name = name[0]
-    url_list = [name]
-
+    if not name or name in ("/",):
+      url_list = []
+    else:
+      url_list = [name]
     while len(stack):
-      url_list.append(stack.pop())
-
-    if request.get('ACTUAL_URL', '').endswith("/"):
+      if stack[-1] not in ('/', ''):
+        url_list.append(stack.pop())
+      else:
+        stack.pop()
+    if request.get('ACTUAL_URL', '').endswith("/"): # or len(url_list) == 0:
       url_list.append("index.html")
-
+    self.log("/".join(url_list))
     return DocumentExtensibleTraversableMixin.getExtensibleContent(self, request, "/".join(url_list))
 
   def _getStaticDocument(self, request, name):
