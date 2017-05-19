@@ -403,12 +403,10 @@ class DB(TM):
         """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
-            # Ping the database to reconnect if connection was closed.
-            self._query("SELECT 1", allow_reconnect=True)
             if self._transactions:
-                self._query("BEGIN")
+                self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
-                self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock)
+                self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
         except:
             LOG('ZMySQLDA', ERROR, "exception during _begin",
                 error=sys.exc_info())
