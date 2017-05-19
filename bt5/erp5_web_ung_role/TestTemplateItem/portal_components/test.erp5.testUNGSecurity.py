@@ -39,6 +39,8 @@ class TestUNGSecurity(ERP5TypeTestCase):
     return "Test UNG Security"
 
   def beforeTearDown(self):
+    self.abort()
+    self.tic()
     person_module = self.getPersonModule()
     person_module.manage_delObjects(list(person_module.objectIds()))
     self.tic()
