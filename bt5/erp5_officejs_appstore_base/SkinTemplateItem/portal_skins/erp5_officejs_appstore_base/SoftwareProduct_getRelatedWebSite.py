@@ -1,3 +1,3 @@
-return context.getFollowUpValue(portal_type="Web Site")
+return context.getFollowUpValue(portal_type="Web Section")
 
 raise ValueError("Unimplemented")

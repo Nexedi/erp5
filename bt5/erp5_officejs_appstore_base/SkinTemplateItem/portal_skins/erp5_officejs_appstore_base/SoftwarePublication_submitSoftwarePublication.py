@@ -58,6 +58,7 @@ base_length = len(base)
 software_release_url = software_release.getRelativeUrl()
 
 tag = "preparing_sr_%s" % software_release_url
+default_page = ""
 for name in zip_reader.namelist():
   if zip_reader.getinfo(name).file_size == 0:
     continue
@@ -84,12 +85,14 @@ for name in zip_reader.namelist():
   # XX Hackish
   document.setCategoryList(
     document.getCategoryList() + ["contributor/" + software_publication.getSource()])
-  document.activate(tag=tag).submit()
+  if url in ("index.html", "index.htm"):
+    default_page = document.getRelativeUrl()
+  document.activate(tag=tag).publish()
 
-software_release.activate(after_tag=tag, tag=tag + "_2").SoftwareRelease_fixRelatedWebSection()
+software_release.SoftwareRelease_fixRelatedWebSection(default_page=default_page)
 
-if portal.portal_workflow.isTransitionPossible(zip_file, 'submit'):
-  zip_file.submit()
+if portal.portal_workflow.isTransitionPossible(zip_file, 'publish'):
+  zip_file.publish()
 if portal.portal_workflow.isTransitionPossible(software_release, 'submit'):
   software_release.submit()
-software_publication.activate(after_tag=tag + "_2").submit()
+software_publication.activate(after_tag=tag).submit()

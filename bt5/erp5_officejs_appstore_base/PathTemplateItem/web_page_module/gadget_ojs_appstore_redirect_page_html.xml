@@ -109,7 +109,9 @@
         </item>
         <item>
             <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -230,7 +232,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -244,7 +246,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.19443.53509.7185</string> </value>
+                <value> <string>958.21401.8615.61559</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -262,7 +264,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1463665193.7</float>
+                        <float>1493976571.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
