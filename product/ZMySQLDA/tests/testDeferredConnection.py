@@ -159,6 +159,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
     try:
       self.commit()
     finally:
+      self.abort()
       self.unmonkeypatchConnection(connection)
 
   def test_03_successiveTransactionsIsolation(self):
