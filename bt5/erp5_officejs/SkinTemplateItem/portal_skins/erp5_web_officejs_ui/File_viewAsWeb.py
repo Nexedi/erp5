@@ -2,6 +2,10 @@ if REQUEST is None:
   REQUEST = context.REQUEST
 if response is None:
   response = REQUEST.RESPONSE
+
+# The vanilla HTML is wanted
+response.setBase(None)
+
 file = context
 file_content = file.getData()
 
