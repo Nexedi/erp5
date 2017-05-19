@@ -310,7 +310,7 @@ class DB(TM):
             r.append(info)
         return r
 
-    def _query(self, query, force_reconnect=False):
+    def _query(self, query, allow_reconnect=False):
         """
           Send a query to MySQL server.
           It reconnects automaticaly if needed and the following conditions are
@@ -319,7 +319,7 @@ class DB(TM):
              attemp to connect twice per call).
            - This conection is not transactionnal and has set not MySQL locks,
              because they are bound to the connection. This check can be
-             overridden by passing force_reconnect with True value.
+             overridden by passing allow_reconnect with True value.
         """
         try:
             self.db.query(query)
@@ -328,7 +328,7 @@ class DB(TM):
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
               raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
-            if not force_reconnect and self._use_TM or \
+            if not allow_reconnect and self._use_TM or \
               m[0] not in hosed_connection:
                 LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
                 raise
@@ -404,7 +404,7 @@ class DB(TM):
         try:
             self._transaction_begun = True
             # Ping the database to reconnect if connection was closed.
-            self._query("SELECT 1", force_reconnect=True)
+            self._query("SELECT 1", allow_reconnect=True)
             if self._transactions:
                 self._query("BEGIN")
             if self._mysql_lock:
