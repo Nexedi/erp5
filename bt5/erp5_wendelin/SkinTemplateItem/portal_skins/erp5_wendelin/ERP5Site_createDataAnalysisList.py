@@ -31,6 +31,13 @@ for movement in portal_catalog(query):
                   portal_type = "Data Transformation",
                   validation_state = "validated",
                   resource_relative_url = movement.getResource()):
+    # Check if analysis already exists
+    data_analysis = portal_catalog.getResultValue(
+      portal_type="Data Analysis",
+      specialise_relative_url = transformation.getRelativeUrl(),
+      causality_relative_url = data_ingestion.getRelativeUrl())
+    if data_analysis is not None:
+      continue
     # Create Analysis
     data_analysis = portal.data_analysis_module.newContent(
                   portal_type = "Data Analysis",
