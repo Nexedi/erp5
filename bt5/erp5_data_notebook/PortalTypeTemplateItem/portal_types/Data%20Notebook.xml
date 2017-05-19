@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Base Type" module="erp5.portal_type"/>
+      <global name="JSON Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17,10 +17,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>factory</string> </key>
-            <value> <string>addXMLObject</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -40,7 +36,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Base Type</string> </value>
+            <value> <string>JSON Type</string> </value>
         </item>
         <item>
             <key> <string>searchable_text_property_id</string> </key>
@@ -53,6 +49,406 @@
                 <string>local_variable</string>
               </tuple>
             </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>{\n
+    "$schema": "http://json-schema.org/draft-04/schema#",\n
+    "description": "Jupyter Notebook v4.2 JSON schema.",\n
+    "type": "object",\n
+    "additionalProperties": false,\n
+    "required": ["metadata", "nbformat_minor", "nbformat", "cells"],\n
+    "properties": {\n
+        "metadata": {\n
+            "description": "Notebook root-level metadata.",\n
+            "type": "object",\n
+            "additionalProperties": true,\n
+            "properties": {\n
+                "kernelspec": {\n
+                    "description": "Kernel information.",\n
+                    "type": "object",\n
+                    "required": ["name", "display_name"],\n
+                    "properties": {\n
+                        "name": {\n
+                            "description": "Name of the kernel specification.",\n
+                            "type": "string"\n
+                        },\n
+                        "display_name": {\n
+                            "description": "Name to display in UI.",\n
+                            "type": "string"\n
+                        }\n
+                    }\n
+                },\n
+                "language_info": {\n
+                  "description": "Kernel information.",\n
+                  "type": "object",\n
+                  "required": ["name"],\n
+                  "properties": {\n
+                    "name": {\n
+                        "description": "The programming language which this kernel runs.",\n
+                        "type": "string"\n
+                    },\n
+                    "codemirror_mode": {\n
+                        "description": "The codemirror mode to use for code in this language.",\n
+                        "oneOf": [\n
+                          {"type": "string"},\n
+                          {"type": "object"}\n
+                        ]\n
+                    },\n
+                    "file_extension": {\n
+                        "description": "The file extension for files in this language.",\n
+                        "type": "string"\n
+                    },\n
+                    "mimetype": {\n
+                        "description": "The mimetype corresponding to files in this language.",\n
+                        "type": "string"\n
+                    },\n
+                    "pygments_lexer": {\n
+                        "description": "The pygments lexer to use for code in this language.",\n
+                        "type": "string"\n
+                    }\n
+                  }\n
+                },\n
+                "orig_nbformat": {\n
+                    "description": "Original notebook format (major number) before converting the notebook between versions. This should never be written to a file.",\n
+                    "type": "integer",\n
+                    "minimum": 1\n
+                },\n
+                "title": {\n
+                    "description": "The title of the notebook document",\n
+                    "type": "string"\n
+                },\n
+                "authors": {\n
+                    "description": "The author(s) of the notebook document",\n
+                    "type": "array",\n
+                    "item": {\n
+                      "type": "object",\n
+                      "properties": {\n
+                        "name": {\n
+                          "type": "string"\n
+                        }\n
+                      },\n
+                      "additionalProperties": true\n
+                    }\n
+                }\n
+            }\n
+        },\n
+        "nbformat_minor": {\n
+            "description": "Notebook format (minor number). Incremented for backward compatible changes to the notebook format.",\n
+            "type": "integer",\n
+            "minimum": 0\n
+        },\n
+        "nbformat": {\n
+            "description": "Notebook format (major number). Incremented between backwards incompatible changes to the notebook format.",\n
+            "type": "integer",\n
+            "minimum": 4,\n
+            "maximum": 4\n
+        },\n
+        "cells": {\n
+            "description": "Array of cells of the current notebook.",\n
+            "type": "array",\n
+            "items": {"$ref": "#/definitions/cell"}\n
+        }\n
+    },\n
+\n
+    "definitions": {\n
+        "cell": {\n
+            "type": "object",\n
+            "oneOf": [\n
+                {"$ref": "#/definitions/raw_cell"},\n
+                {"$ref": "#/definitions/markdown_cell"},\n
+                {"$ref": "#/definitions/code_cell"}\n
+            ]\n
+        },\n
+\n
+        "raw_cell": {\n
+            "description": "Notebook raw nbconvert cell.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["cell_type", "metadata", "source"],\n
+            "properties": {\n
+                "cell_type": {\n
+                    "description": "String identifying the type of cell.",\n
+                    "enum": ["raw"]\n
+                },\n
+                "metadata": {\n
+                    "description": "Cell-level metadata.",\n
+                    "type": "object",\n
+                    "additionalProperties": true,\n
+                    "properties": {\n
+                        "format": {\n
+                            "description": "Raw cell metadata format for nbconvert.",\n
+                            "type": "string"\n
+                        },\n
+                        "name": {"$ref": "#/definitions/misc/metadata_name"},\n
+                        "tags": {"$ref": "#/definitions/misc/metadata_tags"}\n
+                    }\n
+                },\n
+                "attachments": {"$ref": "#/definitions/misc/attachments"},\n
+                "source": {"$ref": "#/definitions/misc/source"}\n
+            }\n
+        },\n
+\n
+        "markdown_cell": {\n
+            "description": "Notebook markdown cell.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["cell_type", "metadata", "source"],\n
+            "properties": {\n
+                "cell_type": {\n
+                    "description": "String identifying the type of cell.",\n
+                    "enum": ["markdown"]\n
+                },\n
+                "metadata": {\n
+                    "description": "Cell-level metadata.",\n
+                    "type": "object",\n
+                    "properties": {\n
+                        "name": {"$ref": "#/definitions/misc/metadata_name"},\n
+                        "tags": {"$ref": "#/definitions/misc/metadata_tags"}\n
+                    },\n
+                    "additionalProperties": true\n
+                },\n
+                "attachments": {"$ref": "#/definitions/misc/attachments"},\n
+                "source": {"$ref": "#/definitions/misc/source"}\n
+            }\n
+        },\n
+\n
+        "code_cell": {\n
+            "description": "Notebook code cell.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["cell_type", "metadata", "source", "outputs", "execution_count"],\n
+            "properties": {\n
+                "cell_type": {\n
+                    "description": "String identifying the type of cell.",\n
+                    "enum": ["code"]\n
+                },\n
+                "metadata": {\n
+                    "description": "Cell-level metadata.",\n
+                    "type": "object",\n
+                    "additionalProperties": true,\n
+                    "properties": {\n
+                        "collapsed": {\n
+                            "description": "Whether the cell is collapsed/expanded.",\n
+                            "type": "boolean"\n
+                        },\n
+                        "scrolled": {\n
+                            "description": "Whether the cell\'s output is scrolled, unscrolled, or autoscrolled.",\n
+                            "enum": [true, false, "auto"]\n
+                        },\n
+                        "name": {"$ref": "#/definitions/misc/metadata_name"},\n
+                        "tags": {"$ref": "#/definitions/misc/metadata_tags"}\n
+                    }\n
+                },\n
+                "source": {"$ref": "#/definitions/misc/source"},\n
+                "outputs": {\n
+                    "description": "Execution, display, or stream outputs.",\n
+                    "type": "array",\n
+                    "items": {"$ref": "#/definitions/output"}\n
+                },\n
+                "execution_count": {\n
+                    "description": "The code cell\'s prompt number. Will be null if the cell has not been run.",\n
+                    "type": ["integer", "null"],\n
+                    "minimum": 0\n
+                }\n
+            }\n
+        },\n
+\n
+        "unrecognized_cell": {\n
+            "description": "Unrecognized cell from a future minor-revision to the notebook format.",\n
+            "type": "object",\n
+            "additionalProperties": true,\n
+            "required": ["cell_type", "metadata"],\n
+            "properties": {\n
+                "cell_type": {\n
+                    "description": "String identifying the type of cell.",\n
+                    "not" : {\n
+                      "enum": ["markdown", "code", "raw"]\n
+                    }\n
+                },\n
+                "metadata": {\n
+                    "description": "Cell-level metadata.",\n
+                    "type": "object",\n
+                    "properties": {\n
+                        "name": {"$ref": "#/definitions/misc/metadata_name"},\n
+                        "tags": {"$ref": "#/definitions/misc/metadata_tags"}\n
+                    },\n
+                    "additionalProperties": true\n
+                }\n
+            }\n
+        },\n
+\n
+        "output": {\n
+            "type": "object",\n
+            "oneOf": [\n
+                {"$ref": "#/definitions/execute_result"},\n
+                {"$ref": "#/definitions/display_data"},\n
+                {"$ref": "#/definitions/stream"},\n
+                {"$ref": "#/definitions/error"}\n
+            ]\n
+        },\n
+\n
+        "execute_result": {\n
+            "description": "Result of executing a code cell.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["output_type", "data", "metadata", "execution_count"],\n
+            "properties": {\n
+                "output_type": {\n
+                    "description": "Type of cell output.",\n
+                    "enum": ["execute_result"]\n
+                },\n
+                "execution_count": {\n
+                    "description": "A result\'s prompt number.",\n
+                    "type": ["integer", "null"],\n
+                    "minimum": 0\n
+                },\n
+                "data": {"$ref": "#/definitions/misc/mimebundle"},\n
+                "metadata": {"$ref": "#/definitions/misc/output_metadata"}\n
+            }\n
+        },\n
+\n
+        "display_data": {\n
+            "description": "Data displayed as a result of code cell execution.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["output_type", "data", "metadata"],\n
+            "properties": {\n
+                "output_type": {\n
+                    "description": "Type of cell output.",\n
+                    "enum": ["display_data"]\n
+                },\n
+                "data": {"$ref": "#/definitions/misc/mimebundle"},\n
+                "metadata": {"$ref": "#/definitions/misc/output_metadata"}\n
+            }\n
+        },\n
+\n
+        "stream": {\n
+            "description": "Stream output from a code cell.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["output_type", "name", "text"],\n
+            "properties": {\n
+                "output_type": {\n
+                    "description": "Type of cell output.",\n
+                    "enum": ["stream"]\n
+                },\n
+                "name": {\n
+                    "description": "The name of the stream (stdout, stderr).",\n
+                    "type": "string"\n
+                },\n
+                "text": {\n
+                    "description": "The stream\'s text output, represented as an array of strings.",\n
+                    "$ref": "#/definitions/misc/multiline_string"\n
+                }\n
+            }\n
+        },\n
+\n
+        "error": {\n
+            "description": "Output of an error that occurred during code cell execution.",\n
+            "type": "object",\n
+            "additionalProperties": false,\n
+            "required": ["output_type", "ename", "evalue", "traceback"],\n
+            "properties": {\n
+                "output_type": {\n
+                    "description": "Type of cell output.",\n
+                    "enum": ["error"]\n
+                },\n
+                "ename": {\n
+                    "description": "The name of the error.",\n
+                    "type": "string"\n
+                },\n
+                "evalue": {\n
+                    "description": "The value, or message, of the error.",\n
+                    "type": "string"\n
+                },\n
+                "traceback": {\n
+                    "description": "The error\'s traceback, represented as an array of strings.",\n
+                    "type": "array",\n
+                    "items": {"type": "string"}\n
+                }\n
+            }\n
+        },\n
+\n
+        "unrecognized_output": {\n
+            "description": "Unrecognized output from a future minor-revision to the notebook format.",\n
+            "type": "object",\n
+            "additionalProperties": true,\n
+            "required": ["output_type"],\n
+            "properties": {\n
+                "output_type": {\n
+                    "description": "Type of cell output.",\n
+                    "not": {\n
+                        "enum": ["execute_result", "display_data", "stream", "error"]\n
+                    }\n
+                }\n
+            }\n
+        },\n
+\n
+        "misc": {\n
+            "metadata_name": {\n
+                "description": "The cell\'s name. If present, must be a non-empty string. Must be unique across all the cells of a given notebook.",\n
+                "type": "string",\n
+                "pattern": "^.+$"\n
+            },\n
+            "metadata_tags": {\n
+                "description": "The cell\'s tags. Tags must be unique, and must not contain commas.",\n
+                "type": "array",\n
+                "uniqueItems": true,\n
+                "items": {\n
+                    "type": "string",\n
+                    "pattern": "^[^,]+$"\n
+                }\n
+            },\n
+            "attachments": {\n
+                "description": "Media attachments (e.g. inline images), stored as mimebundle keyed by filename.",\n
+                "type": "object",\n
+                "patternProperties": {\n
+                    ".*": {\n
+                        "description": "The attachment\'s data stored as a mimebundle.",\n
+                        "$ref": "#/definitions/misc/mimebundle"\n
+                    }\n
+                }\n
+            },\n
+            "source": {\n
+                "description": "Contents of the cell, represented as an array of lines.",\n
+                "$ref": "#/definitions/misc/multiline_string"\n
+            },\n
+            "execution_count": {\n
+                "description": "The code cell\'s prompt number. Will be null if the cell has not been run.",\n
+                "type": ["integer", "null"],\n
+                "minimum": 0\n
+            },\n
+            "mimebundle": {\n
+                "description": "A mime-type keyed dictionary of data",\n
+                "type": "object",\n
+                "additionalProperties": {\n
+                  "description": "mimetype output (e.g. text/plain), represented as either an array of strings or a string.",\n
+                  "$ref": "#/definitions/misc/multiline_string"\n
+                },\n
+                "patternProperties": {\n
+                    "^application/(.*\\\\+)?json$": {\n
+                        "description": "Mimetypes with JSON output, can be any type"\n
+                    }\n
+                }\n
+            },\n
+            "output_metadata": {\n
+                "description": "Cell output metadata.",\n
+                "type": "object",\n
+                "additionalProperties": true\n
+            },\n
+            "multiline_string": {\n
+                "oneOf" : [\n
+                    {"type": "string"},\n
+                    {\n
+                        "type": "array",\n
+                        "items": {"type": "string"}\n
+                    }\n
+                ]\n
+            }\n
+        }\n
+    }\n
+}</string> </value>
         </item>
         <item>
             <key> <string>type_class</string> </key>
