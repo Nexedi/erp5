@@ -1224,7 +1224,7 @@ class ListBoxRenderer:
 
     params['select_columns'] = ', '.join(sql_column_list)
 
-    # XXX Remove selection_expression if present.
+    # XXX Remove selection_expression (and equivalents) if present.
     # This is necessary for now, because the actual selection expression in
     # search catalog does not take the requested columns into account. If
     # select_expression is passed, this can raise an exception, because stat
@@ -1236,8 +1236,9 @@ class ListBoxRenderer:
     # catalog.* but only selection_expression. But this is a bit difficult,
     # because there is no simple way to distinguish queried columns from callable
     # objects in the current ListBox configuration.
-    if 'select_expression' in params:
-      del params['select_expression']
+    params.pop('select_expression', None)
+    params.pop('select_list', None)
+    params.pop('select_dict', None)
     params.setdefault('limit', 1000)
 
     self.getSelection().edit(params=params)
