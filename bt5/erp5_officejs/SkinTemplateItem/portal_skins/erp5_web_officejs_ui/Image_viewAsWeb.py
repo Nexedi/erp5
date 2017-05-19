@@ -3,6 +3,9 @@ if REQUEST is None:
 if response is None:
   response = REQUEST.RESPONSE
 
+# The vanilla HTML is wanted
+response.setBase(None)
+
 image = context
 if REQUEST.getHeader('If-Modified-Since', '') == image.getModificationDate().rfc822():
   response.setStatus(304)

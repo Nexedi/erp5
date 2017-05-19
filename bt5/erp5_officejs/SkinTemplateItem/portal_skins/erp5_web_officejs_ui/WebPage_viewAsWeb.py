@@ -3,6 +3,9 @@ if REQUEST is None:
 if response is None:
   response = REQUEST.RESPONSE
 
+# The vanilla HTML is wanted
+response.setBase(None)
+
 web_page = context
 web_section = REQUEST.get("current_web_section")
 
