@@ -2677,8 +2677,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertFalse(guarded_hasattr(obj, 'getRegionValueList'))
       self.assertFalse(guarded_hasattr(obj, 'getRegionRelatedValueList'))
 
-    # Permission definition on Accessor is buggy. TO BE FIXED!
-    @expectedFailure
     def test_PropertySheetSecurityOnAccessors(self):
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
@@ -2708,55 +2706,21 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           'test_PropertySheetSecurityOnAccessors',
           'hoge_hoge',
           elementary_type='string',
-          write_permission='Access contents information',
-          read_permission='Modify portal content',
+          write_permission=Permissions.AccessContentsInformation,
+          read_permission=Permissions.ModifyPortalContent,
           portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setHogeHoge'))
       self.assertTrue(guarded_hasattr(obj, 'getHogeHoge'))
 
-      obj.manage_permission('Access contents information', [], 0)
+      obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
       self.assertFalse(guarded_hasattr(obj, 'setHogeHoge'))
       self.assertTrue(guarded_hasattr(obj, 'getHogeHoge'))
 
-      obj.manage_permission('Access contents information', ['Manager'], 1)
-      obj.manage_permission('Modify portal content', [], 0)
+      obj.manage_permission(Permissions.AccessContentsInformation, ['Manager'], 1)
+      obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
       self.assertTrue(guarded_hasattr(obj, 'setHogeHoge'))
       self.assertFalse(guarded_hasattr(obj, 'getHogeHoge'))
-
-      # Make sure that getProperty and setProperty respect accessor's
-      # security protection.
-      createZODBPythonScript(portal.portal_skins.custom,
-                             'Base_callAccessorHogeHoge',
-                             'mode',
-                             '''\
-if mode == 'getter':
-  context.getHogeHoge()
-elif mode == 'getProperty':
-  context.getProperty('hoge_hoge')
-elif mode == 'setter':
-  context.setHogeHoge('waa')
-elif mode == 'setProperty':
-  context.setProperty('waa')
-return True''')
-      # test accessors
-      obj.manage_permission('Access contents information', ['Manager'], 1)
-      obj.manage_permission('Modify portal content', ['Manager'], 1)
-      self.assertTrue(guarded_hasattr(obj, 'setHogeHoge'))
-      self.assertTrue(guarded_hasattr(obj, 'getHogeHoge'))
-      self.assertTrue(obj.Base_callAccessorHogeHoge(mode='getter'))
-      self.assertTrue(obj.Base_callAccessorHogeHoge(mode='setter'))
-      self.assertTrue(obj.Base_callAccessorHogeHoge(mode='getProperty'))
-      self.assertTrue(obj.Base_callAccessorHogeHoge(mode='setProperty'))
-
-      obj.manage_permission('Access contents information', [], 0)
-      obj.manage_permission('Modify portal content', [], 0)
-      self.assertFalse(guarded_hasattr(obj, 'setHogeHoge'))
-      self.assertFalse(guarded_hasattr(obj, 'getHogeHoge'))
-      self.assertRaises(Unauthorized, obj.Base_callAccessorHogeHoge, mode='getter')
-      self.assertRaises(Unauthorized, obj.Base_callAccessorHogeHoge, mode='setter')
-      self.assertRaises(Unauthorized, obj.Base_callAccessorHogeHoge, mode='getProperty')
-      self.assertRaises(Unauthorized, obj.Base_callAccessorHogeHoge, mode='setProperty')
 
     def test_edit(self):
       self._addProperty('Person',

@@ -383,7 +383,8 @@ class PropertyHolder(object):
       dangerous if classes use another default
       security.
     """
-    if permission not in (Permissions.AccessContentsInformation, Permissions.ModifyPortalContent):
+    from Products.ERP5Type.dynamic.accessor_holder import isDefaultPermissionForAccessor
+    if not isDefaultPermissionForAccessor(accessor_name, permission):
       self.security.declareProtected(permission, accessor_name)
 
   # Inspection methods

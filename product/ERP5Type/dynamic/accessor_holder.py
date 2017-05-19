@@ -46,9 +46,18 @@ from AccessControl import ClassSecurityInfo
 
 from zLOG import LOG, ERROR, INFO, WARNING
 
+import re
+
+getter_pattern = re.compile('get|is|has')
+def isDefaultPermissionForAccessor(name, permission):
+  if ((getter_pattern.match(name) is not None and permission == Permissions.AccessContentsInformation) or
+      (name.startswith('set') and permission == Permissions.ModifyPortalContent)):
+    return True
+  return False
+
+
 class AccessorHolderType(type):
-  _skip_permission_tuple = (Permissions.AccessContentsInformation,
-                            Permissions.ModifyPortalContent)
+
   def registerAccessor(cls,
                        accessor,
                        permission=None):
@@ -57,8 +66,7 @@ class AccessorHolderType(type):
     if permission is None:
       return
     # private accessors do not need declarative security
-    if accessor_name[0] != '_' and \
-        permission not in AccessorHolderType._skip_permission_tuple:
+    if accessor_name[0] != '_' and not isDefaultPermissionForAccessor(accessor_name, permission):
       cls.security.declareProtected(permission, accessor_name)
 
   def __new__(meta_class, class_name, base_tuple=(object,), attribute_dict={}):
