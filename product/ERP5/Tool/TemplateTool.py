@@ -35,6 +35,7 @@ import shutil
 import sys
 import hashlib
 import pprint
+import transaction
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -793,7 +794,8 @@ class TemplateTool (BaseTool):
       kw['removable_sub_object_path'] = removable_sub_object_path
 
       migrated_bm.build(**kw)
-
+      # Commit transaction to generate all oids before exporting
+      transaction.commit()
       # Export the newly built business package to the export directory
       migrated_bm.export(path=export_dir, local=True)
 
@@ -1057,10 +1059,24 @@ class TemplateTool (BaseTool):
           'title': 'erp5_mysql_ndb_catalog',
           'version': '1.0'}
 
+        bm_dict_4 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_view_style',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_jquery',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_jquery',
+          'version': '1.0'}
+
         if repository.endswith('/bootstrap'):
           property_dict_list.append(bm_dict_1)
           property_dict_list.append(bm_dict_2)
           property_dict_list.append(bm_dict_3)
+          property_dict_list.append(bm_dict_4)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
