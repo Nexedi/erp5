@@ -10,39 +10,43 @@
     .ready(function (g) {
       return g.getElement()
         .push(function (element) {
-          var textarea = element.querySelector('textarea');
           g.props.element = element;
-          g.props.ckeditor = CKEDITOR.replace(
-            textarea,
-            {
-              removeButtons: 'NewPage,Preview,Cut,Paste,Copy,PasteText,' +
-                'PasteFromWord,Flash,Iframe,Form,Checkbox,Radio,TextField,' +
-                'Textarea,Select,Button,ImageButton,HiddenField,Maximize',
-              removePlugins: '',
-              disableNativeSpellChecker: false,
-              extraAllowedContent: "details section article"
-            }
-          );
-          g.props.ckeditor.addCommand('saveRJS', {
-            readOnly: 1,
-            exec: function () {
-              return g.submitContent();
-            }
-          });
-          g.props.ckeditor.ui.addButton('Save', {
-            label: "Save",
-            command: 'saveRJS',
-            toolbar: 'document,1'
-          });
-          g.props.ckeditor.on('instanceReady', function (event) {
-            event.editor.execCommand('maximize');
-          });
         });
     })
     .declareAcquiredMethod("submitContent", "triggerSubmit")
     .declareMethod('render', function (options) {
-      this.props.key = options.key || "text_content";
-      this.props.ckeditor.setData(options.value || "");
+      var config = options.config || {
+        removeButtons: 'NewPage,Preview,Cut,Paste,Copy,PasteText,' +
+          'PasteFromWord,Flash,Iframe,Form,Checkbox,Radio,TextField,' +
+          'Textarea,Select,Button,ImageButton,HiddenField,Maximize',
+        removePlugins: '',
+        disableNativeSpellChecker: false,
+        extraAllowedContent: "details section article"
+      },
+        gadget = this,
+        textarea = gadget.props.element.querySelector('textarea');
+
+      gadget.props.ckeditor = CKEDITOR.replace(
+        textarea,
+        config
+      );
+      gadget.props.ckeditor.addCommand('saveRJS', {
+        readOnly: 1,
+        exec: function () {
+          return gadget.submitContent();
+        }
+      });
+      gadget.props.ckeditor.ui.addButton('Save', {
+        label: "Save",
+        command: 'saveRJS',
+        toolbar: 'document,1'
+      });
+
+      gadget.props.ckeditor.on('instanceReady', function (event) {
+        event.editor.execCommand('maximize');
+      });
+      gadget.props.key = options.key || "text_content";
+      gadget.props.ckeditor.setData(options.value || "");
       return {};
     })
 
