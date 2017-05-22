@@ -11,8 +11,12 @@ Item | view
 Purchase Order Line | item_creation
 Purchase Order | aggregate_item
 Purchase Packing List Line | item_creation
+Purchase Packing List Line | item_creation_free_form
+Purchase Packing List Line | item_creation_generate_reference
 Purchase Packing List | aggregate_item
 Purchase Packing List | item_creation
+Purchase Packing List | item_creation_free_form
+Purchase Packing List | item_creation_generate_reference
 Purchase Packing List | label_sheet_print
 Returned Purchase Packing List Line | item_creation
 Returned Purchase Packing List | aggregate_item
