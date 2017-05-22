@@ -36,9 +36,38 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Base import Base
+
+
+def checkMovementAggregateQuantityConstraint(document):
+  # Base.checkConsistency is used here in order to avoid recursive check
+  message_list = Base.checkConsistency(
+      document, filter={'reference': 'movement_aggregate_quantity'})
+  if len(message_list) == 0:
+    return True
+  return False
+
 
 class TestItemMixin(TestSaleInvoiceMixin):
   item_portal_type = 'Item'
+
+  def afterSetUp(self):
+    super(TestItemMixin, self).afterSetUp()
+    self._addPropertySheet(
+        'Purchase Packing List Line', 'MovementAggregateQuantityConstraint')
+    self._addPropertySheet(
+        'Purchase Packing List Cell', 'MovementAggregateQuantityConstraint')
+    self._addPropertySheet(
+        'Internal Packing List Line', 'MovementAggregateQuantityConstraint')
+    self._addPropertySheet(
+        'Internal Packing List Cell', 'MovementAggregateQuantityConstraint')
+    self.commit()
+
+  def assertMovementAggregateQuantityConstraintConsistent(self, document):
+    self.assertTrue(checkMovementAggregateQuantityConstraint(document))
+
+  def assertMovementAggregateQuantityConstraintInconsistent(self, document):
+    self.assertFalse(checkMovementAggregateQuantityConstraint(document))
 
   def getBusinessTemplateList(self):
     """
@@ -458,7 +487,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                                           portal_type='Item',
                                           title='Lot C')]), 1)
 
-    self.assertEqual(packing_list_line.getTotalQuantity(), 45.0)
+    self.assertEqual(packing_list_line.getTotalQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintConsistent(packing_list_line)
     self.assertEqual(sorted(packing_list_line.getVariationCategoryList()),
                       sorted([size_base + '/3',
                               size_base + '/2',
@@ -471,17 +501,20 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *(size_base + '/3', ))
-    self.assertEqual(cell.getQuantity(), 20)
+    self.assertEqual(cell.getQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual(['Lot A'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *(size_base + '/2', ))
-    self.assertEqual(cell.getQuantity(), 10)
+    self.assertEqual(cell.getQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual(['Lot B'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *(size_base + '/1', ))
-    self.assertEqual(cell.getQuantity(), 15)
+    self.assertEqual(cell.getQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual(['Lot C'], cell.getAggregateTitleList())
 
 
@@ -507,7 +540,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.assertEqual(packing_list_line.getVariationCategoryList(),
                       [size_base + '/3'])
-    self.assertEqual(packing_list_line.getTotalQuantity(), 20)
+    self.assertEqual(packing_list_line.getTotalQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintConsistent(packing_list_line)
 
     # create listbox a second time
     listbox = ({ 'listbox_key': '000',
@@ -526,7 +560,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list_line.DeliveryLine_createItemList(type='Item', listbox=listbox)
     self.tic()
 
-    self.assertEqual(packing_list_line.getTotalQuantity(), 55.0)
+    self.assertEqual(packing_list_line.getTotalQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintConsistent(packing_list_line)
     self.assertEqual(sorted(packing_list_line.getVariationCategoryList()),
                       sorted([size_base + '/1',
                               size_base + '/2',
@@ -538,17 +573,20 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *(size_base + '/3', ))
-    self.assertEqual(cell.getQuantity(), 20)
+    self.assertEqual(cell.getQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual(['Lot A2'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *(size_base + '/1', ))
-    self.assertEqual(cell.getQuantity(), 20)
+    self.assertEqual(cell.getQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual(['Lot B2'], cell.getAggregateTitleList())
 
     cell = packing_list_line.getCell(base_id='movement',
                                      *(size_base + '/2', ))
-    self.assertEqual(cell.getQuantity(), 15)
+    self.assertEqual(cell.getQuantity(), 0.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual(['Lot C2'], cell.getAggregateTitleList())
 
 
@@ -595,7 +633,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
            len([x.getObject() for x in self.portal.portal_catalog(
                                           portal_type='Item',
                                           title='Lot C3')]), 1)
-    self.assertEqual(packing_list_line.getQuantity(),30.0)
+    self.assertEqual(packing_list_line.getQuantity(),32.0)
+    self.assertMovementAggregateQuantityConstraintInconsistent(packing_list_line)
 
     self.assertEqual(packing_list_line.getVariationCategoryList(), [])
     self.assertEqual(packing_list_line.getAggregateTitleList(),
@@ -897,7 +936,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
               uids=(item.getUid(),))
 
     self.assertEqual([item], packing_list_line.getAggregateValueList())
-    self.assertEqual(12, packing_list_line.getQuantity())
+    self.assertEqual(32.0, packing_list_line.getQuantity())
+    self.assertMovementAggregateQuantityConstraintInconsistent(packing_list_line)
 
 
   def test_select_item_dialog_variation(self):
@@ -958,14 +998,16 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 
     self.assertEqual([variation],
                       packing_list_line.getVariationCategoryList())
-    self.assertEqual(12, packing_list_line.getTotalQuantity())
+    self.assertEqual(0.0, packing_list_line.getTotalQuantity())
+    self.assertMovementAggregateQuantityConstraintConsistent(packing_list_line)
     self.assertEqual([], packing_list_line.getAggregateValueList())
 
     self.assertEqual(1,
         len(packing_list_line.getCellValueList(base_id='movement')))
 
     cell = packing_list_line.getCell(base_id='movement', *(variation, ))
-    self.assertEqual(12, cell.getQuantity())
+    self.assertEqual(0.0, cell.getQuantity())
+    self.assertMovementAggregateQuantityConstraintInconsistent(cell)
     self.assertEqual([item], cell.getAggregateValueList())
 
 

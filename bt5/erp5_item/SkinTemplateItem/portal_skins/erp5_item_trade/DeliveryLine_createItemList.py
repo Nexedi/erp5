@@ -79,7 +79,5 @@ for line in kw.get('listbox'):
       movement_to_update.setAggregateValueList(
         movement_to_update.getAggregateValueList() + [item])
 
-context.Movement_updateQuantityFromAggregateList(at_date=DateTime())
-
 return context.Base_redirect(form_id, keep_items=dict(
       portal_status_message=translateString('Items created')))
