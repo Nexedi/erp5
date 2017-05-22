@@ -5262,8 +5262,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_local_role_key_item = \
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
-      self._object_property_item = \
-          ObjectPropertyTemplateItem(self.getTemplateObjectPropertyList())
       try:
         self._catalog_security_uid_column_item = \
           CatalogSecurityUidColumnTemplateItem(
