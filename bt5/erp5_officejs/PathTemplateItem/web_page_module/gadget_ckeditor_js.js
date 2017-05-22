@@ -10,37 +10,41 @@
     .ready(function (g) {
       return g.getElement()
         .push(function (element) {
-          var textarea = element.querySelector('textarea');
           g.props.element = element;
-          g.props.ckeditor = CKEDITOR.replace(
-            textarea,
-            {
-              removeButtons: 'NewPage,Preview,Cut,Paste,Copy,PasteText,' +
-                'PasteFromWord,Flash,Iframe,Form,Checkbox,Radio,TextField,' +
-                'Textarea,Select,Button,ImageButton,HiddenField,Maximize',
-              removePlugins: '',
-              disableNativeSpellChecker: false,
-              extraAllowedContent: "details section article"
-            }
-          );
-          g.props.ckeditor.addCommand('saveRJS', {
-            readOnly: 1,
-            exec: function () {
-              return g.submitContent();
-            }
-          });
-          g.props.ckeditor.ui.addButton('Save', {
-            label: "Save",
-            command: 'saveRJS',
-            toolbar: 'document,1'
-          });
-          g.props.ckeditor.on('instanceReady', function (event) {
-            event.editor.execCommand('maximize');
-          });
         });
     })
     .declareAcquiredMethod("submitContent", "triggerSubmit")
     .declareMethod('render', function (options) {
+      var config = options.config || {
+        removeButtons: 'NewPage,Preview,Cut,Paste,Copy,PasteText,' +
+          'PasteFromWord,Flash,Iframe,Form,Checkbox,Radio,TextField,' +
+          'Textarea,Select,Button,ImageButton,HiddenField,Maximize',
+        removePlugins: '',
+        disableNativeSpellChecker: false,
+        extraAllowedContent: "details section article"
+      },
+      textarea = this.props.element.querySelector('textarea');
+
+      this.props.ckeditor = CKEDITOR.replace(
+        textarea,
+         config  
+      );
+      this.props.ckeditor.addCommand('saveRJS', {
+        readOnly: 1,
+        exec: function () {
+          return g.submitContent();
+        }
+      });
+      this.props.ckeditor.ui.addButton('Save', {
+        label: "Save",
+        command: 'saveRJS',
+        toolbar: 'document,1'
+      });
+          
+
+      this.props.ckeditor.on('instanceReady', function (event) {
+        event.editor.execCommand('maximize');
+      });
       this.props.key = options.key || "text_content";
       this.props.ckeditor.setData(options.value || "");
       return {};
