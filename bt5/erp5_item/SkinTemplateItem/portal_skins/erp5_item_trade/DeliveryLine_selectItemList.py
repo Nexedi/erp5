@@ -92,7 +92,5 @@ for item_uid in uids:
   movement_to_update.setAggregateValueSet(
       movement_to_update.getAggregateValueList() + [item])
 
-context.Movement_updateQuantityFromAggregateList()
-
 return context.Base_redirect(form_id, keep_items=dict(
        portal_status_message=translateString('Items aggregated')))
