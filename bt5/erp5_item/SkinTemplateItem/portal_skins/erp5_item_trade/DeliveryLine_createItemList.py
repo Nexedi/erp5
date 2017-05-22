@@ -1,8 +1,6 @@
 from Products.ERP5Type.Message import translateString
 
-item_list = []
 request = context.REQUEST
-total_quantity = 0.0
 
 item_portal_type = kw.get('type')
 
@@ -26,22 +24,19 @@ for line in kw.get('listbox'):
 
   if line.has_key('listbox_key'):
     item_reference = line.get('reference')
+    item = None
     if item_reference:
       item = context.portal_catalog.getResultValue(
                                       portal_type=item_portal_type,
                                       reference=item_reference)
-      if item is not None:
-        msg = translateString("Reference Defined On Line ${line_id} already exists",
-                                                    mapping={'line_id': line['listbox_key']})
-        return context.Base_redirect(form_id,
-                                     keep_items=dict(portal_status_message=msg))
-    module = context.getDefaultModule(item_portal_type)
-    item = module.newContent(portal_type=item_portal_type,
-                             title=line['title'],
-                             reference=item_reference,
-                             quantity=line.get('quantity'),
-                             quantity_unit=context.getQuantityUnit(),
-                             **item_property_dict)
+    if item is None:
+      module = context.getDefaultModule(item_portal_type)
+      item = module.newContent(portal_type=item_portal_type,
+                               title=line['title'],
+                               reference=item_reference,
+                               quantity=line.get('quantity'),
+                               quantity_unit=context.getQuantityUnit(),
+                               **item_property_dict)
 
     line_variation_category_list = []
     for variation in (
