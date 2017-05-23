@@ -480,6 +480,7 @@ class TestAlarm(ERP5TypeTestCase):
       if m.method_id == 'notify':
         self.assertEqual(expected_tag, m.activity_kw.get('after_tag'))
       elif m.method_id == 'immediateReindexObject':
+        expected_tag = alarm.getRelativeUrl() + '_1'
         self.assertEqual(expected_tag, m.activity_kw.get('tag'))
       else:
         self.fail(m.method_id)
