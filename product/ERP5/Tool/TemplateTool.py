@@ -1818,9 +1818,12 @@ class TemplateTool (BaseTool):
                                   portal_type='Business Manager',
                                   title='Old Installation State',
                                   )
+
       for item in combined_installed_path_item:
         item.isIndexable = ConstantGetter('isIndexable', value=False)
-        old_installation_state._setObject(item.getId(), aq_base(item),
+        # Better to use new ids so that we don't end up in conflicts
+        new_id = old_installation_state.generateNewId()
+        old_installation_state._setObject(new_id, aq_base(item),
                                           suppress_events=True)
 
       forbidden_bm_title_list = ['Old Installation State',]
