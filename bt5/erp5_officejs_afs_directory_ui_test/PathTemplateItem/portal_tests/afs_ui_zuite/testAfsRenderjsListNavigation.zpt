@@ -198,7 +198,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='custom-success-story-image-wrapper']</td>
+  <td>//div[contains(@class, 'custom-success-story-image-wrapper')]</td>
   <td></td>
 </tr>
 
