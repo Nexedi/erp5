@@ -135,12 +135,19 @@ class TestUpgrader(ERP5TypeTestCase):
         id=script_constraint_id)
     script_constraint.edit(script_id=self.script_id, constraint_type="pre_upgrade")
 
-  def stepCreatePersonPropertySheet(self, sequence=None):
+  def _createPersonEmptyPropertySheet(self):
     portal = self.portal
     property_sheet = getattr(portal.portal_property_sheets, self.property_sheet_id, None)
     if property_sheet is None:
       property_sheet = portal.portal_property_sheets.newContent(
         portal_type="Property Sheet", id=self.property_sheet_id)
+    return property_sheet
+
+  def stepCreatePersonEmptyPropertySheet(self, sequence=None):
+    self._createPersonEmptyPropertySheet()
+
+  def stepCreatePersonPropertySheet(self, sequence=None):
+    property_sheet = self._createPersonEmptyPropertySheet()
     script_constraint_id = "person_old_reference_constraint"
     script_constraint = getattr(property_sheet, script_constraint_id, None)
     if script_constraint is None:
@@ -305,6 +312,11 @@ class TestUpgrader(ERP5TypeTestCase):
     sense, detail_list = self._checkAlarmSense(
       alarm_id="promise_check_upgrade")
     self.assertTrue(sense, detail_list)
+
+  def stepCheckFullUpgradeNotRequired(self, sequence=None):
+    sense, detail_list = self._checkAlarmSense(
+      alarm_id="promise_check_upgrade")
+    self.assertFalse(sense, detail_list)
 
   def stepCheckPostUpgradeNotRequired(self, sequence=None):
     sense, detail_list = self._checkAlarmSense(
@@ -740,6 +752,100 @@ class TestUpgrader(ERP5TypeTestCase):
       stepTic
       stepCheckOrganisationObjectUpdatedAfterCategoryMoving
       stepRemoveCustomUpgradeCategoryList
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_sense_full_upgrade_do_not_sense_post_upgrade(self):
+    """
+    Check that the post-upgrade consistency check is not run
+    when running the activeSense method of the full-upgrade alarm,
+    as post-upgrade will give inconsistent result
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      stepRunUpgrader
+      stepTic
+      stepCreatePerson
+      stepValidatePerson
+      stepSetConstraintInPersonModulePortalType
+      stepTic
+      stepCheckFullUpgradeNotRequired
+      stepCheckPostUpgradeRequired
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def _setPersonTitleConstraintForUpgraderStep(self, step):
+    portal = self.portal
+    skin_folder = portal.portal_skins.custom
+    script_id = "Person_%s_setTitleConstraint" % step
+    custom_script = getattr(skin_folder, script_id, None)
+    if custom_script is None:
+      skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(script_id)
+      custom_script = getattr(skin_folder, script_id)
+      custom_script.ZPythonScript_edit('fixit=False, **kw',
+        "{step_string}='M. {step_string}'\n"
+        "if context.getTitle() != {step_string}:\n"
+        "  if fixit:\n"
+        "    context.setTitle({step_string})\n"
+        "  else:\n"
+        "    return [\"Person's title is wrong\",]\n"
+        "return []".format(step_string=step)
+      )
+
+    property_sheet_id = self.property_sheet_id
+    property_sheet = getattr(portal.portal_property_sheets, property_sheet_id, None)
+    script_constraint_id = "person_title_%s_constraint" % step
+    script_constraint = getattr(property_sheet, script_constraint_id, None)
+    if script_constraint is None:
+      script_constraint = property_sheet.newContent(
+        portal_type="Script Constraint",
+        id=script_constraint_id
+      )
+    script_constraint.edit(
+      script_id=script_id,
+      constraint_type="%s" % step)
+
+  def stepSetPersonTitlePreUpgradeConstraint(self, sequence=None):
+    self._setPersonTitleConstraintForUpgraderStep('pre_upgrade')
+
+  def stepSetPersonTitleUpgradeConstraint(self, sequence=None):
+    self._setPersonTitleConstraintForUpgraderStep('upgrader')
+
+  def stepSetPersonTitlePostUpgradeConstraint(self, sequence=None):
+    self._setPersonTitleConstraintForUpgraderStep('post_upgrade')
+
+  def stepCheckPersonTitleHasBeenSetByPersonTitlePostUpgradeConstraint(self, sequence=None):
+    person = sequence['person']
+    title = person.getTitle()
+    self.assertEqual(title, 'M. post_upgrade')
+
+  def stepCheckPersonTitleHistory(self, sequence=None):
+    person = sequence['person']
+    self.assertEqual(
+      [x.changes for x in self.portal.person_module['1'].Base_getZODBHistoryList()[-3:]],
+      [('title:M. pre_upgrade',), ('title:M. upgrader',), ('title:M. post_upgrade',)])
+
+  def test_upgrade_activities_are_run_sequentially(self):
+    """
+    Check that activities spawned by the upgrader are always run in the same
+    order : pre-upgrade, upgrade, post-upgrade
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      stepCreatePerson
+      stepValidatePerson
+      stepCreatePersonEmptyPropertySheet
+      stepSetConstraintInPersonPortalType
+      stepSetPersonTitlePreUpgradeConstraint
+      stepSetPersonTitleUpgradeConstraint
+      stepSetPersonTitlePostUpgradeConstraint
+      stepTic
+      stepRunFullUpgrader
+      stepTic
+      stepCheckPersonTitleHasBeenSetByPersonTitlePostUpgradeConstraint
+      stepCheckPersonTitleHistory
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
