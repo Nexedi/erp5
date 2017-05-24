@@ -42,6 +42,7 @@
                 <string>base_application</string>
                 <string>industrial_phase</string>
                 <string>quantity_unit</string>
+                <string>aggregate</string>
               </tuple>
             </value>
         </item>
