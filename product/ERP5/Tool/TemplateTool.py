@@ -703,7 +703,6 @@ class TemplateTool (BaseTool):
       template_catalog_full_text_key  = import_template.getTemplateCatalogFullTextKeyList()
       template_catalog_keyword_key    = import_template.getTemplateCatalogKeywordKeyList()
       template_catalog_local_role_key = import_template.getTemplateCatalogLocalRoleKeyList()
-      template_catalog_method_id      = import_template.getTemplateCatalogMethodIdList()
       template_catalog_multivalue_key = import_template.getTemplateCatalogMultivalueKeyList()
       template_catalog_related_key    = import_template.getTemplateCatalogRelatedKeyList()
       template_catalog_request_key    = import_template.getTemplateCatalogRequestKeyList()
@@ -720,7 +719,6 @@ class TemplateTool (BaseTool):
         template_catalog_full_text_key,
         template_catalog_keyword_key,
         template_catalog_local_role_key,
-        template_catalog_method_id,
         template_catalog_multivalue_key,
         template_catalog_related_key,
         template_catalog_request_key,
@@ -739,7 +737,6 @@ class TemplateTool (BaseTool):
         'sql_catalog_full_text_search_keys_list',
         'sql_catalog_keyword_search_keys_list',
         'sql_catalog_local_role_keys_list',
-        'sql_catalog_method_id_list',
         'sql_catalog_multivalue_keys_list',
         'sql_catalog_related_keys_list',
         'sql_catalog_request_keys_list',
@@ -754,6 +751,14 @@ class TemplateTool (BaseTool):
 
       removable_property = {}
       removable_sub_object_path = []
+
+      # For catalog method, add paths
+      template_catalog_method_id_list  = import_template.getTemplateCatalogMethodIdList()
+      catalog_method_path_list = []
+      for method_id in template_catalog_method_id_list:
+        method_path = 'portal_catalog/%s | 1 | 1' % method_id
+        catalog_method_path_list.append(method_path)
+      template_path_list.extend(catalog_method_path_list)
 
       if is_property_added:
         if catalog_method_path_list:
