@@ -66,11 +66,31 @@ def guarded_next(iterator, default=_marker):
         return default
 add_builtins(next=guarded_next)
 
+
+def _get_class_name(obj):
+  module_name = getattr(obj, '__module__', None)
+  class_name = getattr(obj, '__name__', None)
+  return (module_name, class_name)
+
+import inspect
+SafeClassAttributeClassNameList = []
+def allow_class_attribute(klass):
+  """
+   Allow class methods, static methods, and clrass properties in the class
+
+   klass -- the class that will allow all class attributes
+  """
+  assert(inspect.isclass(klass))
+  class_name_tuple = _get_class_name(klass)
+  SafeClassAttributeClassNameList.append(class_name_tuple)
+
 def _check_type_access(name, v):
   def factory(inst, name):
     if not (name == 'fromkeys' and type(inst) is dict):
-      # fallback to default security
-      aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
+      # allow all the class methods and attributes in the class name list
+      if not _get_class_name(inst) in SafeClassAttributeClassNameList:
+        # fallback to default security
+        aq_acquire(inst, name, aq_validate, getSecurityManager().validate)
     return v
   return factory
 
@@ -196,6 +216,25 @@ ContainerAssertions[datetime.time] = 1
 ContainerAssertions[datetime.date] = 1
 ContainerAssertions[datetime.timedelta] = 1
 ContainerAssertions[datetime.tzinfo] = 1
+# ContainerAssertions allows instance methods but not class attributes,
+# thus allowing the class attributes by allow_class_attribute(cls).
+# Ex: datetime.datetime.now(), datetime.datetime.max are class attributes.
+allow_class_attribute(datetime.datetime)
+allow_class_attribute(datetime.date)
+allow_class_attribute(datetime.time)
+allow_class_attribute(datetime.timedelta)
+allow_class_attribute(datetime.tzinfo)
+# We need special care for datetime.datetime.strptime() in Python 2.7.
+# It is because datetime.datetime.strptime() imports _strptime by C function
+# PyImport_Import which calls
+# __import__(name, globals, locals, fromlist=['__doc__'], level=0).
+# The "level=0" is not supported by AccessControl in Zope2. At the same time,
+# the dummy from '__doc__'  is neither allowed in it by default.
+# Therefore we import _strptime in advance in this file.
+# This prevents both importing _strptime with level=0, and accessing __doc__,
+# when calling datetime.datetime.strptime().
+import _strptime
+
 allow_module('difflib')
 allow_module('hashlib')
 import hashlib
