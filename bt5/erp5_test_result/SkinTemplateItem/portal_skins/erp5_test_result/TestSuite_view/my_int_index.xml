@@ -199,7 +199,12 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>For Priority, please use :\n
+- 3 or 6 cores for a test suite taking less than 2 hours on 3 cores.\n
+- 9 cores if your test suite is still quite fast on 3 cores (at most 3 hours), but you are on an a quite active branch and you would like to reduce the time to wait before test start.\n
+- 15 cores if your test suite is slow on 3 cores (more than 3 hours). 15 cores is strictly required if you launch all ERP5 tests. This is also true even if the test suite is not urgent for you. If you do not do so, your test suite will block a testnode many hours, preventing others to have their results.\n
+\n
+In all cases, please avoid single test taking more than one hour (otherwise it is useless to distribute on many cores). So if a test is too long, please cut it in several tests.</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -269,7 +274,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [("", None),("3 Cores", 1),("3 to 6 Cores",4),("6 to 9 Cores",7),("9 to 15 Cores",9)]</string> </value>
+            <value> <string>python: [("", None),("3 Cores", 1),("6 Cores",4),("9 Cores",7),("15 Cores",9)]</string> </value>
         </item>
       </dictionary>
     </pickle>
