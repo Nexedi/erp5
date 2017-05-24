@@ -1,7 +1,8 @@
 portal_alarms/officejs_process_submit_software_publication
 portal_categories/product_line/software
 portal_categories/product_line/software/**
-portal_categories/publication_section/**
+portal_categories/publication_section/application
+portal_categories/publication_section/application/**
 web_page_module/gadget_ojs_*
 web_site_module/application-list
 web_site_module/application-list/template
