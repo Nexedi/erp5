@@ -1,8 +1,37 @@
-/*global window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO */
-/*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO) {
+/*global window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery,
+  jIO, DOMParser */
+/*jslint indent: 2, maxerr: 3, nomen: true, DOMParser */
+(function (window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, 
+  ComplexQuery, jIO, DOMParser) {
   "use strict";
-  
+
+  var DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS = {
+    "https://www.openhub.net/p/alfresco/analyses/latest/languages_summary": 62894263,
+    "https://www.openhub.net/p/swift-lang/analyses/latest/languages_summary": 755449,
+    "https://www.openhub.net/p/bluemind/analyses/latest/languages_summary": 857795,
+    "https://www.openhub.net/p/drupalcommerce/analyses/latest/languages_summary": 49743,
+    "https://www.openhub.net/p/obm/analyses/latest/languages_summary": 363914,
+    "https://www.openhub.net/p/linshare/analyses/latest/languages_summary": 185407,
+    "https://www.openhub.net/p/linid-directory-manager/analyses/latest/languages_summary": 725443,
+    "https://www.openhub.net/p/openpaas/analyses/latest/languages_summary": 228875,
+    "https://www.openhub.net/p/magento/analyses/latest/languages_summary": 13507099,
+    "https://www.openhub.net/p/mariadb/analyses/latest/languages_summary": 3163137,
+    "https://www.openhub.net/p/vscode/analyses/latest/languages_summary": 106972,
+    "https://www.openhub.net/p/mongodb/analyses/latest/languages_summary": 1734408,
+    "https://www.openhub.net/p/erp5/analyses/latest/languages_summary": 11685522,
+    "https://www.openhub.net/p/SlapOS/analyses/latest/languages_summary": 583328,
+    "https://www.openhub.net/p/wendelin/analyses/latest/languages_summary": 123904,
+    "https://www.openhub.net/p/renderjs/analyses/latest/languages_summary": 52261,
+    "https://www.openhub.net/p/odoo/analyses/latest/languages_summary": 2492373,
+    "https://www.openhub.net/p/mondrian/analyses/latest/languages_summary": 1319124,
+    "https://www.openhub.net/p/PrestaShop/analyses/latest/languages_summary": 539680,
+    "https://www.openhub.net/p/symfony/analyses/latest/languages_summary": 1480506,
+    "https://www.openhub.net/p/php-twig/analyses/latest/languages_summary": 22572,
+    "https://www.openhub.net/p/fabpots_Silex/analyses/latest/languages_summary": 11586,
+    "https://www.openhub.net/p/talend-studio/analyses/latest/languages_summary": 287512,
+    "https://www.openhub.net/p/xwiki/analyses/latest/languages_summary": 7909332
+  };
+
   // XXX... lord have mercy
   function mockupQueryParam(param, select_list) {
     var wild_param = param.replace(/[()]/g,"%").replace(/ /g,''),
@@ -41,6 +70,7 @@
     gadget.jio_allDocs = gadget.state_parameter_dict.jio_storage.allDocs;
     gadget.jio_get = gadget.state_parameter_dict.jio_storage.get;
     gadget.jio_put = gadget.state_parameter_dict.jio_storage.put;
+
     return gadget.jio_allDocs()
 
       /////////////////////////////////////////////////////////////////
@@ -72,22 +102,102 @@
       })
       .push(function () {
         return gadget.jio_allDocs({
-          select_list: ['title', 'free_software_list', 'website'],
+          select_list: ['title', 'free_software_list', 'website', 'lines'],
           query: 'portal_type: "publisher"'
         });
+      })
+      /////////////////////////////////////////////////////////////////
+      // Create Statistic Sheets
+      /////////////////////////////////////////////////////////////////
+      .push(function (result_list) {
+        var uid = 1000,
+          publisher_list = result_list.data.rows,
+          statistic_list = [],
+          i_len = publisher_list.length,
+          i;
+
+        // OPENHUB LOOKUP?
+        // curl https://www.openhub.net/projects/{project_id}/analyses/latest.xml 
+
+        function createStatisticSheet(my_publisher_row) {
+          var publisher = my_publisher_row.value.title,
+          software_list = my_publisher_row.value.free_software_list,
+          j_len = software_list.length,
+          profile_url,
+          software_analysis,
+          software_analysis_list = [],
+          j;
+
+          for (j = 0; j < j_len; j += 1) {
+            profile_url = software_list[j].source_code_profile;
+            if (profile_url && profile_url !== "") {
+
+              // more yuck
+              software_analysis = DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS[profile_url];
+              delete DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS[profile_url];
+              //software_analysis = jIO.util.ajax({
+              //  type: "GET",
+              //  "url": profile_url.replace("/languages_summary", ".xml")
+              //});
+              // prevent multiple entries into calculation
+            }
+            software_analysis_list.push(software_analysis || 0);
+          }
+
+          return new RSVP.Queue()
+            .push(function () {
+              return RSVP.all(software_analysis_list);
+            })
+            .push(function (my_stat_list) {
+              var parser = new DOMParser(),
+                line_total = 0,
+                xml, 
+                k_len = my_stat_list.length,
+                k;
+              for (k = 0; k < k_len; k += 1) {
+                if (my_stat_list[k]) {
+                  // xml =  parser.parseFromString(my_stat_list[k],"text/xml");
+                  //line_total += xml.getElementsByTagName("total_code_lines")[0]
+                  //  .childNodes[0].nodeValue;
+                  line_total += my_stat_list[k];
+                }
+              }
+              // actually we need to store this...
+              return new RSVP.Queue()
+                .push(function () {
+                  return gadget.jio_get(my_publisher_row.id);
+                })
+                .push(function (my_publisher) {
+                  my_publisher.lines = line_total;
+                  // my_publisher_row.value.lines = line_total.toString();
+                  return gadget.jio_put(my_publisher.uid, my_publisher);
+                });
+            });
+        }
+
+        for (i = 0; i < i_len; i += 1) {
+          statistic_list.push(createStatisticSheet(publisher_list[i]));
+        }
+
+        return new RSVP.Queue()
+          .push(function() {
+            return RSVP.all(statistic_list);
+          })
+          .push(function () {
+            return result_list;
+          });
       })
       /////////////////////////////////////////////////////////////////
       // Make Software datasheets
       /////////////////////////////////////////////////////////////////
       .push(function (publisher_list) {
-        
-        var uid = 1000;
+        var uid = 2000;
         
         function saveSoftwareListFromPublisher (j) {
           var publisher = j.value.title,
             software_list = j.value.free_software_list,
             website = j.value.website;
-          
+
           function saveSoftwareDocument (software) {
             software.portal_type = "software";
             software.publisher = publisher;
@@ -123,7 +233,7 @@
       // Make Success Case datasheets
       /////////////////////////////////////////////////////////////////
       .push(function (software_list) {
-        var uid = 2000;
+        var uid = 3000;
         
         function saveSuccessCaseListFromSoftware (softwareObject) {
           var software = softwareObject.value,
@@ -215,7 +325,6 @@
 
     .declareMethod('allDocs', function (option_dict) {
       option_dict.query = updateQuery(option_dict.query, option_dict.select_list);
-      //console.log(option_dict.query)
       return this.state_parameter_dict.jio_storage.allDocs(option_dict);
     })
     .declareMethod('getAttachment', function (id, view) {
@@ -230,4 +339,5 @@
     .declareMethod('repair', function () {
       return this.state_parameter_dict.jio_storage.repair();
     });
-}(window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO));
+}(window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO,
+ DOMParser));

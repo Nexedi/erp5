@@ -90,7 +90,7 @@
             })
             .push(
               function (my_content) {
-                var response = my_content.target.respons || my_content.target.responseText;
+                var response = my_content.target.response || my_content.target.responseText;
                 software.wikipedia_description = JSON.parse(response).extract;
                 return software;
               }, function (my_error) {

@@ -39,8 +39,6 @@
               page_title: "Success Story List",
             });
           })
-          /*
-          */
           .push(function () {
             return gadget.getDeclaredGadget("form_list");
           })
