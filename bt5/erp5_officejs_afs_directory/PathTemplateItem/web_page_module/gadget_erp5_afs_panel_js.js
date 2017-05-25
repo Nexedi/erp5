@@ -25,6 +25,11 @@
     .ready(function (g) {
       g.props = {};
     })
+    
+    .setState({
+      visible: false,
+      desktop: false
+    })
 
     //////////////////////////////////////////////
     // acquired method
@@ -45,12 +50,14 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('toggle', function () {
-      this.props.element.classList.toggle('visible');
+      return this.changeState({
+        visible: !this.state.visible
+      });
     })
     .declareMethod('close', function () {
-      if (this.props.element.classList.contains('visible')) {
-        this.props.element.classList.remove('visible');
-      }
+      return this.changeState({
+        visible: false
+      });
     })
 
     .declareMethod('render', function () {
@@ -59,19 +66,22 @@
         .push(function () {
           return RSVP.all([
             g.getUrlFor({command: 'display', options: {page: "afs_directory"}}),
+            g.getUrlFor({command: 'display', options: {page: "afs_publisher_statistic"}}),
             g.getUrlFor({command: 'display', options: {page: "afs_publisher_list"}}),
             g.getUrlFor({command: 'display', options: {page: "afs_software_list"}}),
             g.getUrlFor({command: 'display', options: {page: "afs_success_case_list"}})
           ]);
         })
         .push(function (all_result) {
+
           // XXX: Customize panel header!
           var tmp = panel_template_header();
           tmp += panel_template_body({
             "directory_href": all_result[0],
-            "publisher_href": all_result[1],
-            "software_href": all_result[2],
-            "success_case_href": all_result[3]
+            "publisher_statistic_href": all_result[1],
+            "publisher_href": all_result[2],
+            "software_href": all_result[3],
+            "success_case_href": all_result[4]
           });
           return tmp;
         })
@@ -81,28 +91,72 @@
         });
     })
 
+
+    .onStateChange(function (modification_dict) {
+      var context = this,
+        gadget = this,
+        queue = new RSVP.Queue(),
+        tmp_element;
+
+      if (modification_dict.hasOwnProperty("visible")) {
+        if (this.state.visible) {
+          if (!this.element.classList.contains('visible')) {
+            this.element.classList.toggle('visible');
+          }
+        } else {
+          if (this.element.classList.contains('visible')) {
+            this.element.classList.remove('visible');
+          }
+        }
+      }
+    })
+
     /////////////////////////////////////////////////////////////////
     // declared services
     /////////////////////////////////////////////////////////////////
-    .declareService(function () {
-      var panel_gadget = this;
-
-      function formSubmit() {
-        panel_gadget.toggle();
+    .onEvent('click', function (evt) {
+      if ((evt.target.nodeType === Node.ELEMENT_NODE) &&
+          (evt.target.tagName === 'BUTTON')) {
+        return this.toggle();
       }
-      return new RSVP.Queue()
-        .push(function () {
-          return panel_gadget.props.render_deferred.promise;
-        })
-        .push(function () {
-          return loopEventListener(
-            panel_gadget.props.element.querySelector('button'),
-            'click',
-            false,
-            formSubmit
-          );
-        });
+    }, false, false)
 
-    });
+    .declareJob('listenResize', function () {
+      // resize should be only trigger after the render method
+      // as displaying the panel rely on external gadget (for translation for example)
+      var result,
+        event,
+        context = this;
+      function extractSizeAndDispatch() {
+        if (window.matchMedia("(min-width: 85em)").matches) {
+          return context.changeState({
+            desktop: true
+          });
+        }
+        return context.changeState({
+          desktop: false
+        });
+      }
+      result = loopEventListener(window, 'resize', false,
+                                 extractSizeAndDispatch);
+      event = document.createEvent("Event");
+      event.initEvent('resize', true, true);
+      window.dispatchEvent(event);
+      return result;
+    })
+
+    .onEvent('blur', function (evt) {
+      // XXX Horrible hack to clear the search when focus is lost
+      // This does not follow renderJS design, as a gadget should not touch
+      // another gadget content
+      if (evt.target.type === 'search') {
+        evt.target.value = "";
+      }
+    }, true, false);
 
 }(window, rJS, Handlebars, RSVP, loopEventListener));
+
+
+
+
+

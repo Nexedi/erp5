@@ -49,7 +49,7 @@
           // only works in for english
           var wikipedia_api_url = 'https://en.wikipedia.org/api/rest_v1/page/summary/',
             wiki_list = [];
-          
+
           publisher.free_software_list.map(function (software) {
             if (software.commercial_support === "N/A") {
               delete software.commercial_support;

@@ -1,7 +1,7 @@
-/*global window, rJS, RSVP, Handlebars, URI, console, jIO */
+/*global window, rJS, RSVP, Handlebars, URI, console, jIO, document */
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 
-(function (window, rJS, RSVP, Handlebars, URI) {
+(function (window, rJS, RSVP, Handlebars, URI, document) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -38,30 +38,49 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-    
-
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
-      var gadget = this;
+      var gadget = this,
+        masonry_container = gadget.props.element.querySelector(
+          '.ui-masonry-container'
+        );
 
-      return gadget.updateHeader({
-        page_title: 'Free Software Publisher Directory'
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            gadget.getDeclaredGadget("unsplash"),
+            gadget.updateHeader({
+              page_title: 'Free Software Publisher Directory'
+            })
+          ]);
       })
-      .push(function () {
-        return gadget.jio_allDocs({
-          select_list: ['category_list'],
-          query: 'portal_type:"software"'
-        });
+      .push(function (my_response_list) {
+        return RSVP.all([
+          gadget.jio_allDocs({
+            select_list: ['category_list'],
+            query: 'portal_type:"software"'
+          }),
+          my_response_list[0].render()
+        ]);
       })
-      .push(function (software_objects) {
-        var softwares = software_objects.data.rows,
-          categories = softwares.map( (obj) => obj.value.category_list ) // get all categories
-                                .reduce( (cur, prev) => cur.concat(prev) ), // flatten array of category arrays
-          // remove duplicates (case sensitive!)
-          unique_categories = Array.from(new Set(categories));
+      .push(function (my_response_list) {
+        var softwares = my_response_list[0].data.rows,
         
+          // get categories and flatten array of category arrays
+          categories = softwares.map( (obj) => obj.value.category_list )
+                        .reduce( (cur, prev) => cur.concat(prev) ),
+
+          // remove duplicates (case sensitive!)
+          unique_categories = Array.from(new Set(categories)),
+
+          // kudos: https://davidwalsh.name/convert-html-stings-dom-nodes
+          banner = document.createRange()
+            .createContextualFragment(my_response_list[1] || "");
+        
+        gadget.element.insertBefore(banner, masonry_container);
+
         return RSVP.all(unique_categories);
       })
       .push(function (categories) {
@@ -89,11 +108,13 @@
         return RSVP.all(softwares_by_category);
       })
       .push(function (result) {
+        var content;
+
         // reverse sort categories by number of softwares
         result.sort( (a, b) => b.softwares.length - a.softwares.length );
         
-        var content = template(result);
-        gadget.props.element.querySelector('.body').innerHTML = content;
+        content = template(result);
+        masonry_container.innerHTML = content;
       });
     });
-}(window, rJS, RSVP, Handlebars, URI));
+}(window, rJS, RSVP, Handlebars, URI, document));
