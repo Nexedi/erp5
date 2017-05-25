@@ -92,6 +92,66 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Statistics']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Statistics']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='Statistics']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Next']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//input[@id='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=search</td>
+  <td>Nexedi</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@class='search_button ui-shadow-inset ui-btn ui-btn-inline ui-corner-all ui-btn-icon-notext ui-icon-search ui-override-theme ui-input-btn']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n='1 Records']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table/tbody/tr/th[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='custom-software-profile-image-wrapper']</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
   <td></td>
