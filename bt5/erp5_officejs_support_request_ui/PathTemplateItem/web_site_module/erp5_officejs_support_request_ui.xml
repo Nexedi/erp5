@@ -29,6 +29,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -38,6 +39,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -47,6 +49,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -56,6 +59,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>

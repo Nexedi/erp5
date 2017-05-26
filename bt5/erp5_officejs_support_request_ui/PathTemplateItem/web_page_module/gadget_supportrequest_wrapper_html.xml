@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_homepage.html</string> </value>
+            <value> <string>gadget_erp5_page_support_request_wrapper.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,11 +85,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_supportrequest_homepage_html</string> </value>
+            <value> <string>gadget_supportrequest_wrapper_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -103,11 +105,13 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget SupportRequest Homepage</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -138,6 +142,12 @@
                     <key> <string>edit_workflow</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -183,7 +193,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1489414491.18</float>
+                        <float>1495632537.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -228,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.10697.33273.31266</string> </value>
+                <value> <string>959.40692.1819.31982</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +256,66 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1493995342.0</float>
+                        <float>1495792991.84</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1495632479.82</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
