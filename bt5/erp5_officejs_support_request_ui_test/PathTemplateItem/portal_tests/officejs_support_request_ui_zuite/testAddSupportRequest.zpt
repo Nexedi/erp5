@@ -17,27 +17,62 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n='[value]Add Support Request']</td>
+  <td>//a[@class='add']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@data-i18n='[value]Add Support Request']</td>
+  <td>//a[@class='add']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@class='ui-title']</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@type='submit']</td>
-  <td>Document Created.</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
+  <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//th[@data-i18n='Title']</td>
+  <td>waitForTextPresent</td>
+  <td>Reference</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Requester</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Billing Supplier</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Supervisor</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Begin Date</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>State</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Submitted</td>
   <td></td>
 </tr>
 </tbody></table>
