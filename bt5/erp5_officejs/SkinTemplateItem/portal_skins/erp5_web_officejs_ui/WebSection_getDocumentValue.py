@@ -18,9 +18,8 @@
    fix acquisition issues within the _aq_dynamic
    lookup from WebSection class.
 """
-context.log(context.REQUEST['TraversalRequestNameStack'])
 
-stack = context.REQUEST['TraversalRequestNameStack']
+stack = context.REQUEST.get('TraversalRequestNameStack', [])
 if type(name) is list:
   name = name[0]
 url_list = [name]
@@ -63,13 +62,44 @@ base_sort = (('effective_date', 'descending'), )
 
 # Portal Type and validation state should be handled by predicate
 # By default
-web_page_list = context.searchResults(
+if hasattr(context, "searchResults"):
+  web_page_list = context.searchResults(
   reference=reference,
   effective_date=effective_date,
   language=(language, ''),
   sort_on=(('language', 'descending'), ) + base_sort,
   limit=1,
   **kw)
+else:
+  web_page_list = portal_catalog(reference=name,
+                               effective_date=effective_date,
+                               portal_type=valid_portal_type_list,
+                               validation_state=validation_state,
+                               language=(language, ''),
+                               sort_on=(('language', 'descending'), ) + base_sort,
+                               limit=1,
+                               **kw)
+  if len(web_page_list) == 0 and language != 'en':
+    # Search again with English as a fallback.
+    web_page_list = portal_catalog(reference=name,
+                                   effective_date=effective_date,
+                                   portal_type=valid_portal_type_list,
+                                   validation_state=validation_state,
+                                   language='en',
+                                   sort_on=base_sort,
+                                   limit=1,
+                                   **kw)
+
+  if len(web_page_list) == 0:
+    # Search again without the language
+    web_page_list = portal_catalog(reference=name,
+                                   effective_date=effective_date,
+                                   portal_type=valid_portal_type_list,
+                                   validation_state=validation_state,
+                                   sort_on=base_sort,
+                                   limit=1,
+                                   **kw)
+
 if len(web_page_list) == 0:
   # Default returns None
   web_page = None
