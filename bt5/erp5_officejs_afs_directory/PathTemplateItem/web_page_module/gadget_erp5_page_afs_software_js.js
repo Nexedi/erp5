@@ -29,14 +29,6 @@
   }
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     .declareAcquiredMethod('updateHeader', 'updateHeader')
     .declareAcquiredMethod('jio_get', 'jio_get')
 
@@ -98,7 +90,7 @@
 
         })
         .push(function (my_software) {
-          gadget.props.element.querySelector(".display-widget")
+          gadget.element.querySelector(".display-widget")
             .innerHTML = display_widget_table(my_software);
 
           return gadget.updateHeader({page_title: my_software.title});

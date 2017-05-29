@@ -18,14 +18,6 @@
     panel_template_body = Handlebars.compile(source_body);
 
   gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
     .setState({
       visible: false,
       desktop: false
@@ -36,15 +28,6 @@
     //////////////////////////////////////////////
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.render_deferred = RSVP.defer();
-        });
-    })
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -75,19 +58,15 @@
         .push(function (all_result) {
 
           // XXX: Customize panel header!
-          var tmp = panel_template_header();
-          tmp += panel_template_body({
-            "directory_href": all_result[0],
-            "publisher_statistic_href": all_result[1],
-            "publisher_href": all_result[2],
-            "software_href": all_result[3],
-            "success_case_href": all_result[4]
-          });
-          return tmp;
-        })
-        .push(function (my_translated_or_plain_html) {
-          g.props.element.querySelector("div").innerHTML = my_translated_or_plain_html;
-          g.props.render_deferred.resolve();
+          var tmp = panel_template_header() +
+            panel_template_body({
+              "directory_href": all_result[0],
+              "publisher_statistic_href": all_result[1],
+              "publisher_href": all_result[2],
+              "software_href": all_result[3],
+              "success_case_href": all_result[4]
+            });
+          g.element.querySelector("div").innerHTML = tmp;
         });
     })
 

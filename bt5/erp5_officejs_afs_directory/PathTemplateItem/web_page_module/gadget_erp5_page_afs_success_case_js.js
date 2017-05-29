@@ -10,14 +10,6 @@
     );
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
     .declareAcquiredMethod('updateHeader', 'updateHeader')
     .declareAcquiredMethod('jio_get', 'jio_get')
 
@@ -33,7 +25,7 @@
             story.image_class = "custom-placeholder";
           }
 
-          gadget.props.element.querySelector(".display-widget")
+          gadget.element.querySelector(".display-widget")
             .innerHTML = display_widget_table(story);
           return gadget.updateHeader({page_title: story.title});
         });
