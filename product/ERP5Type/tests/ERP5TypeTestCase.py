@@ -430,6 +430,8 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       ti.setTypePropertySheetList(list(property_sheet_set))
 
       # remember that we added a property sheet for tear down
+      if getattr(self, '_added_property_sheets', None) is None:
+        self._added_property_sheets = {}
       self._added_property_sheets.setdefault(
                     portal_type_name, []).append(property_sheet_name)
 
