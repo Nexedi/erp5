@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors.
+# Copyright (c) 2002-2017 Nexedi SA and Contributors. All Rights Reserved.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
@@ -23,11 +23,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 ##############################################################################
-
-import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
@@ -36,7 +34,6 @@ class TestWorklist(ERP5TypeTestCase):
 
   run_all_test = 1
   quiet = 1
-  login = PortalTestCase.login
 
   checked_portal_type = 'Organisation'
   module_selection_name = 'organisation_module_selection'
@@ -515,9 +512,3 @@ class TestWorklist(ERP5TypeTestCase):
 
     finally:
       self.removeWorklist(self.checked_workflow, ['region_worklist'])
-
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestWorklist))
-  return suite

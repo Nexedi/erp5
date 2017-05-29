@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors.
+# Copyright (c) 2002-2017 Nexedi SA and Contributors. All Rights Reserved.
 # All Rights Reserved.
 #          Vincent Pelletier <vincent@nexedi.com>
 #
@@ -23,12 +23,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 ##############################################################################
 
 import unittest
-from Products.ERP5.tests.testWorklist import TestWorklist
+from erp5.component.test.testWorklist import TestWorklist
 from Products.ERP5Type.tests.utils import todo_erp5
 
 class TestSQLCachedWorklist(TestWorklist):
@@ -45,6 +45,8 @@ class TestSQLCachedWorklist(TestWorklist):
   test_02_related_key = todo_erp5(TestWorklist.test_02_related_key)
   test_04_dynamic_variables = todo_erp5(TestWorklist.test_04_dynamic_variables)
 
+# This could should not be needed. But since we import another test, automatic
+# creation of suite also add the suite of TestWorklist, and we do not want this
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSQLCachedWorklist))
