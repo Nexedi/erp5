@@ -1,0 +1,31 @@
+<!Doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Unsplash Banner Image</title>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="jiodev.js"></script>
+
+    <script src="gadget_erp5_page_afs_unsplash.js"></script>
+
+    <!-- templates -->
+    <script id="banner-template" type="text/x-handlebars-template">
+      <section class="ui-banner-section">
+        <h1>{{message}}</h1>
+        <img src="{{src}}" alt="{{alt}}" />
+        <span>
+          Photo by
+          <a target="_blank" href="{{source_url}}">{{source_title}}</a>
+          &nbsp;/&nbsp;
+          <a target="_blank" href="{{unsplash_url}}">Unsplash</a>
+        </span>
+      </section>
+    </script>
+
+  </head>
+  <body></body>
+</html>
