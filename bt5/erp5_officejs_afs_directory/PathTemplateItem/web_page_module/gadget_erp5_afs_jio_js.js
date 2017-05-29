@@ -307,6 +307,7 @@
             check_local_modification: false,
             check_local_creation: false,
             check_local_deletion: false,
+            parallel_operation_amount: 100,
             type: "replicate",
             local_sub_storage : {
               type: "query",
