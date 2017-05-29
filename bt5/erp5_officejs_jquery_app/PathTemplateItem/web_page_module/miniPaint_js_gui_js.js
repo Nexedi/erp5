@@ -69,7 +69,7 @@ function GUI_CLASS() {
 		var html = '';
 		for (var i in DRAW_TOOLS_CONFIG) {
 			html += '<a title="' + DRAW_TOOLS_CONFIG[i].title + '"';
-			html += ' style="background: #989898 url(\'../miniPaint/img/' + DRAW_TOOLS_CONFIG[i].icon[0] + '\') no-repeat ' + DRAW_TOOLS_CONFIG[i].icon[1] + 'px ' + DRAW_TOOLS_CONFIG[i].icon[2] + 'px;"';
+			html += ' style="background: #989898 url(\'miniPaint/img/' + DRAW_TOOLS_CONFIG[i].icon[0] + '\') no-repeat ' + DRAW_TOOLS_CONFIG[i].icon[1] + 'px ' + DRAW_TOOLS_CONFIG[i].icon[2] + 'px;"';
 			if (DRAW_TOOLS_CONFIG[i].name == DRAW.active_tool)
 				html += ' class="active trn"';
 			else
