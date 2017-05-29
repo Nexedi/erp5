@@ -4,14 +4,6 @@
   "use strict";
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
     /*
     .ready(function (g) {
       return g.getDeclaredGadget("router")

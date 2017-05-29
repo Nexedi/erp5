@@ -3,13 +3,6 @@
 (function (window, RSVP, rJS) {
   "use strict";
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")

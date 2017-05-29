@@ -15,25 +15,6 @@
   );
 
   gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        })
-
-        .push(undefined, function (error) {
-          console.log(error);
-        });
-    })
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -42,7 +23,7 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this,
-        masonry_container = gadget.props.element.querySelector(
+        masonry_container = gadget.element.querySelector(
           '.ui-masonry-container'
         );
 
