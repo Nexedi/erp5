@@ -1,8 +1,7 @@
-/*global window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery,
+/*global window, rJS, RSVP,
   jIO, DOMParser */
-/*jslint indent: 2, maxerr: 3, nomen: true, DOMParser */
-(function (window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, 
-  ComplexQuery, jIO, DOMParser) {
+/*jslint indent: 2, maxerr: 3, nomen: true */
+(function (window, rJS, RSVP) {
   "use strict";
 
   var DIRTY_OLOH_LOOKUP_UNTIL_API_WORKS = {
@@ -34,7 +33,7 @@
 
   // XXX... lord have mercy
   function mockupQueryParam(param, select_list) {
-    var wild_param = param.replace(/[()]/g,"%").replace(/ /g,''),
+    var wild_param = param.replace(/[()]/g, "%").replace(/ /g, ''),
       return_list = [],
       len,
       i;
@@ -52,12 +51,12 @@
       i;
     for (i = 0, len = query_param_list.length; i < len; i += 1) {
       param = query_param_list[i];
-      
+
       // search
       if (param.split(":").length !== 2) {
         return query.replace(param, mockupQueryParam(param, select_list));
       }
-      
+
       // hide rows
       if (param.indexOf("catalog.uid") > 0) {
         return query.replace("catalog.", "");
@@ -65,7 +64,7 @@
     }
     return query;
   }
-  
+
   function createDataSheets(gadget) {
     gadget.jio_allDocs = gadget.state_parameter_dict.jio_storage.allDocs;
     gadget.jio_get = gadget.state_parameter_dict.jio_storage.get;
@@ -77,26 +76,29 @@
       // Make Publisher datasheets
       /////////////////////////////////////////////////////////////////
       .push(function (data) {
-        var uid = 0;
-
+        var uid = 0,
+          publisher_id_list,
+          promise_list;
+/*
         function isReplicate(el) {
           return (el.id.indexOf("_replicate_") < 0);
         }
-        
-        function setPortalTypeOnPublisher (el) {
+*/
+        function setPortalTypeOnPublisher(el) {
           return gadget.jio_get(el.id)
-          .push(function (publisher_object) {
-            publisher_object.portal_type = "publisher";
-            
-            //publisher_object.url = publisher_object.website;
-            publisher_object.uid = (uid++).toString();
-            
-            return gadget.jio_put(publisher_object.uid, publisher_object);
-          });
+            .push(function (publisher_object) {
+              publisher_object.portal_type = "publisher";
+
+              //publisher_object.url = publisher_object.website;
+              uid += 1;
+              publisher_object.uid = uid.toString();
+
+              return gadget.jio_put(publisher_object.uid, publisher_object);
+            });
         }
-        
-        var publisher_id_list = data.data.rows,
-          promise_list = publisher_id_list.map(setPortalTypeOnPublisher);
+
+        publisher_id_list = data.data.rows;
+        promise_list = publisher_id_list.map(setPortalTypeOnPublisher);
 
         return RSVP.all(promise_list);
       })
@@ -110,8 +112,7 @@
       // Create Statistic Sheets
       /////////////////////////////////////////////////////////////////
       .push(function (result_list) {
-        var uid = 1000,
-          publisher_list = result_list.data.rows,
+        var publisher_list = result_list.data.rows,
           statistic_list = [],
           i_len = publisher_list.length,
           i;
@@ -120,13 +121,12 @@
         // curl https://www.openhub.net/projects/{project_id}/analyses/latest.xml 
 
         function createStatisticSheet(my_publisher_row) {
-          var publisher = my_publisher_row.value.title,
-          software_list = my_publisher_row.value.free_software_list,
-          j_len = software_list.length,
-          profile_url,
-          software_analysis,
-          software_analysis_list = [],
-          j;
+          var software_list = my_publisher_row.value.free_software_list,
+            j_len = software_list.length,
+            profile_url,
+            software_analysis,
+            software_analysis_list = [],
+            j;
 
           for (j = 0; j < j_len; j += 1) {
             profile_url = software_list[j].source_code_profile;
@@ -149,9 +149,7 @@
               return RSVP.all(software_analysis_list);
             })
             .push(function (my_stat_list) {
-              var parser = new DOMParser(),
-                line_total = 0,
-                xml, 
+              var line_total = 0,
                 k_len = my_stat_list.length,
                 k;
               for (k = 0; k < k_len; k += 1) {
@@ -180,7 +178,7 @@
         }
 
         return new RSVP.Queue()
-          .push(function() {
+          .push(function () {
             return RSVP.all(statistic_list);
           })
           .push(function () {
@@ -191,30 +189,34 @@
       // Make Software datasheets
       /////////////////////////////////////////////////////////////////
       .push(function (publisher_list) {
-        var uid = 2000;
-        
-        function saveSoftwareListFromPublisher (j) {
+        var uid = 2000,
+          save_software_promise_list,
+          publishers,
+          promise_list;
+
+        function saveSoftwareListFromPublisher(j) {
           var publisher = j.value.title,
             software_list = j.value.free_software_list,
             website = j.value.website;
 
-          function saveSoftwareDocument (software) {
+          function saveSoftwareDocument(software) {
             software.portal_type = "software";
             software.publisher = publisher;
             software.publisher_website = website;
-            software.uid = (uid++).toString();
+            uid += 1;
+            software.uid = uid.toString();
 
             return gadget.jio_put(software.uid, software);
           }
-          
-          var save_software_promise_list = software_list.map(saveSoftwareDocument);
-    
+
+          save_software_promise_list = software_list.map(saveSoftwareDocument);
+
           return RSVP.all(save_software_promise_list);
         }
 
-        var publishers = publisher_list.data.rows,
-          promise_list = publishers.map(saveSoftwareListFromPublisher);
-        
+        publishers = publisher_list.data.rows;
+        promise_list = publishers.map(saveSoftwareListFromPublisher);
+
         return RSVP.all(promise_list);
       })
       .push(function () {
@@ -224,7 +226,7 @@
             'website',
             'success_case_list',
             'publisher',
-            'category_list',
+            'category_list'
           ],
           query: 'portal_type: "software"'
         });
@@ -233,50 +235,56 @@
       // Make Success Case datasheets
       /////////////////////////////////////////////////////////////////
       .push(function (software_list) {
-        var uid = 3000;
-        
-        function saveSuccessCaseListFromSoftware (softwareObject) {
+        var uid = 3000,
+          softwares,
+          promise_list;
+
+        function saveSuccessCaseListFromSoftware(softwareObject) {
           var software = softwareObject.value,
             publisher = softwareObject.value.publisher,
             website = softwareObject.value.website,
-            success_case_list = softwareObject.value.success_case_list;
-          
-          function isValid (success_case) {
+            success_case_list = softwareObject.value.success_case_list,
+            save_success_case_promise_list;
+
+          function isValid(success_case) {
             return (success_case !== "N/A" &&
-                    success_case.title !== "" && 
+                    success_case.title !== "" &&
                     success_case.title !== "N/A");
           }
-          
-          function addProperties (success_case) {
+
+          function addProperties(success_case) {
             success_case.portal_type = "success_case";
             success_case.software = software.title;
             success_case.software_website = software.website;
             success_case.publisher = publisher;
             success_case.publisher_website = website;
             success_case.category_list = software.category_list;
-            success_case.uid = (uid++).toString();
+            uid += 1;
+            success_case.uid = uid.toString();
             return gadget.jio_put(success_case.uid, success_case);
           }
 
-          var save_success_case_promise_list = 
+          save_success_case_promise_list =
             success_case_list.filter(isValid)
                              .map(addProperties);
 
           return RSVP.all(save_success_case_promise_list);
         }
-        
-        var softwares = software_list.data.rows.filter(function (sw) {
+
+        softwares = software_list.data.rows.filter(function (sw) {
           return (sw.value.success_case_list !== "N/A");
-        }),
-          promise_list = softwares.map(saveSuccessCaseListFromSoftware);
-        
-        return RSVP.all(promise_list);       
+        });
+        promise_list = softwares.map(saveSuccessCaseListFromSoftware);
+
+        return RSVP.all(promise_list);
+/*
       })
       .push(undefined, function (error) {
         console.log(error);
+*/
       });
   }
-  
+
   rJS(window)
 
     .ready(function (gadget) {
@@ -294,7 +302,7 @@
     .declareMethod('createJio', function () {
       var gadget = this;
       return new RSVP.Queue()
-        .push(function (setting_list) {
+        .push(function () {
           return gadget.state_parameter_dict.jio_storage.createJio({
             check_local_modification: false,
             check_local_creation: false,
@@ -303,7 +311,7 @@
             local_sub_storage : {
               type: "query",
               sub_storage: {
-              type: "memory",
+                type: "memory"
               }
             },
             remote_sub_storage : {
@@ -312,14 +320,14 @@
                 type: "publisher_storage",
                 url: "/"
               }
-            },
+            }
           })
-          .push(function (data) {
-            return gadget.state_parameter_dict.jio_storage.repair();
-          })
-          .push(function () {
-            return createDataSheets(gadget);
-          });
+            .push(function () {
+              return gadget.state_parameter_dict.jio_storage.repair();
+            })
+            .push(function () {
+              return createDataSheets(gadget);
+            });
         });
     })
 
@@ -339,5 +347,4 @@
     .declareMethod('repair', function () {
       return this.state_parameter_dict.jio_storage.repair();
     });
-}(window, rJS, RSVP, UriTemplate, URI, Query, SimpleQuery, ComplexQuery, jIO,
- DOMParser));
+}(window, rJS, RSVP));

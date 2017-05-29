@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP */
-(function (window, rJS, RSVP) {
+/*global window, rJS */
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
@@ -69,8 +69,5 @@
           return router.redirect.apply(router, argument_list);
         });
     });
-    
-    
 
-
-}(window, rJS, RSVP));
+}(window, rJS));

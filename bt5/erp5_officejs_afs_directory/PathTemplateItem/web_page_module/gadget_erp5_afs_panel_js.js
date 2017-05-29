@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, Handlebars, RSVP, loopEventListener */
-(function (window, rJS, Handlebars, RSVP, loopEventListener) {
+/*global document, window, rJS, Handlebars, RSVP, loopEventListener, Node */
+(function (document, window, rJS, Handlebars, RSVP, loopEventListener, Node) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@
     .ready(function (g) {
       g.props = {};
     })
-    
+
     .setState({
       visible: false,
       desktop: false
@@ -93,11 +93,6 @@
 
 
     .onStateChange(function (modification_dict) {
-      var context = this,
-        gadget = this,
-        queue = new RSVP.Queue(),
-        tmp_element;
-
       if (modification_dict.hasOwnProperty("visible")) {
         if (this.state.visible) {
           if (!this.element.classList.contains('visible')) {
@@ -154,7 +149,7 @@
       }
     }, true, false);
 
-}(window, rJS, Handlebars, RSVP, loopEventListener));
+}(document, window, rJS, Handlebars, RSVP, loopEventListener, Node));
 
 
 
