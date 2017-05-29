@@ -69,18 +69,6 @@ class TestItemMixin(TestSaleInvoiceMixin):
   def assertMovementAggregateQuantityConstraintInconsistent(self, document):
     self.assertFalse(checkMovementAggregateQuantityConstraint(document))
 
-  def getBusinessTemplateList(self):
-    """
-    custom list of business templates for testItem
-
-    erp5_trade_proxy_field_legacy is added only for a temporary
-    period until wrongly proxyfied business template (erp5_item here) stops
-    using obsolete field libraries. erp5_trade_proxy_field_legacy must be
-    removed as soon as possible.
-    """
-    return TestSaleInvoiceMixin.getBusinessTemplateList(self) + \
-         ('erp5_item',) + ('erp5_trade_proxy_field_legacy',)
-
   def createOrganisation(self, title=None):
     organisation_portal_type = 'Organisation'
     organisation_module = self.portal.getDefaultModule(
@@ -1221,12 +1209,6 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
 class TestItemScripts(ERP5TypeTestCase):
   """Test scripts from erp5_item.
   """
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
-            'erp5_item', 'erp5_configurator_standard_solver',
-            'erp5_configurator_standard_trade_template',
-            'erp5_simulation_test')
-
   def afterSetUp(self):
     self.validateRules()
     size_category = self.portal.portal_categories.size
