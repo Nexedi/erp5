@@ -31,7 +31,6 @@ import unittest
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
-from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
@@ -159,7 +158,6 @@ class TestItemMixin(TestSaleInvoiceMixin):
   def stepCreateItemList(self, sequence=None, sequence_list=None, **kw):
     """ Create some items """
     item_module = self.getPortal().item_module
-    resource = sequence.get('resource')
     item = item_module.newContent(portal_type=self.item_portal_type)
 
     sequence.edit(item_list=[item])
@@ -1137,7 +1135,6 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     self.assertEqual(1, len(item_by_hand_value_list))
     self.assertEqual(1, len(item_by_dialog_value_list))
 
-    item_by_hand = item_by_hand_value_list[0]
     item_by_dialog = item_by_dialog_value_list[0]
 
     self.assertTrue(item_by_dialog.getTitle().startswith(resource.getTitle()))
@@ -1283,42 +1280,42 @@ class TestItemScripts(ERP5TypeTestCase):
   # with line
   def test_Item_getResourceValue(self):
     self.assertEqual(None, self.item.Item_getResourceValue())
-    line = self._makeSalePackingListLine()
+    self._makeSalePackingListLine()
     self.assertEqual(self.product, self.item.Item_getResourceValue())
     self.assertEqual(None, self.item.Item_getResourceValue(
                                 at_date=DateTime() - 2))
 
   def test_Item_getResourceTitle(self):
     self.assertEqual(None, self.item.Item_getResourceTitle())
-    line = self._makeSalePackingListLine()
+    self._makeSalePackingListLine()
     self.assertEqual('Product', self.item.Item_getResourceTitle())
     self.assertEqual(None, self.item.Item_getResourceTitle(
                                 at_date=DateTime() - 2))
 
   def test_Item_getCurrentOwnerValue(self):
     self.assertEqual(None, self.item.Item_getCurrentOwnerValue())
-    line = self._makeSalePackingListLine()
+    self._makeSalePackingListLine()
     self.assertEqual(self.section, self.item.Item_getCurrentOwnerValue())
     self.assertEqual(None,
         self.item.Item_getCurrentOwnerValue(at_date=DateTime() - 2))
 
   def test_Item_getCurrentOwnerTitle(self):
     self.assertEqual(None, self.item.Item_getCurrentOwnerTitle())
-    line = self._makeSalePackingListLine()
+    self._makeSalePackingListLine()
     self.assertEqual('Section', self.item.Item_getCurrentOwnerTitle())
     self.assertEqual(None,
         self.item.Item_getCurrentOwnerTitle(at_date=DateTime() - 2))
 
   def test_Item_getCurrentSiteValue(self):
     self.assertEqual(None, self.item.Item_getCurrentSiteValue())
-    line = self._makeSalePackingListLine()
+    self._makeSalePackingListLine()
     self.assertEqual(self.node, self.item.Item_getCurrentSiteValue())
     self.assertEqual(None, self.item.Item_getCurrentSiteValue(
                                             at_date=DateTime() - 2))
 
   def test_Item_getCurrentSiteTitle(self):
     self.assertEqual(None, self.item.Item_getCurrentSiteTitle())
-    line = self._makeSalePackingListLine()
+    self._makeSalePackingListLine()
     self.assertEqual('Node', self.item.Item_getCurrentSiteTitle())
     self.assertEqual(None,
           self.item.Item_getCurrentSiteTitle(at_date=DateTime() - 2))
@@ -1386,7 +1383,7 @@ class TestItemScripts(ERP5TypeTestCase):
       destination_section_value=self.section,
       specialise_value=self.portal.business_process_module.erp5_default_business_process,
       start_date=DateTime() - 1,)
-    line = packing_list.newContent(
+    packing_list.newContent(
       portal_type='Sale Packing List Line',
       quantity=1,
       resource_value=self.product,
