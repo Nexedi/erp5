@@ -96,7 +96,7 @@
   <td>//button[@data-i18n='Menu']</td>
   <td></td>
 </tr>
-<tr>
+<!--tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
   <td></td>
@@ -150,7 +150,7 @@
   <td>waitForElementPresent</td>
   <td>//div[@class='custom-software-profile-image-wrapper']</td>
   <td></td>
-</tr>
+</tr-->
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
