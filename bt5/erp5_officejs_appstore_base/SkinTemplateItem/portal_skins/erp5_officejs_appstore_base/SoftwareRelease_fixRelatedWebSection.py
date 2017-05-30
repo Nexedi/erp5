@@ -30,7 +30,6 @@ web_section.setCriterionPropertyList([
 web_section.setCriterion('version', version[:10])
 web_section.setMembershipCriterionBaseCategoryList(['follow_up'])
 web_section.setMembershipCriterionCategoryList(['follow_up/' + context.getRelativeUrl()])
-web_site.edit(configuration_latest_version=web_section.getId())
 
 if not default_page:
   # Update default page for development version.
