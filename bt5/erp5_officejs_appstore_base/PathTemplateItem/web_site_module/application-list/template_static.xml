@@ -98,7 +98,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/template</string>
+                        <string>ERP5 Web Section/template_static</string>
                       </tuple>
                     </key>
                     <value>
@@ -209,7 +209,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>template</string> </value>
+            <value> <string>template_static</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -441,7 +441,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.36391.8144.11332</string> </value>
+                <value> <string>959.46640.35795.61969</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -459,7 +459,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495618943.32</float>
+                        <float>1496149488.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

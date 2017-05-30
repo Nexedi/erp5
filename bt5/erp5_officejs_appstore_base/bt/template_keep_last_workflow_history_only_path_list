@@ -4,3 +4,5 @@ web_site_module/officejs_appstore/**
 web_site_module/application-list
 web_site_module/application-list/template
 web_site_module/application-list/template/**
+web_site_module/application-list/template_static
+web_site_module/application-list/template_static/**
