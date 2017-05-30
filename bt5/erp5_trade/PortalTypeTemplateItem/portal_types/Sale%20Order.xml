@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>Delivery_generateReference</string> </value>
+            <value> <string>SaleOrder_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
