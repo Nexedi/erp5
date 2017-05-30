@@ -4,7 +4,7 @@
 activate_kw = params or {}
 
 with context.defaultActivateParameterDict(activate_kw, placeless=True):
-  active_process = context.newActiveProcess()
+  active_process = context.newActiveProcess(activate_kw=activate_kw)
 
 context.ERP5Site_checkUpgraderConsistency(fixit=fixit,
   activate_kw=activate_kw,
