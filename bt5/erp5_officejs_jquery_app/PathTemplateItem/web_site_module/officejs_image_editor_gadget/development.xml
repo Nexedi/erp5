@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Section" module="erp5.portal_type"/>
+      <global name="Static Web Section" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -144,12 +144,6 @@
             </value>
         </item>
         <item>
-            <key> <string>__translation_dict</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
@@ -159,66 +153,6 @@
             <key> <string>_local_properties</string> </key>
             <value>
               <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_router_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_jio_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_panel_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_header_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_hateoas_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
@@ -232,7 +166,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
+                      <value> <string>configuration_content_security_policy</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -242,7 +176,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_content_security_policy</string> </value>
+                      <value> <string>configuration_hateoas_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -262,7 +196,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/gadget_image_editor_officejs_html</string>
               </tuple>
             </value>
@@ -274,42 +207,6 @@
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
             <value> <string>hateoas</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_jio_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_manifest_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_panel_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_router_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -347,7 +244,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Section</string> </value>
+            <value> <string>Static Web Section</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -479,7 +376,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487775922.73</float>
+                        <float>1496046633.53</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -524,7 +421,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.28729.12824.38536</string> </value>
+                <value> <string>959.45140.37801.7372</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -542,7 +439,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491232643.34</float>
+                        <float>1496059824.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
