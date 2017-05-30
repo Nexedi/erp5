@@ -66,9 +66,7 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -109,9 +107,7 @@
         </item>
         <item>
             <key> <string>text_content_substitution_mapping_method_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>WebPage_getRenderJSSubstitutionMappingDict</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -232,7 +228,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -246,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.21401.8615.61559</string> </value>
+                <value> <string>959.46591.59882.45141</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -264,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1493976571.58</float>
+                        <float>1496147551.92</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

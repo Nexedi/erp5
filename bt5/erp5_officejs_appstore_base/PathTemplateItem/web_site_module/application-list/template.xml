@@ -121,6 +121,33 @@
             </value>
         </item>
         <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_content_security_policy</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_mt_index</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
@@ -148,6 +175,26 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_content_security_policy</string> </key>
+            <value> <string>default-src \'self\'; script-src \'unsafe-inline\';</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>SAMEORIGIN</string> </value>
+        </item>
+        <item>
+            <key> <string>container_layout</string> </key>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
+        </item>
+        <item>
+            <key> <string>content_layout</string> </key>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
+        </item>
+        <item>
+            <key> <string>custom_render_method_id</string> </key>
+            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>Template used to create WebSite</string> </value>
         </item>
@@ -166,6 +213,10 @@
             </value>
         </item>
         <item>
+            <key> <string>layout_configuration_form_id</string> </key>
+            <value> <string>WebSection_viewOfficeJSApplicationPreference</string> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Section</string> </value>
         </item>
@@ -176,8 +227,12 @@
             </value>
         </item>
         <item>
+            <key> <string>skin_selection_name</string> </key>
+            <value> <string>RJS</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Template</string> </value>
+            <value> <string>Template Redirect</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -350,12 +405,12 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                  <none/>
                 </value>
             </item>
             <item>
@@ -364,7 +419,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>959.46472.13801.63641</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -382,7 +437,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495185385.46</float>
+                        <float>1496149454.25</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -392,38 +447,6 @@
           </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="11" aka="AAAAAAAAAAs=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_site_module/application-list-old/template</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>

@@ -11,7 +11,11 @@ context.log("%s" % web_site.getRelativeUrl())
 try:
   web_section = web_site.restrictedTraverse(version)
 except KeyError:
-  web_section = web_site.template.Base_createCloneDocument(batch_mode=True)
+  clipboard = web_site.getParentValue().manage_copyObjects(ids=['template_static'])
+  context.REQUEST.set('__cp', clipboard) # CopySupport is using this to set
+                           # tracebility information in edit_workflow history
+  paste_result = web_site.manage_pasteObjects(cb_copy_data=clipboard)
+  web_section = web_site[paste_result[0]['new_id']]
   web_section.edit(
     id=version,
     title=software_release.getVersion(),
@@ -26,6 +30,7 @@ web_section.setCriterionPropertyList([
 web_section.setCriterion('version', version[:10])
 web_section.setMembershipCriterionBaseCategoryList(['follow_up'])
 web_section.setMembershipCriterionCategoryList(['follow_up/' + context.getRelativeUrl()])
+web_site.edit(configuration_latest_version=web_section.getId())
 
 if not default_page:
   # Update default page for development version.
