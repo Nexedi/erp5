@@ -106,7 +106,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Mon, 29 May 2017 10:00:00 GMT\n
+# generated on Mon, 30 May 2017 10:00:00 GMT\n
 # images/ajax-loader.gif\n
 CACHE:\n
 font-awesome/font-awesome-webfont.eot?v=4.6.3\n
@@ -164,6 +164,10 @@ gadget_erp5_page_afs_success_case_list.html\n
 gadget_erp5_page_afs_success_case_list.js\n
 gadget_erp5_page_afs_publisher_list.html\n
 gadget_erp5_page_afs_publisher_list.js\n
+gadget_erp5_page_afs_publisher_statistic.html\n
+gadget_erp5_page_afs_publisher_statistic.js\n
+gadget_erp5_page_afs_unsplash.html\n
+gadget_erp5_page_afs_unsplash.js\n
 gadget_erp5_page_afs_software.html\n
 gadget_erp5_page_afs_software.js\n
 gadget_erp5_page_afs_directory.html\n
@@ -316,7 +320,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.45264.30637.35123</string> </value>
+                <value> <string>959.46970.48446.4744</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -334,7 +338,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496067282.1</float>
+                        <float>1496169745.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
