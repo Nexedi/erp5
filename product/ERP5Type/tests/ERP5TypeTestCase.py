@@ -429,6 +429,10 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       property_sheet_set.add(property_sheet_name)
       ti.setTypePropertySheetList(list(property_sheet_set))
 
+      # keep a mapping type info name -> property sheet list, to remove them in
+      # tear down.
+      if not hasattr(self, '_added_property_sheets'):
+        self._added_property_sheets = {}
       # remember that we added a property sheet for tear down
       if getattr(self, '_added_property_sheets', None) is None:
         self._added_property_sheets = {}
@@ -854,9 +858,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         template_list[:0] = (erp5_catalog_storage, 'erp5_property_sheets',
                              'erp5_core', 'erp5_xhtml_style')
 
-      # keep a mapping type info name -> property sheet list, to remove them in
-      # tear down.
-      self._added_property_sheets = {}
       light_install = self.enableLightInstall()
       create_activities = self.enableActivityTool()
       hot_reindexing = self.enableHotReindexing()
