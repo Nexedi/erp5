@@ -17,7 +17,7 @@ if tool_portal_type in portal_type_list:
 activate_kw = params or {}
 
 with context.defaultActivateParameterDict(activate_kw, placeless=True):
-  active_process = context.newActiveProcess()
+  active_process = context.newActiveProcess(activate_kw=activate_kw)
 
   method_kw = {'fixit': fixit,
     'filter': {"constraint_type": 'upgrader'},
