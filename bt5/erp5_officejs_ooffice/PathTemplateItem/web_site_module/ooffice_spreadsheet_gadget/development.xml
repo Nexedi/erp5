@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Section" module="erp5.portal_type"/>
+      <global name="Static Web Section" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -144,208 +144,22 @@
             </value>
         </item>
         <item>
-            <key> <string>__translation_dict</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_count</string> </key>
+            <key> <string>_identity_criterion</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>_identity_criterion</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_router_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_jio_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_panel_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_translation_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_header_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_hateoas_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_x_frame_options</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_content_security_policy</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>_mt_index</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-            </value>
-        </item>
-        <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
-            </value>
-        </item>
-        <item>
-            <key> <string>_tree</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>caching_policy/must-revalidate</string>
                 <string>aggregate/web_page_module/gadget_ooffice_spreadsheet_gadget_landing_page.html</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_header_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_jio_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_manifest_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_panel_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_router_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_translation_gadget_url</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_x_frame_options</string> </key>
-            <value> <string>ALLOW-FROM-ALL</string> </value>
-        </item>
-        <item>
-            <key> <string>container_layout</string> </key>
-            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
-        </item>
-        <item>
-            <key> <string>content_layout</string> </key>
-            <value> <string>WebSection_renderOfficeJSApplicationPage</string> </value>
-        </item>
-        <item>
-            <key> <string>criterion_property</string> </key>
-            <value>
-              <tuple>
-                <string>url_string</string>
               </tuple>
             </value>
         </item>
@@ -368,24 +182,8 @@
             <value> <string>development</string> </value>
         </item>
         <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>layout_configuration_form_id</string> </key>
-            <value> <string>WebSection_viewOfficeJSApplicationPreference</string> </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_category</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Section</string> </value>
+            <value> <string>Static Web Section</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -398,18 +196,6 @@
             <value> <string>Officejs</string> </value>
         </item>
         <item>
-            <key> <string>string_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>OnlyOffice Spreadsheet Gadget Development</string> </value>
         </item>
@@ -420,7 +206,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -436,12 +222,6 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="Length" module="BTrees.Length"/>
-    </pickle>
-    <pickle> <int>0</int> </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
@@ -449,28 +229,13 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>url_string</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>
     </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -485,15 +250,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -506,13 +263,13 @@
                 <item>
                     <key> <string>category_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -521,7 +278,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -558,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487176628.79</float>
+                        <float>1496061304.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -574,7 +331,7 @@
       </tuple>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -603,7 +360,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.28728.56894.55927</string> </value>
+                <value> <string>959.45154.50506.21401</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -621,7 +378,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491232624.87</float>
+                        <float>1496060390.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
