@@ -30,19 +30,19 @@
       return new RSVP.Queue()
         .push(function () {
           return RSVP.all([
-            // gadget.getDeclaredGadget("unsplash"),
+            gadget.getDeclaredGadget("unsplash"),
             gadget.updateHeader({
               page_title: 'Free Software Publisher Directory'
             })
           ]);
         })
-        .push(function () {
+        .push(function (my_response_list) {
           return RSVP.all([
             gadget.jio_allDocs({
               select_list: ['category_list'],
               query: 'portal_type:"software"'
-            })
-            // my_response_list[0].render()
+            }),
+            my_response_list[0].render()
           ]);
         })
         .push(function (my_response_list) {
