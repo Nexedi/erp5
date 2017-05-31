@@ -475,6 +475,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
     checkTestResultLine([('testBar', 'started'), ('testFoo', 'stopped')])
 
   def test_07_reportTaskFailure(self):
+    """
+    When all test nodes report failures, we should mark the test result as
+    failed. If we do not do so, test node would always pickup same repository
+    revision and might fail with same failure forever (for example, a slapos
+    build issue).
+    """
     test_result_path, revision = self._createTestResult(node_title="Node0")
     next_test_result_path, revision = self._createTestResult(node_title="Node1")
     self.assertEqual(test_result_path, next_test_result_path)
@@ -492,6 +498,48 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.tool.reportTaskFailure(test_result_path, {}, "Node1")
     self.assertEqual("failed", test_result.getSimulationState())
     checkNodeState("failed", "failed")
+
+  def test_07b_reportTaskFailureWithRunningTest(self):
+    """
+    Similar to above test. Though, sometimes there is failure reported only because
+    runTestSuite reached timeout. This happens when not enough testnode are working
+    on a very long test suite. So code investigate if tests looked working fine, and
+    it might try to not cancel test result if there is chance that tests could be
+    continued.
+
+    For example :
+    - testnode0 start test suite Foo with revision r0 which would take 6 hours (other
+      testnodes are busy)
+    - after 4 hours, runTestSuite reach timeout of 4 hours (value set in test nodes).
+      thus it report a failure. We do not cancel the test result since everything went
+      fine up to know
+    - after some time testnode0 come back to run test suite Foo, revision r0, and
+      just do the 2 remaining hours. Test Suite can go up to the end even if we have
+      timeout smaller than total time for test suite.
+    """
+    now = DateTime()
+    try:
+      self.pinDateTime(now - 1.0/24*2)
+      test_result_path, revision = self._createTestResult(node_title="Node0",
+                                               test_list=['testFoo', 'testBar'])
+      test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
+      self.assertEqual("started", test_result.getSimulationState())
+      node, = test_result.objectValues(portal_type="Test Result Node",
+                                           sort_on=[("title", "ascending")])
+      self.assertEqual("started", node.getSimulationState())
+      line_url, test = self.tool.startUnitTest(test_result_path)
+      # We have a failure but with recent activities on tests
+      self.pinDateTime(now - 1.0/24*1.5)
+      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.assertEqual("failed", node.getSimulationState())
+      self.assertEqual("started", test_result.getSimulationState())
+      # We have a failure but with no recent activities on tests
+      self.pinDateTime(now)
+      self.tool.reportTaskFailure(test_result_path, {}, "Node0")
+      self.assertEqual("failed", node.getSimulationState())
+      self.assertEqual("failed", test_result.getSimulationState())
+    finally:
+      self.unpinDateTime()
 
   def test_08_checkWeCanNotCreateTwoTestResultInParallel(self):
     """

@@ -27,6 +27,7 @@
 ##############################################################################
 
 import random
+from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -270,8 +271,17 @@ class TaskDistributionTool(BaseTool):
       if node.getSimulationState() != 'failed':
         break
     else:
-      if test_result.getSimulationState() not in ('failed', 'cancelled'):
-        test_result.fail()
+      # now check if we had recent work on test line, if so, this means
+      # we might just add timeout due to too much tests to execute for too
+      # little nodes. In that case we would like to continue the work later
+      recent_time = DateTime() - 1.0/24
+      for test_result_line in test_result.objectValues(
+          portal_type="Test Result Line"):
+        if test_result_line.getModificationDate() > recent_time:
+          break
+      else:
+        if test_result.getSimulationState() not in ('failed', 'cancelled'):
+          test_result.fail()
 
   security.declarePublic('reportTaskStatus')
   def reportTaskStatus(self, test_result_path, status_dict, node_title):
