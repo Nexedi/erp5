@@ -113,6 +113,7 @@
 # images/ajax-loader.gif\n
 CACHE:\n
 jiodev.js\n
+jio_mappingstorage.js\n
 renderjs.js\n
 rsvp.js\n
 gadget_officejs_setting.js\n
@@ -263,7 +264,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64903.6566.48281</string> </value>
+                <value> <string>958.24259.25538.21094</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -281,7 +282,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486567918.12</float>
+                        <float>1496236447.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
