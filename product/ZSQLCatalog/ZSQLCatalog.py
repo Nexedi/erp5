@@ -699,7 +699,7 @@ class ZCatalog(Folder, Persistent, Implicit):
 
       This method should be overridden if necessary.
     """
-    return object_list
+    return object_value_list
 
   security.declareProtected(manage_zcatalog_entries, 'catalog_object')
   def catalog_object(self, obj, url=None, idxs=[], is_object_moved=0, sql_catalog_id=None, **kw):
