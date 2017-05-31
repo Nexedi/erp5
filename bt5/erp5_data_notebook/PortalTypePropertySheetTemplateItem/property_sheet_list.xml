@@ -1,7 +1,9 @@
 <property_sheet_list>
  <portal_type id="Data Notebook">
+  <item>JSONTypeConstraint</item>
   <item>JupyterNotebook</item>
   <item>Reference</item>
+  <item>TextDocument</item>
  </portal_type>
  <portal_type id="Data Notebook Line">
   <item>JupyterNotebookLine</item>
