@@ -101,6 +101,7 @@
       <span class="first"
             tal:define="search_actions actions/object_search | nothing;
             exchange_actions actions/object_exchange | nothing;
+            exchange_jio_actions actions/object_exchange_jio | nothing;
             report_actions actions/object_report | nothing;
             report_jio_actions actions/object_report_jio | nothing;
             button_actions actions/object_button | nothing;
@@ -213,9 +214,9 @@
             <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>
           </a>
         </tal:block>
-        <span tal:condition="exchange_actions | report_actions"
+        <span tal:condition="exchange_actions | exchange_jio_actions | report_actions"
               class="separator"><!--separator--></span>
-        <button tal:condition="exchange_actions" class="import_export"
+        <button tal:condition="exchange_actions | exchange_jio_actions" class="import_export"
               type="submit" name="Base_doExchange:method" title="Import / Export"
               i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
