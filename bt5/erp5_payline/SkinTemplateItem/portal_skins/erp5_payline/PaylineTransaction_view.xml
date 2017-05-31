@@ -103,7 +103,7 @@
                         <string>my_destination_reference</string>
                         <string>my_destination_carrier_reference</string>
                         <string>my_expiration_date</string>
-                        <string>my_simulation_state</string>
+                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
