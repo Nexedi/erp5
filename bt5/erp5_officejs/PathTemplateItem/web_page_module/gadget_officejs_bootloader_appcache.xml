@@ -109,7 +109,11 @@
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
-gadget_officejs_bootloader.html\n
+/\n
+development/jiodev.js\n
+development/rsvp.js\n
+development/renderjs.js\n
+gadget_erp5_nojqm.css\n
 gadget_officejs_bootloader.js\n
 gadget_officejs_bootloader_presentation.html\n
 gadget_officejs_bootloader_presentation.js\n
@@ -258,7 +262,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.64411.34322.58368</string> </value>
+                <value> <string>959.48233.9194.50227</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -276,7 +280,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1493373616.75</float>
+                        <float>1496245831.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
