@@ -59,7 +59,7 @@ class AutoQuery(Query):
     self.operator = operator
     self.ignore_empty_string = kw.pop('ignore_empty_string', True)
     if 'key' in kw and len(kw) > 2:
-      raise ValueError, '"key" parameter cannot be used when more than one column is given. key=%r' % (self.search_key, )
+      raise ValueError, '"key" parameter cannot be used when more than one column is given. key=%r' % (kw['key'], )
     self.search_key = kw.pop('key', None)
 
   def _createWrappedQuery(self, sql_catalog):
