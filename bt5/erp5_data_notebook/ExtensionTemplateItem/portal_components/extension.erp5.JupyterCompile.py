@@ -34,6 +34,9 @@ well_known_unserializable_type_tuple = (ModuleType, Record)
 # ZBigArray may not be available
 try:
   from wendelin.bigarray.array_zodb import ZBigArray
+  # FIXME ZBigArrays are regular ZODB objects and must be serializable
+  # FIXME the bug is probably in CanSerialize()
+  # FIXME -> see https://lab.nexedi.com/nexedi/erp5/commit/5fb16acd#note_33582 for details
   well_known_unserializable_type_tuple = tuple(list(well_known_unserializable_type_tuple) + [ZBigArray])
 except ImportError:
   pass
