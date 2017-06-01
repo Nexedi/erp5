@@ -87,8 +87,7 @@ class DataBucketStream(Document):
     """
       Get a lazy sequence of bucket values
     """
-    excludemin = start_key is not None
-    sequence = self._tree.keys(min=start_key, excludemin=excludemin)
+    sequence = self._tree.keys(min=start_key)
     if count is None:
       return sequence
     return sequence[:count]
@@ -97,8 +96,7 @@ class DataBucketStream(Document):
     """
       Get a lazy sequence of bucket values
     """
-    excludemin = start_key is not None
-    sequence = self._tree.values(min=start_key, excludemin=excludemin)
+    sequence = self._tree.values(min=start_key)
     if count is None:
       return sequence
     return sequence[:count]
@@ -107,8 +105,7 @@ class DataBucketStream(Document):
     """
       Get a lazy sequence of bucket values
     """
-    excludemin = start_key is not None
-    sequence = self._tree.items(min=start_key, excludemin=excludemin)
+    sequence = self._tree.items(min=start_key)
     if count is None:
       return sequence
     return sequence[:count]
