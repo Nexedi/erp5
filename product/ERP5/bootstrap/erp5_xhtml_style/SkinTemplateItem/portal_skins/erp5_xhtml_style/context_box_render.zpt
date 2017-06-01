@@ -214,15 +214,15 @@
             <span class="description" i18n:translate="" i18n:domain="ui">Sort</span>
           </a>
         </tal:block>
-        <span tal:condition="exchange_actions | exchange_jio_actions | report_actions"
+        <span tal:condition="python: exchange_actions or exchange_jio_actions or report_actions"
               class="separator"><!--separator--></span>
-        <button tal:condition="exchange_actions | exchange_jio_actions" class="import_export"
+        <button tal:condition="python: exchange_actions or exchange_jio_actions" class="import_export"
               type="submit" name="Base_doExchange:method" title="Import / Export"
               i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Import / Export</span>
         </button>
-        <button tal:condition="report_actions | report_jio_actions" class="report" type="submit" name="Base_doReport:method" title="Report"
+        <button tal:condition="python: report_actions or report_jio_actions" class="report" type="submit" name="Base_doReport:method" title="Report"
                 i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Report</span>
