@@ -44,8 +44,8 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 40, 23: Redefining built-in \'object\' (redefined-builtin)</string>
-                <string>W: 40, 19: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W: 41, 23: Redefining built-in \'object\' (redefined-builtin)</string>
+                <string>W: 41, 19: Redefining built-in \'id\' (redefined-builtin)</string>
               </tuple>
             </value>
         </item>
