@@ -106,6 +106,7 @@
             report_jio_actions actions/object_report_jio | nothing;
             button_actions actions/object_button | nothing;
             fast_input_actions actions/object_fast_input | nothing;
+            fast_input_jio_actions actions/object_fast_input_jio | nothing;
             sort_actions actions/object_sort | nothing;
             ui_actions actions/object_ui | nothing;
             print_actions actions/object_print | nothing;
@@ -227,8 +228,8 @@
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Report</span>
         </button>
-        <a tal:condition="fast_input_actions" class="fast_input" title="Fast Input"
-           tal:attributes="href python: portal.ERP5Site_renderCustomLink(fast_input_actions[0]['url'], http_parameter_list, dialog_category='object_fast_input')"
+        <a tal:condition="python: fast_input_actions or fast_input_jio_actions" class="fast_input" title="Fast Input"
+           tal:attributes="href python: portal.ERP5Site_renderCustomLink((fast_input_actions or fast_input_jio_actions)[0]['url'], http_parameter_list, dialog_category='object_fast_input')"
            i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Fast Input</span>
