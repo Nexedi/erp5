@@ -27,8 +27,9 @@
 #
 ##############################################################################
 from Products.ERP5Type.Core.Folder import Folder
+from Products.CMFCore.utils import UniqueObject                                  
 
-class CallableTool(Folder):
+class CallableTool(UniqueObject, Folder):
   """
   XXXXX
 
