@@ -1715,7 +1715,7 @@ html .ui-controlgroup-controls ~.ui-controlgroup-controls {
 .ui-grid-container > ul > li:first-child:nth-last-child(6) ~ li,
 .ui-grid-container > ul.ui-grid-column-6 > li:first-child:nth-last-child(n),
 .ui-grid-container > ul.ui-grid-column-6 > li:first-child:nth-last-child(n) ~ li {
-  width: 16.667%;
+  width: 16.666%;
 }
 .ui-grid-container > ul > li:first-child:nth-last-child(7),
 .ui-grid-container > ul > li:first-child:nth-last-child(7) ~ li,
