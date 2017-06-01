@@ -826,8 +826,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         bta.addObject(obj, name=key, ext='.py')
       else:
         try:
-          if obj.__class__.__name__ not in ('Test Component', 'Extension Component', 'Document Component'):
-            raise KeyError("use old format")
           extension, unicode_data, record_id = \
             SEPARATELY_EXPORTED_PROPERTY_DICT[obj.__class__.__name__]
         except KeyError:
