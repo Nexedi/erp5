@@ -752,14 +752,6 @@ class TemplateTool (BaseTool):
       removable_property = {}
       removable_sub_object_path = []
 
-      # For catalog method, add paths
-      template_catalog_method_id_list  = import_template.getTemplateCatalogMethodIdList()
-      catalog_method_path_list = []
-      for method_id in template_catalog_method_id_list:
-        method_path = 'portal_catalog/%s | 1 | 1' % method_id
-        catalog_method_path_list.append(method_path)
-      template_path_list.extend(catalog_method_path_list)
-
       if is_property_added:
         if catalog_method_path_list:
           catalog_path = catalog_method_path_list[0].rsplit('/', 1)[0]
@@ -793,6 +785,7 @@ class TemplateTool (BaseTool):
       template_path_list.extend(property_path_list)
       template_path_list.extend(selection_list)
       template_path_list = self.cleanTemplatePathList(template_path_list)
+      template_path_list = self.sortPathList(template_path_list)
       migrated_bm.setProperty('template_path_list', template_path_list)
 
       kw['removable_property'] = removable_property
@@ -828,9 +821,11 @@ class TemplateTool (BaseTool):
       # Join the path list
       a2 = [('/').join(l) for l in a2]
       # Remove the redundant paths
-      a2 = list(set(a2))
+      seen = set()
+      seen_add = seen.add
+      a2 = [x for x in a2 if not (x in seen or seen_add(x))]
       # Sort the path list
-      a2.sort()
+      #a2.sort()
       # Add the layer and signs, for now all 1
       a2 = [l+' | 1 | 1' for l in a2]
 
@@ -1010,7 +1005,7 @@ class TemplateTool (BaseTool):
           f.close()
 
         #XXX: Hardcoding 'erp5_core_proxy_field_legacy' BP in the list
-        bp_dict ={
+        bp_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': [],
           'description': '',
@@ -1022,8 +1017,24 @@ class TemplateTool (BaseTool):
           'provision_list': [],
           'title': 'erp5_core_proxy_field_legacy',
           'version': '1.0'}
+
+        bp_dict_2 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_base >= 0.8.3',
+                              'erp5_core >= 1.0rc13'],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_accounting',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_accounting',
+          'version': '1.0'}
+
         if repository.endswith('/bt5'):
-          property_dict_list.append(bp_dict)
+          property_dict_list.append(bp_dict_1)
+          #property_dict_list.append(bp_dict_2)
 
         bm_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1077,11 +1088,25 @@ class TemplateTool (BaseTool):
           'title': 'erp5_jquery',
           'version': '1.0'}
 
+        bm_dict_5 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_property_sheets',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_property_sheets',
+          'version': '1.0'}
+
         if repository.endswith('/bootstrap'):
           property_dict_list.append(bm_dict_1)
           property_dict_list.append(bm_dict_2)
           property_dict_list.append(bm_dict_3)
           property_dict_list.append(bm_dict_4)
+          #property_dict_list.append(bm_dict_5)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
@@ -1812,6 +1837,7 @@ class TemplateTool (BaseTool):
       6. If conflict while comaprison at 3, raise the error
       7. In all other case, install the BM List
       """
+
       # Create old installation state from Installed Business Manager
       installed_bm_list = self.getInstalledBusinessManagerList()
       combined_installed_path_item = [item for bm
@@ -1987,6 +2013,22 @@ class TemplateTool (BaseTool):
       obj_sha = hash(pprint.pformat(obj_dict))
       return obj_sha
 
+    def sortPathList(self, path_list):
+      """
+      Custom sort for path_list according to the priorities of paths
+      """
+      def comparePath(path):
+        if len(path.split('/')) == 1:
+          return 10
+        elif len(path.split('/')) > 2:
+          return 9
+        elif path.split('/')[0] in ('portal_types', 'portal_categories'):
+          return -10
+        else:
+          return 0
+
+      return sorted(path_list, key=comparePath)
+
     def compareOldStateToOFS(self, installation_process, old_state):
 
       # Get the paths about which we are concerned about
@@ -1994,6 +2036,8 @@ class TemplateTool (BaseTool):
       portal = self.getPortalObject()
 
       error_list = []
+
+      to_update_path_list = self.sortPathList(to_update_path_list)
 
       for path in to_update_path_list:
         try:
