@@ -19,7 +19,7 @@ def buildIndex(language=None):
   from Products.ZSQLCatalog.SQLCatalog import NegatedQuery, Query
   # Retrieve the different subjects in the catalog
   subject_list = context.searchResults(
-      select_expression='subject, reference',
+      select_list=['subject', 'reference'],
       query=NegatedQuery(Query(subject=None)),
       language=language or '',
       sort_on=(('subject', 'ascending'), ('title', 'ascending')),

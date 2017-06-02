@@ -1,1 +1,4 @@
-erp5_web_renderjs_ui_unsafe | RJSUnsafe
+erp5_web_officejs_ui | Officejs
+erp5_web_officejs_ui | View
+erp5_web_renderjs_ui | Officejs
+erp5_xhtml_style | Officejs

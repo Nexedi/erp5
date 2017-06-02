@@ -33,11 +33,11 @@ if context.Person_getUserId() not in (None, ""):
   selection_columns = [('document_type', "Document Type")]
   if from_date is None:
     # get the minimum creation date in catalog
-    select_expression = "MIN(creation_date)"
-    group_by = "creation_date"
-    from_date = DateTime(context.portal_catalog(select_expression=select_expression,
-                                       group_by_expression=group_by,
-                                       limit=1)[0][2])
+    from_date = context.portal_catalog(
+      select_list=['creation_date'],
+      sort_on=[['creation_date', 'ASC']],
+      limit=1,
+    )[0].creation_date
   # get period list between given date
   interval_list_dict = getIntervalListBetweenDates(from_date=from_date, to_date=to_date,
                                               keys={'year':aggregation_level=="year",

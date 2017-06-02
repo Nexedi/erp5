@@ -77,9 +77,6 @@ class TestPreferences(PropertySheetTestCase):
         id='site', portal_type='Preference')
     site.setPriority(Priority.SITE)
 
-    # commit transaction
-    self.commit()
-    self.getPreferenceTool().recursiveReindexObject()
     self.tic()
 
     # check preference levels are Ok
@@ -115,6 +112,7 @@ class TestPreferences(PropertySheetTestCase):
     site = self.getPreferenceTool()['site']
 
     self.assertEqual(None, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(None, self.getPreferenceTool().getActiveUserPreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
 
@@ -124,6 +122,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(person1.getPreferenceState(), 'enabled')
 
     self.assertEqual( person1, self.getPreferenceTool().getActivePreference())
+    self.assertEqual( person1, self.getPreferenceTool().getActiveUserPreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
 
@@ -133,6 +132,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(site.getPreferenceState(),    'global')
 
     self.assertEqual(person1, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(person1, self.getPreferenceTool().getActiveUserPreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
 
@@ -143,6 +143,7 @@ class TestPreferences(PropertySheetTestCase):
     self.assertEqual(site.getPreferenceState(),    'global')
 
     self.assertEqual(person1, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(person1, self.getPreferenceTool().getActiveUserPreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
 
@@ -150,6 +151,7 @@ class TestPreferences(PropertySheetTestCase):
        person2, 'enable_action', wf_id='preference_workflow')
     self.commit()
     self.assertEqual(person2, self.getPreferenceTool().getActivePreference())
+    self.assertEqual(person2, self.getPreferenceTool().getActiveUserPreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
     self.assertEqual(person2.getPreferenceState(), 'enabled')
@@ -553,6 +555,7 @@ class TestPreferences(PropertySheetTestCase):
     # even if there is System Preference enabled getActivePreference shall return
     # user preference
     self.assertEqual(user_pref, preference_tool.getActivePreference())
+    self.assertEqual(user_pref, preference_tool.getActiveUserPreference())
     self.assertEqual(system_pref, preference_tool.getActiveSystemPreference())
 
   def test_boolean_accessor(self):

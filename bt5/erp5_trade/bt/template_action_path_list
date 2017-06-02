@@ -166,6 +166,7 @@ Sale Order | jump_to_related_sale_packing_list
 Sale Order | order_print
 Sale Order | order_summary
 Sale Order | payment_condition
+Sale Order | planning_view
 Sale Order | profile_view
 Sale Order | reference_generate
 Sale Order | reset_movement_price_list

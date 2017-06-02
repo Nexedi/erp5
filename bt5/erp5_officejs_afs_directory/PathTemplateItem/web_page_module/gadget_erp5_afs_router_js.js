@@ -1,17 +1,9 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, rJS, RSVP */
-(function (window, rJS, RSVP) {
+/*global window, rJS */
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
     /*
     .ready(function (g) {
       return g.getDeclaredGadget("router")
@@ -69,8 +61,5 @@
           return router.redirect.apply(router, argument_list);
         });
     });
-    
-    
 
-
-}(window, rJS, RSVP));
+}(window, rJS));

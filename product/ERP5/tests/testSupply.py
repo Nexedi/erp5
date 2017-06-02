@@ -264,7 +264,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     kw = {}
     kw['predicate.uid'] = supply_line.getUid()
-    kw['select_expression'] = 'predicate.start_date_range_min'
+    kw['select_list'] = ['predicate.start_date_range_min']
 
     # check supply line in predicate table
     result = self.catalog_tool(**kw)
@@ -588,6 +588,19 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     preference.setPreferredPricingOptimise(False)
     self._clearCache()
 
+  def test_getPriceDoesNotLookupPriceDuringEdit(self):
+    """Test getPrice does not lookup price during edit.
+    """
+    movement = self._makeRealMovement()
+
+    def methodThatShouldNotBeCalled(*args, **kw):
+      self.fail("price lookup should not happen")
+    movement.getPriceCalculationOperandDict = methodThatShouldNotBeCalled
+    movement._getPrice = methodThatShouldNotBeCalled
+
+    movement.edit(price=10)
+    self.assertEqual(10, movement.getPrice())
+    self.abort()
 
   def _createTwoHundredSupplyLineInASupply(self):
     supply = self._makeSupply(

@@ -808,7 +808,7 @@ class SimulationTool(BaseTool):
         if where_expression != '':
           add_kw['where_expression'] = where_expression
           add_kw['predicate_category.uid'] = '!=NULL'
-          add_kw['group_by_expression'] = 'uid'
+          add_kw['group_by'] = ['uid']
           add_query = self.portal_catalog(**add_kw)
           uid_list = []
           for line in add_query:
@@ -822,7 +822,7 @@ class SimulationTool(BaseTool):
       # the caller can also pass select_dict or select_list. select_expression,
       # which is deprecated in ZSQLCatalog is not supported here.
       select_dict = kw.get('select_dict', {})
-      select_dict.update(dict.fromkeys(list(kw.get('select_list', [])) + related_group_by))
+      select_dict.update(dict.fromkeys(list(kw.pop('select_list', [])) + related_group_by))
       new_kw['select_dict'] = select_dict
       related_key_select_expression_list = []
 

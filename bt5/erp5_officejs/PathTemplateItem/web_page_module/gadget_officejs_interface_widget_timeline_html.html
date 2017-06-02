@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Timeline Interface</title>
+  </head>
+  <body>
+    <h1>widget_timeline_interface</h1>
+    <h3>A timeline gadget allows to display various types of schedules</h3>
+    <dl>
+      <dt>render</dt>
+      <dd>render a timeline</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">configuration_dict</dt>
+        <dd><code style="display:block;white-space:pre-wrap">
+
+  Generic timeline gadget. The purpose of this gadget is to provide an unique
+  API for various timeline libraries
+
+  Options supported are :
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Parameters to generate a graph",
+  "properties": {
+    "tree_title": {
+      "description": "The title of the tree",
+      "type": "string"
+      },
+    "tree_list": {
+      "description": "the list of item needed to construct resource tree",
+      "items": {
+          "properties" : {
+            "title": {
+              "description": "The title of the resource",
+              "type": "string"
+            },
+            "id": {
+              "description": "an identifier for the resource",
+              "type": "string"
+            },
+            "parent_id": {
+              "description": "the identifier of the parent resource",
+              "type": "string"
+            },
+          },
+          "additionalProperties": false,
+          "type": "object",
+          },
+      "type": "array",
+     },
+   "data_list": {
+      "description": "the list of task to be displayed in timeline",
+      "items": {
+          "properties" : {
+            "title": {
+              "description": "The title of the task",
+              "type": "string"
+            },
+            "id": {
+              "description": "an identifier for the task",
+              "type": "string"
+            },
+            "tree_id": {
+              "description": "the identifier of the corresponding resource",
+              "type": "string"
+            },
+            "start_date": {
+              "description": "task starting date",
+              "type": "string"
+            },
+            "stop_date": {
+              "description": "task end date",
+              "type": "string"
+            },
+            "background_color": {
+              "description": "task color",
+              "type": "string"
+            },
+          },
+          "additionalProperties": false,
+          "type": "object",
+          },
+      "type": "array",
+      }
+  },
+  "additionalProperties": false
+}
+
+
+
+
+
+
+  Example of options:
+  { tree_title: "Tasks",
+    tree_list: [{'title': 'Phase 1',
+                 'id': '1'},
+                {'title': 'Phase 1.1',
+                 'id': '1.1',
+                 'parent_id': '1'},
+                {'title': 'Phase 1.1.1',
+                 'id': '1.1.1',
+                 'parent_id': '1.1'},
+                {'title': 'Phase 2',
+                 'id': '2'}],
+    data_list : [{'id': '1',
+                  'tree_id': '1.1.1',
+                  'title': 'Task A in Phase 1.1.1',
+                  'start_date': '2017-03-01',
+                  'stop_date': '2017-04-15'},
+                 {'id': '2',
+                  'tree_id': '2',
+                  'title': 'Task B in Group 2',
+                  'start_date': '2017-04-15',
+                  'stop_date': '2017-06-30',
+                  'background_color': 'green'}]
+  }
+          </code></dd>
+      </dl>
+    </dl>
+  </body>
+</html>

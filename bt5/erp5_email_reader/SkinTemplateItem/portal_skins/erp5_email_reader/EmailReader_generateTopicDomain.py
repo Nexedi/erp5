@@ -20,8 +20,8 @@ def getAvailableSubjectList(subject_list=(), container_uid=None):
   """
   #log("In getAvailableSubjectList with container: %s subject_list: %s" % (container_uid, subject_list))
   kw = dict(subject="!=", 
-            select_expression="subject.subject", 
-            group_by_expression="subject.subject",
+            select_list=["subject.subject"],
+            group_by=["subject.subject"],
             #src__=1
             )
   if container_uid: kw['parent_uid'] = container_uid

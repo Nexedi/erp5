@@ -197,6 +197,27 @@ class PreferenceTool(BaseTool):
        Note that this preference may be read only. """
     return self._getActivePreferenceByPortalType('Preference')
 
+  security.declareProtected(Permissions.View, 'getActiveUserPreference')
+  def getActiveUserPreference(self) :
+    """ returns the current user preference for the user.
+    If no preference exists, then try to create one with `createUserPreference`
+    type based method.
+
+    This method returns a preference that the user will be able to edit or
+    None, if `createUserPreference` refused to create a preference.
+
+    It is intendended for "click here to edit your preferences" actions.
+    """
+    active_preference = self.getActivePreference()
+    if active_preference is None or active_preference.getPriority() != Priority.USER:
+      # If user does not have a preference, let's try to create one
+      user = self.getPortalObject().portal_membership.getAuthenticatedMember().getUserValue()
+      if user is not None:
+        createUserPreference = user.getTypeBasedMethod('createUserPreference')
+        if createUserPreference is not None:
+          active_preference = createUserPreference()
+    return active_preference
+
   security.declareProtected(Permissions.View, 'getActiveSystemPreference')
   def getActiveSystemPreference(self) :
     """ returns the current system preference for the user.
@@ -249,14 +270,14 @@ class PreferenceTool(BaseTool):
 
   security.declareProtected(Permissions.ManagePortal,
                             'createPreferenceForUser')
-  def createPreferenceForUser(self, username, enable=True):
+  def createPreferenceForUser(self, user_id, enable=True):
     """Creates a preference for a given user, and optionnally enable the
     preference.
     """
     user_folder = self.acl_users
-    user = user_folder.getUserById(username)
+    user = user_folder.getUserById(user_id)
     if user is None:
-      raise ValueError("User %r not found" % (username, ))
+      raise ValueError("User %r not found" % (user_id, ))
     security_manager = getSecurityManager()
     try:
       newSecurityManager(None, user.__of__(user_folder))

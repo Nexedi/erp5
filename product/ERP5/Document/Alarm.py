@@ -103,7 +103,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     return '%s_%s' % (self.getRelativeUrl(), id)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'activeSense')
-  def activeSense(self, fixit=0, params=None):
+  def activeSense(self, fixit=0, activate_kw=(), params=None):
     """
     This method launches the sensing process as activities.
     It is intended to launch a very long process made
@@ -113,6 +113,8 @@ class Alarm(XMLObject, PeriodicityMixin):
     The result of the sensing process can be obtained by invoking
     the sense method or by requesting a report.
     """
+    activate_kw = dict(activate_kw)
+
     portal_membership = self.getPortalObject().portal_membership
     if fixit or not self.getEnabled():
       checkPermission = portal_membership.checkPermission
@@ -135,7 +137,9 @@ class Alarm(XMLObject, PeriodicityMixin):
         # able to notify the user after all processes are ended
         # We do some inspection to keep compatibility
         # (because fixit and tag were not set previously)
-        tag = self.__getTag(True)
+        if 'tag' not in activate_kw:
+          activate_kw['tag'] = self.__getTag(True)
+        tag = activate_kw['tag']
         method = getattr(self, method_id)
         func_code = method.func_code
         try:
@@ -149,13 +153,13 @@ class Alarm(XMLObject, PeriodicityMixin):
         name_list = func_code.co_varnames[:func_code.co_argcount]
         if 'params' in name_list or has_kw:
           # New New API
-          getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag, params=params)
+          getattr(self.activate(**activate_kw), method_id)(fixit=fixit, tag=tag, params=params)
         elif 'fixit' in name_list:
           # New API - also if variable number of named parameters
-          getattr(self.activate(tag=tag), method_id)(fixit=fixit, tag=tag)
+          getattr(self.activate(**activate_kw), method_id)(fixit=fixit, tag=tag)
         else:
           # Old API
-          getattr(self.activate(tag=tag), method_id)()
+          getattr(self.activate(**activate_kw), method_id)()
         if self.isAlarmNotificationMode():
           self.activate(after_tag=tag).notify(include_active=True, params=params)
 
@@ -163,6 +167,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     # is always invoked by system user.
     sm = getSecurityManager()
     newSecurityManager(None, nobody)
+
     try:
       _activeSense()
     finally:

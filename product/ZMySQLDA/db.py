@@ -310,7 +310,7 @@ class DB(TM):
             r.append(info)
         return r
 
-    def _query(self, query, force_reconnect=False):
+    def _query(self, query, allow_reconnect=False):
         """
           Send a query to MySQL server.
           It reconnects automaticaly if needed and the following conditions are
@@ -319,7 +319,7 @@ class DB(TM):
              attemp to connect twice per call).
            - This conection is not transactionnal and has set not MySQL locks,
              because they are bound to the connection. This check can be
-             overridden by passing force_reconnect with True value.
+             overridden by passing allow_reconnect with True value.
         """
         try:
             self.db.query(query)
@@ -328,7 +328,7 @@ class DB(TM):
               raise OperationalError(m[0], '%s: %s' % (m[1], query))
             if m[0] in lock_error:
               raise ConflictError('%s: %s: %s' % (m[0], m[1], query))
-            if not force_reconnect and self._use_TM or \
+            if not allow_reconnect and self._use_TM or \
               m[0] not in hosed_connection:
                 LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
                 raise
@@ -403,16 +403,19 @@ class DB(TM):
         """Begin a transaction (when TM is enabled)."""
         try:
             self._transaction_begun = True
-            # Ping the database to reconnect if connection was closed.
-            self._query("SELECT 1", force_reconnect=True)
             if self._transactions:
-                self._query("BEGIN")
+                self._query("BEGIN", allow_reconnect=True)
             if self._mysql_lock:
-                self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock)
+                self._query("SELECT GET_LOCK('%s',0)" % self._mysql_lock, allow_reconnect=not self._transactions)
         except:
             LOG('ZMySQLDA', ERROR, "exception during _begin",
                 error=sys.exc_info())
             raise
+
+    def tpc_vote(self, *ignored):
+        # Raise if a disconnection is detected, to avoid detecting this later
+        self._query("SELECT 1")
+        return TM.tpc_vote(self, *ignored)
 
     def _finish(self, *ignored):
         """Commit a transaction (when TM is enabled)."""
@@ -587,4 +590,5 @@ class DeferredDB(DB):
             del self._sql_string_list[:]
             DB._finish(self)
 
+    tpc_vote = TM.tpc_vote
     _abort = _begin

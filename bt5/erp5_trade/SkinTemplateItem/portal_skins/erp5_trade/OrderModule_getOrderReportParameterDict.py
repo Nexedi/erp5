@@ -37,18 +37,15 @@ if from_date is None:
   from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
   kw = {"delivery.start_date" : None, "key":"DefaultKey"}
   q = NegatedQuery(Query(**kw))
-  select_expression = "MIN(delivery.start_date)"
-  group_by = "delivery.start_date"
   from_date = DateTime()
   result_list = context.portal_catalog(
-                                     select_expression=select_expression,
-                                     group_by_expression=group_by,
+                                     select_dict={'start_date': 'delivery.start_date'},
                                      simulation_state=simulation_state,
                                      portal_type=doc_portal_type,
                                      query=q,
                                      limit=1)
   if result_list:
-    from_date = DateTime(result_list[0][2])
+    from_date = DateTime(result_list[0].start_date)
 
  
 # get period list between given date

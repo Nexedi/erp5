@@ -24,16 +24,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This alarm checks that the upgrader is required. If yes, the upgrader have three steps:\n
+            <value> <string>This alarms controls the upgrade process by calling others upgrader alarms.\n
 \n
-1. Pre-upgrade\n
-This step will run all constraints that have contraint_type equal pre_upgrade.\n
+It delegates sense to calling fix on "Run Pre Upgrade" then "Run Upgrade" alarms an aggregating the results.\n
 \n
-2. Upgrader\n
-This step will run all constraints that have contraint_type equal upgrade. In this step is supposed to install/upgrade all Business Template required.\n
+It delegate fix to calling fix on "Run Pre Upgrade" then "Run Upgrade" then "Run Post Upgrade" alarms then aggregating the results.\n
 \n
-3. Post-Upgrade\n
-This step will run all constraints that have contraint_type equal post_upgrade.</string> </value>
+Note that post upgrade steps are not executed in the sense, because they require the upgrade step to be actually executed.</string> </value>
         </item>
         <item>
             <key> <string>enabled</string> </key>

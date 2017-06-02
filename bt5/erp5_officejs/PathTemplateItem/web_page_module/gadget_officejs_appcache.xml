@@ -177,6 +177,8 @@ gadget_officejs_jio_web_page_view.html\n
 gadget_officejs_jio_web_page_view.js\n
 gadget_officejs_jio_web_illustration_view.html\n
 gadget_officejs_jio_web_illustration_view.js\n
+gadget_officejs_liberator.js\n
+gadget_officejs_liberator.html\n
 NETWORK:\n
 *
 
@@ -185,6 +187,12 @@ NETWORK:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>RenderJS Gadget OfficeJS AppCache</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -309,7 +317,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>954.32946.59767.46762</string> </value>
+                <value> <string>956.64903.6566.48281</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -327,7 +335,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476100704.52</float>
+                        <float>1486567953.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

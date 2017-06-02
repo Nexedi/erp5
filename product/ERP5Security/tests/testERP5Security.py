@@ -379,6 +379,31 @@ class TestUserManagement(ERP5TypeTestCase):
       user_id,
     )
 
+  def test_Preference_created_for_new_user_on_getActiveUserPreference(self):
+    # Creating a user will create a preference on the first time `getActiveUserPreference`
+    # is called
+    preference_tool = self.portal.portal_preferences
+    preference_count = len(preference_tool.contentValues())
+
+    user_id, login, password = self._makePerson()
+    # creating a person does not create a preference
+    self.assertEqual(preference_count, len(preference_tool.contentValues()))
+
+    self.loginAsUser(user_id)
+
+    # getActiveUserPreference will create a user preference
+    new_preference = preference_tool.getActiveUserPreference()
+    self.assertNotEqual(None, new_preference)
+    self.assertEqual(preference_count+1, len(preference_tool.contentValues()))
+    self.assertEqual('enabled', new_preference.getPreferenceState())
+
+    self.tic()
+
+    # subsequent calls to getActiveUserPreference returns the same preference
+    active_preference = preference_tool.getActiveUserPreference()
+    self.assertEqual(active_preference, new_preference)
+    self.assertEqual(preference_count+1, len(preference_tool.contentValues()))
+
   def test_PreferenceTool_setNewPassword(self):
     # Preference Tool has an action to change password
     user_id, login, password = self._makePerson()

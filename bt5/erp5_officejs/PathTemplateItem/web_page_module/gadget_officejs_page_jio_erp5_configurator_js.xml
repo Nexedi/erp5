@@ -140,7 +140,9 @@
         </item>
         <item>
             <key> <string>url_string</string> </key>
-            <value> <string>gadget_officejs_page_jio_erp5_configurator.js</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -271,7 +273,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.4077.57694.30242</string> </value>
+                <value> <string>958.61732.51927.19012</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -289,7 +291,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482145123.94</float>
+                        <float>1493209251.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

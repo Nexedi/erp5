@@ -216,7 +216,7 @@ class EGOVUserManager(ERP5UserManager):
             newSecurityManager(self, self.getUser(SUPER_USER))
           try:
             result = portal.portal_catalog.unrestrictedSearchResults(
-                            select_expression='reference',
+                            select_list=['reference'],
                             portal_type=self.portal_type_list, reference=login)
             if len(result) != 1: # we won't proceed with groups
               if len(result) > 1: # configuration is screwed

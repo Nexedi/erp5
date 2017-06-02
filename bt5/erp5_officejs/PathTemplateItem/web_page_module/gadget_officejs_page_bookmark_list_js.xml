@@ -64,26 +64,14 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>creators</string> </key>
-            <value>
-              <tuple>
-                <string>cedric.le.ninivin</string>
-              </tuple>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -106,43 +94,22 @@
             </value>
         </item>
         <item>
-            <key> <string>modification_date</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="DateTime" module="DateTime.DateTime"/>
-                </klass>
-                <tuple>
-                  <none/>
-                </tuple>
-                <state>
-                  <tuple>
-                    <float>1455284352.18</float>
-                    <string>UTC</string>
-                  </tuple>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Script</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>OfficeJS Bookmark List JS</string> </value>
         </item>
         <item>
-            <key> <string>version</string> </key>
+            <key> <string>url_string</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -224,7 +191,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468955568.76</float>
+                        <float>1485780679.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -269,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>953.62286.195.51114</string> </value>
+                <value> <string>956.64652.30281.58163</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -287,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1478609077.97</float>
+                        <float>1485780674.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -310,7 +277,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -326,7 +295,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -344,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1468955459.16</float>
+                        <float>1485779306.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

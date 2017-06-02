@@ -493,8 +493,8 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
       getSecurityUidDictAndRoleColumnDict = \
         portal_catalog.getSecurityUidDictAndRoleColumnDict
-      search_result = getattr(self, "Base_getCountFromWorklistTable", None)
-      use_cache = search_result is not None
+      search_result_ = getattr(self, "Base_getCountFromWorklistTable", None)
+      use_cache = search_result_ is not None
       if use_cache:
         ignored_security_column_id_set = self._getWorklistIgnoredSecurityColumnSet()
         ignored_security_uid_parameter_set = {x
@@ -512,12 +512,26 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
               ignored_security_uid_parameter_set:
             security_uid_dict.pop(ignored_security_uid_parameter)
           return security_uid_dict, role_column_dict, local_role_column_dict
-        select_expression_prefix = 'sum(`%s`) as %s' % (COUNT_COLUMN_TITLE, COUNT_COLUMN_TITLE)
+        count_column_expression = 'sum(`%s`)' % (COUNT_COLUMN_TITLE, )
         # Prevent catalog from trying to join
         getQuery = SimpleQuery
+        # BBB
+        def search_result(select_dict, group_by, query, limit, src__):
+          select_item_list = []
+          for alias, expression in select_dict.iteritems():
+            if expression is None:
+              expression = alias
+            select_item_list.append('%s AS %s' % (expression, alias))
+          return search_result_(
+            select_expression=','.join(select_item_list),
+            group_by_expression=','.join(group_by),
+            query=query,
+            limit=limit,
+            src__=src__,
+          )
       else:
         search_result = portal_catalog.unrestrictedSearchResults
-        select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
+        count_column_expression = 'count(*)'
         # Let catalog join as needed
         getQuery = lambda comparison_operator=None, **kw: AutoQuery(
           operator=comparison_operator,
@@ -544,18 +558,15 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
             getQuery=getQuery,
             grouped_worklist_dict=grouped_worklist_dict,
           )
-        group_by_expression = ', '.join(total_criterion_id_list)
+        group_by = total_criterion_id_list
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-        # If required mapping method is not present on the query, assume it
-        # handles column mapping properly, and build a bare select
-        # expression.
-        select_expression = select_expression_prefix + ', ' \
-                            + group_by_expression
+        select_dict = dict.fromkeys(total_criterion_id_list)
+        select_dict[COUNT_COLUMN_TITLE] = count_column_expression
         catalog_brain_result = []
         try:
           catalog_brain_result = search_result(
-                                      select_expression=select_expression,
-                                      group_by_expression=group_by_expression,
+                                      select_dict=select_dict,
+                                      group_by=group_by,
                                       query=query,
                                       limit=None,
                                       src__=src__)
@@ -684,14 +695,16 @@ def WorkflowTool_refreshWorklistCache(self):
         for security_column_id in security_column_id_set:
           assert security_column_id not in total_criterion_id_list
           total_criterion_id_list.append(security_column_id)
-        group_by_expression = ', '.join(total_criterion_id_list)
+        group_by = total_criterion_id_list
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-        select_expression = 'count(*) as %s, %s' % (COUNT_COLUMN_TITLE,
-                                                    group_by_expression)
-        search_result_kw = {'select_expression': select_expression,
-                            'group_by_expression': group_by_expression,
-                            'query': query,
-                            'limit': None}
+        select_dict = dict.fromkeys(total_criterion_id_list)
+        select_dict[COUNT_COLUMN_TITLE] = 'count(*)'
+        search_result_kw = {
+          'select_dict': select_dict,
+          'group_by': group_by,
+          'query': query,
+          'limit': None,
+        }
         #LOG('refreshWorklistCache', WARNING, 'Using query: %s' % \
         #    (search_result(src__=1, **search_result_kw), ))
         catalog_brain_result = search_result(**search_result_kw)
