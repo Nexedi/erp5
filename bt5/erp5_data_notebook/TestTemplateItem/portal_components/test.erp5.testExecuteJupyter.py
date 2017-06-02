@@ -856,4 +856,29 @@ print dig
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '0123456789')
+    
+  def testImportWarning(self):
+    '''
+      This test checks the warning output for imports in Jupyter.
+    '''
+    self.login('dev_user')
+    import_code = '''
+import numpy as np
+print np.array([1, 2, 3])
+import matplotlib.pyplot as plt
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Import'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+    
+    expected_result = (u'[1 2 3]\nWARNING: Your imported from the modules numpy'
+                       u', matplotlib.pyplot without using the environment'
+                       u' object, which is not recomended. Your import was'
+                       u' automatically converted to use such method. The setup'
+                       u' functions were named as *module*_setup.')
 
+    result = json.loads(result)
+    self.assertEquals(result['code_result'].strip() , expected_result)
