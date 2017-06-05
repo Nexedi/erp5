@@ -30,7 +30,7 @@
     "Bookmark Manager": {
       "url": "officejs_bookmark_manager/",
       "cache" : "gadget_officejs_bookmark_manager.appcache",
-      "sub_gadget": []
+      "sub_gadget": ["officejs_setting_gadget"]
     },
     "Onlyoffice Text": {
       "url": "ooffice_text/",
