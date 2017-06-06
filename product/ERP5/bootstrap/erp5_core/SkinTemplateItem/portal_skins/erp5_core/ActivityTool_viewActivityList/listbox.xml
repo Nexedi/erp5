@@ -78,9 +78,7 @@
                 </item>
                 <item>
                     <key> <string>url_columns</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+		    <value> <string></string> </value>
                 </item>
               </dictionary>
             </value>
@@ -185,7 +183,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -262,7 +260,52 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>delete</string>
+                          <string>ActivityTool_deleteMessage</string>
+                        </tuple>
+                        <tuple>
+                          <string>restart</string>
+                          <string>ActivityTool_restartMessage</string>
+                        </tuple>
+                        <tuple>
+                          <string>uid_activity</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>str_object_path</string>
+                          <string>ActivityTool_getMessagePath</string>
+                        </tuple>
+                        <tuple>
+                          <string>method_id</string>
+                          <string>ActivityTool_getMessageMethodEditPath</string>
+                        </tuple>
+                        <tuple>
+                          <string>activity_kw</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>arguments</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>kw</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>processing_node</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>retry</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>processing</string>
+                          <string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -272,19 +315,6 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(\'delete\', \'ActivityTool_deleteMessage\'),(\'restart\', \'ActivityTool_restartMessage\')]</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
