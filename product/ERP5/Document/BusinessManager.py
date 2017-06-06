@@ -337,7 +337,9 @@ class BusinessManager(Folder):
   security.declareProtected(Permissions.ManagePortal, 'storeTemplateData')
   def storeTemplateData(self, isBuild=False, **kw):
     """
-    Store data for objects in the ERP5
+    Store data for objects in the ERP5.
+    Create Business Item sub-objects after resolving the paths. Also, add
+    layers to all Business Item objects
     """
     portal = self.getPortalObject()
     LOG('Business Manager', INFO, 'Storing Manager Data')
@@ -507,7 +509,7 @@ class BusinessManager(Folder):
     reduce(BT) = BT
     """
     path_list = list(set([path_item.getBusinessPath() for path_item
-                 in self._path_item_list]))
+                 in self.objectValues()]))
 
     reduced_path_item_list = []
 
@@ -522,11 +524,11 @@ class BusinessManager(Folder):
     # Create an extra dict for values on path which are repeated in the path list
     seen_path_dict = {path: [] for path in seen_path_list}
 
-    for path_item in self._path_item_list:
-      if path_item.path in seen_path_list:
+    for path_item in self.objectValues():
+      if path_item.getProperty('item_path') in seen_path_list:
         # In case the path is repeated keep the path_item in a separate dict
         # for further arithmetic
-        seen_path_dict[path_item.path].append(path_item)
+        seen_path_dict[path_item.getProperty('item_path')].append(path_item)
       else:
         # If the path is unique, add them in the list of reduced Business Item
         reduced_path_item_list.append(path_item)
@@ -535,27 +537,27 @@ class BusinessManager(Folder):
     for path, path_item_list in seen_path_dict.items():
 
       # Create separate list of list items with highest priority
-      higest_priority_layer = max(path_item_list, key=attrgetter('layer')).layer
+      higest_priority_layer = max(path_item_list, key=attrgetter('item_layer')).item_layer
       prioritized_path_item = [path_item for path_item
                                in path_item_list
-                               if path_item.layer == higest_priority_layer]
+                               if path_item.item_layer == higest_priority_layer]
 
       # Separate the positive and negative sign path_item
       if len(prioritized_path_item) > 1:
 
         path_item_list_add = [item for item
                               in prioritized_path_item
-                              if item.sign > 0]
+                              if item.getProperty('item_sign') > 0]
 
         path_item_list_subtract = [item for item
                                    in prioritized_path_item
-                                   if item.sign < 0]
+                                   if item.getProperty('item_sign') < 0]
 
         combined_added_path_item = reduce(lambda x, y: x+y, path_item_list_add)
         combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
 
-        added_value = combined_added_path_item.value
-        subtracted_value = combined_subtracted_path_item.value
+        added_value = combined_added_path_item.objectValues()
+        subtracted_value = combined_subtracted_path_item.objectValues()
 
         if added_value != subtracted_value:
           # Append the arithmetically combined path_item objects in the final
