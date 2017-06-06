@@ -27,7 +27,10 @@ if resource_value is None:
   if resource_value is None and (resource_title or resource_reference):
     # Querying catalog to find a resource according title and reference parameters
     # like Delivery_updateFastInputLineList does.
-    line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \
+    delivery = context
+    if delivery.getPortalType() in portal.getPortalContainerLineTypeList():
+      delivery = context.getExplanationValue()
+    line_portal_type_list = [x for x in delivery.getTypeInfo().getTypeAllowedContentTypeList() \
                              if x in portal.getPortalMovementTypeList()]
     line_portal_type = line_portal_type_list[0]
 

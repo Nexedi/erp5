@@ -14,19 +14,23 @@ check_stock_availability = False
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 
+delivery = context
+if delivery.getPortalType() in portal.getPortalContainerTypeList():
+  delivery = context.getExplanationValue()
+
 # Retrieve lines portal type
-line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \
+line_portal_type_list = [x for x in delivery.getTypeInfo().getTypeAllowedContentTypeList() \
                          if x in portal.getPortalMovementTypeList()]
 line_portal_type = line_portal_type_list[0]
 
 if line_portal_type in portal.getPortalSaleTypeList():
-  section_uid = context.getSourceSectionUid()
+  section_uid = delivery.getSourceSectionUid()
   supply_cell_portal_type = "Sale Supply Cell"
   supply_line_id = "default_ssl"
   use_list = portal.portal_preferences.getPreferredSaleUseList()
   check_stock_availability = True
 elif line_portal_type in portal.getPortalPurchaseTypeList():
-  section_uid = context.getDestinationSectionUid()
+  section_uid = delivery.getDestinationSectionUid()
   supply_cell_portal_type = "Purchase Supply Cell"
   supply_line_id = "default_psl"
   use_list = portal.portal_preferences.getPreferredPurchaseUseList()
