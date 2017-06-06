@@ -6,6 +6,7 @@ Business Process | view
 Component Module | jump_to_related_sale_packing_list
 Container Line | view
 Container Line | view_quantity
+Container | fast_input
 Container | view
 Delivery Cell | view
 Delivery Node Module | view
