@@ -1,9 +1,0 @@
-Component Module | business_application
-Internal Supply Module | business_application
-Product Module | business_application
-Purchase Supply Module | business_application
-Quantity Unit Conversion Group | quantity_unit
-Quantity Unit Conversion Module | business_application
-Sale Supply Module | business_application
-Service Module | business_application
-Transformation Module | business_application
