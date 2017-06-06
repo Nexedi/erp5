@@ -165,7 +165,7 @@ def mergeTracebackListIntoResultDict(result_dict, error_result_dict_list):
 
 
 def matplotlib_pre_run():
-  matplotlib.interactive(True)
+  matplotlib.interactive(False)
   rc = {'figure.figsize': (6.0,4.0),
         'figure.facecolor': (1,1,1,0),
         'figure.edgecolor': (1,1,1,0),
