@@ -88,6 +88,7 @@
                         <string>image/tiff</string>
                         <string>image/tiff-fx</string>
                         <string>image/x-icon</string>
+                        <string>image/x-ms-bmp</string>
                         <string>image/x-xbm</string>
                         <string>image/x-xbitmap</string>
                         <string>image/webp</string>
