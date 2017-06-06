@@ -11,6 +11,7 @@ from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWo
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
+from Products.ERP5Type.Core.Folder import Folder
 
 from zope.interface import classImplements
 from ZODB.broken import Broken, PersistentBroken
@@ -333,7 +334,6 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     # Do not load the class again if it has already been loaded
     if not cls.__isghost__:
       return
-
     # cls might be a subclass of a portal type class
     # we need to find the right class to change
     for klass in cls.__mro__:
@@ -354,7 +354,10 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
         LOG("ERP5Type.Dynamic", WARNING,
             "Could not access Portal Type Object for type %r"
             % portal_type, error=sys.exc_info())
-        base_tuple = (ERP5BaseBroken, )
+        # XXX: Add checks for testing if this is just during import and that too
+        # for module objects only, for other cases, the base_tuple should be
+        # ERP5Broken only in general
+        base_tuple = (Folder,)
         portal_type_category_list = []
         attribute_dict = dict(_categories=[], constraints=[])
         interface_list = []
