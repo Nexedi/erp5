@@ -1020,21 +1020,20 @@ class TemplateTool (BaseTool):
 
         bp_dict_2 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
-          'dependency_list': ['erp5_base >= 0.8.3',
-                              'erp5_core >= 1.0rc13'],
+          'dependency_list': ['erp5_base',],
           'description': '',
           'force_install': 0,
-          'id': 'erp5_accounting',
+          'id': 'erp5_pdm',
           'license': 'GPL',
           'revision': '',
           'test_dependency_list': [],
           'provision_list': [],
-          'title': 'erp5_accounting',
+          'title': 'erp5_pdm',
           'version': '1.0'}
 
         if repository.endswith('/bt5'):
           property_dict_list.append(bp_dict_1)
-          #property_dict_list.append(bp_dict_2)
+          property_dict_list.append(bp_dict_2)
 
         bm_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
