@@ -1057,6 +1057,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         # If the bt is Business Manager, update the installation state
         if bt.getPortalType() == 'Business Manager':
           template_tool.updateInstallationState([bt])
+          ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
           continue
 
         if not quiet:
