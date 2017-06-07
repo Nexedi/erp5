@@ -71,11 +71,13 @@ SECURITY_QUERY_ARGUMENT_NAME = 'ERP5Catalog_security_query'
 
 DYNAMIC_RELATED_KEY_FLAG_PARENT    = 1 << 0
 DYNAMIC_RELATED_KEY_FLAG_STRICT    = 1 << 1
+DYNAMIC_RELATED_KEY_FLAG_PREDICATE = 1 << 2
 # Note: parsing flags backward as "pop()" is O(1), so this list contains flags
 # in right to left order.
 DYNAMIC_RELATED_KEY_FLAG_LIST = (
   ('parent', DYNAMIC_RELATED_KEY_FLAG_PARENT),
   ('strict', DYNAMIC_RELATED_KEY_FLAG_STRICT),
+  ('predicate', DYNAMIC_RELATED_KEY_FLAG_PREDICATE),
 )
 
 class IndexableObjectWrapper(object):
@@ -965,7 +967,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       by looking at the category tree.
 
       Syntax:
-        [[strict_][parent_]_]<base category id>__[related__]<column id>
+        [[predicate_][strict_][parent_]_]<base category id>__[related__]<column id>
+      "predicate": Use predicate_category as relation table, otherwise category table.
       "strict": Match only strict relation members, otherwise match non-strict too.
       "parent": Search for documents whose parent have described relation, otherwise search for their immediate relations.
       <base_category_id>: The id of an existing Base Category document, or "any" to not restrict by relation type.
@@ -1041,7 +1044,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           column_id = 'uid' if related else 'category_uid'
         related_key_list.append(
           key + ' | ' +
-          'category' +
+          ('predicate_' if flag_bitmap & DYNAMIC_RELATED_KEY_FLAG_PREDICATE else '') + 'category' +
           ('' if is_uid else ',catalog') +
           '/' +
           column_id +
@@ -1054,13 +1057,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return related_key_list
 
     security.declarePublic('getCategoryParameterDict')
-    def getCategoryParameterDict(self, category_list, strict_membership=True, forward=True, onMissing=lambda category: True):
+    def getCategoryParameterDict(self, category_list, category_table='category', strict_membership=True, forward=True, onMissing=lambda category: True):
       """
       From a list of categories, produce a catalog keyword argument dictionary
       testing (strict or not, forward or reverse relation) membership to these
       categories.
 
       category_list (list of category relative urls with their base categories)
+      category_table ('category' or 'predicate_category')
+        Controls the table to use for membership lookup.
       strict_membership (bool)
         Whether intermediate relation members should be excluded (true) or
         included (false).
@@ -1078,7 +1083,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       are sets of uids.
       """
       flag_list = []
-      if category_table != 'category':
+      if category_table == 'predicate_category':
+        flag_list.append('predicate')
+      elif category_table != 'category':
         raise ValueError('Unknown category table %r' % (category_table, ))
       if strict_membership:
         flag_list.append('strict')
