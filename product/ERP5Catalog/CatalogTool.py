@@ -57,6 +57,7 @@ from zLOG import LOG, PROBLEM, WARNING, INFO
 ACQUIRE_PERMISSION_VALUE = []
 DYNAMIC_METHOD_NAME = 'z_related_'
 DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
+PREDICATE_METHOD_NAME = 'predicate_'
 STRICT_METHOD_NAME = 'strict_'
 STRICT_METHOD_NAME_LEN = len(STRICT_METHOD_NAME)
 PARENT_METHOD_NAME = 'parent_'
@@ -962,6 +963,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       )
       base_cat_id_set.discard('parent')
       default_string = 'default_'
+      predicate_string = PREDICATE_METHOD_NAME
       strict_string = STRICT_METHOD_NAME
       parent_string = PARENT_METHOD_NAME
       related_string = 'related_'
@@ -970,9 +972,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         prefix = ''
         strict = 0
         parent = 0
+        predicate = 0
+        if key.startswith(predicate_string):
+          predicate = 1
+          key = key[len(predicate_string):]
+          prefix += predicate_string
         if key.startswith(default_string):
           key = key[len(default_string):]
-          prefix = default_string
+          prefix += default_string
         if key.startswith(strict_string):
           strict = 1
           key = key[len(strict_string):]
@@ -998,7 +1005,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               if is_uid:
                 end_key = 'uid' if related else 'category_uid'
               related_key_list.append(
-                prefix + key + ' | category' +
+                prefix + key + ' | ' +
+                ('predicate_' if predicate else '') + 'category' +
                 ('' if is_uid else ',catalog') +
                 '/' +
                 end_key +
