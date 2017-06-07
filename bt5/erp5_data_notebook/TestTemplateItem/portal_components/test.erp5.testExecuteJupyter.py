@@ -857,3 +857,34 @@ print dig
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '0123456789')
 
+  def testDotImport(self):
+    '''
+      This test guarantees that "import a.b" works in Jupyter.
+    '''
+    self.login('dev_user')
+    import_code = '''
+import os.path
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Import'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+
+    jupyter_code = '''
+print os.path
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), '0123456789')
+

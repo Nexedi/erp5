@@ -44,7 +44,7 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:697,  4: Unused variable \'notebook\' (unused-variable)</string>
+                <string>W:727,  4: Unused variable \'notebook\' (unused-variable)</string>
               </tuple>
             </value>
         </item>
