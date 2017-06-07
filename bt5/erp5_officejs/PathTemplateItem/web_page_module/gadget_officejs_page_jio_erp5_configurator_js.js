@@ -14,8 +14,7 @@
         ]);
       })
       .push(function (result) {
-        var old_date = new Date(),
-          configuration = {},
+        var configuration = {},
           portal_type = result[0],
           attachment_synchro = result[1] !== undefined,
           extended_attachment_url = result[1];
@@ -62,7 +61,7 @@
                 },
                 "put": {
                   "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
-                    .toString() + "/{+id}/Base_edit"
+                      .toString() + "/{+id}/Base_edit"
                 }
               }
             },
