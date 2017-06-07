@@ -220,6 +220,9 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                       'isMovingItem')
   def isMovingItem(self, item):
+    type_based_script = self._getTypeBasedMethod('isMovingItem')
+    if type_based_script:
+      return type_based_script(item)
     return False
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMovedItemUidList')
