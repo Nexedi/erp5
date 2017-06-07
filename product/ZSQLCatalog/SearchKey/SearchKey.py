@@ -265,57 +265,39 @@ class SearchKey(object):
           else:
             logical_operator = value_operator
         search_value = actual_value
-    # Cast to list
-    if isinstance(search_value, list_type_list):
-      # Check list content (not empty, homogenous)
-      # Note: neither is strictly required, but it helps spotting easy mistakes.
-      klass_set = {
-        int if x.__class__ in numeric_type_set else x.__class__
-        for x in search_value
-      }
-      try:
-        reference_class, = klass_set
-      except ValueError:
-        if search_value:
-          raise TypeError(
-            'List elements must be of the same class: %r' % (search_value, )
-          )
-        raise ValueError(
-          'Value cannot be an empty list/tuple: %r' % (search_value, )
-        )
-    else:
-      assert logical_operator is None
-      if isinstance(search_value, dict):
-        reference_class = search_value['query'].__class__
-      else:
-        reference_class = search_value.__class__
+    if not isinstance(search_value, list_type_list):
       search_value = [search_value]
     if logical_operator is None:
       logical_operator = default_logical_operator
     operator_value_dict = {}
     if comparison_operator is None:
-      if issubclass(reference_class, basestring):
-        if get_operator_from_value:
-          parsed = True
-          for value in search_value:
-            if isinstance(value, dict):
-              operator, value['query'] = self._getComparisonOperator(
-                value['query'])
-            else:
-              operator, value = self._getComparisonOperator(value)
-            operator_value_dict.setdefault(operator, []).append(
-              self._preprocessValue(value, operator))
+      getComparisonOperator = self._getComparisonOperator
+      guessComparisonOperator = self._guessComparisonOperator
+      preprocessValue = self._preprocessValue
+      for value in search_value:
+        is_dict = isinstance(value, dict)
+        if is_dict:
+          base_value = value['query']
         else:
-          for value in search_value:
-            if isinstance(value, dict):
-              operator = self._guessComparisonOperator(value['query'])
-            else:
-              operator = self._guessComparisonOperator(value)
-            operator_value_dict.setdefault(operator, []).append(
-              self._preprocessValue(value, operator))
-      else:
-        # XXX: comparison operator is hardcoded for non-strings.
-        operator_value_dict['='] = search_value
+          base_value = value
+        if isinstance(base_value, basestring):
+          if get_operator_from_value:
+            parsed = True
+            operator, base_value = getComparisonOperator(base_value)
+          else:
+            operator = guessComparisonOperator(base_value)
+        elif base_value is None:
+          operator = 'is'
+        else:
+          # XXX: comparison operator is hardcoded for non-strings.
+          operator = '='
+        if is_dict:
+          value['query'] = base_value
+        else:
+          value = base_value
+        operator_value_dict.setdefault(operator, []).append(
+          preprocessValue(value, operator),
+        )
     elif isinstance(comparison_operator, (tuple, list)):
       assert len(comparison_operator) == len(search_value)
       for operator, value in zip(comparison_operator, search_value):
