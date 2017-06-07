@@ -108,9 +108,8 @@ class Xvfb(Process):
 
   def run(self):
     for display_try in self.display_list:
-      lock_filepath = '/tmp/.X%s-lock' % display_try.replace(":", "")
-      if not os.path.exists(lock_filepath):
-        self._runCommand(display_try)
+      self._runCommand(display_try)
+      if self.process.poll() is None:
         self.display = display_try
         os.environ['DISPLAY'] = self.display
         break
