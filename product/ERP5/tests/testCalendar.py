@@ -921,6 +921,15 @@ class TestCalendar(ERP5ReportTestCase):
          from_date=DateTime(2008, 1, 1).earliestTime(),
          to_date=DateTime(2008, 1, 1).latestTime(),
          day=1)])
+    # When calendar exception is modified, the assignments on this calendar are
+    # automatically updated.
+    exception.setExceptionDate(DateTime(2018, 2, 2))
+    self.tic()
+    self.assertEqual([36000], [x.total_quantity
+      for x in person1.getAvailableTimeSequence(
+        from_date=DateTime(2008, 1, 1).earliestTime(),
+        to_date=DateTime(2008, 1, 1).latestTime(),
+        day=1)])
 
   def test_GroupCalendarConstraint(self):
     group_calendar = self.portal.group_calendar_module.newContent(
