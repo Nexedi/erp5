@@ -26,7 +26,8 @@
   xmlns:i18n='http://xml.zope.org/namespaces/i18n'
   xmlns:metal='http://xml.zope.org/namespaces/metal'
   tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
-  tal:define='money_quantity_style python:context.getPortalObject().portal_preferences.getPreferredMoneyQuantityStyle("");
+  tal:define='portal python: context.getPortalObject();
+              money_quantity_style python:portal.portal_preferences.getPreferredMoneyQuantityStyle("");
               money_currency_do_grouping python:"1234" in money_quantity_style and "false" or "true";
               at_date request/at_date/latestTime;
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day()).latestTime();
@@ -129,7 +130,7 @@
   <office:body>
 
     <office:spreadsheet>
-      <table:table table:style-name='ta1' table:print='false' table:name='Expense' i18n:domain='ui' i18n:attributes='table:name'>
+      <table:table table:style-name='ta1' table:print='false' table:name='Expense' tal:attributes="table:name portal/portal_categories/financial_section/expense/getTranslatedTitle">
         <office:forms form:apply-design-mode='false' form:automatic-focus='false'/>
         <table:table-column table:style-name='co1' table:default-cell-style-name='report-title'/>
         <table:table-column table:style-name='co2' table:default-cell-style-name='ce7'/>
@@ -191,7 +192,7 @@
               office:value-type='string'
               table:number-rows-spanned='1'
               table:number-columns-spanned='3'>
-            <text:p i18n:translate="" i18n:domain="ui">Expense</text:p>
+            <text:p tal:content="portal/portal_categories/financial_section/expense/getTranslatedTitle">Expense</text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>
           <table:table-cell table:style-name='report-column-title' office:value-type='string'>
@@ -443,8 +444,7 @@
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
                             office:value-type='string'>
-            <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class"
-                        i18n:translate='' i18n:domain="ui" tal:content='string:Expense'></tal:block></text:p>
+            <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" tal:content="portal/portal_categories/financial_section/expense/getTranslatedTitle"></tal:block></text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/>
           <table:covered-table-cell table:style-name="ce9"/>
@@ -515,7 +515,8 @@
 
 
     </table:table> <!-- new table -->
-    <table:table table:style-name='ta1' table:print='false' table:name='Income'
+    <table:table tal:attributes="table:name portal/portal_categories/financial_section/income/getTranslatedTitle"
+                 table:style-name='ta1' table:print='false' table:name='Income'
                  i18n:domain='ui' i18n:attributes='table:name'>
         <office:forms form:apply-design-mode='false' form:automatic-focus='false'/>
         <table:table-column table:style-name='co1' table:default-cell-style-name='report-title'/>
@@ -542,7 +543,7 @@
               office:value-type='string'
               table:number-rows-spanned='1'
               table:number-columns-spanned='3'>
-            <text:p i18n:translate="" i18n:domain="ui">Income</text:p>
+            <text:p tal:content="portal/portal_categories/financial_section/income/getTranslatedTitle">Income</text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>
           <table:table-cell table:style-name='report-column-title' office:value-type='string'>
@@ -797,7 +798,7 @@
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
-          <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" i18n:translate='' i18n:domain="ui" tal:content='string:Income'></tal:block></text:p>
+          <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" tal:content="portal/portal_categories/financial_section/income/getTranslatedTitle"></tal:block></text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>
           <table:table-cell table:style-name='report-stat-currency2'
