@@ -2366,6 +2366,7 @@ class Catalog(Folder,
     select_dict = kw.pop('select_dict', {})
     # Handle left_join_list
     left_join_list = kw.pop('left_join_list', ())
+    inner_join_list = kw.pop('inner_join_list', ())
     # Handle implicit_join. It's True by default, as there's a lot of code
     # in BT5s and elsewhere that calls buildSQLQuery() expecting implicit
     # join. self._queryResults() defaults it to False for those using
@@ -2393,6 +2394,7 @@ class Catalog(Folder,
       group_by_list=group_by_list,
       select_dict=select_dict,
       left_join_list=left_join_list,
+      inner_join_list=inner_join_list,
       implicit_join=implicit_join,
       limit=limit,
       catalog_table_name=query_table,
