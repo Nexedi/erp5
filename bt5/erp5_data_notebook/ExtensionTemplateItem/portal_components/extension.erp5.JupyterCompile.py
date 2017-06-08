@@ -867,9 +867,6 @@ class ImportFixer(ast.NodeTransformer):
       if not self.import_func_dict.get(name):
         final_module_names.append(name)
 
-    log("module_names[0]: " + module_names[0])
-    log("result_name: " + result_name)
-
     if final_module_names:
       # try to import module before it is added to environment
       # this way if user tries to import non existent module Exception
@@ -878,8 +875,6 @@ class ImportFixer(ast.NodeTransformer):
 
       empty_function = self.newEmptyFunction("%s_setup" %result_name)
       return_dict = self.newReturnDict(final_module_names)
-
-      log(return_dict)
 
       empty_function.body = [node, return_dict]
       environment_set = self.newEnvironmentSetCall("%s_setup" %result_name)
@@ -1180,3 +1175,12 @@ def erp5PivotTableUI(self, df):
   iframe_host = self.REQUEST['HTTP_X_FORWARDED_HOST'].split(',')[0]
   url = "https://%s/erp5/Base_displayPivotTableFrame?key=%s" % (iframe_host, key)
   return IFrame(src=url, width='100%', height='500')
+  
+def Base_checkExistingReference(self, reference):
+  existing_notebook = self.portal_catalog.getResultValue(
+                         owner=self.portal_membership.getAuthenticatedMember().getUserName(),
+                         portal_type='Data Notebook',
+                         reference=reference)
+  if not existing_notebook is None:
+    return True
+  return False
