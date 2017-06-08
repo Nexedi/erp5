@@ -59,6 +59,7 @@ class ColumnMap(object):
                catalog_table_name=None,
                table_override_map=None,
                left_join_list=None,
+               inner_join_list=None,
                implicit_join=False):
     self.catalog_table_name = catalog_table_name
     # Key: group
@@ -106,6 +107,10 @@ class ColumnMap(object):
     self.implicit_join = implicit_join
     assert not (self.implicit_join and self.left_join_list), (
       "Cannot do left_joins while forcing implicit join"
+    )
+    self.inner_join_list = inner_join_list
+    assert not set(left_join_list).intersection(inner_join_list), (
+      "left_join_list and inner_join_list intersect"
     )
 
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
@@ -666,7 +671,7 @@ class ColumnMap(object):
     # table aliases should cause some of these table definitions to be
     # collapsed into others.
     assert self._setMinimalTableDefinition()
-    Join = (column in self.left_join_list or
+    Join = column not in self.inner_join_list and (column in self.left_join_list or
      (not self.implicit_join and column in self.registry.get(DEFAULT_GROUP_ID, ())))\
       and LeftJoin or InnerJoin
     join_definition = Join(self.table_definition, right_side,

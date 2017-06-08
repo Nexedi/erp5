@@ -59,6 +59,7 @@ class EntireQuery(object):
                group_by_list=(),
                select_dict=None,
                left_join_list=(),
+               inner_join_list=(),
                limit=None,
                catalog_table_name=None,
                extra_column_list=(),
@@ -71,6 +72,7 @@ class EntireQuery(object):
     self.group_by_list = list(group_by_list)
     self.select_dict = defaultDict(select_dict)
     self.left_join_list = left_join_list
+    self.inner_join_list = inner_join_list
     self.limit = limit
     self.catalog_table_name = catalog_table_name
     self.extra_column_list = list(extra_column_list)
@@ -89,6 +91,7 @@ class EntireQuery(object):
       column_map = ColumnMap(catalog_table_name=self.catalog_table_name,
                              table_override_map=self.from_expression,
                              left_join_list=self.left_join_list,
+                             inner_join_list=self.inner_join_list,
                              implicit_join=self.implicit_join,
                             )
       self.column_map = column_map
