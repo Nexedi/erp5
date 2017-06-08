@@ -32,6 +32,8 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPyth
 import time
 import json
 import base64
+import random
+import string
 
 
 class TestExecuteJupyter(ERP5TypeTestCase):
@@ -856,4 +858,26 @@ print dig
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '0123456789')
+    
+  def testReferenceWarning(self):
+    '''
+      Tests Base_checkExistingReference in JupyterCompile.
+    '''
+    self.login('dev_user')
+    
+    notebook_reference = u''.join(random.choice(string.ascii_lowercase) for _ in range(30))
+    notebook_title = u''.join(random.choice(string.ascii_lowercase) for _ in range(30))
+    
+    notebook_module = self.portal.getDefaultModule(portal_type='Data Notebook')
+    data_notebook = notebook_module.DataNotebookModule_addDataNotebook(
+                                      title=notebook_title,
+                                      reference=notebook_reference,
+                                      batch_mode=True)
+    self.tic()
+        
+    result = self.portal.Base_checkExistingReference(
+      reference=notebook_reference,
+    )
+    self.tic()
 
+    self.assertEquals(result, True)
