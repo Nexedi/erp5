@@ -127,6 +127,43 @@
       <style:text-properties fo:font-size='12pt'/>
     </style:style>
   </office:automatic-styles> <!-- }}} -->
+
+  <tal:block metal:define-macro="report_header">
+    <!-- Title {{{ -->
+    <table:table-row table:style-name='ro2'>
+      <table:table-cell table:number-rows-spanned='2'
+                        table:number-columns-spanned='1'
+                        office:value-type='string'
+                        table:style-name='report-title'>
+        <text:p tal:content='python: context.portal_categories.restrictedTraverse(request["section_category"]).getTranslatedTitle()'/>
+      </table:table-cell>
+      <table:table-cell table:number-rows-spanned='1' table:number-columns-spanned='4'
+                        office:value-type='string' table:style-name='report-title'>
+        <text:p i18n:translate="" i18n:domain="ui">Profit and Loss</text:p>
+      </table:table-cell>
+      <table:covered-table-cell table:number-columns-repeated='2'/>
+      <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
+    </table:table-row>
+
+    <table:table-row table:style-name='ro2'>
+      <table:table-cell table:style-name='ce1'><text:p/></table:table-cell>
+      <table:table-cell table:style-name='report-title-date'
+                        table:number-rows-spanned='1' table:number-columns-spanned='4'>
+        <text:p tal:content="python:date_formatter(at_date)">Date</text:p>
+      </table:table-cell>
+      <table:covered-table-cell table:number-columns-repeated='2'/>
+      <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
+    </table:table-row>
+
+    <table:table-row table:style-name='ro2'>
+      <table:table-cell table:style-name='ce1'/>
+      <table:table-cell table:style-name='ce8'/>
+      <table:table-cell/>
+      <table:table-cell table:style-name='ce1' table:number-columns-repeated='2'/>
+    </table:table-row>
+    <!-- }}} -->
+  </tal:block>
+
   <office:body>
 
     <office:spreadsheet>
@@ -150,40 +187,7 @@
                                 global level1_title python:'';
                                 ">
 
-        <!-- Title {{{ -->
-        <table:table-row table:style-name='ro2'>
-          <table:table-cell table:number-rows-spanned='2'
-                            table:number-columns-spanned='1'
-                            office:value-type='string'
-                            table:style-name='report-title'>
-            <text:p tal:content='python: context.portal_categories.restrictedTraverse(request["section_category"]).getTranslatedTitle()'/>
-          </table:table-cell>
-          <table:table-cell table:number-rows-spanned='1' table:number-columns-spanned='4'
-                            office:value-type='string' table:style-name='report-title'>
-            <text:p i18n:translate="" i18n:domain="ui">Profit and Loss</text:p>
-          </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated='2'/>
-          <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
-        </table:table-row>
-
-        <table:table-row table:style-name='ro2'>
-          <table:table-cell table:style-name='ce1'><text:p/></table:table-cell>
-          <table:table-cell table:style-name='report-title-date'
-                            table:number-rows-spanned='1' table:number-columns-spanned='4'>
-            <text:p tal:content="python:date_formatter(at_date)">Date</text:p>
-          </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated='2'/>
-          <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
-        </table:table-row>
-
-        <table:table-row table:style-name='ro2'>
-          <table:table-cell table:style-name='ce1'/>
-          <table:table-cell table:style-name='ce8'/>
-          <table:table-cell/>
-          <table:table-cell table:style-name='ce1' table:number-columns-repeated='2'/>
-        </table:table-row>
-        <!-- }}} -->
-
+        <tal:block metal:use-macro="template/macros/report_header"/>
         <!-- Header {{{ -->
         <table:table-header-rows>
         <table:table-row table:style-name='ro3'>
