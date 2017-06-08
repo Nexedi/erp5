@@ -32,6 +32,8 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript, removeZODBPyth
 import time
 import json
 import base64
+import random
+import string
 
 
 class TestExecuteJupyter(ERP5TypeTestCase):
@@ -856,4 +858,16 @@ print dig
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
     self.assertEquals(result['code_result'].strip(), '0123456789')
+    
+  def testReferenceWarning(self):
+    '''
+      Tests Base_checkExistingReference in JupyterCompile.
+    '''
+    self.login('dev_user')
+    
+    result = self.portal.Base_checkExistingReference(
+      reference=''.join(random.choice(string.ascii_lowercase) for _ in range(50)),
+    )
+    self.tic()
 
+    self.assertEquals(result, False)
