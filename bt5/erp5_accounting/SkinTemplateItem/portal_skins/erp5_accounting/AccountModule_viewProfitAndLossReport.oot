@@ -27,6 +27,7 @@
   xmlns:metal='http://xml.zope.org/namespaces/metal'
   tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
   tal:define='portal python: context.getPortalObject();
+              has_income_and_expense_category python: bool(portal.portal_categories.financial_section.expense.contentValues());
               money_quantity_style python:portal.portal_preferences.getPreferredMoneyQuantityStyle("");
               money_currency_do_grouping python:"1234" in money_quantity_style and "false" or "true";
               at_date request/at_date/latestTime;
@@ -167,7 +168,8 @@
   <office:body>
 
     <office:spreadsheet>
-      <table:table table:style-name='ta1' table:print='false' table:name='Expense' tal:attributes="table:name portal/portal_categories/financial_section/expense/getTranslatedTitle">
+      <table:table tal:condition="has_income_and_expense_category"
+                   table:style-name='ta1' table:print='false' table:name='Expense' tal:attributes="table:name portal/portal_categories/financial_section/expense/getTranslatedTitle">
         <office:forms form:apply-design-mode='false' form:automatic-focus='false'/>
         <table:table-column table:style-name='co1' table:default-cell-style-name='report-title'/>
         <table:table-column table:style-name='co2' table:default-cell-style-name='ce7'/>
@@ -539,6 +541,8 @@
                                 global level2_title python:'';
                                 global level1_title python:'';">
 
+        <tal:block tal:condition="not: has_income_and_expense_category" metal:use-macro="template/macros/report_header"/>
+
         <!-- Header {{{ -->
         <table:table-header-rows>
         <table:table-row table:style-name='ro3'>
@@ -814,8 +818,9 @@
         </table:table-row>
         <!-- }}} --> 
 
+
         <!-- NET LOSS {{{ -->
-        <table:table-row tal:condition="python: net_income &gt; 0 or net_income_previous_period &gt; 0">
+        <table:table-row tal:condition="python: has_income_and_expense_category and (net_income &gt; 0 or net_income_previous_period &gt; 0)">
           <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
