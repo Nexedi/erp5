@@ -403,7 +403,7 @@
 
         <!-- TOTAL LEVEL 1 {{{ -->
         <table:table-row table:style-name='ro7'>
-          <table:table-cell table:style-name='report-stat1'
+          <table:table-cell table:style-name='report-stat-heading1'
                             office:value-type='string'
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
@@ -439,7 +439,7 @@
       <!-- loop level 2 -->
       <!-- Total expense {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
                             office:value-type='string'>
@@ -460,7 +460,7 @@
 
         <!-- NET PROFIT {{{ -->
         <table:table-row tal:condition="python: net_income &lt; 0 or net_income_previous_period &lt; 0">
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -479,7 +479,7 @@
 
         <!-- TOTAL LEVEL 2 {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
                             office:value-type='string'>
@@ -757,7 +757,7 @@
 
         <!-- TOTAL LEVEL 1 {{{ -->
         <table:table-row table:style-name='ro7'>
-          <table:table-cell table:style-name='report-stat1'
+          <table:table-cell table:style-name='report-stat-heading1'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -793,7 +793,7 @@
 
         <!-- TOTAL INCOME {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -811,7 +811,7 @@
 
         <!-- NET LOSS {{{ -->
         <table:table-row tal:condition="python: net_income &gt; 0 or net_income_previous_period &gt; 0">
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -830,7 +830,7 @@
 
         <!-- TOTAL LEVEL 2 {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
