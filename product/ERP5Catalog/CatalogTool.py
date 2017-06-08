@@ -1042,6 +1042,62 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       return related_key_list
 
+    security.declarePublic('getCategoryParameterDict')
+    def getCategoryParameterDict(self, category_list, category_table='category', strict_membership=True, forward=True, onMissing=lambda category: True):
+      """
+      From a list of categories, produce a catalog keyword argument dictionary
+      testing (strict or not, forward or reverse relation) membership to these
+      categories.
+
+      category_list (list of category relative urls with their base categories)
+      category_table ('category' or 'predicate_category')
+        Controls the table to use for membership lookup.
+      strict_membership (bool)
+        Whether intermediate relation members should be excluded (true) or
+        included (false).
+      forward (bool)
+        Whether document being looked up bears the relation (true) or is its
+        target (false).
+      onMissing (callable)
+        Called for each category which does not exist.
+        Receives faulty relative url as "category" argument.
+        False return value skips the entry.
+        True return value causes a None placeholder to be inserted.
+        Raised exceptions will propagate.
+
+      Return a dictionnary whose keys are catalog parameter names and values
+      are sets of uids.
+      """
+      prefix = (
+        STRICT_METHOD_NAME if strict_membership else 'default_'
+      )
+      suffix = (
+        '' if forward else RELATED_DYNAMIC_METHOD_NAME
+      ) + '_uid'
+      if category_table == 'predicate_category':
+        prefix = PREDICATE_METHOD_NAME + prefix
+      elif category_table != 'category':
+        raise ValueError('Unknown category table %r' % (category_table, ))
+      base_category_dict = {}
+      portal_categories = self.getPortalObject().portal_categories
+      getBaseCategoryId = portal_categories.getBaseCategoryId
+      getCategoryUid = portal_categories.getCategoryUid
+      for relative_url in category_list:
+        category_uid = getCategoryUid(relative_url)
+        if category_uid is not None or onMissing(category=relative_url):
+          base_category_dict.setdefault(
+            getBaseCategoryId(relative_url),
+            set(),
+          ).add(category_uid)
+      parent_uid_set = base_category_dict.pop('parent', None)
+      result = {
+        prefix + x + suffix: y
+        for x, y in base_category_dict.iteritems()
+      }
+      if parent_uid_set is not None:
+        result['parent_uid'] = parent_uid_set
+      return result
+
     def _aq_dynamic(self, name):
       """
       Automatic related key generation.
