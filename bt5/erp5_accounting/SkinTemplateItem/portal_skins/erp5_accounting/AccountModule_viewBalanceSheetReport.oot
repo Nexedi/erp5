@@ -430,7 +430,7 @@
 
         <!-- TOTAL LEVEL 1 {{{ -->
         <table:table-row table:style-name='ro7'>
-          <table:table-cell table:style-name='report-stat1' office:value-type='string' tal:define="global level1_counter python:level1_counter + 1">
+          <table:table-cell table:style-name='report-stat-heading1' office:value-type='string' tal:define="global level1_counter python:level1_counter + 1">
             <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="category_level_1_title" tal:content='level1_title'>
                                                      </tal:block> <tal:block i18n:name="level1_counter" tal:content='level1_counter'>
                                                      </tal:block></text:p>
@@ -480,7 +480,7 @@
 
         <!-- TOTAL LEVEL 2 {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2' office:value-type='string'>
+          <table:table-cell table:style-name='report-stat-heading2' office:value-type='string'>
             <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class"
                         i18n:translate='' i18n:domain="ui" tal:content='string:Asset'></tal:block></text:p>
           </table:table-cell>
@@ -883,7 +883,7 @@
 
         <!-- TOTAL LEVEL 1 {{{ -->
         <table:table-row table:style-name='ro7'>
-          <table:table-cell table:style-name='report-stat1'
+          <table:table-cell table:style-name='report-stat-heading1'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -919,7 +919,7 @@
 
         <!-- TOTAL LEVEL 2 {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
