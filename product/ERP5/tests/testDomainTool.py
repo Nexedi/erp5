@@ -412,39 +412,36 @@ class TestDomainTool(TestPredicateMixIn):
         self.assertNotIn('LEFT JOIN', src)
       self.assertItemsEqual(searchPredicateList(**kw), expected)
 
-    # Check traditional left join mode
+    # Check left join mode
     check(True, [supply1_line1])
     check(True, [supply1_line1, supply1_line2, supply2_line1, supply3_line1], tested_base_category_list=['source_section'])
     check(True, [supply1_line1, supply1_line2, supply3_line1], tested_base_category_list=['source_section', 'destination_section'])
     check(True, [supply1_line1, supply1_line2], tested_base_category_list=['source_section', 'destination_section', 'price_currency'])
     check(True, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
-    # if wrong base categories are passed, then nothing is matched
-    check(True, [], tested_base_category_list=['WAAA', 'BOOO'])
 
-    # Check non-left join mode
+    # Check inner-join mode
     # Enable system preference and reindex relevant predicates
     system_preference.enable()
     self.tic()
     supply_module.Folder_reindexAll()
     self.tic()
-    # if tested_base_category_list is not passed, then left join mode is still used.
+    # if document has relations using base categories which are not present in the preference, then left join mode is still used.
     check(True, [supply1_line1])
     check(False, [supply1_line1, supply1_line2, supply2_line1, supply3_line1], tested_base_category_list=['source_section'])
     check(False, [supply1_line1, supply1_line2, supply3_line1], tested_base_category_list=['source_section', 'destination_section'])
     check(False, [supply1_line1, supply1_line2], tested_base_category_list=['source_section', 'destination_section', 'price_currency'])
     # resource is not in preferred predicate category list, so left join is used
     check(True, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
-    # if wrong base categories are passed, then nothing is matched
-    check(True, [], tested_base_category_list=['WAAA', 'BOOO'])
-    # add WAAA and BOOO to preference, this enables non-left join mode
-    system_preference.setPreferredPredicateCategoryList(
-      ['source_section', 'destination_section', 'price_currency',
-       'WAAA', 'BOOO'])
+    # add region and color to preference, this enables non-left join mode
+    system_preference.setPreferredPredicateCategoryList(['source_section', 'destination_section', 'price_currency', 'resource'])
     self.portal.portal_caches.clearAllCache()
     self.tic()
     supply_module.Folder_reindexAll()
     self.tic()
-    check(False, [], tested_base_category_list=['WAAA', 'BOOO'])
+    # resource is not in preferred predicate category list, so left join is used
+    check(False, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
+    # and we now cover all categories defined on order_line, so it uses inner-join only
+    check(False, [supply1_line1])
 
   def test_searchPredicateInvalidCategories(self):
     predicate = self.portal.sale_supply_module.newContent(
