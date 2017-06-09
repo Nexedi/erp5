@@ -66,7 +66,7 @@ dQEAAAAA</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
+            <value> <unicode>Balance Sheet</unicode> </value>
         </item>
       </dictionary>
     </pickle>
