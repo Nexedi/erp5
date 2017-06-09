@@ -1749,9 +1749,10 @@ class IntegerWidget(TextWidget) :
     if isinstance(value, float):
       value = int(value)
     display_maxwidth = field.get_value('display_maxwidth') or 0
+    input_type = field.get_value('input_type') or 'text'
     if display_maxwidth > 0:
       return render_element("input",
-                            type="text",
+                            type=input_type,
                             name=key,
                             css_class=field.get_value('css_class'),
                             value=value,
@@ -1760,7 +1761,7 @@ class IntegerWidget(TextWidget) :
                             extra=field.get_value('extra'))
     else:
       return render_element("input",
-                            type="text",
+                            type=input_type,
                             name=key,
                             css_class=field.get_value('css_class'),
                             value=value,
