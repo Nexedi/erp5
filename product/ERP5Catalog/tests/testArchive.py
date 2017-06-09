@@ -360,7 +360,6 @@ class TestArchive(InventoryAPITestCase):
       # with a static variable.
       depth.append(None)
       assert not portal_type, portal_type
-      # the following line calls Base_zSearchRelatedObjectsByCategoryList
       object.getSourceDecisionRelatedValueList()
       bc, = base_category_list
       depth.pop()

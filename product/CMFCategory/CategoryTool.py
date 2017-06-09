@@ -1363,7 +1363,20 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             category_list.append("%s/%s" % (base_category, relative_url))
 
-      search = self.getPortalObject().Base_zSearchRelatedObjectsByCategoryList
+      portal_catalog = context.getPortalObject().portal_catalog
+      def search(category_list, portal_type, strict_membership):
+        catalog_kw = portal_catalog.getCategoryParameterDict(
+          category_list=category_list,
+          strict_membership=strict_membership,
+        )
+        inner_join_list = catalog_kw.keys()
+        if portal_type is not None:
+          catalog_kw['portal_type'] = portal_type
+        return portal_catalog.unrestrictedSearchResults(
+          select_list=['relative_url', 'portal_type'],
+          inner_join_list=inner_join_list,
+          **catalog_kw
+        )
       if local_index_dict:
         # For some base categories, lookup indexes in ZODB.
         recurse = isinstance(context, Category) and not strict_membership
@@ -1399,7 +1412,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             # Update local index with results from catalog for backward
             # compatibility. But no need to do it several times in the same
             # transaction.
-            for r in search(category_list=category,
+            for r in search(category_list=[category],
                             portal_type=None,
                             strict_membership=strict_membership):
               r = r.relative_url
