@@ -42,8 +42,7 @@ if section_category:
 checked_uid_list = \
     portal_selections.getSelectionCheckedUidsFor(selection_name)
 if checked_uid_list:
-  getObject = portal.portal_catalog.getObject
-  delivery_list = [getObject(uid) for uid in checked_uid_list]
+  delivery_list = [brain.getObject() for brain in portal.portal_catalog(uid=checked_uid_list)]
 else:
   params = portal_selections.getSelectionParamsFor(selection_name)
   params['limit'] = None # XXX potentially very big report

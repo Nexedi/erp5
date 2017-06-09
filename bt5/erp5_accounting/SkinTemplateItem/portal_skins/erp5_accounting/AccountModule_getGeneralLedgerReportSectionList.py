@@ -142,18 +142,17 @@ def getAccountName(account_relative_url):
     account_name_cache[account_relative_url] = name
     return name
 
-getObject = portal.portal_catalog.getObject
 
-title_for_uid_cache = {}
+title_for_uid_cache = {None: ''}
 def getTitleForUid(uid):
   try:
     return title_for_uid_cache[uid]
   except KeyError:
     name = ''
-    if uid:
-      document = getObject(uid)
-      if document is not None:
-        name = document.getTitle()
+    brain_list = portal.portal_catalog(uid=uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      name = brain.getObject().getTitle()
     title_for_uid_cache[uid] = name
     return name
 

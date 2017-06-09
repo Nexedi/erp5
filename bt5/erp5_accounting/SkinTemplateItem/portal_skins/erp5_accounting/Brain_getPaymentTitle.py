@@ -4,9 +4,10 @@ try:
   return request.other[context.payment_uid]
 except KeyError:
   if context.payment_uid:
-    payment = context.getPortalObject().portal_catalog.getobject(context.payment_uid)
-    if payment is not None:
-      payment_title = payment.getTitle()
-  
+    brain_list = context.getPortalObject().portal_catalog(uid=context.payment_uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      payment_title = brain.getObject().getTitle()
+
 request.other[context.payment_uid] = payment_title
 return payment_title

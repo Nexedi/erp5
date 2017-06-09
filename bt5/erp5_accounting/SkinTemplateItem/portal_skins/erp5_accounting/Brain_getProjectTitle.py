@@ -4,9 +4,10 @@ try:
   return request.other[context.project_uid]
 except KeyError:
   if context.project_uid:
-    project = context.getPortalObject().portal_catalog.getobject(context.project_uid)
-    if project is not None:
-      project_title = project.getTitle()
-  
+    brain_list = context.getPortalObject().portal_catalog(uid=context.project_uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      project_title = brain.getObject().getTitle()
+
 request.other[context.project_uid] = project_title
 return project_title

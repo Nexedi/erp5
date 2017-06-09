@@ -8,7 +8,6 @@ request = portal.REQUEST
 getInventoryList_ = portal.portal_simulation.getInventoryList
 traverse = portal.restrictedTraverse
 portal_catalog = portal.portal_catalog
-getObject = portal_catalog.getObject
 Base_translateString = portal.Base_translateString
 selected_gap = gap_root
 traverseCategory = portal.portal_categories.restrictedTraverse
@@ -551,6 +550,8 @@ if node_uid_of_strict_account_type_to_group_by_payment:
 if src__:
   return src_list
 
+TRANSLATED_NONE = Base_translateString('None')
+
 node_title_and_id_cache = {}
 def getNodeTitleAndId(node_relative_url):
   try:
@@ -575,12 +576,12 @@ def getSectionPriceCurrencyFromSectionUid(uid):
   try:
     return section_price_currency_dict[uid]
   except KeyError:
-    section = getObject(uid)
-    if section is None:
-      price_currency = ''
-    else:
-      price_currency = section.getProperty('price_currency_reference')
-    section_price_currency_dict[uid] = price_currency
+    price_currency = ''
+    brain_list = portal_catalog(uid=uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      price_currency = brain.getObject().getProperty('price_currency_reference')
+      section_price_currency_dict[uid] = price_currency
     return price_currency
 
 analytic_title_dict = {None: ''}
@@ -590,15 +591,46 @@ def getAnalyticTitleFromUid(uid):
   try:
     return analytic_title_dict[uid]
   except KeyError:
-    node = getObject(uid)
-    title = node.getTranslatedTitle()
-    reference = node.getReference()
-    if reference:
-      title = '%s - %s' % (reference, title)
+    title = ''
+    brain_list = portal_catalog(uid=uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      node = brain.getObject()
+      title = node.getTranslatedTitle()
+      reference = node.getReference()
+      if reference:
+        title = '%s - %s' % (reference, title)
     analytic_title_dict[uid] = title
     return title
 
-TRANSLATED_NONE = Base_translateString('None')
+mirror_section_title_dict = {None: ''}
+def getMirrorSectionTitleFromUid(uid):
+  if uid is MARKER:
+    return ''
+  try:
+    return mirror_section_title_dict[uid]
+  except KeyError:
+    title = ''
+    brain_list = portal_catalog(uid=uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      title = brain.getObject().getTitle()
+      mirror_section_title_dict[uid] = title
+    return title
+
+payment_title_dict = {None: TRANSLATED_NONE}
+def getPaymentTitleFromUid(uid):
+  try:
+    return payment_title_dict[uid]
+  except KeyError:
+    title = ''
+    brain_list = portal_catalog(uid=uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      title = brain.getObject().getTitle()
+      payment_title_dict[uid] = title
+    return title
+
 line_list = []
 for key, data in line_per_account.iteritems():
   node_relative_url = key[0]
@@ -606,10 +638,9 @@ for key, data in line_per_account.iteritems():
   payment_uid = key[2]
   analytic_key_list = key[3:]
 
-  if expand_accounts and mirror_section_uid is not MARKER:
-    mirror_section_title = getObject(mirror_section_uid).getTitle()
-  else:
-    mirror_section_title = None
+  mirror_section_title = None
+  if expand_accounts:
+    mirror_section_title = getMirrorSectionTitleFromUid(mirror_section_uid)
 
   node_uid, node_title, node_id, node_string_index, node = getNodeTitleAndId(node_relative_url)
 
@@ -617,9 +648,7 @@ for key, data in line_per_account.iteritems():
     continue
 
   if payment_uid is not MARKER:
-    node_title += " (%s)" % (
-      TRANSLATED_NONE if payment_uid is None else getObject(payment_uid).getTitle(),
-    )
+    node_title += " (%s)" % getPaymentTitleFromUid(payment_uid)
 
   if not node_string_index:
     node_string_index = '%-10s' % node_id

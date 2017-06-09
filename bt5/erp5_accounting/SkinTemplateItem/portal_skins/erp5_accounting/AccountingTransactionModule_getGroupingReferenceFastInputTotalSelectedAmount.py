@@ -7,15 +7,14 @@ portal = context.getPortalObject()
 selection_name = \
   context.AccountingTransactionModule_viewGroupingFastInputDialog.listbox.get_value('selection_name')
 
-getobject = portal.portal_catalog.getobject
-
-selected_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)
 total_selected_amount = 0
 # calculate total selected amount
-for uid in selected_uid_list or []:
-  line = getobject(uid)
-  if line.AccountingTransaction_isSourceView():
-    total_selected_amount += (line.getSourceInventoriatedTotalAssetPrice() or 0)
-  else:
-    total_selected_amount += (line.getDestinationInventoriatedTotalAssetPrice() or 0)
+selected_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)
+if selected_uid_list:
+  for line in portal.portal_catalog(uid=selected_uid_list):
+    line = line.getObject()
+    if line.AccountingTransaction_isSourceView():
+      total_selected_amount += (line.getSourceInventoriatedTotalAssetPrice() or 0)
+    else:
+      total_selected_amount += (line.getDestinationInventoriatedTotalAssetPrice() or 0)
 return total_selected_amount

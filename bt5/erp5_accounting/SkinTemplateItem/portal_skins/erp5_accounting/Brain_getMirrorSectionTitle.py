@@ -4,9 +4,10 @@ try:
   return request.other[context.mirror_section_uid]
 except KeyError:
   if context.mirror_section_uid:
-    mirror_section = context.getPortalObject().portal_catalog.getobject(context.mirror_section_uid)
-    if mirror_section is not None:
-      mirror_section_title = mirror_section.getTitle()
-  
+    brain_list = context.getPortalObject().portal_catalog(uid=context.mirror_section_uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      mirror_section_title = brain.getObject().getTitle()
+
 request.other[context.mirror_section_uid] = mirror_section_title
 return mirror_section_title
