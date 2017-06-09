@@ -136,6 +136,8 @@ class DateTimeField(ZMIField):
       self.sub_form = create_datetime_text_sub_form()
     elif input_style == 'list':
       self.sub_form = create_datetime_list_sub_form()
+    elif input_style == 'number':
+      self.sub_form = create_datetime_number_sub_form()
     else:
       assert 0, "Unknown input_style '%s'" % input_style
 
@@ -147,6 +149,8 @@ class DateTimeField(ZMIField):
       year_field = self.sub_form.get_field('year', include_disabled=1)
       year_field.overrides['items'] = BoundMethod(self,
                                                   '_override_year_items')
+    elif value == 'number':
+      self.sub_form = create_datetime_number_sub_form()
     else:
       assert 0, "Unknown input_style."
     self.on_value_css_class_changed(self.values['css_class'])
@@ -296,6 +300,71 @@ def create_datetime_list_sub_form():
                         size = 1)
   sub_form.add_group("time")
 
+  sub_form.add_fields([hour, minute, ampm, timezone], "time")
+  return sub_form
+
+def create_datetime_number_sub_form():
+  sub_form = BasicForm()
+
+  year = IntegerField('year',
+                      title="Year",
+                      required=0,
+                      input_type='number',
+                      extra='min="0" max="9999"',
+                      display_width=4,
+                      display_maxwidth=4,
+                      max_length=4)
+
+  month = IntegerField('month',
+                        title="Month",
+                        required=0,
+                        input_type='number',
+                        extra='min="1" max="12"',
+                        display_width=2,
+                        display_maxwidth=2,
+                        max_length=2)
+
+  day = IntegerField('day',
+                      title="Day",
+                      required=0,
+                      input_type='number',
+                      extra='min="1" max="31"',
+                      display_width=2,
+                      display_maxwidth=2,
+                      max_length=2)
+  sub_form.add_group("date")
+  sub_form.add_fields([year, month, day], "date")
+
+  hour = IntegerField('hour',
+                      title="Hour",
+                      required=0,
+                      input_type='number',
+                      extra='min="0" max="23"',
+                      display_width=2,
+                      display_maxwidth=2,
+                      max_length=2)
+
+  minute = IntegerField('minute',
+                        title="Minute",
+                        required=0,
+                        input_type='number',
+                        extra='min="0" max="59"',
+                        display_width=2,
+                        display_maxwidth=2,
+                        max_length=2)
+
+  ampm = StringField('ampm',
+                      title="am/pm",
+                      required=0,
+                      display_width=2,
+                      display_maxwidth=2,
+                      max_length=2)
+  timezone = ListField('timezone',
+                        title = "Timezone",
+                        required = 0,
+                        default = 'GMT',
+                        items = Widget.gmt_timezones,
+                        size = 1)
   sub_form.add_fields([hour, minute, ampm, timezone], "time")
   return sub_form
 
