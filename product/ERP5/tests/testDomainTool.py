@@ -436,6 +436,8 @@ class TestDomainTool(TestPredicateMixIn):
     self.tic()
     # resource is not in preferred predicate category list, so only inner join is used
     assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
+    # we now cover all categories defined on order_line, so it uses inner-join only even if tested_base_category_list is not specified.
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1])
 
     # unknown base category ids cause an exception, so typos are detected
     self.assertRaises(
@@ -444,6 +446,14 @@ class TestDomainTool(TestPredicateMixIn):
       context=order_line,
       portal_type='Sale Supply Line',
       tested_base_category_list=['BOOO'],
+    )
+    # known Base Categories but for which context has no relation also raise.
+    self.assertRaises(
+      ValueError,
+      searchPredicateList,
+      context=order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['colour'],
     )
 
   def test_searchPredicateInvalidCategories(self):

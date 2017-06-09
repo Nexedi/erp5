@@ -33,7 +33,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ZSQLCatalog.SQLCatalog import SQLQuery, Query, SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 from zLOG import LOG
 from DateTime import DateTime
 
@@ -156,58 +156,62 @@ class DomainTool(BaseTool):
           for tested_base_category in tested_base_category_list:
             if portal_categories.get(tested_base_category) is None:
               raise ValueError('Unknown base category: %r' % (tested_base_category, ))
-            extend(getter(tested_base_category, base=1))
-        preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList()
-
-        if (preferred_predicate_category_list and
-            tested_base_category_list is not None and
-            set(preferred_predicate_category_list).issuperset(tested_base_category_list)):
-          # New behavior is enabled only if preferred predicate category is
-          # defined and tested_base_category_list is passed.
-          predicate_category_query_list = []
-          predicate_category_table_name_list = []
-          category_dict = {}
-          for relative_url in category_list:
-            category_value = portal_categories.getCategoryValue(relative_url)
-            base_category_id = portal_categories.getBaseCategoryId(relative_url)
-            base_category_value = portal_categories.getCategoryValue(base_category_id)
-            if not base_category_value in category_dict:
-              category_dict[base_category_value] = []
-            category_dict[base_category_value].append(category_value)
-
-          for base_category_value, category_value_list in category_dict.iteritems():
-            if base_category_value.getId() in preferred_predicate_category_list:
-              table_index = len(predicate_category_query_list)
-              predicate_category_table_name = 'predicate_category_for_domain_tool_%s' % table_index
-              table_alias_list = [('predicate_category', predicate_category_table_name)]
-              predicate_category_query_list.append(
-                  ComplexQuery(
-                      Query(predicate_category_base_category_uid=base_category_value.getUid(), table_alias_list=table_alias_list),
-                      Query(predicate_category_category_strict_membership=1, table_alias_list=table_alias_list),
-                      ComplexQuery(
-                          Query(predicate_category_category_uid=[category_value.getUid() for category_value in category_value_list], table_alias_list=table_alias_list),
-                          Query(predicate_category_category_uid='NULL', table_alias_list=table_alias_list),
-                          logical_operator='OR'),
-                      logical_operator='AND'))
-
-          if not predicate_category_query_list:
-            # Prevent matching everything
-            predicate_category_query_list.append(Query(predicate_category_base_category_uid=0))
-
-          predicate_category_query = ComplexQuery(
-              logical_operator='AND',
-              *predicate_category_query_list)
-          query_list.append(predicate_category_query)
+            tested_category_list = getter(tested_base_category, base=1)
+            if tested_category_list:
+              extend(tested_category_list)
+            else:
+              # Developer requested specific base categories, but context do not
+              # declare one of these. Skipping this criterion risks matching too
+              # many predicates, breaking the system performance-wise. So let
+              # developer know there is an unexpected situation by raising.
+              raise ValueError('%r does not have any %r relation' % (
+                context.getPath(),
+                tested_base_category,
+              ))
+        left_join_list = kw.get('left_join_list', [])[:]
+        inner_join_list = kw.get('inner_join_list', [])[:]
+        if category_list:
+          preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList([])
+          left_join_category_list = []
+          inner_join_category_list = []
+          for category in category_list:
+            if portal_categories.getBaseCategoryId(category) in preferred_predicate_category_list:
+              inner_join_category_list.append(category)
+            else:
+              left_join_category_list.append(category)
+          def onMissing(category):
+            # BBB: ValueError would seem more appropriate here, but original code
+            # was raising TypeError - and this is explicitely tested for.
+            raise TypeError('Unknown category: %r' % (category, ))
+          for join_category_list, join_list, predicate_has_no_condition_value in (
+            # Base category is part of preferred predicate categories, predicates
+            # which ignore it are indexed with category_uid=0.
+            (inner_join_category_list, inner_join_list, 0),
+            # Base category is not part of preferred predicate categories,
+            # predicates which ignore it get no predicate_category row inserted
+            # for it, so an SQL NULL appears, translating to None.
+            (left_join_category_list, left_join_list, None),
+          ):
+            category_parameter_kw = portal_catalog.getCategoryParameterDict(
+              join_category_list,
+              category_table='predicate_category',
+              onMissing=onMissing,
+            )
+            for relation, uid_set in category_parameter_kw.iteritems():
+              join_list.append(relation)
+              uid_set.add(predicate_has_no_condition_value)
+            kw.update(category_parameter_kw)
         else:
-          # Traditional behavior
-          category_expression_dict = portal_categories.buildAdvancedSQLSelector(
-                                             category_list or ['NULL'],
-                                             query_table='predicate_category',
-                                             none_sql_value=0,
-          )
-          kw['where_expression'] = SQLQuery(category_expression_dict['where_expression'])
-          kw['from_expression'] = category_expression_dict['from_expression']
-
+          # No category to match against, so predicates expecting any relation
+          # would not apply, so we can exclude these.
+          # Note: this relies on a special indexation mechanism for predicate
+          # categories, which inserts a base_category_uid=0 line when indexed
+          # predicate membership_criterion_category_list is empty.
+          base_category_uid_column = 'predicate_category.base_category_uid'
+          kw[base_category_uid_column] = 0
+          inner_join_list.append(base_category_uid_column)
+        kw['left_join_list'] = left_join_list
+        kw['inner_join_list'] = inner_join_list
       if query_list:
         kw['query'] = ComplexQuery(logical_operator='AND', *query_list)
 

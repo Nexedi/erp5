@@ -22,9 +22,6 @@
  <key>parent_relative_url | catalog/relative_url/z_related_parent</key>
  <key>parent_string_index | catalog/string_index/z_related_parent</key>
  <key>parent_title | catalog/title/z_related_parent</key>
- <key>predicate_category_base_category_uid | predicate_category/base_category_uid/z_related_predicate_category</key>
- <key>predicate_category_category_strict_membership | predicate_category/category_strict_membership/z_related_predicate_category</key>
- <key>predicate_category_category_uid | predicate_category/category_uid/z_related_predicate_category</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
  <key>related_resource_from_use_category_uid | category,category/category_uid/z_related_resource_from_use</key>
  <key>resourceType | catalog/portal_type/z_related_resource_uid_from_stock</key>
