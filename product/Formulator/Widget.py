@@ -1376,7 +1376,8 @@ class DateTimeWidget(Widget):
       "as text, while 'list' will use dropdown lists instead."),
                                   default="text",
                                   items=[("text", "text"),
-                                        ("list", "list")],
+                                        ("list", "list"),
+                                        ("number", "number")],
                                   size=1)
 
   default_timezone = fields.ListField('default_timezone',
