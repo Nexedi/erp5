@@ -147,134 +147,76 @@ class TestDomainTool(TestPredicateMixIn):
     self.tic()
 
   def checkPredicate(self, test=None):
-
     predicate = self.getPredicate()
-    #predicate.setMembershipCriterionBaseCategoryList([])
-    #predicate.setMembershipCriterionCategoryList([])
-    #predicate.setCriterion('quantity',identity=45,min=None,max=None)
-    #predicate.immediateReindexObject()
-
-
     order_line = self.getOrderLine()
-    domain_tool = self.getDomainTool()
+    searchPredicateList = self.getDomainTool().searchPredicateList
+    def assertPredicateItemsMatchingOrderLineEqual(expected, **kw):
+      self.tic()
+      self.assertItemsEqual(
+        expected,
+        searchPredicateList(order_line, test=test, **kw),
+      )
 
     # Test with order line and predicate to none
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,
-        portal_type=self.portal_type_query)
-    self.assertEqual(len(predicate_list),1) # Actually, a predicate where
-                                             # nothing is defined is ok
-
+    # Actually, a predicate where nothing is defined is ok
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type=self.portal_type_query)
     # Test with order line not none and predicate to none
     order_line.setQuantity(45)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,
-        portal_type=self.portal_type_query)
-    self.assertEqual(len(predicate_list),1)
-
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type=self.portal_type_query)
     # Test with order line not none and predicate to identity
     order_line.setQuantity(45)
-    kw = {'portal_type':'Mapped Value'}
-    predicate.setCriterion('quantity',identity=45,min=None,max=None)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),1)
-
+    predicate.setCriterion('quantity', identity=45, min=None, max=None)
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type='Mapped Value')
     order_line.setQuantity(40)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     # Test with order line not none and predicate to min
     order_line.setQuantity(45)
-    predicate = self.getPredicate()
-    predicate.setCriterion('quantity',identity=None,min=30,max=None)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),1)
-
+    predicate.setCriterion('quantity', identity=None, min=30, max=None)
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type='Mapped Value')
     order_line.setQuantity(10)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,
-        portal_type=self.portal_type_query)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type=self.portal_type_query) # XXX: mistake in the test ?
     # Test with order line not none and predicate to max
     order_line.setQuantity(45)
-    predicate = self.getPredicate()
-    predicate.setCriterion('quantity',identity=None,min=None,max=50)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),1)
-
+    predicate.setCriterion('quantity', identity=None, min=None, max=50)
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type='Mapped Value')
     order_line.setQuantity(60)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     # Test with order line not none and predicate to min max
     order_line.setQuantity(20)
-    predicate = self.getPredicate()
-    predicate.setCriterion('quantity',identity=None,min=30,max=50)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    predicate.setCriterion('quantity', identity=None, min=30, max=50)
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     order_line.setQuantity(60)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     order_line.setQuantity(45)
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.tic()
-    self.assertEqual(len(predicate_list),1)
-
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type='Mapped Value')
     # Test with order line not none and predicate to min max
     # and also predicate to a category
     predicate.setMembershipCriterionBaseCategoryList(['region'])
     predicate.setMembershipCriterionCategoryList(['region/europe'])
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     order_line.setCategoryList(['region/africa'])
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     order_line.setCategoryList(['region/europe'])
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),1)
-
+    assertPredicateItemsMatchingOrderLineEqual([predicate], portal_type='Mapped Value')
     order_line.setQuantity(60)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Mapped Value')
     # Test with order line not none and predicate to date min and date max
-    kw = {'portal_type':'Supply Line'}
     self.supply_line.setBasePrice(23)
     self.supply_line.setPricedQuantity(1)
     self.supply_line.setDefaultResourceValue(self.resource)
     order_line.setDefaultResourceValue(self.resource)
-    self.assertEqual(self.supply_line.getDefaultResourceValue(),self.resource)
-    self.assertEqual(order_line.getDefaultResourceValue(),self.resource)
+    self.assertEqual(self.supply_line.getDefaultResourceValue(), self.resource)
+    self.assertEqual(order_line.getDefaultResourceValue(), self.resource)
     date1 = DateTime('2005/04/08 10:47:26.388 GMT-4')
     date2 = DateTime('2005/04/10 10:47:26.388 GMT-4')
     self.supply_line.setStartDateRangeMin(date1)
     self.supply_line.setStartDateRangeMax(date2)
     current_date = DateTime('2005/04/1 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),0)
-
+    assertPredicateItemsMatchingOrderLineEqual([], portal_type='Supply Line')
     current_date = DateTime('2005/04/09 10:47:26.388 GMT-4')
     order_line.setStartDate(current_date)
-    self.tic()
-    predicate_list = domain_tool.searchPredicateList(order_line,test=test,**kw)
-    self.assertEqual(len(predicate_list),1)
+    assertPredicateItemsMatchingOrderLineEqual([self.supply_line], portal_type='Supply Line')
 
   def test_01_SearchPredidateListWithNoTest(self):
     self.createData()
@@ -418,239 +360,82 @@ class TestDomainTool(TestPredicateMixIn):
     self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, portal_type=self.portal_type_query, test=0))
 
   def test_07_NonLeftJoinModeOfSearchPredicateList(self):
+    searchPredicateList = self.portal.portal_domains.searchPredicateList
     # Add system preference
     system_preference = self.portal.portal_preferences.newContent(portal_type='System Preference')
-    system_preference.setPreferredPredicateCategoryList(
-      ['source_section', 'destination_section', 'price_currency'])
-
-    self.tic()
-
+    system_preference.setPreferredPredicateCategoryList(['source_section', 'destination_section', 'price_currency'])
     # Add sample data
-    jpy = self.portal.currency_module.newContent(portal_type='Currency',
-                                                 title='JPY',
-                                                 reference='JPY')
+    jpy = self.portal.currency_module.newContent(portal_type='Currency', title='JPY', reference='JPY')
     jpy.validate()
-
-    euro = self.portal.currency_module.newContent(portal_type='Currency',
-                                                 title='EURO',
-                                                 reference='EUR')
+    euro = self.portal.currency_module.newContent(portal_type='Currency', title='EURO', reference='EUR')
     euro.validate()
-
-    organisation_module = self.portal.organisation_module
-    company= organisation_module.newContent(portal_type='Organisation',
-                                            title='Company')
-    shop = organisation_module.newContent(portal_type='Organisation',
-                                          title='Shop')
-    supplier = organisation_module.newContent(portal_type='Organisation',
-                                              title='Supplier')
-
+    newOrganisation = self.portal.organisation_module.newContent
+    company= newOrganisation(portal_type='Organisation', title='Company')
+    shop = newOrganisation(portal_type='Organisation', title='Shop')
+    supplier = newOrganisation(portal_type='Organisation', title='Supplier')
     product_module = self.portal.product_module
-    product1 = product_module.newContent(portal_type='Product',
-                                         title='Product1')
-    product2 = product_module.newContent(portal_type='Product',
-                                         title='Product2')
-
+    product1 = product_module.newContent(portal_type='Product', title='Product1')
+    product2 = product_module.newContent(portal_type='Product', title='Product2')
     supply_module = self.portal.sale_supply_module
-    supply1 = supply_module.newContent(portal_type='Sale Supply',
-                                       title='Supply1',
-                                       source_section_value=supplier,
-                                       destination_section_value=shop,
-                                       price_currency_value=jpy)
+    supply1 = supply_module.newContent(portal_type='Sale Supply', title='Supply1', source_section_value=supplier, destination_section_value=shop, price_currency_value=jpy)
     supply1.validate()
-    supply1.newContent(portal_type='Sale Supply Line',
-                       resource_value=product1)
-    supply1.newContent(portal_type='Sale Supply Line',
-                       resource_value=product2)
-    supply2 = supply_module.newContent(portal_type='Sale Supply',
-                                       title='Supply2',
-                                       source_section_value=supplier,
-                                       destination_section_value=company,
-                                       price_currency_value=jpy)
+    supply1_line1 = supply1.newContent(portal_type='Sale Supply Line', resource_value=product1)
+    supply1_line2 = supply1.newContent(portal_type='Sale Supply Line', resource_value=product2)
+    supply2 = supply_module.newContent(portal_type='Sale Supply', title='Supply2', source_section_value=supplier, destination_section_value=company, price_currency_value=jpy)
     supply2.validate()
-    supply2.newContent(portal_type='Sale Supply Line',
-                       resource_value=product2)
-    supply3 = supply_module.newContent(portal_type='Sale Supply',
-                                       title='Supply3',
-                                       source_section_value=supplier,
-                                       price_currency_value=euro)
+    supply2_line1 = supply2.newContent(portal_type='Sale Supply Line', resource_value=product2)
+    supply3 = supply_module.newContent(portal_type='Sale Supply', title='Supply3', source_section_value=supplier, price_currency_value=euro)
     supply3.validate()
-    supply3.newContent(portal_type='Sale Supply Line',
-                       resource_value=product1)
-
+    supply3_line1 = supply3.newContent(portal_type='Sale Supply Line', resource_value=product1)
     order = self.portal.sale_order_module.newContent(
       portal_type='Sale Order',
       source_section_value=supplier,
       destination_section_value=shop,
       price_currency_value=jpy)
-    order_line = order.newContent(portal_type='Sale Order Line',
-                                  resource_value=product1)
-
+    order_line = order.newContent(
+      portal_type='Sale Order Line',
+      resource_value=product1,
+    )
     self.tic()
 
-    # Test
-    # Check traditional left join mode
-    domain_tool = self.portal.portal_domains
-    searchPredicateList = domain_tool.searchPredicateList
-    self.assertEqual(len(
-      searchPredicateList(order_line,
-                          portal_type='Sale Supply Line')),
-                     1)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section'])),
-                     4)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency'],
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section'])),
-                     3)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section'],
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency'])),
-                     2)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency'],
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency', 'resource'])),
-                     1)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency', 'resource'],
-      src__=1))
-    # if wrong base categories are passed, then nothing is matched
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['WAAA', 'BOOO'])),
-                     0)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['WAAA', 'BOOO'],
-      src__=1))
+    def assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(uses_left_join, expected, **kw):
+      kw['context'] = order_line
+      kw['portal_type'] = 'Sale Supply Line'
+      src = searchPredicateList(src__=1, **kw)
+      if uses_left_join:
+        self.assertIn('LEFT JOIN', src)
+      else:
+        self.assertNotIn('LEFT JOIN', src)
+      self.assertItemsEqual(expected, searchPredicateList(**kw))
 
-    # Check non-left join mode
-    # Enable system preference and reindex all
+    # Check left join mode
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1, supply1_line2, supply2_line1, supply3_line1], tested_base_category_list=['source_section'])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1, supply1_line2, supply3_line1], tested_base_category_list=['source_section', 'destination_section'])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1, supply1_line2], tested_base_category_list=['source_section', 'destination_section', 'price_currency'])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
+
+    # Check inner-join mode
+    # Enable system preference and reindex relevant predicates
     system_preference.enable()
     self.tic()
-    self.portal.ERP5Site_reindexAll()
+    supply_module.Folder_reindexAll()
     self.tic()
-
-    # if tested_base_category_list is not passed, then left join mode is
-    # still used.
-    self.assertEqual(len(
-      searchPredicateList(order_line,
-                          portal_type='Sale Supply Line')),
-                     1)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      src__=1))
-
-
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section'])),
-                     4)
-    self.assert_(not 'LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency'],
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section'])),
-                     3)
-    self.assert_(not 'LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section'],
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency'])),
-                     2)
-    self.assert_(not 'LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency'],
-      src__=1))
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency', 'resource'])),
-                     1)
-    # resource is not in preferred predicate category list, so left join
-    # is used
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['source_section', 'destination_section',
-                                 'price_currency', 'resource'],
-      src__=1))
-    # if wrong base categories are passed, then nothing is matched
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['WAAA', 'BOOO'])),
-                     0)
-    self.assert_('LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['WAAA', 'BOOO'],
-      src__=1))
-    # add WAAA and BOOO to preference, this enables non-left join mode
-    system_preference.setPreferredPredicateCategoryList(
-      ['source_section', 'destination_section', 'price_currency',
-       'WAAA', 'BOOO'])
+    # if document has relations using base categories which are not present in the preference, then left join mode is still used.
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1, supply1_line2, supply2_line1, supply3_line1], tested_base_category_list=['source_section'])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1, supply1_line2, supply3_line1], tested_base_category_list=['source_section', 'destination_section'])
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1, supply1_line2], tested_base_category_list=['source_section', 'destination_section', 'price_currency'])
+    # resource is not in preferred predicate category list, so left join is used
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(True, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
+    # add resource to preference, this enables non-left join mode
+    system_preference.setPreferredPredicateCategoryList(['source_section', 'destination_section', 'price_currency', 'resource'])
     self.portal.portal_caches.clearAllCache()
     self.tic()
-    self.portal.ERP5Site_reindexAll()
+    supply_module.Folder_reindexAll()
     self.tic()
-    self.assertEqual(len(searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['WAAA', 'BOOO'])),
-                     0)
-    self.assert_(not 'LEFT JOIN' in searchPredicateList(
-      order_line,
-      portal_type='Sale Supply Line',
-      tested_base_category_list=['WAAA', 'BOOO'],
-      src__=1))
+    # resource is not in preferred predicate category list, so only inner join is used
+    assertUsesLeftJoinAndPredicateItemsMatchingOrderLineEqual(False, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
 
   def test_searchPredicateInvalidCategories(self):
     predicate = self.portal.sale_supply_module.newContent(
