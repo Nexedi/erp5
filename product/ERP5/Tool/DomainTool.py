@@ -157,23 +157,22 @@ class DomainTool(BaseTool):
 
             query_list.append(query)
 
-      # Add category selection
-      if tested_base_category_list is None:
-        if acquired:
-          category_list = context.getAcquiredCategoryList()
-        else:
-          category_list = context.getCategoryList()
-      else:
-        if acquired:
-          getter = context.getAcquiredCategoryMembershipList
-        else:
-          getter = context.getCategoryMembershipList
-        category_list = []
-        extend = category_list.extend
-        for tested_base_category in tested_base_category_list:
-          extend(getter(tested_base_category, base=1))
-
       if tested_base_category_list != []:
+        # Add category selection
+        if tested_base_category_list is None:
+          if acquired:
+            category_list = context.getAcquiredCategoryList()
+          else:
+            category_list = context.getCategoryList()
+        else:
+          if acquired:
+            getter = context.getAcquiredCategoryMembershipList
+          else:
+            getter = context.getCategoryMembershipList
+          category_list = []
+          extend = category_list.extend
+          for tested_base_category in tested_base_category_list:
+            extend(getter(tested_base_category, base=1))
         preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList()
 
         if (preferred_predicate_category_list and
