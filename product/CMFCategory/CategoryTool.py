@@ -1347,6 +1347,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # Base Category may not be related, besides sub categories
       relative_url = context.getRelativeUrl()
       local_index_dict = {}
+      is_any_base_category = False
       if isinstance(context, BaseCategory):
         category_list = relative_url,
       else:
@@ -1355,15 +1356,34 @@ class CategoryTool( UniqueObject, Folder, Base ):
           base_category_list = base_category_list,
         elif base_category_list is () or base_category_list is None:
           base_category_list = self.getBaseCategoryList()
+          is_any_base_category = True
         for base_category in base_category_list:
           if self[base_category].isRelatedLocallyIndexed():
             category = base_category + '/'
             local_index_dict[base_category] = '' \
               if relative_url.startswith(category) else category
-          else:
+          elif not is_any_base_category:
+            # If base_category_list contains all base categories, and the
+            # relation is not locally indexed, then just do not apply any
+            # relational condition. This assumes relation membership
+            # conditions would not exclude any document, iow there are no
+            # indexed relation which has a non-existing base category.
             category_list.append("%s/%s" % (base_category, relative_url))
 
-      search = self.getPortalObject().Base_zSearchRelatedObjectsByCategoryList
+      portal_catalog = context.getPortalObject().portal_catalog
+      def search(category_list, portal_type, strict_membership):
+        catalog_kw = portal_catalog.getCategoryParameterDict(
+          category_list=category_list,
+          strict_membership=strict_membership,
+        )
+        inner_join_list = catalog_kw.keys()
+        if portal_type is not None:
+          catalog_kw['portal_type'] = portal_type
+        return portal_catalog.unrestrictedSearchResults(
+          select_list=['relative_url', 'portal_type'],
+          inner_join_list=inner_join_list,
+          **catalog_kw
+        )
       result_dict = {}
       if local_index_dict:
         # For some base categories, lookup indexes in ZODB.
@@ -1399,7 +1419,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             # Update local index with results from catalog for backward
             # compatibility. But no need to do it several times in the same
             # transaction.
-            for r in search(category_list=category,
+            for r in search(category_list=[category],
                             portal_type=None,
                             strict_membership=strict_membership):
               r = r.relative_url
@@ -1459,10 +1479,23 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         # Catalog-only search.
         result = []
-      if category_list:
-        for r in search(category_list=category_list,
+      if category_list or is_any_base_category:
+        if is_any_base_category:
+          catalog_kw = {
+            ('strict__' if strict_membership else '') +
+            'any__uid': context.getUid(),
+          }
+          if portal_type is not None:
+            catalog_kw['portal_type'] = portal_type
+          from_catalog_result_list = portal_catalog.unrestrictedSearchResults(
+            select_list=['relative_url', 'portal_type'],
+            **catalog_kw
+          )
+        else:
+          from_catalog_result_list = search(category_list=category_list,
                         portal_type=portal_type,
-                        strict_membership=strict_membership):
+                        strict_membership=strict_membership)
+        for r in from_catalog_result_list:
           if r.relative_url not in result_dict:
             try:
               result.append(self.unrestrictedTraverse(r.path))
