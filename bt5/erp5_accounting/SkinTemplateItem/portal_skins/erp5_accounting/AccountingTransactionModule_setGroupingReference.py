@@ -3,7 +3,6 @@ Used as a fast input dialog action.
 """
 from Products.CMFCore.WorkflowCore import WorkflowException
 portal = context.getPortalObject()
-getobject = portal.portal_catalog.getobject
 Base_translateString = portal.Base_translateString
 psm = Base_translateString('Nothing matches.')
 request = container.REQUEST
@@ -34,8 +33,8 @@ portal.portal_selections.setSelectionParamsFor(
 # calculate total selected amount 
 total_selected_amount = 0
 if uids:
-  for uid in uids:
-    line = getobject(uid)
+  for line in portal.portal_catalog(uid=uids):
+    line = line.getObject()
     if line.AccountingTransaction_isSourceView(): # XXX not optimal !
       total_selected_amount += (line.getSourceInventoriatedTotalAssetPrice() or 0)
     else:
@@ -108,9 +107,11 @@ if grouping == 'grouping':
 else:
   assert grouping == 'ungrouping'
   # XXX is uids multi page safe here ?
-  line_list = [getobject(line_uid) for line_uid in uids]
-  ungrouped_line_list = []
+  line_list = []
+  if uids:
+    line_list = [brain.getObject() for brain in portal.portal_catalog(uid=uids)]
 
+  ungrouped_line_list = []
   for line in line_list:
     if line.getGroupingReference():
       ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference())

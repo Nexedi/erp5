@@ -2,14 +2,13 @@ from Products.ERP5Type.Message import translateString
 from zExceptions import Redirect
 portal = context.getPortalObject()
 stool = portal.portal_selections
-getObject = portal.portal_catalog.getObject
 countMessage = portal.portal_activities.countMessage
 
 stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)
 selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(
                                                        selection_name)
 if selection_uid_list:
-  object_list = [getObject(uid) for uid in selection_uid_list]
+  object_list = [brain.getObject() for brain in portal.portal_catalog(uid=selection_uid_list)]
 else:
   object_list = stool.callSelectionFor(selection_name)
 

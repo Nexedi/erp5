@@ -26,13 +26,17 @@ def getAccountNumber(account_url):
       portal.restrictedTraverse(account_url).Account_getGapId()
   return account_number_memo[account_url]
 
-section_title_memo = {}
+section_title_memo = {None: ''}
 def getSectionTitle(uid):
   try:
     return section_title_memo[uid]
   except KeyError:
-    section_title_memo[uid] =\
-      portal.portal_catalog.getObject(uid).getTranslatedTitle()
+    section_title = ''
+    brain_list = portal.portal_catalog(uid=uid, limit=2)
+    if brain_list:
+      brain, = brain_list
+      section_title = brain.getObject().getTranslatedTitle()
+    section_title_memo[uid] = section_title
   return section_title_memo[uid]
 
 last_period_id = 'period_%s' % len(period_list)
