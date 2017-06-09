@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_fast_input</string>
+                <string>action_type/object_fast_input_jio</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_fast_input</string> </value>
+            <value> <string>object_fast_input_jio</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
