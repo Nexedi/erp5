@@ -65,12 +65,8 @@ class DomainTool(BaseTool):
                              ignored_category_list=None,
                              tested_base_category_list=None,
                              filter_method=None, acquired=1,
-                             strict=True, sort_key_method=None, query=None,
+                             sort_key_method=None, query=None,
                              restricted=False, **kw):
-      # XXX: about "strict" parameter: This is a transition parameter,
-      # allowing someone hitting a bug to revert to original behaviour easily.
-      # It is not a correct name, as pointed out by Jerome. But instead of
-      # searching for another name, it would be much better to just remove it.
       """
       Search all predicates which corresponds to this particular
       context.
@@ -92,22 +88,9 @@ class DomainTool(BaseTool):
 
       - the acquired parameter allows to define if we want to use
         acquisition for categories. By default we want.
-
-      - strict: if True, generate SQL which will match predicates matching
-        all those categories at the same time, except for categories they do
-        not check at all. Example:
-          Predicate_1 checks foo/bar
-          Predicate_2 checks foo/baz region/somewhere
-          Predicate_3 checks foo/bar region/somewhere
-          When called with category list ['foo/bar', 'region/somewhere'] and
-          strict parameter to True, it will return [Predicate_1, Predicate_3].
-          With strict to False or by not giving a category list, it would also
-          return Predicate_2, because it matches on one criterion out of the 2
-          it checks.
-        Note that it changes the value returned by this function if it was
-        invoked with "test=False" value. Otherwise, it should only change
-        execution duration.
       """
+      if not kw.pop('strict', True):
+        raise ValueError('"strict" mode cannot be disabled anymore')
       portal = self.getPortalObject()
       portal_catalog = portal.portal_catalog
       portal_categories = portal.portal_categories
@@ -221,16 +204,9 @@ class DomainTool(BaseTool):
                                              category_list or ['NULL'],
                                              query_table='predicate_category',
                                              none_sql_value=0,
-                                             strict=strict)
-          where_expression = category_expression_dict['where_expression']
-          if where_expression:
-            kw['where_expression'] = SQLQuery(where_expression)
-
-          if 'from_expression' in category_expression_dict:
-            kw['from_expression'] = category_expression_dict['from_expression']
-          else:
-            # Add predicate_category.uid for automatic join
-            kw['predicate_category.uid'] = '!=NULL'
+          )
+          kw['where_expression'] = SQLQuery(category_expression_dict['where_expression'])
+          kw['from_expression'] = category_expression_dict['from_expression']
 
       if query_list:
         kw['query'] = ComplexQuery(logical_operator='AND', *query_list)
