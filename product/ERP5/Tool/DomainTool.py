@@ -33,7 +33,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ZSQLCatalog.SQLCatalog import SQLQuery, Query, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import SQLQuery, Query, SimpleQuery, ComplexQuery
 from zLOG import LOG
 from DateTime import DateTime
 
@@ -128,32 +128,32 @@ class DomainTool(BaseTool):
             value = context.getProperty(property_name)
 
             query = ComplexQuery(
-                Query(**{equality: None}),
-                Query(**{range_min: None}),
-                Query(**{range_max: None}),
+                SimpleQuery(**{equality: None}),
+                SimpleQuery(**{range_min: None}),
+                SimpleQuery(**{range_max: None}),
                 logical_operator='AND')
 
             if value is not None:
               query = ComplexQuery(
-                  query,
-                  ComplexQuery(
-                    Query(**{equality: value}),
-                    ComplexQuery(
-                      ComplexQuery(
-                        Query(**{range_min: {'query': value, 'range': 'ngt'}}),
-                        Query(**{range_max: None}),
-                        logical_operator='AND'),
-                      ComplexQuery(
-                        Query(**{range_min: None}),
-                        Query(**{range_max: {'query': value, 'range': 'min'}}),
-                        logical_operator='AND'),
-                      ComplexQuery(
-                        Query(**{range_min: {'query': value, 'range': 'ngt'}}),
-                        Query(**{range_max: {'query': value, 'range': 'min'}}),
-                        logical_operator='AND'),
-                      logical_operator='OR'),
-                    logical_operator='OR'),
-                  logical_operator='OR')
+                query,
+                SimpleQuery(**{equality: value}),
+                ComplexQuery(
+                  SimpleQuery(comparison_operator='<=', **{range_min: value}),
+                  SimpleQuery(**{range_max: None}),
+                  logical_operator='AND',
+                ),
+                ComplexQuery(
+                  SimpleQuery(**{range_min: None}),
+                  SimpleQuery(comparison_operator='>=', **{range_max: value}),
+                  logical_operator='AND',
+                ),
+                ComplexQuery(
+                  SimpleQuery(comparison_operator='<=', **{range_min: value}),
+                  SimpleQuery(comparison_operator='>=', **{range_max: value}),
+                  logical_operator='AND',
+                ),
+                logical_operator='OR',
+              )
 
             query_list.append(query)
 
