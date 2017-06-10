@@ -19,7 +19,7 @@ table_3</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_related_resource_use</string> </value>
+            <value> <string>z_related_resource_related_use</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
