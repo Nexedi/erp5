@@ -1364,10 +1364,10 @@ class CategoryTool( UniqueObject, Folder, Base ):
             category_list.append("%s/%s" % (base_category, relative_url))
 
       search = self.getPortalObject().Base_zSearchRelatedObjectsByCategoryList
+      result_dict = {}
       if local_index_dict:
         # For some base categories, lookup indexes in ZODB.
         recurse = isinstance(context, Category) and not strict_membership
-        result_dict = {}
         def check_local():
           r = set(getattr(related, base_category, ()))
           r.difference_update(result_dict)
@@ -1456,26 +1456,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
           not portal_type or ob.getPortalType() in portal_type)]
         # Finish with base categories that are only indexed in catalog,
         # making sure we don't return duplicate values.
-        if category_list:
-          for r in search(category_list=category_list,
-                          portal_type=portal_type,
-                          strict_membership=strict_membership):
-            if r.relative_url not in result_dict:
-              try:
-                result.append(self.unrestrictedTraverse(r.path))
-              except KeyError:
-                pass
-
       else:
         # Catalog-only search.
         result = []
+      if category_list:
         for r in search(category_list=category_list,
                         portal_type=portal_type,
                         strict_membership=strict_membership):
-          try:
-            result.append(self.unrestrictedTraverse(r.path))
-          except KeyError:
-            pass
+          if r.relative_url not in result_dict:
+            try:
+              result.append(self.unrestrictedTraverse(r.path))
+            except KeyError:
+              pass
 
       if checked_permission is None:
         return result
