@@ -955,6 +955,15 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       strict_ related keys only returns documents which are strictly member of
       the category.
+
+      Syntax:
+        [default_][strict_][parent_]<base category id>[related_]<column id>
+      "default_": No effect, useful to avoid static related keys, which would shadow desired dynamic related key.
+      "strict_": Match only strict relation members, otherwise match non-strict too.
+      "parent_": Search for documents whose parent have described relation, otherwise search for their immediate relations.
+      <base_category_id>: The id of an existing Base Category document.
+      "related_": Search for reverse relationships, otherwise search for direct relationships.
+      <column_id>: The name of the column to compare values against.
       """
       related_key_list = []
       base_cat_id_set = set(
