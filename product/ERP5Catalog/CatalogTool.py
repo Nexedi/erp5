@@ -1008,6 +1008,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
                 expected_base_cat_id +
                 (RELATED_DYNAMIC_METHOD_NAME if related else '')
               )
+              break
 
       return related_key_list
 
