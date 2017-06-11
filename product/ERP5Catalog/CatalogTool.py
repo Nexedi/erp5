@@ -65,6 +65,7 @@ RELATED_DYNAMIC_METHOD_NAME = '_related'
 # Negative as it's used as a slice end offset
 RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
 ZOPE_SECURITY_SUFFIX = '__roles__'
+IGNORE_BASE_CATEGORY_UID = 'any'
 
 SECURITY_QUERY_ARGUMENT_NAME = 'ERP5Catalog_security_query'
 
@@ -265,8 +266,12 @@ class RelatedBaseCategory(Method):
     """
     def __init__(self, id, strict_membership=0, related=0, query_table_column='uid'):
       self._id = id
+      if self._id == IGNORE_BASE_CATEGORY_UID:
+        base_category_sql = ''
+      else:
+        base_category_sql = "%(category_table)s.base_category_uid = %(base_category_uid)s AND\n"
       if strict_membership:
-        strict = 'AND %(category_table)s.category_strict_membership = 1\n'
+        strict = '%(category_table)s.category_strict_membership = 1 AND\n'
       else:
         strict = ''
       # From the point of view of query_table, we are looking up objects...
@@ -283,18 +288,18 @@ class RelatedBaseCategory(Method):
         # category table's category_uid = foreign_table's uid
         foreign_side = 'category_uid'
       self._template = """\
-%%(category_table)s.base_category_uid = %%(base_category_uid)s
-%(strict)sAND %%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
+%(base_category)s%(strict)s%%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
 %%(RELATED_QUERY_SEPARATOR)s
 %%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
+          'base_category': base_category_sql,
           'strict': strict,
           'foreign_side': foreign_side,
           'query_table_side': query_table_side,
           'query_table_column': query_table_column
       }
       self._monotable_template = """\
-%%(category_table)s.base_category_uid = %%(base_category_uid)s
-%(strict)sAND %%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
+%(base_category)s%(strict)s%%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
+          'base_category': base_category_sql,
           'strict': strict,
           'query_table_side': query_table_side,
           'query_table_column': query_table_column,
@@ -303,18 +308,20 @@ class RelatedBaseCategory(Method):
     def __call__(self, instance, table_0, table_1=None, query_table='catalog',
         RELATED_QUERY_SEPARATOR=' AND ', **kw):
       """Create the sql code for this related key."""
-      # Note: in normal conditions, our category's uid will not change from
-      # one invocation to the next.
-      return (
-        self._monotable_template if table_1 is None else self._template
-      ) % {
-        'base_category_uid': instance.getPortalObject().portal_categories.\
-          _getOb(self._id).getUid(),
+      format_dict = {
         'query_table': query_table,
         'category_table': table_0,
         'foreign_catalog': table_1,
         'RELATED_QUERY_SEPARATOR': RELATED_QUERY_SEPARATOR,
       }
+      if self._id != IGNORE_BASE_CATEGORY_UID:
+        # Note: in normal conditions, our category's uid will not change from
+        # one invocation to the next.
+        format_dict['base_category_uid'] = instance.getPortalObject().portal_categories.\
+          _getOb(self._id).getUid()
+      return (
+        self._monotable_template if table_1 is None else self._template
+      ) % format_dict
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     """
@@ -961,7 +968,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       "default_": No effect, useful to avoid static related keys, which would shadow desired dynamic related key.
       "strict_": Match only strict relation members, otherwise match non-strict too.
       "parent_": Search for documents whose parent have described relation, otherwise search for their immediate relations.
-      <base_category_id>: The id of an existing Base Category document.
+      <base_category_id>: The id of an existing Base Category document, or "any" to not restrict by relation type.
       "related_": Search for reverse relationships, otherwise search for direct relationships.
       <column_id>: The name of the column to compare values against.
       """
@@ -993,7 +1000,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         split_key = key.split('_')
         for i in xrange(len(split_key) - 1, 0, -1):
           expected_base_cat_id = '_'.join(split_key[0:i])
-          if expected_base_cat_id in base_cat_id_set:
+          if expected_base_cat_id in base_cat_id_set or (
+            i == len(split_key) - 1 and expected_base_cat_id == IGNORE_BASE_CATEGORY_UID
+          ):
             # We have found a base_category
             end_key = '_'.join(split_key[i:])
             related = end_key.startswith(related_string)
