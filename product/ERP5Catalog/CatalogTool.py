@@ -266,14 +266,14 @@ class RelatedBaseCategory(Method):
     """
     def __init__(self, id, strict_membership=0, related=0, query_table_column='uid'):
       self._id = id
-      if strict_membership:
-        strict = 'AND %(category_table)s.category_strict_membership = 1\n'
-      else:
-        strict = ''
       if self._id == 'all':
         base_category_sql = ''
       else:
-        base_category_sql = "%(category_table)s.base_category_uid = %(base_category_uid)s\n"
+        base_category_sql = "%(category_table)s.base_category_uid = %(base_category_uid)s AND\n"
+      if strict_membership:
+        strict = '%(category_table)s.category_strict_membership = 1 AND\n'
+      else:
+        strict = ''
       # From the point of view of query_table, we are looking up objects...
       if related:
         # ... which have a relation toward us
@@ -288,7 +288,7 @@ class RelatedBaseCategory(Method):
         # category table's category_uid = foreign_table's uid
         foreign_side = 'category_uid'
       self._template = """\
-%(base_category)s%(strict)sAND %%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
+%(base_category)s%(strict)s%%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
 %%(RELATED_QUERY_SEPARATOR)s
 %%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
           'base_category': base_category_sql,
@@ -298,7 +298,7 @@ class RelatedBaseCategory(Method):
           'query_table_column': query_table_column
       }
       self._monotable_template = """\
-%(base_category)s%(strict)sAND %%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
+%(base_category)s%(strict)s%%(category_table)s.%(query_table_side)s = %%(query_table)s.%(query_table_column)s""" % {
           'base_category': base_category_sql,
           'strict': strict,
           'query_table_side': query_table_side,
@@ -318,7 +318,7 @@ class RelatedBaseCategory(Method):
         # Note: in normal conditions, our category's uid will not change from
         # one invocation to the next.
         format_dict['base_category_uid'] = instance.getPortalObject().portal_categories.\
-          _getOb(self._id).getUid(),
+          _getOb(self._id).getUid()
       return (
         self._monotable_template if table_1 is None else self._template
       ) % format_dict

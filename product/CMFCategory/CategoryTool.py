@@ -1347,6 +1347,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # Base Category may not be related, besides sub categories
       relative_url = context.getRelativeUrl()
       local_index_dict = {}
+      is_all_base_categories = False
       if isinstance(context, BaseCategory):
         category_list = relative_url,
       else:
@@ -1355,12 +1356,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
           base_category_list = base_category_list,
         elif base_category_list is () or base_category_list is None:
           base_category_list = self.getBaseCategoryList()
+          is_all_base_categories = True
         for base_category in base_category_list:
           if self[base_category].isRelatedLocallyIndexed():
             category = base_category + '/'
             local_index_dict[base_category] = '' \
               if relative_url.startswith(category) else category
-          else:
+          elif not is_all_base_categories:
             category_list.append("%s/%s" % (base_category, relative_url))
 
       portal_catalog = context.getPortalObject().portal_catalog
@@ -1472,10 +1474,23 @@ class CategoryTool( UniqueObject, Folder, Base ):
       else:
         # Catalog-only search.
         result = []
-      if category_list:
-        for r in search(category_list=category_list,
+      if category_list or is_all_base_categories:
+        if is_all_base_categories:
+          catalog_kw = {
+            ('strict_' if strict_membership else 'default_') +
+            'all_uid': context.getUid(),
+          }
+          if portal_type is not None:
+            catalog_kw['portal_type'] = portal_type
+          from_catalog_result_list = portal_catalog.unrestrictedSearchResults(
+            select_list=['relative_url', 'portal_type'],
+            **catalog_kw
+          )
+        else:
+          from_catalog_result_list = search(category_list=category_list,
                         portal_type=portal_type,
-                        strict_membership=strict_membership):
+                        strict_membership=strict_membership)
+        for r in from_catalog_result_list:
           if r.relative_url not in result_dict:
             try:
               result.append(self.unrestrictedTraverse(r.path))
