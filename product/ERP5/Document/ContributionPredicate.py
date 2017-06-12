@@ -124,8 +124,5 @@ class ContributionPredicate(Predicate, XMLObject):
       result = result and self.getDestinationPortalType()
     return result
 
-  def asSQLExpression(self):
-    raise NotImplementedError, 'ContributionPredicate does not support asSQLExpression.'
-
   def asQuery(self, *args, **kw):
     raise NotImplementedError('ContributionPredicate does not support asQuery.')

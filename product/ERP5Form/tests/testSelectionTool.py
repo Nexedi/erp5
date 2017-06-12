@@ -179,31 +179,6 @@ class TestSelectionTool(ERP5TypeTestCase):
   def testPage(self):
     raise NotImplementedError('test should be added')
 
-  def testDomainSelection(self):
-    self.assertEqual('',
-                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection({}))
-    self.assertEqual('',
-                      self.portal_selections.buildSQLExpressionFromDomainSelection({}))
-    from Products.ERP5Form.Selection import DomainSelection
-    self.assertEqual('',
-                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection(DomainSelection({}).__of__(self.portal_selections)))
-    category_tool = self.getCategoryTool()
-    base = category_tool.newContent(portal_type = 'Base Category',
-                                   id='test_base_cat')
-    base_uid = base.getUid()
-    self.assertEqual('category AS test_base_cat_category',
-                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat')}))
-    self.assertEqual('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (base_uid, base_uid),
-                      self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat')}))
-    test = base.newContent(portal_type = 'Category', id = 'test_cat')
-    test_uid = test.getUid()
-    self.assertEqual('category AS test_base_cat_category',
-                      self.portal_selections.buildSQLJoinExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}))
-    self.assertEqual('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d) )' % (test_uid, base_uid),
-                      self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}))
-    self.assertEqual('( catalog.uid = test_base_cat_category.uid AND (test_base_cat_category.category_uid = %d AND test_base_cat_category.base_category_uid = %d AND test_base_cat_category.category_strict_membership = 1) )' % (test_uid, base_uid),
-                      self.portal_selections.buildSQLExpressionFromDomainSelection({'test_base_cat': ('portal_categories', 'test_base_cat/test_cat')}, strict_membership = 1))
-
   def testDict(self):
     self.assertEqual({},
                       self.portal_selections.getSelectionDomainDictFor('test_selection'))
