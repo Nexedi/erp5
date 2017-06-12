@@ -142,6 +142,7 @@ class DomainTool(BaseTool):
 
       if tested_base_category_list != []:
         # Add category selection
+        missing_relation_list = []
         if tested_base_category_list is None:
           if acquired:
             category_list = context.getAcquiredCategoryList()
@@ -157,11 +158,15 @@ class DomainTool(BaseTool):
           for tested_base_category in tested_base_category_list:
             if portal_categories.get(tested_base_category) is None:
               raise ValueError('Unknown base category: %r' % (tested_base_category, ))
-            extend(getter(tested_base_category, base=1))
+            tested_category_list = getter(tested_base_category, base=1)
+            if tested_category_list:
+              extend(tested_category_list)
+            else:
+              missing_relation_list.append(tested_base_category)
         left_join_list = kw.get('left_join_list', [])[:]
         inner_join_list = kw.get('inner_join_list', [])[:]
+        preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList([])
         if category_list:
-          preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList([])
           left_join_category_list = []
           inner_join_category_list = []
           for category in category_list:
@@ -187,12 +192,20 @@ class DomainTool(BaseTool):
               uid_set.add(None)
               uid_set.add(0)
             kw.update(category_parameter_kw)
-        else:
+        elif not missing_relation_list:
           # We will not search for any category, so by definition no predicate
           # matching any relation would suceed, so exclude predicates defining
           # any category.
           kw['predicate_strict_none_uid'] = 0
           inner_join_list.append('predicate_strict_none_uid')
+        for tested_base_category in missing_relation_list:
+          category_parameter = 'predicate_strict_' + tested_base_category + '_uid'
+          kw[category_parameter] = (0, None)
+          (
+            inner_join_list
+            if tested_base_category in preferred_predicate_category_list
+            else left_join_list
+          ).append(tested_base_category)
         kw['left_join_list'] = left_join_list
         kw['inner_join_list'] = inner_join_list
       if query_list:
