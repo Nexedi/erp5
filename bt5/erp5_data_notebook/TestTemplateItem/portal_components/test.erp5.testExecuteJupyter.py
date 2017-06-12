@@ -881,3 +881,46 @@ print dig
     self.tic()
 
     self.assertEquals(result, True)
+
+def testNPArrayPrint(self):
+  self.login('dev_user')
+  import_code = '''
+import numpy as np
+'''
+  reference = 'Test.Notebook.EnvironmentObject.Errors.NPArrayTest'
+  result = self.portal.Base_executeJupyter(
+    reference=reference,
+    python_expression=import_code
+  )
+  self.tic()
+
+  result = json.loads(result)
+  self.assertEquals(result['status'], 'ok')
+  
+  jupyter_code = '''
+print np.random.rand(256, 256, 256)
+'''
+
+  result = self.portal.Base_executeJupyter(
+    reference=reference,
+    python_expression=jupyter_code
+  )
+  self.tic()
+
+  result = json.loads(result)
+  self.assertEquals(result['status'], 'ok')
+
+  jupyter_code = '''
+print np.random.randint(low = 2 ** 63 - 1, size = (256, 256, 256), dtype = 'int64')
+'''
+
+  result = self.portal.Base_executeJupyter(
+    reference=reference,
+    python_expression=jupyter_code
+  )
+  self.tic()
+
+  result = json.loads(result)
+  self.assertEquals(result['status'], 'ok')
+
+  
