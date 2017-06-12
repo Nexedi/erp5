@@ -9271,6 +9271,12 @@ msgstr "Page précédente"
 msgid "Previous Period"
 msgstr "Exercice N-1"
 
+msgid "Previous Period at Date"
+msgstr "Date de fin période précédente"
+
+msgid "Previous Period from Date"
+msgstr "Date de début période précédente"
+
 msgid "Previous bank statement balance does not match reconciled balance at previous bank statement date"
 msgstr "Le solde du relevé précédent ne correspond pas à au solde rapproché à la date du précédent relevé"
 

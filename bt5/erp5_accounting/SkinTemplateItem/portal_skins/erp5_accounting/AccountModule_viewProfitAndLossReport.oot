@@ -26,12 +26,14 @@
   xmlns:i18n='http://xml.zope.org/namespaces/i18n'
   xmlns:metal='http://xml.zope.org/namespaces/metal'
   tal:attributes='dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")'
-  tal:define='money_quantity_style python:context.getPortalObject().portal_preferences.getPreferredMoneyQuantityStyle("");
+  tal:define='portal python: context.getPortalObject();
+              has_income_and_expense_category python: bool(portal.portal_categories.financial_section.expense.contentValues());
+              money_quantity_style python:portal.portal_preferences.getPreferredMoneyQuantityStyle("");
               money_currency_do_grouping python:"1234" in money_quantity_style and "false" or "true";
               at_date request/at_date/latestTime;
-              at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day()).latestTime();
-              from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);
-              from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);
+              from_date python: request.get("from_date") or context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);
+              at_date_previous_period python: (request.get("at_date_previous_period") or (from_date - 1)).latestTime();
+              from_date_previous_period python: request.get("from_date_previous_period") or context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);
               portal_type here/getPortalAccountingMovementTypeList;
               date_formatter nocall:here/Base_viewAccountingReport/my_date/render_pdf;
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"], request["section_category_strict"]);
@@ -126,10 +128,48 @@
       <style:text-properties fo:font-size='12pt'/>
     </style:style>
   </office:automatic-styles> <!-- }}} -->
+
+  <tal:block metal:define-macro="report_header">
+    <!-- Title {{{ -->
+    <table:table-row table:style-name='ro2'>
+      <table:table-cell table:number-rows-spanned='2'
+                        table:number-columns-spanned='1'
+                        office:value-type='string'
+                        table:style-name='report-title'>
+        <text:p tal:content='python: context.portal_categories.restrictedTraverse(request["section_category"]).getTranslatedTitle()'/>
+      </table:table-cell>
+      <table:table-cell table:number-rows-spanned='1' table:number-columns-spanned='4'
+                        office:value-type='string' table:style-name='report-title'>
+        <text:p i18n:translate="" i18n:domain="ui">Profit and Loss</text:p>
+      </table:table-cell>
+      <table:covered-table-cell table:number-columns-repeated='2'/>
+      <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
+    </table:table-row>
+
+    <table:table-row table:style-name='ro2'>
+      <table:table-cell table:style-name='ce1'><text:p/></table:table-cell>
+      <table:table-cell table:style-name='report-title-date'
+                        table:number-rows-spanned='1' table:number-columns-spanned='4'>
+        <text:p tal:content="python:date_formatter(at_date)">Date</text:p>
+      </table:table-cell>
+      <table:covered-table-cell table:number-columns-repeated='2'/>
+      <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
+    </table:table-row>
+
+    <table:table-row table:style-name='ro2'>
+      <table:table-cell table:style-name='ce1'/>
+      <table:table-cell table:style-name='ce8'/>
+      <table:table-cell/>
+      <table:table-cell table:style-name='ce1' table:number-columns-repeated='2'/>
+    </table:table-row>
+    <!-- }}} -->
+  </tal:block>
+
   <office:body>
 
     <office:spreadsheet>
-      <table:table table:style-name='ta1' table:print='false' table:name='Expense' i18n:domain='ui' i18n:attributes='table:name'>
+      <table:table tal:condition="has_income_and_expense_category"
+                   table:style-name='ta1' table:print='false' table:name='Expense' tal:attributes="table:name portal/portal_categories/financial_section/expense/getTranslatedTitle">
         <office:forms form:apply-design-mode='false' form:automatic-focus='false'/>
         <table:table-column table:style-name='co1' table:default-cell-style-name='report-title'/>
         <table:table-column table:style-name='co2' table:default-cell-style-name='ce7'/>
@@ -149,40 +189,7 @@
                                 global level1_title python:'';
                                 ">
 
-        <!-- Title {{{ -->
-        <table:table-row table:style-name='ro2'>
-          <table:table-cell table:number-rows-spanned='2'
-                            table:number-columns-spanned='1'
-                            office:value-type='string'
-                            table:style-name='report-title'>
-            <text:p tal:content='python: context.portal_categories.restrictedTraverse(request["section_category"]).getTranslatedTitle()'/>
-          </table:table-cell>
-          <table:table-cell table:number-rows-spanned='1' table:number-columns-spanned='4'
-                            office:value-type='string' table:style-name='report-title'>
-            <text:p i18n:translate="" i18n:domain="ui">Profit and Loss</text:p>
-          </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated='2'/>
-          <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
-        </table:table-row>
-
-        <table:table-row table:style-name='ro2'>
-          <table:table-cell table:style-name='ce1'><text:p/></table:table-cell>
-          <table:table-cell table:style-name='report-title-date'
-                            table:number-rows-spanned='1' table:number-columns-spanned='4'>
-            <text:p tal:content="python:date_formatter(at_date)">Date</text:p>
-          </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated='2'/>
-          <table:covered-table-cell table:style-name='ce1' table:number-columns-repeated='1'/>
-        </table:table-row>
-
-        <table:table-row table:style-name='ro2'>
-          <table:table-cell table:style-name='ce1'/>
-          <table:table-cell table:style-name='ce8'/>
-          <table:table-cell/>
-          <table:table-cell table:style-name='ce1' table:number-columns-repeated='2'/>
-        </table:table-row>
-        <!-- }}} -->
-
+        <tal:block metal:use-macro="template/macros/report_header"/>
         <!-- Header {{{ -->
         <table:table-header-rows>
         <table:table-row table:style-name='ro3'>
@@ -191,7 +198,7 @@
               office:value-type='string'
               table:number-rows-spanned='1'
               table:number-columns-spanned='3'>
-            <text:p i18n:translate="" i18n:domain="ui">Expense</text:p>
+            <text:p tal:content="portal/portal_categories/financial_section/expense/getTranslatedTitle">Expense</text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>
           <table:table-cell table:style-name='report-column-title' office:value-type='string'>
@@ -403,7 +410,7 @@
 
         <!-- TOTAL LEVEL 1 {{{ -->
         <table:table-row table:style-name='ro7'>
-          <table:table-cell table:style-name='report-stat1'
+          <table:table-cell table:style-name='report-stat-heading1'
                             office:value-type='string'
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
@@ -439,12 +446,11 @@
       <!-- loop level 2 -->
       <!-- Total expense {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
                             office:value-type='string'>
-            <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class"
-                        i18n:translate='' i18n:domain="ui" tal:content='string:Expense'></tal:block></text:p>
+            <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" tal:content="portal/portal_categories/financial_section/expense/getTranslatedTitle"></tal:block></text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/>
           <table:covered-table-cell table:style-name="ce9"/>
@@ -460,7 +466,7 @@
 
         <!-- NET PROFIT {{{ -->
         <table:table-row tal:condition="python: net_income &lt; 0 or net_income_previous_period &lt; 0">
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -479,7 +485,7 @@
 
         <!-- TOTAL LEVEL 2 {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             table:number-columns-spanned='3'
                             table:number-rows-spanned='1'
                             office:value-type='string'>
@@ -515,7 +521,8 @@
 
 
     </table:table> <!-- new table -->
-    <table:table table:style-name='ta1' table:print='false' table:name='Income'
+    <table:table tal:attributes="table:name portal/portal_categories/financial_section/income/getTranslatedTitle"
+                 table:style-name='ta1' table:print='false' table:name='Income'
                  i18n:domain='ui' i18n:attributes='table:name'>
         <office:forms form:apply-design-mode='false' form:automatic-focus='false'/>
         <table:table-column table:style-name='co1' table:default-cell-style-name='report-title'/>
@@ -534,6 +541,8 @@
                                 global level2_title python:'';
                                 global level1_title python:'';">
 
+        <tal:block tal:condition="not: has_income_and_expense_category" metal:use-macro="template/macros/report_header"/>
+
         <!-- Header {{{ -->
         <table:table-header-rows>
         <table:table-row table:style-name='ro3'>
@@ -542,7 +551,7 @@
               office:value-type='string'
               table:number-rows-spanned='1'
               table:number-columns-spanned='3'>
-            <text:p i18n:translate="" i18n:domain="ui">Income</text:p>
+            <text:p tal:content="portal/portal_categories/financial_section/income/getTranslatedTitle">Income</text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>
           <table:table-cell table:style-name='report-column-title' office:value-type='string'>
@@ -757,7 +766,7 @@
 
         <!-- TOTAL LEVEL 1 {{{ -->
         <table:table-row table:style-name='ro7'>
-          <table:table-cell table:style-name='report-stat1'
+          <table:table-cell table:style-name='report-stat-heading1'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -793,11 +802,11 @@
 
         <!-- TOTAL INCOME {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
-          <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" i18n:translate='' i18n:domain="ui" tal:content='string:Income'></tal:block></text:p>
+          <text:p i18n:translate="" i18n:domain="ui">Total <tal:block i18n:name="class" tal:content="portal/portal_categories/financial_section/income/getTranslatedTitle"></tal:block></text:p>
           </table:table-cell>
           <table:covered-table-cell table:style-name="ce9"/><table:covered-table-cell table:style-name="ce9"/>
           <table:table-cell table:style-name='report-stat-currency2'
@@ -809,9 +818,10 @@
         </table:table-row>
         <!-- }}} --> 
 
+
         <!-- NET LOSS {{{ -->
-        <table:table-row tal:condition="python: net_income &gt; 0 or net_income_previous_period &gt; 0">
-          <table:table-cell table:style-name='report-stat2'
+        <table:table-row tal:condition="python: has_income_and_expense_category and (net_income &gt; 0 or net_income_previous_period &gt; 0)">
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
@@ -830,7 +840,7 @@
 
         <!-- TOTAL LEVEL 2 {{{ -->
         <table:table-row>
-          <table:table-cell table:style-name='report-stat2'
+          <table:table-cell table:style-name='report-stat-heading2'
                             office:value-type='string'
                             table:number-rows-spanned='1'
                             table:number-columns-spanned='3'>
