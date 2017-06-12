@@ -57,18 +57,6 @@ class IPredicate(Interface):
         (XXX-JPS - is this really needed ? is this appropriate
          naming - probably not)
     """
-
-  def asSQLExpression():
-    """
-    A Predicate can be rendered as an sql expression. This
-    can be useful to create reporting trees based on the
-    ZSQLCatalog. This SQL expression is however partial since
-    python scripts which are used by the test method of the predicate
-    can be converted to SQL. If a python script is defined to
-    implement test, results obtained through asSQLExpression
-    must be additionnaly tested by invoking test().
-    """
-
   def asQuery():
     """
     A Predicate can be rendered as a set of catalog conditions. This

@@ -1591,36 +1591,6 @@ class Base( CopyContainer,
         assert mount_point._getMountedConnection(connection) is connection
         return mount_point._traverseToMountedRoot(connection.root(), None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'asSQLExpression')
-  def asSQLExpression(self, strict_membership=0, table='category', base_category = None):
-    """
-      Any document can be used as a Category. It can therefore
-      serve in a Predicate and must be rendered as an sql expression. This
-      can be useful to create reporting trees based on the
-      ZSQLCatalog whenever documents are used rather than categories
-
-      TODO:
-        - strict_membership is not implemented
-    """
-    if isinstance(base_category, str):
-      base_category = self.portal_categories[base_category]
-    if base_category is None:
-      sql_text = '(%s.category_uid = %s)' % \
-          (table, self.getUid())
-    else:
-      sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
-          (table, self.getUid(), table, base_category.getBaseCategoryUid())
-    return sql_text
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getParentSQLExpression' )
-  def getParentSQLExpression(self, table = 'catalog', strict_membership = 0):
-    """
-      Builds an SQL expression to search children and subclidren
-    """
-    return "%s.parent_uid = %s" % (table, self.getUid())
-
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentUid' )
   def getParentUid(self):

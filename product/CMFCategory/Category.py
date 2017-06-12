@@ -671,33 +671,6 @@ class Category(Folder):
       """
       return context.isMemberOf(self.getCategoryName())
 
-    security.declareProtected( Permissions.AccessContentsInformation, 'asSQLExpression' )
-    def asSQLExpression(self, strict_membership=0, table='category', base_category = None):
-      """
-        A Predicate can be rendered as an sql expression. This
-        can be useful to create reporting trees based on the
-        ZSQLCatalog
-      """
-      if base_category is None:
-        base_category = self
-      elif type(base_category) is type('a'):
-        base_category = self.portal_categories[base_category]
-      if strict_membership:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s ' \
-                   'AND %s.category_strict_membership = 1)' % \
-                                 (table, self.getUid(), table,
-                                  base_category.getBaseCategoryUid(), table)
-      else:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
-            (table, self.getUid(), table, base_category.getBaseCategoryUid())
-      # Now useless since we precompute the mapping
-      #for o in self.objectValues():
-      #  sql_text += ' OR %s' % o.asSQLExpression()
-      return sql_text
-
-    security.declareProtected( Permissions.AccessContentsInformation, 'asSqlExpression' )
-    asSqlExpression = asSQLExpression
-
     # A Category's categories is self
 
 
@@ -816,25 +789,6 @@ class BaseCategory(Category):
     def isRelatedLocallyIndexed(self):
       """Determines if related values should be indexed on target documents"""
       return self.related_locally_indexed
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'asSQLExpression')
-    def asSQLExpression(self, strict_membership=0, table='category', base_category=None):
-      """
-        A Predicate can be rendered as an sql expression. This
-        can be useful to create reporting trees based on the
-        ZSQLCatalog
-      """
-      if strict_membership:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s ' \
-                   'AND %s.category_strict_membership = 1)' % \
-                                (table, self.uid, table, self.uid, table)
-      else:
-        sql_text = '(%s.category_uid = %s AND %s.base_category_uid = %s)' % \
-                               (table, self.uid, table, self.uid)
-      # Now useless since we precompute the mapping
-      #for o in self.objectValues():
-      #  sql_text += ' OR %s' % o.asSQLExpression()
-      return sql_text
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getBaseCategoryId')
