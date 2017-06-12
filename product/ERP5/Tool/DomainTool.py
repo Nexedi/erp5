@@ -155,6 +155,8 @@ class DomainTool(BaseTool):
           category_list = []
           extend = category_list.extend
           for tested_base_category in tested_base_category_list:
+            if portal_categories.get(tested_base_category) is None:
+              raise ValueError('Unknown base category: %r' % (tested_base_category, ))
             extend(getter(tested_base_category, base=1))
         preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList([])
         left_join_category_list = []
@@ -167,6 +169,8 @@ class DomainTool(BaseTool):
         left_join_list = kw.get('left_join_list', [])[:]
         inner_join_list = kw.get('inner_join_list', [])[:]
         def onMissing(category):
+          # BBB: ValueError would seem more appropriate here, but original code
+          # was raising TypeError - and this is explicitely tested for.
           raise TypeError('Unknown category: %r' % (category, ))
         for join_category_list, join_list in (
           (inner_join_category_list, inner_join_list),

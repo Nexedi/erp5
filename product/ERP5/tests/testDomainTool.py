@@ -443,6 +443,15 @@ class TestDomainTool(TestPredicateMixIn):
     # and we now cover all categories defined on order_line, so it uses inner-join only
     check(False, [supply1_line1])
 
+    # unknown base category ids cause an exception, so typos are detected
+    self.assertRaises(
+      ValueError,
+      searchPredicateList,
+      context=order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['BOOO'],
+    )
+
   def test_searchPredicateInvalidCategories(self):
     predicate = self.portal.sale_supply_module.newContent(
       portal_type='Sale Supply')
