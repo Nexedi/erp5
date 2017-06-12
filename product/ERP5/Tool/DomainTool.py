@@ -155,6 +155,8 @@ class DomainTool(BaseTool):
           category_list = []
           extend = category_list.extend
           for tested_base_category in tested_base_category_list:
+            if portal_categories.get(tested_base_category) is None:
+              raise ValueError('Unknown base category: %r' % (tested_base_category, ))
             extend(getter(tested_base_category, base=1))
         left_join_list = kw.get('left_join_list', [])[:]
         inner_join_list = kw.get('inner_join_list', [])[:]
