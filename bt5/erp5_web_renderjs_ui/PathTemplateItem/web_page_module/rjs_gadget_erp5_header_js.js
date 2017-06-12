@@ -48,6 +48,7 @@
       ['filter_action', 'Filter', 'filter', 'submit']
     ],
     possible_sub_header_list = [
+      ['edit_sub_url', 'Editable', 'pencil'],
       ['tab_url', 'Views', 'eye'],
       ['jump_url', 'Jump', 'plane'],
       ['delete_url', 'Delete', 'times'],
