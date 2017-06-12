@@ -447,6 +447,14 @@ class TestDomainTool(TestPredicateMixIn):
       portal_type='Sale Supply Line',
       tested_base_category_list=['BOOO'],
     )
+    # known Base Categories but for which context has no relation also raise.
+    self.assertRaises(
+      ValueError,
+      searchPredicateList,
+      context=order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['colour'],
+    )
 
   def test_searchPredicateInvalidCategories(self):
     predicate = self.portal.sale_supply_module.newContent(
