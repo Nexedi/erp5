@@ -31,9 +31,9 @@
               money_quantity_style python:portal.portal_preferences.getPreferredMoneyQuantityStyle("");
               money_currency_do_grouping python:"1234" in money_quantity_style and "false" or "true";
               at_date request/at_date/latestTime;
-              at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day()).latestTime();
-              from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);
-              from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);
+              from_date python: request.get("from_date") or context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);
+              at_date_previous_period python: (request.get("at_date_previous_period") or (from_date - 1)).latestTime();
+              from_date_previous_period python: request.get("from_date_previous_period") or context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);
               portal_type here/getPortalAccountingMovementTypeList;
               date_formatter nocall:here/Base_viewAccountingReport/my_date/render_pdf;
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"], request["section_category_strict"]);
