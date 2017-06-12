@@ -63,6 +63,12 @@
         "officejs_setting_gadget"
       ]
     },
+    "Awesome Free Software Publisher List": {
+      "url": "afs/",
+      "cache": "gadget_erp5_afs.appcache",
+      "no_installer": true,
+      "sub_gadget": []
+    },
     "officejs_ckeditor_gadget": {
       "cache": "gadget_ckeditor.appcache"
     },
@@ -101,7 +107,8 @@
       i = 0,
       form_result = {},
       len = event.target.length,
-      app;
+      app,
+      take_installer;
     for (j = 0; j < len; j += 1) {
       form_result[event.target[j].name] = event.target[j].value;
     }
@@ -112,12 +119,13 @@
     function fill(zip_file) {
       if (i < len) {
         var sub_app = app.sub_gadget[i];
-        return gadget.fillZip(
-          application_dict[sub_app].cache,
-          origin_url + app.url,
-          zip_file,
-          sub_app + "/"
-        )
+        return gadget.fillZip({
+          cache: application_dict[sub_app].cache,
+          site_url: origin_url + app.url,
+          zip_file: zip_file,
+          prefix: sub_app + "/",
+          take_installer: application_dict[sub_app].no_installer ? false : true
+        })
           .push(function (zip_file) {
             i += 1;
             return fill(zip_file);
@@ -126,7 +134,11 @@
       return zip_file;
     }
 
-    return gadget.fillZip(app.cache, origin_url + app.url)
+    return gadget.fillZip({
+      cache: app.cache,
+      site_url: origin_url + app.url,
+      take_installer: app.no_installer ? false : true
+    })
       .push(function (zip_file) {
         return fill(zip_file);
       })
@@ -152,8 +164,7 @@
           g.props.element = element;
         });
     })
-    .declareMethod("fillZip", function (cache_file, site_url, zip_file,
-                                         prefix) {
+    .declareMethod("fillZip", function (options) {
       var gadget = this,
         file_storage = jIO.createJIO({
         type: "replicate",
@@ -166,13 +177,13 @@
         check_remote_modification: false,
         remote_sub_storage: {
           type: "filesystem",
-          document: site_url,
+          document: options.site_url,
           sub_storage: {
             type: "appcache",
-            take_installer: true,
-            manifest: cache_file,
-            origin_url: site_url,
-            prefix: prefix || ""
+            take_installer: options.take_installer,
+            manifest: options.cache,
+            origin_url: options.site_url,
+            prefix: options.prefix || ""
           }
         },
         signature_storage: {
@@ -180,7 +191,7 @@
         },
         local_sub_storage: {
           type: "zipfile",
-          file: zip_file
+          file: options.zip_file
         }
       });
       return file_storage.repair()
