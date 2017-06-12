@@ -11,7 +11,7 @@
       (window.location.pathname.endsWith('/') ? '' : '/') +
       ((spec.version !== undefined) ?
       (spec.version + (spec.version.endsWith('/') ? '' : '/')) : ""));
-    this._relative_url_list = [this._origin_url, spec.manifest];
+    this._relative_url_list = ["/", spec.manifest];
     this._prefix = spec.prefix;
     if (this._take_installer) {
       this._relative_url_list = [
