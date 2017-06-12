@@ -384,41 +384,10 @@ allow_class(Selection)
 class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
   """
     A class to store a selection of domains which defines a report
-    section. There are different ways to use DomainSelection in
-    SQL methods. As a general principle, SQL methods are passed
-    DomainSelection instances as a parameter.
+    section.
 
-    Example 1: (hand coded)
-
-    The domain is accessed directly from the selection and a list of
-    uids is gathered from the ZODB to feed the SQL request. This
-    approach is only suitable for categories and relations. It is
-    not suitable for predicates. Do not use it unless there is no other way.
-
-    <dtml-if selection.domain.eip>
-      <dtml-in "selection.domain.eip.getCategoryChildUidList()">uid = <dtml-sqlvar sequence-item type="int"></dtml-in>
-    </dtml-if>
-
-    Example 2: (auto generated)
-
-    The domain object is in charge of generating automatically all
-    SQL expressions to feed the SQL method (or the catalog). This
-    is the recommended approach.
-
-    <dtml-var "selection.domain.asSQLExpression(table_map=(('eip','movement'), ('group', 'catalog')))">
-    <dtml-var "selection.domain.asSQLJoinExpression(table_map=(('eip','movement'), ('group', 'catalog')))">
-
-    Example 3: (mixed)
-
-    The category or predicate of the domain object is accessed. SQL
-    code generation is invoked on it. This is better than the manual
-    approach.
-
-    <dtml-var "selection.domain.eip.asSQLExpresion(table="resource_category")">
-
-    Current implementation is only suitable for categories.
-    It needs to be extended to support also predicates. The right approach
-    would be to turn any category into a predicate.
+    Do not use this class directly, but use selection_{domain,report}
+    parameters in SQLCatalog API.
   """
 
   security = ClassSecurityInfo()
@@ -462,73 +431,6 @@ class DomainSelection(Acquisition.Implicit, Traversable, Persistent):
       obj = aq_base(domain).__of__(portal)
 
     return obj
-
-  security.declarePublic('asSQLExpression')
-  def asSQLExpression(self, table_map=None, domain_id=None,
-                      exclude_domain_id=None, strict_membership=0,
-                      join_table="catalog", join_column="uid",
-                      base_category=None, category_table_alias='category'):
-    select_expression = []
-    portal = self.getPortalObject()
-    for k, d in self.domain_dict.iteritems():
-      d = self._getDomainObject(portal, d)
-
-      if k == 'parent':
-        # Special treatment for parent
-        select_expression.append(
-            d.getParentSQLExpression(table='catalog',
-                                     strict_membership=strict_membership))
-      elif k is not None:
-        if getattr(aq_base(d), 'isPredicate', 0):
-          select_expression.append(
-              d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
-                                strict_membership=strict_membership))
-        else:
-          # This is a category, we must join
-          select_expression.append('%s.%s = %s_%s.uid' % \
-                                (join_table, join_column,
-                                 k, category_table_alias))
-          select_expression.append(
-              d.asSQLExpression(table='%s_%s' % (k, category_table_alias),
-                                base_category=k,
-                                strict_membership=strict_membership))
-                                # XXX We should take into account k explicitely
-                                # if we want to support category acquisition
-    if select_expression:
-      result = "( %s )" % ' AND '.join(select_expression)
-    else:
-      result = ''
-    #LOG('DomainSelection', 0, 'asSQLExpression returns %r' % (result,))
-    return result
-
-  # Compatibility SQL Sql
-  security.declarePublic('asSqlExpression')
-  asSqlExpression = asSQLExpression
-
-  security.declarePublic('asSQLJoinExpression')
-  def asSQLJoinExpression(self, domain_id=None, exclude_domain_id=None,
-                          category_table_alias='category'):
-    join_expression = []
-    #LOG('DomainSelection', 0, 'domain_id = %r, exclude_domain_id = %r, self.domain_dict = %r' % (domain_id, exclude_domain_id, self.domain_dict))
-    portal = self.getPortalObject()
-    for k, d in self.domain_dict.iteritems():
-      d = self._getDomainObject(portal, d)
-
-      if k == 'parent':
-        pass
-      elif k is not None:
-        if getattr(aq_base(d), 'isPredicate', 0):
-          join_expression.append(d.asSQLJoinExpression(table='%s_%s' % (k, category_table_alias)))
-        else:
-          # This is a category, we must join
-          join_expression.append('category AS %s_%s' % (k, category_table_alias))
-    result = "%s" % ' , '.join(join_expression)
-    #LOG('DomainSelection', 0, 'asSQLJoinExpression returns %r' % (result,))
-    return result
-
-  # Compatibility SQL Sql
-  security.declarePublic('asSqlJoinExpression')
-  asSqlJoinExpression = asSQLJoinExpression
 
   security.declarePublic('asDomainDict')
   def asDomainDict(self, domain_id=None, exclude_domain_id=None):

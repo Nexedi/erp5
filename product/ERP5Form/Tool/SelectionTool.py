@@ -1365,42 +1365,6 @@ class SelectionTool( BaseTool, SimpleItem ):
         return ComplexQuery(query_list)
       return SimpleQuery(uid=0, comparison_operator='>')
 
-    security.declarePublic('buildSQLJoinExpressionFromDomainSelection')
-    def buildSQLJoinExpressionFromDomainSelection(self, selection_domain,
-                                                  domain_id=None,
-                                                  exclude_domain_id=None,
-                                                  category_table_alias='category'):
-      if isinstance(selection_domain, DomainSelection):
-        warnings.warn("To pass a DomainSelection instance is deprecated.\n"
-                      "Please use a domain dict instead.",
-                      DeprecationWarning)
-      else:
-        selection_domain = DomainSelection(selection_domain).__of__(self)
-      return selection_domain.asSQLJoinExpression(
-          category_table_alias=category_table_alias)
-
-    security.declarePublic('buildSQLExpressionFromDomainSelection')
-    def buildSQLExpressionFromDomainSelection(self, selection_domain,
-                                              table_map=None, domain_id=None,
-                                              exclude_domain_id=None,
-                                              strict_membership=0,
-                                              join_table="catalog",
-                                              join_column="uid",
-                                              base_category=None,
-                                              category_table_alias='category'):
-      if isinstance(selection_domain, DomainSelection):
-        warnings.warn("To pass a DomainSelection instance is deprecated.\n"
-                      "Please use a domain dict instead.",
-                      DeprecationWarning)
-      else:
-        selection_domain = DomainSelection(selection_domain).__of__(self)
-      return selection_domain.asSQLExpression(
-          strict_membership = strict_membership,
-          join_table=join_table,
-          join_column=join_column,
-          base_category=base_category,
-          category_table_alias = category_table_alias)
-
     def _aq_dynamic(self, name):
       """
         Generate viewSearchRelatedDocumentDialog0,
