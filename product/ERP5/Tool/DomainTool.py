@@ -172,6 +172,8 @@ class DomainTool(BaseTool):
           category_list = []
           extend = category_list.extend
           for tested_base_category in tested_base_category_list:
+            if portal_categories.get(tested_base_category) is None:
+              raise ValueError('Unknown base category: %r' % (tested_base_category, ))
             extend(getter(tested_base_category, base=1))
         preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList()
 
