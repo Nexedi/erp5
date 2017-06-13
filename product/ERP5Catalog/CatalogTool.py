@@ -314,10 +314,14 @@ class RelatedBaseCategory(Method):
         'RELATED_QUERY_SEPARATOR': RELATED_QUERY_SEPARATOR,
       }
       if self._id != 'all':
-        # Note: in normal conditions, our category's uid will not change from
-        # one invocation to the next.
-        format_dict['base_category_uid'] = instance.getPortalObject().portal_categories.\
-          _getOb(self._id).getUid()
+        if self._id == 'none':
+          # By definition, no object get uid 0, so no Base Category has uid 0,
+          # so this condition will not match any relation type.
+          format_dict['base_category_uid'] = 0
+        else:
+          # Note: in normal conditions, our category's uid will not change from
+          # one invocation to the next.
+          format_dict['base_category_uid'] = instance.getPortalObject().portal_categories._getOb(self._id).getUid()
       return (
         self._monotable_template if table_1 is None else self._template
       ) % format_dict
@@ -967,7 +971,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       "default_": No effect, useful to avoid static related keys, which would shadow desired dynamic related key.
       "strict_": Match only strict relation members, otherwise match non-strict too.
       "parent_": Search for documents whose parent have described relation, otherwise search for their immediate relations.
-      <base_category_id>: The id of an existing Base Category document, or "all" to not restrict by relation type.
+      <base_category_id>: The id of an existing Base Category document, or "all" to not restrict by relation type, or "none" to match no relation type.
       "related_": Search for reverse relationships, otherwise search for direct relationships.
       <column_id>: The name of the column to compare values against.
       """
@@ -1000,7 +1004,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         for i in xrange(len(split_key) - 1, 0, -1):
           expected_base_cat_id = '_'.join(split_key[0:i])
           if expected_base_cat_id in base_cat_id_set or (
-            i == len(split_key) - 1 and expected_base_cat_id == 'all'
+            i == len(split_key) - 1 and expected_base_cat_id in ('all', 'none')
           ):
             # We have found a base_category
             end_key = '_'.join(split_key[i:])
