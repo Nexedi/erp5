@@ -1411,6 +1411,40 @@ div[data-gadget-scope='notification'] button {
   }
 }
 /**********************************************
+* Class
+**********************************************/
+.content-iframe-maximize {
+  position: fixed;
+}
+@media not screen and (max-width: 85em) {
+  .content-iframe-maximize {
+    left: 180pt;
+    top: 60pt;
+    width: calc(100vw -  180pt );
+  }
+  .content-iframe-maximize iframe {
+    height: calc(100vh -  60pt );
+  }
+}
+@media only screen and (min-width: 45em) and (max-width: 85em) {
+  .content-iframe-maximize {
+    left: 0;
+    top: 73pt;
+  }
+  .content-iframe-maximize iframe {
+    height: calc(100vh -  73pt );
+  }
+}
+@media not screen and (min-width: 45em) {
+  .content-iframe-maximize {
+    left: 0;
+    top: 67pt;
+  }
+  .content-iframe-maximize iframe {
+    height: calc(100vh -  67pt );
+  }
+}
+/**********************************************
 * Icons
 **********************************************/
 .ui-btn-icon-top::before,

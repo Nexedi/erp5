@@ -36,6 +36,8 @@
 
 // XXX BUG Generate wrong align on firefox smartphone
 @headerheight: @font-size * 2 + @margin-size;
+@headerheight-smartphone: 2 * @headerheight + @margin-size + 1;
+@headerheight-tablet: 2 * @headerheight + 2 * @margin-size + 1;
 
 @main-margin-size-desktop: @quadruple-margin-size;
 @main-margin-size-smartphone: @margin-size;
@@ -1602,6 +1604,35 @@ div[data-gadget-scope='notification'] {
 @keyframes fadein {
     from {opacity:0;}
     to {opacity:1;}
+}
+
+/**********************************************
+* Class
+**********************************************/
+.content-iframe-maximize {
+  position: fixed;
+  @media @desktop {
+    left: @panelwidth;
+    top: 2 * @headerheight;
+    width: ~"calc(100vw - "@panelwidth~")";
+    iframe {
+      height: ~"calc(100vh - "2 * @headerheight~")";
+    }
+  }
+  @media @tablet {
+    left: 0;
+    top: @headerheight-tablet;
+    iframe {
+      height: ~"calc(100vh - "@headerheight-tablet~")";
+    }
+  }
+  @media @smartphone {
+    left: 0;
+    top: @headerheight-smartphone;
+    iframe {
+      height: ~"calc(100vh - "@headerheight-smartphone~")";
+    }
+  }
 }
 
 /**********************************************
