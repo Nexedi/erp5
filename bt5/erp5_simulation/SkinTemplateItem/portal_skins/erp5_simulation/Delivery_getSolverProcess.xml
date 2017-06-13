@@ -50,8 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>for solver_process in context.getSolverValueList():\n
-  if solver_process.getValidationState() == \'draft\':\n
+            <value> <string>portal = context.getPortalObject()\n
+for solver_process in context.getSolverValueList():\n
+  target_solver_list = solver_process.contentValues(portal_type=portal.getPortalTargetSolverTypeList())\n
+  if not target_solver_list:\n
     return solver_process\n
 </string> </value>
         </item>

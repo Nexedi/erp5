@@ -17,6 +17,5 @@ processing_status_workflow
 query_workflow
 reindex_object_interaction_workflow
 simulation_movement_causality_interaction_workflow
-solver_process_workflow
 solver_workflow
 user_account_workflow

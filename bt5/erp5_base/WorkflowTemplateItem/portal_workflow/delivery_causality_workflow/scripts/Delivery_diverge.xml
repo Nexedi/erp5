@@ -51,13 +51,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>delivery = state_change[\'object\']\n
+portal = delivery.getPortalObject()\n
 draft_solver_process = None\n
+# XXX: Only check the latest SolverProcess?\n
 for solver_process in delivery.getSolverValueList():\n
-  validation_state = solver_process.getValidationState()\n
-  if validation_state == \'solving\':\n
-    # Currently solving Divergences through solve() Activity\n
-    return\n
-  elif solver_process.getValidationState() == \'draft\':\n
+  target_solver_list = solver_process.contentValues(portal_type=portal.getPortalTargetSolverTypeList())\n
+  if target_solver_list:\n
+    for target_solver in target_solver_list:\n
+      if target_solver.getValidationState() == \'solving\':\n
+        # Currently solving Divergences through solve() Activity\n
+        return\n
+  else:\n
     draft_solver_process = solver_process\n
 \n
 if draft_solver_process is not None:\n
