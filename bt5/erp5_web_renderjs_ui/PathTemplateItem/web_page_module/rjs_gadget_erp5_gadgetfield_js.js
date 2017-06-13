@@ -12,7 +12,8 @@
         editable: options.field_json.editable,
         url: options.field_json.url,
         sandbox: options.field_json.sandbox || undefined,
-        hidden: options.field_json.hidden
+        hidden: options.field_json.hidden,
+        css_class: options.field_json.css_class
       });
     })
 
@@ -30,11 +31,10 @@
       var div = document.createElement('div'),
         element = this.element,
         gadget = this;
-/*
-          if (field_json.css_class) {
-            gadget_element.setAttribute("class", field_json.css_class);
-          }
-*/
+      if (gadget.state.css_class) {
+        element.setAttribute("class", gadget.state.css_class);
+      }
+
       // Clear first to DOM, append after to reduce flickering/manip
       while (element.firstChild) {
         element.removeChild(element.firstChild);
