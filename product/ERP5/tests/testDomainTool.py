@@ -418,8 +418,6 @@ class TestDomainTool(TestPredicateMixIn):
     check(True, [supply1_line1, supply1_line2, supply3_line1], tested_base_category_list=['source_section', 'destination_section'])
     check(True, [supply1_line1, supply1_line2], tested_base_category_list=['source_section', 'destination_section', 'price_currency'])
     check(True, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
-    # if wrong base categories are passed, then nothing is matched
-    check(True, [], tested_base_category_list=['colour'])
 
     # Check inner-join mode
     # Enable system preference and reindex relevant predicates
@@ -434,16 +432,12 @@ class TestDomainTool(TestPredicateMixIn):
     check(False, [supply1_line1, supply1_line2], tested_base_category_list=['source_section', 'destination_section', 'price_currency'])
     # resource is not in preferred predicate category list, so left join is used
     check(True, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
-    # if wrong base categories are passed, then nothing is matched
-    #check(True, [], tested_base_category_list=['colour'])
-    # add resource and colour to preference, this enables non-left join mode
-    system_preference.setPreferredPredicateCategoryList(['source_section', 'destination_section', 'price_currency', 'resource', 'colour'])
+    # add resource to preference, this enables non-left join mode
+    system_preference.setPreferredPredicateCategoryList(['source_section', 'destination_section', 'price_currency', 'resource'])
     self.portal.portal_caches.clearAllCache()
     self.tic()
     supply_module.Folder_reindexAll()
     self.tic()
-    # if wrong base categories are passed, then nothing is matched
-    check(False, [], tested_base_category_list=['colour'])
     # resource is not in preferred predicate category list, so left join is used
     check(False, [supply1_line1], tested_base_category_list=['source_section', 'destination_section', 'price_currency', 'resource'])
     # and we now cover all categories defined on order_line, so it uses inner-join only
@@ -456,6 +450,14 @@ class TestDomainTool(TestPredicateMixIn):
       context=order_line,
       portal_type='Sale Supply Line',
       tested_base_category_list=['BOOO'],
+    )
+    # known Base Categories but for which context has no relation also raise.
+    self.assertRaises(
+      ValueError,
+      searchPredicateList,
+      context=order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['colour'],
     )
 
   def test_searchPredicateInvalidCategories(self):
