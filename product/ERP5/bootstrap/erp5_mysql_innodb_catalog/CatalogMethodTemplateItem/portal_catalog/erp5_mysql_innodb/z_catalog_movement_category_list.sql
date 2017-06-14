@@ -1,9 +1,7 @@
 DELETE FROM
   category
 WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
+<dtml-sqltest uid type="int" multiple>
 ;
 <dtml-var "'\0'">
 <dtml-let category_list="[]" getCategoryParentUidList="portal_categories.getCategoryParentUidList">
