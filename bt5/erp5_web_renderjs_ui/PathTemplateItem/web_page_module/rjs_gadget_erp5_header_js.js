@@ -158,6 +158,9 @@
       if (options.hasOwnProperty("page_title")) {
         state.title_text = options.page_title;
       }
+      if (options.hasOwnProperty("page_icon")) {
+        state.title_icon = options.page_icon;
+      }
       for (i = 0; i < possible_main_link_list.length; i += 1) {
         if (options.hasOwnProperty(possible_main_link_list[i][0])) {
           state.title_icon = possible_main_link_list[i][2];
@@ -219,19 +222,29 @@
       var gadget = this,
         right_link,
         right_button,
+        default_title_icon = "",
         default_right_icon = "",
         title_link,
         promise_list = [];
-
       // Main title
-      if (modification_dict.hasOwnProperty('title_text') ||
+      if (modification_dict.hasOwnProperty('error') ||
+          modification_dict.hasOwnProperty('loaded') ||
+          modification_dict.hasOwnProperty('submitted') ||
+          modification_dict.hasOwnProperty('title_text') ||
           modification_dict.hasOwnProperty('title_icon') ||
           modification_dict.hasOwnProperty('title_url')) {
+        if (gadget.state.error) {
+          default_title_icon = "exclamation";
+        } else if (!gadget.state.loaded) {
+          default_title_icon = "spinner";
+        } else if (!gadget.state.submitted) {
+          default_title_icon = "spinner";
+        }
         // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now
         document.title = gadget.state.title_text;
         title_link = {
           title: gadget.state.title_text,
-          icon: gadget.state.title_icon,
+          icon: default_title_icon || gadget.state.title_icon,
           url: gadget.state.title_url
         };
         if (title_link.url === undefined) {
@@ -261,38 +274,22 @@
       }
 
       // Handle right link
-      if (modification_dict.hasOwnProperty('error') ||
-          modification_dict.hasOwnProperty('loaded') ||
+      if (modification_dict.hasOwnProperty('loaded') ||
+          modification_dict.hasOwnProperty('submitted') ||
           modification_dict.hasOwnProperty('modified') ||
           modification_dict.hasOwnProperty('right_link_title') ||
           modification_dict.hasOwnProperty('right_link_icon') ||
           modification_dict.hasOwnProperty('right_link_url') ||
           modification_dict.hasOwnProperty('right_link_class') ||
           modification_dict.hasOwnProperty('right_button_title') ||
-          modification_dict.hasOwnProperty('right_button_icon') ||
-          modification_dict.hasOwnProperty('submitted')) {
-
-        if (gadget.state.error) {
-          default_right_icon = "exclamation";
-        } else if (!gadget.state.loaded) {
-          default_right_icon = "spinner";
-          // Show default loading information
-          right_link = {
-            title: "Loading",
-            icon: default_right_icon,
-            url: "",
-            class: "ui-disabled ui-icon-spin"
-          };
-        } else if (!gadget.state.submitted) {
-          default_right_icon = "spinner";
-        } else if (gadget.state.modified) {
+          modification_dict.hasOwnProperty('right_button_icon')) {
+        if (gadget.state.modified) {
           default_right_icon = "warning";
         }
-
         if (gadget.state.right_link_title !== undefined) {
           right_link = {
             title: gadget.state.right_link_title,
-            icon: default_right_icon || gadget.state.right_link_icon,
+            icon: gadget.state.right_link_icon,
             url: gadget.state.right_link_url,
             class: gadget.state.right_link_class
           };
@@ -303,20 +300,14 @@
             icon: default_right_icon || gadget.state.right_button_icon,
             name: gadget.state.right_button_name
           };
-          if (gadget.state.error) {
+          if (gadget.state.error || !gadget.state.loaded || !gadget.state.submitted) {
             right_button.class = "ui-disabled";
           }
         }
 
         if (right_button !== undefined) {
-          if (right_button.icon === 'spinner') {
-            right_button.class = "ui-disabled ui-icon-spin";
-          }
           promise_list.push(gadget.translateHtml(header_button_template(right_button)));
         } else if (right_link !== undefined) {
-          if (right_link.icon === 'spinner') {
-            right_link.class = "ui-disabled ui-icon-spin";
-          }
           promise_list.push(gadget.translateHtml(header_link_template(right_link)));
         } else {
           promise_list.push("");

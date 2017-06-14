@@ -43,6 +43,7 @@
       var gadget = this,
         header_dict = {
           page_title: 'Modules',
+          page_icon: 'puzzle-piece',
           filter_action: true
         };
 

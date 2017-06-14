@@ -44,6 +44,15 @@
 
 @headertitleleftlargemargin: @main-margin-size-desktop + @margin-size * 3;
 @headertitleleftsmallmargin: @main-margin-size-smartphone + @main-margin-size-desktop;
+@headertitlemiddlewidth: @double-margin-size;
+@headertitleleftmiddlemargin: @main-margin-size-desktop;
+@headertitlerightsmallmargin: @margin-size * 3 -  @headertitlemiddlewidth;
+
+@headertitlespanleftlargemargin: @double-margin-size + 2;
+@headertitlespanleftsmallmargin: @margin-size;
+@headertitlespanleftlargepadding: @quadruple-margin-size;
+@headertitlespanleftmiddlepadding: @triple-margin-size - 2;
+@headertitlespanleftsmallpadding: @double-margin-size;
 
 // XXX desktop: 12em
 @panelwidth: @margin-size * 30;
@@ -921,12 +930,24 @@ div[data-gadget-scope='header'] .ui-header {
 
     // Title which is not a link
     & > span {
-      padding-left: @headertitleleftlargemargin;
-      @media @smartphone {
-        padding-left: @headertitleleftsmallmargin;
+      padding-left: @headertitlespanleftlargepadding;
+      &::before {
+        width:1em;
+        margin-right:@headertitlespanleftsmallmargin;
       }
-      @media @desktop {
-        padding-left: @main-margin-size-desktop;
+
+      @media @tablet {
+         padding-left: @headertitlespanleftmiddlepadding;
+         &::before {
+           margin-right:@headertitlespanleftlargemargin;
+         }
+      }
+
+      @media @smartphone {
+         padding-left: @headertitlespanleftsmallpadding;
+         &::before {
+           margin-right:@headertitlespanleftsmallmargin;
+         }
       }
     }
     // Clickable title
@@ -945,7 +966,9 @@ div[data-gadget-scope='header'] .ui-header {
         }
 
         @media @desktop {
-          padding-left: @main-margin-size-desktop;
+          width: @headertitlemiddlewidth;
+          margin-left: @headertitleleftmiddlemargin;
+          margin-right: @headertitlerightsmallmargin;
         }
         width: @headertitleleftlargemargin;
         @media @smartphone {
