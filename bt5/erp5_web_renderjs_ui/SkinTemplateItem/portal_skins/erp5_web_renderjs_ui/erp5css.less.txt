@@ -1614,8 +1614,8 @@ div[data-gadget-scope='notification'] {
   @media @desktop {
     left: @panelwidth;
     top: 2 * @headerheight;
-    width: ~"calc(100vw - "@panelwidth~")";
     iframe {
+      width: ~"calc(100vw - "@panelwidth~")";
       height: ~"calc(100vh - "2 * @headerheight~")";
     }
   }
