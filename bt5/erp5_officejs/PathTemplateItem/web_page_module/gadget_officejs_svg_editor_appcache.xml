@@ -319,20 +319,20 @@ method-draw/lib/jgraduate/LICENSE\n
 method-draw/lib/jgraduate/README\n
 method-draw/lib/jgraduate/css/jPicker.css\n
 method-draw/lib/jgraduate/css/jgraduate.css\n
-method-draw/lib/jgraduate/images//AlphaBar.png\n
-method-draw/lib/jgraduate/images//Bars.png\n
-method-draw/lib/jgraduate/images//NoColor.png\n
-method-draw/lib/jgraduate/images//bar-opacity.png\n
-method-draw/lib/jgraduate/images//eyedropper.png\n
-method-draw/lib/jgraduate/images//map-opacity.png\n
-method-draw/lib/jgraduate/images//mappoint.gif\n
-method-draw/lib/jgraduate/images//mappoint_c.png\n
-method-draw/lib/jgraduate/images//mappoint_f.png\n
-method-draw/lib/jgraduate/images//picker.gif\n
-method-draw/lib/jgraduate/images//preview-opacity.png\n
-method-draw/lib/jgraduate/images//rangearrows.gif\n
-method-draw/lib/jgraduate/images//rangearrows2.gif\n
-method-draw/lib/jgraduate/images//Maps.png\n
+method-draw/lib/jgraduate/images/AlphaBar.png\n
+method-draw/lib/jgraduate/images/Bars.png\n
+method-draw/lib/jgraduate/images/NoColor.png\n
+method-draw/lib/jgraduate/images/bar-opacity.png\n
+method-draw/lib/jgraduate/images/eyedropper.png\n
+method-draw/lib/jgraduate/images/map-opacity.png\n
+method-draw/lib/jgraduate/images/mappoint.gif\n
+method-draw/lib/jgraduate/images/mappoint_c.png\n
+method-draw/lib/jgraduate/images/mappoint_f.png\n
+method-draw/lib/jgraduate/images/picker.gif\n
+method-draw/lib/jgraduate/images/preview-opacity.png\n
+method-draw/lib/jgraduate/images/rangearrows.gif\n
+method-draw/lib/jgraduate/images/rangearrows2.gif\n
+method-draw/lib/jgraduate/images/Maps.png\n
 method-draw/lib/jgraduate/jquery.jgraduate.js\n
 method-draw/lib/jgraduate/jquery.jgraduate.min.js\n
 method-draw/lib/jgraduate/jpicker.min.js\n
@@ -510,7 +510,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.44217.46814.8652</string> </value>
+                <value> <string>959.47786.31692.33024</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -528,7 +528,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495033633.22</float>
+                        <float>1497440463.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
