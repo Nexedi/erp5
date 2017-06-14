@@ -882,45 +882,82 @@ print dig
 
     self.assertEquals(result, True)
 
-def testNPArrayPrint(self):
-  self.login('dev_user')
-  import_code = '''
+  def testNPArrayPrint(self):
+    self.login('dev_user')
+    import_code = '''
 import numpy as np
 '''
-  reference = 'Test.Notebook.EnvironmentObject.Errors.NPArrayTest'
-  result = self.portal.Base_executeJupyter(
-    reference=reference,
-    python_expression=import_code
-  )
-  self.tic()
+    reference = 'Test.Notebook.EnvironmentObject.Errors.NPArrayTest'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
 
-  result = json.loads(result)
-  self.assertEquals(result['status'], 'ok')
-  
-  jupyter_code = '''
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    jupyter_code = '''
 print np.random.rand(256, 256, 256)
 '''
 
-  result = self.portal.Base_executeJupyter(
-    reference=reference,
-    python_expression=jupyter_code
-  )
-  self.tic()
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
 
-  result = json.loads(result)
-  self.assertEquals(result['status'], 'ok')
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
 
-  jupyter_code = '''
+    jupyter_code = '''
 print np.random.randint(low = 2 ** 63 - 1, size = (256, 256, 256), dtype = 'int64')
 '''
 
-  result = self.portal.Base_executeJupyter(
-    reference=reference,
-    python_expression=jupyter_code
-  )
-  self.tic()
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
 
-  result = json.loads(result)
-  self.assertEquals(result['status'], 'ok')
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
 
-  
+  def testImportWarning(self):
+    '''
+      This test checks the warning output for imports in Jupyter.
+    '''
+    self.login('dev_user')
+    import_code = '''
+import numpy as np
+import matplotlib.pyplot as plt
+import datetime
+'''
+    reference = 'Test.Notebook.EnvironmentObject.Errors.Import'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+    
+    expected_result = (u'WARNING: You imported from the modules numpy'
+                       u', matplotlib.pyplot, datetime without using the environment'
+                       u' object, which is not recomended. Your import was'
+                       u' automatically converted to use such method. The setup'
+                       u' functions were named as *module*_setup.')
+
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), expected_result)
+
+    jupyter_code = '''
+print np.array([1, 2, 3])
+'''
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.tic()
+    
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+    self.assertEquals(result['code_result'].strip(), u'[1 2 3]')
