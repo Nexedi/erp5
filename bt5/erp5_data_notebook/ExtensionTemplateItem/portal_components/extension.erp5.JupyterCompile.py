@@ -298,6 +298,20 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     print_fixer = PrintFixer()
     environment_collector = EnvironmentParser()
     ast_node = import_fixer.visit(ast_node)
+    
+    # Whenever we have new imports we need to warn the user about the 
+    # environment
+    if (import_fixer.warning_module_names != []):
+      warning = ("print '"
+                 "WARNING: You imported from the modules %s without "
+                 "using the environment object, which is not recomended. "
+                 "Your import was automatically converted to use such method. "
+                 "The setup functions were named as *module*_setup. "
+                 "'") % (', '.join(import_fixer.warning_module_names))               
+      tree = ast.parse(warning)
+      tree.body[0].lineno = ast_node.body[-1].lineno+5
+      ast_node.body.append(tree.body[0])    
+
     ast_node = print_fixer.visit(ast_node)
     ast.fix_missing_locations(ast_node)
     
@@ -759,6 +773,7 @@ class ImportFixer(ast.NodeTransformer):
   
   def __init__(self):
     self.import_func_dict = {}
+    self.warning_module_names = []
   
   def visit_FunctionDef(self, node):
     """
@@ -878,8 +893,8 @@ class ImportFixer(ast.NodeTransformer):
 
       empty_function.body = [node, return_dict]
       environment_set = self.newEnvironmentSetCall("%s_setup" %result_name)
-      warning = self.newImportWarningCall(root_module_name, result_name)
-      return [empty_function, environment_set, warning]
+      self.newImportWarningCall(root_module_name, result_name)
+      return [empty_function, environment_set]
     else:
       return node
 
@@ -914,18 +929,10 @@ class ImportFixer(ast.NodeTransformer):
 
   def newImportWarningCall(self, module_name, function_name):
     """
-      Return an AST.Expr representanting a print statement with a warning to an
-      user about the import of a module named `module_name` and instructs him
-      on how to fix it.
+      Adds a new module to the warning to the user about the importing of new
+      modules.
     """
-    warning = ("print '"
-               "WARNING: Your imported from the module %s without "
-               "using the environment object, which is not recomended. "
-               "Your import was automatically converted to use such method."
-               "The setup function was named as: %s_setup.\\n"
-               "'") % (module_name, function_name)
-    tree = ast.parse(warning)
-    return tree.body[0]
+    self.warning_module_names.append(module_name)
 
   
 def renderAsHtml(self, renderable_object):
