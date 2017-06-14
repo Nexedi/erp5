@@ -32,11 +32,12 @@ if listbox is None:
   listbox = []
   if node is not None or disable_node:
     getCurrentTrackingList = context.portal_simulation.getCurrentTrackingList
-#     context.log('Delivery_viewCheckbookInputDialog', getCurrentTrackingList(at_date=at_date, node=node,src__=1,where_expression="item_catalog.portal_type='Check' or item_catalog.portal_type='Checkbook'"))
     if disable_node:
       node=None
 
-    kw = {}
+    kw = {
+      'item_catalog_portal_type': ('Check', 'Checkbook'),
+    }
     if reference not in (None, ''):
       kw['aggregate_uid'] = [x.uid for x in context.getPortalObject().portal_catalog(
         destination_payment_internal_bank_account_number=reference,
@@ -47,17 +48,12 @@ if listbox is None:
       checkbook_model_uid = context.getPortalObject().restrictedTraverse(checkbook_model).getUid()
       kw['resource_uid'] = checkbook_model_uid
 
-    search_criterion = ''
     if title not in (None, ''):
-      # FIXME: this doesn't work with current catalog and simulation tool
-      #        build a SQL statement to bypass this limitation
-      #kw['item_catalog.title'] = title
-      search_criterion = " AND item_catalog.title LIKE '%s'" % title
+      kw['item_catalog_title'] = title
 
     current_tracking_list = getCurrentTrackingList(
       to_date=at_date,
       node=node,
-      where_expression="item_catalog.portal_type='Check' or item_catalog.portal_type='Checkbook' %s" % search_criterion,
       **kw)
 
     if count is True:
