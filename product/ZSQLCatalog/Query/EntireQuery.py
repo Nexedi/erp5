@@ -64,12 +64,9 @@ class EntireQuery(object):
                catalog_table_name=None,
                catalog_table_alias=None,
                extra_column_list=(),
-               from_expression=None,
-               order_by_override_list=None,
                implicit_join=False):
     self.query = query
     self.order_by_list = list(order_by_list)
-    self.order_by_override_set = frozenset(order_by_override_list)
     self.group_by_list = list(group_by_list)
     self.select_dict = defaultDict(select_dict)
     self.left_join_list = left_join_list
@@ -78,7 +75,6 @@ class EntireQuery(object):
     self.catalog_table_name = catalog_table_name
     self.catalog_table_alias = catalog_table_alias
     self.extra_column_list = list(extra_column_list)
-    self.from_expression = from_expression
     self.implicit_join = implicit_join
 
   def asSearchTextExpression(self, sql_catalog):
@@ -91,7 +87,6 @@ class EntireQuery(object):
       # method or do it here ?
       # Column Map was not built yet, do it.
       column_map = ColumnMap(catalog_table_name=self.catalog_table_name,
-                             table_override_map=self.from_expression,
                              left_join_list=self.left_join_list,
                              inner_join_list=self.inner_join_list,
                              implicit_join=self.implicit_join,
@@ -115,8 +110,6 @@ class EntireQuery(object):
         else:
           column_map.ignoreColumn(alias)
         column_map.registerColumn(column)
-      for override in self.order_by_override_set:
-        column_map.ignoreColumn(override)
       for order_by in self.order_by_list:
         assert isinstance(order_by, (tuple, list))
         assert len(order_by)
@@ -155,15 +148,11 @@ class EntireQuery(object):
       append = new_order_by_list.append
       for order_by in self.order_by_list:
         column = order_by[0]
-        if column in self.order_by_override_set:
-          LOG('EntireQuery', WARNING, 'Order-by column %r is forcibly accepted. This use is strongly discouraged.' % (column, ))
-          rendered = column
-        else:
-          try:
-            rendered = column_map.asSQLColumn(column)
-          except KeyError:
-            LOG('EntireQuery', WARNING, 'Order by %r ignored: it could not be mapped to a known column.' % (order_by, ))
-            rendered = None
+        try:
+          rendered = column_map.asSQLColumn(column)
+        except KeyError:
+          LOG('EntireQuery', WARNING, 'Order by %r ignored: it could not be mapped to a known column.' % (order_by, ))
+          rendered = None
         if rendered is not None:
           append((rendered, ) + tuple(order_by[1:]) + (
             None, ) * (3 - len(order_by)))
@@ -196,21 +185,11 @@ class EntireQuery(object):
       #     where_pattern % (x, ) for x in join_table_list
       #   )))
 
-      # BBB self.from_expression forces use of implicit inner join
       table_alias_dict = column_map.getTableAliasDict()
-      if self.from_expression:
-        warnings.warn("Providing a 'from_expression' is deprecated.",
-                      DeprecationWarning)
-        # XXX: perhaps move this code to ColumnMap?
-        legacy_from_expression = self.from_expression
-        from_expression = LegacyTableDefinition(legacy_from_expression,
-                                                table_alias_dict)
-        table_alias_dict = None
-      else:
-        from_expression = column_map.getTableDefinition()
-        assert ((from_expression is None) !=
-                (table_alias_dict is None)), ("Got both a from_expression "
-                                              "and a table_alias_dict")
+      from_expression = column_map.getTableDefinition()
+      assert ((from_expression is None) !=
+              (table_alias_dict is None)), ("Got both a from_expression "
+                                            "and a table_alias_dict")
       self.sql_expression_list = sql_expression_list
       # TODO: wrap the table_alias_dict above into a TableDefinition as well,
       # even without a legacy_table_definition.
