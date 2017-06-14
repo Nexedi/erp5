@@ -3547,31 +3547,6 @@ VALUES
     self.assertEqual([x.getTitle() for x in
                       folder_object_list], real_title_list)
 
-  def test_countResultsUsesFromExpression(self):
-    person_module = self.getPersonModule()
-    module_len = len(person_module)
-    if module_len == 0:
-      person = person_module.newContent(portal_type='Person')
-      module_len = len(person_module)
-    module_uid = person_module.getUid()
-
-    self.tic()
-    catalog = self.getCatalogTool()
-
-    # Test sanity checks
-    self.assertEqual(len(catalog.searchResults(parent_uid=module_uid)),
-      module_len)
-    self.assertEqual(catalog.countResults(parent_uid=module_uid)[0][0],
-      module_len)
-
-    from_expression = {
-      'catalog': '(SELECT sub_catalog.* FROM catalog AS sub_catalog'
-                 ' WHERE sub_catalog.parent_uid=%i)'
-                 ' AS catalog' % (module_uid, ),
-    }
-    count = catalog.countResults(from_expression=from_expression)[0][0]
-    self.assertEqual(count, module_len)
-
   def test_getParentUid(self):
     from Products.ERP5.Document.Assignment import Assignment
     import erp5.portal_type

@@ -805,21 +805,6 @@ class TestSQLCatalog(ERP5TypeTestCase):
       sort_on=[['default', 'DESC', 'INT']]
     )
     self.assertEqual(order_by_list, [['default', 'DESC', 'INT']])
-    order_by_list = self._catalog.buildOrderByList(
-      order_by_expression='default'
-    )
-    order_by_list = self._catalog.buildOrderByList(
-      order_by_expression='default DESC'
-    )
-    self.assertEqual(order_by_list, [['default', 'DESC']])
-    order_by_list = self._catalog.buildOrderByList(
-      order_by_expression='CAST(default AS INT) DESC'
-    )
-    self.assertEqual(order_by_list, [['CAST(default AS INT)', 'DESC']])
-    order_by_list = self._catalog.buildOrderByList(
-      order_by_expression='CAST(default AS INT)'
-    )
-    self.assertEqual(order_by_list, [['CAST(default AS INT)']])
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})

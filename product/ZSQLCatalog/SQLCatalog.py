@@ -296,7 +296,7 @@ class Catalog(Folder,
 
   An Object Catalog maintains a table of object metadata, and a
   series of manageable indexes to quickly search for objects
-  (references in the metadata) that satisfy a search where_expression.
+  (references in the metadata) that satisfy search conditions.
 
   This class is not Zope specific, and can be used in any python
   program to build catalogs of objects.  Note that it does require
@@ -2014,11 +2014,7 @@ class Catalog(Folder,
     query_list = []
     append = query_list.append
     # unknown_column_dict: contains all (key, value) pairs which could not be
-    # changed into queries. This is here for backward compatibility, because
-    # scripts can invoke this method and expect extra parameters (such as
-    # from_expression) to be handled. As they are normaly handled at
-    # buildSQLQuery level, we must store them into final ComplexQuery, which
-    # will handle them.
+    # changed into queries.
     unknown_column_dict = {}
     # empty_value_dict: contains all keys whose value causes them to be
     # discarded.
@@ -2107,11 +2103,10 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING, message)
       else:
         raise TypeError(message)
-    return ComplexQuery(query_list, logical_operator=operator,
-        unknown_column_dict=unknown_column_dict)
+    return ComplexQuery(query_list, logical_operator=operator)
 
   security.declarePrivate('buildOrderByList')
-  def buildOrderByList(self, sort_on=None, sort_order=None, order_by_expression=None):
+  def buildOrderByList(self, sort_on=None, sort_order=None):
     """
       Internal method. Should not be used by code outside buildSQLQuery.
 
@@ -2128,8 +2123,6 @@ class Catalog(Folder,
     order_by_list = []
     append = order_by_list.append
     if sort_on is not None:
-      if order_by_expression is not None:
-        LOG('SQLCatalog', WARNING, 'order_by_expression (%r) and sort_on (%r) were given. Ignoring order_by_expression.' % (order_by_expression, sort_on))
       if not isinstance(sort_on, (tuple, list)):
         sort_on = [[sort_on]]
       for item in sort_on:
@@ -2150,16 +2143,6 @@ class Catalog(Folder,
             elif item[2] == 'float':
               item[2] = 'DECIMAL'
         append(item)
-    elif order_by_expression is not None:
-      if not isinstance(order_by_expression, basestring):
-        raise TypeError, 'order_by_expression must be a basestring instance. Got %r.' % (order_by_expression, )
-      for x in order_by_expression.split(','):
-        x = x.strip()
-        item = x.rsplit(None, 1)
-        if len(item) > 1 and item[-1].upper() in ('ASC', 'DESC'):
-          append(item)
-        else:
-          append([x])
     return order_by_list
 
   security.declarePrivate('buildEntireQuery')
@@ -2182,23 +2165,9 @@ class Catalog(Folder,
     implicit_join = kw.pop('implicit_join', True)
     # Handle order_by_list
     order_by_list = kw.pop('order_by_list', [])
-    # Handle from_expression
-    from_expression = kw.pop('from_expression', None)
-    # Handle where_expression
-    where_expression = kw.get('where_expression', None)
-    if isinstance(where_expression, basestring) and len(where_expression):
-      LOG('SQLCatalog', INFO, 'Giving where_expression a string value is deprecated.')
-      # Transform given where_expression into a query, and update kw.
-      kw['where_expression'] = SQLQuery(where_expression)
-    # Handle select_expression_key
-    # It is required to support select_expression_key parameter for backward
-    # compatiblity, but I'm not sure if there can be a serious use for it in
-    # new API.
-    order_by_override_list = kw.pop('select_expression_key', ())
     return EntireQuery(
       query=self.buildQuery(kw, ignore_empty_string=ignore_empty_string, ignore_unknown_columns=ignore_unknown_columns),
       order_by_list=order_by_list,
-      order_by_override_list=order_by_override_list,
       group_by_list=group_by_list,
       select_dict=select_dict,
       left_join_list=left_join_list,
@@ -2208,7 +2177,7 @@ class Catalog(Folder,
       catalog_table_name=query_table,
       catalog_table_alias=query_table_alias,
       extra_column_list=extra_column_list,
-      from_expression=from_expression)
+    )
 
   security.declarePublic('buildSQLQuery')
   def buildSQLQuery(self, query_table='catalog',
@@ -2240,56 +2209,32 @@ class Catalog(Folder,
     """
     Convert some catalog arguments to generic arguments.
 
-    group_by, group_by_expression -> group_by_list
-    select_list, select_expression -> select_dict
-    sort_on, sort_on_order, order_by_expression -> order_list
+    group_by -> group_by_list
+    select_list -> select_dict
+    sort_on, sort_on_order -> order_list
     """
     kw = kw.copy()
-    group_by = kw.pop('group_by', None)
-    group_by_expression = kw.pop('group_by_expression', None)
-    group_by_list = kw.pop('group_by_list', None) or group_by or group_by_expression or []
-    if isinstance(group_by_list, basestring):
-      group_by_list = [x.strip() for x in group_by_list.split(',')]
-    kw['group_by_list'] = group_by_list
 
-    select_list = kw.pop('select_list', None)
-    select_expression = kw.pop('select_expression', None)
-    select_dict = kw.pop('select_dict', None) or select_list or select_expression or {}
+    kw['group_by_list'] = kw.pop('group_by_list', None) or kw.pop('group_by', [])
+
+    select_dict = kw.pop('select_dict', None) or kw.pop('select_list', {})
     if isinstance(select_dict, (list, tuple)):
-      select_dict = dict.fromkeys(select_dict)
-    if isinstance(select_dict, basestring):
-      if len(select_dict):
-        real_select_dict = {}
-        for column in select_dict.split(','):
-          index = column.lower().find(' as ')
-          if index != -1:
-            real_select_dict[column[index + 4:].strip()] = column[:index].strip()
-          else:
-            real_select_dict[column.strip()] = None
-        select_dict = real_select_dict
-      else:
-        select_dict = None
-    elif isinstance(select_dict, (list, tuple)):
       select_dict = dict.fromkeys(select_dict)
     kw['select_dict'] = select_dict
 
     order_by_list = kw.pop('order_by_list', None)
     sort_on = kw.pop('sort_on', None)
     sort_order = kw.pop('sort_order', None)
-    order_by_expression = kw.pop('order_by_expression', None)
     if order_by_list is None:
       order_by_list = self.buildOrderByList(
         sort_on=sort_on,
         sort_order=sort_order,
-        order_by_expression=order_by_expression,
       )
     else:
       if sort_on is not None:
         LOG('SQLCatalog', WARNING, 'order_by_list and sort_on were given, ignoring sort_on.')
       if sort_order is not None:
         LOG('SQLCatalog', WARNING, 'order_by_list and sort_order were given, ignoring sort_order.')
-      if order_by_expression is not None:
-        LOG('SQLCatalog', WARNING, 'order_by_list and order_by_expression were given, ignoring order_by_expression.')
     kw['order_by_list'] = order_by_list or []
     return kw
 
@@ -2412,7 +2357,7 @@ class Catalog(Folder,
 
   security.declarePrivate('countResults')
   def countResults(self, REQUEST=None, **kw):
-    """ Returns the number of items which satisfy the where_expression """
+    """ Returns the number of items which satisfy the conditions """
     return self.queryResults(
       self.getCountResultsMethod(),
       REQUEST=REQUEST,

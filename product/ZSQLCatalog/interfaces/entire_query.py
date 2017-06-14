@@ -45,8 +45,7 @@ class IEntireQuery(Interface):
 
   def __init__(query, order_by_list=None, group_by_list=None,
     select_dict=None, limit=None, catalog_table_name=None,
-    extra_column_list=None, from_expression=None,
-    order_by_override_list=None):
+    extra_column_list=None):
     """
       query (Query instance)
         The root of the Query tree this query will contain.
@@ -73,12 +72,6 @@ class IEntireQuery(Interface):
         The list of columns to register to column map. They will not be used
         in final rendering, but are hint on which table are supposed to be
         used when mapping columns.
-      from_expression
-        See SQLExpression.
-      order_by_override_list (list of string)
-        If a column is in order_by_list, cannot be mapped to a table column
-        but is present in this list, it will be passed through to
-        SQLExpression.
     """
 
   def asSQLExpression(sql_catalog, only_group_columns):

@@ -30,7 +30,6 @@
 
 from Query import Query
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
-from SQLQuery import SQLQuery
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.Query.AutoQuery import AutoQuery
@@ -53,20 +52,9 @@ class ComplexQuery(Query):
       logical_operator ('and', 'or', 'not')
         Logical operator.
         Default: 'and'
-
-      Deprecated
-        unknown_column_dict (dict)
-          Only one key of this dictionnary is used here:
-            key: 'from_expression'
-            value: string
-            This value will be passed through to SQLExpression. If it is
-            provided, this ComplexQuery must have no subquery (regular
-            SQLExpression limitation)
     """
     self.logical_operator = kw.pop('logical_operator', 'and').lower()
     assert self.logical_operator in ('and', 'or', 'not'), self.logical_operator
-    unknown_column_dict = kw.pop('unknown_column_dict', {})
-    self.from_expression = unknown_column_dict.pop('from_expression', None)
     if kw:
       raise TypeError('Unknown named arguments: %r' % (kw.keys(), ))
     query_list = []
@@ -78,14 +66,10 @@ class ComplexQuery(Query):
         extend(arg)
       else:
         append(arg)
-    new_query_list = []
-    append = new_query_list.append
-    # Iterate over the flaten argument list to cast each into a query type.
     for query in query_list:
       if not isinstance(query, Query):
-        query = SQLQuery(query)
-      append(query)
-    self.query_list = new_query_list
+        raise TypeError('Got a non-query argument: %r' % (query, ))
+    self.query_list = query_list
     self.checkQueryTree()
 
   def _findRelatedQuery(self, query):
@@ -190,7 +174,7 @@ class ComplexQuery(Query):
     return SQLExpression(self,
       sql_expression_list=sql_expression_list,
       where_expression_operator=self.logical_operator,
-      from_expression=self.from_expression)
+    )
 
   def registerColumnMap(self, sql_catalog, column_map):
     for query in self.query_list:
