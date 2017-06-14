@@ -154,24 +154,19 @@
       // Gadget has not yet been correctly initialized
       throw error;
     }
-    // XXX Improve error rendering
-    gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";
-    gadget.props.content_element.querySelector('pre').textContent =
-      "Error: " + error_text;
-    // XXX Notify error
+
+    return gadget.changeState({
+      error_text: error_text,
+      url: undefined
+    });
+
   }
 
   function displayError(gadget, error) {
     if (error instanceof RSVP.CancellationError) {
       return;
     }
-    displayErrorContent(gadget, error);
-    return gadget.dropGadget(MAIN_SCOPE)
-      .push(undefined, function () {
-        // Do not crash the app if the pg gadget in not defined
-        // ie, keep the original error on screen
-        return;
-      });
+    return displayErrorContent(gadget, error);
   }
 
   //////////////////////////////////////////
@@ -479,6 +474,23 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         route_result = gadget.state;
+
+      if (modification_dict.hasOwnProperty('error_text')) {
+        return gadget.dropGadget(MAIN_SCOPE)
+          .push(undefined, function () {
+            // Do not crash the app if the pg gadget in not defined
+            // ie, keep the original error on screen
+            return;
+          })
+          .push(function () {
+            // XXX Improve error rendering
+            gadget.props.content_element.innerHTML = "<br/><br/><br/><pre></pre>";
+            gadget.props.content_element.querySelector('pre').textContent =
+              "Error: " + gadget.state.error_text;
+            // XXX Notify error
+          });
+      }
+
       if (modification_dict.hasOwnProperty('url')) {
         return new RSVP.Queue()
           .push(function () {
