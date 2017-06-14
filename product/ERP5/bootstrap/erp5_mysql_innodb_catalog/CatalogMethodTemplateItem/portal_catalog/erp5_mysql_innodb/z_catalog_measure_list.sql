@@ -1,5 +1,5 @@
 DELETE FROM `measure` WHERE
-  <dtml-sqltest uid column="resource_uid" type="int" multiple>;
+  <dtml-sqltest uid column="resource_uid" type="int" multiple>
 
 <dtml-let measure_list="[]">
   <dtml-in getMeasureRowList prefix="loop">

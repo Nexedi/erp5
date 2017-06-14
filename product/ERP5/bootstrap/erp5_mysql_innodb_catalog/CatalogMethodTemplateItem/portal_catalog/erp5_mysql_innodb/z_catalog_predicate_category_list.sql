@@ -2,9 +2,8 @@ DELETE FROM
   predicate_category
 WHERE
 <dtml-sqltest uid type="int" multiple>
-;
 
-<dtml-var "'\0'">
+  <dtml-var sql_delimiter>
 
 <dtml-let predicate_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
