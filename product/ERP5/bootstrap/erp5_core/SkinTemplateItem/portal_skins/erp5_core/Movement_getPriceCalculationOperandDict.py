@@ -1,3 +1,5 @@
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
+
 def getResourceInternalPriceSortKeyMethod(high_priority_supply_line_list):
   def resourceInternalPriceSortKeyMethod(a):
     high_priority_supply_line_list_len = len(high_priority_supply_line_list)
@@ -70,9 +72,9 @@ def getOptimisedPriceCalculationOperandDict(default=None, context=None, **kw):
     for key in preferences.getPreferredPricingSupplyPathKeyCategoryList():
       key_uid = '%s_uid' % key
       supply_kw['default_%s' % key_uid] = context.getProperty(key_uid)
-    supply_uid_list = [str(brain.uid) for brain in context.portal_catalog(**supply_kw)]
-    if len(supply_uid_list):
-      kw['query'] = ' catalog.uid IN (%s)' % ','.join(supply_uid_list)
+    supply_uid_list = [brain.uid for brain in context.portal_catalog(**supply_kw)]
+    if supply_uid_list:
+      kw['query'] = SimpleQuery(uid=supply_uid_list)
     else:
       return default
   return resource.getPriceCalculationOperandDict(default=default, context=context, **kw)
