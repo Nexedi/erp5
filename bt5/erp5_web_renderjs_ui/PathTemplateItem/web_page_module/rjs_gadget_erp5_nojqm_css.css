@@ -794,16 +794,26 @@ div[data-gadget-scope='header'] .ui-header h1 {
   }
 }
 div[data-gadget-scope='header'] .ui-header h1 > span {
-  padding-left: 42pt;
+  padding-left: 24pt;
+}
+div[data-gadget-scope='header'] .ui-header h1 > span::before {
+  width: 1em;
+  margin-right: 6pt;
+}
+@media only screen and (min-width: 45em) and (max-width: 85em) {
+  div[data-gadget-scope='header'] .ui-header h1 > span {
+    padding-left: 16pt;
+  }
+  div[data-gadget-scope='header'] .ui-header h1 > span::before {
+    margin-right: 14pt;
+  }
 }
 @media not screen and (min-width: 45em) {
   div[data-gadget-scope='header'] .ui-header h1 > span {
-    padding-left: 30pt;
+    padding-left: 12pt;
   }
-}
-@media not screen and (max-width: 85em) {
-  div[data-gadget-scope='header'] .ui-header h1 > span {
-    padding-left: 24pt;
+  div[data-gadget-scope='header'] .ui-header h1 > span::before {
+    margin-right: 6pt;
   }
 }
 div[data-gadget-scope='header'] .ui-header h1 a {
@@ -823,7 +833,9 @@ div[data-gadget-scope='header'] .ui-header h1 a::before {
 }
 @media not screen and (max-width: 85em) {
   div[data-gadget-scope='header'] .ui-header h1 a::before {
-    padding-left: 24pt;
+    width: 12pt;
+    margin-left: 24pt;
+    margin-right: 6pt;
   }
 }
 @media not screen and (min-width: 45em) {

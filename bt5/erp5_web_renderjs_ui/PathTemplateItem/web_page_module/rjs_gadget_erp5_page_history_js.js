@@ -29,7 +29,8 @@
         id_list = options.id_list || [];
 
       return gadget.updateHeader({
-        page_title: 'History'
+        page_title: 'History',
+        page_icon: 'history'
       })
         .push(function () {
           var i,

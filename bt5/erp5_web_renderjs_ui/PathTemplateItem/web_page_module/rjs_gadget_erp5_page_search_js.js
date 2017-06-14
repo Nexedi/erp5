@@ -37,6 +37,7 @@
       var gadget = this,
         header_dict = {
           page_title: 'Search',
+          page_icon: 'search',
           filter_action: true
         };
 

@@ -18,7 +18,10 @@
     /////////////////////////////////////////////////////////////////
      .declareMethod("render", function () {
       var gadget = this;
-      return gadget.updateHeader({page_title: 'Logout'})
+      return gadget.updateHeader({
+        page_title: 'Logout',
+        page_icon: 'power-off'
+      })
         .push(function () {
           return gadget.translateHtml(gadget.element.innerHTML);
         })

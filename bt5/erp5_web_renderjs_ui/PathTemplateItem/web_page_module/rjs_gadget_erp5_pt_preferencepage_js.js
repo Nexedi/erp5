@@ -25,6 +25,7 @@
         user = "Who are you?";
       return gadget.updateHeader({
         page_title: 'Preferences',
+        page_icon: 'gear',
         save_action: true
       })
         .push(function () {
@@ -52,7 +53,7 @@
             gadget.getSetting("default_selected_language"),
             gadget.translate("User"),
             gadget.translate("Language")
-            
+
           ]);
         })
         .push(function (results) {

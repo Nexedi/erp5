@@ -29,7 +29,8 @@
       var gadget = this;
 
       return gadget.updateHeader({
-        page_title: 'Worklist'
+        page_title: 'Worklist',
+        page_icon: 'clipboard'
       })
         .push(function () {
           return gadget.jio_getAttachment(
