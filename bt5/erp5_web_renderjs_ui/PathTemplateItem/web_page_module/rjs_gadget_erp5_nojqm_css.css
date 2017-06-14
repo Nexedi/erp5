@@ -1420,9 +1420,9 @@ div[data-gadget-scope='notification'] button {
   .content-iframe-maximize {
     left: 180pt;
     top: 60pt;
-    width: calc(100vw -  180pt );
   }
   .content-iframe-maximize iframe {
+    width: calc(100vw -  180pt );
     height: calc(100vh -  60pt );
   }
 }
