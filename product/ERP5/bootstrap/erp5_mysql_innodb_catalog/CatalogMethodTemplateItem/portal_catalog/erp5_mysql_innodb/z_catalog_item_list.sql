@@ -2,9 +2,8 @@ DELETE FROM
   item
 WHERE
 <dtml-sqltest uid type="int" multiple>
-;
 
-<dtml-var "'\0'">
+<dtml-var sql_delimiter>
 
 <dtml-let movement_list="[]" uid_dict="{}">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">

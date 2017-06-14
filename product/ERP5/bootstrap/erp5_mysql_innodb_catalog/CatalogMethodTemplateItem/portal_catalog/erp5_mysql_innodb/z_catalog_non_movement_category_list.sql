@@ -2,8 +2,9 @@ DELETE FROM
   category
 WHERE
 <dtml-sqltest uid type="int" multiple>
-;
-<dtml-var "'\0'">
+
+<dtml-var sql_delimiter>
+
 <dtml-let category_list="[]" getCategoryParentUidList="portal_categories.getCategoryParentUidList">
 <dtml-in prefix="loop" expr="_.range(_.len(uid))">
 <dtml-if expr="getAcquiredCategoryList[loop_item]">

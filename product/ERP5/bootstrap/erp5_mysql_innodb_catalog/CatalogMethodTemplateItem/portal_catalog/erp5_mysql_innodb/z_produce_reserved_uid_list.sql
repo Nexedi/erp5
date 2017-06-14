@@ -4,9 +4,9 @@ VALUES
 <dtml-in "_.range(count - 1)">
 ( <dtml-sqlvar instance_id type="string"> , 'reserved' ) ,
 </dtml-in>
-( <dtml-sqlvar instance_id type="string"> , 'reserved' );
+( <dtml-sqlvar instance_id type="string"> , 'reserved' )
 
-<dtml-var "'\0'">
+<dtml-var sql_delimiter>
 
 SELECT   
   uid
