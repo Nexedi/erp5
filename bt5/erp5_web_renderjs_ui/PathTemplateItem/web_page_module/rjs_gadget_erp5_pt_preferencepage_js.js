@@ -25,6 +25,7 @@
         user = "Who are you?";
       return gadget.updateHeader({
         page_title: 'Preferences',
+        page_icon: 'gear',
         save_action: true
       })
         .push(function () {
