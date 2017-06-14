@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>HTML Post</type>
+  <workflow>edit_workflow, post_workflow</workflow>
+ </chain>
+</workflow_chain>
