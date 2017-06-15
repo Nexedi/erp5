@@ -45,7 +45,7 @@ var global = self, window = self;
       new self.RSVP.Queue()
         .push(function () {
           if (self.storage.get === undefined) {
-            self.storage = createStorage("officejs_code_source");
+            self.storage = createStorage(self.registration.scope);
           }
           return self.storage.getAttachment("/", relative_url)
             .push(function (blob) {
