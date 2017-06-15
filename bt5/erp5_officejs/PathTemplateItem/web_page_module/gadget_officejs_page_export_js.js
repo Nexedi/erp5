@@ -69,6 +69,16 @@
       "no_installer": true,
       "sub_gadget": []
     },
+    "Jabber Client": {
+      "url": "jabber_client/",
+      "cache": "gadget_jabberclient.appcache",
+      "no_installer": true,
+      "sub_gadget": ["connection"]
+    },
+    "connection": {
+      "cache": "gadget_jabberconnection.appcache",
+      "no_installer": true
+    },
     "officejs_ckeditor_gadget": {
       "cache": "gadget_ckeditor.appcache"
     },
