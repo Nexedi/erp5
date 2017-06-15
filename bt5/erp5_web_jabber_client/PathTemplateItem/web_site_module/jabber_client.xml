@@ -111,7 +111,6 @@
                         <value>
                           <list>
                             <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                            <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                           </list>
                         </value>
                     </item>
@@ -141,30 +140,19 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
-                <item>
-                    <key>
-                      <tuple>
-                        <int>99</int>
-                        <string>ERP5 Web Site/renderjs_runner</string>
-                      </tuple>
-                    </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
               </dictionary>
             </value>
         </item>
         <item>
             <key> <string>_count</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_identity_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -241,25 +229,35 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_x_frame_options</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>_mt_index</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_range_criterion</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>_tree</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
             </value>
         </item>
         <item>
@@ -285,7 +283,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'none\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
@@ -306,6 +304,10 @@
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
             <value> <string>gadget_translation.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_x_frame_options</string> </key>
+            <value> <string>SAMEORIGIN</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
@@ -362,7 +364,7 @@
         <item>
             <key> <string>workflow_history</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+              <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
             </value>
         </item>
       </dictionary>
@@ -378,19 +380,11 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="WebSiteTraversalHook" module="Products.ERP5.Document.WebSite"/>
-    </pickle>
-    <pickle>
-      <dictionary/>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
       <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
-  <record id="5" aka="AAAAAAAAAAU=">
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -403,18 +397,18 @@
             </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
     </pickle>
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <global name="OOBTree" module="BTrees.OOBTree"/>
-    </pickle>
-    <pickle>
-      <none/>
-    </pickle>
-  </record>
-  <record id="7" aka="AAAAAAAAAAc=">
-    <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
@@ -428,7 +422,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
@@ -436,7 +430,7 @@
       <none/>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
@@ -449,13 +443,13 @@
                 <item>
                     <key> <string>category_publication_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>edit_workflow</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                     </value>
                 </item>
               </dictionary>
@@ -464,7 +458,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="10" aka="AAAAAAAAAAo=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -517,7 +511,7 @@
       </tuple>
     </pickle>
   </record>
-  <record id="11" aka="AAAAAAAAAAs=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
     </pickle>
@@ -546,7 +540,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.24016.56134.48605</string> </value>
+                <value> <string>960.4006.61190.60910</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -564,7 +558,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456492716.38</float>
+                        <float>1497524510.1</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
