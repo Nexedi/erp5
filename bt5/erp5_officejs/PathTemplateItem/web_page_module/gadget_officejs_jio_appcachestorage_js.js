@@ -11,8 +11,8 @@
       (window.location.pathname.endsWith('/') ? '' : '/') +
       ((spec.version !== undefined) ?
       (spec.version + (spec.version.endsWith('/') ? '' : '/')) : ""));
-    this._relative_url_list = ["/", spec.manifest];
-    this._prefix = spec.prefix;
+    this._prefix = spec.prefix || "";
+    this._relative_url_list = ["/", this._prefix + spec.manifest];
     if (this._take_installer) {
       this._relative_url_list = [
         this._prefix || "/",
@@ -68,12 +68,13 @@
 
   AppCacheStorage.prototype.repair = function () {
     var storage = this,
-      prefix = storage._take_installer ? this._prefix + "development/" : "";
+      prefix = storage._prefix +
+        (storage._take_installer ? "development/" : "");
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
           type: "GET",
-          url: storage._origin_url + storage._manifest
+          url: storage._origin_url + storage._prefix + storage._manifest
         });
       })
       .push(function (response) {
