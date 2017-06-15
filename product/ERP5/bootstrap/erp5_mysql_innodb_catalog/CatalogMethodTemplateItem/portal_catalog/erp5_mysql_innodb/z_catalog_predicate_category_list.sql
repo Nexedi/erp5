@@ -14,7 +14,7 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(predicate_list) > 0">
-REPLACE INTO predicate_category VALUES 
+INSERT INTO predicate_category VALUES
     <dtml-in prefix="loop" expr="predicate_list">
       <dtml-if sequence-start><dtml-else>,</dtml-if>
       <dtml-if "predicate_property_dict[loop_item].has_key('membership_criterion_category_list')">
