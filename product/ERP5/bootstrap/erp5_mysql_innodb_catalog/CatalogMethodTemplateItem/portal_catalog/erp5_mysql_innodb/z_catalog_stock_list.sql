@@ -72,7 +72,7 @@ WHERE
   </dtml-in>
 
   <dtml-if "row_list">
-REPLACE INTO
+INSERT INTO
   stock
 (
   `uid`,

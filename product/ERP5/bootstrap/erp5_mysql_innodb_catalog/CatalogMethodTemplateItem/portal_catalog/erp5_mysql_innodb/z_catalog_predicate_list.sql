@@ -14,7 +14,7 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(predicate_list) > 0">
-REPLACE INTO predicate VALUES 
+INSERT INTO predicate VALUES
     <dtml-in prefix="loop" expr="predicate_list">
       <dtml-if sequence-start><dtml-else>,</dtml-if>
 ( 

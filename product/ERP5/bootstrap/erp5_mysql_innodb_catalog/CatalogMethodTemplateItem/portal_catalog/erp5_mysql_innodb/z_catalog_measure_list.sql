@@ -9,7 +9,7 @@ DELETE FROM `measure` WHERE
   <dtml-if measure_list>
     <dtml-var sql_delimiter>
 
-REPLACE INTO `measure`
+INSERT INTO `measure`
 VALUES
     <dtml-in measure_list prefix="loop">
 (
