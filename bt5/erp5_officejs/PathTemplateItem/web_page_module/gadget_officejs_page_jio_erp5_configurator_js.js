@@ -10,7 +10,8 @@
       .push(function () {
         return RSVP.all([
           gadget.getSetting("portal_type"),
-          gadget.getSetting("erp5_attachment_synchro", undefined)
+          gadget.getSetting("erp5_attachment_synchro", undefined),
+          gadget.getSetting("default_view_reference", "jio_view")
         ]);
       })
       .push(function (result) {
@@ -70,7 +71,7 @@
               url: (new URI("hateoas"))
                     .absoluteTo(erp5_url)
                     .toString(),
-              default_view_reference: "jio_view"
+              default_view_reference: result[2]
             }
           }
         };
