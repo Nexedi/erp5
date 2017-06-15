@@ -99,18 +99,16 @@
         </item>
         <item>
             <key> <string>text_content</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-CACHE MANIFEST\n
-# generated on Fri, 29 Apr 2016 14:26:00 +0200\n
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri, 30Apr 2016 14:26:00 +0200\n
 \n
 CACHE:\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.eot?#iefix&v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.woff?v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.ttf?v=4.2.0\n
-//netdna.bootstrapcdn.com/font-awesome/4.2.0/fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular\n
+font-awesome/font-awesome.css\n
+font-awesome/font-awesome-webfont.eot\n
+font-awesome/font-awesome-webfont.woff\n
+font-awesome/font-awesome-webfont.woff2\n
+font-awesome/font-awesome-webfont.ttf\n
+font-awesome/font-awesome-webfont.svg\n
 URI.js\n
 gadget_translation.html\n
 gadget_translation.js\n
@@ -138,6 +136,10 @@ gadget_erp5_field_string.html\n
 gadget_erp5_field_string.js\n
 gadget_erp5_field_password.html\n
 gadget_erp5_field_password.js\n
+gadget_erp5_label_field.html\n
+gadget_erp5_label_field.js\n
+gadget_html5_input.html\n
+gadget_html5_input.js\n
 gadget_jabberclient_page_dialog.html\n
 gadget_jabberclient_page_dialog.js\n
 gadget_jabberclient_router.html\n
@@ -157,9 +159,7 @@ gadget_jabberclient_jio.js\n
 favicon.ico\n
 connection/\n
 NETWORK:\n
-*
-
-]]></string> </value>
+*</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -294,7 +294,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>951.6719.60863.47701</string> </value>
+                <value> <string>960.4045.64587.54579</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -312,7 +312,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1476100696.24</float>
+                        <float>1497526217.44</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
