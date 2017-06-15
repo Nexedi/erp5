@@ -39,13 +39,13 @@ var global = self, window = self;
       .replace(self.registration.scope, "")
       .replace(self.version_url, "");
     if (relative_url === "") {
-      relative_url = self.registration.scope;
+      relative_url = "/";
     }
     event.respondWith(
       new self.RSVP.Queue()
         .push(function () {
           if (self.storage.get === undefined) {
-            self.storage = createStorage("officejs_code_source");
+            self.storage = createStorage(self.registration.scope);
           }
           return self.storage.getAttachment("/", relative_url)
             .push(function (blob) {

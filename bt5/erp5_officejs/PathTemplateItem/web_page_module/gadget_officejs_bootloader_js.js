@@ -26,7 +26,7 @@ var repair = false;
       check_local_modification: false,
       signature_storage: {
         type: "indexeddb",
-        database: "installer_hash"
+        database: window.location.pathname + version_url + "_hash"
       },
       local_sub_storage: {
         type: "query",
@@ -34,7 +34,8 @@ var repair = false;
           type: "uuid",
           sub_storage: {
             type: "indexeddb",
-            database: "officejs_code_source"
+            database: window.location.origin + window.location.pathname +
+              version_url
           }
         }
       },
