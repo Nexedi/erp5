@@ -2,6 +2,7 @@
 <html>
 <!--
   data-i18n=Worklist
+  data-i18n=All work caught up!
 -->
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
@@ -20,11 +21,18 @@
 
     <!-- XXX must set theme here! -->
     <script id="table-template" type="text/x-handlebars-template">
+      {{#if documentList }}
       <ul data-role="listview" data-theme="c" class="document-listview ui-listview-inset ui-corner-all">
         {{#each documentlist}}
           <li class="ui-li-has-count" data-icon="false" ><a class="ui-body-inherit" href="{{link}}">{{title}} <span class="ui-li-count">{{count}}</span></a></li>
         {{/each}}
       </ul>
+      {{else}}
+      <div class="first-loader">
+        <h2 data-i18n="All work caught up!">All work caught up!</h2>
+        <img width="442" height="442" src="gadget_erp5_worklist_empty.svg?format=svg">
+        </div>
+      {{/if}}
     </script>
 
   </head>
