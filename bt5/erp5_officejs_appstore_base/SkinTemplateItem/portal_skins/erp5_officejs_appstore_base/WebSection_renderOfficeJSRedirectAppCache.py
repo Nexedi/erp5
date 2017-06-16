@@ -13,4 +13,4 @@ response.setHeader('Content-Type', 'text/cache-manifest')
 response.setHeader('Cache-Control', 'max-age=0, public, must-revalidate')
 
 return """CACHE MANIFEST
-# %s""" % context.getLayoutProperty("configuration_latest_version", default="development")
+# %s + hash""" % context.getLayoutProperty("configuration_latest_version", default="development")

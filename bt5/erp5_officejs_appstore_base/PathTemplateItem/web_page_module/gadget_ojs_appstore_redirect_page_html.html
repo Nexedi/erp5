@@ -3,7 +3,7 @@
   <body>
     <script language="JavaScript">
       function redirect_version() {
-        document.location.replace("${latest_version}/")
+        document.location.replace("${latest_version}/" + document.location.hash)
       };
       window.applicationCache.addEventListener('cached',redirect_version);
       window.applicationCache.addEventListener('noupdate',redirect_version);
