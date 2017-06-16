@@ -4354,6 +4354,17 @@ class TestTransactions(AccountingTestCase):
       ('from section', bank_account.getRelativeUrl()),
       source_transaction.AccountingTransaction_getSourcePaymentItemList())
 
+    # We include non selectable elements in the drop down to show which to which organisation
+    # the bank account belongs to.
+    self.assertEqual(
+      [('', ''),
+       (self.main_section.getTitle(), None),
+       ('from main section', parent_bank_account.getRelativeUrl()),
+       (self.section.getTitle(), None),
+       ('from section', bank_account.getRelativeUrl()),
+      ],
+      source_transaction.AccountingTransaction_getSourcePaymentItemList())
+
     destination_transaction = self._makeOne(
       portal_type='Payment Transaction',
       destination_section_value=self.section,
@@ -4368,6 +4379,29 @@ class TestTransactions(AccountingTestCase):
     self.assertIn(
       ('from section', bank_account.getRelativeUrl()),
       destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
+
+    main_section_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.main_section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertIn(
+      ('from main section', parent_bank_account.getRelativeUrl()),
+      main_section_transaction.AccountingTransaction_getSourcePaymentItemList())
+    self.assertNotIn(
+      ('from section', bank_account.getRelativeUrl()),
+      main_section_transaction.AccountingTransaction_getSourcePaymentItemList())
+
+    # We don't have this non selectable element when all bank accounts are from
+    # the same organisation
+    self.assertEqual(
+      [('', ''),
+       ('from main section', parent_bank_account.getRelativeUrl()),
+      ],
+      main_section_transaction.AccountingTransaction_getSourcePaymentItemList())
 
   def test_AccountingTransaction_getSourcePaymentItemList_parent_section_with_accounting_period(self):
     # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList

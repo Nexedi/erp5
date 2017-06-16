@@ -48,19 +48,36 @@ else:
 
 
 item_list = [('', '')]
-for bank in bank_account_list:
-  bank = bank.getObject()
-     
+
+
+# If we have bank accounts from more than one organisation, include
+# the organisation as hierarchy to show which organisation the bank
+# account belongs to.
+include_organisation_hierarchy = len(set(
+  ['/'.join(b.path.split('/')[:-1]) for b in bank_account_list])) > 1
+
+previous_organisation = None
+# sort bank accounts in a way that bank accounts from the same
+# organisation are consecutive
+for brain in sorted(bank_account_list, key=lambda b:b.path):
+  bank = brain.getObject()
+  if include_organisation_hierarchy:
+    organisation = bank.getParentValue()
+    if organisation != previous_organisation:
+      previous_organisation = organisation
+      # include non-selectable element to show hierarchy
+      item_list.append((organisation.getTranslatedTitle(), None))
+
   if bank.getReference() and bank.getTitle() \
                   and bank.getReference() != bank.getTitle():
     item_list.append(('%s - %s' % ( bank.getReference(),
-                                    bank.getTitle() or 
+                                    bank.getTitle() or
                                     bank.getSourceFreeText() or
                                     bank.getSourceTitle()),
                                     bank.getRelativeUrl()))
   else:
     item_list.append(( bank.getReference() or
-                       bank.getTitle() or 
+                       bank.getTitle() or
                        bank.getSourceFreeText() or
                        bank.getSourceTitle(),
                        bank.getRelativeUrl() ))
