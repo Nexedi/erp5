@@ -459,8 +459,8 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
         user_context['_volatile_variable_list'] += variable
         
       if environment_collector.showEnvironmentSetup():
-        inject_variable_dict.write("%s\n" % str(notebook_context['setup']))
-
+        inject_variable_dict['_print'].write("%s\n" % str(notebook_context['setup']))
+    
       # Execute the nodes with 'exec' mode
       for node in to_run_exec:
         mod = ast.Module([node])
@@ -888,12 +888,19 @@ class ImportFixer(ast.NodeTransformer):
       # is immediately raised and doesn't block next Jupyter cell execution
       exec(test_import_string)
 
-      empty_function = self.newEmptyFunction("%s_setup" %result_name)
+      dotless_result_name = ""
+      for character in result_name:
+        if character == '.':
+          dotless_result_name = dotless_result_name + '_dot_'
+        else:
+          dotless_result_name = dotless_result_name + character
+      
+      empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
       return_dict = self.newReturnDict(final_module_names)
 
       empty_function.body = [node, return_dict]
-      environment_set = self.newEnvironmentSetCall("%s_setup" %result_name)
-      self.newImportWarningCall(root_module_name, result_name)
+      environment_set = self.newEnvironmentSetCall("%s_setup" %dotless_result_name)
+      self.newImportWarningCall(root_module_name, dotless_result_name)
       return [empty_function, environment_set]
     else:
       return node
@@ -914,7 +921,11 @@ class ImportFixer(ast.NodeTransformer):
     """
     return_dict = "return {"
     for name in module_names:
-      return_dict = return_dict + "'%s': %s, " % (name, name)
+      if name.find('.') != -1:
+        base_name = name[:name.find('.')]
+      else:
+        base_name = name
+      return_dict = return_dict + "'%s': %s, " % (base_name, base_name)
     return_dict = return_dict + '}'
     return ast.parse(return_dict).body[0]
 
