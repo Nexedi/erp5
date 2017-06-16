@@ -39,7 +39,7 @@ var global = self, window = self;
       .replace(self.registration.scope, "")
       .replace(self.version_url, "");
     if (relative_url === "") {
-      relative_url = self.registration.scope;
+      relative_url = "/";
     }
     event.respondWith(
       new self.RSVP.Queue()
