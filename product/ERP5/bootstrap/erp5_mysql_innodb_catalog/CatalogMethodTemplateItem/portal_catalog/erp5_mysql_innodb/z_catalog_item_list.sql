@@ -1,12 +1,9 @@
 DELETE FROM
   item
 WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
+<dtml-sqltest uid type="int" multiple>
 
-<dtml-var "'\0'">
+<dtml-var sql_delimiter>
 
 <dtml-let movement_list="[]" uid_dict="{}">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
@@ -16,7 +13,7 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(movement_list) > 0">
-REPLACE INTO
+INSERT INTO
   item
 VALUES
     <dtml-in prefix="loop" expr="movement_list">

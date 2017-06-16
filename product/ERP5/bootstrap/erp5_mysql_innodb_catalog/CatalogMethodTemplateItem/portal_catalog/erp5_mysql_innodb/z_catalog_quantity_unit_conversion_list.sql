@@ -13,8 +13,7 @@
 
 <dtml-if quantity_unit_conversion_dict>
 DELETE FROM `quantity_unit_conversion` WHERE
-  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>;
-
+  <dtml-sqltest "quantity_unit_conversion_dict.keys()" column="resource_uid" type="int" multiple>
 
   <dtml-var sql_delimiter>
 
@@ -22,8 +21,7 @@ DELETE FROM `quantity_unit_conversion` WHERE
   <dtml-call "value_list.extend(loop_item.values())">
 </dtml-in>
 
-REPLACE INTO `quantity_unit_conversion`
-VALUES
+INSERT INTO `quantity_unit_conversion` VALUES
     <dtml-in "value_list" prefix="loop">
 (
   <dtml-sqlvar expr="loop_item['uid']" type="int" optional>,

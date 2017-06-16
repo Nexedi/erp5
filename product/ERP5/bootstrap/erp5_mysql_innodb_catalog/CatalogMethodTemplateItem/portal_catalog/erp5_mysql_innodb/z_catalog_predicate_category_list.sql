@@ -1,12 +1,9 @@
 DELETE FROM
   predicate_category
 WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
+<dtml-sqltest uid type="int" multiple>
 
-<dtml-var "'\0'">
+  <dtml-var sql_delimiter>
 
 <dtml-let predicate_list="[]">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
@@ -17,7 +14,7 @@ WHERE
     </dtml-if>
   </dtml-in>
   <dtml-if expr="_.len(predicate_list) > 0">
-REPLACE INTO predicate_category VALUES 
+INSERT INTO predicate_category VALUES
     <dtml-in prefix="loop" expr="predicate_list">
       <dtml-if sequence-start><dtml-else>,</dtml-if>
       <dtml-if "predicate_property_dict[loop_item].has_key('membership_criterion_category_list')">

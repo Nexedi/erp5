@@ -1,5 +1,5 @@
 DELETE FROM `measure` WHERE
-  <dtml-sqltest uid column="resource_uid" type="int" multiple>;
+  <dtml-sqltest uid column="resource_uid" type="int" multiple>
 
 <dtml-let measure_list="[]">
   <dtml-in getMeasureRowList prefix="loop">
@@ -9,7 +9,7 @@ DELETE FROM `measure` WHERE
   <dtml-if measure_list>
     <dtml-var sql_delimiter>
 
-REPLACE INTO `measure`
+INSERT INTO `measure`
 VALUES
     <dtml-in measure_list prefix="loop">
 (

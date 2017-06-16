@@ -1,12 +1,10 @@
 DELETE FROM
   stock
 WHERE
-<dtml-in uid>
-  uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>
-</dtml-in>
-;
+<dtml-sqltest uid type="int" multiple>
 
-<dtml-var "'\0'">
+<dtml-var sql_delimiter>
+
 <dtml-let row_list="[]" uid_dict="{}">
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">
     <dtml-if "not(isInventoryMovement[loop_item]) and isMovement[loop_item] and getResourceUid[loop_item]">
@@ -74,7 +72,7 @@ WHERE
   </dtml-in>
 
   <dtml-if "row_list">
-REPLACE INTO
+INSERT INTO
   stock
 (
   `uid`,
