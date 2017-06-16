@@ -4276,6 +4276,88 @@ class TestTransactions(AccountingTestCase):
       ('getSourceSectionTitle', 'Third Party'),
       at.AccountingTransaction_getListBoxColumnList(source=False))
 
+  def test_AccountingTransaction_getSourcePaymentItemList(self):
+    # AccountingTransaction_getSourcePaymentItemList allows to select bank accounts
+    # from section
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='BA-1'
+    )
+    bank_account.validate()
+    self.tic()
+
+    at = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertIn(
+      ('BA-1', bank_account.getRelativeUrl()),
+      at.AccountingTransaction_getSourcePaymentItemList())
+
+  def test_AccountingTransaction_getDestinationPaymentItemList(self):
+    # AccountingTransaction_getDestinationPaymentItemList allows to select bank accounts
+    # from destination section
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='BA-1'
+    )
+    bank_account.validate()
+    self.tic()
+
+    at = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.client_1,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  destination_credit=500)))
+    self.assertIn(
+      ('BA-1', bank_account.getRelativeUrl()),
+      at.AccountingTransaction_getDestinationPaymentItemList())
+
+  def test_AccountingTransaction_getSourcePaymentItemList_parent_section(self):
+    # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList
+    # allows to select bank accounts from parent groups of source section
+    parent_bank_account = self.main_section.newContent(
+      portal_type='Bank Account',
+      reference='from main section'
+    )
+    parent_bank_account.validate()
+    main_section_accounting_period = self.main_section.newContent(
+      portal_type='Accounting Period',
+    )
+    main_section_accounting_period.start()
+    self.tic()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertIn(
+      ('from main section', parent_bank_account.getRelativeUrl()),
+      source_transaction.AccountingTransaction_getSourcePaymentItemList())
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.client_1,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  destination_credit=500)))
+    self.assertIn(
+      ('from main section', parent_bank_account.getRelativeUrl()),
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
+
 
 class TestAccountingWithSequences(ERP5TypeTestCase):
   """The first test for Accounting
