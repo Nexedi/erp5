@@ -4332,6 +4332,11 @@ class TestTransactions(AccountingTestCase):
       portal_type='Accounting Period',
     )
     main_section_accounting_period.start()
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='from section'
+    )
+    bank_account.validate()
     self.tic()
 
     source_transaction = self._makeOne(
@@ -4345,6 +4350,9 @@ class TestTransactions(AccountingTestCase):
     self.assertIn(
       ('from main section', parent_bank_account.getRelativeUrl()),
       source_transaction.AccountingTransaction_getSourcePaymentItemList())
+    self.assertIn(
+      ('from section', bank_account.getRelativeUrl()),
+      source_transaction.AccountingTransaction_getSourcePaymentItemList())
 
     destination_transaction = self._makeOne(
       portal_type='Payment Transaction',
@@ -4356,6 +4364,65 @@ class TestTransactions(AccountingTestCase):
                   destination_credit=500)))
     self.assertIn(
       ('from main section', parent_bank_account.getRelativeUrl()),
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
+    self.assertIn(
+      ('from section', bank_account.getRelativeUrl()),
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
+
+  def test_AccountingTransaction_getSourcePaymentItemList_parent_section_with_accounting_period(self):
+    # AccountingTransaction_getSourcePaymentItemList and AccountingTransaction_getDestinationPaymentItemList
+    # allows to select bank accounts from parent groups of source section, but not if
+    # the organisation has accounting periods, in this case it acts as an independant section.
+    parent_bank_account = self.main_section.newContent(
+      portal_type='Bank Account',
+      reference='from main section'
+    )
+    parent_bank_account.validate()
+    main_section_accounting_period = self.main_section.newContent(
+      portal_type='Accounting Period',
+    )
+    main_section_accounting_period.start()
+    bank_account = self.section.newContent(
+      portal_type='Bank Account',
+      reference='from section'
+    )
+    bank_account.validate()
+    # open an accounting periods in this section, it will act as an independant section
+    # and will not allow bank accounts from parent sections.
+    section_accounting_period = self.section.newContent(
+      portal_type='Accounting Period',
+    )
+    section_accounting_period.start()
+    self.tic()
+
+    source_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      source_section_value=self.section,
+      destination_section_value=self.organisation_module.client_1,
+      lines=(dict(source_value=self.account_module.goods_purchase,
+                  source_debit=500),
+             dict(source_value=self.account_module.receivable,
+                  source_credit=500)))
+    self.assertNotIn(
+      ('from main section', parent_bank_account.getRelativeUrl()),
+      source_transaction.AccountingTransaction_getSourcePaymentItemList())
+    self.assertIn(
+      ('from section', bank_account.getRelativeUrl()),
+      source_transaction.AccountingTransaction_getSourcePaymentItemList())
+
+    destination_transaction = self._makeOne(
+      portal_type='Payment Transaction',
+      destination_section_value=self.section,
+      source_section_value=self.organisation_module.client_1,
+      lines=(dict(destination_value=self.account_module.goods_purchase,
+                  destination_debit=500),
+             dict(destination_value=self.account_module.receivable,
+                  destination_credit=500)))
+    self.assertNotIn(
+      ('from main section', parent_bank_account.getRelativeUrl()),
+      destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
+    self.assertIn(
+      ('from section', bank_account.getRelativeUrl()),
       destination_transaction.AccountingTransaction_getDestinationPaymentItemList())
 
 
