@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Contents\n"
-"POT-Creation-Date: 2016-01-08 13:01+UTC\n"
-"PO-Revision-Date: 2016-01-08 13:01+UTC\n"
+"POT-Creation-Date: 2017-06-19 12:06+UTC\n"
+"PO-Revision-Date: 2017-06-19 12:06+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -689,6 +689,9 @@ msgstr "Docteur"
 
 msgid "Document module features"
 msgstr "Fonctionnalités du module de gestion des documents"
+
+msgid "Documentary Collection"
+msgstr "TIP"
 
 msgid "Documentation"
 msgstr "Documentation"
@@ -2375,6 +2378,9 @@ msgstr "Slovène"
 
 msgid "Slovenia"
 msgstr "Slovénie"
+
+msgid "Social Declaration"
+msgstr "Déclaration Sociale"
 
 msgid "Software Developer"
 msgstr "Développeur informatique"
