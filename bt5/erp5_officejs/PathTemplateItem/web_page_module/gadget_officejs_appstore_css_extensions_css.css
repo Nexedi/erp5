@@ -1,0 +1,833 @@
+/* =========================== action button ========================*/
+.ui-input-search-no-pseudo:after {
+  content: none;
+}
+.ui-input-has-action {
+  position: relative;
+}
+.ui-input-search .ui-input-action,
+.ui-input-text .ui-input-action {
+  position: absolute;
+  right: 0;
+  top: 55%;
+  margin: -15px .3125em 0;
+  border: 0;
+  background-color: transparent;
+}
+.ui-input-has-action.ui-input-has-clear input {
+  padding-left: 0.25em;
+  padding-right: 4.5em;
+}
+.ui-input-has-action.ui-input-has-clear .ui-input-clear {
+  right: 2em !important;
+}
+html body .ui-panel .ui-input-search .ui-btn-icon-notext.ui-input-action:after,
+html body .ui-panel .ui-input-text .ui-btn-icon-notext.ui-input-action:after {
+  margin-top: -10px;
+}
+html body .ui-input-search .ui-input-action:hover,
+html body .ui-input-text .ui-input-action:hover,
+html body .ui-input-search .ui-input-action:active,
+html body .ui-input-text .ui-input-action:active {
+  background: transparent;
+  background-image: none;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+}
+/* =========================== carousel widget ========================*/
+.ui-carousel {
+  list-style: none outside none;
+  margin: 0 auto;
+  padding: 0;
+  position: relative;
+  text-align: center;
+  width: auto;
+  min-height: 25em;
+  overflow: hidden; /* firefox seems the only browser to properly overflow-hide round corners... */
+  margin: 0 -15px;
+}
+.ui-carousel-inset {
+  margin: 1em auto;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 1em;
+}
+.ui-carousel li {
+  list-style: none;
+  width: 100%;
+  position: absolute;
+  display: none;
+  height: 100%;
+  -webkit-border-radius: inherit;
+  -moz-border-radius: inherit;
+  border-radius: inherit;
+  overflow: inherit;
+  min-height: inherit;
+}
+.ui-carousel li.ui-carousel-transitioning {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.ui-carousel li.ui-carousel-active {
+  display: block;
+}
+.ui-carousel li a {
+  height: inherit;
+  -webkit-border-radius: inherit;
+  -moz-border-radius: inherit;
+  border-radius: inherit;
+  overflow: inherit;
+  min-height: inherit;
+}
+.ui-carousel img {
+  width: 100%;
+  display: block;
+  -webkit-border-radius: inherit;
+  -moz-border-radius: inherit;
+  border-radius: inherit;
+  min-height: inherit;
+}
+.ui-carousel-controls {
+  text-align: center;
+}
+.ui-carousel-controls .ui-radio {
+  display: inline-block;
+  padding: 0 0.25em;
+}
+.ui-carousel-controls .ui-radio input:checked {
+  border: 1px solid red !important;
+}
+
+.ui-carousel-captions .ui-carousel-captions-heading {
+  margin: 0;
+  padding: 0;
+}
+.ui-carousel-captions-content {
+  left: 0;
+  margin: 0;
+  padding: 0.5em 0;
+  position: absolute;
+  right: 0;
+}
+.ui-carousel-captions-bottom {
+  bottom: 0;
+}
+.ui-carousel-captions-top {
+  top: 0;
+}
+@media (max-width: 77.5em) {
+  .ui-carousel.ui-responsive {
+    max-width: 80%;
+  }
+}
+@media (max-width: 45em) {
+  .ui-carousel.ui-responsive {
+    max-width: 85%;
+  }
+}
+@media (max-width: 40em) {
+  .ui-carousel.ui-responsive {
+    max-width: 90%;
+  }
+}
+@media (max-width: 30em) {
+  .ui-carousel.ui-responsive {
+    max-width: 90%;
+  }
+}
+@media (max-width: 20em) {
+  .ui-carousel.ui-responsive {
+    max-width: 90%;
+  }
+}
+
+/* ================================= table ================================*/
+html div.ui-table-wrapper-top p,
+html div.ui-table-wrapper-bottom p {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+html table.ui-table thead th, html table.ui-table thead td {
+  padding: 0;
+}
+/* font-size */
+html table.ui-table {
+  font-size: 90%; 
+}
+html div.ui-table-wrapper-top > *,
+html div.ui-table-wrapper-bottom > *,
+html div.ui-collapsible-set {
+   font-size: 100%;
+}
+@media (min-width: 40em) {
+  html table.ui-table {
+     font-size: 80%; 
+  }
+  html div.ui-collapsible-set table.ui-table {
+   font-size: 90%;
+  }
+  html div.ui-table-wrapper-top > *,
+  html div.ui-table-wrapper-bottom > *,
+  html div.ui-collapsible-set {
+   font-size: 90%;
+  }
+  html table thead th a.ui-btn {
+     font-size: 100%;
+  }
+}
+/* shrink icon font-size (should not be set here...) */
+.ui-page .ui-table-wrapper-top .ui-btn[class*="ui-icon-"]:after ,
+.ui-page .ui-table-wrapper-bottom .ui-btn[class*="ui-icon-"]:after,
+.ui-page .ui-table-wrapper-top .ui-btn[class*="ui-icon-"]:after,
+.ui-page .ui-table-wrapper-bottom .ui-btn[class*="ui-icon-"]:after,
+.ui-page .ui-table thead .ui-btn[class*="ui-icon-"]:after,
+html div.ui-collapsible-set h1 .ui-btn[class*="ui-icon-"]:after{
+  font-size: 125%;
+  margin-top: -9px;
+}
+html table.ui-table tbdoy th,
+html table.ui-table tbody td {
+  text-align: right;
+  padding: 0 1em;
+}
+@media (max-width: 20em) {
+  html table.ui-table tbdoy th,
+  html table.ui-table tbody td {
+    padding: 0;
+  }
+}
+html table.ui-table tbody td a,
+html table.ui-table tbody th a {
+  text-decoration: none;
+  font-weight: normal;
+}
+html table.ui-table tbody td:hover a,
+html table.ui-table tbody th:hover a {
+  text-decoration: none;
+}
+/* override JQM */
+html table.ui-table {
+  width: 100.15%;
+  border: 0 none;
+  border-left: 1px solid;
+  border-right: 1px solid;
+}
+html table td, html table th {
+  /* padding: 0px !important; */
+  height: 34px; /* width with action menu without margins TODO: flex! */
+}
+/* table action menu */
+html table.ui-table tr td .ui-controlgroup {
+  margin: 0;
+  text-align: center;
+}
+html table.ui-table tr td .ui-controlgroup .ui-controlgroup-controls {
+  width: auto;
+}
+html table.ui-table tr td a.ui-btn {
+  border: 0 none;
+  background: transparent;
+}
+html table.ui-table tr td a.ui-btn:after {
+  margin-top: -10px;
+}
+/* default */
+html table.table_default {
+  width: 100%;
+  text-align: center;
+}
+/* checkbox cells */
+html table th .ui-checkbox .ui-btn,
+html table td .ui-checkbox .ui-btn {
+  border: 0 none;
+  border-radius: 0 0 0 0;
+  box-shadow: none !important;
+  height: inherit;
+  width: 100%;
+}
+@media (max-width: 20em) {
+  html body table thead th .ui-checkbox .ui-btn,
+  html body table tbody th .ui-checkbox .ui-btn {
+    max-width: 1.25em;
+    min-width: 1.25em;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+html table.ui-table tbody th {
+  padding-bottom: 0;
+  padding-top: 0;
+  width: auto;
+}
+html table tbody th .ui-checkbox .ui-btn,
+html table tbody th .ui-checkbox .ui-btn:hover,
+html table tbody td .ui-controlgroup-controls .ui-btn,
+html table tbody td .ui-controlgroup-controls .ui-btn:hover {
+  background-color: transparent;
+  background-image: none;
+}
+html table th .ui-checkbox .ui-btn.ui-btn-icon-notext.ui-checkbox-on:after,
+html table th .ui-checkbox .ui-btn.ui-btn-icon-notext.ui-checkbox-off:after,
+html table td .ui-checkbox .ui-btn.ui-btn-icon-notext.ui-checkbox-on:after,
+html table td .ui-checkbox .ui-btn.ui-btn-icon-notext.ui-checkbox-off:after {
+  margin-left: -.5em;
+}
+html table tr th .ui-checkbox input,
+html table tr td .ui-checkbox input {
+  position: absolute !important;
+  top: -9999px;
+  left: -9999px;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+}
+html table tr th .ui-checkbox,
+html table tr td .ui-checkbox {
+  margin: 0;
+  min-width: 1em;
+  padding: 0;
+  height: inherit;
+  position: static;
+}
+/* top radii - can use :first/last-child, because IE can't do corners anyway */
+/* inherit = 0!, not inheriting = radius */
+.ui-table-wrapper-top.ui-table-wrapper-inset,
+.ui-table-wrapper-top.ui-table-wrapper-inset * {
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/* first grid and contained buttons get top left */
+.ui-table-wrapper-top.ui-table-wrapper-inset > div:first-child,
+.ui-table-wrapper-top.ui-table-wrapper-inset > div:first-child > div > div > .ui-btn,
+.ui-table-wrapper-top.ui-table-wrapper-inset > div:first-child > div > div > .ui-select {
+  border-radius: inherit;
+  -webkit-border-radius: inherit;
+  border-top-right-radius: 0;
+  -webkit-border-top-right-radius: 0;
+}
+/* last grid and contained button get top right */
+.ui-table-wrapper-top.ui-table-wrapper-inset > div:last-child,
+.ui-table-wrapper-top.ui-table-wrapper-inset > div:last-child > div > div > .ui-btn,
+.ui-table-wrapper-top.ui-table-wrapper-inset > div:last-child > div > div > .ui-select {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  border-top-right-radius: inherit;
+  -webkit-border-top-right-radius: inherit;
+}
+/* bottom radii */
+.ui-table-wrapper-bottom.ui-table-wrapper-inset,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset * {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+}
+/* first grid and button get bottom left */
+.ui-table-wrapper-bottom.ui-table-wrapper-inset > div:first-child,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset > div:first-child > div > div > .ui-btn,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset > div:first-child > div > div > .ui-select {
+  border-radius: inherit;
+  -webkit-border-radius: inherit;
+  border-bottom-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+}
+/* last grid and button get bottom right */
+.ui-table-wrapper-bottom.ui-table-wrapper-inset > div:last-child,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset > div:last-child > div > div > .ui-btn,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset > div:last-child > div > div > .ui-select {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  border-bottom-right-radius: inherit;
+  -webkit-border-bottom-right-radius: inherit;
+}
+/* and overwrite again for controlgroups... */
+.ui-table-wrapper-top.ui-table-wrapper-inset .ui-controlgroup .ui-controlgroup-controls .ui-btn,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset .ui-controlgroup .ui-controlgroup-controls .ui-btn,
+.ui-table-wrapper-top.ui-table-wrapper-inset .ui-controlgroup .ui-controlgroup-controls .ui-select,
+.ui-table-wrapper-bottom.ui-table-wrapper-inset .ui-controlgroup .ui-controlgroup-controls .ui-select {
+  border-radius: 0;
+  -webkit-border-radius: 0;
+}
+/* buttons inside wrapper input/controlgroups*/
+.ui-table-wrapper .ui-input-search .ui-input-clear,
+.ui-table-wrapper .ui-input-search .ui-input-action,
+.ui-table-wrapper .ui-input-search .ui-input-clear:focus,
+.ui-table-wrapper .ui-input-search .ui-input-action:focus {
+  background-color: transparent;
+  background-image: none !important;
+  top: 50%;
+  height: 100%;
+}
+.ui-table-wrapper .ui-input-search .ui-input-clear:after,
+.ui-table-wrapper .ui-input-search .ui-input-action:after,
+.ui-table-wrapper .ui-input-search .ui-input-clear:focus:after,
+.ui-table-wrapper .ui-input-search .ui-input-action:focus:after {
+  margin-top: -10px !important;
+}
+.ui-table-wrapper.ui-table-wrapper-inset .ui-input-search a {
+  border-radius: 0 none;
+  -webkit-border-radius: 0 none;
+}
+.ui-table-wrapper.ui-table-wrapper-inset .ui-input-search a:last-child {
+  -webkit-border-top-right-radius: inherit;
+  border-top-right-radius: inherit;
+}
+/* table wrappers */
+.ui-table-wrapper-top, .ui-table-wrapper-bottom {
+  min-height: 25px;
+  width: 100%;
+  vertical-align: middle;
+  border-style: solid;
+  -webkit-box-shadow: none /* iOS3 */ !important;
+  box-shadow: none /* iOS3 */ !important;
+}
+.ui-table-wrapper-top div > .ui-select,
+.ui-table-wrapper-top div > .ui-btn:not(.ui-input-clear, .ui-input-action),
+.ui-table-wrapper-bottom div > .ui-select,
+.ui-table-wrapper-bottom div > .ui-btn:not(.ui-input-clear, .ui-input-action) {
+  width: auto;
+  margin: 0;
+}
+/* table borders */
+.ui-table-wrapper-top {
+  border-width: 1px 1px 0;
+}
+.ui-table-wrapper-bottom {
+  border-width: 0 1px 1px;
+}
+/* inherit border to table ... */
+.ui-table-wrapper-top ~ table,
+.ui-table-wrapper-bottom ~ table {
+  border: 1px solid;
+}
+/* wrapper buttons */
+.ui-table-wrapper-top:not(.ui-grid) .ui-btn:not(.ui-input-clear):not(.ui-input-action),
+.ui-table-wrapper-bottom:not(.ui-grid) .ui-btn:not(.ui-input-clear):not(.ui-input-action) {
+  margin: 0;
+  border: 0 none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  font-weight: normal;
+  vertical-align: middle;
+  padding: .625em 1em;
+}
+.ui-table-wrapper-top > div, .ui-table-wrapper-bottom  > div {
+  text-align: center;
+}
+.ui-table-wrapper-top .ui-table-columntoggle-btn {
+  float: none;
+}
+/* wrapper plain text */
+.ui-table-wrapper-top .ui-plain-text,
+.ui-table-wrapper-bottom .ui-plain-text {
+  font-size: .95em;
+  margin: 0;
+  padding: .625em 1em;
+  display: block;
+  position: relative;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: normal;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+}
+/* wrapper controlgroups */
+.ui-table-wrapper-top .ui-controlgroup,
+.ui-table-wrapper-bottom .ui-controlgroup {
+  text-align: center;
+  margin: 0 !important;
+}
+
+.ui-table-wrapper .ui-controlgroup .ui-controlgroup-controls > .ui-btn {
+  height: auto;
+  margin: 0 !important;
+  max-height: 2em;
+  padding: 0.45em 1em;
+}
+.ui-table-wrapper .ui-controlgroup .ui-controlgroup-controls .ui-btn,
+.ui-table-wrapper .ui-controlgroup .ui-controlgroup-controls .ui-select {
+  border: 0 none;
+  margin: 0 !important;
+}
+
+.ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls ,
+.ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls {
+  /* width: 100%; *//* in single block, this prevents centering */
+}
+/* buttons */
+.ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-btn ,
+.ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-btn
+.ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-select ,
+.ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-select {
+  width: auto;
+}
+.ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-select .ui-btn {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+
+@media (max-width: 20em) {
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls {
+    width: 100%;
+  }
+  /* why? if not 5 buttons, this breaks...*/
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-btn,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-btn,
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-select,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-select {
+    width: 10%;
+    padding-left: 2%;
+    padding-right: 2%;
+  }
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-select,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-select {
+    width: 20%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-select .ui-btn,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-select .ui-btn {
+    width: 100%;
+  }
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-btn:after,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-btn:after,
+  .ui-table-wrapper-top .ui-controlgroup .ui-controlgroup-controls .ui-select .ui-btn:after,
+  .ui-table-wrapper-bottom .ui-controlgroup .ui-controlgroup-controls .ui-select .ui-btn:after {
+    /* left: auto;
+    right: auto; *//*
+    margin-left: 5%  bad... */;
+  }
+  /* only child */
+  .ui-table-wrapper-bottom.ui-table-wrapper-inset > div:only-child,
+  .ui-table-wrapper-bottom.ui-table-wrapper-inset > div:only-child .ui-btn,
+  .ui-table-wrapper-bottom.ui-table-wrapper-inset > div:only-child .ui-select {
+    border-bottom-right-radius: inherit;
+    -webkit-border-bottom-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    -webkit-border-bottom-right-radius: inherit;
+  }
+  /* only child */
+  .ui-table-wrapper-top.ui-table-wrapper-inset > div:only-child,
+  .ui-table-wrapper-top.ui-table-wrapper-inset > div:only-child .ui-btn,
+  .ui-table-wrapper-top.ui-table-wrapper-inset > div:only-child .ui-select  {
+    border-top-right-radius: inherit;
+    -webkit-border-top-right-radius: inherit;
+    border-top-right-radius: inherit;
+    -webkit-border-top-right-radius: inherit;
+  }
+  .ui-table-wrapper-top.ui-table-wrapper-inset  .ui-controlgroup .ui-controlgroup-controls .ui-first-child,
+  .ui-table-wrapper-bottom.ui-table-wrapper-inset  .ui-controlgroup .ui-controlgroup-controls .ui-first-child {
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+  .ui-table-wrapper-top.ui-table-wrapper-inset  .ui-controlgroup .ui-controlgroup-controls .ui-last-child,
+  .ui-table-wrapper-bottom.ui-table-wrapper-inset  .ui-controlgroup .ui-controlgroup-controls .ui-last-child {
+    -webkit-border-bottom-right-radius: inherit;
+    border-bottom-right-radius: inherit;
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+/* alignment */
+.ui-table th, .ui-table td {
+  vertical-align: middle;
+}
+.ui-table thead th, .ui-table thead td {
+  text-align: center;
+}
+/* sortable buttons */
+.ui-table  thead th {
+  font-weight: normal !important;
+  /* padding: 0px; */
+}
+.ui-table thead th div.ui-checkbox {
+   position:relative; /*FF*/
+   height: 100%;
+   width: 100%;
+}
+.ui-table  thead th a {
+  margin: 0;
+  border-width: 0px !important;
+}
+/* multi row header */
+.ui-table thead th[rowspan="2"] a {
+  height: auto; padding: 10px 0;
+}
+/* responsiveness */
+@media (max-width: 40em) {
+  html table.ui-table {
+    width: 100.55%;
+  }
+  html table.ui-table-reflow tbody th {
+    border-top: 1px solid;
+    margin-top: 1.5em;
+  }
+  html table.ui-table-reflow tbody th:before {
+    width: 100%;
+  }
+
+  .ui-table-wrapper-top .ui-btn,
+  .ui-table-wrapper-top .ui-select,
+  .ui-table-wrapper-bottom .ui-btn,
+  .ui-table-wrapper-bottom .ui-select {
+    /* width: auto; */
+    text-indent: -9999px;
+    white-space: nowrap !important;
+  }
+  /* only way it works... */
+  .ui-table-wrapper-top [class*="ui-icon-"]:after,
+  .ui-table-wrapper-bottom [class*="ui-icon-"]:after {
+    text-indent: 0px;
+    left: 0;
+    margin: 0 auto;
+    right: 0;
+  }
+}
+
+/* ================================= contolbar ============================*/
+/* TODO: remove? old css */
+.ui-controlbar {
+  position: static;
+  text-align: center;
+  white-space: pre-line;
+  line-height: 0;
+}
+.ui-controlbar > * {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0;
+}
+.ui-controlbar .ui-select {
+  padding: 0 1%;
+}
+.ui-controlbar .ui-input-search {
+  display: block;
+  margin: 0.5em auto;
+}
+/* shrink icon font-size (should not be set here...) */
+html body .ui-controlbar .ui-btn[class*="ui-icon-"]:after {
+  font-size: 125%;
+  margin-top: -9px;
+}
+/* remove margin on controlbar buttons */
+html body .ui-controlbar > .ui-select,
+html body .ui-controlbar  > .ui-btn:not(.ui-input-clear, .ui-input-action) {
+  width: auto;
+  margin: 0;
+}
+html body .ui-controlbar .ui-controlgroup {
+  text-align: center;
+  margin: 0 !important;
+}
+html body .ui-controlbar .ui-controlgroup .ui-controlgroup-controls > * {
+  height: auto;
+  margin: 0 !important;
+  max-height: 2em;
+}
+html body .ui-controlbar .ui-controlgroup .ui-controlgroup-controls > .ui-select {
+  padding: 0;
+}
+
+
+
+/* custom bar */
+.ui-bar-plain {
+  padding: .7em 1em;
+  border: 1px solid;
+  font-size: 1em;
+}
+/* search filter bar? */
+.ui-controlbar {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.ui-controlbar .ui-plain-text {
+  display: block;
+  font-size: 80%;
+}
+/* ui-collapsible-tabs */
+/* action btns */
+.ui-collapsible-tabs.ui-dynamic-tabs .ui-collapsible-heading a.tab_action.ui-btn {
+  background: none repeat scroll 0 0 transparent;
+  border-width: 0px;
+  margin: 0 -1px;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  position: absolute;
+  right: 2em;
+  height: 100%;
+  top: 0;
+  width: 2em;
+}
+.ui-collapsible-tabs.ui-dynamic-tabs .ui-collapsible-collapsed .ui-collapsible-heading a.tab_action.ui-btn {
+  display: none;
+}
+.ui-collapsible-tabs.ui-dynamic-tabs .ui-collapsible-heading a.tab_action.ui-btn,
+.ui-collapsible-tabs.ui-dynamic-tabs .ui-collapsible-heading a.tab_action.ui-btn:hover {
+  background: none repeat scroll 0 0 transparent;
+}
+.ui-collapsible-tabs.ui-dynamic-tabs .ui-collapsible-heading a.tab_action + a.tab_action  {
+  right: 0;
+}
+.ui-collapsible-tabs.ui-dynamic-tabs.ui-dynamic-tabs-added ~ .ui-dynamic-info {
+  display: none;
+}
+
+/* side-by-side */
+@media (min-width: 40em) {
+  .ui-collapsible-tabs {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+  }
+  .ui-collapsible-tabs .ui-collapsible {
+    display: table-cell;
+  }
+  .ui-collapsible-tabs .ui-collapsible-content {
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  /* if we only have 1 element, we don't strecht full screen */
+  /* thx: http://lea.verou.me/2011/01/styling-children-based-on-their-number-with-css3/ */
+  .ui-collapsible-tabs .ui-collapsible:first-child:nth-last-child(1).add_tab {
+    width: 15%;
+    display: block;
+    margin: 0 auto;
+  }
+  .ui-collapsible-tabs .ui-collapsible:first-child:nth-last-child(1) h1 a {
+    text-align: center;
+  }
+
+  /* 1/2/3/4 items
+  li:first-child:nth-last-child(1) {
+    width: 100%;
+  }
+  li:first-child:nth-last-child(2),
+  li:first-child:nth-last-child(2) ~ li {
+    width: 50%;
+  }
+  li:first-child:nth-last-child(3),
+  li:first-child:nth-last-child(3) ~ li {
+    width: 33.3333%;
+  }
+  li:first-child:nth-last-child(4),
+  li:first-child:nth-last-child(4) ~ li {
+    width: 25%;
+  }
+  */
+  /* content - IE8 ignores this and falls back to regular collapsible-set */
+  .ui-collapsible-tabs[data-tabs="10"] .ui-collapsible .ui-collapsible-content {width: 1000%; }
+  .ui-collapsible-tabs[data-tabs="9"] .ui-collapsible .ui-collapsible-content {width: 900%; }
+  .ui-collapsible-tabs[data-tabs="8"] .ui-collapsible .ui-collapsible-content {width: 800%;}
+  .ui-collapsible-tabs[data-tabs="7"] .ui-collapsible .ui-collapsible-content {width: 700%;}
+  .ui-collapsible-tabs[data-tabs="6"] .ui-collapsible .ui-collapsible-content {width: 600%;}
+  .ui-collapsible-tabs[data-tabs="5"] .ui-collapsible .ui-collapsible-content {width: 500%;}
+  .ui-collapsible-tabs[data-tabs="4"] .ui-collapsible .ui-collapsible-content {width: 400%;}
+  .ui-collapsible-tabs[data-tabs="3"] .ui-collapsible .ui-collapsible-content {width: 300%;}
+  .ui-collapsible-tabs[data-tabs="2"] .ui-collapsible .ui-collapsible-content {width: 200%;}
+  .ui-collapsible-tabs[data-tabs="1"] .ui-collapsible .ui-collapsible-content {width: 100%;}
+
+  /* positioning (can use nth-child because IE8 does not care for the above */
+  .ui-collapsible-tabs .ui-collapsible:nth-child(1) .ui-collapsible-content {left: 0;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(2) .ui-collapsible-content {left: -100%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(3) .ui-collapsible-content {left: -200%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(4) .ui-collapsible-content {left: -300%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(5) .ui-collapsible-content {left: -400%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(6) .ui-collapsible-content {left: -500%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(7) .ui-collapsible-content {left: -600%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(8) .ui-collapsible-content {left: -700%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(9) .ui-collapsible-content {left: -800%;}
+  .ui-collapsible-tabs .ui-collapsible:nth-child(10) .ui-collapsible-content {left: -900%;}
+
+  /* corners */
+  /* hardcode inset content-theme bottom corners, because can't inherit 0 on bottom left/right first/last tab */
+  .ui-collapsible-tabs .ui-collapsible-inset.ui-collapsible-themed-content:not(.ui-collapsible-collapsed) .ui-collapsible-content {
+    -webkit-border-bottom-left-radius: .6em;
+    border-bottom-left-radius: .6em;
+    -webkit-border-bottom-right-radius: .6em;
+    border-bottom-right-radius: .6em;
+  }
+  .ui-collapsible-tabs .ui-collapsible.ui-first-child {
+    -webkit-border-top-left-radius: inherit;
+    border-top-left-radius: inherit;
+    -webkit-border-top-right-radius: 0;
+    border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .ui-collapsible-tabs .ui-collapsible.ui-last-child {
+    -webkit-border-top-right-radius: inherit;
+    border-top-right-radius: inherit;
+    -webkit-border-top-left-radius: 0;
+    border-top-left-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  /* if it's only a single tab, revert */
+  .ui-collapsible-tabs .ui-collapsible.ui-last-child.ui-first-child {
+    -webkit-border-radius: inherit;
+    border-radius: inherit;
+  }
+  /* straight corner last-tab if one tab is open */
+  .ui-collapsible-tabs .ui-collapsible:not(.ui-collapsible-collapsed) ~ .ui-collapsible.ui-last-child {
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  /* first tab, needs extra JS-assigned class... */
+  .ui-collapsible-tabs .ui-collapsible.ui-first-child {
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .ui-collapsible-tabs.ui-collapsible-set-all-closed .ui-collapsible.ui-first-child {
+    -webkit-border-bottom-left-radius: inherit;
+    border-bottom-left-radius: inherit;
+  }
+  /* hide status text */
+  .ui-collapsible-tabs .ui-collapsible-heading-status {
+    position: absolute !important;
+    left: -9999px;
+    clip: rect(1px 1px 1px 1px);
+  }
+  /* borders */
+  .ui-collapsible-tabs .ui-collapsible:not(.ui-collapsible-collapsed) h1 a {
+    border-bottom-color: transparent;
+  }
+  .ui-collapsible-tabs .ui-collapsible .ui-collapsible-content {
+    border-top-color: transparent;
+    border-top-width: 1px; /* magic */
+  }
+  html .ui-page .ui-collapsible-tabs .ui-collapsible + .ui-collapsible h1 a.ui-btn {
+    border-left-color: transparent;
+  }
+}
+/* hide icons */
+html .ui-page .ui-collapsible-tabs .ui-collapsible h1 a.ui-collapsible-hide-icon.ui-btn:after {
+  content: none;
+  left: 0;
+}
+html .ui-page .ui-collapsible-tabs .ui-collapsible h1 a.ui-collapsible-hide-icon.ui-btn {
+  padding-left: 1em;
+}
+
