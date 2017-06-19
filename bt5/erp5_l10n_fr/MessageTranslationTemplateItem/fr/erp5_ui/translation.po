@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 User Interface\n"
-"POT-Creation-Date: 2016-11-23 11:11+UTC\n"
-"PO-Revision-Date: 2016-11-23 11:11+UTC\n"
+"POT-Creation-Date: 2017-06-19 12:06+UTC\n"
+"PO-Revision-Date: 2017-06-19 12:06+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -333,6 +333,9 @@ msgstr "Unité de mesure utilisée pour calculer le poids d'une ressource."
 
 msgid "A typical per unit width of the resource"
 msgstr "Unité de mesure utilisée pour calculer la largeur d'une ressource."
+
+msgid "Abbreviations"
+msgstr "Abréviations"
 
 msgid "Absence Hours"
 msgstr "Heures d'absence"
@@ -705,6 +708,12 @@ msgstr "Code A.P.E."
 
 msgid "Actor"
 msgstr "Acteur"
+
+msgid "Actors"
+msgstr "Acteurs"
+
+msgid "Actors involved in this Use Case are listed below:"
+msgstr "Les acteurs impliqués dans ce cas d'usage sont listés ci-dessous:"
 
 msgid "Add"
 msgstr "Ajouter"
@@ -1221,6 +1230,9 @@ msgstr "Tissu"
 
 msgid "Apparel shape"
 msgstr "Modèle"
+
+msgid "Applicable Documents"
+msgstr "Documents Applicables"
 
 msgid "Application preferences"
 msgstr "Préférences pour l'application"
@@ -2370,6 +2382,9 @@ msgstr "Nom du caissier"
 
 msgid "Cashiers"
 msgstr "Caissiers"
+
+msgid "Catalog Result Tables"
+msgstr "Tableaux"
 
 msgid "Categories"
 msgstr "Catégories"
@@ -6871,6 +6886,9 @@ msgstr "Dernières publications"
 msgid "Layout Configuration"
 msgstr "Configuration du design"
 
+msgid "Leader"
+msgstr "Responsable"
+
 msgid "Learn"
 msgstr "Apprendre"
 
@@ -6949,6 +6967,12 @@ msgstr "Configuration de la liste réinitialisée."
 msgid "List Trash Bin"
 msgstr "Lister les documents de la corbeille"
 
+msgid "List and details of Use Case Actors."
+msgstr "Liste et Détails des Acteurs du Cas d'Usage"
+
+msgid "List and details of Use Case Scenario Steps."
+msgstr "Scénario"
+
 msgid "List of Documents"
 msgstr "Liste des documents"
 
@@ -6966,6 +6990,9 @@ msgstr "Rôles locaux"
 
 msgid "Location"
 msgstr "Lieu"
+
+msgid "Locations"
+msgstr "Site"
 
 msgid "Log in"
 msgstr "Connexion"
@@ -11104,6 +11131,9 @@ msgstr "Sauvegarder le Business Template"
 msgid "Saved in ${path} ."
 msgstr "Sauvé dans ${path} ."
 
+msgid "Scenarii"
+msgstr "Scénarii"
+
 msgid "Search"
 msgstr "Rechercher"
 
@@ -11574,6 +11604,9 @@ msgstr "Capital"
 
 msgid "Social Code"
 msgstr "Numéro de sécurité sociale"
+
+msgid "Social Declaration"
+msgstr "Déclaration Sociale"
 
 msgid "Social Form"
 msgstr "Forme juridique"
@@ -12357,6 +12390,12 @@ msgstr "Onglet 1"
 
 msgid "Tab name"
 msgstr "Nom de l'onglet"
+
+msgid "Table of Contents"
+msgstr "Table des Matières"
+
+msgid "Tables"
+msgstr "Tableaux"
 
 msgid "Taken on this period"
 msgstr "Pris sur cette période"
@@ -13471,6 +13510,24 @@ msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondan
 msgid "This price is not equal to tariff price. Check your price !"
 msgstr "Ce prix n'est pas celui du tarif. Vous devez cocher la case correspondante pour le valider."
 
+msgid "This section provides the list of applicable documents and references."
+msgstr "Cette section fournit la liste des fichiers applicables et des fichiers r&eacute;f&eacute;rences."
+
+msgid "This section provides the list of applicable documents."
+msgstr "Cette section fournit la liste des fichiers applicables."
+
+msgid "This section provides the list of figures and images."
+msgstr "Cette section fournit la liste des figures et des images."
+
+msgid "This section provides the list of referenced documents."
+msgstr "Cette section fournit la liste des documents référencés."
+
+msgid "This section provides the list of tables."
+msgstr "Cette section fournit la liste des tableaux."
+
+msgid "This section provides the lists of the applicable abbreviations."
+msgstr "Cette section fournit les listes des abr&eacute;viations applicables."
+
 msgid "This size is not possible."
 msgstr "Cette taille est hors standard"
 
@@ -14074,6 +14131,9 @@ msgstr "Date et heure de sortie"
 msgid "Url of the document"
 msgstr "Url du document"
 
+msgid "Use Case"
+msgstr "Cas D'usage"
+
 msgid "Use Current Selection"
 msgstr "Utiliser la sélection courante"
 
@@ -14100,6 +14160,9 @@ msgstr "L'utilisateur ${user} n'existe pas."
 
 msgid "User Account Workflow"
 msgstr "Workflow du compte utilisateur"
+
+msgid "User ID is not specified."
+msgstr "L'identifiant de l'utilisateur n'es pas spécifié."
 
 msgid "User Interface"
 msgstr "Interface utilisateur"
