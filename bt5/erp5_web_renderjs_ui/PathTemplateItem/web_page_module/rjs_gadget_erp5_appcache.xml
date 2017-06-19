@@ -108,7 +108,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 CACHE MANIFEST\n
-# generated on Wed, 03 Apr 2017 12:00:00 GMT+0200\n
+# generated on Mon, 19 Jun 2017 12:00:00 GMT+0200\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -119,6 +119,7 @@ font-awesome/font-awesome-webfont.woff?v=4.6.3\n
 font-awesome/font-awesome-webfont.woff2?v=4.6.3\n
 font-awesome/font-awesome-webfont.ttf?v=4.6.3\n
 font-awesome/font-awesome-webfont.svg?v=4.6.3#fontawesomeregular\n
+gadget_erp5_worklist_empty.svg?format=svg\n
 erp5_launcher_nojqm.js\n
 gadget_erp5_nojqm.css\n
 gadget_erp5_editor_panel.html\n
@@ -371,7 +372,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.22627.55549.31829</string> </value>
+                <value> <string>960.9595.29464.53282</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -389,7 +390,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491211677.95</float>
+                        <float>1497860105.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
