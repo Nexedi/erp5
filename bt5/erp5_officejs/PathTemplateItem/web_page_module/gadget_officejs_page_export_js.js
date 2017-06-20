@@ -75,6 +75,12 @@
       "no_installer": true,
       "sub_gadget": ["connection"]
     },
+    "Appstore": {
+      "url": "officejsoldv1/",
+      "cache": "officejs_store.appcache",
+      "no_installer": true,
+      "sub_gadget": []
+    },
     "connection": {
       "cache": "gadget_jabberconnection.appcache",
       "no_installer": true
