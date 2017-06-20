@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SQLCatalog_makeFullTextQuery</string> </value>
+            <value> <string>SQLCatalog_makeMroongaFullTextQuery</string> </value>
         </item>
       </dictionary>
     </pickle>
