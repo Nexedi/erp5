@@ -94,6 +94,19 @@
       var gadget = this,
         args = options.args;
       gadget.options = options;
+      if (args.access_token) {
+        if (args.state === "gdrive") {
+          args.page = "jio_gdrive_configurator";
+        } else {
+          args.page = "jio_dropbox_configurator";
+        }
+        return this.getCommandUrlFor({"page": args.page,
+                                      "token": args.access_token})
+          .push(function (hash) {
+            window.location.replace(hash);
+            return RSVP.timeout(REDIRECT_TIMEOUT);
+          });
+      }
       if (args.jio_key === undefined || args.jio_key === '') {
         if (args.page === undefined || args.page === '' || args.page === "document_list") {
           args.page = DEFAULT_PAGE;

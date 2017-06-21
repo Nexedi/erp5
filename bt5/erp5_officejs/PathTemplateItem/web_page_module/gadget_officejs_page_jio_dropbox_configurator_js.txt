@@ -1,7 +1,7 @@
 /*global window, rJS, RSVP, URI, location,
     loopEventListener, btoa */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, console) {
   "use strict";
 
   function setDropboxConfiguration(gadget) {
@@ -100,20 +100,6 @@
     .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
-    .declareMethod("getGlobalSetting", function (key) {
-      var gadget = this;
-      return gadget.getDeclaredGadget("global_setting_gadget")
-        .push(function (global_setting_gadget) {
-          return global_setting_gadget.getSetting(key);
-        });
-    })
-    .declareMethod("setGlobalSetting", function (key, value) {
-      var gadget = this;
-      return gadget.getDeclaredGadget("global_setting_gadget")
-        .push(function (global_setting_gadget) {
-          return global_setting_gadget.setSetting(key, value);
-        });
-    })
     .declareMethod("render", function (options) {
       var gadget = this;
       return gadget.updateHeader({
@@ -121,18 +107,14 @@
         back_url: "#page=jio_configurator",
         panel_action: false
       })
-        .push(function (options) {
-          return gadget.getSetting('jio_storage_name');
-        })
-        .push(function (jio_storage_name) {
-          if (!jio_storage_name) {
-            gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
-          }
-        })
         .push(function () {
           gadget.props.access_token = options.token;
-          return setDropboxConfiguration(gadget);
+          return gadget.props.deferred.resolve();
         });
+    })
+    .declareService(function () {
+      var gadget = this;
+      return setDropboxConfiguration(gadget);
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, console));
