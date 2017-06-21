@@ -171,7 +171,7 @@ def checkConversionToolAvailability(self):
 
 from Products.ERP5Type.Utils import checkPythonSourceCode
 
-def checkPythonSourceCodeAsJSON(self, data):
+def checkPythonSourceCodeAsJSON(self, data, REQUEST=None):
   """
   Check Python source suitable for Ace Editor and return a JSON object
   """
@@ -212,7 +212,8 @@ def checkPythonSourceCodeAsJSON(self, data):
     else:
       message_dict['type'] = 'warning'
 
-  self.REQUEST.RESPONSE.setHeader('content-type', 'application/json')
+  if REQUEST is not None:
+    REQUEST.RESPONSE.setHeader('content-type', 'application/json')
   return json.dumps(dict(annotations=message_list))
 
 def filterSecurityUidDict(security_uid_dict, referenced_security_uid_set):
