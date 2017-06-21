@@ -88,7 +88,7 @@
             });
           }
           gadget.element.querySelector('.document_list').innerHTML = table_template({
-            documentlist: line_list
+            document_list: line_list
           });
         });
     });
