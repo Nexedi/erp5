@@ -156,6 +156,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>aggregate/web_page_module/gadget_officejs_appstore_html</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>custom_render_method_id</string> </key>
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
@@ -352,7 +360,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.5672.53703.7441</string> </value>
+                <value> <string>960.11262.8893.51200</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -370,7 +378,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497623588.82</float>
+                        <float>1498047108.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

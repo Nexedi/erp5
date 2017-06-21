@@ -116,7 +116,7 @@ appstore/bookmark_manager_logo.svg\n
 appstore/trade_application_logo.png\n
 appstore/pdf_viewer_app_logo.svg\n
 appstore/image_editor_app_logo.svg\n
-appstore/media_player_app_logo.svg\n
+appstore/media_player_app_logo.jpg\n
 appstore/web_table_app_logo.svg\n
 appstore/forum_app_logo.png\n
 appstore/app/contact_manager/icon_contacts.png\n
@@ -197,7 +197,7 @@ appstore/img/erp5-logo.png\n
 appstore/img/flags.png\n
 appstore/img/slapos.png\n
 appstore/img/vifib-logo.png\n
-appstore/index.html\n
+appstore/\n
 appstore/js/bin.js\n
 appstore/js/erp5_loader.js\n
 appstore/js/extensions.js\n
@@ -366,7 +366,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.11262.8893.51200</string> </value>
+                <value> <string>960.12732.43789.50261</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -384,7 +384,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497960630.02</float>
+                        <float>1498047437.23</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
