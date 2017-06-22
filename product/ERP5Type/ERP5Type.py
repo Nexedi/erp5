@@ -328,6 +328,12 @@ class ERP5TypeInformation(XMLObject,
     #   Acquisition editing interface
     #
 
+    def getTypeFilterContentType(self):
+      return
+
+    def getTypeInitScriptId(self):
+      return
+
     security.declarePrivate('_guessMethodAliases')
     def _guessMethodAliases(self):
         """ Override this method to disable Method Aliases in ERP5.
