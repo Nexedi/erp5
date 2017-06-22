@@ -196,6 +196,23 @@ class BusinessManager(Folder):
   template_format_version = 3
   status = 'uninstalled'
 
+  # Factory Type Information
+  factory_type_information = \
+    {    'id'             : portal_type
+       , 'meta_type'      : meta_type
+       , 'icon'           : 'file_icon.gif'
+       , 'product'        : 'ERP5Type'
+       , 'factory'        : ''
+       , 'type_class'     : 'BusinessManager'
+       , 'immediate_view' : 'BusinessManager_view'
+       , 'allow_discussion'     : 1
+       , 'allowed_content_types': ('Business Item',
+                                    'Business Property Item',
+                                    )
+       , 'filter_content_types' : 1
+    }
+
+
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
