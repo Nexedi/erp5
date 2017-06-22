@@ -2044,7 +2044,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
     # Add erp5 catalog tool
-    addERP5Tool(p, 'portal_catalog', 'Catalog Tool')
+    addERP5Tool(p, 'portal_catalog', 'ERP5 Catalog Tool')
 
     sql_reset = kw.get('sql_reset', 0)
     def addSQLConnection(id, title, **kw):
