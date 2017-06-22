@@ -27,3 +27,7 @@ web_site_module/officejs_whiteboard
 web_site_module/officejs_export
 web_site_module/officejsoldv1
 web_site_module/officejsoldv1/**
+image_module/officejs_audioplayer_*
+web_page_module/officejs_audioplayer_*
+web_site_module/officejs_audioplayer
+web_site_module/officejs_audioplayer/**

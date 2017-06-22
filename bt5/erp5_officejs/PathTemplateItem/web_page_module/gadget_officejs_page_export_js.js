@@ -81,6 +81,18 @@
       "no_installer": true,
       "sub_gadget": []
     },
+    "MediaPlayer": {
+      "url": "officejs_audioplayer/",
+      "cache": "gadget_officejs_audioplayer.appcache",
+      "no_installer": true,
+      "sub_gadget": []
+    },
+    "Trade Application": {
+      "url": "osp-9/",
+      "cache": "gadget_trade_application.appcache",
+      "no_installer": true,
+      "sub_gadget": []
+    },
     "connection": {
       "cache": "gadget_jabberconnection.appcache",
       "no_installer": true

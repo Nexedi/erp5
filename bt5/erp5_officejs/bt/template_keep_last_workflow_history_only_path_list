@@ -1,3 +1,7 @@
+image_module/officejs_audioplayer_*
+web_page_module/officejs_audioplayer_*
+web_site_module/officejs_audioplayer
+web_site_module/officejs_audioplayer/**
 web_page_module/ckeditor_*
 image_module/ckeditor_*
 web_page_module/gadget_ckeditor_*
