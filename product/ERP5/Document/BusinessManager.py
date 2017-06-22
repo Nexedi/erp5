@@ -250,12 +250,21 @@ class BusinessManager(Folder):
     portal = self.getPortalObject()
     pass
 
-  def edit(self, template_path_list=[], **kw):
+  def _setTitle(self, value):
+    """
+    Override required due to bootstrap
+    """
+    self.title = value
+
+  def edit(self, template_path_list=[], layer=1, **kw):
     """
     Explicilty edit the class instance
     XXX: No need of this class ? as we already have _edit from ERP5Type.Folder
     """
-    super(BusinessManager, self).edit(template_path_list=template_path_list, **kw)
+    super(BusinessManager, self).edit(
+                    template_path_list=template_path_list,
+                    layer=layer,
+                    **kw)
 
   def getPathItemList(self):
     return self.objectValues()
@@ -318,6 +327,7 @@ class BusinessManager(Folder):
       self._setObject(obj.getId(), aq_base(obj))
       obj.isIndexable = ConstantGetter('isIndexable', value=False)
     self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
+    self.setProperty('layer', imported_manager.getProperty('layer'))
 
   def __add__(self, other):
     """
