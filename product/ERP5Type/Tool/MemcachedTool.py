@@ -62,11 +62,38 @@ if memcache is not None:
   # Real memcache tool
   from Shared.DC.ZRDB.TM import TM
   from Products.PythonScripts.Utility import allow_class
-  from zLOG import LOG
+  from zLOG import LOG, INFO
 
   MARKER = object()
   DELETE_ACTION = 0
   UPDATE_ACTION = 1
+
+  _client_pool = {}
+  def getClient(server_list, server_max_key_length, server_max_value_length):
+    """
+    Pool memcache.Client instances.
+
+    This is possible as there is no such thing as a database snapshot on
+    memcached connections (unlike, for example, mysql).
+    Also, memcached.Client instance are thread-safe (by inheriting from
+    threading.local), so we only need one instance per parameter set (and
+    we use few enough parameter variants to make this manageable).
+    """
+    key = (
+      tuple(sorted(server_list)),
+      server_max_key_length,
+      server_max_value_length,
+    )
+    try:
+      return _client_pool[key]
+    except KeyError:
+      client = _client_pool[key] = memcache.Client(
+        server_list,
+        pickleProtocol=-1, # use the highest available version
+        server_max_key_length=server_max_key_length,
+        server_max_value_length=server_max_value_length,
+      )
+      return client
 
   class MemcachedDict(TM):
     """
@@ -108,14 +135,10 @@ if memcache is not None:
       self.expiration_time = expiration_time
       self.server_max_key_length = server_max_key_length
       self.server_max_value_length = server_max_value_length
-      self._initialiseConnection()
-
-    def _initialiseConnection(self):
-      self.memcached_connection = memcache.Client(
-        self.server_list,
-        pickleProtocol=-1, # use the highest available version
-        server_max_key_length=self.server_max_key_length,
-        server_max_value_length=self.server_max_value_length,
+      self.memcached_connection = getClient(
+        server_list,
+        server_max_key_length=server_max_key_length,
+        server_max_value_length=server_max_value_length,
       )
 
     def _finish(self, *ignored):
@@ -136,25 +159,17 @@ if memcache is not None:
         for key, action in self.scheduled_action_dict.iteritems():
           encoded_key = encodeKey(key)
           if action is UPDATE_ACTION:
-            succeed = self.memcached_connection.set(encoded_key,
-                                                    self.local_cache[key],
-                                                    expiration_time)
-            if not succeed:
-              self._initialiseConnection()
-              succeed = self.memcached_connection.set(encoded_key,
-                                                      self.local_cache[key],
-                                                      expiration_time)
-              if not succeed:
-                LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list,))
+            self.memcached_connection.set(
+              encoded_key,
+              self.local_cache[key],
+              expiration_time,
+            )
           elif action is DELETE_ACTION:
-            succeed = self.memcached_connection.delete(encoded_key, 0)
-            if not succeed:
-              self._initialiseConnection()
-              succeed = self.memcached_connection.delete(encoded_key, 0)
-              if not succeed:
-                LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
-      except:
-        LOG('MemcachedDict', 0, 'An exception occured during _finish', error=True)
+            self.memcached_connection.delete(encoded_key, 0)
+      except Exception:
+        # This is a cache. Failing to push data to server must be fine, as long as
+        # cleanup succeeds.
+        LOG('MemcachedDict', INFO, 'An exception occured during _finish', error=True)
       self.__cleanup()
 
     def _abort(self, *ignored):
@@ -179,15 +194,8 @@ if memcache is not None:
         try:
           result = self.memcached_connection.get(encoded_key)
         except memcache.Client.MemcachedConnectionError:
-          self._initialiseConnection()
-          try:
-            result = self.memcached_connection.get(encoded_key)
-          except memcache.Client.MemcachedConnectionError:
-            # maybe the server is not available at all / misconfigured
-            LOG('MemcacheTool', 0,
-                'get command to memcached server (%r) failed'
-                % (self.server_list,))
-            raise KeyError
+          LOG('MemcacheTool', INFO, 'get command to memcached server (%r) failed' % (self.server_list,), error=True)
+          raise KeyError
         self.local_cache[key] = result
       return result
 
