@@ -226,6 +226,9 @@ class BusinessManager(Folder):
                       PropertySheet.Version,
                     )
 
+  def getShortRevision(self):
+    return ' '
+
   def getStatus(self):
     """
     installed       :BI(s) are installed in OFS.
@@ -771,6 +774,7 @@ class BusinessItem(XMLObject):
     path = self.getProperty('item_path')
     path_list = path.split('/')
     container_path = path_list[:-1]
+
     object_id = path_list[-1]
     try:
       container = self.unrestrictedResolveValue(portal, container_path)
