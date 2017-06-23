@@ -419,6 +419,7 @@ class TemplateTool (BaseTool):
       else:
         template_version_path_list = [
                                       name+'/bp/template_format_version',
+                                      name+'/bt/template_format_version',
                                      ]
 
         for path in template_version_path_list:
