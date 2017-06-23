@@ -44,8 +44,8 @@
     .push(function () {
       return jIO.util.ajax({
         type: "GET",
-        url: (url.startsWith("http") || url.startsWith("//")) ?
-          url : storage._origin_url + url,
+        url: ((url.startsWith("http") || url.startsWith("//")) ?
+          url : storage._origin_url) + url,
         dataType: "blob"
       });
     })
