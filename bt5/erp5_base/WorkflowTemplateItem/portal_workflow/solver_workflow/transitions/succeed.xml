@@ -11,10 +11,6 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
-            <key> <string>actbox_icon</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string></string> </value>
         </item>
@@ -24,7 +20,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string></string> </value>
+            <value> <string>SolverProcess_succeed</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

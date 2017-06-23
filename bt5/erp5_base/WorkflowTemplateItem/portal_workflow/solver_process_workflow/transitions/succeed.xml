@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This transition is invoked when a target solver begins to solve divergences.</string> </value>
+            <value> <string>This transition is invoked when a target solver succeeds to solve divergences.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -34,19 +34,19 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>start_solving</string> </value>
+            <value> <string>succeed</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>solving</string> </value>
+            <value> <string>solved</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>SolverProcess_startSolving</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Start Solving</string> </value>
+            <value> <string>Succeed</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

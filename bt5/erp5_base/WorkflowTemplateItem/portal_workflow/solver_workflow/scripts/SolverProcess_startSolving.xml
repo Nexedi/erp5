@@ -50,29 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-draft_solver_process = None\n
-for solver_process in delivery.getSolverValueList():\n
-  validation_state = solver_process.getValidationState()\n
-  if validation_state == \'solving\':\n
-    # Currently solving Divergences through solve() Activity\n
-    return\n
-  elif solver_process.getValidationState() == \'draft\':\n
-    draft_solver_process = solver_process\n
-\n
-if draft_solver_process is not None:\n
-  draft_solver_process.buildSolverDecisionList(delivery)\n
-else:\n
-  delivery.getPortalObject().portal_solver_processes.newSolverProcess(delivery)\n
+            <value> <string>solver_process = state_change[\'object\'].aq_parent\n
+if solver_process.getValidationState() == \'draft\':\n
+  solver_process.startSolving()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_diverge</string> </value>
+            <value> <string>SolverProcess_startSolving</string> </value>
         </item>
       </dictionary>
     </pickle>

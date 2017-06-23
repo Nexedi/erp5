@@ -53,9 +53,8 @@
             <value> <string>portal = context.getPortalObject()\n
 \n
 solver_process = context.getSolverValueList()[-1]\n
-for target_solver in solver_process.contentValues(portal_type=portal.getPortalTargetSolverTypeList()):\n
-  if target_solver.getValidationState() == \'solving\':\n
-    return\n
+if solver_process.getValidationState() == \'solving\':\n
+  return\n
 \n
 solver_decision_uid = int(solver_decision_uid)\n
 solver_decision = None\n
