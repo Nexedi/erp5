@@ -29,6 +29,8 @@
 
 import unittest
 import sys
+import time
+import transaction
 from unittest import expectedFailure
 
 from Testing import ZopeTestCase
@@ -169,6 +171,49 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       path = '/' + portal_id + '/' + url
       self.assertTrue(path not in  path_list)
       LOG('checkRelativeUrlInSQLPathList not found path:',0,path)
+
+  def test_00_exportNewBusinessManager(self):
+    portal = self.getPortalObject()
+    portal_templates = portal.portal_templates
+    portal_types = portal.portal_types
+
+    # Create the new base type and module based on it
+    base_type = self.portal.portal_types.newContent(
+        id='type_%s' % time.time(),
+        portal_type='Base Type',
+        type_class='Folder',
+        )
+    self.tic()
+    test_module = self.portal.newContent(
+                          id='module_%s' % time.time(),
+                          portal_type=base_type.id)
+
+    # Create a new manager and add path in the manager
+    manager = portal_templates.newContent(id='test_manager',
+                                          portal_type='Business Manager')
+    path_item_list = [
+                      'portal_types/%s | 1 | 1' % base_type.id,
+                      '%s | 1 | 1' % test_module.id,
+                      ]
+    manager.setProperty('template_path_list', path_item_list)
+    manager.build()
+    self.tic()
+
+    self.manager_id = manager.id
+    # Export the manager
+    manager.export('/srv/slapgrid/slappart16/srv/runner/instance/slappart6/tmp')
+
+    self.portal.manage_delObjects(['%s' % test_module.id])
+    self.portal.portal_types.manage_delObjects(['%s' % base_type.id])
+
+    portal_templates._delOb(manager.id)
+
+    transaction.commit()
+
+  def test_00_importNewBusinessManager(self):
+    portal = self.getPortalObject()
+    portal_templates = portal.portal_templates
+    imported_manager = portal_templates._importObjectFromFile('/srv/slapgrid/slappart16/srv/runner/instance/slappart6/tmp/test_manager.zexp')
 
   def test_01_HasEverything(self):
     self.assertNotEquals(self.getCategoryTool(), None)
