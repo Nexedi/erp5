@@ -35,6 +35,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("redirect", "redirect")
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
       return this.jio_allDocs.apply(this, param_list)
@@ -68,6 +69,10 @@
         })
         .push(function (answer_list) {
           gadget.props.portal_type = answer_list[0];
+          // Hardcoded For Bookmark View
+          if (gadget.props.portal_type === "Bookmark") {
+            return gadget.redirect({"page": "bookmark_list" });
+          }
           gadget.props.document_title_plural = answer_list[1];
           return gadget.getUrlFor({page: "add_document"});
         })

@@ -42,7 +42,8 @@
   function setDroboxConfiguration(gadget) {
     return new RSVP.Queue()
       .push(function () {
-        return gadget.getSetting('dropbox_app_key');
+        return gadget.getSetting('dropbox_app_key', 'r47azfr1dgqwxdp');
+        // harcoded for bookmark only
       })
       .push(function (app_key) {
         window.location = 'https://www.dropbox.com/1/oauth2/authorize?client_id='

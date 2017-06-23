@@ -114,7 +114,13 @@
     })
     .declareService(function () {
       var gadget = this;
-      return setDropboxConfiguration(gadget);
+      return new RSVP.Queue()
+        .push(function () {
+          return gadget.props.deferred.promise;
+        })
+        .push(function () {
+          return setDropboxConfiguration(gadget);
+        });
     });
 
 }(window, rJS, RSVP, console));
