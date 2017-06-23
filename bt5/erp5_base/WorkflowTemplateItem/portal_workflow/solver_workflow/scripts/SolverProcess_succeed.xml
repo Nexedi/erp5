@@ -54,6 +54,8 @@
 for solver in solver_process.objectValues(\n
     portal_type=solver_process.getPortalObject().getPortalTargetSolverTypeList()):\n
   if solver.getValidationState() != \'solved\':\n
+    # Try to update solver process workflow state to avoid race condition.\n
+    solver_process.activate(activity=\'SQLQueue\').SolverProcess_updateWorkflowState()\n
     return\n
 solver_process.succeed()\n
 </string> </value>
