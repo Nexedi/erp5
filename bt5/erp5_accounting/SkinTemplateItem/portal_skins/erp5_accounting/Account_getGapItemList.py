@@ -12,8 +12,9 @@ def display(x):
   if x not in display_cache:
     gap_id = x.getReference()
     if gap_id:
-      display_cache[x] = '%s - %s' % (gap_id,
-                  x.getShortTitle() or x.getTitle())
+      display_cache[x] = '%s - %s' % (
+        gap_id,
+        x.getTranslatedShortTitle() or x.getTranslatedTitle())
     else:
       display_cache[x] = x.getIndentedTitle()
 
@@ -36,6 +37,11 @@ def getGapItemList(only_preferred_gap, gap_root=None):
   return result
 
 from Products.ERP5Type.Cache import CachingMethod
-getGapItemList = CachingMethod(getGapItemList, id='Account_getGapItemList', cache_factory='erp5_content_long')
-return getGapItemList(only_preferred_gap=only_preferred_gap,
-                gap_root=portal.portal_preferences.getPreferredAccountingTransactionGap())
+getGapItemList = CachingMethod(
+  getGapItemList,
+  id='Account_getGapItemList.%s' % portal.Localizer.get_selected_language(),
+  cache_factory='erp5_content_long')
+
+return getGapItemList(
+  only_preferred_gap=only_preferred_gap,
+  gap_root=portal.portal_preferences.getPreferredAccountingTransactionGap())
