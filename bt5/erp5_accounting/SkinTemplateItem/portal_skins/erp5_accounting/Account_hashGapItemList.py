@@ -9,7 +9,7 @@ def getSubFieldDict():
     for item in item_list:
       # Get value of the item
       item_value = item[int(not is_right_display)]
-      
+
       # Hash key from item_value
       item_split = item_value.split('/')
       item_key = '/'.join(item_split[:split_depth])
@@ -21,7 +21,7 @@ def getSubFieldDict():
         sub_field_property_dict['key'] = item_key
         sub_field_property_dict['title'] = Base_translateString("GAP - ${gap_title}", mapping=dict(
                     gap_title=context.portal_categories.resolveCategory(
-                          'gap/%s' % item_key).getTitle()))
+                          'gap/%s' % item_key).getTranslatedTitle()))
         sub_field_property_dict['required'] = 0
         sub_field_property_dict['field_type'] = 'ListField'
         sub_field_property_dict['size'] = 1
