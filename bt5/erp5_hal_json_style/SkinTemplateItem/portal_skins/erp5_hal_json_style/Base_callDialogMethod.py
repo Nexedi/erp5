@@ -2,7 +2,7 @@
 Generic method called when submitting a form in dialog mode.
 Responsible for validating form data and redirecting to the form action.
 """
-from Products.ERP5Type.Log import log
+from Products.ERP5Type.Log import log, DEBUG, INFO, WARNING
 
 # XXX We should not use meta_type properly,
 # XXX We need to discuss this problem.(yusei)
@@ -18,7 +18,10 @@ def isListBox(field):
 from Products.Formulator.Errors import FormValidationError
 from ZTUtils import make_query
 
-request = container.REQUEST
+request = REQUEST
+if REQUEST is None:
+  request = container.REQUEST
+
 request_form = request.form
 error_message = ''
 
@@ -96,7 +99,16 @@ except FormValidationError, validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
-  return form(request)
+  # Make sure editors are pushed back as values into the REQUEST object
+  for f in form.get_fields():
+    field_id = f.id
+    if request.has_key(field_id):
+      value = request.get(field_id)
+      if callable(value):
+        value(request)
+  if silent_mode: return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form'), 'form'
+  request.RESPONSE.setStatus(400)
+  return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
 
 # Use REQUEST.redirect if possible. It will not be possible if at least one of these is true :
 #  * we got an import_file,
