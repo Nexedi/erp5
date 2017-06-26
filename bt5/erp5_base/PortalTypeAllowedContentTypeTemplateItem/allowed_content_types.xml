@@ -95,6 +95,7 @@
   <item>Document</item>
   <item>Email</item>
   <item>Embedded File</item>
+  <item>External Identifier</item>
   <item>Fax</item>
   <item>Link</item>
   <item>Telephone</item>
@@ -112,6 +113,7 @@
   <item>ERP5 Login</item>
   <item>Email</item>
   <item>Embedded File</item>
+  <item>External Identifier</item>
   <item>Fax</item>
   <item>Link</item>
   <item>Telephone</item>

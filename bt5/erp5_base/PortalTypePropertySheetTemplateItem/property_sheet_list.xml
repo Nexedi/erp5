@@ -1,4 +1,9 @@
 <property_sheet_list>
+ <portal_type id="External Identifier">
+  <item>Base</item>
+  <item>Coordinate</item>
+  <item>SimpleItem</item>
+ </portal_type>
  <portal_type id="Notification Message">
   <item>ItemAggregation</item>
   <item>Reference</item>

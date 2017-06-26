@@ -25,6 +25,7 @@ Embedded File | edit_workflow
 Embedded File | embedded_workflow
 Embedded Folder | edit_workflow
 Embedded Folder | embedded_workflow
+External Identifier | edit_workflow
 Fax | edit_workflow
 File | document_conversion_interaction_workflow
 File | document_security_interaction_workflow

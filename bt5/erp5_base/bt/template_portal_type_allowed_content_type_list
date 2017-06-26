@@ -66,6 +66,7 @@ Organisation | Credit Card
 Organisation | Document
 Organisation | Email
 Organisation | Embedded File
+Organisation | External Identifier
 Organisation | Fax
 Organisation | Link
 Organisation | Telephone
@@ -79,6 +80,7 @@ Person | Credit Card
 Person | ERP5 Login
 Person | Email
 Person | Embedded File
+Person | External Identifier
 Person | Fax
 Person | Link
 Person | Telephone

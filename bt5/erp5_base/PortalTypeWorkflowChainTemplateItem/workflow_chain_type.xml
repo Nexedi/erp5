@@ -56,6 +56,10 @@
   <workflow>edit_workflow, embedded_workflow</workflow>
  </chain>
  <chain>
+  <type>External Identifier</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Fax</type>
   <workflow>edit_workflow</workflow>
  </chain>
