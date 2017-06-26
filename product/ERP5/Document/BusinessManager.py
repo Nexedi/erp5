@@ -227,7 +227,7 @@ class BusinessManager(Folder):
                     )
 
   def getShortRevision(self):
-    return ' '
+    return None
 
   def getStatus(self):
     """
