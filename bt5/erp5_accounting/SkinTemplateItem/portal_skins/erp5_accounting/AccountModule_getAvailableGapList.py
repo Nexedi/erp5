@@ -3,18 +3,14 @@
 #  gap / country / gap_name
 # so we always use as "root" the category of depth 2.
 
-results = []
+item_list = [('', '')]
 countries = context.portal_categories.gap.objectValues()
 for country in countries : 
   for gap in country.objectValues() :
-    title = gap.getParentValue().getTranslatedTitle() + '/'+ gap.getTranslatedTitle()
+    title = country.getTranslatedTitle() + '/'+ gap.getTranslatedTitle()
     path = gap.getRelativeUrl()
-    if not include_gap_in_path : 
-      path = path.replace('gap/', '')
+    item_list.append(
+        ((country.getTranslatedTitle() + '/'+ gap.getTranslatedTitle()),
+        path))
 
-    results += [(title, path)]
-
-if include_empty_item == 1:
-  results = [('', '')] + results
-
-return results
+return item_list

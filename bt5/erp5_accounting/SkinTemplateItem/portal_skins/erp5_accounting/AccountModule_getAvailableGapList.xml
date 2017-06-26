@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>include_gap_in_path=1, include_empty_item=0</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
