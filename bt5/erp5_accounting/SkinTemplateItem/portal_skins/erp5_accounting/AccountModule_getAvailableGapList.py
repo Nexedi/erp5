@@ -7,7 +7,7 @@ results = []
 countries = context.portal_categories.gap.objectValues()
 for country in countries : 
   for gap in country.objectValues() :
-    title = gap.getParentValue().getTitle() + '/'+ gap.getTitle()
+    title = gap.getParentValue().getTranslatedTitle() + '/'+ gap.getTranslatedTitle()
     path = gap.getRelativeUrl()
     if not include_gap_in_path : 
       path = path.replace('gap/', '')

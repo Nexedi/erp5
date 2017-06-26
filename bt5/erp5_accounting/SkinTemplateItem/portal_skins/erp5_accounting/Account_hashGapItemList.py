@@ -1,4 +1,5 @@
-Base_translateString = context.Base_translateString
+portal = context.getPortalObject()
+Base_translateString = portal.Base_translateString
 split_depth = 2
 
 def getSubFieldDict():
@@ -34,8 +35,9 @@ def getSubFieldDict():
     return sub_field_dict
 
   from Products.ERP5Type.Cache import CachingMethod
-  getSubFieldDictCache = CachingMethod(getSubFieldDictCache,
-                                  id='Account_getSubFieldDict')
+  getSubFieldDictCache = CachingMethod(
+      getSubFieldDictCache,
+      id='Account_getSubFieldDict.%s' % portal.Localizer.get_selected_language())
   # Those cached dictionnaries are later modified, we just reset the 'value'
   # key to return clean dictionnaries.
   sub_field_dict = getSubFieldDictCache()
