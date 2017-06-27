@@ -711,7 +711,8 @@ class BusinessItem(XMLObject):
         _recursiveRemoveUid(obj)
         obj = aq_base(obj)
         obj.isIndexable = ConstantGetter('isIndexable', value=False)
-        self._setObject(obj.getId(), obj, suppress_events=True)
+        new_id = self.generateNewId()
+        self._setObject(new_id, obj, suppress_events=True)
     except AttributeError:
       # In case the object doesn't exist, just pass without raising error
       pass
