@@ -1207,30 +1207,35 @@ return msg"
 
 class TestERP5Action_getHateoas(ERP5HALJSONStyleSkinsMixin):
 
-  @simulate('Base_getRequestUrl', '*args, **kwargs',
-      'return "http://example.org/foo"')
   @simulate('Base_getRequestHeader', '*args, **kwargs',
             'return "application/hal+json"')
-  @changeSkin('Hal')
   @createIndexedDocument()
+  @changeSkin('Hal')
   def test_getHateoasDialog_dialog_failure(self, document):
     """Test an dialog on Foo object with empty required for a failure.
     
     Expected behaviour is response Http 400 with field errors.
     """
     fake_request = do_fake_request("POST")
-    # user form fields (no need to set meta-fields because we pass them directly to script)
+    # user form fields
+    # no need to set meta-fields because we pass them directly to script)
     fake_request.set('field_your_workflow_action', 'custom_dialog_required_action')
     fake_request.set('field_your_comment', 'My comment')
     fake_request.set('field_your_custom_workflow_variable',  '')  # empty required field!
-    # call the standard dialog submit script
+
+    # call the standard dialog submit script - should return plain string bytes
+    method_path = document.Base_callDialogMethod.aq_self._filepath
+    self.assertIn("erp5_hal_json_style", method_path,
+                  "Script from \"erp5_hal_json_style\" must be selected - not \"{!s}\"".format(method_path))
     response = document.Base_callDialogMethod(
       REQUEST=fake_request,
-      dialog_method='Foo_doNothing',  # 'Workflow_statusModify' would lead us to different code path,
+      dialog_method='Foo_doNothing',  # 'Workflow_statusModify' would lead us by a different path in the code
       dialog_id='Foo_viewCustomWorkflowRequiredActionDialog',
     )
-    response = json.loads(response)
     self.assertEqual(fake_request.RESPONSE.status, 400)
+
+    response = json.loads(response)
+
     self.assertIn('your_custom_workflow_variable', response, "Invalid field '{}' must be in the response {!s}".format(
       'your_custom_workflow_variable', response))
     self.assertIn('error_text', response['your_custom_workflow_variable'], "Invalid field must contain error message")
