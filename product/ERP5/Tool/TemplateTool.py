@@ -659,6 +659,13 @@ class TemplateTool (BaseTool):
         #category_path_list.append('portal_categories/'+base_category+'/**')
       template_path_list.extend(category_path_list)
 
+      # Adding tools
+      template_tool_id_list = import_template.getTemplateToolIdList()
+      tool_id_list = []
+      for tool_id in template_tool_id_list:
+        tool_id_list.append({tool_id + ' | 1 | 1')
+      template_path_list.extend(tool_id_list)
+
       # Adding business template skin selection property on the portal_tempaltes
       template_skin_selection_list = import_template.getTemplateRegisteredSkinSelectionList()
       selection_list = []
