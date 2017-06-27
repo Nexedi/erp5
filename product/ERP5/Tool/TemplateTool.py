@@ -2027,7 +2027,10 @@ class TemplateTool (BaseTool):
       Custom sort for path_list according to the priorities of paths
       """
       def comparePath(path):
-        if len(path.split('/')) == 1:
+        path = path.split(' | ')[0]
+        if path.split('/')[-1] == '**':
+          return 20
+        elif len(path.split('/')) == 1:
           return 10
         elif len(path.split('/')) > 2:
           return 9
