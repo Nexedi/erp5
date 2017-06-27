@@ -14,6 +14,10 @@ import json
 import urllib
 
 def changeSkin(skin_name):
+  """Change skin for following commands and attribute resolution.
+
+  Caution: In case of more annotations, this one has to be at the bottom (last)!
+  """
   def decorator(func):
     def wrapped(self, *args, **kwargs):
       default_skin = self.portal.portal_skins.default_skin
@@ -29,6 +33,18 @@ def changeSkin(skin_name):
   return decorator
 
 def simulate(script_id, params_string, code_string):
+  """Create temporary script in portal_skins/custom.
+
+  In case of unexpectedly interrupted test you need to clean that folder manually!
+
+  Examples of usage:
+
+    @simulate('Base_getRequestHeader', '*args, **kwargs', 'return "application/hal+json"')
+  Will make ERP5Document_getHateoas believe that any request accepts given MIME response.
+
+    @simulate('Base_getRequestUrl', '*args, **kwargs', 'return "http://example.org/bar"')
+  TBD.
+  """
   def upperWrap(f):
     @wraps(f)
     def decorated(self, *args, **kw):
@@ -48,6 +64,7 @@ def simulate(script_id, params_string, code_string):
   return upperWrap
 
 def createIndexedDocument():
+  """Create a Foo document inside Foo module and pass it as "document" argument into wrapped function."""
   def decorator(func):
     def wrapped(self, *args, **kwargs):
       kwargs.update(document=self._makeDocument())
