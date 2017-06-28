@@ -32,17 +32,15 @@ from Testing import ZopeTestCase
 from Acquisition import aq_base
 
 class CodingStyleTestCase(ERP5TypeTestCase):
-  """XXX
+  """Test case to test coding style in business templates.
+
+  Subclasses must override:
+    * getBusinessTemplateList to list business template to install.
+    * getTestedBusinessTemplateList to list business templates to test.
   """
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
-
-  def getTitle(self):
-    """
-    Override this method in implementation class.
-    """
-    raise NotImplementedError
 
   def getBusinessTemplateList(self):
     """
