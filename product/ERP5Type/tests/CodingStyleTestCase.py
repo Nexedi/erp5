@@ -32,17 +32,15 @@ from Testing import ZopeTestCase
 from Acquisition import aq_base
 
 class CodingStyleTestCase(ERP5TypeTestCase):
-  """XXX
+  """Test case to test coding style in business templates.
+
+  Subclasses must override:
+    * getBusinessTemplateList to list business template to install.
+    * getTestedBusinessTemplateList to list business templates to test.
   """
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
-
-  def getTitle(self):
-    """
-    Override this method in implementation class.
-    """
-    raise NotImplementedError
 
   def getBusinessTemplateList(self):
     """
@@ -89,7 +87,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
       skin = portal_skins[skin_id]
       for document in skin.objectValues():
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
-           message_list.extend(document.checkConsistency())
+          message_list.extend(document.checkConsistency())
 
     # Return results
     if len(message_list):
