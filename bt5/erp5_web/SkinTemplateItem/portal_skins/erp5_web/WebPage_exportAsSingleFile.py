@@ -3,7 +3,8 @@ Export the web page and its components to a single (m)html file.
 
 see Base_convertHtmlToSingleFile for documentation
 """
-
+# ERP5 web uses format= argument, which is also a python builtin
+# pylint: disable=redefined-builtin
 data = context.Base_convertHtmlToSingleFile(
   context.getTextContent(""),
   allow_script=allow_script,

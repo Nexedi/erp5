@@ -20,11 +20,6 @@
 """
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 if portal is None: portal = context.getPortalObject()
-portal_catalog = portal.portal_catalog
-# The list of portal types here should be large enough to include
-# all portal_types defined in the various sections so that
-# href tags which point to a document by reference can still work.
-valid_portal_type_list = portal.getPortalDocumentTypeList()
 
 # Find the applicable language
 if language is None:

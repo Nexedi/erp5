@@ -1,12 +1,12 @@
-object = state_change['object']
+document = state_change['object']
 
-workflow_tool = object.getPortalObject().portal_workflow
+workflow_tool = document.getPortalObject().portal_workflow
 
-if workflow_tool.isTransitionPossible(object, 'expire'):
-  object.expire()
+if workflow_tool.isTransitionPossible(document, 'expire'):
+  document.expire()
 
-if workflow_tool.isTransitionPossible(object, 'expire_protected'):
-  object.expireProtected()
+if workflow_tool.isTransitionPossible(document, 'expire_protected'):
+  document.expireProtected()
 
-if workflow_tool.isTransitionPossible(object, 'expire_published'):
-  object.expirePublished()
+if workflow_tool.isTransitionPossible(document, 'expire_published'):
+  document.expirePublished()

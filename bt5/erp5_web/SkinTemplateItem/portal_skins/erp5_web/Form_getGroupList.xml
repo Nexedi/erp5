@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>group_by_criterion=[\'left\', \'right\', \'center\', \'bottom\', \'hidden\']</string> </value>
+            <value> <string>group_by_criterion=(\'left\', \'right\', \'center\', \'bottom\', \'hidden\')</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

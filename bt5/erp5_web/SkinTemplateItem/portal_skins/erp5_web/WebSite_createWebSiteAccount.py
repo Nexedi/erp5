@@ -10,11 +10,11 @@
     - you need to adjust group, function and site to your needs
 """
 
+# pylint: disable=unreachable
 # since the following code is just an example, we simply raise an exception so that
 # it is not executed actually.
 raise NotImplementedError
 
-from Products.Formulator.Errors import ValidationError, FormValidationError
 portal = context.getPortalObject()
 translateString = context.Base_translateString
 website = context.getWebSiteValue()
@@ -25,7 +25,7 @@ result, result_type = context.Base_edit(form_id, silent_mode=1, field_prefix='yo
 # Return if not appropriate
 if result_type != 'edit':
   return result
-kw, encapsulated_editor_list = result
+kw, _ = result
 
 # Set default values
 person_group = kw.get('group', None)
@@ -55,11 +55,11 @@ person.validate()
 #person.immediateReindexObject()
 
 # Create default career
-career = person.newContent(portal_type='Career',
-                           id='default_career',
-                           group=person_group,
-                           function=person_function,
-                           role=person_role)
+person.newContent(portal_type='Career',
+                  id='default_career',
+                  group=person_group,
+                  function=person_function,
+                  role=person_role)
 # Create assignment
 assignment = person.newContent(portal_type='Assignment',
                                group=person_group,

@@ -7,9 +7,7 @@
 from zExceptions import Unauthorized
 
 # Initialize some useful variables
-request = context.REQUEST
 portal = context.getPortalObject()
-website = context.getWebSiteValue()
 user = portal.portal_membership.getAuthenticatedMember()
 user_preference = None
 portal_preferences = portal.portal_preferences

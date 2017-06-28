@@ -1,4 +1,3 @@
-request = context.REQUEST
 portal = context.getPortalObject()
 title = context.getTitle('Unknown')
 translateString = context.Base_translateString
