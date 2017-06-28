@@ -5,6 +5,8 @@
 """
 # Initialise result
 sub_field_list = []
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
 
 # Maximum size of the MultiListField
 default_sub_field_property_dict.update({
@@ -17,7 +19,7 @@ default_sub_field_property_dict.update({
 })
 
 z = 0
-for i in range(1):
+for _ in range(1):
   new_dict = default_sub_field_property_dict.copy()
   new_dict['title'] = '&nbsp;'
   new_dict['key'] = str(z)

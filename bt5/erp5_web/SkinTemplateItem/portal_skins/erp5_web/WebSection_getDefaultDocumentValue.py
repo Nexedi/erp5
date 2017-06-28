@@ -24,11 +24,6 @@
  portal skins. It is recommended to use the first approach
  to host multiple sites on a single ERP5Site instance.
 """
-portal_object = context.getPortalObject()
-
-# First find the Web Section or Web Site we belong to
-current_section = context.getWebSectionValue()
-
 # First get all the applicable references
 # There might be more than one reference due to security differences
 # (ex. a default restricted web page and a default public web page)
