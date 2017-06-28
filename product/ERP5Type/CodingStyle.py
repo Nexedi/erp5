@@ -75,7 +75,6 @@ def getSkinPrefixList(self):
   # Add other prefix
   skin_prefix_list.extend((
     'Base',
-    'NotificationTool',
     'ERP5Site',
     'ERP5Type',
 
