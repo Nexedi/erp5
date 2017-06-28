@@ -50,6 +50,7 @@ class ERP5WebCodingStyle(CodingStyleTestCase):
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
             'erp5_crm',
+            'erp5_administration',
             )
 
 def test_suite():
