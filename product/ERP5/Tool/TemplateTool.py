@@ -663,7 +663,7 @@ class TemplateTool (BaseTool):
       template_tool_id_list = import_template.getTemplateToolIdList()
       tool_id_list = []
       for tool_id in template_tool_id_list:
-        tool_id_list.append({tool_id + ' | 1 | 1')
+        tool_id_list.append(tool_id + ' | 1 | 1')
       template_path_list.extend(tool_id_list)
 
       # Adding business template skin selection property on the portal_tempaltes
