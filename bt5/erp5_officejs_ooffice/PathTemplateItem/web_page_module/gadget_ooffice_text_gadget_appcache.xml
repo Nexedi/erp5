@@ -121,6 +121,77 @@ gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
 gadget_officejs_onlyoffice_landing.js\n
 zipfilestorage-with-jszip.js\n
+ooffice/apps/common/main/resources/img/about/OnlyOffice@2x.png\n
+ooffice/apps/common/main/resources/img/header/header-logo@2x.png\n
+ooffice/apps/common/main/resources/img/plugin/icon_add_on_default@2x.png\n
+ooffice/apps/common/main/resources/img/plugin/icon_add_on_default.png\n
+ooffice/apps/common/main/resources/img/hsbcolorpicker/hsb-colorpicker@2x.png\n
+ooffice/apps/common/main/resources/img/hsbcolorpicker/transparency_39x15.png\n
+ooffice/apps/common/main/resources/img/hsbcolorpicker/transparency_39x15@2x.png\n
+ooffice/apps/common/main/resources/img/hsbcolorpicker/transparency_63x20.png\n
+ooffice/apps/common/main/resources/img/hsbcolorpicker/transparency_63x20@2x.png\n
+ooffice/apps/common/main/resources/img/controls/common-controls.png\n
+ooffice/apps/common/main/resources/img/controls/common-controls@2x.png\n
+ooffice/apps/common/main/resources/img/controls/Scroll_center.png\n
+ooffice/apps/common/main/resources/img/controls/Scroll_center@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/controls/dimension-picker/dimension-highlighted.png\n
+ooffice/apps/documenteditor/main/resources/img/controls/dimension-picker/dimension-highlighted@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/controls/dimension-picker/dimension-unhighlighted@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/docformat.png\n
+ooffice/apps/documenteditor/main/resources/img/docformat@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/file-recent.png\n
+ooffice/apps/documenteditor/main/resources/img/file-recent@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/file-template-default.png\n
+ooffice/apps/documenteditor/main/resources/img/file-template-default@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/file-templates-blank.png\n
+ooffice/apps/documenteditor/main/resources/img/file-templates-blank@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/loading-logo.gif\n
+ooffice/apps/documenteditor/main/resources/img/loading-logo@2x.gif\n
+ooffice/apps/documenteditor/main/resources/img/popupmenu-btns.png\n
+ooffice/apps/documenteditor/main/resources/img/popupmenu-btns@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/profile.png\n
+ooffice/apps/documenteditor/main/resources/img/profile@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/Begin-EndStyle.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/Begin-EndStyle@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/BorderSize.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/LargeBorders.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/LargeBorders@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/RightPanelBigBtns.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/RightPanelBigBtns@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/SmallBorders.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/SmallBorders@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/gradients.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/gradients@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/patterns.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/patterns@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/right_panel_wrap_btns.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/right_panel_wrap_btns@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/right_panel_wrap_icons.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/right_panel_wrap_icons@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/rowscols_icon.png\n
+ooffice/apps/documenteditor/main/resources/img/right-panels/rowscols_icon@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar-menu@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/AutoColor.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/NoFill.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/NoFill@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/bullets.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/bullets@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/charttypes@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/colontitules.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/colontitules@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/math.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/math@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/multilevels-numbering.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/multilevels-numbering@2x.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/nocolor.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/text_styles.png\n
+ooffice/sdkjs/common/Images/marker_format.cur\n
+ooffice/sdkjs/common/Images/plus.cur\n
+ooffice/sdkjs/common/Images/plus_2x.cur\n
+ooffice/sdkjs/common/Images/plus_copy.cur\n
+ooffice/sdkjs/common/Images/plus_copy_2x.cur\n
+ooffice/sdkjs/common/Images/text_copy.cur\n
+ooffice/sdkjs/common/Images/text_copy_2x.cur\n
 ooffice/apps/common/Analytics.js\n
 ooffice/apps/common/IrregularStack.js\n
 ooffice/apps/common/locale.js\n
@@ -213,6 +284,7 @@ ooffice/apps/common/main/lib/view/Plugins.js\n
 ooffice/apps/common/main/lib/view/ReviewChanges.js\n
 ooffice/apps/common/main/lib/view/SearchDialog.js\n
 ooffice/apps/common/main/resources/img/about/OnlyOffice.png\n
+ooffice/apps/common/main/resources/img/combo-border-size/BorderSize.png\n
 ooffice/apps/common/main/resources/img/controls/common-controls.png\n
 ooffice/apps/common/main/resources/img/header/header-logo.png\n
 ooffice/apps/common/main/resources/img/hsbcolorpicker/hsb-colorpicker.png\n
@@ -280,6 +352,7 @@ ooffice/apps/documenteditor/main/app/view/Viewport.js\n
 ooffice/apps/documenteditor/main/resources/css/app.css\n
 ooffice/apps/documenteditor/main/resources/img/controls/dimension-picker/dimension-unhighlighted.png\n
 ooffice/apps/documenteditor/main/resources/img/toolbar-menu.png\n
+ooffice/apps/documenteditor/main/resources/img/toolbar/charttypes.png\n
 ooffice/gadget_ooffice.html\n
 ooffice/gadget_ooffice.js\n
 #ooffice/resources/help/en/Contents.json\n
@@ -333,6 +406,7 @@ ooffice/sdkjs/common/FontsFreeType/font_engine.js\n
 ooffice/sdkjs/common/FontsFreeType/font_map.js\n
 ooffice/sdkjs/common/GlobalLoaders.js\n
 ooffice/sdkjs/common/Images/fonts_thumbnail.png\n
+ooffice/sdkjs/common/Images/fonts_thumbnail@2x.png\n
 ooffice/sdkjs/common/Local/common_jio.js\n
 ooffice/sdkjs/common/NumFormat.js\n
 ooffice/sdkjs/common/Overlay.js\n
@@ -735,7 +809,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.27910.57959.65194</string> </value>
+                <value> <string>960.22604.16805.12595</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -753,7 +827,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495097874.72</float>
+                        <float>1498639695.3</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
