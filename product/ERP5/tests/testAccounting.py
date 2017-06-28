@@ -36,6 +36,7 @@ from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.CodingStyleTestCase import CodingStyleTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
@@ -5802,7 +5803,23 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
         internal_invoice, 'stop_action')
     self.assertEqual('stopped', internal_invoice.getSimulationState())
 
-  
+
+class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
+  """Runs CodingStyleTestCase checks on erp5_accounting
+  """
+  def getBusinessTemplateList(self):
+    # include administration for test_PythonSourceCode
+    return AccountingTestCase.getBusinessTemplateList(self) + (
+        'erp5_administration', )
+
+  def getTestedBusinessTemplateList(self):
+    return ('erp5_accounting', )
+
+  def beforeTearDown(self):
+    # we don't want to run AccountingTestCase.tearDown
+    pass
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccountingWithSequences))
@@ -5813,4 +5830,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestAccountingExport))
   suite.addTest(unittest.makeSuite(TestAccountingTransactionTemplate))
   suite.addTest(unittest.makeSuite(TestInternalInvoiceTransaction))
+  suite.addTest(unittest.makeSuite(TestAccountingCodingStyle))
   return suite
