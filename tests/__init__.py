@@ -173,3 +173,18 @@ class FunctionalTests(ERP5):
   def _getAllTestList(self):
     return [x for x in super(FunctionalTests, self)._getAllTestList()
       if x.startswith('testFunctional') or ':testFunctional' in x]
+
+
+class ERP5BusinessTemplateCodingStyleTestSuite(_ERP5):
+  """Run coding style test on all business templates.
+  """
+  def getTestList(self):
+    test_list = []
+    for business_template_path in glob('%s/../bt5/*' % HERE):
+      if os.path.isdir(business_template_path):
+        test_list.append(os.path.basename(business_template_path))
+    return test_list
+
+  def run(self, full_test):
+    return self.runUnitTest('CodingStyleTest', TESTED_BUSINESS_TEMPLATE=full_test)
+
