@@ -75,10 +75,11 @@ def getSkinPrefixList(self):
   # Add other prefix
   skin_prefix_list.extend((
     'Base',
-    'Entity',
     'NotificationTool',
     'ERP5Site',
     'ERP5Type',
+
+    'Entity', # A base class for Person / Organisation
     'Form', # Acceptable for ERP5 Forms which will soon become portal types too
   ))
 
