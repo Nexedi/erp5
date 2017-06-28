@@ -92,3 +92,17 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     # Return results
     if len(message_list):
       raise self.failureException('\n'.join(map(lambda x: repr(x), message_list)))
+
+  def test_PythonSourceCode(self):
+    """test python script from the tested business templates.
+
+    reuses BusinessTemplate_getPythonSourceCodeMessageList from erp5_administration
+    """
+    if 'erp5_administration' not in self.getBusinessTemplateList():
+      self.skipTest('erp5_administration needs be installed to check python source code')
+
+    self.maxDiff = None
+    for business_template in self.portal.portal_templates.contentValues():
+      if business_template.getTitle() in self.getTestedBusinessTemplateList():
+        self.assertEqual([], business_template.BusinessTemplate_getPythonSourceCodeMessageList())
+
