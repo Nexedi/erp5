@@ -191,8 +191,8 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
         sql_uncatalog_object.remove(method_id)
         sql_uncatalog_object.sort()
         catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
-      if method_id in catalog.filter_dict:
-        del catalog.filter_dict[method_id]
+      if method_id in catalog._getFilterDict():
+        del catalog._getFilterDict()[method_id]
     for obj_id in ('another_file', 'test_document', 'dummy_type_provider'):
       if obj_id in self.portal.objectIds():
         self.portal.manage_delObjects([obj_id])
@@ -1585,9 +1585,9 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog = pc.getSQLCatalog()
     self.assertTrue(catalog is not None)
     method_id = "z_fake_method"
-    addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
-                 arguments='', template='')
+    addSQLMethod = catalog.newContent
+    addSQLMethod(portal_type='SQL Method', id=method_id, title='',
+                 connection_id='erp5_sql_connection', arguments_src='', src='')
     zsql_method = catalog._getOb(method_id, None)
     self.assertTrue(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
@@ -1599,21 +1599,20 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # set filter for this method
     expression = 'python: context.isPredicate()'
     expr_instance = Expression(expression)
-    catalog.filter_dict[method_id] = PersistentMapping()
-    catalog.filter_dict[method_id]['filtered'] = 1
-    catalog.filter_dict[method_id]['expression'] = expression
-    catalog.filter_dict[method_id]['expression_instance'] = expr_instance
-    catalog.filter_dict[method_id]['expression_cache_key'] = 'portal_type',
-    catalog.filter_dict[method_id]['type'] = []
+    zsql_method.setFiltered(1)
+    zsql_method.setExpression(expression)
+    zsql_method.setExpressionInstance(expr_instance)
+    zsql_method.setExpressionCacheKey('portal_type')
+    zsql_method.setTypeList([])
 
   def stepCreateUpdateCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     self.assertTrue(catalog is not None)
     method_id = "z_fake_method"
-    addSQLMethod = catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
-                 arguments='', template='')
+    addSQLMethod = catalog.newContent
+    addSQLMethod(portal_type='SQL Method', id=method_id, title='',
+                 connection_id='erp5_sql_connection', arguments_src='', src='')
     zsql_method = catalog._getOb(method_id, None)
     self.assertTrue(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
@@ -1625,20 +1624,19 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # set filter for this method
     expression = 'python: context.isDelivery()'
     expr_instance = Expression(expression)
-    catalog.filter_dict[method_id] = PersistentMapping()
-    catalog.filter_dict[method_id]['filtered'] = 1
-    catalog.filter_dict[method_id]['expression'] = expression
-    catalog.filter_dict[method_id]['expression_instance'] = expr_instance
-    catalog.filter_dict[method_id]['expression_cache_key'] = 'portal_type',
-    catalog.filter_dict[method_id]['type'] = []
+    zsql_method.setFiltered(1)
+    zsql_method.setExpression(expression)
+    zsql_method.setExpressionInstance(expr_instance)
+    zsql_method.setExpressionCacheKey('portal_type')
+    zsql_method.setTypeList([])
 
   def stepCreateNewCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = "z_another_fake_method"
-    addSQLMethod =catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod
-    addSQLMethod(id=method_id, title='', connection_id='erp5_sql_connection',
-                 arguments='', template='')
+    addSQLMethod =catalog.newContent
+    addSQLMethod(portal_type='SQL Method', id=method_id, title='',
+                 connection_id='erp5_sql_connection', arguments_src='', src='')
     zsql_method = catalog._getOb(method_id, None)
     self.assertTrue(zsql_method is not None)
     sequence.edit(another_zsql_method_id = method_id)
@@ -1717,11 +1715,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # check catalog properties
     self.assertIn(method_id, catalog.sql_uncatalog_object)
     # check filter
-    filter_dict = catalog.filter_dict[method_id]
+    filter_dict = catalog.getFilterDict()
+    filter_dict = filter_dict[method_id]
+    self.assertItemsEqual(filter_dict['expression_cache_key'], ['portal_type'])
+    self.assertEqual(filter_dict['type'], [])
     self.assertEqual(filter_dict['filtered'], 1)
     self.assertEqual(filter_dict['expression'], 'python: context.isPredicate()')
-    self.assertEqual(filter_dict['expression_cache_key'], ('portal_type',))
-    self.assertEqual(filter_dict['type'], ())
 
   def stepCheckUpdatedCatalogMethodExists(self, sequence=None, **kw):
     pc = self.getCatalogTool()
@@ -1733,11 +1732,12 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # check catalog properties
     self.assertIn(method_id, catalog.sql_uncatalog_object)
     # check filter
-    filter_dict = catalog.filter_dict[method_id]
+    filter_dict = catalog.getFilterDict()
+    filter_dict = filter_dict[method_id]
+    self.assertItemsEqual(filter_dict['expression_cache_key'], ['portal_type'])
+    self.assertEqual(filter_dict['type'], [])
     self.assertEqual(filter_dict['filtered'], 1)
     self.assertEqual(filter_dict['expression'], 'python: context.isDelivery()')
-    self.assertEqual(filter_dict['expression_cache_key'], ('portal_type',))
-    self.assertEqual(filter_dict['type'], ())
 
   def stepCheckCatalogMethodRemoved(self, sequence=None, **kw):
     """
@@ -1752,7 +1752,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     # check catalog properties
     self.assertNotIn(method_id, catalog.sql_uncatalog_object)
     # check filter
-    self.assertNotIn(method_id, catalog.filter_dict.keys())
+    self.assertNotIn(method_id, catalog._getFilterDict().keys())
 
   def stepRemoveCatalogMethod(self, sequence=None, **kw):
     """
@@ -1772,8 +1772,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
     self.assertNotIn(method_id, catalog.sql_uncatalog_object)
     # remove filter
-    del catalog.filter_dict[method_id]
-    self.assertNotIn(method_id, catalog.filter_dict.keys())
+    self.assertNotIn(method_id, catalog._getFilterDict().keys())
 
   # Related key, Result key and table, and others
   def stepCreateKeysAndTable(self, sequence=list, **kw):

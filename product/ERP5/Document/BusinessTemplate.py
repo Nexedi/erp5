@@ -153,12 +153,12 @@ SEPARATELY_EXPORTED_PROPERTY_DICT = {
 
 def _getCatalog(acquisition_context):
   """
-    Return the id of the SQLCatalog which correspond to the current BT.
+    Return the id of the Catalog which correspond to the current BT.
   """
   catalog_method_id_list = acquisition_context.getTemplateCatalogMethodIdList()
   if len(catalog_method_id_list) == 0:
     try:
-      return acquisition_context.getPortalObject().portal_catalog.objectIds('SQLCatalog')[0]
+      return acquisition_context.getPortalObject().portal_catalog.objectIds()[0]
     except IndexError:
       return None
   catalog_method_id = catalog_method_id_list[0]
@@ -1459,7 +1459,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               # an object which cannot (e.g. External Method).
               LOG('BusinessTemplate', WARNING,
                   'could not restore %r in %r' % (subobject_id, obj))
-        if obj.meta_type in ('Z SQL Method',):
+        if obj.meta_type in ('Z SQL Method', 'ERP5 SQL Method'):
           fixZSQLMethod(portal, obj)
         # portal transforms specific initialization
         elif obj.meta_type in ('Transform', 'TransformsChain'):
@@ -1951,7 +1951,7 @@ class SkinTemplateItem(ObjectTemplateItem):
       if not force and update_dict.get(relative_url)  == 'nothing':
         continue
       folder = self.unrestrictedResolveValue(p, relative_url)
-      for obj in folder.objectValues(spec=('Z SQL Method',)):
+      for obj in folder.objectValues(spec=('Z SQL Method', 'ERP5 SQL Method')):
         fixZSQLMethod(p, obj)
       if folder.aq_parent.meta_type == 'CMF Skins Tool':
         registerSkinFolder(skin_tool, folder)
@@ -2891,14 +2891,23 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     """Extracts properties for a given method in the catalog.
     Returns a mapping of property name -> boolean """
     method_properties = PersistentMapping()
-    for prop in catalog._properties:
+    property_list = list(catalog._properties)
+    if catalog.meta_type == 'ERP5 Catalog':
+      property_list = list(catalog.propertyMap())
+    for prop in property_list:
       if prop.get('select_variable') == 'getCatalogMethodIds':
+        # In case the properties are defined via property sheet 'Catalog', the
+        # object would have two IDs if it is of type 'selection' or
+        # 'multiple_selection': 'id' and 'base_id', usage of base_id is preferred
+        # while building objects as it maintains consistency between the old
+        # catalog and new erp5 catalog
+        prop_id = prop.get('base_id', prop['id'])
         if prop['type'] == 'selection' and \
-            getattr(catalog, prop['id']) == method_id:
-          method_properties[prop['id']] = 1
+            getattr(catalog, prop_id) == method_id:
+          method_properties[prop_id] = 1
         elif prop['type'] == 'multiple selection' and \
-            method_id in getattr(catalog, prop['id']):
-          method_properties[prop['id']] = 1
+            method_id in getattr(catalog, prop_id):
+          method_properties[prop_id] = 1
     return method_properties
 
   def build(self, context, **kw):
@@ -2917,7 +2926,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
       method_id = obj.id
       self._method_properties[method_id] = self._extractMethodProperties(
                                                           catalog, method_id)
-      filter = catalog.filter_dict.get(method_id, {})
+      filter_dict = catalog._getFilterDict()
+      filter = filter_dict.get(method_id, {})
       self._is_filtered_archive[method_id] = filter.get('filtered', 0)
       for method in catalog_method_filter_list:
         property = method[8:-8]
@@ -2983,6 +2993,32 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
     force = kw.get('force')
     values = []
 
+    # When the default catalog is of 'ERP5 Catalog' meta_type, its better to ..
+    # convert all the CatalogMethodTemplateItems in the current BT to the
+    # allowed types for ERP5 Catalog, i.e, to ERP5 SQLMethod and ERP5 Python Script
+    # and update the self._objects dict accordingly
+    if catalog.meta_type == 'ERP5 Catalog':
+      import erp5
+      from Products.ERP5.Extensions.CheckPortalTypes import changeObjectClass
+
+      # We need the dynamic portal_type classes for changing object classes
+      sql_class = getattr(erp5.portal_type, 'SQL Method')
+      script_class = getattr(erp5.portal_type, 'Python Script')
+
+      portal = self.getPortalObject()
+      # Will be modifying dict, so better to use .items()
+      # XXX: In python3 it should be .copy.items().
+      for path, obj in self._objects.items():
+        method = self.unrestrictedResolveValue(portal, path)
+        method_id = path.split('/')[-1]
+        if method.meta_type == 'Z SQL Method':
+          method = changeObjectClass(catalog, method_id, sql_class)
+        if method.meta_type == 'Script (Python)':
+          method = changeObjectClass(catalog, method_id, script_class)
+          method._compile()
+        new_obj  = method.aq_base
+        self._objects[path] = new_obj
+
     if force: # get all objects
       values = self._objects.values()
     else: # get only selected object
@@ -3009,6 +3045,8 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
               new_value.sort()
               setattr(catalog, key, tuple(new_value))
 
+      filter_dict = catalog._getFilterDict()
+
       # Restore filter
       if self._is_filtered_archive.get(method_id, 0):
         expression = self._filter_expression_archive[method_id]
@@ -3017,16 +3055,15 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
           expr_instance = Expression(expression)
         else:
           expr_instance = None
-        catalog.filter_dict[method_id] = PersistentMapping()
-        catalog.filter_dict[method_id]['filtered'] = 1
-        catalog.filter_dict[method_id]['expression'] = expression
-        catalog.filter_dict[method_id]['expression_instance'] = expr_instance
-        catalog.filter_dict[method_id]['expression_cache_key'] = \
+        filter_dict[method_id]['filtered'] = 1
+        filter_dict[method_id]['expression'] = expression
+        filter_dict[method_id]['expression_instance'] = expr_instance
+        filter_dict[method_id]['expression_cache_key'] = \
           self._filter_expression_cache_key_archive.get(method_id, ())
-        catalog.filter_dict[method_id]['type'] = \
+        filter_dict[method_id]['type'] = \
           self._filter_type_archive.get(method_id, ())
-      elif method_id in catalog.filter_dict.keys():
-        catalog.filter_dict[method_id]['filtered'] = 0
+      elif method_id in filter_dict.keys():
+        filter_dict[method_id]['filtered'] = 0
 
       # backward compatibility
       if hasattr(self, '_is_catalog_list_method_archive'):
@@ -3082,18 +3119,30 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         values.append(value)
     for obj in values:
       method_id = obj.id
+      property_list = list(catalog._properties)
+      if catalog.meta_type == 'ERP5 Catalog':
+        property_list = list(catalog.propertyMap())
       # remove method references in portal_catalog
-      for catalog_prop in catalog._properties:
+      for catalog_prop in property_list:
         if catalog_prop.get('select_variable') == 'getCatalogMethodIds'\
             and catalog_prop['type'] == 'multiple selection':
-          old_value = getattr(catalog, catalog_prop['id'], ())
+          # In case the properties are defined via property sheet 'Catalog', the
+          # object would have two IDs if it is of type 'selection' or
+          # 'multiple_selection': 'id' and 'base_id', usage of base_id is preferred
+          # while building objects as it maintains consistency between the old
+          # catalog and new erp5 catalog
+          catalog_prop_id = catalog_prop.get('base_id', catalog_prop['id'])
+          old_value = getattr(catalog, catalog_prop_id, ())
           if method_id in old_value:
             new_value = list(old_value)
             new_value.remove(method_id)
-            setattr(catalog, catalog_prop['id'], new_value)
+            # Better to set the attribute value as tuple as it would be consistent
+            # with both SQL Catalog and ERP5 Catalog.
+            setattr(catalog, catalog_prop_id, tuple(new_value))
 
-      if method_id in catalog.filter_dict:
-        del catalog.filter_dict[method_id]
+      filter_dict = catalog._getFilterDict()
+      if method_id in filter_dict:
+        del filter_dict[method_id]
 
     # uninstall objects
     ObjectTemplateItem.uninstall(self, context, **kw)

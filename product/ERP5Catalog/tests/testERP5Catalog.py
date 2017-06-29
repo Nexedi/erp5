@@ -582,14 +582,15 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """ % {'query_table' : query_table}
 
     portal_skins_custom = portal.portal_skins.custom
-    portal_skins_custom.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    portal_skins_custom.newContent(
+          portal_type='SQL Method',
           id='testMethod',
           title='',
           connection_id='erp5_sql_connection',
-          arguments="\n".join([ 'from_table_list',
-                                'where_expression',
-                                'order_by_expression' ]),
-          template=sql_squeleton)
+          arguments_src="\n".join([ 'from_table_list',
+                                  'where_expression',
+                                  'order_by_expression' ]),
+          src=sql_squeleton)
     testMethod = portal_skins_custom['testMethod']
 
     default_parametrs = {}
@@ -1476,14 +1477,20 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     """
     for catalog, connection_id in ((original_catalog, original_connection_id),
         (new_catalog, self.new_erp5_sql_connection)):
-      catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-                    id='z_create_dummy_table', title='', arguments="",
+      catalog.newContent(
+                    portal_type='SQL Method',
+                    id='z_create_dummy_table',
+                    title='',
+                    arguments_src="",
                     connection_id=connection_id,
-                    template=create_dummy_table_sql)
-      catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-                    id='z0_drop_dummy_table', title='', arguments="",
+                    src=create_dummy_table_sql)
+      catalog.newContent(
+                    portal_type='SQL Method',
+                    id='z0_drop_dummy_table',
+                    title='',
+                    arguments_src="",
                     connection_id=connection_id,
-                    template=drop_summy_table_sql)
+                    src=drop_summy_table_sql)
 
     # update catalog configuration and declare new ZSQLMethods
     sql_clear_catalog_list = list(original_catalog.sql_clear_catalog)
@@ -2389,6 +2396,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Add a new table to the catalog
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    # Using newContent for an ERP5 object is not allowed to all roles, so
+    # better to fix the roles on the user
+    sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "test_local_roles"
 
@@ -2400,22 +2410,23 @@ CREATE TABLE `%s` (
   KEY `version` (`owner_reference`)
 ) ENGINE=InnoDB;
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z_create_%s' % local_roles_table,
           title='',
-          arguments="",
+          arguments_src="",
           connection_id='erp5_sql_connection',
-          template=create_local_role_table_sql)
+          src=create_local_role_table_sql)
 
     drop_local_role_table_sql = """
 DROP TABLE IF EXISTS %s
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(portal_type='SQL Method',
           id='z0_drop_%s' % local_roles_table,
           title='',
-          arguments="",
+          arguments_src="",
           connection_id='erp5_sql_connection',
-          template=drop_local_role_table_sql)
+          src=drop_local_role_table_sql)
 
     catalog_local_role_sql = """
 REPLACE INTO
@@ -2432,13 +2443,14 @@ VALUES
 </dtml-if>
 </dtml-in>
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z_catalog_%s_list' % local_roles_table,
           title='',
           connection_id='erp5_sql_connection',
-          arguments="\n".join(['uid',
-                               'Base_getOwnerId']),
-          template=catalog_local_role_sql)
+          arguments_src="\n".join(['uid',
+                                   'Base_getOwnerId']),
+          src=catalog_local_role_sql)
 
     self.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
@@ -2571,6 +2583,9 @@ VALUES
 
     # Add a new table to the catalog
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    # Using newContent for an ERP5 object is not allowed to all roles, so
+    # better to fix the roles on the user
+    sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "test_assignee_local_roles"
 
@@ -2584,22 +2599,24 @@ CREATE TABLE `%s` (
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
 ) ENGINE=InnoDB;
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z_create_%s' % local_roles_table,
           title='',
-          arguments="",
+          arguments_src="",
           connection_id='erp5_sql_connection',
-          template=create_local_role_table_sql)
+          src=create_local_role_table_sql)
 
     drop_local_role_table_sql = """
 DROP TABLE IF EXISTS %s
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z0_drop_%s' % local_roles_table,
           title='',
-          arguments="",
+          arguments_src="",
           connection_id='erp5_sql_connection',
-          template=drop_local_role_table_sql)
+          src=drop_local_role_table_sql)
 
     catalog_local_role_sql = """
 REPLACE INTO
@@ -2617,14 +2634,15 @@ VALUES
 </dtml-if>
 </dtml-in>
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z_catalog_%s_list' % local_roles_table,
           title='',
           connection_id='erp5_sql_connection',
-          arguments="\n".join(['uid',
-                               'getAssignee',
-                               'getViewPermissionAssignee']),
-          template=catalog_local_role_sql)
+          arguments_src="\n".join(['uid',
+                                   'getAssignee',
+                                   'getViewPermissionAssignee']),
+          src=catalog_local_role_sql)
 
     self.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
@@ -2729,6 +2747,9 @@ VALUES
 
     # Add a new table to the catalog
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    # Using newContent for an ERP5 object is not allowed to all roles, so
+    # better to fix the roles on the user
+    sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "test_user_or_group_local_roles"
 
@@ -2742,22 +2763,24 @@ CREATE TABLE `%s` (
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
 ) ENGINE=InnoDB;
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z_create_%s' % local_roles_table,
           title='',
-          arguments="",
+          arguments_src="",
           connection_id='erp5_sql_connection',
-          template=create_local_role_table_sql)
+          src=create_local_role_table_sql)
 
     drop_local_role_table_sql = """
 DROP TABLE IF EXISTS %s
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z0_drop_%s' % local_roles_table,
           title='',
-          arguments="",
+          arguments_src="",
           connection_id='erp5_sql_connection',
-          template=drop_local_role_table_sql)
+          src=drop_local_role_table_sql)
 
     catalog_local_role_sql = """
 REPLACE INTO
@@ -2775,14 +2798,15 @@ VALUES
 </dtml-if>
 </dtml-in>
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    sql_catalog.newContent(
+          portal_type='SQL Method',
           id='z_catalog_%s_list' % local_roles_table,
           title='',
           connection_id='erp5_sql_connection',
-          arguments="\n".join(['uid',
-                               'getAssignee',
-                               'getViewPermissionAssignee']),
-          template=catalog_local_role_sql)
+          arguments_src="\n".join(['uid',
+                                   'getAssignee',
+                                   'getViewPermissionAssignee']),
+          src=catalog_local_role_sql)
 
     self.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
@@ -2983,6 +3007,9 @@ VALUES
 
     # Add a new table to the catalog
     sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    # Using newContent for an ERP5 object is not allowed to all roles, so
+    # better to fix the roles on the user
+    sql_catalog.manage_setLocalRoles(user1, ['Author', 'Auditor', 'Manager'])
 
     local_roles_table = "another_test_user_or_group_local_roles"
 
@@ -2994,22 +3021,24 @@ CREATE TABLE `%s` (
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
 ) ENGINE=InnoDB;
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-          id='z_create_%s' % local_roles_table,
-          title='',
-          arguments="",
-          connection_id='erp5_sql_connection',
-          template=create_local_role_table_sql)
+    sql_catalog.newContent(
+          portal_type='SQL Method',
+          id = 'z_create_%s' % local_roles_table,
+          title = '',
+          arguments_src = "",
+          connection_id = 'erp5_sql_connection',
+          src = create_local_role_table_sql)
 
     drop_local_role_table_sql = """
 DROP TABLE IF EXISTS %s
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-          id='z0_drop_%s' % local_roles_table,
-          title='',
-          arguments="",
-          connection_id='erp5_sql_connection',
-          template=drop_local_role_table_sql)
+    sql_catalog.newContent(
+          portal_type='SQL Method',
+          id = 'z0_drop_%s' % local_roles_table,
+          title = '',
+          arguments_src = "",
+          connection_id = 'erp5_sql_connection',
+          src = drop_local_role_table_sql)
 
     catalog_local_role_sql = """
 REPLACE INTO
@@ -3026,13 +3055,14 @@ VALUES
 </dtml-if>
 </dtml-in>
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-          id='z_catalog_%s_list' % local_roles_table,
-          title='',
-          connection_id='erp5_sql_connection',
-          arguments="\n".join(['uid',
-                               'getViewPermissionAssignee']),
-          template=catalog_local_role_sql)
+    sql_catalog.newContent(
+          portal_type='SQL Method',
+          id = 'z_catalog_%s_list' % local_roles_table,
+          title = '',
+          connection_id = 'erp5_sql_connection',
+          arguments_src = "\n".join(['uid',
+                                 'getViewPermissionAssignee']),
+          src = catalog_local_role_sql)
 
     self.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
@@ -3223,22 +3253,24 @@ CREATE TABLE `%s` (
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
 ) ENGINE=InnoDB;
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-          id='z_create_%s' % local_roles_table,
-          title='',
-          arguments="",
-          connection_id='erp5_sql_connection',
-          template=create_local_role_table_sql)
+    sql_catalog.newContent(
+          portal_type='SQL Method',
+          id = 'z_create_%s' % local_roles_table,
+          title = '',
+          arguments_src = "",
+          connection_id = 'erp5_sql_connection',
+          src = create_local_role_table_sql)
 
     drop_local_role_table_sql = """
 DROP TABLE IF EXISTS %s
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-          id='z0_drop_%s' % local_roles_table,
-          title='',
-          arguments="",
-          connection_id='erp5_sql_connection',
-          template=drop_local_role_table_sql)
+    sql_catalog.newContent(
+          portal_type='SQL Method',
+          id = 'z0_drop_%s' % local_roles_table,
+          title = '',
+          arguments_src = "",
+          connection_id = 'erp5_sql_connection',
+          src = drop_local_role_table_sql)
 
     catalog_local_role_sql = """
 REPLACE INTO
@@ -3255,13 +3287,14 @@ VALUES
 </dtml-if>
 </dtml-in>
     """ % local_roles_table
-    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-          id='z_catalog_%s_list' % local_roles_table,
-          title='',
-          connection_id='erp5_sql_connection',
-          arguments="\n".join(['uid',
-                               'getViewPermissionAssignee']),
-          template=catalog_local_role_sql)
+    sql_catalog.newContent(
+          portal_type='SQL Method',
+          id = 'z_catalog_%s_list' % local_roles_table,
+          title = '',
+          connection_id = 'erp5_sql_connection',
+          arguments_src = "\n".join(['uid',
+                                 'getViewPermissionAssignee']),
+          src = catalog_local_role_sql)
 
     self.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
