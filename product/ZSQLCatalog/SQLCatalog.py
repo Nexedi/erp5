@@ -668,6 +668,9 @@ class Catalog(Folder,
   def _clearCaches(self):
     self._cache_sequence_number += 1
 
+  def _getFilterDict(self):
+    return self.filter_dict
+
   security.declarePrivate('getSQLCatalogRoleKeysList')
   def getSQLCatalogRoleKeysList(self):
     """
@@ -737,10 +740,11 @@ class Catalog(Folder,
         f.write('  </property>\n')
     # XXX Although filters are not properties, output filters here.
     # XXX Ideally, filters should be properties in Z SQL Methods, shouldn't they?
-    if hasattr(self, 'filter_dict'):
+    filter_dict = self._getFilterDict()
+    if filter_dict:
       filter_list = []
-      for filter_id in self.filter_dict.keys():
-        filter_definition = self.filter_dict[filter_id]
+      for filter_id in filter_dict.keys():
+        filter_definition = filter_dict[filter_id]
         filter_list.append((filter_id, filter_definition))
       # Sort for easy diff
       filter_list.sort(key=lambda x: x[0])
@@ -1601,7 +1605,7 @@ class Catalog(Folder,
 
     with (noReadOnlyTransactionCache if disable_cache else
           readOnlyTransactionCache)():
-      filter_dict = self.filter_dict
+      filter_dict = self._getFilterDict()
       catalogged_object_list_cache = {}
       for method_name in method_id_list:
         # We will check if there is an filter on this
