@@ -1,7 +1,6 @@
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Form.Report import ReportSection
-portal = context.getPortalObject()
-  
+
 request = container.REQUEST
 section_category = request['section_category']
 section_category_strict = request['section_category_strict']
@@ -55,7 +54,7 @@ ledger = request.get('ledger', None)
 if ledger:
   selection_params['ledger'] = ledger
 
-return [ReportSection(form_id=(detailed and 
+return [ReportSection(form_id=(detailed and
                                'AccountingTransactionModule_viewDetailedAgedBalanceReportSection' or
                                'AccountingTransactionModule_viewSummaryAgedBalanceReportSection'),
                       path=context.getPhysicalPath(),

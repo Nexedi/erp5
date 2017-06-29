@@ -38,13 +38,12 @@ def splitCsvLine(str_line):
 
   return clean_list
 
-def getSubCategory(parent, id):
+def getSubCategory(parent, category_id):
   try:
-    return parent[id]
+    return parent[category_id]
   except KeyError:
-    return parent.newContent(id=id)
+    return parent.newContent(id=category_id)
 
-request  = context.REQUEST
 csv_file_line_list = import_file.readlines()
 csv_line_list = []
 
@@ -54,18 +53,16 @@ for csv_line in csv_file_line_list:
 object_list = []
 
 csv_property_list = splitCsvLine(csv_line_list[0])
-csv_title_list = splitCsvLine(csv_line_list[1])
-
 for csv_line in csv_line_list[2:]:
-  object = {}
+  property_dict = {}
   csv_data_list = splitCsvLine(csv_line)
   data_n = 0
 
-  for property in csv_property_list:
-    object[property] = csv_data_list[data_n]
+  for property_ in csv_property_list:
+    property_dict[property_] = csv_data_list[data_n]
     data_n += 1
 
-  object_list.append(object)
+  object_list.append(property_dict)
 
 root = context.getPortalObject().portal_categories
 for path in gap_root_path.split('/'):
@@ -74,10 +71,10 @@ for path in gap_root_path.split('/'):
 existing_path_list = recursiveDocumentList(root)
 existing_path_list.remove(root.getPath())
 
-for object in object_list:
-  description = object.get('Description', None) or ''
-  gap = object.get('Gap', None) or ''
-  title = object.get('Title', None) or ''
+for property_dict in object_list:
+  description = property_dict.get('Description', None) or ''
+  gap = property_dict.get('Gap', None) or ''
+  title = property_dict.get('Title', None) or ''
   gap = str(gap)
   if gap:
     gap = gap.replace('CLASSE ', '')
@@ -95,11 +92,11 @@ for object in object_list:
 
 existing_path_list.sort(key=len, reverse=True)
 for path in existing_path_list:
-  object = context.restrictedTraverse(path)
-  description = object.getDescription() or ''
-  gap = object.getId() or ''
-  title = object.getTitle() or ''
+  document = context.restrictedTraverse(path)
+  description = document.getDescription() or ''
+  gap = document.getId() or ''
+  title = document.getTitle() or ''
   print '- %s - %s - %s' % (gap or '', title or '', description or '')
-  object.getParentValue().deleteContent(object.getId())
+  document.getParentValue().deleteContent(document.getId())
 
 return printed

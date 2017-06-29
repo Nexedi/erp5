@@ -8,7 +8,7 @@ detail_line_list = portal\
                simulation_state, period_list, account_type, detail=False, **kw)
 
 period_id_list = ['period_future']
-for idx, period in enumerate(period_list):
+for idx, _ in enumerate(period_list):
   period_id_list.append('period_%s' % idx)
 period_id_list.append('period_%s' % (idx + 1))
 

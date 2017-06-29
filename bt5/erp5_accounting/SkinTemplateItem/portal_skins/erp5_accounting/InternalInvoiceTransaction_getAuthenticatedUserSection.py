@@ -11,8 +11,6 @@ if person is None:
 from DateTime import DateTime
 now = DateTime()
 
-destination_group = section_group = None
-
 assigned_group_set = set() # groups on which the user is assigned
 for assignment in person.contentValues(portal_type='Assignment'):
   if assignment.getGroup() \

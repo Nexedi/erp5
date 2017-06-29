@@ -2,7 +2,6 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Message import translateString
 
 closing_period = state_change['object']
-portal = closing_period.getPortalObject()
 valid_state_list = ['started', 'stopped', 'delivered']
 
 closing_period.Base_checkConsistency()
@@ -25,7 +24,7 @@ for period in period_list:
       raise ValidationFailed, translateString(
           "${date} is already in an open accounting period.",
           mapping={'date': start_date})
-          
+
 if len(period_list) > 1:
   last_period  = period_list[-1].getObject()
   if last_period.getId() == closing_period.getId():

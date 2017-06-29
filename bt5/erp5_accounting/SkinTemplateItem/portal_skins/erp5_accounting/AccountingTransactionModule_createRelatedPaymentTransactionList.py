@@ -1,8 +1,6 @@
 from Products.ERP5Type.Message import translateString
-try:
-  from zExceptions import Redirect
-except:
-  Redirect = 'Redirect'
+from zExceptions import Redirect
+
 portal = context.getPortalObject()
 stool = portal.portal_selections
 getObject = portal.portal_catalog.getObject

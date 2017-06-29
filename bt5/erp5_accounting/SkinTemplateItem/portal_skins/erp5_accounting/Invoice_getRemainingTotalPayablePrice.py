@@ -59,7 +59,7 @@ def getIsSourceMovementItemList(invoice):
     btt_is_source = btt.AccountingTransaction_isSourceView()
     for btt_movement in btt.getMovementList(
                   portal_type=portal.getPortalAccountingMovementTypeList()):
-        movement_item_list.append((btt_is_source, btt_movement))
+      movement_item_list.append((btt_is_source, btt_movement))
 
   return movement_item_list
 
@@ -71,7 +71,6 @@ for is_source, line in getIsSourceMovementItemList(context):
 
   if is_source:
     node_value = line.getSourceValue(portal_type='Account')
-    line_section = line.getSourceSection()
     mirror_section = line.getDestinationSection()
     if quantity:
       amount = -line.getQuantity()
@@ -79,7 +78,6 @@ for is_source, line in getIsSourceMovementItemList(context):
       amount = line.getSourceInventoriatedTotalAssetPrice() or 0
   else:
     node_value = line.getDestinationValue(portal_type='Account')
-    line_section = line.getDestinationSection()
     mirror_section = line.getSourceSection()
     if quantity:
       amount = line.getQuantity()
@@ -88,7 +86,7 @@ for is_source, line in getIsSourceMovementItemList(context):
 
   if at_date is None and line.getGroupingReference():
     continue
-  
+
   if node_value is not None:
     if account_id is not None and node_value.getId() not in account_id:
       continue
@@ -110,7 +108,7 @@ for related_transaction in related_transaction_list:
     continue
   if related_transaction.getProperty('origin_id') == 'MAJO':
     continue
-  
+
   # if we have a payment related to multiple invoices, we cannot say the
   # remaining price on those invoices.
   for other_invoice in [ tr for tr in related_transaction.getCausalityValueList(
@@ -128,18 +126,18 @@ for related_transaction in related_transaction_list:
       else:
         other_invoice_line_account = other_line.getDestinationValue()
         other_invoice_line_mirror_section = other_line.getSourceSection()
-        
+
       if other_invoice_line_account in accounts_in_context:
         # unless this line is for another mirror_section, we cannot calculate
         if mirror_section_relative_url is None or \
               other_invoice_line_mirror_section == mirror_section_relative_url:
           raise ValueError('Unable to calculate %s' % context.getPath())
-  
+
   related_transaction_is_source = related_transaction.\
                                         AccountingTransaction_isSourceView()
   for line in related_transaction.getMovementList(
             portal_type=portal.getPortalAccountingMovementTypeList()):
-    
+
     if at_date is None and line.getGroupingReference():
       continue
 
@@ -148,10 +146,9 @@ for related_transaction in related_transaction_list:
         raise ValueError("Unable to calculate"
         ", related transaction %s uses different currency" %
           line.getRelativeUrl())
-    
+
     if related_transaction_is_source:
       node_value = line.getSourceValue(portal_type='Account')
-      line_section = line.getSourceSection()
       mirror_section = line.getDestinationSection()
       if quantity:
         amount = -line.getQuantity()
@@ -160,14 +157,13 @@ for related_transaction in related_transaction_list:
       date = line.getStartDate().earliestTime()
     else:
       node_value = line.getDestinationValue(portal_type='Account')
-      line_section = line.getDestinationSection()
       mirror_section = line.getSourceSection()
       if quantity:
         amount = line.getQuantity()
       else:
         amount = line.getDestinationInventoriatedTotalAssetPrice() or 0
       date = line.getStopDate().earliestTime()
-    
+
     if node_value is not None:
       if account_id is not None and node_value.getId() not in account_id:
         continue
@@ -185,7 +181,7 @@ if detailed:
 else:
   if mirror_section_relative_url:
     total_amount = 0
-    for (node, mirror_section), amount in total_payable_price_per_node_section.items():
+    for (node, mirror_section), amount in total_payable_price_per_node_section.items(): # pylint: disable=unused-variable
       if mirror_section == mirror_section_relative_url:
         total_amount += amount
     return total_amount
