@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Receipt_view</string> </value>
+            <value> <string>ReceiptRecognition_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

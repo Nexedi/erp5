@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ReceiptConversion_convertImage</string> </value>
+            <value> <string>ReceiptRecognition_convertImage</string> </value>
         </item>
       </dictionary>
     </pickle>

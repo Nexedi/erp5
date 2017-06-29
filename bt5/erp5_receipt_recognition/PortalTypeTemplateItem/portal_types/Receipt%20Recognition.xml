@@ -28,7 +28,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Receipt</string> </value>
+            <value> <string>Receipt Recognition</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

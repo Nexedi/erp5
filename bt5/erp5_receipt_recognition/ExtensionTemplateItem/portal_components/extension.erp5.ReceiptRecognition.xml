@@ -45,10 +45,7 @@
         <item>
             <key> <string>text_content_warning_message</string> </key>
             <value>
-              <tuple>
-                <string>W:243,  2: Attempting to unpack a non-sequence defined at line 181 of scipy.ndimage.measurements (unpacking-non-sequence)</string>
-                <string>W:272,  2: Attempting to unpack a non-sequence defined at line 181 of scipy.ndimage.measurements (unpacking-non-sequence)</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
