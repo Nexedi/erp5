@@ -6,11 +6,11 @@
 """
 
 def getInlinePage(reference, language):
- if reference:
-   page = context.getDocumentValue(reference)
-   if page is not None:
-     return page.asStrippedHTML()
- return None
+  if reference:
+    page = context.getDocumentValue(reference)
+    if page is not None:
+      return page.asStrippedHTML()
+  return None
 
 from Products.ERP5Type.Cache import CachingMethod
 web_site_url = context.getWebSectionValue().absolute_url()

@@ -1,5 +1,5 @@
 request = context.REQUEST
-request_form = context.REQUEST.form
+request_form = request.form
 from ZTUtils import make_query
 portal = context.getPortalObject()
 title = context.getTitle('Unknown')

@@ -4,4 +4,4 @@
 """
 site = context.getWebSiteValue()
 section_list = site.contentValues(portal_type='Web Section', sort_on='int_index', checked_permission='View')
-return filter(lambda x: x.isVisible(), section_list)
+return [x for x in section_list if x.isVisible()]

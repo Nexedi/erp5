@@ -30,12 +30,15 @@
 import unittest
 from Products.ERP5Type.tests.CodingStyleTestCase import CodingStyleTestCase
 
-class CodingStyle(CodingStyleTestCase):
+class ERP5WebCodingStyle(CodingStyleTestCase):
   """
   Check consistency of erp5_web business template code
   """
   def getTitle(self):
     return "erp5_web CodingStyle"
+
+  def getTestedBusinessTemplateList(self):
+    return ('erp5_web', )
 
   def getBusinessTemplateList(self):
     """
@@ -47,9 +50,10 @@ class CodingStyle(CodingStyleTestCase):
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
             'erp5_crm',
+            'erp5_administration',
             )
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(CodingStyle))
+  suite.addTest(unittest.makeSuite(ERP5WebCodingStyle))
   return suite

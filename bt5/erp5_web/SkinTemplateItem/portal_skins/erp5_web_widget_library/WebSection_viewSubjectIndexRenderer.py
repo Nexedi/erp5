@@ -9,8 +9,6 @@
   Result is cached for high performance.
 """
 
-web_site_value = context.getWebSiteValue()
-web_site_url = web_site_value.absolute_url()
 web_section_value = context.getWebSectionValue()
 web_section_url = web_section_value.absolute_url()
 context = web_section_value
