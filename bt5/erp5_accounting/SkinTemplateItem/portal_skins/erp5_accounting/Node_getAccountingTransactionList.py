@@ -4,7 +4,7 @@ from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Log import log
 portal = context.getPortalObject()
 request = portal.REQUEST
-params = portal.ERP5Accounting_getParams(selection_name=selection_name)
+params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name=selection_name)
 
 if params.get('precision', None) is not None:
   # listbox editable float fields uses request/precision to format the value.

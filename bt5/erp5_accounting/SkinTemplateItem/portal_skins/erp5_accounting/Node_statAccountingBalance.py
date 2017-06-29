@@ -1,7 +1,7 @@
 from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
 portal = context.getPortalObject()
 
-params = portal.ERP5Accounting_getParams(selection_name=selection_name)
+params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name=selection_name)
 getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor
 
 if asset_price:

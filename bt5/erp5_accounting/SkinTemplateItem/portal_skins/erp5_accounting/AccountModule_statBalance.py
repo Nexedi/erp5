@@ -1,5 +1,5 @@
 portal = context.getPortalObject()
-params = portal.ERP5Accounting_getParams(selection_name)
+params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name)
 
 params['omit_asset_increase'] = omit_asset_increase
 params['omit_asset_decrease'] = omit_asset_decrease
@@ -24,7 +24,7 @@ else:
   params['node_uid'] = [x.uid for x in
                         portal.portal_catalog(**selection_params)]
 
-# Remove params used internally by ERP5Accounting_getParams before passing to inventory API
+# Remove params used internally by ERP5Site_getAccountingSelectionParameterDict before passing to inventory API
 params.pop("period_start_date", None)
 params.pop("detailed_from_date_summary", None)
 
