@@ -609,7 +609,7 @@ for key, data in line_per_account.iteritems():
   if expand_accounts and mirror_section_uid is not MARKER:
     mirror_section_title = getObject(mirror_section_uid).getTitle()
   else:
-     mirror_section_title = None
+    mirror_section_title = None
 
   node_uid, node_title, node_id, node_string_index, node = getNodeTitleAndId(node_relative_url)
 

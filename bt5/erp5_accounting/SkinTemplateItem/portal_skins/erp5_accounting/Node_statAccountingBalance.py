@@ -1,4 +1,4 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query
 portal = context.getPortalObject()
 
 params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name=selection_name)

@@ -10,7 +10,6 @@ Base_translateString = context.Base_translateString
 if date is None:
   date = DateTime()
 portal = context.getPortalObject()
-payment_dict = {}
 is_source = context.AccountingTransaction_isSourceView()
 line_portal_type = 'Accounting Transaction Line'
 
@@ -58,12 +57,10 @@ related_payment = portal.accounting_module.newContent(
 if is_source:
   related_payment.edit(destination_payment=context.getDestinationPayment(),
                        source_payment=payment)
-  section = context.getSourceSection()
   mirror_section = context.getDestinationSection()
 else:
   related_payment.edit(destination_payment=payment,
               source_payment=context.getSourcePayment())
-  section = context.getDestinationSection()
   mirror_section = context.getSourceSection()
 
 bank = related_payment.newContent(
@@ -77,30 +74,29 @@ for (line_node, line_mirror_section), quantity in\
   if line_mirror_section == mirror_section:
     bank_quantity += quantity
     if is_source:
-      line = related_payment.newContent(
+      related_payment.newContent(
         portal_type=line_portal_type,
         source=line_node,
         quantity=quantity)
     else:
-      line = related_payment.newContent(
+      related_payment.newContent(
         portal_type=line_portal_type,
         destination=line_node,
         quantity=-quantity)
 
 if is_source:
-  bank.edit( source=node,
-             quantity=-bank_quantity )
+  bank.setSource(node)
+  bank.setQuantity(-bank_quantity)
 else:
-  bank.edit( destination=node,
-             quantity=bank_quantity )
+  bank.setDestination(node)
+  bank.setQuantity(bank_quantity)
 
 if plan:
   related_payment.plan()
 
 if not batch_mode:
-  return context.REQUEST.RESPONSE.redirect(
-    "%s/view?portal_status_message=%s" % (
-    related_payment.absolute_url(),
-    Base_translateString('Related payment created.')))
-else:
-  return related_payment
+  return related_payment.Base_redirect(
+    'view',
+    keep_items={'portal_status_message': Base_translateString('Related payment created.')})
+
+return related_payment

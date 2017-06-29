@@ -3,12 +3,12 @@ section_value = context.getSourceSectionValue()
 if section_value is None or \
    section_value.getProperty('price_currency', None) is None:
   # If no section defined, no way to convert currencies
-  return 0
+  return False
 
 transaction_currency = context.getResource()
 if transaction_currency is not None and\
    transaction_currency != section_value.getProperty('price_currency', None):
-  return 1
+  return True
 
 for line in context.getMovementList(
    portal_type=context.getPortalAccountingMovementTypeList()):
@@ -16,6 +16,6 @@ for line in context.getMovementList(
        line.getSourceInventoriatedTotalAssetCredit()) or (
        line.getSourceDebit() !=
        line.getSourceInventoriatedTotalAssetDebit())):
-   return 1
+    return True
 
-return 0
+return False

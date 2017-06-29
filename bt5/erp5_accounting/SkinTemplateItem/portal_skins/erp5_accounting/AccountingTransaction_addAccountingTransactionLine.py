@@ -5,7 +5,7 @@ use.
 from Products.ERP5Type.Message import translateString
 request = container.REQUEST
 
-for i in range(line_count):
+for _ in range(line_count):
   context.newContent(portal_type=line_portal_type)
 
 request.set('portal_status_message',

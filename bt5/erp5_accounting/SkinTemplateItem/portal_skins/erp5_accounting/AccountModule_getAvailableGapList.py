@@ -7,7 +7,6 @@ item_list = [('', '')]
 countries = context.portal_categories.gap.objectValues()
 for country in countries : 
   for gap in country.objectValues() :
-    title = country.getTranslatedTitle() + '/'+ gap.getTranslatedTitle()
     path = gap.getRelativeUrl()
     item_list.append(
         ((country.getTranslatedTitle() + '/'+ gap.getTranslatedTitle()),

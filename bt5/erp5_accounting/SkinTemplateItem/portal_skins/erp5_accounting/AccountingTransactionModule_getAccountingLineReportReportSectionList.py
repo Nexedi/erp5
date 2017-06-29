@@ -1,6 +1,4 @@
 from Products.ERP5Form.Report import ReportSection
-portal = context.getPortalObject()
-request = container.REQUEST
 
 selection_columns = (
   ('title', 'Title',),
@@ -20,7 +18,7 @@ selection_columns = (
   ('mirror_payment_title', 'Third Party Bank Account',),
   ('mirror_section_region_title', 'Third Party Region',),
   ('function_reference',
-      '%s Reference' % context.AccountingTransactionLine_getFunctionBaseCategoryTitle()), 
+      '%s Reference' % context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),
   ('function_title',
       context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),
   ('funding_reference', 'Funding Reference',),

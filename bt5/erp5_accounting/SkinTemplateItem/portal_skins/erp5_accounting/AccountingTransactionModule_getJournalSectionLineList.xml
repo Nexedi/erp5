@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, group_by=None, analytic_column_list=[], project_uid=None, ledger_uid=None, **kw</string> </value>
+            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, group_by=None, analytic_column_list=(), project_uid=None, ledger_uid=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

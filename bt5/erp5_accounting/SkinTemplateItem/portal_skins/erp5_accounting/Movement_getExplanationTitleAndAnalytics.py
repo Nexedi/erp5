@@ -10,7 +10,7 @@ else:
 
 analytic_property_list = [explanation.getReference()]
 
-for property_name, property_title in request['analytic_column_list']:
+for property_name, property_title in request['analytic_column_list']: #pylint: disable=unused-variable
   # XXX it would be a little better to reuse editable field
   if property_name == 'project':
     analytic_property_list.append(brain.Movement_getProjectTitle())
