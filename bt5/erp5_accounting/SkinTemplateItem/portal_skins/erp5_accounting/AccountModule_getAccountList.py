@@ -1,5 +1,5 @@
 # precision for editable fields
-params = context.ERP5Accounting_getParams(selection_name)
+params = context.ERP5Site_getAccountingSelectionParameterDict(selection_name)
 if params.get('precision', None) is not None:
   context.REQUEST.set('precision', params['precision'])
 

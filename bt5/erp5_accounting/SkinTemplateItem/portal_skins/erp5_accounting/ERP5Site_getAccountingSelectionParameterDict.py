@@ -12,7 +12,7 @@ caveats:
 # do we have a cache already?
 if not ignore_cache:
   params_cache = context.REQUEST.other.get(
-          'ERP5Accounting_getParams', None)
+          'ERP5Site_getAccountingSelectionParameterDict', None)
   if params_cache is not None:
     # return a copy
     return dict(params_cache)
@@ -113,5 +113,5 @@ else:
     params['parent_portal_type'] = parent_portal_type
 
 if not ignore_cache:
-  context.REQUEST.other['ERP5Accounting_getParams'] = params
+  context.REQUEST.other['ERP5Site_getAccountingSelectionParameterDict'] = params
 return dict(params)

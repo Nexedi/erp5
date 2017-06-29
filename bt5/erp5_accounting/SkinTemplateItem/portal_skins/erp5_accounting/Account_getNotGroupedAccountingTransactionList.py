@@ -1,7 +1,7 @@
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.PythonScripts.standard import Object
 portal = context.getPortalObject()
-params = portal.ERP5Accounting_getParams(selection_name)
+params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name)
 
 # this also prevents to be called directly
 assert 'node_uid' in kw

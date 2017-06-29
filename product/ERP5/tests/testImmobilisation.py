@@ -3620,7 +3620,7 @@ class TestImmobilisation(TestImmobilisationMixin):
     self.assertEqual('group/group B',
         preference_tool.getPreferredAccountingTransactionSectionCategory())
     # Make sure to not use the cache
-    self.portal.REQUEST['ERP5Accounting_getParams'] = None
+    self.portal.REQUEST['ERP5Site_getAccountingSelectionParameterDict'] = None
     self.assertEqual(5000.0,account.AccountModule_getTotalSourceDebit(brain=account))
     self.assertEqual(0.0,account.AccountModule_getTotalSourceCredit(brain=account))
 

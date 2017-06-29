@@ -1,4 +1,4 @@
-kwd = context.ERP5Accounting_getParams(selection_name)
+kwd = context.ERP5Site_getAccountingSelectionParameterDict(selection_name)
 # cleanup unsupported catalog parameters
 kwd.pop('period_start_date', None)
 kwd.pop('detailed_from_date_summary', None)
