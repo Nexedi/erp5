@@ -744,8 +744,7 @@ class Catalog(Folder,
         for item in item_list:
           f.write('    <item type="str">%s</item>\n' % escape(str(item)))
         f.write('  </property>\n')
-    # XXX Although filters are not properties, output filters here.
-    # XXX Ideally, filters should be properties in Z SQL Methods, shouldn't they?
+    # Filters are now propeties in ERP5 SQL Method(s)
     filter_dict = self._getFilterDict()
     if filter_dict:
       for filter_id, filter_def in sorted(filter_dict.iteritems()):
@@ -2663,179 +2662,6 @@ class Catalog(Folder,
     method = self._getOb(self.getSqlReadRecordedObjectList())
     return method(catalog=catalog)
 
-  # Filtering
-  security.declareProtected(manage_zcatalog_entries, 'manage_editFilter')
-  def manage_editFilter(self, REQUEST=None, RESPONSE=None, URL1=None):
-    """
-    This methods allows to set a filter on each zsql method called,
-    so we can test if we should or not call a zsql method, so we can
-    increase a lot the speed.
-    """
-    if withCMF:
-      method_id_list = [zsql_method.id for zsql_method in self.getFilterableMethodList()]
-
-      # Remove unused filters.
-      for id in self.filter_dict.keys():
-        if id not in method_id_list:
-          del self.filter_dict[id]
-
-      for id in method_id_list:
-        # We will first look if the filter is activated
-        if id not in self.filter_dict:
-          self.filter_dict[id] = PersistentMapping()
-
-        if REQUEST.has_key('%s_box' % id):
-          self.filter_dict[id]['filtered'] = 1
-        else:
-          self.filter_dict[id]['filtered'] = 0
-
-        expression = REQUEST.get('%s_expression' % id, '').strip()
-        self.filter_dict[id]['expression'] = expression
-        if expression:
-          self.filter_dict[id]['expression_instance'] = Expression(expression)
-        else:
-          self.filter_dict[id]['expression_instance'] = None
-
-        if REQUEST.has_key('%s_type' % id):
-          list_type = REQUEST['%s_type' % id]
-          if isinstance(list_type, str):
-            list_type = [list_type]
-          self.filter_dict[id]['type'] = list_type
-        else:
-          self.filter_dict[id]['type'] = []
-
-        self.filter_dict[id]['expression_cache_key'] = \
-          tuple(sorted(REQUEST.get('%s_expression_cache_key' % id, '').split()))
-
-    if RESPONSE and URL1:
-      RESPONSE.redirect(URL1 + '/manage_catalogFilter?manage_tabs_message=Filter%20Changed')
-
-  security.declarePrivate('isMethodFiltered')
-  def isMethodFiltered(self, method_name):
-    """
-    Returns 1 if the method is already filtered,
-    else it returns 0
-    """
-    if withCMF:
-      # Reset Filtet dict
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return 0
-      try:
-        return self.filter_dict[method_name]['filtered']
-      except KeyError:
-        return 0
-    return 0
-
-  security.declarePrivate('getExpression')
-  def getExpression(self, method_name):
-    """ Get the filter expression text for this method.
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return ""
-      try:
-        return self.filter_dict[method_name]['expression']
-      except KeyError:
-        return ""
-    return ""
-
-  security.declarePrivate('getExpressionCacheKey')
-  def getExpressionCacheKey(self, method_name):
-    """ Get the key string which is used to cache results
-        for the given expression.
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return ""
-      try:
-        return ' '.join(self.filter_dict[method_name]['expression_cache_key'])
-      except KeyError:
-        return ""
-    return ""
-
-  security.declarePrivate('getExpressionInstance')
-  def getExpressionInstance(self, method_name):
-    """ Get the filter expression instance for this method.
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return None
-      try:
-        return self.filter_dict[method_name]['expression_instance']
-      except KeyError:
-        return None
-    return None
-
-  security.declarePrivate('setFilterExpression')
-  def setFilterExpression(self, method_name, expression):
-    """ Set the Expression for a certain method name. This allow set
-        expressions by scripts.
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return None
-      self.filter_dict[method_name]['expression'] = expression
-      if expression:
-        self.filter_dict[method_name]['expression_instance'] = Expression(expression)
-      else:
-        self.filter_dict[method_name]['expression_instance'] = None
-
-  security.declarePrivate('isPortalTypeSelected')
-  def isPortalTypeSelected(self, method_name, portal_type):
-    """ Returns true if the portal type is selected for this method.
-      XXX deprecated
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return 0
-      try:
-        return portal_type in (self.filter_dict[method_name]['type'])
-      except KeyError:
-        return 0
-    return 0
-
-  security.declarePrivate('getFilteredPortalTypeList')
-  def getFilteredPortalTypeList(self, method_name):
-    """ Returns the list of portal types which define
-        the filter.
-      XXX deprecated
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return []
-      try:
-        return self.filter_dict[method_name]['type']
-      except KeyError:
-        return []
-    return []
-
-  security.declarePrivate('getFilterDict')
-  def getFilterDict(self):
-    """
-      Utility Method.
-      Filter Dict is a dictionary and used at Python Scripts,
-      This method returns a filter dict as a dictionary.
-    """
-    if withCMF:
-      if getattr(aq_base(self), 'filter_dict', None) is None:
-        self.filter_dict = PersistentMapping()
-        return None
-      filter_dict = {}
-      for key in self.filter_dict:
-        # Filter is also a Persistence dict.
-        filter_dict[key] = {}
-        for sub_key in self.filter_dict[key]:
-           filter_dict[key][sub_key] = self.filter_dict[key][sub_key]
-      return filter_dict
-    return None
-
   security.declarePublic('getConnectionId')
   def getConnectionId(self, deferred=False):
     """
@@ -2844,7 +2670,7 @@ class Catalog(Folder,
     If 'deferred' is True, then returns the deferred connection
     """
     for method in self.objectValues():
-      if method.meta_type == 'Z SQL Method':
+      if method.meta_type in ('Z SQL Method', 'ERP5 SQL Method',):
         if ('deferred' in method.connection_id) == deferred:
           return method.connection_id
 
