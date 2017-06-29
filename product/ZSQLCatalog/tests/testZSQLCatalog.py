@@ -55,64 +55,6 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertTrue(self._catalog.z_dummy_method in
                     self._catalog.getFilterableMethodList())
 
-  def test_manage_editFilter(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_expression='python: 1')
-    self._catalog.manage_editFilter(REQUEST=request)
-    self.assertTrue(self._catalog.filter_dict.has_key('z_dummy_method'))
-
-  def test_isMethodFiltered(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_expression='python: 1')
-    self._catalog.manage_editFilter(REQUEST=request)
-    self.assertTrue(self._catalog.isMethodFiltered('z_dummy_method'))
-    self.assertFalse(self._catalog.isMethodFiltered('not_exist'))
-
-  def test_getFilterExpression(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_expression='python: 1')
-    self._catalog.manage_editFilter(REQUEST=request)
-    self.assertEqual('python: 1', self._catalog.getExpression('z_dummy_method'))
-    self.assertEqual('', self._catalog.getExpression('not_exists'))
-
-  def test_setFilterExpression(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_expression='python: 1')
-    self._catalog.manage_editFilter(REQUEST=request)
-    expression = self._catalog.getExpressionInstance('z_dummy_method')
-    self._catalog.setFilterExpression('z_dummy_method', 'python: 2')
-    self.assertEqual('python: 2', self._catalog.getExpression('z_dummy_method'))
-    self.assertNotEquals(expression,
-                         self._catalog.getExpressionInstance('z_dummy_method'))
-    self._catalog.setFilterExpression('z_dummy_method', 'python: 1')
-    self.assertEqual('python: 1', self._catalog.getExpression('z_dummy_method'))
-    self.assertRaises(KeyError, self._catalog.setFilterExpression,
-                                'not_exists', "python:1")
-    self.assertEqual('', self._catalog.getExpression('not_exists'))
-
-  def test_getFilterDict(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_expression='python: 1')
-    self._catalog.manage_editFilter(REQUEST=request)
-    filter_dict = self._catalog.getFilterDict()
-    self.assertEqual(self._catalog.filter_dict.keys(), filter_dict.keys())
-    self.assertTrue(isinstance(filter_dict, type({})))
-    self.assertTrue(isinstance(filter_dict['z_dummy_method'], type({})))
-    self.assertEqual(self._catalog.getExpression('z_dummy_method'),
-                      filter_dict['z_dummy_method']['expression'])
-
-  def test_getFilterExpressionInstance(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_expression='python: 1')
-    self._catalog.manage_editFilter(REQUEST=request)
-    self.assertTrue(isinstance(
-        self._catalog.getExpressionInstance('z_dummy_method'), Expression))
-    self.assertEqual(None, self._catalog.getExpressionInstance('not_exists'))
-
-  def test_isPortalTypeSelected(self):
-    request = dict(z_dummy_method_box=1, z_dummy_method_type=['Selected'])
-    self._catalog.manage_editFilter(REQUEST=request)
-    self.assertTrue(
-        self._catalog.isPortalTypeSelected('z_dummy_method', 'Selected'))
-    self.assertFalse(
-        self._catalog.isPortalTypeSelected('z_dummy_method', 'Not Selected'))
-    self.assertFalse(
-        self._catalog.isPortalTypeSelected('not_exists', 'Selected'))
-
   def test_getRecordByUid(self):
     class MyError(RuntimeError):
       pass
