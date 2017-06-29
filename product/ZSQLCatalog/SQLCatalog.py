@@ -1670,18 +1670,10 @@ class Catalog(Folder,
           continue
 
         #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
-        method = getattr(self, method_name)
-        if method.meta_type in ("Z SQL Method", "LDIF Method"):
-          # Build the dictionnary of values
-          arguments = method.arguments_src.split()
-        elif method.meta_type == "Script (Python)":
-          arguments = \
-            method.func_code.co_varnames[:method.func_code.co_argcount]
-        else:
-          arguments = []
+        method = self._getCatalogMethod(method_name)
         kw = {x: LazyIndexationParameterList(catalogged_object_list,
                                              x, argument_cache)
-          for x in arguments}
+          for x in self._getCatalogMethodArgumentList(method)}
 
         # Alter/Create row
         try:
@@ -1704,6 +1696,17 @@ class Catalog(Folder,
 
   if psyco is not None:
     psyco.bind(_catalogObjectList)
+
+  def _getCatalogMethodArgumentList(self, method):
+    if method.meta_type in ("Z SQL Method", "LDIF Method"):
+      # Build the dictionnary of values
+      return method.arguments_src.split()
+    elif method.meta_type == "Script (Python)":
+      return method.func_code.co_varnames[:method.func_code.co_argcount]
+    return ()
+
+  def _getCatalogMethod(self, method_name):
+    return getattr(self, method_name)
 
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, path=None,uid=None):
