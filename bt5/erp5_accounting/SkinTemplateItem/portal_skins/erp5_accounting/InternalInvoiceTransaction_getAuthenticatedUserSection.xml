@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>InternalInvoice_getAuthenticatedUserSection</string> </value>
+            <value> <string>InternalInvoiceTransaction_getAuthenticatedUserSection</string> </value>
         </item>
       </dictionary>
     </pickle>
