@@ -71,15 +71,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_afs_storage.js</string> </value>
+            <value> <string>gadget_erp5_afs_publisher_storage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Custom AFS storage</string> </value>
+            <value> <string>Custom AFS publisher storage</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_erp5_afs_storage_js</string> </value>
+            <value> <string>gadget_erp5_afs_publisher_storage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget AFS Storage</string> </value>
+            <value> <string>Gadget AFS Publisher Storage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -214,7 +214,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>3</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -228,7 +228,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.45095.9318.10888</string> </value>
+                <value> <string>960.24382.2075.20667</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -246,7 +246,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496056764.06</float>
+                        <float>1498746700.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

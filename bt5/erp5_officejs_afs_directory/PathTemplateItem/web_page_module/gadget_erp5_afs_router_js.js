@@ -1,17 +1,9 @@
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint indent: 2, nomen: true, maxlen: 80*/
 /*global window, rJS */
 (function (window, rJS) {
   "use strict";
 
   rJS(window)
-    /*
-    .ready(function (g) {
-      return g.getDeclaredGadget("router")
-        .push(function (my_default_router) {
-          return my_default_router.start();
-        });
-    })
-    */
 
     /////////////////////////////////////////////////////////////////
     // declared methods
