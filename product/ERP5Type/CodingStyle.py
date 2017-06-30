@@ -59,28 +59,31 @@ def getSkinPrefixList(self):
     skin_prefix_list.append(portal_prefix)
 
   # Add document classes prefix
-  from Products.ERP5Type import Document
-  for document_class in Document.__dict__.keys():
-    if not document_class.startswith('add') and \
-        not document_class.startswith('new') and \
-        not document_class.startswith('_'):
-      skin_prefix_list.append(document_class)
+  skin_prefix_list.extend(self.portal_types.getDocumentTypeList())
+
+  # Add mixins prefix
+  skin_prefix_list.extend(self.portal_types.getMixinTypeList())
 
   # Add interfaces prefix
+  skin_prefix_list.extend(self.portal_types.getInterfaceTypeList())
+  # XXX getInterfaceTypeList seems empty ... keep this low-level way for now.
   from Products.ERP5Type import interfaces
   for interface_name in interfaces.__dict__.keys():
     if interface_name.startswith('I'):
+      skin_prefix_list.append(interface_name[1:])
+      # XXX do we really add with the I prefix ?
       skin_prefix_list.append(interface_name)
 
   # Add other prefix
   skin_prefix_list.extend((
-    'Base',
-    'ERP5Site',
     'ERP5Type',
 
     'Entity', # A base class for Person / Organisation
     'Zuite', # Products.Zelenium test suites
     'Form', # Acceptable for ERP5 Forms which will soon become portal types too
+    'ListBox',
+    'DCWorkflow', # some workflow script use this, not sure it's correct.
+    'Zuite', # from Zelenium
     'Brain', # Catalog brains
   ))
 
