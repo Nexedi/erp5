@@ -275,6 +275,34 @@
 
 /*
    -------------------------------------------------------------------------
+   ------------------------- OPENHUB ATTRIBUTION ---------------------------
+   -------------------------------------------------------------------------
+*/
+div[data-gadget-scope='panel'] ul li a:first-child:nth-last-child(2) {
+  display: inline-block;
+  width: 62%;
+  vertical-align: middle;
+}
+div[data-gadget-scope='panel'] ul li a:first-child:nth-last-child(2) ~ a {
+  display: inline-block;
+  width: 33%;
+  vertical-align: middle;
+  margin: 0;
+  padding: 0;
+}
+div[data-gadget-scope='panel'] ul li a:first-child:nth-last-child(2) ~ a img {
+  height: 100%;
+  width: 80px;
+  margin: 0;
+  padding: 0;
+}
+div[data-gadget-scope='panel'] ul li a:first-child:nth-last-child(2) ~ a:hover,
+div[data-gadget-scope='panel'] ul li a:first-child:nth-last-child(2) ~ a:active {
+  background-color: inherit;
+}
+
+/*
+   -------------------------------------------------------------------------
    -------------------------- UNSPLASH BANNER ------------------------------
    -------------------------------------------------------------------------
 */
@@ -294,7 +322,7 @@
 .ui-banner-section img {
   /* max-height: 100%; */  
   max-width: 100%; 
-  width: auto;
+  width: 100%;
   height: auto;
   position: absolute;  
   top: 0;  
@@ -308,13 +336,13 @@
 .ui-banner-section span {
   position: absolute;
   bottom: 0;
-  right: 0;
+  right: 2em;
   color: white;
   font-size: small;
   padding: 0 .5em .25em 0;
 }
 .ui-banner-section span a {
-  color: rgb(153, 153, 153);
+  color: #fff;
 }
 .ui-banner-section h1 {
   position: absolute;

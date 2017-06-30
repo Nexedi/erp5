@@ -52,11 +52,11 @@
           if (is_response) {
             image_dict = JSON.parse(is_response);
 
+            // I don't need the gadget hooray, just the container, so look away
             //gadget.element.innerHTML =
-            // I don't need the gadget hooray, just the container, so sorry.
             return template({
               "message": "What can Free Software do for you?",
-              "src": image_dict.urls.full + UTM,
+              "src": image_dict.urls.regular + UTM,
               "alt": "Free Software",
               "source_url": image_dict.user.links.html + UTM,
               "source_title": image_dict.user.name,
