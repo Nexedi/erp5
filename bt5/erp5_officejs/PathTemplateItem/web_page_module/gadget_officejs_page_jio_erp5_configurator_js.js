@@ -41,12 +41,15 @@
           check_remote_creation: true,
           check_remote_deletion: true,
           local_sub_storage: {
-            type: "query",
+            type: "fix_local",
             sub_storage: {
-              type: "uuid",
+              type: "query",
               sub_storage: {
-                type: "indexeddb",
-                database: "officejs-erp5"
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-erp5"
+                }
               }
             }
           },
