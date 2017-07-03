@@ -211,7 +211,6 @@ DateTime._parse_args = _parse_args
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
-
     def dummy_test(self):
       ZopeTestCase._print('All tests are skipped when --save option is passed '
                           'with --update_business_templates or without --load')
@@ -1041,6 +1040,18 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
+    def _getSiteCreationParameterDict(self):
+      kw = _getConnectionStringDict()
+      # manage_addERP5Site does not accept the following 2 arguments
+      for k in ('erp5_sql_deferred_connection_string',
+                'erp5_sql_transactionless_connection_string'):
+        kw.pop(k, None)
+      email_from_address = os.environ.get('email_from_address')
+      if email_from_address is not None:
+        kw['email_from_address'] = email_from_address
+      kw['sql_reset'] = 1
+      return kw
+
     def setUpERP5Site(self,
                      business_template_list=(),
                      quiet=0,
@@ -1092,23 +1103,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               if not quiet:
                 ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
 
-              extra_constructor_kw = _getConnectionStringDict()
-              # manage_addERP5Site does not accept the following 2 arguments
-              for k in ('erp5_sql_deferred_connection_string',
-                        'erp5_sql_transactionless_connection_string'):
-                extra_constructor_kw.pop(k, None)
-              email_from_address = os.environ.get('email_from_address')
-              if email_from_address is not None:
-                extra_constructor_kw['email_from_address'] = email_from_address
-
+              kw = self._getSiteCreationParameterDict()
               factory = app.manage_addProduct['ERP5']
               factory.manage_addERP5Site(portal_name,
                                        erp5_catalog_storage=erp5_catalog_storage,
                                        light_install=light_install,
                                        reindex=reindex,
                                        create_activities=create_activities,
-                                       **extra_constructor_kw )
-              sql = extra_constructor_kw.get('erp5_sql_connection_string')
+                                       **kw)
+              sql = kw.get('erp5_sql_connection_string')
               if sql:
                 app[portal_name]._setProperty('erp5_site_global_id',
                                               base64.standard_b64encode(sql))
