@@ -16,7 +16,6 @@
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
               </list>
@@ -177,17 +176,6 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>credential_recovery_module_selection</string> </value>
-                </item>
-                <item>
-                    <key> <string>sort</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>delivery.start_date</string>
-                          <string>descending</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
