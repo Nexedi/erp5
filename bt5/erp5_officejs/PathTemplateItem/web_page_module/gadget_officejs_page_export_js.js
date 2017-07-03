@@ -173,11 +173,13 @@
       .push(function (zip_file) {
         var element = gadget.props.element,
           a = document.createElement("a"),
-          url = URL.createObjectURL(zip_file);
+          url = URL.createObjectURL(zip_file),
+          default_name = form_result.web_site.toLocaleLowerCase()
+            .replace(' ', '_');
         element.appendChild(a);
         a.style = "display: none";
         a.href = url;
-        a.download = zip_name + ".zip";
+        a.download = zip_name ? zip_name : default_name + ".zip";
         a.click();
         element.removeChild(a);
         URL.revokeObjectURL(url);
@@ -214,8 +216,11 @@
             prefix: options.prefix || ""
           }
         },
-        signature_storage: {
-          type: "memory"
+        signature_sub_storage: {
+          type: "query",
+          sub_storage: {
+            type: "memory"
+          }
         },
         local_sub_storage: {
           type: "zipfile",

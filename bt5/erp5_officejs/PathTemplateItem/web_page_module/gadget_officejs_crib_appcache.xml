@@ -117,6 +117,7 @@ font-awesome/font-awesome-webfont.woff2\n
 font-awesome/font-awesome-webfont.ttf\n
 font-awesome/font-awesome-webfont.svg\n
 jio_mappingstorage.js\n
+jio_fixstorage.js\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 URI.js\n
@@ -324,7 +325,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.28017.43401.59818</string> </value>
+                <value> <string>960.25484.60987.38638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -342,7 +343,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1495094491.62</float>
+                        <float>1499072418.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
