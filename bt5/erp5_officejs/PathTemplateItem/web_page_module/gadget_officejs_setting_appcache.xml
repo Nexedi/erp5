@@ -114,6 +114,7 @@
 CACHE:\n
 jiodev.js\n
 jio_mappingstorage.js\n
+jio_fixstorage.js\n
 renderjs.js\n
 rsvp.js\n
 gadget_officejs_setting.js\n
@@ -264,7 +265,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>960.25484.60987.38638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -282,7 +283,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496236447.21</float>
+                        <float>1498817454.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
