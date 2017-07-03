@@ -98,6 +98,10 @@ label {
       <input class="form-element" name="cmf_activity_sql_connection_string" id="cmf_activity_sql_connection_string" type="text" size="40" value="test test"/>
     </div>
     <div>
+      <label class="form-label" for="sql_reset">Drop any existing table</label>
+      <input type="checkbox" name="sql_reset:int" value="1" id="sql_reset"/>
+    </div>
+    <div>
       <p>The connection strings used for Z MySQL Database Connections are of the form:</p>
       <blockquote><code>database[@host[:port]] [user [password [unix_socket]]]</code></blockquote>
     </div>

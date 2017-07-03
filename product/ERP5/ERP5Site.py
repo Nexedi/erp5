@@ -73,6 +73,7 @@ def manage_addERP5Site(self,
                        cmf_activity_sql_connection_string='test test',
                        light_install=0,
                        reindex=1,
+                       sql_reset=0,
                        RESPONSE=None):
   '''
   Adds a portal instance.
@@ -87,7 +88,8 @@ def manage_addERP5Site(self,
                  cmf_activity_sql_connection_string,
                  create_activities=create_activities,
                  light_install=light_install,
-                 reindex=reindex)
+                 reindex=reindex,
+                 sql_reset=sql_reset)
   gen.setupDefaultProperties(p,
                              title,
                              description,
@@ -1967,43 +1969,37 @@ class ERP5Generator(PortalGenerator):
     if not p.hasObject('portal_catalog'):
       addTool('ERP5 Catalog', None)
 
-    if 1:
-    # Add Default SQL connection
-      if not p.hasObject('erp5_sql_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
-                                     manage_addZMySQLConnection
-        addSQLConnection('erp5_sql_connection',
-                         'ERP5 SQL Server Connection',
-                         p.erp5_sql_connection_string)
-
-    # Add Deferred SQL Connections
-      if not p.hasObject('erp5_sql_deferred_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
-            manage_addZMySQLConnection
-        addSQLConnection('erp5_sql_deferred_connection',
-                         'ERP5 SQL Server Deferred Connection',
-                         p.erp5_sql_deferred_connection_string,
-                         deferred=True)
-
-    # Add Activity SQL Connections
-      if not p.hasObject('cmf_activity_sql_connection'):
-        addSQLConnection = p.manage_addProduct['CMFActivity'].\
-                                     manage_addActivityConnection
-        addSQLConnection('cmf_activity_sql_connection',
-                         'CMF Activity SQL Server Connection',
-                         p.cmf_activity_sql_connection_string)
-      # Warning : This transactionless connection is created with
+    sql_reset = kw.get('sql_reset', 0)
+    def addSQLConnection(id, title, **kw):
+      if p.hasObject(id):
+        return
+      # Warning : The transactionless connection is created with
       # the activity connection string and not the catalog's because
       # it's not compatible with the hot reindexing feature.
       # Though, it has nothing to do with activities.
       # The only difference compared to activity connection is the
       # minus prepended to the connection string.
-      if not p.hasObject('erp5_sql_transactionless_connection'):
-        addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
-                                     manage_addZMySQLConnection
-        addSQLConnection('erp5_sql_transactionless_connection',
-                         'ERP5 Transactionless SQL Server Connection',
-                         '-%s' % p.cmf_activity_sql_connection_string)
+      if id == 'erp5_sql_transactionless_connection':
+        connection_string = '-' + p.cmf_activity_sql_connection_string
+      else:
+        connection_string = getattr(p, id + '_string')
+      manage_add(id, title, connection_string, **kw)
+      if not sql_reset and p[id]().tables():
+        raise Exception("Database %r is not empty." % connection_string)
+
+    # Add Z MySQL Connections
+    manage_add = p.manage_addProduct['ZMySQLDA'].manage_addZMySQLConnection
+    addSQLConnection('erp5_sql_connection',
+                     'ERP5 SQL Server Connection')
+    addSQLConnection('erp5_sql_deferred_connection',
+                     'ERP5 SQL Server Deferred Connection',
+                     deferred=True)
+    addSQLConnection('erp5_sql_transactionless_connection',
+                     'ERP5 Transactionless SQL Server Connection')
+    # Add Activity SQL Connections
+    manage_add = p.manage_addProduct['CMFActivity'].manage_addActivityConnection
+    addSQLConnection('cmf_activity_sql_connection',
+                     'CMF Activity SQL Server Connection')
 
     # Add ERP5Form Tools
     addERP5Tool(p, 'portal_selections', 'Selection Tool')
