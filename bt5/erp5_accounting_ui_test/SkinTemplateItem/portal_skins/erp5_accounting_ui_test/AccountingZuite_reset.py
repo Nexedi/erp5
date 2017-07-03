@@ -45,28 +45,27 @@ if pref.getPreferenceState() == 'disabled':
   pref.enable()
 
 # reset selections
-stool = context.getPortalObject().portal_selections
 for form in context.getPortalObject().portal_skins\
                     .erp5_accounting.objectValues(spec=('ERP5 Form',)):
   listbox = getattr(form, 'listbox', None)
   if listbox is not None:
-    stool.setSelectionFor(listbox.get_value('selection_name'), None)
+    portal.portal_selections.setSelectionFor(listbox.get_value('selection_name'), None)
 # also reset common selections
-stool.setSelectionFor('person_selection', None)
-stool.setSelectionFor('organisation_selection', None)
-stool.setSelectionFor('grouping_reference_fast_input_selection', None)
-stool.setSelectionFor('accounting_transaction_module_grouping_reference_fast_input', None)
-stool.setSelectionFor('entity_transaction_selection', None)
-stool.setSelectionFor('account_module_selection', None)
+portal.portal_selections.setSelectionFor('person_selection', None)
+portal.portal_selections.setSelectionFor('organisation_selection', None)
+portal.portal_selections.setSelectionFor('grouping_reference_fast_input_selection', None)
+portal.portal_selections.setSelectionFor('accounting_transaction_module_grouping_reference_fast_input', None)
+portal.portal_selections.setSelectionFor('entity_transaction_selection', None)
+portal.portal_selections.setSelectionFor('account_module_selection', None)
 
 # set sort order on accounting module
-stool.setSelectionParamsFor('accounting_selection', {}) # (this recreates selection)
-stool.setSelectionSortOrder('accounting_selection', sort_on=(('operation_date', 'ascending'),))
+portal.portal_selections.setSelectionParamsFor('accounting_selection', {}) # (this recreates selection)
+portal.portal_selections.setSelectionSortOrder('accounting_selection', sort_on=(('operation_date', 'ascending'),))
 
 # set sort order and columns on account module
-stool.setSelectionParamsFor('account_module_selection', {}) # (this recreates selection)
-stool.setSelectionSortOrder('account_module_selection', sort_on=(('preferred_gap_id', 'ascending'),))
-stool.setSelectionColumns('account_module_selection',
+portal.portal_selections.setSelectionParamsFor('account_module_selection', {}) # (this recreates selection)
+portal.portal_selections.setSelectionSortOrder('account_module_selection', sort_on=(('preferred_gap_id', 'ascending'),))
+portal.portal_selections.setSelectionColumns('account_module_selection',
     [('preferred_gap_id', 'GAP Number'),
      ('translated_title', 'Account Name'),
      ('translated_validation_state_title', 'State'),

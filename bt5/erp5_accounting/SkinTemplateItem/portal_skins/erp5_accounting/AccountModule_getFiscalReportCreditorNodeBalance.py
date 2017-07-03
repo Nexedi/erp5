@@ -17,10 +17,10 @@ if request.get('account_id_list_conversion_script_id'):
 else:
   kw['node_category'] = account_id_list
 
-sum = 0.0
+sum_ = 0.0
 for inventory in portal.portal_simulation.getInventoryList(
                                     group_by_node=1,
                                     **kw):
   if inventory.total_price < 0:
-    sum += (inventory.total_price or 0)
-return sum
+    sum_ += (inventory.total_price or 0)
+return sum_

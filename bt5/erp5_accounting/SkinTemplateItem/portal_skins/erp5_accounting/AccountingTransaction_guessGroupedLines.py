@@ -12,7 +12,6 @@ from Products.ERP5Type.Utils import int2letter
 lines_per_node = {}
 
 portal = context.getPortalObject()
-ctool = portal.portal_catalog
 
 allow_grouping_with_different_quantity = portal.portal_preferences.getPreference(
                                          'preferred_grouping_with_different_quantities', 0)
@@ -31,8 +30,9 @@ if accounting_transaction_line_uid_list is None:
         continue
       accounting_transaction_line_value_list.append(line)
 else:
-  accounting_transaction_line_value_list = [ctool.getObject(uid) for uid in 
-                                        accounting_transaction_line_uid_list]
+  if accounting_transaction_line_uid_list:
+    accounting_transaction_line_value_list = [
+      brain.getObject() for brain in portal.portal_catalog(uid=accounting_transaction_line_uid_list)]
 
 for line in accounting_transaction_line_value_list:
   accounting_transaction = line.getParentValue()

@@ -32,7 +32,7 @@ def getCurrencyForSection(section_url):
 
     # otherwise, lookup all groups top down until we find one currency
     for subsection in section.getCategoryChildValueList(local_sort_id='int_index'):
-      member_list = section.getGroupRelatedValueList(portal_type='Organisation',
+      member_list = subsection.getGroupRelatedValueList(portal_type='Organisation',
                                         strict_membership=True,
                                         checked_permission='View')
       for member in member_list:

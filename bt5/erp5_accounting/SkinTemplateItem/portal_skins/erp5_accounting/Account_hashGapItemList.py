@@ -1,6 +1,8 @@
 portal = context.getPortalObject()
 Base_translateString = portal.Base_translateString
 split_depth = 2
+if default_sub_field_property_dict is None:
+  default_sub_field_property_dict = {}
 
 def getSubFieldDict():
   def getSubFieldDictCache():

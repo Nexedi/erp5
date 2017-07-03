@@ -2,8 +2,6 @@ from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
 
 request = container.REQUEST
 portal = context.getPortalObject()
-ctool = portal.portal_catalog
-stool = portal.portal_simulation
 
 # we use a different selection for dialog params, because we never want this
 # selection to be reseteted
@@ -77,7 +75,7 @@ if debit_price:
 if credit_price:
   try:
     search_kw['stock.total_price'] = - float(credit_price['query'])
-  except ValueError, e:
+  except ValueError:
     # happens when user entered a complex query (like "> 100 AND < 200")
     # in that case, there is not much we can do.
     search_kw['stock.total_price'] = credit_price['query']
@@ -85,7 +83,7 @@ if date:
   search_kw['stock.date'] = date
 
 
-return stool.getMovementHistoryList(
+return portal.portal_simulation.getMovementHistoryList(
                           section_uid=section_uid,
                           simulation_state=['stopped', 'delivered'],
                           sort_on=sort_on,

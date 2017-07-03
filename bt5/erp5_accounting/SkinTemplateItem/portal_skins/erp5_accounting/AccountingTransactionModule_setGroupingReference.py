@@ -1,20 +1,16 @@
 """Set grouping reference for selected lines.
 Used as a fast input dialog action.
 """
-from ZTUtils import make_query
-from ZODB.POSException import ConflictError
+from Products.CMFCore.WorkflowCore import WorkflowException
 portal = context.getPortalObject()
-getobject = portal.portal_catalog.getobject
-stool = portal.portal_selections
 Base_translateString = portal.Base_translateString
 psm = Base_translateString('Nothing matches.')
 request = container.REQUEST
-precision = request.get('precision', 2)
 
 # update selected uids 
-stool.updateSelectionCheckedUidList(
+portal.portal_selections.updateSelectionCheckedUidList(
     list_selection_name, uids=uids, listbox_uid=listbox_uid, REQUEST=request)
-uids = stool.getSelectionCheckedUidsFor(list_selection_name)
+uids = portal.portal_selections.getSelectionCheckedUidsFor(list_selection_name)
 
 # XXX when should it be validated ?
 if node == '':
@@ -37,8 +33,8 @@ portal.portal_selections.setSelectionParamsFor(
 # calculate total selected amount 
 total_selected_amount = 0
 if uids:
-  for uid in uids:
-    line = getobject(uid)
+  for line in portal.portal_catalog(uid=uids):
+    line = line.getObject()
     if line.AccountingTransaction_isSourceView(): # XXX not optimal !
       total_selected_amount += (line.getSourceInventoriatedTotalAssetPrice() or 0)
     else:
@@ -59,7 +55,7 @@ if grouping == 'grouping':
                                mapping=dict(grouped_line_count=len(grouped_line_list)))
 
     # make sure nothing will be checked next time
-    stool.setSelectionCheckedUidsFor(list_selection_name, [])
+    portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
     # we check if we can mark some transaction as payed.
     transaction_list = {}
@@ -103,9 +99,7 @@ if grouping == 'grouping':
           try:
             portal.portal_workflow.doActionFor(transaction, 'clear_action',
                                                payment_date=date)
-          except ConflictError:
-            raise
-          except:
+          except WorkflowException:
             # Workflow action not supported
             pass
 
@@ -113,18 +107,20 @@ if grouping == 'grouping':
 else:
   assert grouping == 'ungrouping'
   # XXX is uids multi page safe here ?
-  line_list = [getobject(line_uid) for line_uid in uids]
-  ungrouped_line_list = []
+  line_list = []
+  if uids:
+    line_list = [brain.getObject() for brain in portal.portal_catalog(uid=uids)]
 
+  ungrouped_line_list = []
   for line in line_list:
     if line.getGroupingReference():
       ungrouped_line_list.extend(line.AccountingTransactionLine_resetGroupingReference())
-  
+
   psm = Base_translateString('${ungrouped_line_count} lines ungrouped.',
                              mapping=dict(ungrouped_line_count=len(ungrouped_line_list)))
 
   # make sure nothing will be checked next time
-  stool.setSelectionCheckedUidsFor(list_selection_name, [])
+  portal.portal_selections.setSelectionCheckedUidsFor(list_selection_name, [])
 
 request.set('portal_status_message', psm)
 return context.AccountingTransactionModule_viewGroupingFastInputDialog(request)

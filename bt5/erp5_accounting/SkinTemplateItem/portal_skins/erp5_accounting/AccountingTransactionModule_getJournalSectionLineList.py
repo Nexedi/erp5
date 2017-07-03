@@ -111,7 +111,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(
                 debit=debit,
                 credit=credit,)
   analytic_info = {}
-  for analytic_column, analytic_column_title in analytic_column_list:
+  for analytic_column, analytic_column_title in analytic_column_list: # pylint: disable=unused-variable
     if analytic_column == 'project':
       analytic_info['project'] = brain.Movement_getProjectTitle()
     elif analytic_column == 'funding':

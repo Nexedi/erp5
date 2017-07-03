@@ -1,7 +1,7 @@
-from Products.ZSQLCatalog.SQLCatalog import Query, SimpleQuery, ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import Query
 portal = context.getPortalObject()
 
-params = portal.ERP5Accounting_getParams(selection_name=selection_name)
+params = portal.ERP5Site_getAccountingSelectionParameterDict(selection_name=selection_name)
 getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor
 
 if asset_price:
@@ -74,7 +74,8 @@ if period_start_date and params.get('node_uid'):
   if context.getUid() == params['node_uid']: # I bet it's context
     node = context
   else:
-    node = portal.portal_catalog.getObject(params['node_uid'])
+    node, = portal.portal_catalog(uid=params['node_uid'], limit=2)
+    node = node.getObject()
   if node.isMemberOf('account_type/expense') or\
         node.isMemberOf('account_type/income'):
     # For expense or income accounts, we only take into account transactions

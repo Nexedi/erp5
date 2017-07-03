@@ -36,6 +36,7 @@ from DateTime import DateTime
 from Products.CMFCore.utils import _checkPermission
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.CodingStyleTestCase import CodingStyleTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
@@ -4159,27 +4160,6 @@ class TestTransactions(AccountingTestCase):
     self.assertEqual(500, accounting_transaction.AccountingTransaction_getTotalDebit())
     self.assertEqual(400, accounting_transaction.AccountingTransaction_getTotalCredit())
 
-  def test_Account_getDestinationSectionItemList(self):
-    organisation1 = self.portal.organisation_module.newContent(
-                            portal_type='Organisation',
-                            title='Organisation 1')
-    organisation2 = self.portal.organisation_module.newContent(
-                            portal_type='Organisation',
-                            title='Organisation 2')
-    self._makeOne(
-              portal_type='Sale Invoice Transaction',
-              simulation_state='delivered',
-              destination_section_value=organisation1,
-              start_date=DateTime(2006, 2, 2),
-              lines=(dict(source_value=self.portal.account_module.receivable,
-                          source_debit=100),
-                     dict(source_value=self.portal.account_module.goods_sales,
-                          source_credit=100.00)))
-    self.assertEqual([('', ''),
-                       ('Organisation 1 (Organisation)',
-                        organisation1.getRelativeUrl())],
-                       self.portal.Account_getDestinationSectionItemList())
-
   def test_AccountingTransaction_getListBoxColumnList_does_not_enable_section_column_when_only_two_sections(self):
     # AccountingTransaction_getListBoxColumnList is the script returning the
     # columns to display in AccountingTransaction_view.
@@ -5802,7 +5782,23 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
         internal_invoice, 'stop_action')
     self.assertEqual('stopped', internal_invoice.getSimulationState())
 
-  
+
+class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
+  """Runs CodingStyleTestCase checks on erp5_accounting
+  """
+  def getBusinessTemplateList(self):
+    # include administration for test_PythonSourceCode
+    return AccountingTestCase.getBusinessTemplateList(self) + (
+        'erp5_administration', )
+
+  def getTestedBusinessTemplateList(self):
+    return ('erp5_accounting', )
+
+  def beforeTearDown(self):
+    # we don't want to run AccountingTestCase.tearDown
+    pass
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccountingWithSequences))
@@ -5813,4 +5809,5 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestAccountingExport))
   suite.addTest(unittest.makeSuite(TestAccountingTransactionTemplate))
   suite.addTest(unittest.makeSuite(TestInternalInvoiceTransaction))
+  suite.addTest(unittest.makeSuite(TestAccountingCodingStyle))
   return suite
