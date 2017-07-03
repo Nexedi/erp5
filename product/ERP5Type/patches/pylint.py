@@ -22,9 +22,10 @@ from __future__ import absolute_import
 from inspect import getargspec
 
 try:
-    from pylint.checkers import imports
+    from pylint.checkers.imports import ImportsChecker
     import astroid
-except ImportError:
+    ImportsChecker.get_imported_module
+except (AttributeError, ImportError):
     pass
 else:
     def _get_imported_module(self, importnode, modname):
@@ -64,11 +65,11 @@ else:
                 args = repr(modname)
             self.add_message("F0401", args=args, node=importnode)
 
-    if 'modnode' in getargspec(imports.ImportsChecker.get_imported_module).args:
+    if 'modnode' in getargspec(ImportsChecker.get_imported_module).args:
         # BBB for pylint < 1.4.0
         def get_imported_module(self, modnode, importnode, modname):
             return _get_imported_module(self, importnode, modname)
     else:
         get_imported_module = _get_imported_module
 
-    imports.ImportsChecker.get_imported_module = get_imported_module
+    ImportsChecker.get_imported_module = get_imported_module
