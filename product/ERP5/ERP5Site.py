@@ -69,12 +69,7 @@ def manage_addERP5Site(self,
                        email_from_name='Portal Administrator',
                        validate_email=0,
                        erp5_catalog_storage='',
-                       erp5_sql_connection_type='Z MySQL Database Connection',
                        erp5_sql_connection_string='test test',
-                       erp5_sql_deferred_connection_type=\
-                           'Z MySQL Deferred Database Connection',
-                       cmf_activity_sql_connection_type= \
-                           'Z MySQL Database Connection',
                        cmf_activity_sql_connection_string='test test',
                        light_install=0,
                        reindex=1,
@@ -88,10 +83,7 @@ def manage_addERP5Site(self,
                  id,
                  create_userfolder,
                  erp5_catalog_storage,
-                 erp5_sql_connection_type,
                  erp5_sql_connection_string,
-                 erp5_sql_deferred_connection_type,
-                 cmf_activity_sql_connection_type,
                  cmf_activity_sql_connection_string,
                  create_activities=create_activities,
                  light_install=light_install,
@@ -1848,10 +1840,7 @@ class ERP5Generator(PortalGenerator):
              id,
              create_userfolder,
              erp5_catalog_storage,
-             erp5_sql_connection_type,
              erp5_sql_connection_string,
-             erp5_sql_deferred_connection_type,
-             cmf_activity_sql_connection_type,
              cmf_activity_sql_connection_string,
              create_activities=True,
              reindex=1,
@@ -1875,16 +1864,10 @@ class ERP5Generator(PortalGenerator):
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',
                    erp5_catalog_storage, 'string')
-    p._setProperty('erp5_sql_connection_type',
-                   erp5_sql_connection_type, 'string')
     p._setProperty('erp5_sql_connection_string',
                    erp5_sql_connection_string, 'string')
-    p._setProperty('erp5_sql_deferred_connection_type',
-                   erp5_sql_deferred_connection_type, 'string')
     p._setProperty('erp5_sql_deferred_connection_string',
                    erp5_sql_deferred_connection_string, 'string')
-    p._setProperty('cmf_activity_sql_connection_type',
-                   cmf_activity_sql_connection_type, 'string')
     p._setProperty('cmf_activity_sql_connection_string',
                    cmf_activity_sql_connection_string, 'string')
     p._setProperty('management_page_charset', 'UTF-8', 'string')
@@ -1984,20 +1967,16 @@ class ERP5Generator(PortalGenerator):
     if not p.hasObject('portal_catalog'):
       addTool('ERP5 Catalog', None)
 
+    if 1:
     # Add Default SQL connection
-    if p.erp5_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('erp5_sql_connection'):
         addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
                                      manage_addZMySQLConnection
         addSQLConnection('erp5_sql_connection',
                          'ERP5 SQL Server Connection',
                          p.erp5_sql_connection_string)
-    elif p.erp5_sql_connection_type == 'Z Gadfly':
-      pass
 
     # Add Deferred SQL Connections
-    if p.erp5_sql_deferred_connection_type == \
-        'Z MySQL Deferred Database Connection':
       if not p.hasObject('erp5_sql_deferred_connection'):
         addSQLConnection = p.manage_addProduct['ZMySQLDA'].\
             manage_addZMySQLConnection
@@ -2005,11 +1984,8 @@ class ERP5Generator(PortalGenerator):
                          'ERP5 SQL Server Deferred Connection',
                          p.erp5_sql_deferred_connection_string,
                          deferred=True)
-    elif p.erp5_sql_deferred_connection_type == 'Z Gadfly':
-      pass
 
     # Add Activity SQL Connections
-    if p.cmf_activity_sql_connection_type == 'Z MySQL Database Connection':
       if not p.hasObject('cmf_activity_sql_connection'):
         addSQLConnection = p.manage_addProduct['CMFActivity'].\
                                      manage_addActivityConnection
@@ -2028,8 +2004,6 @@ class ERP5Generator(PortalGenerator):
         addSQLConnection('erp5_sql_transactionless_connection',
                          'ERP5 Transactionless SQL Server Connection',
                          '-%s' % p.cmf_activity_sql_connection_string)
-    elif p.cmf_activity_sql_connection_type == 'Z Gadfly':
-      pass
 
     # Add ERP5Form Tools
     addERP5Tool(p, 'portal_selections', 'Selection Tool')
@@ -2149,11 +2123,7 @@ class ERP5Generator(PortalGenerator):
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
-    if not kw.get('reindex', 1):
-      return
-    # When no SQL connection was define on the site,
-    # we don't want to make it crash
-    if p.erp5_sql_connection_type is not None:
+    if kw.get('reindex', 1):
       setattr(p, 'isIndexable', ConstantGetter('isIndexable', value=True))
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
