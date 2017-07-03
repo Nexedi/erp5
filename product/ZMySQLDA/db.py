@@ -432,12 +432,25 @@ class DB(TM):
         if not self._transaction_begun:
             return
         self._transaction_begun = False
-        if self._mysql_lock:
-            self._query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
-        if self._transactions:
-            self._query("ROLLBACK")
-        else:
-            LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
+        # Hide hosed connection exceptions:
+        # - if the disconnection caused the abort, we would then hide the
+        #   original error traceback
+        # - if the disconnection happened during abort, then we cannot recover
+        #   anyway as the transaction is bound to its connection anyway
+        # Note: in any case, we expect server to notice the disconnection and
+        # trigger an abort on its side.
+        try:
+            if self._mysql_lock:
+                self._query("SELECT RELEASE_LOCK('%s')" % self._mysql_lock)
+            if self._transactions:
+                self._query("ROLLBACK")
+            else:
+                LOG('ZMySQLDA', ERROR, "aborting when non-transactional")
+        except OperationalError, m:
+            LOG('ZMySQLDA', ERROR, "exception during _abort",
+                error=sys.exc_info())
+            if m[0] not in hosed_connection:
+                raise
 
     @contextmanager
     def lock(self):
