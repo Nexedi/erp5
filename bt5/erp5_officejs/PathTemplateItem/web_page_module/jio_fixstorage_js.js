@@ -3,11 +3,39 @@
 (function (jIO, Blob, Rusha, RSVP, URI) {
   "use strict";
 
-  var rusha = new Rusha(), stringify = jIO.util.stringify;
+  function repairDocumentSignature(storage, signature_document) {
+    /* The aim is deleted corrupted data to have fresh one from server
+       And clear signature for inexistant document
+       This can be consider like a HACK
+    */
+    return storage._sub_storage.allDocs({
+        select_list: ["content_type"]
+      })
+      .push(function (result) {
+        var i, promise_list = [], doc_list = result.data.rows;
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          if (doc_list[i].value.content_type !== undefined &&
+              !doc_list[i].value.content_type.startsWith("application/x-asc")) {
+            promise_list.push(
+              storage._sub_storage.remove(doc_list[i].id)
+            );
+          }
+        }
+        return RSVP.all(promise_list);
+      })
+      .push(function () {
+        signature_document.is_fixed = true;
+        return storage._local_storage.put(
+          storage._signature_hash, signature_document
+        );
+      });
+  }
 
   function CompatibilityStorage(spec) {
     this._sub_storage = jIO.createJIO(spec.sub_storage);
-    this._is_fixed = spec.is_fixed;
+    this._replicate_storage = this._sub_storage.__storage;
+    this._local_storage = this._replicate_storage._local_sub_storage;
+    this._signature_hash = this._replicate_storage._signature_hash;
   }
 
   CompatibilityStorage.prototype.get = function () {
@@ -31,31 +59,25 @@
   };
 
   CompatibilityStorage.prototype.repair = function () {
-    var context = this;
+    var storage = this, signature_doc;
     // Here fix the local storage for some cases.
 
-    if (!context._is_fixed) {
-      return context._sub_storage.allDocs({
-        select_list: ["content_type"]
-      })
-      .push(function (result) {
-        var i, promise_list = [], doc_list = result.data.rows;
-        for (i = 0; i < result.data.total_rows; i += 1) {
-          if (doc_list[i].value.content_type !== undefined &&
-              !doc_list[i].value.content_type.startsWith("application/x-asc")) {
-            promise_list.push(
-              context._sub_storage.remove(doc_list[i].id)
-            );
-          }
+    return storage._local_storage.get(this._signature_hash)
+      .push(undefined, function (error) {
+        if (error.status_code === 404) {
+          return {is_fixed: false};
         }
-        return RSVP.all(promise_list);
+      })
+      .push(function (doc) {
+        if (!doc.is_fixed) {
+          return repairDocumentSignature(storage, doc);
+        }
       })
       .push(function () {
-        return context._sub_storage.repair.apply(
-          context._sub_storage, arguments
+        return storage._sub_storage.repair.apply(
+          storage._sub_storage, arguments
         );
       });
-    }
   };
 
   CompatibilityStorage.prototype.allAttachments = function (doc_id) {
