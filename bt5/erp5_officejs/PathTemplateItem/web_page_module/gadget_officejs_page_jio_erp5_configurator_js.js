@@ -11,7 +11,8 @@
         return RSVP.all([
           gadget.getSetting("portal_type"),
           gadget.getSetting("erp5_attachment_synchro", undefined),
-          gadget.getSetting("default_view_reference", "jio_view")
+          gadget.getSetting("default_view_reference", "jio_view"),
+          gadget.getSetting("storage_attachment_issue", false)
         ]);
       })
       .push(function (result) {
@@ -19,6 +20,7 @@
           portal_type = result[0],
           attachment_synchro = result[1] !== undefined,
           extended_attachment_url = result[1];
+
         configuration = {
           type: "replicate",
           // XXX This drop the signature lists...
@@ -41,15 +43,12 @@
           check_remote_creation: true,
           check_remote_deletion: true,
           local_sub_storage: {
-            type: "fix_local",
+            type: "query",
             sub_storage: {
-              type: "query",
+              type: "uuid",
               sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "officejs-erp5"
-                }
+                type: "indexeddb",
+                database: "officejs-erp5"
               }
             }
           },
@@ -72,16 +71,27 @@
             sub_storage: {
               type: "erp5",
               url: (new URI("hateoas"))
-                    .absoluteTo(erp5_url)
-                    .toString(),
+                  .absoluteTo(erp5_url)
+                  .toString(),
               default_view_reference: result[2]
             }
           }
         };
+                // This is only for onlyoffice
+        if (extended_attachment_url === "/{+id}/Document_downloadForOnlyOfficeApp") {
+          configuration = {
+            type: "fix_local",
+            is_fixed: result[3],
+            sub_storage: configuration
+          };
+        }
         return gadget.setSetting('jio_storage_description', configuration);
       })
       .push(function () {
         return gadget.setSetting('jio_storage_name', "ERP5");
+      })
+      .push(function () {
+        return gadget.setSetting('storage_attachment_issue', true);
       })
       .push(function () {
         return gadget.setGlobalSetting('erp5_url', erp5_url);
