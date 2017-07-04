@@ -154,7 +154,7 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<!-- Search With Dispatcher -->
+<!-- Search With Dispatcher and default redirection on bookmark-->
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
@@ -188,10 +188,25 @@
 <!--- Verify Search --->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//table//tbody//tr//td</td>
+  <td>//h1[@class='test-script-title']</td>
   <td></td>
 </tr>
+<tr>
+  <td>verifyText</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td>Title is : cloud</td>
+</tr>
 <!--- Set preferences --->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_bookmark_manager/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
@@ -232,7 +247,7 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
-<!--- Do search and redirect on bookmark --->
+<!--- Do search and display result list --->
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Menu']</td>
@@ -265,13 +280,8 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@class='test-script-title']</td>
+  <td>//table//tbody//tr//td</td>
   <td></td>
-</tr>
-<tr>
-  <td>verifyText</td>
-  <td>//h1[@class='test-script-title']</td>
-  <td>Title is : cloud</td>
 </tr>
 <!--- Do search and redirect on search engine --->
 <tr>
