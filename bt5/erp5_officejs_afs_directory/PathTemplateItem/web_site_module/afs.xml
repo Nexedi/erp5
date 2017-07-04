@@ -337,7 +337,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' https://images.unsplash.com * data:; media-src \'self\' blob:; connect-src \'self\' https://api.unsplash.com https://www.openhub.net https://en.wikipedia.org https://fr.wikipedia.org https://raw.githubusercontent.com https://api.github.com data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' https://images.unsplash.com * data:; media-src \'self\' blob:; connect-src \'self\' https://api.unsplash.com https://en.wikipedia.org https://fr.wikipedia.org https://raw.githubusercontent.com https://api.github.com data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -614,7 +614,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.31263.27499.6263</string> </value>
+                <value> <string>959.30886.17996.5358</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -632,7 +632,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497023079.42</float>
+                        <float>1495226845.13</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

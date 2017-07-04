@@ -1,28 +1,20 @@
-/*global window, rJS, RSVP, Handlebars, jIO, document */
-/*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, rJS, RSVP, Handlebars, document) {
+/*global window, rJS, RSVP, Handlebars, URI, console, jIO, document */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+
+(function (window, rJS, RSVP, Handlebars, URI, document) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // some varables
-  /////////////////////////////////////////////////////////////////
-  var VIEW = "?page=afs_software&view=view",
-
-    gadget_klass = rJS(window),
+  var gadget_klass = rJS(window),
     templater = gadget_klass.__template_element,
-    source = templater.getElementById("frontpage-template").innerHTML,
+    source = templater.getElementById("frontpage-template")
+                      .innerHTML,
     template = Handlebars.compile(source);
-
   Handlebars.registerPartial(
     "list-partial",
     templater.getElementById("list-partial").innerHTML
   );
 
   gadget_klass
-
-    /////////////////////////////////////////////////////////////////
-    // acquired methods
-    /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
@@ -31,7 +23,9 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this,
-        grid = gadget.element.querySelector('.ui-masonry-container');
+        masonry_container = gadget.element.querySelector(
+          '.ui-masonry-container'
+        );
 
       return new RSVP.Queue()
         .push(function () {
@@ -42,64 +36,67 @@
             })
           ]);
         })
-        .push(function (result_list) {
-          return result_list[0].render();
+        .push(function (my_response_list) {
+          return RSVP.all([
+            gadget.jio_allDocs({
+              select_list: ['category_list'],
+              query: 'portal_type:"software"'
+            }),
+            my_response_list[0].render()
+          ]);
         })
-        .push(function (html_content) {
-          var banner = document.createRange()
-            .createContextualFragment(html_content || "");
+        .push(function (my_response_list) {
+          var softwares = my_response_list[0].data.rows,
+            obj,
 
-          gadget.element.insertBefore(banner, grid);
-          return gadget.jio_allDocs({
-            select_list: ['category_list', 'title', 'publisher'],
-            query: 'portal_type:"software"'
+            // get categories and flatten array of category arrays
+            categories = softwares
+              .map((obj) => obj.value.category_list)
+              .reduce((cur, prev) => cur.concat(prev)),
+
+            // remove duplicates (case sensitive!)
+            unique_categories = Array.from(new Set(categories)),
+
+            // kudos: https://davidwalsh.name/convert-html-stings-dom-nodes
+            banner = document.createRange()
+              .createContextualFragment(my_response_list[1] || "");
+
+          gadget.element.insertBefore(banner, masonry_container);
+
+          return RSVP.all(unique_categories);
+        })
+        .push(function (categories) {
+          var softwares_by_category = categories.map(function (category) {
+            return gadget.jio_allDocs({
+              select_list: [
+                'title',
+                'publisher',
+                'logo'
+              ],
+              query: 'category_list:"%' + category + '%" AND portal_type:"software"'
+            })
+            .push(function (softwares) {
+              softwares.data.rows.map(function (sw) {
+                // XXX hardcoded page and view
+                sw.value.href = "#/" + sw.id + "?page=afs_software&view=view";
+              });
+              return {
+                category: category,
+                softwares: softwares.data.rows
+              };
+            });
           });
+        
+          return RSVP.all(softwares_by_category);
         })
-        .push(function (result_list) {
-          var software_list = result_list.data.rows,
-            global_category_list = [],
-            config;
+        .push(function (result) {
+          var content;
 
-          // list of unique list of categories
-          if (software_list.length > 0) {
-            global_category_list = software_list.reduce(function (list, dict) {
-              var software = dict.value;
-              if (software.category_list.length > 0) {
-                software.category_list.map(function (category) {
-                  if (list.indexOf(category) === -1) {
-                    list.push(category);
-                  }
-                });
-              }
-              return list;
-            }, []);
-          }
+          // reverse sort categories by number of softwares
+          result.sort( (a, b) => b.softwares.length - a.softwares.length );
 
-          // populate list with software
-          config = global_category_list.reduce(function (result, category) {
-            var category_entry = {"category": category, "software_list": []},
-              len = software_list.length,
-              match_list,
-              software,
-              i;
-
-            for (i = 0; i < len; i += 1) {
-              software = software_list[i].value;
-              match_list = software.category_list;
-              if (match_list && match_list.length > 0) {
-                if (match_list.indexOf(category) > -1) {
-                  category_entry.software_list.push({
-                    "title": software.title,
-                    "href": "#/" + software_list[i].id + VIEW
-                  });
-                }
-              }
-            }
-            result.push(category_entry);
-            return result;
-          }, []);
-
-          grid.innerHTML = template(config);
+          content = template(result);
+          masonry_container.innerHTML = content;
         });
     });
-}(window, rJS, RSVP, Handlebars, document));
+}(window, rJS, RSVP, Handlebars, URI, document));
