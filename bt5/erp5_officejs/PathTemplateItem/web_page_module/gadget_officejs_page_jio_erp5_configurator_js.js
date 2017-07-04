@@ -11,8 +11,7 @@
         return RSVP.all([
           gadget.getSetting("portal_type"),
           gadget.getSetting("erp5_attachment_synchro", undefined),
-          gadget.getSetting("default_view_reference", "jio_view"),
-          gadget.getSetting("storage_attachment_issue", false)
+          gadget.getSetting("default_view_reference", "jio_view")
         ]);
       })
       .push(function (result) {
@@ -81,7 +80,6 @@
         if (extended_attachment_url === "/{+id}/Document_downloadForOnlyOfficeApp") {
           configuration = {
             type: "fix_local",
-            is_fixed: result[3],
             sub_storage: configuration
           };
         }
