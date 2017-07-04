@@ -14,6 +14,15 @@
   </head>
 
   <body>
+        <fieldset class="ui-controlgroup ui-corner-all">
+          <div class="center ui-controlgroup-controls">
+            <div class="ui-field-contain">
+              <p>To use the bookmark manager as a search engine, add this url to the search engine list of your browser : </p>
+               <input type="text" class="search-engine-url" style="font-weight:bold;" readonly></input>
+              </div>
+            </div>
+        </fieldset>
+
       <form class="options">
         <fieldset class="ui-controlgroup ui-corner-all">
           <div class="center ui-controlgroup-controls">
@@ -25,7 +34,7 @@
             <div class="ui-field-contain">
               <label for="search_engine">Default Search Engine :</label>
               <div class="ui-input-text ui-body-inherit ui-corner-all ui-shadow-inset">
-                <input type="text" name="search_engine" value="https://duckduckgo.com/?q=">
+                <input type="text" name="search_engine">
               </div>
             </div>
 
@@ -35,8 +44,5 @@
         </fieldset>
       </form>
       
-      <hr />
-
-      <p>To use the bookmark manager as a search engine, add this url to the search engine list of your browser : <span class="search-engine-url" style="font-weight:bold;"></span></p>
   </body>
 </html>

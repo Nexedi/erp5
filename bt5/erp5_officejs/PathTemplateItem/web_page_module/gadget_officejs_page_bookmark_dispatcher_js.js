@@ -44,8 +44,8 @@
       var gadget = this,
         portal_type = null,
         option = {
-          auto_redirect: false,
-          search_engine: ""
+          auto_redirect: true,
+          search_engine: "https://duckduckgo.com/?q="
         };
 
       return new RSVP.Queue()
