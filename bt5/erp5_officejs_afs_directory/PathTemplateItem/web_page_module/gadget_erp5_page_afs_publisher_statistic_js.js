@@ -3,32 +3,23 @@
 (function (window, RSVP, rJS) {
   "use strict";
 
-  /////////////////////////////////////////////////////////////////
-  // some parameters
-  /////////////////////////////////////////////////////////////////
-  var STR = "",
-    QUERY = 'urn:jio:allDocs?query=' + 'portal_type:"publisher"',
-    SORT = 'field_listbox_sort_list:json',
-    COLUMN_LIST = [
-      ['title', 'Title'],
-      ['country', 'Country'],
-      ['total_lines', 'Total Lines of Code']
-    ],
-    SORT_LIST = [
-      ['total_lines', 'Total Lines of Code']
-    ];
+  var SORT_STRING = 'field_listbox_sort_list:json';
 
   rJS(window)
+    .ready(function (g) {
+      g.props = {};
+      return g.getElement()
+        .push(function (element) {
+          g.props.element = element;
+        });
+    })
 
-    /////////////////////////////////////////////////////////////////
-    // acquired methods
-    /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("translate", "translate")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
-    /////////////////////////////////////////////////////////////////
-    // published methods
-    /////////////////////////////////////////////////////////////////
     .allowPublicAcquisition('updateHeader', function () {
       return;
     })
@@ -36,50 +27,60 @@
     .allowPublicAcquisition('getUrlParameter', function (argument_list) {
       return this.getUrlParameter(argument_list)
         .push(function (result) {
-          if ((result === undefined) && (argument_list[0] === SORT)) {
-            return [['title', 'ascending']];
+          if ((result === undefined) && (argument_list[0] === SORT_STRING)) {
+            return [['lines', 'descending']];
           }
           return result;
         });
     })
 
-    /////////////////////////////////////////////////////////////////
-    // declared methods
-    /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this;
       return new RSVP.Queue()
         .push(function () {
-          return RSVP.all([
-            gadget.updateHeader({page_title: "Statistics"}),
-            gadget.getDeclaredGadget("form_list")
-          ]);
+          return gadget.updateHeader({
+            page_title: "Statistics"
+          });
         })
-        .push(function (result_list) {
-          return result_list[1].render({
-            erp5_document: {
-              "_embedded": {
-                "_view": {
-                  "listbox": {
-                    "column_list": COLUMN_LIST,
-                    "show_anchor": 0,
-                    "default_params": {},
-                    "editable": 0,
-                    "key": "field_listbox",
-                    "lines": 20,
-                    "list_method": "portal_catalog",
-                    "query": QUERY,
-                    "portal_type": [],
-                    "search_column_list": COLUMN_LIST,
-                    "sort_column_list": SORT_LIST,
-                    "sort_on": ["total_lines", "descending"],
-                    "title": "Documents",
-                    "type": "ListBox"
-                  }
+        .push(function () {
+          return gadget.getDeclaredGadget("form_list");
+        })
+        .push(function (form_gadget) {
+          var column_list = [
+            ['title', 'Title'],
+            ['country', 'Country'],
+            ['lines', 'Total Lines of Code']
+          ],
+            sort_column_list = [
+              ['lines', 'Total Lines of Code']
+            ];
+
+          return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              "listbox": {
+                "column_list": column_list,
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 0,
+                "key": "field_listbox",
+                "lines": 20,
+                "list_method": "portal_catalog",
+                "query": 'urn:jio:allDocs?query=' + 'portal_type:"publisher"',
+                "portal_type": [],
+                "search_column_list": column_list,
+                "sort_column_list": sort_column_list,
+                "sort_on": ["lines", "descending"],
+                "title": "Documents",
+                "type": "ListBox"
+              }
+            }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
                 }
+              }
               },
-              "_links": {"type": {name: STR}}
-            },
             form_definition: {
               group_list: [
                 ["bottom", [["listbox"]]],
@@ -89,5 +90,4 @@
           });
         });
     });
-
 }(window, RSVP, rJS));
