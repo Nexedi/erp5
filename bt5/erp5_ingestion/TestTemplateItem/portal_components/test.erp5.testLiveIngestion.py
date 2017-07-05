@@ -28,7 +28,6 @@
 ##############################################################################
 
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
 from Products.CMFCore.utils import getToolByName
 import random
@@ -73,14 +72,9 @@ class TestIngestion(ERP5TypeLiveTestCase):
     self.tic()
 
   def setSystemPreference(self):
-    portal_preferences = getToolByName(self.portal, 'portal_preferences')
-    default_pref = portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
+    default_pref = self.getDefaultSystemPreference()
+    default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
 
   def contributeFileWithUrl(self, script_id, filename=None):
     """compute url and call portal_contributions.newContentFromUrl

@@ -33,8 +33,7 @@ from unittest import expectedFailure
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-                                                       _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 from email.header import decode_header
@@ -454,17 +453,11 @@ class TestCRM(BaseTestCRM):
                           id=i)
     # create a person like a resource to declare it as a resource
     person = self.portal.person_module.newContent(portal_type='Person')
-    # Configure system preference.
-    portal_preferences = self.portal.portal_preferences
-    system_preference = portal_preferences.getActiveSystemPreference()
-    if system_preference is None:
-      system_preference = portal_preferences.newContent(
-                                              portal_type='System Preference')
-      system_preference.enable()
     resource_list = [category.getRelativeUrl() \
                                       for category in resource.contentValues()]
     resource_list.append(person.getRelativeUrl())
     # XXX this preference is obsolete, this is now based on use category
+    system_preference = self.getDefaultSystemPreference()
     system_preference.setPreferredEventResourceList(resource_list)
     self.tic()
     # Then create One event and play with it
@@ -1052,13 +1045,9 @@ class TestCRMMailSend(BaseTestCRM):
             default_email_text='me@erp5.org')
 
     # set preference
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() == 'disabled':
-      default_pref.enable()
+    pref = self.getDefaultSystemPreference()
+    pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
+    pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
 
     # make sure customers are available to catalog
     self.tic()

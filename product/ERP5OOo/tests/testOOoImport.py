@@ -32,11 +32,9 @@ import os
 
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
-from Products.ERP5Form.PreferenceTool import Priority
 from DateTime import DateTime
 
 def makeFilePath(name):
@@ -55,13 +53,6 @@ class TestOOoImportMixin(ERP5TypeTestCase):
       Initialize the ERP5 site.
     """
     self.login()
-    self.pref = self.portal.portal_preferences.newContent(
-                          portal_type='System Preference')
-    conversion_dict = _getConversionServerDict()
-    self.pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    self.pref.setPriority(Priority.SITE)
-    self.pref.enable()
-
     # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
@@ -100,8 +91,6 @@ class TestOOoImportMixin(ERP5TypeTestCase):
         self.portal.portal_categories.region,
         ]:
       parent.deleteContent(list(parent.objectIds()))
-    self.portal.portal_preferences.manage_delObjects([self.pref.getId()])
-
     self.tic()
 
 class TestOOoImport(TestOOoImportMixin):

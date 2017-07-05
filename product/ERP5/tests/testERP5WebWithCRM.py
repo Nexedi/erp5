@@ -30,8 +30,7 @@
 import unittest
 import transaction
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-     _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
 class TestERP5WebWithCRM(ERP5TypeTestCase):
@@ -55,23 +54,8 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
-    self.setSystemPreference()
     user = self.createUser('robby')
     self.createUserAssignment(user, {})
-
-  def setSystemPreference(self):
-    portal_type = 'System Preference'
-    preference_list = self.portal.portal_preferences.contentValues(
-                                                       portal_type=portal_type)
-    if not preference_list:
-      preference = self.portal.portal_preferences.newContent(
-                                                       portal_type=portal_type)
-    else:
-      preference = preference_list[0]
-    conversion_dict = _getConversionServerDict()
-    preference.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
-      preference.enable()
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))

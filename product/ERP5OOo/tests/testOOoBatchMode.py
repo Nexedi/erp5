@@ -54,6 +54,10 @@ class TestOoodResponse(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.login()
+    # disable pref that configures the conversion server
+    pref = self.getDefaultSystemPreference()
+    if pref.getPreferenceState() != 'disabled':
+      pref.disable()
     portal_skins = self.getSkinsTool()
     import_file_path = os.path.join(os.path.dirname(__file__),
                                     'test_document',

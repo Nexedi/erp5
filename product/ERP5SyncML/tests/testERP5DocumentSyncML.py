@@ -35,7 +35,6 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 
 from Products.ERP5Type.tests.runUnitTest import tests_home
-from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5SyncML.Tool import SynchronizationTool
 from Products.ERP5SyncML.tests.testERP5SyncML import TestERP5SyncMLMixin
@@ -149,8 +148,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
 
   def setSystemPreferences(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() == 'disabled':

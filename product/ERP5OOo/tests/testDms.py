@@ -54,7 +54,6 @@ from unittest import expectedFailure
 
 import ZPublisher.HTTPRequest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
@@ -115,40 +114,27 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   def afterSetUp(self):
     TestDocumentMixin.login(self)
-    self.setDefaultSitePreference()
     self.setSystemPreference()
     self.tic()
     self.login()
 
-  def setDefaultSitePreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
-      default_pref.enable()
-    return default_pref
-
   def setSystemPreference(self):
-    portal_type = 'System Preference'
-    preference_list = self.portal.portal_preferences.contentValues(
-                                                       portal_type=portal_type)
-    if not preference_list:
-      # create a Cache Factory for tests
-      cache_factory = self.portal.portal_caches.newContent(portal_type = 'Cache Factory')
-      cache_factory.cache_duration = 36000
-      cache_plugin = cache_factory.newContent(portal_type='Ram Cache')
-      cache_plugin.cache_expire_check_interval = 54000
-      preference = self.portal.portal_preferences.newContent(title="Default System Preference",
-                                                             # use local RAM based cache as some tests need it
-                                                             preferred_conversion_cache_factory = cache_factory.getId(),
-                                                             portal_type=portal_type)
-    else:
-      preference = preference_list[0]
-    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
-      preference.enable()
-    return preference
+    pref = self.getDefaultSystemPreference()
+    id = self.__class__.__name__
+    if pref.getPreferredConversionCacheFactory() != id:
+      try:
+        self.portal.portal_caches[id]
+      except KeyError:
+        self.setCacheFactory(
+          self.portal.portal_caches.newContent(id, 'Cache Factory'))
+      pref.setPreferredConversionCacheFactory(id)
+    pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
+    pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
+
+  def setCacheFactory(self, cache_factory):
+    cache_factory.cache_duration = 36000
+    cache_plugin = cache_factory.newContent(portal_type='Ram Cache')
+    cache_plugin.cache_expire_check_interval = 54000
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')

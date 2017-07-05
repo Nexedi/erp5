@@ -37,8 +37,7 @@ import shutil
 import transaction
 from ZPublisher.HTTPResponse import HTTPResponse
 from zExceptions.ExceptionFormatter import format_exception
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
-                                               _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Utils import stopProcess, PR_SET_PDEATHSIG
 from lxml import etree
 from lxml.html import builder as E
@@ -250,13 +249,9 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
                                 self.portal, self.run_only)
 
   def setSystemPreference(self):
-    conversion_dict = _getConversionServerDict()
     self.portal.Zuite_setPreference(
        working_copy_list=bt5_dir_list,
-       conversion_server_url=conversion_dict['url'],
       )
-    # XXX Memcached is missing
-    # XXX Persistent cache setup is missing
 
   def _verboseErrorLog(self, size=10):
     for entry in self.portal.error_log.getLogEntries()[:size]:

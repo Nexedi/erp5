@@ -31,6 +31,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestERP5Promise(ERP5TypeTestCase):
 
+    def _updateConversionServerConfiguration(self):
+      pass
+
     def getBusinessTemplateList(self):
       """
         Return the list of business templates.
@@ -38,8 +41,7 @@ class TestERP5Promise(ERP5TypeTestCase):
       return ("erp5_promise", "erp5_base")
 
     def _test_promise_alarm(self, alarm_id):
-      alarm = getattr(self.portal.portal_alarms, alarm_id, None)
-      self.assertNotEquals(alarm, None, "Alarm %s not found" % alarm_id)
+      alarm = self.portal.portal_alarms[alarm_id]
       alarm.activeSense()
       self.tic()
       self.assertTrue(alarm.sense())
@@ -56,6 +58,7 @@ class TestERP5Promise(ERP5TypeTestCase):
       self._test_promise_alarm("promise_kumofs_server")
 
     def test_promise_memcached_server(self):
+      self.portal.portal_memcached.default_memcached_plugin.setUrlString(None)
       self._test_promise_alarm("promise_memcached_server")
 
     def test_promise_certificate_autority_tool(self):
