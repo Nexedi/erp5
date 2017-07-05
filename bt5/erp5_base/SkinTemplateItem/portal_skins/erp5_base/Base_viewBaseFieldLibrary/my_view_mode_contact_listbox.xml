@@ -158,6 +158,10 @@
                           <string>Link</string>
                           <string>Link</string>
                         </tuple>
+                        <tuple>
+                          <string>External Identifier</string>
+                          <string>External Identifier</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
