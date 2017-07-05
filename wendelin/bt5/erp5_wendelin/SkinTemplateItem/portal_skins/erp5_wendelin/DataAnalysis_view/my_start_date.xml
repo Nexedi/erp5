@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>date_only</string>
                 <string>title</string>
               </list>
             </value>
@@ -72,10 +71,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>date_only</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
                 <item>
                     <key> <string>extra_context</string> </key>
                     <value>
