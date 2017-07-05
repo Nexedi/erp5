@@ -28,7 +28,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
-from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from DateTime import DateTime
 import os.path
 import Products.ERP5.tests
@@ -450,18 +449,10 @@ class TestUNG(ERP5TypeTestCase):
     """ Test if script load correctly the Web Page with data of one document
     """
     portal = self.portal
-    portal_preferences = portal.portal_preferences
-    web_page_module = portal.web_page_module
-    portal_contributions = portal.portal_contributions
-    system_preference = portal_preferences.newContent(portal_type='System Preference')
-    conversion_dict = _getConversionServerDict()
-    system_preference.setPreferredDocumentConversionServerUrl(conversion_dict["url"])
-    system_preference.enable()
-    self.tic()
     document_path, filename = self.getDocumentPath()
     file = FileUpload(document_path, filename)
-    document = portal_contributions.newContent(file=file)
-    web_page = web_page_module.newContent(portal_type="Web Page")
+    document = portal.portal_contributions.newContent(file=file)
+    web_page = portal.web_page_module.newContent(portal_type="Web Page")
     self.tic()
     self.changeSkin("UNGDoc")
     web_page.WebPage_updateWebDocument(document.getPath())

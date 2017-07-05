@@ -31,7 +31,6 @@
 
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 from StringIO import StringIO
 
@@ -46,14 +45,6 @@ class TestFormPrintoutMixin(ERP5TypeTestCase):
     uf._doAddUser('zope', '', ['Manager'], [])
     user = uf.getUserById('zope').__of__(uf)
     newSecurityManager(None, user)
-
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    #default_pref.setPreferredConversionCacheFactory('document_cache_factory')
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)

@@ -323,12 +323,8 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
             <value> <int>10</int> </value>
         </item>
         <item>
-            <key> <string>preferred_ooodoc_server_address</string> </key>
-            <value> <string>erp5-cloudooo</string> </value>
-        </item>
-        <item>
-            <key> <string>preferred_ooodoc_server_port_number</string> </key>
-            <value> <int>2020</int> </value>
+            <key> <string>preferred_document_conversion_server_url</string> </key>
+            <value> <string>http://erp5-cloudooo:2020</string> </value>
         </item>
         <item>
             <key> <string>preferred_quantity_field_width</string> </key>

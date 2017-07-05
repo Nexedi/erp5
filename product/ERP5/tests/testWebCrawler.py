@@ -28,8 +28,7 @@
 ##############################################################################
 
 import unittest
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-     _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import urlnorm # This library is imported to detect lack of
                # urlnorm availibility in python environment
 
@@ -44,7 +43,6 @@ class TestWebCrawler(ERP5TypeTestCase):
   """
 
   _path_to_delete_list = []
-  system_pref_id = 'my_preference'
 
   def getTitle(self):
     """
@@ -89,20 +87,9 @@ class TestWebCrawler(ERP5TypeTestCase):
     self.tic()
 
   def setSystemPreference(self):
-    portal_preferences = self.portal.portal_preferences
-    system_preference = portal_preferences._getOb(self.system_pref_id, None)
-    if system_preference is None:
-      system_preference = portal_preferences.newContent(id=self.system_pref_id,
-                                               portal_type='System Preference')
-    conversion_dict = _getConversionServerDict()
-    system_preference.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    system_preference.setPreferredDocumentFilenameRegularExpression(
-                                                   FILENAME_REGULAR_EXPRESSION)
-    system_preference.setPreferredDocumentReferenceRegularExpression(
-                                                  REFERENCE_REGULAR_EXPRESSION)
-    if system_preference.getPreferenceState() != 'global':
-      system_preference.enable()
-
+    pref = self.getDefaultSystemPreference()
+    pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
+    pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
 
   def bootstrapWebSite(self):
     """Create 1 Website
@@ -275,8 +262,7 @@ class TestWebCrawler(ERP5TypeTestCase):
     self.assertFalse(len(new_web_crawler))
 
     # set another namespace on preference
-    preference = self.portal.portal_preferences[self.system_pref_id]
-    preference.setPreferredIngestionNamespace('NEW')
+    self.getDefaultSystemPreference().setPreferredIngestionNamespace('NEW')
     self.tic()
     new_web_crawler.crawlContent()
     self.tic()

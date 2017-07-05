@@ -32,7 +32,6 @@ from DateTime import DateTime
 from AccessControl import Unauthorized
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 
 class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
@@ -117,29 +116,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
-    self.setDefaultSitePreference()
-    self.setSystemPreference()
     self.portal.portal_activities.unsubscribe()
-
-  def setSystemPreference(self):
-    portal_type = 'System Preference'
-    preference_list = self.portal.portal_preferences.contentValues(
-                                                       portal_type=portal_type)
-    if not preference_list:
-      preference = self.portal.portal_preferences.newContent(
-                                                       portal_type=portal_type)
-    else:
-      preference = preference_list[0]
-    conversion_dict = _getConversionServerDict()
-    preference.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
-      preference.enable()
-
-  def setDefaultSitePreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
-      default_pref.enable()
-    return default_pref
 
   def beforeTearDown(self):
     self.portal.portal_activities.subscribe()
