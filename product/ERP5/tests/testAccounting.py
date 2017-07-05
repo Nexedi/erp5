@@ -4160,27 +4160,6 @@ class TestTransactions(AccountingTestCase):
     self.assertEqual(500, accounting_transaction.AccountingTransaction_getTotalDebit())
     self.assertEqual(400, accounting_transaction.AccountingTransaction_getTotalCredit())
 
-  def test_Account_getDestinationSectionItemList(self):
-    organisation1 = self.portal.organisation_module.newContent(
-                            portal_type='Organisation',
-                            title='Organisation 1')
-    organisation2 = self.portal.organisation_module.newContent(
-                            portal_type='Organisation',
-                            title='Organisation 2')
-    self._makeOne(
-              portal_type='Sale Invoice Transaction',
-              simulation_state='delivered',
-              destination_section_value=organisation1,
-              start_date=DateTime(2006, 2, 2),
-              lines=(dict(source_value=self.portal.account_module.receivable,
-                          source_debit=100),
-                     dict(source_value=self.portal.account_module.goods_sales,
-                          source_credit=100.00)))
-    self.assertEqual([('', ''),
-                       ('Organisation 1 (Organisation)',
-                        organisation1.getRelativeUrl())],
-                       self.portal.Account_getDestinationSectionItemList())
-
   def test_AccountingTransaction_getListBoxColumnList_does_not_enable_section_column_when_only_two_sections(self):
     # AccountingTransaction_getListBoxColumnList is the script returning the
     # columns to display in AccountingTransaction_view.
