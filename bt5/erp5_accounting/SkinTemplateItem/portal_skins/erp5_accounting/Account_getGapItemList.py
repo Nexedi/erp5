@@ -21,15 +21,14 @@ def display(x):
   return display_cache[x]
 
 def getGapItemList(only_preferred_gap, gap_root=None):
-  ctool = portal.portal_categories
   if only_preferred_gap:
     if gap_root:
-      return ctool.resolveCategory(gap_root).getCategoryChildItemList(
+      return portal.portal_categories.resolveCategory(gap_root).getCategoryChildItemList(
         base=False, is_self_excluded=True, display_method=display,
         local_sort_id=('int_index', 'reference', 'id'))
 
   result = []
-  for country in ctool.gap.contentValues():
+  for country in portal.portal_categories.gap.contentValues():
     for gap_root in country.contentValues():
       result.extend(gap_root.getCategoryChildItemList(
         base=False, is_self_excluded=True, display_method=display,
