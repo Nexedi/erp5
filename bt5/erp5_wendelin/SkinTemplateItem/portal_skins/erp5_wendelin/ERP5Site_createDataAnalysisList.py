@@ -11,7 +11,7 @@ query = AndQuery(
           Query(**{"stock.quantity": "!=0"}),
           Query(resource_portal_type = "Data Product"),
           # Should be improved to support mor than one analysis per ingestion
-          SimpleQuery(parent_causality_related_relative_url = None),
+          #SimpleQuery(parent_causality_related_relative_url = None),
           OrQuery(
             Query(simulation_state = "stopped",
                   use_relative_url = "use/big_data/ingestion/batch"),
