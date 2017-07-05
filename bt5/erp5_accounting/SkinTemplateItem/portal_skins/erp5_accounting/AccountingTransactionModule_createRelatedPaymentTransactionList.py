@@ -2,20 +2,19 @@ from Products.ERP5Type.Message import translateString
 from zExceptions import Redirect
 
 portal = context.getPortalObject()
-stool = portal.portal_selections
 countMessage = portal.portal_activities.countMessage
 invoice_type_list = portal.getPortalInvoiceTypeList()
 
-stool.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)
-selection_uid_list = context.portal_selections.getSelectionCheckedUidsFor(
+portal.portal_selections.updateSelectionCheckedUidList(selection_name, listbox_uid, uids)
+selection_uid_list = portal.portal_selections.getSelectionCheckedUidsFor(
                                                        selection_name)
 if selection_uid_list:
   object_list = [brain.getObject() for brain in portal.portal_catalog(uid=selection_uid_list)]
 else:
-  object_list = stool.callSelectionFor(selection_name)
+  object_list = portal.portal_selections.callSelectionFor(selection_name)
 
 # update selection params, because it'll be used in the selection dialog.
-stool.setSelectionParamsFor('accounting_create_related_payment_selection',
+portal.portal_selections.setSelectionParamsFor('accounting_create_related_payment_selection',
           params=dict(node_for_related_payment=node,
                       payment_mode_for_related_payment=payment_mode,
                       payment_for_related_payment=payment))

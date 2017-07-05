@@ -12,7 +12,6 @@ from Products.ERP5Type.Utils import int2letter
 lines_per_node = {}
 
 portal = context.getPortalObject()
-ctool = portal.portal_catalog
 
 allow_grouping_with_different_quantity = portal.portal_preferences.getPreference(
                                          'preferred_grouping_with_different_quantities', 0)
