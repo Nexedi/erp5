@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>working_copy_list, conversion_server_url=None</string> </value>
+            <value> <string>working_copy_list</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

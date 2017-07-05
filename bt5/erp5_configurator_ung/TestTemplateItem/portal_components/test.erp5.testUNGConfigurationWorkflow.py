@@ -25,7 +25,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerUrl
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
@@ -211,10 +211,9 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
 
   def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
-    system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
-    conversion_dict = _getConversionServerDict()
+    system_preference = self.getDefaultSystemPreference()
     self.assertEqual(system_preference.getPreferredDocumentConversionServerUrl(),
-                      conversion_dict['url'])
+                     _getConversionServerUrl())
 
   def stepCheckSitePreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check Site Preference"""

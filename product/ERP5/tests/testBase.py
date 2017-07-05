@@ -33,8 +33,7 @@ import os
 from unittest import skip
 
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-                                                       _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -93,7 +92,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal_catalog = self.getCatalogTool()
     #portal_catalog.manage_catalogClear()
     self.createCategories()
-    self.setDefaultSitePreference()
 
     #Overwrite immediateReindexObject() with a crashing method
     def crashingMethod(self):
@@ -118,14 +116,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       for category_id in category_list:
         o = self.category_tool.group.newContent(portal_type='Category',
                                                 id=category_id)
-
-  def setDefaultSitePreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
-    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
-      default_pref.enable()
-    return default_pref
 
   def stepRemoveWorkflowsRelated(self, sequence=None, sequence_list=None,
                                  **kw):

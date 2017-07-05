@@ -34,8 +34,8 @@ import os
 from lxml import etree
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-                                                       _getConversionServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import (
+  ERP5TypeTestCase, _getConversionServerUrl)
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5OOo.OOoUtils import OOoBuilder
@@ -138,13 +138,9 @@ class TestIngestion(ERP5TypeTestCase):
     self.commit()
 
   def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredDocumentConversionServerUrl(conversion_dict['url'])
+    default_pref = self.getDefaultSystemPreference()
     default_pref.setPreferredDocumentFilenameRegularExpression(FILENAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
 
   def setSimulatedNotificationScript(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1044,8 +1040,8 @@ class TestIngestion(ERP5TypeTestCase):
       Make sure that preferences are set up properly and accessible
     """
     preference_tool = self.portal.portal_preferences
-    conversion_dict = _getConversionServerDict()
-    self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrl(), conversion_dict['url'])
+    self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrl(),
+                     _getConversionServerUrl())
     self.assertEqual(preference_tool.getPreferredDocumentFilenameRegularExpression(), FILENAME_REGULAR_EXPRESSION)
     self.assertEqual(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
 

@@ -86,18 +86,18 @@ class OOoServerProxy(ServerProxy):
   def __init__(self, context):
     preference_tool = getToolByName(context, 'portal_preferences')
 
-    uri = getattr(preference_tool, "getPreferredDocumentConversionServerUrl", str)()
-    if uri in ('', None):
+    uri = preference_tool.getPreferredDocumentConversionServerUrl()
+    if not uri:
       address = preference_tool.getPreferredOoodocServerAddress()
       port = preference_tool.getPreferredOoodocServerPortNumber()
-      if address in ('', None) or port in ('', None) :
+      if not (address and port):
         raise ConversionError('OOoDocument: cannot proceed with conversion:'
               ' conversion server url is not defined in preferences')
 
       LOG('OOoDocument', WARNING, 'PreferredOoodocServer{Address,PortNumber}' + \
           ' are DEPRECATED please use PreferredDocumentServerUrl instead', error=True)
       scheme = "http"
-      uri = 'http://%s:%d' % (address, port)
+      uri = '%s://%s:%s' % (scheme, address, port)
     else:
       if uri.startswith("http://"):
         scheme = "http"

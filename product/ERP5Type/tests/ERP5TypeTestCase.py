@@ -60,6 +60,7 @@ from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Form.PreferenceTool import Priority
 from zLOG import LOG, DEBUG
 
 from Products.ERP5Type.tests.backportUnittest import SetupSiteError
@@ -127,17 +128,17 @@ def _getConnectionStringDict():
       os.environ.get(connection, '-' + connection_string)
   return connection_string_dict
 
-def _getConversionServerDict():
-  """ Returns a dict with url for Conversion Server (Oood)
+def _getConversionServerUrl():
+  """ Return the url for Conversion Server (Cloudooo)
   """
-  conversion_server_url = os.environ.get('conversion_server_url')
-  conversion_server_hostname = os.environ.get('conversion_server_hostname',
-                                              'localhost')
-  conversion_server_port = os.environ.get('conversion_server_port',
-                                          '8008')
-  return dict(url=conversion_server_url,
-              hostname=conversion_server_hostname,
-              port=int(conversion_server_port))
+  url = os.environ.get('conversion_server_url')
+  if not url: # BBB
+    url = os.environ['conversion_server_url'] = 'http://%s:%s' % (
+      os.environ.get('conversion_server_hostname', 'localhost'),
+      os.environ.get('conversion_server_port', 8008))
+    warn('conversion_server_hostname/conversion_server_port are deprecated.\n'
+      'Using %s as conversion_server_url instead' % url, DeprecationWarning)
+  return url
 
 def _getVolatileMemcachedServerDict():
   """Returns a dict with hostname and port for volatile memcached Server
@@ -157,10 +158,10 @@ def _getPersistentMemcachedServerDict():
 
 def _createTestPromiseConfigurationFile(promise_path, bt5_repository_path_list=None):
   kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
-                             _getVolatileMemcachedServerDict()
-  memcached_url = "memcached://%(hostname)s:%(port)s/" % \
                              _getPersistentMemcachedServerDict()
-  cloudooo_url = _getConversionServerDict()['url']
+  memcached_url = "memcached://%(hostname)s:%(port)s/" % \
+                             _getVolatileMemcachedServerDict()
+  cloudooo_url = _getConversionServerUrl()
 
   promise_config = ConfigParser.RawConfigParser()
   promise_config.add_section('external_service')
@@ -332,10 +333,16 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def unpinDateTime(self):
       self.pinDateTime(None)
 
-    def getDefaultSitePreferenceId(self):
-      """Default id, usefull method to override
-      """
-      return "default_site_preference"
+    def getDefaultSystemPreference(self):
+      id = 'default_system_preference'
+      tool = self.getPreferenceTool()
+      try:
+        pref = tool[id]
+      except KeyError:
+        pref = tool.newContent(id, 'System Preference')
+        pref.setPriority(Priority.SITE)
+        pref.enable()
+      return pref
 
     # Utility methods specific to ERP5Type
     def getTemplateTool(self):
@@ -907,12 +914,11 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         getattr(self.portal, connection_name).edit('', connection_string)
 
     def _updateConversionServerConfiguration(self):
-      """Update conversion server (Oood) at default site preferences.
+      """Update conversion server (Cloudooo) at default site preferences.
       """
-      conversion_dict = _getConversionServerDict()
-      preference = self.portal.portal_preferences[
-                        self.getDefaultSitePreferenceId()]
-      preference._setPreferredDocumentConversionServerUrl(conversion_dict['url'])
+      url = _getConversionServerUrl()
+      pref = self.getDefaultSystemPreference()
+      pref._setPreferredDocumentConversionServerUrl(url)
 
     def _updateMemcachedConfiguration(self):
       """Update default memcached plugin configuration
