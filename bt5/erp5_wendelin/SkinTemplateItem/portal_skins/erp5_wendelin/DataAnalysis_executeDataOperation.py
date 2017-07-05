@@ -2,10 +2,10 @@ portal = context.getPortalObject()
 operation = None
 use = None
 parameter_dict = {}
-initial_product = context.getSpecialiseValue().getResourceValue()
+initial_product = context.getSpecialiseValue(portal_type="Data Transformation").getResourceValue()
 for analysis_line in context.objectValues(portal_type="Data Analysis Line"):
   resource = analysis_line.getResourceValue()
-  if resource == initial_product():
+  if resource == initial_product:
     use = analysis_line.getUse()
   if resource is not None:
     resource_portal_type = resource.getPortalType()
