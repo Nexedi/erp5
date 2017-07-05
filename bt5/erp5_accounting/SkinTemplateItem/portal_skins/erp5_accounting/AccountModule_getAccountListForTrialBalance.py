@@ -304,7 +304,7 @@ if node_uid_of_strict_account_type_to_group_by_payment:
 
 # include all accounts, even those not selected before (no movements in the
 # period)
-for node in LazyFilter(portal.account_module.contentValues(), skip=''): # XXX: context should already be account_module
+for node in LazyFilter(portal.account_module.contentValues(), skip=''):
   if node.getRelativeUrl() not in account_used:
     getAccountProps(
       {
@@ -724,6 +724,7 @@ if per_account_class_summary:
     for gap in account.getGapList():
       if gap.startswith(current_gap):
         gap_part_list = gap.split('/')
+        # TODO: this should not be ID
         # country / accounting principle / ${class}
         if len(gap_part_list) > 2:
           return gap_part_list[2]
