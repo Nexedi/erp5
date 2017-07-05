@@ -325,9 +325,7 @@
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>jio_view_attachment</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -359,7 +357,9 @@
         </item>
         <item>
             <key> <string>configuration_view_action_category</string> </key>
-            <value> <string>jio_view_attachment</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -596,7 +596,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.4145.39687.36881</string> </value>
+                <value> <string>960.25499.10547.9250</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -614,7 +614,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497532640.31</float>
+                        <float>1498831614.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
