@@ -25,14 +25,14 @@ if role_filter_list == [''] :
   role_filter_list = None
 
 section_uid = context.Base_getSectionUidListForSectionCategory(
-                                             request['section_category'],
-                                             request['section_category_strict'])
+    request['section_category'],
+    request['section_category_strict'])
 result = []
 
 params =  {
-    'at_date' : at_date
-  , 'section_uid': section_uid
-  , 'simulation_state': simulation_state
+    'at_date': at_date,
+    'section_uid': section_uid,
+    'simulation_state': simulation_state
 }
 
 if from_date:
@@ -59,16 +59,16 @@ if ledger:
 simulation_tool = portal.portal_simulation
 
 entity_columns = [
-                       ('date', 'Date'),
-                       ('Movement_getExplanationTranslatedPortalType', 'Type'),
-                       ('Movement_getNodeGapId', 'GAP'),
-                       ('Movement_getExplanationReference', 'Invoice No'),
-                       ('Movement_getExplanationTitle', 'Title'),
-                       ('Movement_getSpecificReference', 'Reference'),
-                       ('getTranslatedSimulationStateTitle', 'State'),
-                       ('debit_price', 'Debit'),
-                       ('credit_price', 'Credit'),
-                       ('running_total_price', 'Balance'),
+    ('date', 'Date'),
+    ('Movement_getExplanationTranslatedPortalType', 'Type'),
+    ('Movement_getNodeGapId', 'GAP'),
+    ('Movement_getExplanationReference', 'Invoice No'),
+    ('Movement_getExplanationTitle', 'Title'),
+    ('Movement_getSpecificReference', 'Reference'),
+    ('getTranslatedSimulationStateTitle', 'State'),
+    ('debit_price', 'Debit'),
+    ('credit_price', 'Credit'),
+    ('running_total_price', 'Balance'),
 ]
 
 if not request['omit_grouping_reference']:
