@@ -16,7 +16,7 @@ var repair = false;
     return jIO.createJIO({
       type: "replicate",
       conflict_handling: 2,
-      parallel_operation_attachment_amount: 1000,
+      parallel_operation_attachment_amount: 10,
       check_remote_attachment_modification: false,
       check_remote_attachment_creation: true,
       check_remote_modification: false,
