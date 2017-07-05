@@ -1045,8 +1045,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     preference_tool = self.portal.portal_preferences
     conversion_dict = _getConversionServerDict()
-    self.assertEqual(preference_tool.getPreferredOoodocServerAddress(), conversion_dict['hostname'])
-    self.assertEqual(preference_tool.getPreferredOoodocServerPortNumber(), conversion_dict['port'])
     self.assertEqual(preference_tool.getPreferredDocumentConversionServerUrl(), conversion_dict['url'])
     self.assertEqual(preference_tool.getPreferredDocumentFilenameRegularExpression(), FILENAME_REGULAR_EXPRESSION)
     self.assertEqual(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
