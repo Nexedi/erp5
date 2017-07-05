@@ -18,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_specialise_title</string> </value>
+            <value> <string>my_specialise_title_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,7 +75,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_relation_field</string> </value>
+                    <value> <string>my_multi_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -85,6 +85,10 @@
                     <key> <string>portal_type</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>Data Supply</string>
+                          <string>Data Supply</string>
+                        </tuple>
                         <tuple>
                           <string>Data Transformation</string>
                           <string>Data Transformation</string>
@@ -100,6 +104,10 @@
                           <string>DataSupplyModule_viewDataSupplyList/listbox</string>
                           <string>Data Supply</string>
                         </tuple>
+                        <tuple>
+                          <string>DataTransformationModule_viewDataTransformationList/listbox</string>
+                          <string>Data Transformation</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -109,7 +117,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Data Transformation</string> </value>
+                    <value> <string>Data Supply and Transformation</string> </value>
                 </item>
               </dictionary>
             </value>
