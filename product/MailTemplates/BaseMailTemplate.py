@@ -80,26 +80,19 @@ class BaseMailTemplate:
             if value is not None:
                 values[key]=value
 
-                # turn some sequences in coma-seperated strings
-                if isinstance(value, (tuple, list)):
-                    value = ', '.join(value)
-                # make sure we have no unicode headers
-                if isinstance(value,unicode):
-                    value = value.encode(encoding)
-
                 if key == 'subject':
                     try:
                         # Try to keep header non encoded
-                        value = Header(value.encode("ascii"))
+                        value = Header(value)
                     except UnicodeDecodeError:
                         value = Header(value, "UTF-8")
 
                 else:
-                    value_list = getaddresses([value])
                     dest_list = []
-                    for name, email in value_list:
+                    for name, email in getaddresses((value,)
+                            if isinstance(value, basestring) else value):
                         try:
-                            name = Header(name.encode("ascii"))
+                            name = Header(name)
                         except UnicodeDecodeError:
                             name = Header(name, "UTF-8")
                         dest_list.append(formataddr((name.encode(), email)))
