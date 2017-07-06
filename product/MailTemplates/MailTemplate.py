@@ -18,13 +18,13 @@ from BaseMailTemplate import BaseMailTemplate
 
 class MailTemplate(BaseMailTemplate,ZopePageTemplate):
     "A ZPT-like template for sending mails"
-    
+
     security = ClassSecurityInfo()
 
     meta_type = 'Mail Template'
 
     _properties = ()
-    
+
     manage_options = ZopePageTemplate.manage_options[0:1] + \
                      ZopePageTemplate.manage_options[2:]
 
@@ -102,4 +102,4 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
 
 InitializeClass(MailTemplate)
 
-    
+
