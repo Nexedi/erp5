@@ -1,6 +1,6 @@
 /*jslint nomen: true, indent: 2, maxerr: 3, maxlen: 80*/
-/*global self, caches, fetch, Request, Promise*/
-(function (self, caches, fetch, Request, Promise) {
+/*global self, caches, fetch, Promise*/
+(function (self, caches, fetch, Promise) {
   "use strict";
 
   var CACHE_VERSION = 1,
@@ -8,14 +8,7 @@
   self.addEventListener("install", function (event) {
     event.waitUntil(caches.open(CACHE_NAME)
       .then(function (cache) {
-        return fetch(new Request(
-          "officejs_todomvc.appcache",
-          {
-            method: 'GET',
-            headers: {
-              'Upgrade-Insecure-Requests': 1
-            }
-          }))
+        return fetch("officejs_todomvc.appcache")
           .then(function (cache_file) {
             return cache_file.text();
           })
@@ -24,7 +17,6 @@
               i,
               take = false;
             self.cache_list = [];
-            self.console.log(text);
             if (relative_url_list.length === 1) {
               relative_url_list = text.split('\n');
             }
@@ -46,12 +38,8 @@
                 take = true;
               }
             }
-            self.console.log(self.cache_list);
             return cache.addAll(self.cache_list);
           });
-      })
-      .catch(function (error) {
-        self.console.log(error);
       })
       .then(function () {
         return self.skipWaiting();
@@ -81,4 +69,4 @@
       }));
   });
 
-}(self, caches, fetch, Request, Promise));
+}(self, caches, fetch, Promise));
