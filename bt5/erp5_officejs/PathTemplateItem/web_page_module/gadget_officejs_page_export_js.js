@@ -1,7 +1,7 @@
 /*globals window, RSVP, rJS, loopEventListener, URL, document
-  FileReader, console */
+  FileReader, console, navigator */
 /*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, RSVP, rJS, jIO, URL) {
+(function (window, navigator, RSVP, rJS, jIO, URL) {
   "use strict";
 
   var origin_url = (window.location.origin + window.location.pathname).replace(
@@ -93,6 +93,12 @@
       "no_installer": true,
       "sub_gadget": []
     },
+    "Todomvc": {
+      "url": "officejs_todomvc/",
+      "cache": "officejs_todomvc.appcache",
+      "no_installer": true,
+      "sub_gadget": []
+    },
     "connection": {
       "cache": "gadget_jabberconnection.appcache",
       "no_installer": true
@@ -137,6 +143,7 @@
       len = event.target.length,
       app,
       take_installer;
+
     for (j = 0; j < len; j += 1) {
       form_result[event.target[j].name] = event.target[j].value;
     }
@@ -251,4 +258,4 @@
         });
     });
 
-}(window, RSVP, rJS, jIO, URL));
+}(window, navigator, RSVP, rJS, jIO, URL));
