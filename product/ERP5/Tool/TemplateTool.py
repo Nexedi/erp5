@@ -1993,7 +1993,7 @@ class TemplateTool (BaseTool):
         classname = klass.__name__
         obj_dict = object.__dict__.copy()
         attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
-                    'last_id', 'uid',
+                    'last_id', 'uid', '_mt_index', '_count', '_tree',
                     '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
 
         attr_set.update(('isIndexable',))
@@ -2012,6 +2012,18 @@ class TemplateTool (BaseTool):
               # are not in attribute list
               # Raise an error
               continue
+
+          # Special case for configuration instance attributes
+          if attr in ['_config', '_config_metadata']:
+            import collections
+            # Order the dictionary so that comparison can be correct
+            obj_dict[attr] = collections.OrderedDict(sorted(obj_dict[attr].items()))
+            if 'valid_tags' in obj_dict[attr]:
+              try:
+                obj_dict[attr]['valid_tags'] = collections.OrderedDict(sorted(obj_dict[attr]['valid_tags'].items()))
+              except AttributeError:
+                # This can occur in case the valid_tag object is PersistentList
+                pass
 
         if 'data' in obj_dict:
           try:
