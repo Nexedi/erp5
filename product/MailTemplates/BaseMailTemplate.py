@@ -9,8 +9,10 @@ import rfc822
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
+from email.Header import Header
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+from email.Utils import make_msgid, formataddr, getaddresses
 
 from App.class_init import default__class_init__ as InitializeClass
 from App.Common import package_home
@@ -42,7 +44,11 @@ class BaseMailTemplate:
                           self.getProperty('encoding',
                                            default_encoding))
         text = self.__class__.__bases__[1].__call__(self,**kw)
-        if not self.html():
+        # ZPT adds newline at the end, but it breaks backward compatibility.
+        # So I remove it.
+        if text.endswith('\n'):
+            text = text[:-1]
+        if not self.html() and isinstance(text, unicode):
             text = text.encode(encoding,'replace')
         # now turn the result into a MIMEText object
         msg = MIMEText(
@@ -73,16 +79,36 @@ class BaseMailTemplate:
                                                      headers.get(header))))
             if value is not None:
                 values[key]=value
+
                 # turn some sequences in coma-seperated strings
-                if isinstance(value,tuple) or isinstance(value,list):
+                if isinstance(value, (tuple, list)):
                     value = ', '.join(value)
                 # make sure we have no unicode headers
                 if isinstance(value,unicode):
                     value = value.encode(encoding)
+
+                if key == 'subject':
+                    try:
+                        # Try to keep header non encoded
+                        value = Header(value.encode("ascii"))
+                    except UnicodeDecodeError:
+                        value = Header(value, "UTF-8")
+
+                else:
+                    value_list = getaddresses([value])
+                    dest_list = []
+                    for name, email in value_list:
+                        try:
+                            name = Header(name.encode("ascii"))
+                        except UnicodeDecodeError:
+                            name = Header(name, "UTF-8")
+                        dest_list.append(formataddr((name.encode(), email)))
+                    value = ", ".join(dest_list)
+
                 headers[header]=value
         # check required values have been supplied
         errors = []
-        for param in ('mfrom','mto','subject'):
+        for param in ('mfrom','mto'):
             if not values.get(param):
                 errors.append(param)
         if errors:
@@ -92,6 +118,9 @@ class BaseMailTemplate:
                 ))
         # add date header
         headers['Date']=DateTime().rfc822()
+        # do not let the MTA to generate the Message-ID:
+        # we want to have it stored in ERP5, for mail threading
+        headers['Message-ID'] = make_msgid()
         # turn headers into an ordered list for predictable header order
         keys = headers.keys()
         keys.sort()
