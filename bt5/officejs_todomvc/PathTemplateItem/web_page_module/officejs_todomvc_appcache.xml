@@ -9,7 +9,7 @@
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
@@ -17,17 +17,15 @@
                 <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </list>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -44,10 +42,7 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -118,6 +113,7 @@ officejs_todomvc_gadget_model.js\n
 officejs_todomvc_gadget_router.html\n
 officejs_todomvc_gadget_router.js\n
 officejs_todomvc_manifest.json\n
+officejs_todomvc_serviceworker.js\n
 /\n
 NETWORK:\n
 *</string> </value>
@@ -255,7 +251,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.35683.10793.57514</string> </value>
+                <value> <string>960.35777.53431.31453</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -273,7 +269,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499337902.46</float>
+                        <float>1499344507.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
