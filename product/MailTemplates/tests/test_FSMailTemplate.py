@@ -24,11 +24,11 @@ else:
     from Products.CMFCore.tests.base.testcase import FSDVTest
     from AccessControl import ClassSecurityInfo
     from App.class_init import default__class_init__ as InitializeClass
-    
+
     class DummyMember:
 
         security = ClassSecurityInfo()
-        
+
         security.declareObjectPublic()
         security.setDefaultAccess('allow')
 
@@ -41,7 +41,7 @@ else:
             return 'member@example.com'
 
     InitializeClass(DummyMember)
-    
+
     class DummyMembershipTool:
 
         security = ClassSecurityInfo()
@@ -54,9 +54,9 @@ else:
             return (DummyMember(),)
 
     InitializeClass(DummyMembershipTool)
-    
+
     class TestFSMailTemplate(FSDVTest):
-        
+
         _sourceprefix = os.path.dirname(__file__)
 
         def setUp(self):
@@ -75,7 +75,7 @@ else:
                 self.app.manage_delObjects(ids=['MailHost'])
             self.MailHost = self.app.MailHost = DummyMailHost()
             newSecurityManager( None, SystemUser )
-        
+
         def tearDown(self):
             noSecurityManager()
             get_transaction().abort()
@@ -101,7 +101,7 @@ else:
                 })
 
             self.MailHost.checkSent()
-        
+
             # check we're not setting a content type
             self.assertFalse(self.r.RESPONSE.headers.get('content-type'),
                         self.r.RESPONSE.headers)
@@ -110,7 +110,7 @@ else:
             self.assertEqual(self.ob.fake_skin.test.mailhost,'MailHost')
             self.assertEqual(self.ob.fake_skin.test.subject,'Hello %s there')
             self.assertEqual(self.ob.fake_skin.test.mfrom,'from@example.com')
-            
+
         def test_zodbclone(self):
             from Products.MailTemplates.MailTemplate import MailTemplate
             clone = self.ob.fake_skin.test._createZODBClone()
@@ -121,7 +121,7 @@ else:
             self.assertEqual(clone.getProperty('subject'),'Hello %s there')
             self.assertEqual(clone.getProperty('mfrom'),'from@example.com')
             self.assertEqual(clone.content_type,'text/notplain')
-            
+
         def test_view_manage_workspace(self):
             from zExceptions import Redirect
             try:
@@ -134,7 +134,7 @@ else:
             # ugh, okay, so we can't really test for security, but lets
             # test for the missing docstring that was causing problems!
             self.assertTrue(self.ob.fake_skin.test.__doc__)
-            
+
         def test_example2(self):
             # login
             noSecurityManager()

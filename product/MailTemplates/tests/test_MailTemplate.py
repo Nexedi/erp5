@@ -41,7 +41,7 @@ class DummyFieldStorage:
 class DummyMailHost(MailHost):
 
     sent = False
-    
+
     def setExpected(self,mfrom,mto,filename):
         self.mfrom = mfrom
         self.mto = mto
@@ -55,7 +55,7 @@ class DummyMailHost(MailHost):
 
     def title_and_id(self):
         return 'MHTID'
-    
+
     def assertEqual(self,x,y,message=None,field=None):
         if x!=y:
             if message:
@@ -64,8 +64,8 @@ class DummyMailHost(MailHost):
             if field:
                 error = field+':'+error
             raise AssertionError(error)
-        
-        
+
+
     def _send(self,mfrom,mto,messageText):
         self.assertEqual(self.mfrom,mfrom,field='mfrom')
         self.assertEqual(self.mto,mto,field='mto')
@@ -94,11 +94,11 @@ class DummyMailHost(MailHost):
         else:
             error = "Mail sent when it shouldn't have been"
         self.assertEqual(self.sent,value,error)
-        
+
 class DummyMailDropHost(DummyMailHost):
 
     meta_type = 'Maildrop Host'
-    
+
 class TestMailTemplate(TestCase):
 
     def setUp(self):
@@ -115,7 +115,7 @@ class TestMailTemplate(TestCase):
         o.append({'meta_type': 'Mail Host', 'id': 'MailHost'})
         self.app._objects = tuple(o)
         newSecurityManager( None, SystemUser )
-        
+
     def tearDown(self):
         noSecurityManager()
         get_transaction().abort()
@@ -133,17 +133,17 @@ class TestMailTemplate(TestCase):
             filename,
             value
             ))
-    
+
     def checkContent(self,text='test text'):
         if text is None:
-            text = open(os.path.join(test_folder,'..','www','default.txt')).read()            
+            text = open(os.path.join(test_folder,'..','www','default.txt')).read()
         self.assertEqual(
             self.app.test_mt.document_src({'raw':1}),
             text
             )
-        
+
     # Test Adding
-    
+
     def test_addAddForm(self):
         self.app.manage_addProduct['MailTemplates'].addMailTemplateForm()
 
@@ -178,7 +178,7 @@ class TestMailTemplate(TestCase):
             )
 
     def test_addNoREQUEST(self):
-        self._add('test_mt','MailHost')        
+        self._add('test_mt','MailHost')
         # check settings
         self.assertEqual(self.app.test_mt.expand,0)
         self.assertEqual(self.app.test_mt.mailhost,'MailHost')
@@ -187,7 +187,7 @@ class TestMailTemplate(TestCase):
         self.checkContent(None)
 
     def test_addNoMailHostSelected(self):
-        self._add('test_mt',REQUEST=self.r)        
+        self._add('test_mt',REQUEST=self.r)
         # check settings
         self.assertEqual(self.app.test_mt.expand,0)
         self.assertEqual(self.app.test_mt.mailhost,None)
@@ -217,7 +217,7 @@ class TestMailTemplate(TestCase):
             self._add('test_mt','MailHost',text=text,REQUEST=self.r)
         else:
             self._add('test_mt','MailHost',REQUEST=self.r)
-            
+
         self.assertEqual(
             self.r.RESPONSE.headers,
             {'status': '302 Moved Temporarily', 'location': 'http://foo/manage_main'}
@@ -257,7 +257,7 @@ class TestMailTemplate(TestCase):
         self.assertEqual(self.app.test_mt.content_type,'text/plain')
         # check default content
         self.checkContent(None)
-        
+
     def test_addEditFile(self):
         self.r.form['file'] = self.makeFileUpload()
         self._add('test_mt','MailHost',REQUEST=self.r,submit=' Add and Edit ')
@@ -274,7 +274,7 @@ class TestMailTemplate(TestCase):
 
     # Test Properties Tab
     # Not much here, as we assume PropertyManager does its job ;-)
-    
+
     def test_PropertiesForm(self):
         self.test_add()
         self.mt.manage_propertiesForm()
@@ -284,7 +284,7 @@ class TestMailTemplate(TestCase):
         self.assertFalse(self.mt.propertyMap())
 
     # Test Test tab, well, actually, make sure it's not there ;-)
-    
+
     def test_NoTestTab(self):
         from Products.MailTemplates.MailTemplate import MailTemplate
         for option in MailTemplate.manage_options:
@@ -373,8 +373,8 @@ class TestMailTemplate(TestCase):
             mbcc=('bcc@example.com',),
             subject='Hello out there',
             )
-        
-    def _shouldFail(self,error,**params):        
+
+    def _shouldFail(self,error,**params):
         self.test_add('Test Body')
         try:
             self.mt.send(**params)
@@ -425,11 +425,11 @@ class TestMailTemplate(TestCase):
              ('Cc:cc@example.com',)),
             ):
             self.mt.manage_addProperty(name,value,type)
-            
+
         self.mt.send()
 
         self.MailHost.checkSent()
-        
+
     def testSendHeadersDict(self):
         self.test_add('Test Body')
         self.MailHost.setExpected(mfrom='from@example.com',
@@ -448,7 +448,7 @@ class TestMailTemplate(TestCase):
             )
 
         self.MailHost.checkSent()
-        
+
     def testSendParametersOverrideHeadersDictOverridesProperties(self):
         self.test_add('Test Body')
         self.MailHost.setExpected(mfrom='from@example.com',
@@ -467,7 +467,7 @@ class TestMailTemplate(TestCase):
                 ))
             ):
             self.mt.manage_addProperty(name,value,type)
-            
+
         self.mt.send(subject=self.mt.subject % 'out',
                      headers={
             'To':('to@example.com','to2@example.com'),
@@ -491,7 +491,7 @@ class TestMailTemplate(TestCase):
             ('subject','string','Hello %s there'),
             ):
             self.mt.manage_addProperty(name,value,type)
-            
+
         self.mt.send(subject=self.mt.subject % 'out',
                      headers={
             'To':('to@example.com','to2@example.com'),
@@ -515,15 +515,15 @@ class TestMailTemplate(TestCase):
             ('subject','string','Hello %s there'),
             ):
             self.mt.manage_addProperty(name,value,type)
-            
+
         self.mt.send(subject=self.mt.subject % 'out')
 
         self.MailHost.checkSent()
-        
+
     def testGetMessage(self):
         from email.MIMEMultipart import MIMEMultipart
         from email.MIMEText import MIMEText
-        
+
         self.test_add('Test <tal:x replace="options/body"/>')
         self.MailHost.setExpected(mfrom='from@example.com',
                                   mto=('to@example.com','to2@example.com'),
@@ -536,7 +536,7 @@ class TestMailTemplate(TestCase):
             ('subject','string','Hello %s there'),
             ):
             self.mt.manage_addProperty(name,value,type)
-            
+
         msg = self.mt.as_message(subject=self.mt.subject % 'out',
                                  headers={
             'To':('to@example.com','to2@example.com'),
@@ -556,7 +556,7 @@ class TestMailTemplate(TestCase):
 
     def _addFileSetup(self):
         from email.MIMEMultipart import MIMEMultipart
-        
+
         self.test_add('Test <tal:x replace="options/body"/>')
         self.MailHost.setExpected(mfrom='from@example.com',
                                   mto=('to@example.com','to2@example.com'),
@@ -569,7 +569,7 @@ class TestMailTemplate(TestCase):
             ('subject','string','Hello %s there'),
             ):
             self.mt.manage_addProperty(name,value,type)
-            
+
         msg = self.mt.as_message(subject=self.mt.subject % 'out',
                                  headers={
             'To':('to@example.com','to2@example.com'),
@@ -581,14 +581,14 @@ class TestMailTemplate(TestCase):
 
         self.assertTrue(isinstance(msg,MIMEMultipart))
         return msg
-        
+
     def testZopeFileObject(self):
         self.app.manage_addFile('test.txt',
-                                'A Test Attachment')        
+                                'A Test Attachment')
         msg = self._addFileSetup()
         msg.add_file(self.app['test.txt'])
         msg.send()
-        
+
         self.MailHost.checkSent()
 
     def testPythonFileObject(self):
@@ -597,7 +597,7 @@ class TestMailTemplate(TestCase):
             os.path.join(test_folder,'test.txt')
             ))
         msg.send()
-        
+
         self.MailHost.checkSent()
 
     def testFileUploadObject(self):
@@ -606,7 +606,7 @@ class TestMailTemplate(TestCase):
             value='A Test Attachment'
             ))
         msg.send()
-        
+
         self.MailHost.checkSent()
 
     def testStringWithContentType(self):
@@ -619,7 +619,7 @@ class TestMailTemplate(TestCase):
             content_type='text/plain'
             )
         msg.send()
-        
+
         self.MailHost.checkSent()
 
     def testStringWithoutContentType(self):
@@ -631,7 +631,7 @@ class TestMailTemplate(TestCase):
             filename='test.txt'
             )
         msg.send()
-        
+
         self.MailHost.checkSent()
 
     def testTooManyParameters(self):
@@ -714,7 +714,7 @@ class TestMailTemplate(TestCase):
         self.test_add('')
         self.mt.pt_edit('Test <tal:x replace="options/unicode"/>',
                         'text/html')
-        
+
         self.mt(
             mfrom='from@example.com',
             mto=('to@example.com',),
@@ -766,13 +766,13 @@ class TestMailTemplate(TestCase):
             SimpleUser('Test User','',('Manager',),[]).__of__(self.app)
             )
         try:
-            # setup 
+            # setup
             self.r.form['file']=self.makeFileUpload(diskname='example1.mt')
             self.app.manage_addProduct['MailTemplates'].addMailTemplate(
                 id='my_mt',
                 mailhost='MailHost',
                 REQUEST=self.r
-                )        
+                )
             self.r.form['file']=self.makeFileUpload(diskname='example1.py')
             self.app.manage_addProduct['PythonScripts'].manage_addPythonScript(
                 id='test_mt',
@@ -799,17 +799,17 @@ class TestMailTemplate(TestCase):
             SimpleUser('Test User','',('Manager',),[]).__of__(self.app)
             )
         try:
-            # setup 
+            # setup
             self.r.form['file']=self.makeFileUpload(diskname='example3.mt')
             self.app.manage_addProduct['MailTemplates'].addMailTemplate(
                 id='my_mt',
                 mailhost='MailHost',
                 REQUEST=self.r
-                )        
+                )
             self.app.manage_addFile(
                 id='myfile.bin',
                 file=self.makeFileUpload(diskname='example3.bin')
-                )        
+                )
             self.r.form['file']=self.makeFileUpload(diskname='example3.py')
             self.app.manage_addProduct['PythonScripts'].manage_addPythonScript(
                 id='send_mail',
@@ -836,7 +836,7 @@ class TestMailTemplate(TestCase):
             SimpleUser('Test User','',('Manager',),[]).__of__(self.app)
             )
         try:
-            # setup 
+            # setup
             self.r.form['file']=self.makeFileUpload(diskname='example4.mt')
             self.app.manage_addProduct['MailTemplates'].addMailTemplate(
                 id='my_mt',

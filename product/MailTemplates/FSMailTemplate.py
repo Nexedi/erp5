@@ -16,7 +16,7 @@ from MailTemplate import MailTemplate
 
 class FSMailTemplate(BaseMailTemplate,FSPageTemplate):
     "Wrapper for Mail Template"
-    
+
     security = ClassSecurityInfo()
 
     meta_type = 'Filesystem Mail Template'

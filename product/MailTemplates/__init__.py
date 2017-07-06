@@ -82,4 +82,4 @@ for name in email.__all__:
             obj = getattr(mod,mod_name)
             if isinstance(obj,ClassType):
                 allow_class(obj)
-    
+

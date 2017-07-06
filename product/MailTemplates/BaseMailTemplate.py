@@ -28,13 +28,13 @@ class BaseMailTemplate:
     security = ClassSecurityInfo()
 
     _properties = ()
-    
+
     ZScriptHTML_tryForm = None
 
     content_type = 'text/plain'
 
     mailhost = None
-    
+
     security.declarePrivate('_process')
     def _process(self,kw):
         # sort out what encoding we're going to use
@@ -96,10 +96,10 @@ class BaseMailTemplate:
         keys = headers.keys()
         keys.sort()
         return msg,values,[(key,headers[key]) for key in keys]
-        
+
     security.declarePrivate('_send')
     def _send(self,mfrom,mto,msg):
-            
+
         mailhost = self.restrictedTraverse(self.mailhost,None)
         if not getattr(mailhost,'meta_type',None) in (
             'Mail Host','Maildrop Host'
@@ -107,7 +107,7 @@ class BaseMailTemplate:
             raise RuntimeError(
                 'Could not traverse to MailHost %r' % self.mailhost
                 )
-        
+
         mailhost._send(mfrom,mto,msg.as_string())
 
     security.declareProtected('View', 'send')
@@ -126,7 +126,7 @@ class BaseMailTemplate:
                     v = [rfc822.dump_address_pair(addr) for addr \
                             in rfc822.AddressList(v)]
                 to_addrs += tuple(v)
-        
+
         self._send(values['mfrom'], to_addrs, msg)
 
     security.declareProtected('View', '__call__')
@@ -142,7 +142,7 @@ class BaseMailTemplate:
         #boundary = kw.get('boundary')
         #if boundary:
         #    multipart_kw['boundary'] = boundary
-            
+
         multipart = MTMultipart(self,
                                 values['mfrom'],
                                 values['mto'],
@@ -150,14 +150,12 @@ class BaseMailTemplate:
 
         # set the encoding for the container
         #multipart.set_charset(msg.get_charset())
-        
+
         for header,value in headers:
             multipart[header]=value
-            
+
         multipart.attach(msg)
 
         return multipart
-        
-InitializeClass(BaseMailTemplate)
 
-    
+InitializeClass(BaseMailTemplate)
