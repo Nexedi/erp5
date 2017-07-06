@@ -20,8 +20,16 @@
 
 from __future__ import absolute_import
 from inspect import getargspec
+import sys
 
 try:
+    # TODO: Add support for newer versions pylint. Meanwhile, make sure that
+    #       trying to use it does not import isort, because the latter hacks
+    #       Python in order to execute:
+    #           sys.setdefaultencoding('utf-8')
+    #       This changes the behaviour of some ERP5 code.
+    sys.modules.setdefault('isort', None)
+
     from pylint.checkers.imports import ImportsChecker
     import astroid
     ImportsChecker.get_imported_module
@@ -73,3 +81,6 @@ else:
         get_imported_module = _get_imported_module
 
     ImportsChecker.get_imported_module = get_imported_module
+finally:
+    if sys.modules['isort'] is None:
+        del sys.modules['isort']
