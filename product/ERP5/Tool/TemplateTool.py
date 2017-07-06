@@ -641,13 +641,13 @@ class TemplateTool (BaseTool):
       # For modules, we don't need to create path for the module
       module_list = import_template.getTemplateModuleIdList()
       for path in module_list:
-        template_path_list.append(path + ' | 1 | 1')
+        template_path_list.append(path)
 
       # For portal_types, we have to add path and subobjects
       portal_type_id_list = import_template.getTemplatePortalTypeIdList()
       portal_type_path_list = []
       for id in portal_type_id_list:
-        portal_type_path_list.append('portal_types/'+id + ' | 1 | 1')
+        portal_type_path_list.append('portal_types/'+id)
         #portal_type_path_list.append('portal_types/'+id+'/**')
       template_path_list.extend(portal_type_path_list)
 
@@ -655,7 +655,7 @@ class TemplateTool (BaseTool):
       category_list = import_template.getTemplateBaseCategoryList()
       category_path_list = []
       for base_category in category_list:
-        category_path_list.append('portal_categories/'+base_category + ' | 1 | 1')
+        category_path_list.append('portal_categories/'+base_category)
         #category_path_list.append('portal_categories/'+base_category+'/**')
       template_path_list.extend(category_path_list)
 
@@ -663,7 +663,7 @@ class TemplateTool (BaseTool):
       template_tool_id_list = import_template.getTemplateToolIdList()
       tool_id_list = []
       for tool_id in template_tool_id_list:
-        tool_id_list.append(tool_id + ' | 1 | 1')
+        tool_id_list.append(tool_id)
       template_path_list.extend(tool_id_list)
 
       # Adding business template skin selection property on the portal_tempaltes
@@ -677,7 +677,7 @@ class TemplateTool (BaseTool):
       portal_skin_list = import_template.getTemplateSkinIdList()
       portal_skin_path_list = []
       for skin in portal_skin_list:
-        portal_skin_path_list.append('portal_skins/'+skin + ' | 1 | 1')
+        portal_skin_path_list.append('portal_skins/'+skin)
         #portal_skin_path_list.append('portal_skins/'+skin+'/**')
       template_path_list.extend(portal_skin_path_list)
 
@@ -691,20 +691,20 @@ class TemplateTool (BaseTool):
       workflow_id_list = import_template.getTemplateWorkflowIdList()
       workflow_path_list = []
       for workflow in workflow_id_list:
-        workflow_path_list.append('portal_workflow/' + workflow + ' | 1 | 1')
+        workflow_path_list.append('portal_workflow/' + workflow)
         #workflow_path_list.append('portal_workflow/' + workflow + '/**')
       template_path_list.extend(workflow_path_list)
 
       # For paths, we add them directly to the path list
       path_list = import_template.getTemplatePathList()
       for path in path_list:
-        template_path_list.append(path  + ' | 1 | 1')
+        template_path_list.append(path)
 
       # Catalog methods would be added as sub objects
       catalog_method_item_list = import_template.getTemplateCatalogMethodIdList()
       catalog_method_path_list = []
       for method in catalog_method_item_list:
-        catalog_method_path_list.append('portal_catalog/' + method + ' | 1 | 1')
+        catalog_method_path_list.append('portal_catalog/' + method)
       template_path_list.extend(catalog_method_path_list)
 
       # For catalog objects, we check if there is any catalog object, and then
@@ -768,21 +768,21 @@ class TemplateTool (BaseTool):
         else:
           catalog_path = 'portal_catalog/erp5_mysql_innodb'
           removable_sub_object_path.append(catalog_path)
-        template_path_list.append(catalog_path + ' | 1 | 1')
+        template_path_list.append(catalog_path)
         removable_property[catalog_path] = properties_removed
         for prop in properties_removed:
-            property_path_list.append('%s#%s | 1 | 1' % (catalog_path, prop))
+            property_path_list.append('%s#%s' % (catalog_path, prop))
 
       # Add these catalog items in the object_property instead of adding
       # dummy path item for them
       if import_template.getTitle() == 'erp5_mysql_innodb_catalog':
-        template_path_list.extend('portal_catalog/erp5_mysql_innodb | 1 | 1')
+        template_path_list.extend('portal_catalog/erp5_mysql_innodb')
 
       # Add portal_property_sheets
       property_sheet_id_list = import_template.getTemplatePropertySheetIdList()
       property_sheet_path_list = []
       for property_sheet in property_sheet_id_list:
-        property_sheet_path_list.append('portal_property_sheets/' + property_sheet + ' | 1 | 1')
+        property_sheet_path_list.append('portal_property_sheets/' + property_sheet)
         #property_sheet_path_list.append('portal_property_sheets/' + property_sheet + '/**')
       template_path_list.extend(property_sheet_path_list)
 
@@ -795,13 +795,17 @@ class TemplateTool (BaseTool):
       template_path_list.extend(property_path_list)
       template_path_list.extend(selection_list)
       template_path_list = self.cleanTemplatePathList(template_path_list)
-      template_path_list = self.sortPathList(template_path_list)
+      template_path_list = sorted(template_path_list, key=lambda x: x[1])
+
+      # XXX: Add layer=1 and sign=1 for default for all paths
+      template_path_list = [l + ' | 1 | 1' for l in template_path_list]
+
       migrated_bm.setProperty('template_path_list', template_path_list)
 
       kw['removable_property'] = removable_property
       kw['removable_sub_object_path'] = removable_sub_object_path
-
       migrated_bm.build(**kw)
+
       # Commit transaction to generate all oids before exporting
       transaction.commit()
       # Export the newly built business package to the export directory
@@ -815,14 +819,12 @@ class TemplateTool (BaseTool):
       Remove redundant paths and sub-objects' path if the object path already
       exist.
       """
-      # Remove layer and sign
-      a1 = [l.split(' | ')[0] for l in path_list]
       # Split path into list
-      a2 = [l.split('/') for l in a1]
+      a2 = [l.split('/') for l in path_list]
       # Create new list for paths with **
-      a3 = [l for l in a2 if l[-1] == '**']
+      a3 = [l for l in a2 if l[-1] in ('**', '*')]
       # Create new list for paths without **
-      a4 = [l for l in a2 if l[-1] != '**']
+      a4 = [l for l in a2 if l[-1] not in ('**', '*')]
       # Remove ** from paths in a3
       reserved_id = ('portal_transforms', 'portal_ids')
       a3 = [l[:-1] for l in a3 if l[0] not in reserved_id] + [l for l in a3 if l[0] in reserved_id]
@@ -833,11 +835,9 @@ class TemplateTool (BaseTool):
       # Remove the redundant paths
       seen = set()
       seen_add = seen.add
+      # XXX: What about redundant signs with different layers
+      # Maybe we will end up reducing them
       a2 = [x for x in a2 if not (x in seen or seen_add(x))]
-      # Sort the path list
-      #a2.sort()
-      # Add the layer and signs, for now all 1
-      a2 = [l+' | 1 | 1' for l in a2]
 
       return a2
 
@@ -2027,17 +2027,14 @@ class TemplateTool (BaseTool):
       Custom sort for path_list according to the priorities of paths
       """
       def comparePath(path):
-        path = path.split(' | ')[0]
-        if path.split('/')[-1] == '**':
-          return 20
-        elif len(path.split('/')) == 1:
+        split_path_list = path.split('/')
+        if len(split_path_list) == 2 and split_path_list[0] in ('portal_types', 'portal_categories'):
+          return 1
+        if len(split_path_list) > 2:
           return 10
-        elif len(path.split('/')) > 2:
-          return 9
-        elif path.split('/')[0] in ('portal_types', 'portal_categories'):
-          return -10
-        else:
-          return 0
+        if len(split_path_list) == 1:
+          return 2
+        return 5
 
       return sorted(path_list, key=comparePath)
 
