@@ -1760,7 +1760,8 @@ class TestCRMMailSend(BaseTestCRM):
       self.tic()
 
       # check created Event
-      event = organisation.getDestinationSectionRelatedValue()
+      _, event = sorted(organisation.getDestinationSectionRelatedValueList(),
+          key=lambda x: x.getCreationDate())
       self.assertEqual(event.getTitle(), title)
       self.assertEqual(event.getResource(), resource)
       self.assertTrue(event.hasStartDate())
