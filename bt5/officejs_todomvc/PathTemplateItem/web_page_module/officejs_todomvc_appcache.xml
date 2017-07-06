@@ -2,14 +2,14 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Manifest" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <tuple>
+              <list>
                 <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
@@ -17,7 +17,7 @@
                 <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
-              </tuple>
+              </list>
             </value>
         </item>
         <item>
@@ -27,6 +27,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -46,6 +47,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -64,14 +66,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>classification/collaborative/team</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -79,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>officejs_todomvc_serviceworker.js</string> </value>
+            <value> <string>officejs_todomvc.appcache</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>officejs_todomvc_serviceworker_js</string> </value>
+            <value> <string>officejs_todomvc_appcache</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -97,7 +91,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Manifest</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -106,8 +100,31 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>CACHE MANIFEST\n
+# generated on Fri 09 Jun 2016 11:45:33 +0000\n
+CACHE:\n
+rsvp.js\n
+renderjs.js\n
+jiodev.js\n
+handlebars.js\n
+officejs_todomvc_icon.svg\n
+officejs_todomvc_icon.png\n
+officejs_todomvc.css\n
+officejs_todomvc_gadget_index.html\n
+officejs_todomvc_gadget_index.js\n
+officejs_todomvc_gadget_model.html\n
+officejs_todomvc_gadget_model.js\n
+officejs_todomvc_gadget_router.html\n
+officejs_todomvc_gadget_router.js\n
+officejs_todomvc_manifest.json\n
+/\n
+NETWORK:\n
+*</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS TodoMVC Service Worker JS</string> </value>
+            <value> <string>OfficeJS Todomvc App Cache</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -144,6 +161,12 @@
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
+                <item>
+                    <key> <string>processing_status_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -161,11 +184,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>eyqs</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -187,7 +210,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491226558.8</float>
+                        <float>1499260563.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -196,7 +219,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -232,7 +255,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.34534.37982.43332</string> </value>
+                <value> <string>960.35683.10793.57514</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -250,7 +273,66 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499268940.21</float>
+                        <float>1499337902.46</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>external_processing_state</string> </key>
+                <value> <string>empty</string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>0.0.0.0</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass>
+                      <global name="DateTime" module="DateTime.DateTime"/>
+                    </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1499259329.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
