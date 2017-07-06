@@ -2079,7 +2079,17 @@ class TemplateTool (BaseTool):
             obj = property_value
           else:
             isProperty = False
-            obj = portal.restrictedTraverse(path)
+            # XXX: Hardcoding because of problem with 'resource' trying to access
+            # the resource via acqusition. Should be removed completely before
+            # merging (DONT PUSH THIS)
+            if path == 'portal_categories/resource':
+              path_list = path.split('/')
+              container_path = path_list[:-1]
+              object_id = path_list[-1]
+              container = portal.restrictedTraverse(container_path)
+              obj = container._getOb(object_id)
+            else:
+              obj = portal.restrictedTraverse(path)
 
           obj_sha = self.calculateComparableHash(obj, isProperty)
 
@@ -2133,7 +2143,7 @@ class TemplateTool (BaseTool):
               # Raise error
               error_list.append('Trying to remove changes at ZODB at %s' % path)
 
-        except KeyError:
+        except (AttributeError, KeyError) as e:
           # Get item at old state
           old_item = old_state.getBusinessItemByPath(path)
           # Check if there is an object at old state at this path
