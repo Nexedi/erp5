@@ -112,50 +112,49 @@ class DomainTool(BaseTool):
       portal_catalog = portal.portal_catalog
       portal_categories = portal.portal_categories
       # Search the columns of the predicate table
-      range_column_set = set()
       query_list = [] if query is None else [query]
-      for column in portal_catalog.getColumnIds():
-        if column[:10] == 'predicate.' and \
-           column[-10:] in ('_range_min', '_range_max'):
-          property_name = column[10:-10]
-          if property_name not in range_column_set:
-            range_column_set.add(property_name)
-            # We have to check a range property
-            equality = 'predicate.' + property_name
-            range_min = equality + '_range_min'
-            range_max = equality + '_range_max'
+      for column in portal_catalog.getSQLCatalog().getTableColumnList('predicate'):
+        # Arbitrary suffix choice, this code expects COLUMN, COLUMN_range_min
+        # and COLUMN_range_max to be simultaneously present for ranged
+        # properties. Only checking one suffix simplifies the code flow.
+        if column.endswith('_range_min'):
+          property_name = column[:-10]
+          # We have to check a range property
+          equality = 'predicate.' + property_name
+          range_min = equality + '_range_min'
+          range_max = equality + '_range_max'
 
-            value = context.getProperty(property_name)
+          value = context.getProperty(property_name)
 
+          query = ComplexQuery(
+              SimpleQuery(**{equality: None}),
+              SimpleQuery(**{range_min: None}),
+              SimpleQuery(**{range_max: None}),
+              logical_operator='AND')
+
+          if value is not None:
             query = ComplexQuery(
-                SimpleQuery(**{equality: None}),
-                SimpleQuery(**{range_min: None}),
+              query,
+              SimpleQuery(**{equality: value}),
+              ComplexQuery(
+                SimpleQuery(comparison_operator='<=', **{range_min: value}),
                 SimpleQuery(**{range_max: None}),
-                logical_operator='AND')
+                logical_operator='AND',
+              ),
+              ComplexQuery(
+                SimpleQuery(**{range_min: None}),
+                SimpleQuery(comparison_operator='>=', **{range_max: value}),
+                logical_operator='AND',
+              ),
+              ComplexQuery(
+                SimpleQuery(comparison_operator='<=', **{range_min: value}),
+                SimpleQuery(comparison_operator='>=', **{range_max: value}),
+                logical_operator='AND',
+              ),
+              logical_operator='OR',
+            )
 
-            if value is not None:
-              query = ComplexQuery(
-                query,
-                SimpleQuery(**{equality: value}),
-                ComplexQuery(
-                  SimpleQuery(comparison_operator='<=', **{range_min: value}),
-                  SimpleQuery(**{range_max: None}),
-                  logical_operator='AND',
-                ),
-                ComplexQuery(
-                  SimpleQuery(**{range_min: None}),
-                  SimpleQuery(comparison_operator='>=', **{range_max: value}),
-                  logical_operator='AND',
-                ),
-                ComplexQuery(
-                  SimpleQuery(comparison_operator='<=', **{range_min: value}),
-                  SimpleQuery(comparison_operator='>=', **{range_max: value}),
-                  logical_operator='AND',
-                ),
-                logical_operator='OR',
-              )
-
-            query_list.append(query)
+          query_list.append(query)
 
       if tested_base_category_list != []:
         # Add category selection
