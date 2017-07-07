@@ -1,0 +1,80 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module/1?editable=1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Views']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[text()='Views']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='View Crash on Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='View Crash on Save']</td>
+  <td></td>
+</tr>
+<!-- Wait for gadget to be loaded -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_pt_form_view_editable.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Title 1</td>
+  <td></td>
+</tr>
+<!-- Fill in the form -->
+<tr>
+  <td>type</td>
+  <td>field_my_title</td>
+  <td>QWERTY</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>field_my_short_title</td>
+  <td>Q</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
+  <td></td>
+</tr>
+<!-- Wait for the notification to appear. We cannot use verifyText because the button
+     is there all the time. It gets text assigned and is shown asynchronously later. -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='notification']/button[text()='Encountered an unknown error. Try to resubmit.']</td>
+  <td></td>
+</tr>
+<!-- Modified form data must stay after the notification -->
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@name='field_my_title']</td>
+  <td>QWERTY</td>
+</tr>
+</tbody></table>
+</body>
+</html>

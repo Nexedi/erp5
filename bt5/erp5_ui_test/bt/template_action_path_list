@@ -20,6 +20,7 @@ Foo | dummy_report
 Foo | list
 Foo | select_bar
 Foo | view
+Foo | view_crash_on_save
 Foo | view_duration_field
 Foo | view_formbox
 Foo | view_formbox_dialog
