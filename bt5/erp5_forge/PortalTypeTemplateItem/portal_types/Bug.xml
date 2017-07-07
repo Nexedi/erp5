@@ -86,6 +86,7 @@
               <tuple>
                 <string>title</string>
                 <string>description</string>
+                <string>reference</string>
               </tuple>
             </value>
         </item>
