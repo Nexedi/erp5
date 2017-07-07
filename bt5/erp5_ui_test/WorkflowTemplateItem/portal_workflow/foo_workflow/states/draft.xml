@@ -36,6 +36,7 @@
                 <string>display_status</string>
                 <string>display_status_action</string>
                 <string>dummy_action</string>
+                <string>dummy_crashing_action</string>
                 <string>dummy_failing_action</string>
                 <string>validate</string>
                 <string>validate_action</string>
