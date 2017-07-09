@@ -224,8 +224,8 @@
                     var graph = JSON.parse(content).graph, node_coordinate = graph.node.N1.coordinate;
                     // Since original coordinates where 0,0 we are now about 0.1,0.1
                     // as we moved 10%
-                    ok(node_coordinate.top - .1 < .1, "Top is ok");
-                    ok(node_coordinate.left - .1 < .1, "Left is ok");
+                    ok(node_coordinate.top - 0.1 < 0.1, "Top is ok");
+                    ok(node_coordinate.left - 0.1 < 0.1, "Left is ok");
                 });
             }
             g.declareGadget("./index.html", {
@@ -251,7 +251,8 @@
                                 // XXX this condition is actually incorrect. We need to wait
                                 // for the event listener to have been registered for the
                                 // dialog buttons. This setTimeout is good enough for now.
-                                return setTimeout(fillDialog, 1e3);
+                                setTimeout(fillDialog, 1e3);
+                                return;
                             }
                             // check displayed values
                             equal($("input[name='id']").val(), "N1");
@@ -290,7 +291,8 @@
             stop();
             function runTest() {
                 return jsplumb_gadget.getContent().then(function(content) {
-                    var node1 = jsplumb_gadget.props.main.querySelector("div[title='Node 1']"), node2 = jsplumb_gadget.props.main.querySelector("div[title='Node 2']");
+                    var node1 = jsplumb_gadget.props.main.querySelector("div[title='Node 1']"),
+                        node2 = jsplumb_gadget.props.main.querySelector("div[title='Node 2']");
                     equal(0, Object.keys(JSON.parse(content).graph.edge).length, "There are no edge at the beginning");
                     jsplumb_gadget.props.jsplumb_instance.connect({
                         source: node1.id,
@@ -334,7 +336,8 @@
                                 // XXX this condition is actually incorrect. We need to wait
                                 // for the event listener to have been registered for the
                                 // dialog buttons. This setTimeout is good enough for now.
-                                return setTimeout(waitForDialogAndDelete, 1e3);
+                                setTimeout(waitForDialogAndDelete, 1e3);
+                                return;
                             }
                             equal(1, $("input[value='Delete']").length, "There should be one delete button");
                             $("input[value='Delete']").click();
@@ -378,7 +381,8 @@
                                 // XXX this condition is actually incorrect. We need to wait
                                 // for the event listener to have been registered for the
                                 // dialog buttons. This setTimeout is good enough for now.
-                                return setTimeout(fillDialog, 1e3);
+                                setTimeout(fillDialog, 1e3);
+                                return;
                             }
                             equal($("input[name='id']").val(), "N1");
                             // change the id
@@ -448,7 +452,8 @@
                                 // XXX this condition is actually incorrect. We need to wait
                                 // for the event listener to have been registered for the
                                 // dialog buttons. This setTimeout is good enough for now.
-                                return setTimeout(fillDialog, 1e3);
+                                setTimeout(fillDialog, 1e3);
+                                return;
                             }
                             // check displayed values
                             equal($("input[name='id']").val(), node_id);
@@ -520,7 +525,8 @@
                                 // XXX this condition is actually incorrect. We need to wait
                                 // for the event listener to have been registered for the
                                 // dialog buttons. This setTimeout is good enough for now.
-                                return setTimeout(waitForDialogAndDelete, 1e3);
+                                setTimeout(waitForDialogAndDelete, 1e3);
+                                return;
                             }
                             equal(1, $("input[value='Delete']").length, "There should be one delete button");
                             $("input[value='Delete']").click();
@@ -558,11 +564,11 @@
                 return jsplumb_gadget.getContent();
             }).then(function(content) {
                 $.each(JSON.parse(content).graph.node, function(i, node){
-                     ok(node.coordinate.top !== undefined, "Node have top coordinate")
-                     ok(0 <= node.coordinate.top <= 1, "Node top coordinate is between [0..1]")
-                     ok(node.coordinate.left !== undefined, "Node have left coordinate")
-                     ok(0 <= node.coordinate.left <= 1, "Node left coordinate is between [0..1]")
-                })
+                     ok(node.coordinate.top !== undefined, "Node have top coordinate");
+                     ok(0 <= node.coordinate.top <= 1, "Node top coordinate is between [0..1]");
+                     ok(node.coordinate.left !== undefined, "Node have left coordinate");
+                     ok(0 <= node.coordinate.left <= 1, "Node left coordinate is between [0..1]");
+                });
             }).fail(error_handler).always(start);
         });
     });

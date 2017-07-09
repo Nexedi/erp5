@@ -49,13 +49,15 @@
              min_x=100, max_x=0, min_y=100, max_y=0;
          // if graph is empty, no need to layout
          if (Object.keys(graph_data.edge).length === 0) {
-            return resolve(graph_data);
+            resolve(graph_data);
+            return;
          }
          // make a Springy graph with our graph
          $.each(graph_data.node, function(key, value) {
            if (value.coordinate && value.coordinate.top && value.coordinate.left) {
              // graph already has a layout, no need to layout again
-             return resolve(graph_data);
+             resolve(graph_data);
+             return;
            }
            springy_nodes[key] = springy_graph.newNode({node_id: key});
          });
@@ -549,7 +551,7 @@
      // XXX incorrect, we need to display this dialog to be able
      // to delete a node
      if (gadget.props.data.class_definition[node_data._class] === undefined) {
-       return;
+       return false;
      }
      schema = expandSchema(gadget.props.data.class_definition[node_data._class], gadget.props.data);
      if (node_edit_popup.length !== 0) {
