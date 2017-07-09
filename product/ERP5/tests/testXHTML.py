@@ -53,7 +53,15 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                           'renderjs.js','jio.js','rsvp.js','handlebars.js', 
                           'pdf_js/build/pdf.js', 'pdf_js/build/pdf.worker.js',
                           'pdf_js/compatibility.js', 'pdf_js/debugger.js',
-                          'pdf_js/viewer.js', 'pdf_js/l10n.js')
+                          'pdf_js/viewer.js', 'pdf_js/l10n.js',
+                          'dream_graph_editor/lib/handlebars.min.js',
+                          'dream_graph_editor/lib/jquery-ui.js',
+                          'dream_graph_editor/lib/jquery.js',
+                          'dream_graph_editor/lib/jquery.jsplumb.js',
+                          'dream_graph_editor/lib/jquery.simulate.js',
+                          'dream_graph_editor/lib/qunit.js',
+                          'dream_graph_editor/lib/springy.js',
+                          )
   JSL_IGNORE_SKIN_LIST = ('erp5_ace_editor', 'erp5_code_mirror',
                           'erp5_fckeditor', 'erp5_jquery', 'erp5_jquery_ui',
                           'erp5_svg_editor', 'erp5_xinha_editor')
@@ -429,6 +437,7 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_xinha_editor',
       'erp5_svg_editor',
       'erp5_jquery_sheet_editor',
+      'erp5_graph_editor',
       'erp5_web_ung_core',
       'erp5_web_ung_theme',
       'erp5_web_ung_role',
