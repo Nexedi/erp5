@@ -47,16 +47,22 @@
              springy_nodes = {},
              drawn_nodes = {},
              min_x=100, max_x=0, min_y=100, max_y=0;
+         // if graph is empty, no need to layout
+         if (Object.keys(graph_data.edge).length === 0) {
+            return resolve(graph_data);
+         }
          // make a Springy graph with our graph
          $.each(graph_data.node, function(key, value) {
-           if (value.coordinate) {
+           if (value.coordinate && value.coordinate.top && value.coordinate.left) {
              // graph already has a layout, no need to layout again
              return resolve(graph_data);
            }
            springy_nodes[key] = springy_graph.newNode({node_id: key});
          });
          $.each(graph_data.edge, function(key, value) {
-           springy_graph.newEdge(springy_nodes[value.source], springy_nodes[value.destination]);
+           springy_graph.newEdge(
+             springy_nodes[value.source],
+             springy_nodes[value.destination]);
          });
 
          var layout = new Springy.Layout.ForceDirected(springy_graph, 400.0, 400.0, 0.5);
