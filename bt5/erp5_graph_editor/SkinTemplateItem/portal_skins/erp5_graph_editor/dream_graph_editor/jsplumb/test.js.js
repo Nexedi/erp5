@@ -107,6 +107,27 @@
                 }
             }
         }
+    }, sample_graph_no_node_coodinate = {
+        edge: {
+            edge1: {
+                _class: "Example.Edge",
+                source: "N1",
+                destination: "N2",
+                color: "blue"
+            }
+        },
+        node: {
+            N1: {
+                _class: "Example.Node",
+                name: "Node 1",
+                shape: "square"
+            },
+            N2: {
+                _class: "Example.Node",
+                name: "Node 2",
+                shape: "circle"
+            }
+        }
     }, sample_graph_not_connected = {
         edge: {},
         node: {
@@ -124,6 +145,9 @@
     }, sample_data_graph = JSON.stringify({
         class_definition: sample_class_definition,
         graph: sample_graph
+    }), sample_data_graph_no_node_coordinate = JSON.stringify({
+        class_definition: sample_class_definition,
+        graph: sample_graph_no_node_coodinate
     }), sample_data_graph_not_connected = JSON.stringify({
         class_definition: sample_class_definition,
         graph: sample_graph_not_connected
@@ -521,6 +545,25 @@
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_empty_graph);
             }).then(runTest).fail(error_handler).always(start);
+        });
+        test("Graph is automatically layout", function() {
+            var jsplumb_gadget;
+            stop();
+            g.declareGadget("./index.html", {
+                element: document.querySelector("#qunit-fixture")
+            }).then(function(new_gadget) {
+                jsplumb_gadget = new_gadget;
+                return jsplumb_gadget.render(sample_data_graph_no_node_coordinate);
+            }).then(function() {
+                return jsplumb_gadget.getContent();
+            }).then(function(content) {
+                $.each(JSON.parse(content).graph.node, function(i, node){
+                     ok(node.coordinate.top !== undefined, "Node have top coordinate")
+                     ok(0 <= node.coordinate.top <= 1, "Node top coordinate is between [0..1]")
+                     ok(node.coordinate.left !== undefined, "Node have left coordinate")
+                     ok(0 <= node.coordinate.left <= 1, "Node left coordinate is between [0..1]")
+                })
+            }).fail(error_handler).always(start);
         });
     });
 })(rJS, JSON, QUnit, RSVP, jQuery);
