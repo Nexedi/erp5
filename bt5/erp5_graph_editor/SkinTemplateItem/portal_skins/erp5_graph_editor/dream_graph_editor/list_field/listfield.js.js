@@ -14,16 +14,16 @@
     }).declareMethod("render", function(options) {
         var select = this.element.getElementsByTagName("select")[0], i, template, tmp = "";
         select.setAttribute("name", options.key);
-        for (i = 0; i < options.property_definition.enum.length; i += 1) {
-            if (options.property_definition.enum[i] === options.value) {
+        for (i = 0; i < options.property_definition['enum'].length; i += 1) {
+            if (options.property_definition['enum'][i] === options.value) {
                 template = selected_option_template;
             } else {
                 template = option_template;
             }
             // XXX value and text are always same in json schema
             tmp += template({
-                value: options.property_definition.enum[i],
-                text: options.property_definition.enum[i]
+                value: options.property_definition['enum'][i],
+                text: options.property_definition['enum'][i]
             });
         }
         select.innerHTML += tmp;
