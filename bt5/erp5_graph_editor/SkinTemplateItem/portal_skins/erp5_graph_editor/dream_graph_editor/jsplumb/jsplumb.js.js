@@ -826,13 +826,12 @@
        Container: this.props.main
      });
      draggable(gadget);
-     
-     this.props.nodes_click_monitor = RSVP.Monitor();
+
+     this.props.nodes_click_monitor = this.__monitor;
      return RSVP.all([waitForDrop(gadget),
        waitForConnection(gadget),
        waitForConnectionDetached(gadget),
-       waitForConnectionClick(gadget),
-       gadget.props.nodes_click_monitor
+       waitForConnectionClick(gadget)
      ]);
    });
 
