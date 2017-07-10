@@ -212,6 +212,11 @@ if block_id == 'S21.G00.23':
 if block_id == 'S21.G00.30':
   birth_country_code = getCountryCode(target)
   address = target.getDefaultAddressStreetAddress().strip().split('\n')
+  if ',' in address[0]:
+    address_complement = address[0].split(',', 1)[1].strip()
+    address[0] = address[0].split(',', 1)[0]
+  else:
+    address_complement = ''
   social_code = target.getSocialCode('')
   rubric_value_dict["S21.G00.30.001"] = ("" if not social_code else "".join(social_code.split(' '))[:13])
   rubric_value_dict["S21.G00.30.002"] = target.getLastName()
@@ -229,7 +234,7 @@ if block_id == 'S21.G00.30':
   rubric_value_dict["S21.G00.30.013"] = enrollment_record.getUeCode()
   rubric_value_dict["S21.G00.30.014"] = enrollment_record.getBirthDepartment()
   rubric_value_dict["S21.G00.30.015"] = enrollment_record.getBirthCountryCode()
-  rubric_value_dict["S21.G00.30.016"] = ''
+  rubric_value_dict["S21.G00.30.016"] = address_complement
   rubric_value_dict["S21.G00.30.017"] = (' '.join(address[1:]).strip() if len(address) > 1 else '')
   rubric_value_dict["S21.G00.30.018"] = target.getDefaultEmailCoordinateText() or ''
   rubric_value_dict["S21.G00.30.019"] = ''
@@ -248,6 +253,8 @@ if block_id == 'S21.G00.40':
   rubric_value_dict["S21.G00.40.008"] = enrollment_record.getSpecialContractType()
   rubric_value_dict["S21.G00.40.009"] = '00000'
   rubric_value_dict["S21.G00.40.010"] = ('' if enrollment_record.getContractType() not in ('02', '29') else formatDate(enrollment_record.getCareerStopDate()))
+  if enrollment_record.getCareerStopDate() and enrollment_record.getCareerStopDate() <= context.getEffectiveDate():
+    rubric_value_dict["S21.G00.40.010"] = formatDate(enrollment_record.getCareerStopDate())
   rubric_value_dict["S21.G00.40.011"] = enrollment_record.getWorkingUnitType()
   rubric_value_dict["S21.G00.40.012"] = formatFloat(enrollment_record.getStandardWorkingUnit())
   rubric_value_dict["S21.G00.40.013"] = formatFloat(enrollment_record.getWorkingUnitQuantity())
@@ -379,6 +386,10 @@ if block_id == 'S21.G00.71':
     code = 'RETA'
   elif enrollment_record.getComplementaryRetirementStatus() == '01':
     code = 'RETC'
+  elif enrollment_record.getComplementaryRetirementStatus() == '99':
+    code = '90000'
+  else:
+    raise ValueError('Unsupported Code for Complementary Retirement Status in Enrollement Record %s' % enrollment_record.absolute_url())
   rubric_value_dict['S21.G00.71.002'] = code
 
 if block_id == 'S21.G00.78':
