@@ -1,0 +1,30 @@
+<html>
+<head><title>Graph Editor Qunit Test</title></head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="4">
+Run existing qunit test in zelenium framework, to easily integrate it in current test suite.
+</td></tr>
+</thead><tbody>
+
+<tr>
+  <td>open</td>
+  <td tal:content="string:${context/portal_url}/dream_graph_editor/jsplumb/test.html"></td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Tests completed in </td>
+  <td>30000</td>
+</tr>
+<tr>
+  <td>assertText</td>
+  <td>css=#qunit-testresult span.failed</td>
+  <td>0</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
