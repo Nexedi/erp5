@@ -109,7 +109,7 @@ def makeIndividualContributionBlock(movement, category):
   if category in ('018', '063', '064', '059'):
     quantity = (getattr(movement, 'employer_total_price', 0) + getattr(movement, 'employee_total_price', 0)) * -1
     if category == '018':
-      assert quantity < 0.
+      assert quantity <= 0., "Quantity in %s should be negative" % movement.absolute_url()
       base = movement.base
   else:
     base = movement.base
@@ -139,6 +139,9 @@ def makeOtherBonusBlock(movement, category):
   }
 
 for movement in context.PaySheetTransaction_getMovementList():
+  if not movement.base:
+    continue
+
   contribution_set = set(movement.getBaseContributionValueList())
 
   ctp_set = all_ctp_set.intersection(contribution_set)

@@ -191,6 +191,9 @@ else:
     dsn_file.append(getDSNBlockDict(block_id='S21.G00.23',
                                     target=aggregated_social_contribution_dict[ctp_code]))
 
+dsn_file.append(getDSNBlockDict(block_id='S21.G00.42', target=establishment))
+dsn_file.append(getDSNBlockDict(block_id='S21.G00.44', target=establishment))
+
 for employee_data_dict, paysheet_data_dict in employee_result_list:
   enrollment_record = employee_data_dict['enrollment_record']
   employee = employee_data_dict['person_relative_url']

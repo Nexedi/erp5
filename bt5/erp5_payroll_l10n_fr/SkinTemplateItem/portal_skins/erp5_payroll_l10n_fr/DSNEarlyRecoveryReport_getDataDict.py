@@ -26,7 +26,7 @@ if block_id == 'S20.G00.05':
   rubric_value_dict['S20.G00.05.001'] = kw['dsn_type']
   rubric_value_dict['S20.G00.05.002'] = '01'
   rubric_value_dict['S20.G00.05.003'] = '11'
-  rubric_value_dict['S20.G00.05.004'] = '1' # TODO : to increment for each new event DSN
+  rubric_value_dict['S20.G00.05.004'] = kw['order']
   rubric_value_dict['S20.G00.05.006'] = ''
   rubric_value_dict['S20.G00.05.007'] = formatDate(DateTime(now.year(), now.month(), now.day()))
   rubric_value_dict['S20.G00.05.009'] = ''
@@ -54,11 +54,14 @@ elif block_id == 'S21.G00.11':
 
 # Individu
 if block_id == 'S21.G00.30':
-  rubric_value_dict["S21.G00.30.001"] = ''.join(target.getSocialCode().split(' '))[:13] # sometimes there are spaces in textfield
+  social_code = target.getSocialCode('')
+  rubric_value_dict["S21.G00.30.001"] = ("" if not social_code else "".join(social_code.split(' '))[:13])
+  rubric_value_dict["S21.G00.30.001"] = ''.join(target.getSocialCode('').split(' '))[:13] # sometimes there are spaces in textfield
   rubric_value_dict["S21.G00.30.002"] = target.getLastName()
   rubric_value_dict["S21.G00.30.003"] = '' # Nom d'usage
   rubric_value_dict["S21.G00.30.004"] = ' '.join([target.getFirstName(), target.getMiddleName() or '']).strip()
   rubric_value_dict["S21.G00.30.006"] = formatDate(target.getStartDate())
+  rubric_value_dict["S21.G00.30.020"] = target.getCareerReference('')
 
 # Contrat
 if block_id == 'S21.G00.40':
