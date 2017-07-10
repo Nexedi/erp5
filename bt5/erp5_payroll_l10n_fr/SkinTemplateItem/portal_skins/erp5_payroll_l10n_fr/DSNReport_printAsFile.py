@@ -1,4 +1,6 @@
-data = context.getTextContent().decode('utf-8').encode('iso-8859-1')
+import unicodedata
+
+data = unicodedata.normalize('NFKD', context.getTextContent().decode('utf-8')).encode('iso-8859-1', 'ignore')
 
 # Update sending mode "on the fly"
 dsn_line_list = data.split('\n')
