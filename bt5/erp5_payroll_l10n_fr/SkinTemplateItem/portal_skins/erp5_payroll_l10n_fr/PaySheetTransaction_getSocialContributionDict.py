@@ -62,7 +62,7 @@ def makeCTPBlock(movement, category):
     'code': category,
     'corporate_registration_code': movement.getSourceSectionValue(),
     'cap': ('921' if category[-1] == 'P' else '920'),
-    'rate': (abs(getattr(movement, 'employer_price') * 100) if category in ('100A', '900D', '901D', '863A') else ''),
+    'rate': (abs(getattr(movement, 'employer_price') * 100) if category in ('100A', '900D', '901D', '863A', '734A') else ''),
     'base': movement.base,
     'quantity': quantity,
     'zip_code': (INSEE_CODE if category == '900T' else ''),
