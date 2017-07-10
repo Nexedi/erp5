@@ -11,6 +11,7 @@ catalog_kw = {'query': ComplexQuery(Query(start_date=">=%s" % from_date.strftime
                                     Query(stop_date="<=%s" % to_date.strftime("%Y/%m/%d")),
                                     Query(destination_trade_uid=Query(destination_trade_uid=destination_trade.getUid())),
                                     Query(simulation_state='!=cancelled'),
+                                    Query(simulation_state='!=deleted'),
                                     logical_operator="AND")}
 
 paysheet_list = portal.accounting_module.searchFolder(portal_type="Pay Sheet Transaction", **catalog_kw)
