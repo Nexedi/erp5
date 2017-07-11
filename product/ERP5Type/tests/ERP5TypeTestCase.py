@@ -429,10 +429,6 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       property_sheet_set.add(property_sheet_name)
       ti.setTypePropertySheetList(list(property_sheet_set))
 
-      # keep a mapping type info name -> property sheet list, to remove them in
-      # tear down.
-      if not hasattr(self, '_added_property_sheets'):
-        self._added_property_sheets = {}
       # remember that we added a property sheet for tear down
       if getattr(self, '_added_property_sheets', None) is None:
         self._added_property_sheets = {}
