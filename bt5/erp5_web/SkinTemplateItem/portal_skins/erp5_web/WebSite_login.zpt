@@ -10,8 +10,9 @@
              came_from_valid python: not came_from or url_topmost_document.isURLAncestorOf(came_from);">
     <tal:block tal:condition="isAnon">
       <tal:block tal:define="dummy python: response.expireCookie('__ac', path='/');
-                 url python: '%s/login_form?portal_status_message=%s' % (here.absolute_url(), here.Base_translateString('Login and/or password is incorrect.'));
-                 url python: came_from and  '%s&amp;came_from=%s' % (url, came_from) or url;
+                 parameter_dict python: {'portal_status_message': here.Base_translateString('Login and/or password is incorrect.')};
+                 parameter_dict python: parameter_dict.update({'came_from': came_from}) if came_from else parameter_dict;
+                 url python: here.constructUrlFor(form_id='login_form', parameter_dict=parameter_dict);
                  dummy python: response.redirect(url);" />
     </tal:block>
     <tal:block tal:condition="not: isAnon">
@@ -19,7 +20,7 @@
         <tal:block tal:define="dummy python: response.redirect(came_from or here.getPermanentURL(here));" />
       </tal:block>
       <tal:block tal:condition="not: came_from_valid">
-        <tal:block tal:define="dummy python: response.redirect('%s?portal_status_message=%s' % (url_topmost_document.absolute_url(), here.Base_translateString('Redirection to an external site prevented.')));" />
+        <tal:block tal:define="dummy python: response.redirect(url_topmost_document.constructUrlFor(parameter_dict={'portal_status_message': here.Base_translateString('Redirection to an external site prevented.')}))" />
       </tal:block>
     </tal:block>
   </tal:block>
