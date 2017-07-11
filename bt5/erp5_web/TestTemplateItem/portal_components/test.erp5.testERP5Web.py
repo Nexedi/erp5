@@ -1004,28 +1004,28 @@ Hé Hé Hé!""", page.asText().strip())
     request = self.portal.REQUEST
     request['HTTP_REFERER'] = ''
     website_absolute_url = website.absolute_url()
-    self.assertEqual(website_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(websection_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(webpage_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(websection_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(webpage_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     self.assertEqual(website_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(websection_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(webpage_fr.Base_doLanguage('en'), website_absolute_url)
-    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(websection_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
-    self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(websection_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
+    self.assertEqual(webpage_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     self.assertEqual(website_bg_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(websection_bg_fr.Base_doLanguage('en'), website_absolute_url)
     self.assertEqual(webpage_bg_fr.Base_doLanguage('en'), website_absolute_url)
 
     # change language with referer
     request['HTTP_REFERER'] = website_fr.absolute_url()
-    self.assertEqual(website_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     request['HTTP_REFERER'] = websection_fr.absolute_url()
     self.assertEqual(websection_fr.Base_doLanguage('de'), websection_fr.absolute_url().replace('/fr/', '/de/'))
     request['HTTP_REFERER'] = webpage_fr.absolute_url()
     self.assertEqual(webpage_fr.Base_doLanguage('de'), webpage_fr.absolute_url().replace('/fr/', '/de/'))
     request['HTTP_REFERER'] = website_bg_fr.absolute_url()
-    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%s/de' % website_absolute_url)
+    self.assertEqual(website_bg_fr.Base_doLanguage('de'), '%sde/' % website_absolute_url)
     request['HTTP_REFERER'] = websection_bg_fr.absolute_url()
     self.assertEqual(websection_bg_fr.Base_doLanguage('de'), websection_bg_fr.absolute_url().replace('/bg/fr/', '/de/'))
     request['HTTP_REFERER'] = webpage_bg_fr.absolute_url()
@@ -1043,9 +1043,9 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(self.publish(websection_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
                      websection_fr.absolute_url())
     self.assertEqual(self.publish(webpage_bg_en_fr.absolute_url(relative=1)).getHeader('location'),
-                     webpage_fr.absolute_url())
+                     webpage_fr.absolute_url() + '/')
     self.assertEqual(self.publish(website_bg_en_fr.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
-                     website_fr.absolute_url()+'?a=b&c=d')
+                     website_fr.absolute_url() +'?a=b&c=d')
 
     # /bg/en/xxx should be redirected to /xxx where en is the default language
     website_bg_en = self.portal.restrictedTraverse(
@@ -1059,7 +1059,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(self.publish(websection_bg_en.absolute_url(relative=1)).getHeader('location'),
                      websection.absolute_url())
     self.assertEqual(self.publish(webpage_bg_en.absolute_url(relative=1)).getHeader('location'),
-                     webpage.absolute_url())
+                     webpage.absolute_url() + '/')
     self.assertEqual(self.publish(websection_bg_en.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
                      websection.absolute_url()+'?a=b&c=d')
 
@@ -1075,9 +1075,9 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEqual(self.publish(websection_en.absolute_url(relative=1)).getHeader('location'),
                      websection.absolute_url())
     self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)).getHeader('location'),
-                     webpage.absolute_url())
+                     webpage.absolute_url() + '/')
     self.assertEqual(self.publish(webpage_en.absolute_url(relative=1)+'?a=b&c=d').getHeader('location'),
-                     webpage.absolute_url()+'?a=b&c=d')
+                     webpage.absolute_url()+'/?a=b&c=d')
 
   def test_13_DocumentCache(self):
     """
@@ -1291,7 +1291,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.setupWebSite()
     websection = self.setupWebSection()
 
-    websection_url = '%s/%s' % (self.portal.getId(), websection.getRelativeUrl())
+    websection_url = '%s/%s' % (self.portal.getId(), websection.absolute_url(relative=1))
 
     # connect as administrator and check that only developper_mode is enable
     response = self.publish(websection_url, 'administrator:administrator')
