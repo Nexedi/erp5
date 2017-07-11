@@ -469,7 +469,6 @@ class SyncMLSubscription(XMLObject):
       #document = None  # For now, do no try to retrieve previous version of document
       # XXX this has to be managed with a property
       # XXX Some improvement can also be done to retrieve a list of document at once
-
     # Get the data
     if 'xml_data' in action:
       # Rebuild an Element
@@ -485,7 +484,7 @@ class SyncMLSubscription(XMLObject):
         signature.appendPartialData(incoming_data)
         incoming_data = signature.getPartialData()
         signature.setPartialData(None)
-
+      __traceback_info__ = (gid, document, incoming_data, action['command'])
       # Browse possible actions
       if action["command"] == 'Add':
         status_code = "item_added"  # Default status code for addition
