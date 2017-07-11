@@ -9,7 +9,7 @@ if website is not None and website.isStaticLanguageSelection():
   # Web Mode
   root_website = website.getOriginalDocument()
   default_language = root_website.getDefaultAvailableLanguage()
-  root_website_url = root_website.absolute_url()
+  root_website_url = root_website.Base_constructUrlFor()
   website_url_pattern = r'^%s(?:%s)*(/|$)' % (
     re.escape(root_website_url),
     '|'.join('/' + re.escape(x) for x in root_website.getAvailableLanguageList()))
@@ -22,9 +22,9 @@ if website is not None and website.isStaticLanguageSelection():
                             referer_url)
   else:
     if select_language == default_language:
-      redirect_url = root_website_url
+      redirect_url = root_website_url + '/'
     else:
-      redirect_url = root_website_url + '/' + select_language
+      redirect_url = root_website_url + '/' + select_language + '/'
   return context.REQUEST.RESPONSE.redirect(redirect_url)
 else:
   # ERP5 Mode

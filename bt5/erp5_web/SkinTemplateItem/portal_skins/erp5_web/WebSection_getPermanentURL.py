@@ -60,4 +60,6 @@ if document.getValidationState() not in validation_state:
 web_section = context.getWebSectionValue()
 if web_section is None:
   web_section = context
-return "%s/%s" % (web_section.absolute_url(), reference)
+return web_section.Base_constructUrlFor(
+  document_reference=reference
+)

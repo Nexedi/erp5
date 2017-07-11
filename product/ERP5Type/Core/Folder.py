@@ -521,7 +521,7 @@ class FolderMixIn(ExtensionClass.Base):
       not access any document in given path,
       hence it does not compute the inner acquisition path.
     """
-    document_url = self.absolute_url()
+    document_url = self.Base_constructUrlFor()
     parsed_given_url = urlparse(given_url)
     parsed_document_url = urlparse(document_url)
     # XXX note that the following check:
