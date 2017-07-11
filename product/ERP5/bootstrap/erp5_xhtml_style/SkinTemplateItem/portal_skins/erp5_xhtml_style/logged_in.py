@@ -4,8 +4,10 @@ if portal.portal_skins.updateSkinCookie():
 url = REQUEST.get("came_from")
 if portal.portal_membership.isAnonymousUser():
   RESPONSE.expireCookie("__ac", path="/")
+  absolute_url = context.absolute_url()
+  absolute_url = absolute_url[:-1] if absolute_url.endswith('/') else absolute_url
   url = "%s/login_form?portal_status_message=%s" % (
-    context.absolute_url(),
+    absolute_url,
     context.Base_translateString("Login and/or password is incorrect.")
     + ("&amp;came_from=" + url if url else ""))
 elif not url:
