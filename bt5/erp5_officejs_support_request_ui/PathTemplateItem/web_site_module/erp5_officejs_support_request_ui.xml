@@ -29,6 +29,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -38,6 +39,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -47,6 +49,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -56,6 +59,7 @@
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Authenticated</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -578,9 +582,7 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>Deleted objects: []</string> </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -588,7 +590,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.63241.32836.58845</string> </value>
+                <value> <string>959.56722.31338.13107</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -606,7 +608,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1493912552.82</float>
+                        <float>1497540038.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

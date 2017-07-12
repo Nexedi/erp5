@@ -1,105 +1,206 @@
-/*global window, rJS, RSVP, URI*/
-/*jslint indent: 2, maxerr: 3, nomen: true */
-(function (window, rJS, RSVP, URI) {
+/*global document, window, Option, rJS, RSVP, Chart*/
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // handle acquisition
-    /////////////////////////////////////////////////////////////////
-    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
-    .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-
-    .allowPublicAcquisition('updateHeader', function () {
-      return;
-    })
-    .allowPublicAcquisition('getUrlParameter', function (argument_list) {
-      return this.getUrlParameter(argument_list)
-        .push(function (result) {
-          if ((result === undefined) && (
-              (argument_list[0] === 'field_listbox_support_request_sort_list:json') ||
-                (argument_list[0] === 'field_listbox_task_report_sort_list:json')
-            )) {
-            return [['modification_date', 'descending']];
-          }
-          return result;
+    .ready(function (gadget) {
+      gadget.property_dict = {};
+      return gadget.getElement()
+        .push(function (element) {
+          gadget.property_dict.element = element;
+          gadget.property_dict.deferred = RSVP.defer();
         });
     })
+    /////////////////////////////////////////////////////////////////
+    // Acquired methods
+    /////////////////////////////////////////////////////////////////
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("translateHtml", "translateHtml")
+    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("updateConfiguration", "updateConfiguration")
+    .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+
+    .allowPublicAcquisition("updateHeader", function () {
+      return;
+    })
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this;
-      // We want to force the user to log in right after opening the app if not already logged in.
-      // This can be done by access something which needs credential in the home page, which must force user to login.
-      // The line in below is a way to cheat, because there has nothing to do with this fetched information.
-      // When we truely show some confidential things in the homepage on future, we can remove this line.
-      gadget.jio_getAttachment('support_request_module', 'links');
-      return gadget.updateHeader({page_title: 'Support Requests Home Page'});
-    })
-    .onEvent('submit', function () {
-      var form_gadget = this,
-        form_id,
-        action;
-
-      return form_gadget.notifySubmitting()
+      return new RSVP.Queue()
         .push(function () {
-          return form_gadget.jio_getAttachment('support_request_module', 'links');
+          return RSVP.all([
+            gadget.jio_getAttachment("support_request_module", "links"),
+            gadget.getDeclaredGadget("last")
+          ]);
         })
-        .push(function (links) {
-          var create_content_url = links._links.action_object_new_content_action.href;
-          return form_gadget.jio_getAttachment('support_request_module', create_content_url);
-        })
-        .push(function (erp5_doc) {
-          action = erp5_doc._embedded._view._actions.put;
-          form_id = erp5_doc._embedded._view.form_id;
-        })
-        .push(function () {
-          var data = {};
+        .push(function (result_list) {
+          var i,
+            erp5_document = result_list[0],
+            view_list = erp5_document._links.action_object_view || [],
+            last_href;
 
-          data[form_id.key] = form_id['default'];
-          // XXX Hardcoded
-          data.dialog_id = form_id['default'];
-          data.dialog_method = action.action;
-          //XXX hack for redirect, difined in form
-          data.field_your_portal_type = "Support Request";
-
-          return form_gadget.jio_putAttachment(
-            "support_request_module",
-            action.href,
-            data
-          );
-        })
-        .push(function (evt) {
-          var location = evt.target.getResponseHeader("X-Location"),
-            jio_key,
-            list = [],
-            message;
-          try {
-            message = JSON.parse(evt.target.response).portal_status_message;
-          } catch (ignore) {
+          if (view_list.constructor !== Array) {
+            view_list = [view_list];
           }
-          list.push(form_gadget.notifySubmitted(message));
 
-          if (location === undefined || location === null) {
-            // No redirection, stay on the same document
-            list.push(form_gadget.redirect({command: 'change', options: {view: "view", page: undefined, editable: form_gadget.state.editable}}));
-          } else {
-            jio_key = new URI(location).segment(2);
-            if (form_gadget.state.id === jio_key) {
-              // Do not update navigation history if dialog redirect to the same document
-              list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, view: "view", page: undefined, editable: form_gadget.state.editable}}));
-            } else {
-              list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: jio_key, editable: form_gadget.state.editable}}));
+          for (i = 0; i < view_list.length; i += 1) {
+            if (view_list[i].name === 'view_last_support_request') {
+              last_href = view_list[i].href;
             }
           }
-          return RSVP.all(list);
+          if (last_href === undefined) {
+            throw new Error('Cant find the list document view');
+          }
+
+          return RSVP.all([
+            result_list[1].render({
+              jio_key: "support_request_module",
+              view: last_href
+            })
+          ]);
+        })
+        .push(function () {
+          return gadget.updateHeader({
+            page_title: 'Support Requests Home Page'
+          });
+        });
+    })
+    .declareService(function () {
+      var gadget = this;
+      return gadget.getSetting("hateoas_url")
+        .push(function (hateoas_url) {
+          return gadget.jio_getAttachment(
+            'support_request_module',
+            hateoas_url + 'support_request_module'
+              + "/SupportRequest_getSupportRequestStatisticsAsJson"
+          );
+        })
+        .push(function (result) {
+          new Chart(document.getElementById("bar-chart-grouped"), {
+            type: 'bar',
+            data: {
+              labels: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+              datasets: [
+                {
+                  label: "Opened",
+                  backgroundColor: "#3e95cd",
+                  data: [
+                    result.le2.validated,
+                    result['2to7'].validated,
+                    result['7to30'].validated,
+                    result.gt30.validated
+                  ]
+                },
+                {
+                  label: "Submitted",
+                  backgroundColor: "#e8c3b9",
+                  data: [
+                    result.le2.submitted,
+                    result['2to7'].submitted,
+                    result['7to30'].submitted,
+                    result.gt30.submitted
+                  ]
+                },
+                {
+                  label: "Suspended",
+                  backgroundColor: "#3cba9f",
+                  data: [
+                    result.le2.suspended,
+                    result['2to7'].suspended,
+                    result['7to30'].suspended,
+                    result.gt30.suspended
+                  ]
+                },
+                {
+                  label: "Closed",
+                  backgroundColor: "#8e5ea2",
+                  data: [
+                    result.le2.invalidated,
+                    result['2to7'].invalidated,
+                    result['7to30'].invalidated,
+                    result.gt30.invalidated
+                  ]
+                }
+              ]
+            },
+            options: {
+              responsive : true,
+              title: {
+                display: true,
+                text: 'Support Requests activities'
+              }
+            }
+          });
+          new Chart(document.getElementById("pie-chart"), {
+            type: 'pie',
+            data: {
+              labels: ["Opened", "Closed", "Suspended", "Submitted"],
+              datasets: [{
+                label: "All Support Requests Status",
+                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"],
+                data: [result.validated, result.invalidated, result.suspended, result.submitted]
+              }]
+            },
+            options: {
+              responsive : true,
+              title: {
+                display: true,
+                text: 'Support Requests state since last 30 days'
+              }
+            }
+          });
+        });
+    })
+    .onEvent('change', function (evt) {
+      if (evt.target.id === "field_your_project") {
+        var gadget = this;
+        return gadget.getSetting("hateoas_url")
+          .push(function (hateoas_url) {
+            return gadget.jio_getAttachment(
+              'support_request_module',
+              hateoas_url + 'support_request_module'
+                + "/SupportRequest_getSupportTypeList"
+                + "?project_id=" + evt.target.value + "&json_flag=True"
+            );
+          })
+          .push(function (sp_list) {
+            var i,
+              j,
+              sp_select = document.getElementById('field_your_resource');
+            for (i = sp_select.options.length - 1; i >= 0; i -= 1) {
+              sp_select.remove(i);
+            }
+
+            for (j = 0; j < sp_list.length; j += 1) {
+              sp_select.options[j] = new Option(sp_list[j][0], sp_list[j][1]);
+            }
+          });
+      }
+    }, false, false)
+    .onEvent('submit', function () {
+      var gadget = this;
+      return gadget.jio_getAttachment('support_request_module', 'links')
+        .push(function (links) {
+          var fast_create_url = links._links.view[2].href;
+          return gadget.getUrlFor({
+            command: 'display',
+            options: {
+              jio_key: "support_request_module",
+              view: fast_create_url,
+              editable: true,
+              page: 'support_request_fast_view_dialog'
+            }
+          });
+        })
+        .push(function (url) {
+          window.location.href = url;
         });
     });
-}(window, rJS, RSVP, URI));
+
+}(window, rJS, RSVP));

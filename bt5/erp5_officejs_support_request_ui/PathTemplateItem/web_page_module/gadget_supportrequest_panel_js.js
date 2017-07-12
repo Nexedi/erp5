@@ -96,7 +96,7 @@
               context.getUrlFor({command: 'display', options: {page: "preference"}}),
               context.getUrlFor({command: 'display', options: {page: "logout"}}),
               context.getUrlFor({command: 'display', options: {page: "search"}}),
-              context.getUrlFor({command: 'display', options: {jio_key: "support_request_module"}})
+              context.getUrlFor({command: 'display', options: {jio_key: "support_request_module", page: "list"}})
             ]);
           })
           .push(function (result_list) {
