@@ -1962,7 +1962,8 @@ class TemplateTool (BaseTool):
 
       for item in to_install_path_item_list:
         item.isIndexable = ConstantGetter('isIndexable', value=False)
-        installation_process._setObject(item.getId(), aq_base(item),
+        new_id = new_installation_state.generateNewId()
+        installation_process._setObject(new_id, aq_base(item),
                                         suppress_events=True)
 
       error_list = self.compareOldStateToOFS(installation_process, old_installation_state)
