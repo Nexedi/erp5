@@ -2261,10 +2261,6 @@ class ERP5Generator(PortalGenerator):
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
     if not kw.get('reindex', 1):
-      return
-    # When no SQL connection was define on the site,
-    # we don't want to make it crash
-    if p.erp5_sql_connection_type is not None:
       setattr(p, 'isIndexingRequired', ConstantGetter('isIndexingRequired', value=True))
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
