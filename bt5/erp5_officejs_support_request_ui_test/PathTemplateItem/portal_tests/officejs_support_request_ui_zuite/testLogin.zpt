@@ -9,7 +9,6 @@
 <tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<!-- Run the test as anonymous -->
 <tr>
   <td>open</td>
   <td>${base_url}/ERP5Site_addManagerAclUserIfNotExisting</td>

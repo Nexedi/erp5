@@ -29,6 +29,7 @@
   <td>//input[@data-i18n="[value]Proceed"]</td>
   <td></td>
 </tr>
+field_my_description
 <tr>
   <td>type</td>
   <td>//input[@name='field_your_title']</td>
@@ -50,6 +51,11 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
   <td>//input[@data-i18n='[value]Proceed']</td>
   <td></td>
@@ -60,38 +66,23 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Comments:</td>
+  <td>waitForElementPresent</td>
+  <td>//div[@id="cke_editor1"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Reply']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Reference</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Project</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Begin Date</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Support Type</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>State</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Submitted</td>
+  <td>By</td>
   <td></td>
 </tr>
 </tbody></table>
