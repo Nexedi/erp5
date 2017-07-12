@@ -9,7 +9,6 @@
 <tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
-<!-- Run the test as anonymous -->
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
@@ -17,27 +16,32 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n='[value]Add Support Request']</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@data-i18n='[value]Add Support Request']</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@class='ui-title']</td>
+  <td>//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='field_your_title']</td>
+  <td>test</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]Proceed']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@type='submit']</td>
-  <td>Document Created.</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//th[@data-i18n='Title']</td>
+  <td>//input[@data-i18n='[value]Reply']</td>
   <td></td>
 </tr>
 <tr>
@@ -47,12 +51,12 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//h1[@class='ui-title']</td>
+  <td>//a[@data-i18n='Support Request Module']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//th[@data-i18n='Title']</td>
+  <td>waitForTextPresent</td>
+  <td>Title</td>
   <td></td>
 </tr>
 </tbody></table>
