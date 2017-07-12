@@ -16,13 +16,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_officejs_support_request_view</string>
+                <string>action_type/object_view</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_officejs_support_request_view</string> </value>
+            <value> <string>object_view</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -51,16 +51,12 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Action Information</string> </value>
-        </item>
-        <item>
             <key> <string>priority</string> </key>
             <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Officejs Support Request View</string> </value>
+            <value> <string>OfficeJS View</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
