@@ -795,7 +795,6 @@ class TemplateTool (BaseTool):
       template_path_list.extend(property_path_list)
       template_path_list.extend(selection_list)
       template_path_list = self.cleanTemplatePathList(template_path_list)
-      template_path_list = sorted(template_path_list, key=lambda x: x[1])
 
       # XXX: Add layer=1 and sign=1 for default for all paths
       template_path_list = [l + ' | 1 | 1' for l in template_path_list]
