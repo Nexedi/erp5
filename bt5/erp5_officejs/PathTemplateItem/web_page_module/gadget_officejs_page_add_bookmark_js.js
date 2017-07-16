@@ -53,6 +53,7 @@
         .push(function () {
           var doc = {
             // XXX Hardcoded
+            url_string: gadget.props.options.url_string,
             parent_relative_url: gadget.props.parent_relative_url,
             portal_type: gadget.props.portal_type
           };
