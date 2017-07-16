@@ -85,6 +85,9 @@
             search_page: 'bookmark_list',
             search: options.search,
             column_list: [{
+              select: 'reference',
+              title: 'Reference'
+            }, {
               select: 'title',
               title: 'Title'
             }, {
@@ -96,7 +99,7 @@
             }],
             query: {
               query: 'portal_type:("' + gadget.props.portal_type + '")',
-              select_list: ['title', 'url_string', 'description'],
+              select_list: ['reference', 'title', 'url_string', 'description'],
               limit: [0, 30],
               sort_on: [["modification_date", "descending"]]
             }

@@ -6,7 +6,7 @@
   function getSearchedString() {                                                                                                        
     var regex = new RegExp("[\\#?&]search=([^&]*)"),
     results = regex.exec(window.location.hash);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return results === null ? "" : decodeURIComponent(results[1].trim().replace(/\+/g, " "));
   }
 
   function updateSearchUrl(event) {
@@ -66,23 +66,43 @@
         })
         .push(function () {
           var search = window.decodeURIComponent(getSearchedString()),
-            query = "";
+            query = "",
+            command = "",
+            parameter = "",
+            index;
           if (search) {
-            query = {
-              query: '(title:"%' + search + '%" OR url_string:"%' + search + '%" OR description:"%' + search + '%") AND portal_type:"' + portal_type + '"',
-              select_list: ['title', 'url_string', 'description'],
-            };
+            if (search.startsWith("!")) {
+              index = search.indexOf(" ");
+              if (index !== -1) {
+                command = search.substring(1, index);
+                parameter = search.substr(index + 1);
+              } else {
+                command = search.substr(1);
+                parameter = "";
+              }
+              query = {
+                query: '(reference:"' + command + '")'
+                  + ' AND portal_type:"' + portal_type + '"',
+                select_list: ['url_string']
+              };
+            } else {
+              query = {
+                query: '(title:"%' + search + '%" OR url_string:"%' + search + '%" OR description:"%' + search + '%") AND portal_type:"' + portal_type + '"',
+                select_list: ['title', 'url_string', 'description'],
+              };
+            }
             return gadget.jio_allDocs(query)
               .push(function (query_result) {
                 var result_list_length = query_result.data.rows.length;
-                
+
                 // if 0 result, let's search with a real search engine
                 if (result_list_length === 0 && option.search_engine !== '') {
                   window.location.href = option.search_engine + window.encodeURIComponent(search);
-                }
-                // if 1 result, we go there
-                else if (result_list_length === 1 && option.auto_redirect === true) {
-                  window.location.href = query_result.data.rows[0].value.url_string;
+                } else if (result_list_length === 1
+                         && (option.auto_redirect === true || command !== "")) {
+                  // if 1 result, and redirect or command ,we go there
+                  window.location.href = query_result.data.rows[0].value.url_string
+                    + parameter;
                 }
                 else {
                   return gadget.getUrlFor({page: "bookmark_list", search: window.encodeURIComponent(search)})
@@ -91,7 +111,7 @@
                     });
                 }
               });
-            }
+          }
         });
     })
     .onEvent("submit", function () {
