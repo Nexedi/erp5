@@ -196,6 +196,113 @@
   <td>//h1[@class='test-script-title']</td>
   <td>Title is : cloud</td>
 </tr>
+<!-- Add bookmark With Dispatcher Command-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/officejs_bookmark_manager/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='search']</td>
+  <td>!add ${base_url}/ERP5Site_printParameterAsHTMLTitle?parameter=</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]header-submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>search</td>
+  <td>search_term</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='reference']</td>
+  <td>${search_term}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<!--- Verify Search Command--->
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@name='search']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@name='search']</td>
+  <td>!search mysearchterm</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@data-i18n='[value]header-submit']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//h1[@class='test-script-title']</td>
+  <td>Title is : mysearchterm</td>
+</tr>
 <!--- Set preferences --->
 <tr>
   <td>open</td>
