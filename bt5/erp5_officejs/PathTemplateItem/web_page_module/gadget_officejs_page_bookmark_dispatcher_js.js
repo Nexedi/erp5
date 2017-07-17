@@ -80,6 +80,14 @@
                 command = search.substr(1);
                 parameter = "";
               }
+              if (command === "add") {
+                return gadget.getUrlFor({
+                  page: "add_bookmark",
+                  url_string: parameter
+                }).push(function (url) {
+                  window.location.href = url;
+                });
+              }
               query = {
                 query: '(reference:"' + command + '")'
                   + ' AND portal_type:"' + portal_type + '"',
