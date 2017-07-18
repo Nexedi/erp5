@@ -114,7 +114,9 @@
             </tal:block>
 
             <!-- include the report header as last page -->
-            <table:table tal:attributes="table:name python:unicode(form.getProperty('title'), 'utf8')" i18n:attributes="table:name">
+            <table:table tal:condition="python: [field for field in form.get_fields()
+                                                 if field.getRecursiveTemplateField().meta_type != 'ReportBox']"
+                         tal:attributes="table:name python:unicode(form.getProperty('title'), 'utf8')" i18n:attributes="table:name">
               <table:table-column
                     table:style-name='co2'
                     table:number-columns-repeated='100'
