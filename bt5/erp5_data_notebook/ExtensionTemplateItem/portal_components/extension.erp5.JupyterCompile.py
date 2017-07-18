@@ -15,7 +15,6 @@ import json
 import transaction
 import Acquisition
 import astor
-import importlib
 from Products.ERP5Type.Log import log
 
 # Display matplotlib figure automatically like
@@ -80,14 +79,9 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
                                       reference=reference,
                                       batch_mode=True)
 
-  # By default, store_history is True
-  store_history = kw.get('store_history', True)
-  data_notebook_line = None
-  if store_history:
-    # Add new Data Notebook Line to the Data Notebook
-    data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
-                                       notebook_code=python_expression,
-                                       batch_mode=True)
+  data_notebook_line = data_notebook.DataNotebook_addDataNotebookLine(
+                                     notebook_code=python_expression,
+                                     batch_mode=True)
   
   # Gets the context associated to the data notebook being used
   old_notebook_context = data_notebook.getNotebookContext()
@@ -96,7 +90,7 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
   
   # Pass all to code Base_runJupyter external function which would execute the code
   # and returns a dict of result
-  final_result = displayDataWrapper(lambda:Base_runJupyterCode(self, python_expression, old_notebook_context))
+  final_result = displayDataWrapper(lambda:Base_runJupyterCode(self, data_notebook_line, old_notebook_context))
     
   new_notebook_context = final_result['notebook_context']
   
@@ -146,10 +140,9 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
       u'mime_type': result['mime_type']}
     serialized_result = json.dumps(result)
 
-  if data_notebook_line is not None:
-    data_notebook_line.edit(
-      notebook_code_result = result['code_result'],
-      mime_type = result['mime_type'])
+  data_notebook_line.edit(
+    notebook_code_result = result['code_result'],
+    mime_type = result['mime_type'])
   
   return serialized_result  
 
@@ -222,308 +215,15 @@ def displayDataWrapper(function):
   result['extra_data_list'] = extra_data_list
   return result
 
-def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
-  """
-    Function to execute jupyter code and update the context dictionary.
-    Code execution depends on 'interactivity', a.k.a , if the ast.node object has
-    ast.Expr instance (valid for expressions) or not.
-    
-    old_notebook_context should contain both variables dict and setup functions.
-    Here, setup dict is {key: value} pair of setup function names and another dict,
-    which contains the function's alias and code, as string. These functions
-    should be executed before `jupyter_code` to properly create the required
-    environment.
-
-    For example:
-    old_notebook_context =  {
-      'setup': {
-        'numpy setup': {
-          'func_name': 'numpy_setup_function',
-          'code': ...
-        }
-      },
-      'variables': {
-        'my_variable': 1
-      }
-    }
-
-    The behaviour would be similar to that of jupyter notebook:-
-    ( https://github.com/ipython/ipython/blob/master/IPython/core/interactiveshell.py#L2954 )
-    Example:
-
-      code1 = '''
-      23
-      print 23 #Last node not an expression, interactivity = 'last'
-      '''
-      out1 = '23'
-
-      code2 = '''
-      123
-      12 #Last node an expression, interactivity = 'none'
-      '''
-      out2 = '12'
-
-  """
+def Base_runJupyterCode(self, data_notebook_line, old_notebook_context):
   mime_type = 'text/plain'
   status = u'ok'
-  ename, evalue, tb_list = None, None, None
-  
-  # Other way would be to use all the globals variables instead of just an empty
-  # dictionary, but that might hamper the speed of exec or eval.
-  # Something like -- user_context = globals(); user_context['context'] = self;
-  user_context = {}
-  output = ''
-
-  # Saving the initial globals dict so as to compare it after code execution
-  globals_dict = globals()
-  notebook_context = old_notebook_context
-
-  inject_variable_dict = {}
-  current_var_dict = {}
-  current_setup_dict = {}
-  setup_error_return_dict_list = []
-
-  # Execute only if jupyter_code is not empty
-  if jupyter_code:
-    # Create ast parse tree
-    try:
-      ast_node = ast.parse(jupyter_code)
-    except Exception as e:
-      # It's not necessary to abort the current transaction here 'cause the 
-      # user's code wasn't executed at all yet.
-      return getErrorMessageForException(self, e, notebook_context)
-    
-    # Fixing "normal" imports and detecting environment object usage
-    import_fixer = ImportFixer()
-    print_fixer = PrintFixer()
-    environment_collector = EnvironmentParser()
-    ast_node = import_fixer.visit(ast_node)
-    
-    # Whenever we have new imports we need to warn the user about the 
-    # environment
-    if (import_fixer.warning_module_names != []):
-      warning = ("print '"
-                 "WARNING: You imported from the modules %s without "
-                 "using the environment object, which is not recomended. "
-                 "Your import was automatically converted to use such method. "
-                 "The setup functions were named as *module*_setup. "
-                 "'") % (', '.join(import_fixer.warning_module_names))               
-      tree = ast.parse(warning)
-      tree.body[0].lineno = ast_node.body[-1].lineno+5
-      ast_node.body.append(tree.body[0])    
-
-    ast_node = print_fixer.visit(ast_node)
-    ast.fix_missing_locations(ast_node)
-    
-    # The collector also raises errors when environment.define and undefine
-    # calls are made incorrectly, so we need to capture them to propagate
-    # to Jupyter for rendering.
-    try:
-      ast_node = environment_collector.visit(ast_node)
-    except (EnvironmentDefinitionError, EnvironmentUndefineError) as e:
-      transaction.abort()
-      return getErrorMessageForException(self, e, notebook_context)
-    
-    # Get the node list from the parsed tree
-    nodelist = ast_node.body
-
-    # Handle case for empty nodelist(in case of comments as jupyter_code)
-    if nodelist:
-      # If the last node is instance of ast.Expr, set its interactivity as 'last'
-      # This would be the case if the last node is expression
-      if isinstance(nodelist[-1], ast.Expr):
-        interactivity = "last"
-      else:
-        interactivity = "none"
-
-      # Here, we define which nodes to execute with 'single' and which to execute
-      # with 'exec' mode.
-      if interactivity == 'none':
-        to_run_exec, to_run_interactive = nodelist, []
-      elif interactivity == 'last':
-        to_run_exec, to_run_interactive = nodelist[:-1], nodelist[-1:]
-      
-      # Variables used at the display hook to get the proper form to display
-      # the last returning variable of any code cell.
-      display_data = {'result': '', 
-                      'mime_type': None}
-      
-      # This is where one part of the  display magic happens. We create an 
-      # instance of ProcessorList and add each of the built-in processors.
-      # The classes which each of them are responsiblefor rendering are defined
-      # in the classes themselves.
-      # The customized display hook will automatically use the processor
-      # of the matching class to decide how the object should be displayed.
-      processor_list = ProcessorList()
-      processor_list.addProcessor(IPythonDisplayObjectProcessor)
-      processor_list.addProcessor(MatplotlibFigureProcessor)
-      processor_list.addProcessor(ERP5ImageProcessor)
-      processor_list.addProcessor(IPythonDisplayObjectProcessor)
-      
-      # Putting necessary variables in the `exec` calls context and storing
-      inject_variable_dict = {
-        'context': self,
-        'environment': Environment(),
-        '_display_data': display_data,
-        '_processor_list': processor_list,
-        '_volatile_variable_list': [],
-        '_print': CustomPrint()}
-      user_context.update(inject_variable_dict)
-      user_context.update(notebook_context['variables'])
-      
-      # Getting the environment setup defined in the current code cell
-      current_setup_dict = environment_collector.getEnvironmentSetupDict()
-      current_var_dict = environment_collector.getEnvironmentVarDict()
-
-      # Removing old setup from the setup functions
-      removed_setup_message_list = []
-      for func_alias in environment_collector.getEnvironmentRemoveList():
-        found = False
-        for key, data in notebook_context['setup'].items():
-          if key == func_alias:
-            found = True
-            func_name = data['func_name']
-            del notebook_context['setup'][func_alias]
-            try:
-              del user_context[func_alias]
-            except KeyError:
-              pass
-            removed_setup_message = (
-              "%s (%s) was removed from the setup list. "
-              "Variables it may have added to the context and are not pickleable "
-              "were automatically removed.\n"
-            ) % (func_name, func_alias)
-            removed_setup_message_list.append(removed_setup_message)
-            break
-        if not found:
-          transaction.abort()
-          result = {
-            'result_string': "EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias,
-            'print_result': {"data":{"text/plain":"EnvironmentUndefineError: Trying to remove non existing function/variable from environment: '%s'\n" % func_alias}, "metadata":{}},
-            'displayhook_result': None,
-            'notebook_context': notebook_context,
-            'status': 'ok',
-            'mime_type': 'text/plain',
-            'evalue': None,
-            'ename': None,
-            'traceback': None}
-          return result
-
-      # Removing all the setup functions if user call environment.clearAll()
-      if environment_collector.clearAll():
-        keys = notebook_context ['setup'].keys()
-        for key in keys:
-          del notebook_context['setup'][key]
-      
-      # Running all the setup functions that we got
-      failed_setup_key_list = []
-      for key, value in notebook_context['setup'].iteritems():
-        try:
-          code = compile(value['code'], '<string>', 'exec')
-          exec(code, user_context, user_context)
-        # An error happened, so we show the user the stacktrace along with a
-        # note that the exception happened in a setup function's code.
-        except Exception as e:
-          failed_setup_key_list.append(key)
-          if value['func_name'] in user_context:
-            del user_context[value['func_name']]
-          error_return_dict = getErrorMessageForException(self, e, notebook_context)
-          additional_information = "An error happened when trying to run the one of your setup functions:"
-          error_return_dict['traceback'].insert(0, additional_information)
-          setup_error_return_dict_list.append(error_return_dict)
-      for failed_setup_key in failed_setup_key_list:
-        del notebook_context['setup'][failed_setup_key]
-
-      # Iterating over envinronment.define calls captured by the environment collector
-      # that are functions and saving them as setup functions.
-      for func_name, data in current_setup_dict.iteritems():
-        setup_string = (
-          "%s\n"
-          "_result = %s()\n"
-          "if _result and isinstance(_result, dict):\n"
-          "    globals().update(_result)\n"
-          "_volatile_variable_list += _result.keys()\n"
-          "del %s, _result\n"
-        ) % (data['code'], func_name, func_name)
-        notebook_context['setup'][data['alias']] = {
-          "func_name": func_name,
-          "code": setup_string}
-
-      # Iterating over envinronment.define calls captured by the environment collector
-      # that are simple variables and saving them in the setup.
-      for variable, value, in current_var_dict.iteritems():
-        setup_string = "%s = %s\n" % (variable, repr(value))
-        notebook_context['setup'][variable] = {
-          'func_name': variable,
-          'code': setup_string}
-        user_context['_volatile_variable_list'] += variable
-        
-      if environment_collector.showEnvironmentSetup():
-        inject_variable_dict['_print'].write("%s\n" % str(notebook_context['setup']))
-    
-      # Execute the nodes with 'exec' mode
-      for node in to_run_exec:
-        mod = ast.Module([node])
-        code = compile(mod, '<string>', "exec")
-        try:
-          exec(code, user_context, user_context)
-        except Exception as e:
-          # Abort the current transaction. As a consequence, the notebook lines
-          # are not added if an exception occurs.
-          transaction.abort()
-          return mergeTracebackListIntoResultDict(getErrorMessageForException(self, e, notebook_context),
-                                                  setup_error_return_dict_list)
-
-      # Execute the interactive nodes with 'single' mode
-      for node in to_run_interactive:
-        mod = ast.Interactive([node])
-        try:
-          code = compile(mod, '<string>', 'single')
-          exec(code, user_context, user_context)
-        except Exception as e:
-          # Abort the current transaction. As a consequence, the notebook lines
-          # are not added if an exception occurs.
-          transaction.abort()
-          return mergeTracebackListIntoResultDict(getErrorMessageForException(self, e, notebook_context),
-                                                  setup_error_return_dict_list)
-
-      mime_type = display_data['mime_type'] or mime_type
-      inject_variable_dict['_print'].write("\n".join(removed_setup_message_list) + display_data['result'])
-
-    # Saves a list of all the variables we injected into the user context and
-    # shall be deleted before saving the context.
-    volatile_variable_list = current_setup_dict.keys() + inject_variable_dict.keys() + user_context.get('_volatile_variable_list', [])
-    volatile_variable_list.append('__builtins__')
-
-    for key, val in user_context.items():
-      if not key in globals_dict.keys() and not isinstance(val, well_known_unserializable_type_tuple) and not key in volatile_variable_list:
-        if canSerialize(val):
-          notebook_context['variables'][key] = val
-        else:
-          del user_context[key]
-          message = (
-            "Cannot serialize the variable named %s whose value is %s, "
-            "thus it will not be stored in the context. "
-            "You should move it's definition to a function and " 
-            "use the environment object to load it.\n"
-          ) % (key, val)
-          inject_variable_dict['_print'].write(message)
-    
-    # Deleting from the variable storage the keys that are not in the user 
-    # context anymore (i.e., variables that are deleted by the user).
-    for key in notebook_context['variables'].keys():
-      if not key in user_context:
-        del notebook_context['variables'][key]
-    
-    if inject_variable_dict.get('_print') is not None:
-      output = inject_variable_dict['_print'].getCapturedOutputString()
-
-  displayhook_result = {"data":{}, "metadata":{}}
-  if displayhook.result is not None:
-    if isinstance(displayhook.result, str):
-      displayhook_result["data"]["text/plain"] = displayhook.result
-    elif isinstance(displayhook.result, dict):
-      displayhook_result = displayhook.result
+  output = data_notebook_line.DataNotebookLine_execute()
+  notebook_context = {}
+  displayhook_result = None
+  evalue = None
+  ename = None
+  tb_list = None
   result = {
     'result_string': output,
     'print_result': {"data":{"text/plain":output}, "metadata":{}},
@@ -533,8 +233,9 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
     'mime_type': mime_type,
     'evalue': evalue,
     'ename': ename,
-    'traceback': tb_list}
-  return mergeTracebackListIntoResultDict(result, setup_error_return_dict_list)
+    'traceback': tb_list
+  }
+  return mergeTracebackListIntoResultDict(result, [])
 
 
 class EnvironmentUndefineError(TypeError):
@@ -762,190 +463,7 @@ class Environment(object):
     pass
   
 
-class ImportFixer(ast.NodeTransformer):
-  """
-   The ImportFixer class is responsivle for fixing "normal" imports that users
-   might try to execute.
-   
-   It will automatically replace them with the proper usage of the environment
-   object using AST manipulation.
-  """
-  
-  def __init__(self):
-    self.import_func_dict = {}
-    self.warning_module_names = []
-  
-  def visit_FunctionDef(self, node):
-    """
-      Processes funcion definition nodes. We want to store a list of all the 
-      import that are inside functions, because they do not affect the outter
-      user context, thus do not imply in any un-pickleable variable being added
-      there.
-    """
-    for child in node.body:
-      if isinstance(child, ast.Import):
-        for alias in child.names:
-          if getattr(alias, 'asname'):
-            import_name = alias.asname
-          else:
-            import_name = alias.name
-          self.import_func_dict[import_name] = node.name  
-    return self.generic_visit(node)
-    
-  def visit_ImportFrom(self, node):
-    """
-     Fixes `import x from y` statements in the same way `import y` is fixed.
-    """
-    return self.visit_Import(node)
 
-  def visit_Import(self, node):
-    """
-    This function replaces `normal` imports by creating AST nodes to define
-    and environment function which setups the module and return it to be merged
-    with the user context.
-    """
-
-    test_import_string = None
-    result_name = ""
-    root_module_name = ""
-
-    module_names = []
-
-    if getattr(node, "module", None) is not None:
-      # case when 'from <module_name> import <something>'
-      root_module_name = node.module
-
-      if (node.names[0].name == '*'):
-        # case when "from <module_name> import *"
-        mod = importlib.import_module(node.module)
-        tmp_dict = mod.__dict__
-
-        for name in tmp_dict.keys():
-          if (name[0] != '_'):
-            module_names.append(name)
-
-        test_import_string = "from %s import *" %(node.module)
-        result_name = "%s_ALL" %(node.module)
-      else:
-        # case when "from <module_name> import a as b, c as d, ..."
-        original_names = []
-        as_names = []
-
-        for name in node.names:
-          original_names.append(name.name)
-          if getattr(name, "asname", None) is None:
-            as_names.append(None)
-          else:
-            as_names.append(name.asname)
-
-        test_import_string = "from %s import " %(node.module)
-        for i in range(0, len(original_names)):
-          test_import_string = test_import_string + original_names[i]
-          if as_names[i]!=None:
-            test_import_string = test_import_string + ' as %s' %(as_names[i])
-          test_import_string = test_import_string + ', '
-        test_import_string = test_import_string[:-2]
-
-        module_names = []
-        for i in range(0, len(original_names)):
-          if as_names[i]!=None:
-            module_names.append(as_names[i])
-          else:
-            module_names.append(original_names[i])
-
-        for i in range(0, len(original_names)):
-          if as_names[i]!=None:
-            result_name = result_name + '%s_' %(as_names[i])
-          else:
-            result_name = result_name + '%s_' %(original_names[i])
-        result_name = result_name[:-1]
-
-
-
-    elif getattr(node.names[0], 'asname'):
-      # case when "import <module_name> as <name>""
-      module_names = [(node.names[0].asname), ]
-      test_import_string = "import %s as %s" %(node.names[0].name,
-                                               module_names[0])
-      result_name = node.names[0].asname
-      root_module_name = node.names[0].name
-
-    else:
-      # case when "import <module_name>"
-      module_names = [(node.names[0].name), ]
-      test_import_string = "import %s" %node.names[0].name
-      result_name = node.names[0].name
-      root_module_name = node.names[0].name
-
-    final_module_names = []
-    for name in module_names:
-      if not self.import_func_dict.get(name):
-        final_module_names.append(name)
-
-    if final_module_names:
-      # try to import module before it is added to environment
-      # this way if user tries to import non existent module Exception
-      # is immediately raised and doesn't block next Jupyter cell execution
-      exec(test_import_string)
-
-      dotless_result_name = ""
-      for character in result_name:
-        if character == '.':
-          dotless_result_name = dotless_result_name + '_dot_'
-        else:
-          dotless_result_name = dotless_result_name + character
-      
-      empty_function = self.newEmptyFunction("%s_setup" %dotless_result_name)
-      return_dict = self.newReturnDict(final_module_names)
-
-      empty_function.body = [node, return_dict]
-      environment_set = self.newEnvironmentSetCall("%s_setup" %dotless_result_name)
-      self.newImportWarningCall(root_module_name, dotless_result_name)
-      return [empty_function, environment_set]
-    else:
-      return node
-
-  def newEmptyFunction(self, func_name):
-    """
-      Return a AST.Function object representing a function with name `func_name`
-      and an empty body.
-    """
-    func_body = "def %s(): pass" % func_name
-    return ast.parse(func_body).body[0]
-
-  def newReturnDict(self, module_names):
-    """
-      Return an AST.Expr representing a returned dict with one single key named
-      `'module_name'` (as string) which returns the variable `module_name` (as
-      expression).
-    """
-    return_dict = "return {"
-    for name in module_names:
-      if name.find('.') != -1:
-        base_name = name[:name.find('.')]
-      else:
-        base_name = name
-      return_dict = return_dict + "'%s': %s, " % (base_name, base_name)
-    return_dict = return_dict + '}'
-    return ast.parse(return_dict).body[0]
-
-  def newEnvironmentSetCall(self, func_name):
-    """
-      Return an AST.Expr representaion an `environment.define` call receiving
-      `func_name` (as an expression) and `'func_name'` (as string).
-    """
-    code_string = "environment.define(%s, '%s')" % (func_name, func_name)
-    tree = ast.parse(code_string)
-    return tree.body[0]
-
-  def newImportWarningCall(self, module_name, function_name):
-    """
-      Adds a new module to the warning to the user about the importing of new
-      modules.
-    """
-    self.warning_module_names.append(module_name)
-
-  
 def renderAsHtml(self, renderable_object):
   '''
     renderAsHtml will render its parameter as HTML by using the matching 
