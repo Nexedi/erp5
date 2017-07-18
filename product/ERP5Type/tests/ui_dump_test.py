@@ -33,6 +33,7 @@ from AccessControl.SecurityManagement \
   import getSecurityManager, setSecurityManager
 from Products.DCWorkflow.DCWorkflow import Unauthorized
 from Testing import ZopeTestCase
+from zLOG import LOG
 
 
 class ui_dump_test(object):
@@ -147,7 +148,7 @@ class ui_dump_test(object):
       else:
         assert not raise_if_new, "Tracking a subobject of a new and" \
                                  " untracked object produces unstable dumps."
-        self.last_id_dict[container] += 1
+        self.last_id_dict[container] = virtual_id + 1
       self.virtual_path_dict[path] = virtual_path = container + (virtual_id,)
     return virtual_path
 
