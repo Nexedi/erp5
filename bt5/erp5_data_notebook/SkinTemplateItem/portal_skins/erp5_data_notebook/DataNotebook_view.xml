@@ -68,7 +68,7 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_notebook_code</string>
+                        <string>listbox_default_notebook_code_body</string>
                         <string>listbox_notebook_code_result</string>
                       </list>
                     </value>

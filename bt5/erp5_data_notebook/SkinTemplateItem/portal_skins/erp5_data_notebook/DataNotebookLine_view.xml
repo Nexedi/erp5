@@ -72,7 +72,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_notebook_code</string>
+                        <string>my_default_notebook_code_body</string>
                         <string>my_notebook_code_result</string>
                         <string>my_mime_type</string>
                       </list>

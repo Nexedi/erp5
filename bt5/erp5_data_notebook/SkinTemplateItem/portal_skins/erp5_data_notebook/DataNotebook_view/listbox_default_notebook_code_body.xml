@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_notebook_code</string> </value>
+            <value> <string>listbox_default_notebook_code_body</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: cell.getNotebookCode().replace(\'\\n\', \'<br/>\')
+python: cell.getDefaultNotebookCodeBody().replace(\'\\n\', \'<br/>\')
 
 ]]></string> </value>
         </item>

@@ -86,7 +86,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>notebook_code</string>
+                          <string>default_notebook_code_body</string>
                           <string>Input</string>
                         </tuple>
                         <tuple>

@@ -4,7 +4,7 @@ have notebook_code from jupyter frontend as well as its executed result
 """
 # Create new Data Notebook Line object
 notebook_line = context.newContent(
-    notebook_code=notebook_code,
+    default_notebook_code_body=notebook_code,
     notebook_code_result=notebook_code_result,
     mime_type=mime_type,
     portal_type="Data Notebook Line"
