@@ -46,7 +46,7 @@
         .push(function (url) {
           url = window.location.origin + window.location.pathname
             + url + '&search=%s';
-          gadget.props.element.getElementsByClassName("search-engine-url")[0].value = url;
+          gadget.props.element.getElementsByClassName("search-engine-url")[0].value = url.replace("#", "#?foo=&");
           return gadget.getSetting("option");
         })
         .push(function (option_dict) {
