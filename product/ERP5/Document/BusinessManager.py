@@ -327,7 +327,8 @@ class BusinessManager(Folder):
     self.title = imported_manager.title
     for obj in imported_manager.objectValues():
       delattr(obj, '__ac_local_roles__')
-      self._setObject(obj.getId(), aq_base(obj))
+      new_id = self.generateNewId()
+      self._setObject(new_id, aq_base(obj))
       obj.isIndexable = ConstantGetter('isIndexable', value=False)
     self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
     self.setProperty('layer', imported_manager.getProperty('layer'))
