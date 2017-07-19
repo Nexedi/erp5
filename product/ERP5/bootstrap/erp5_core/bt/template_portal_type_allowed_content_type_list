@@ -12,9 +12,6 @@ Cache Factory | Cache Bag
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Tool | Cache Factory
-Catalog Tool | Catalog
-Catalog | Python Script
-Catalog | SQL Method
 Category Tool | Base Category
 Category | Category
 Component Tool | Document Component
@@ -57,8 +54,6 @@ Property Sheet | String Attribute Match Constraint
 Property Sheet | TALES Constraint
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
-Template Tool | Business Manager
-Template Tool | Business Package
 Template Tool | Business Template
 Trash Tool | Trash Bin
 Types Tool | Base Type

@@ -8,12 +8,6 @@
  <portal_type id="Attribute Unicity Constraint">
   <item>ConstraintType</item>
  </portal_type>
- <portal_type id="Catalog">
-  <item>Catalog</item>
- </portal_type>
- <portal_type id="Catalog Tool">
-  <item>CatalogTool</item>
- </portal_type>
  <portal_type id="Category Acquired Membership State Constraint">
   <item>ConstraintType</item>
  </portal_type>
@@ -46,13 +40,6 @@
  </portal_type>
  <portal_type id="Property Type Validity Constraint">
   <item>ConstraintType</item>
- </portal_type>
- <portal_type id="Python Script">
-  <item>CatalogFilter</item>
- </portal_type>
- <portal_type id="SQL Method">
-  <item>CatalogFilter</item>
-  <item>SQLMethod</item>
  </portal_type>
  <portal_type id="Script Constraint">
   <item>ConstraintType</item>

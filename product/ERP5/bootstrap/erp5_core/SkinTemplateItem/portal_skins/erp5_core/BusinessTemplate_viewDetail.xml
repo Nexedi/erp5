@@ -83,7 +83,6 @@
                         <string>my_template_constraint_id_list</string>
                         <string>my_template_local_role_list</string>
                         <string>my_template_portal_type_role_list</string>
-                        <string>my_template_object_property_list</string>
                       </list>
                     </value>
                 </item>
