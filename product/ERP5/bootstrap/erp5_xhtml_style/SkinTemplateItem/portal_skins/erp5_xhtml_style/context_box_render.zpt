@@ -63,7 +63,7 @@
                   i18n:translate="" i18n:domain="ui" />
         </tal:block>
         <option disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Object</tal:block> --</option>
-        <tal:block tal:repeat="action actions/object_action | nothing">
+        <tal:block tal:repeat="action python:here.Base_fixDialogActions(actions, 'object_action') or []">
           <option tal:content="action/name"
                   tal:attributes="value string:object ${action/url}"
                   i18n:translate="" i18n:domain="ui" />
