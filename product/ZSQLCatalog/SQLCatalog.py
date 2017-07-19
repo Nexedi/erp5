@@ -1263,7 +1263,7 @@ class Catalog(Folder,
       Similar problems may happen with relations and acquisition of uid values (ex. order_uid)
       with the risk of graph loops
     """
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return None
 
     klass = self.__class__
@@ -1443,7 +1443,7 @@ class Catalog(Folder,
       LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
 
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return
 
     # Reminder about optimization: It might be possible to issue just one
@@ -1701,7 +1701,7 @@ class Catalog(Folder,
     """
     Set the path as deleted
     """
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return None
 
     if uid is None and path is not None:
@@ -1734,7 +1734,7 @@ class Catalog(Folder,
     XXX Add filter of methods
 
     """
-    if not self.isIndexable():
+    if not self.isIndexingRequired():
       return None
 
     if uid is None and path is not None:
