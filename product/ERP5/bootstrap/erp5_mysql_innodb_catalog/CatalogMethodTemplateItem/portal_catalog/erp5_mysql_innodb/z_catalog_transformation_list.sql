@@ -3,11 +3,7 @@
 DELETE FROM `transformation` WHERE
   <dtml-sqltest expr="outer_item['uid']" column="uid" type="int">
   AND
-<<<<<<< HEAD
   <dtml-sqltest expr="outer_item['variation_text']" column="variation_text" type="string">
-=======
-  <dtml-sqltest expr="outer_item['variation_text']" column="variation_text" type="string">;
->>>>>>> 3ce2fc0... bt5_prototype: Move erp5_mysql_innodb_catalog back to BT5 type
 <dtml-var sql_delimiter>
 <dtml-call "row_list.extend(outer_item['row_dict_list'])">
 </dtml-in>
