@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Acquired Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mode</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/content</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>source_section</string>
+                <string>source_section_title</string>
+                <string>source_section_uid</string>
+                <string>destination_section</string>
+                <string>destination_section_uid</string>
+                <string>destination_section_title</string>
+                <string>resource_uid</string>
+                <string>resource_title</string>
+                <string>quantity</string>
+                <string>quantity_unit</string>
+                <string>quantity_unit_title</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_portal_type</string> </key>
+            <value> <string>python: (\'Annotation Line\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The duration of overtime worked hours</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>overtime_annotation_line_property</string> </value>
+        </item>
+        <item>
+            <key> <string>mode</string> </key>
+            <value> <string>w</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Acquired Property</string> </value>
+        </item>
+        <item>
+            <key> <string>storage_id</string> </key>
+            <value> <string>overtime_annotation_line</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
