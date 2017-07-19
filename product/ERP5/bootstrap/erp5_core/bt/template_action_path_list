@@ -113,7 +113,6 @@ Property Type Validity Constraint | view
 PyData Script | proxy_role_view
 PyData Script | repository_history_view
 PyData Script | view
-Python Script | filter_view
 Python Script | proxy_role_view
 Python Script | repository_history_view
 Python Script | run
@@ -122,10 +121,6 @@ Ram Cache | statistics
 Ram Cache | view
 Role Information | view
 Rule Tool | view
-SQL Method | advanced_view
-SQL Method | filter_view
-SQL Method | run
-SQL Method | view
 SQL Non Continuous Increasing Id Generator | view
 Script Constraint | predicate
 Script Constraint | view
