@@ -39,12 +39,12 @@
             ];
           erp5_document = result;
           view_list = erp5_document._links.action_workflow || [];
-          action_list = []; // erp5_document._links.action_object_action
+          action_list = erp5_document._links.action_object_action_jio || [];
           if (view_list.constructor !== Array) {
             view_list = [view_list];
           }
           if (action_list.constructor !== Array) {
-            view_list = [view_list];
+            action_list = [action_list];
           }
           for (i = 0; i < view_list.length; i += 1) {
             promise_list.push(
