@@ -139,6 +139,17 @@ def Base_executeJupyter(self, python_expression=None, reference=None, \
       u'status': u'error',
       u'mime_type': result['mime_type']}
     serialized_result = json.dumps(result)
+  except TypeError:
+    result = {
+      u'code_result': None,
+      u'print_result': None,
+      u'displayhook_result': None,
+      u'ename': u'TypeError',
+      u'evalue': None,
+      u'traceback': None,
+      u'status': u'error',
+      u'mime_type': result['mime_type']}
+    serialized_result = json.dumps(result)
 
   data_notebook_line.edit(
     notebook_code_result = result['code_result'],
