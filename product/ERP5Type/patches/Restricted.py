@@ -161,6 +161,14 @@ ContainerAssertions[OrderedDict] = _check_access_wrapper(OrderedDict, _dict_whit
 OrderedDict.__guarded_setitem__ = OrderedDict.__setitem__.__func__
 OrderedDict.__guarded_delitem__ = OrderedDict.__delitem__.__func__
 
+# <PyData Script only allowance>
+allow_module('ipywidgets')
+allow_module('matplotlib')
+allow_module('numpy')
+allow_module('pandas')
+allow_module('simpy')
+# </PyData Script only allowance>
+
 # given as example in Products.PythonScripts.module_access_examples
 allow_module('base64')
 allow_module('binascii')
