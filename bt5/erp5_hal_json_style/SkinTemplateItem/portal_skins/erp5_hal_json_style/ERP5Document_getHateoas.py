@@ -796,7 +796,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         if (view == view_action['id']):
           embedded_url = '%s' % view_action['url']
 
-        if erp5_action_key in (view_action_type, "view", "workflow", "object_new_content_action", "object_clone_action", "object_delete_action", "object_report_jio", "object_exchange_jio", "object_fast_input_jio"):
+        if erp5_action_key in (view_action_type, "view", "workflow", "object_new_content_action", "object_clone_action", "object_delete_action", "object_report_jio", "object_exchange_jio", "object_fast_input_jio", "object_search_jio", "object_action_jio"):
 
           erp5_action_list[-1]['href'] = url_template_dict["traverse_generator"] % {
                 "root_url": site_root.absolute_url(),
