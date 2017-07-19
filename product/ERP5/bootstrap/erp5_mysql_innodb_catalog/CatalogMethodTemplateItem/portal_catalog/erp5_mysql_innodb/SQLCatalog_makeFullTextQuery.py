@@ -6,5 +6,5 @@ from Products.ZSQLCatalog.SQLCatalog import Query
 
 query = ComplexQuery(Query(title=value),
                      Query(reference=value),
-                     operator="OR")
+                     logical_operator="OR")
 return query
