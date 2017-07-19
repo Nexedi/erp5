@@ -1,0 +1,50 @@
+2014-02-19 Arnaud Fontaine
+* ZODB Components: Remove ClassTool and DocumentationHelper relying on it.
+
+2014-02-19 Arnaud Fontaine
+* Move Constraint Property Sheets and Views to their proper bt5s.
+
+2014-01-15 tatuya
+* Add Pricing Preference so that we can optimise the Pricing query.
+
+2013-12-12 arnaud.fontaine
+* Get rid of Business Template format version 0 as it's been deprecated for a while.
+
+2013-10-17 tatuya
+* Arrow: Add {source,destination}_{decision,carrier,section}_administration categories
+
+2013-09-08 arnaud.fontaine
+* ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
+
+2013-08-20 arnaud.fontaine
+* ZODB Components: Add BusinessTemplate property to specify the object paths whose only last workflow history must be kept on export.
+
+2013-08-15 arnaud.fontaine
+* ZODB Components: Add error and warning property for Components.
+
+2012-09-04 arnaud.fontaine
+* message_attribute_not_match was incorrectly renamed to message_attribute_match when migrating StringAttributeMatch constraint from filesystem to ZODB.
+
+2012-03-07 arnaud.fontaine
+* Add property to define preferred source code editor to Preference Property Sheets.
+
+2012-03-06 arnaud.fontaine
+* Add template_registered_version_priority_selection property to BusinessTemplate to define version and their priorities for ZODB Component only for now.
+
+2011-12-15 yusei
+* Fix ProductionOrderLine.resource_category_existence. Any resource type document is ok to be used as resource on production order line.
+
+2011-11-09 tatuya
+* Add same_total_quantity into PaySheetModel.
+
+2011-10-12 tatuya
+* Add preferred_accounting_bank_account_display_method into AccountingPreference to select the way to display bank account.
+
+2011-06-20 Kazuhiko
+* add delivery_mode category in TradeModelPath.
+
+2011-04-24 Kazuhiko
+* remove 'id' from BaseType/searchable_text_property_id_property's default.
+
+2011-02-24 Kazuhiko
+* make the default of 'language' property an empty string instead of None, so that we can make a query like language in ('en', '').
