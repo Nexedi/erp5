@@ -23,28 +23,6 @@
   <td>Reset Successfully.</td>
   <td></td>
 </tr>
-<!-- skin list -->
-<tr>
-  <td>open</td>
-  <td>${base_url}/portal_skins/erp5_hal_json_style/ERP5Site_reindexSkinList/</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>skins ok</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/Zuite_waitForActivities</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>Done.</td>
-  <td></td>
-  <td></td>
-</tr>
 
 <!-- create sample data -->
 <tr>
