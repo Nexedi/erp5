@@ -1187,6 +1187,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self.addERP5TypeTestCaseUser()
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
 
+            # XXX: Hack for allowing reindexing after installing BM(s)
+            self.portal.isIndexingRequired = ConstantGetter('isIndexingRequired', True)
+
             self._callSetUpOnce()
             self._reindexSite()
 
