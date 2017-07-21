@@ -1,1 +1,0 @@
-return context.str_object_path

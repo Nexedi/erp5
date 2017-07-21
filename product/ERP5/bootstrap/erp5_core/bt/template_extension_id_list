@@ -1,6 +1,0 @@
-extension.erp5.DocumentExtraction
-extension.erp5.InventoryBrain
-extension.erp5.SearchUtility
-extension.erp5.StandardSecurity
-extension.erp5.ZODBHistory
-extension.erp5.FolderWorkflowActionUtils
