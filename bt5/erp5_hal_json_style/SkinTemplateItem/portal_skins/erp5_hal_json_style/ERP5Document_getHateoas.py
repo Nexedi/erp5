@@ -429,6 +429,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "editable": field.get_value("editable"),
       "column_list": column_list,
       "search_column_list": search_column_list,
+      "sort" :field.get_value('sort'),
       "sort_column_list": sort_column_list,
       "editable_column_list": editable_column_list,
       "show_anchor": field.get_value("anchor"),

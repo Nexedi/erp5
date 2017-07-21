@@ -159,27 +159,35 @@
         url_query,
         queue;
 
-      //only display which is in listbox's column list
-      if (field_json.sort_column_list.length) {
-        sort_column_list = field_json.sort_column_list.filter(function (n) {
-          for (i = 0; i < field_json.column_list.length; i += 1) {
-            if (field_json.column_list[i][0] === n[0] && field_json.column_list[i][1] === n[1]) {
-              return true;
-            }
-          }
-          return false;
-        });
+      /** Transform sort arguments (column_name, sort_direction) to jIO's "ascending" and "descending" **/
+      function jioize_sort(column_sort) {
+        if (column_sort[1].toLowerCase().startsWith('asc')) {
+          return [column_sort[0], 'ascending'];
+        }
+        if (column_sort[1].toLowerCase().startsWith('desc')) {
+          return [column_sort[0], 'descending'];
+        }
+        return column_sort;
       }
 
-      if (field_json.search_column_list.length) {
-        search_column_list = field_json.search_column_list.filter(function (n) {
-          for (i = 0; i < field_json.column_list.length; i += 1) {
-            if (field_json.column_list[i][0] === n[0] && field_json.column_list[i][1] === n[1]) {
-              return true;
-            }
+      /** Check whether item is in outer-scoped field_json.column_list */
+      function is_in_column_list(item) {
+        for (i = 0; i < field_json.column_list.length; i += 1) {
+          if (field_json.column_list[i][0] === item[0] && field_json.column_list[i][1] === item[1]) {
+            return true;
           }
-          return false;
-        });
+        }
+        return false;
+      }
+
+      // use only visible columns for sort
+      if (field_json.sort_column_list.length) {
+        sort_column_list = field_json.sort_column_list.filter(is_in_column_list);
+      }
+
+      // use only visible columns for search
+      if (field_json.search_column_list.length) {
+        search_column_list = field_json.search_column_list.filter(is_in_column_list);
       }
       search_column_list.push(["searchable_text", "Searchable Text"]);
 
@@ -227,7 +235,9 @@
             editable: field_json.editable,
 
             begin_from: parseInt(result_list[0] || '0', 10) || 0,
-            sort_list_json: JSON.stringify(result_list[1] || []),
+
+            // sorting is either specified in URL per listbox or we take default sorting from JSON's 'sort' attribute
+            sort_list_json: JSON.stringify(result_list[1] || field_json.sort.map(jioize_sort)),
 
             show_anchor: field_json.show_anchor,
             line_icon: field_json.line_icon,
@@ -310,6 +320,7 @@
           (modification_dict.hasOwnProperty('hide_sort')) ||
           (modification_dict.hasOwnProperty('hide_class'))) {
 
+        // display sorting arrow inside correct columns
         sort_list = JSON.parse(gadget.state.sort_list_json);
         column_list = JSON.parse(gadget.state.column_list_json);
 
