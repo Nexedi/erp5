@@ -118,6 +118,13 @@
     ));
   }
 
+  /** Clojure to ease finding in lists of lists by the first item **/
+  function hasSameFirstItem(a) {
+    return function (b) {
+      return a[0] === b[0];
+    };
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // ready
@@ -268,7 +275,6 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         sort_key = gadget.state.key + "_sort_list:json",
-        class_value,
         sort_list,
         column_list,
         sort_column_list,
@@ -327,12 +333,8 @@
             // construct array of links for sortable columns, undefined otherwise
             return RSVP.all(column_list.map(function (column) {
 
-              function is_current_column(item) {
-                return item[0] === column[0];
-              }
-
-              var is_sortable = sort_column_list.find(is_current_column) !== undefined,
-                current_sort = sort_list.find(is_current_column),
+              var is_sortable = sort_column_list.find(hasSameFirstItem(column)) !== undefined,
+                current_sort = sort_list.find(hasSameFirstItem(column)),
                 options = {};
 
               if (is_sortable) {
@@ -350,28 +352,26 @@
             // so we can construct array of header objects to be rendered in the header template
             var hide_button_text,
               hide_button_name,
-              current_sort,
-              head_value_list = [];
-            for (i = 0; i < column_list.length; i += 1) {
-              current_sort = sort_list.find((item) => item[0] === column_list[i][0]);
-              class_value = undefined;
+              head_value_list = column_list.map(function (column, index) {
+                var current_sort = sort_list.find(hasSameFirstItem(column)),
+                  class_value = "";
 
-              if (current_sort !== undefined) {
-                if (current_sort[1] === 'ascending') {
-                  class_value = "ui-icon ui-icon-arrow-up";
+                if (current_sort !== undefined) {
+                  if (current_sort[1] === 'ascending') {
+                    class_value = "ui-icon ui-icon-arrow-up";
+                  }
+                  if (current_sort[1] === 'descending') {
+                    class_value = "ui-icon ui-icon-arrow-down";
+                  }
                 }
-                if (current_sort[1] === 'descending') {
-                  class_value = "ui-icon ui-icon-arrow-down";
-                }
-              }
 
-              head_value_list.push({
-                "data-i18n": column_list[i][1],
-                "class_value": class_value,
-                "sort_link": column_sort_link_list[i],
-                "text": column_list[i][1]
+                return {
+                  "data-i18n": column[1],
+                  "class_value": class_value,
+                  "sort_link": column_sort_link_list[index],
+                  "text": column[1]
+                };
               });
-            }
 
             if (gadget.state.show_line_selector) {
               hide_button_text = 'Submit';
