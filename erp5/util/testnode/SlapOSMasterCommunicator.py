@@ -34,16 +34,25 @@ class SlapOSMasterCommunicator(object):
     self.certificate_path = certificate_path
     self.key_path = key_path
     self.url = url
+    self.log("Getting connection to " + str(self.url))
     self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
+    self.log("Connection done.")
     # Get master
     master_link = {'href':api_path,'type':"application/vnd.slapos.org.hal+json; class=slapos.org.master"}
-    master = self._curl(master_link)
-    self.person_link = master['_links']['http://slapos.org/reg/me']
+    self.log("Getting master with href: " + str(api_path))
+    #master = self._curl(master_link)
+    #self.person_link = master['_links']['http://slapos.org/reg/me']
+    self.person_link = { "href": "urn:jio:get:person_module/20170705-995F2E" }
+    self.log("Getting person with curl to harcoded link.")
     # Get person related to specified key/certificate provided
     person = self._curl(self.person_link)
+    self.log("person: " str(person))
     self.personnal_collection_link = person['_links']['http://slapos.org/reg/hosting_subscription']
+    self.log("personal collection link : " + str(self.personnal_collection_link))
     # Get collection (of hosting subscriptions)
+    self.log("Getting collection with curl")
     collection = self._curl(self.personnal_collection_link)
+    self.log("collection: " + str(collection))
     # XXX: This part may be extremly long (because here no hosting subscriptions
     # has been visited)
     self.hosting_subcriptions_dict = {}
@@ -54,7 +63,8 @@ class SlapOSMasterCommunicator(object):
     
   def _getConnection(self,certificate_path, key_path, url):
     api_scheme, api_netloc, api_path, api_query, api_fragment = urlparse.urlsplit(url)
-    #self.log("HTTPS Connection with: %s, cert=%s, key=%s" %(api_netloc,key_path,certificate_path))
+    #self.log("HTTPS Connection with: api_scheme=%s, api_netloc=%s, api_path=%s, api_query=%s, api_fragment=%s" %(api_scheme, api_netloc, api_path, api_query, api_fragment))
+    self.log("_getConnection method - api_netloc: " + str(api_netloc))
     return httplib.HTTPSConnection(api_netloc, key_file=key_path, cert_file=certificate_path, timeout=TIMEOUT)
 
   def _curl(self, link):
@@ -69,21 +79,31 @@ class SlapOSMasterCommunicator(object):
     max_retry = 10
     # Try to use existing conection
     try:
-      self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
+      self.log("Curl to link: " + str(link))
+      self.log("GET to api " + str(api_path))
+      self.connection.request(method='GET', url=api_path, body="")
+      self.log("Request done. Getting response...")
       response = self.connection.getresponse()
+      self.log("REPONSE.read: " + str(response.read()))
       return json.loads(response.read())
     # Create and use new connection
     except:
+      self.log("Request or response fail! Entering the while-try")
       retry = 0
       # (re)Try several time to use new connection
       while retry < max_retry:
         try:
+          self.log("Retry number: " + str(retry))
+          self.log("entering _getConnection() to " + str(self.url))
           self.connection = self._getConnection(self.certificate_path, self.key_path, self.url)
+          self.log("_getConnection DONE. Getting response...")
           self.connection.request(method='GET', url=api_path, headers={'Accept': link['type']}, body="")
           response = self.connection.getresponse()
+          self.log("REPONSE.read: " + str(response.read()))
           return json.loads(response.read())
-        except:
+        except Exception, e:
           self.log("SlapOSMasterCommunicator: Connection failed..")
+          self.log("EXCEPTION MESSAGE: "+ str(e))
           retry += 1
           time.sleep(10)
     self.log("SlapOSMasterCommunicator: All connection attempts failed after %d try.." %max_retry)
@@ -203,4 +223,3 @@ class SlapOSMasterCommunicator(object):
       }
     else:
       return None
-  

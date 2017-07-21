@@ -375,7 +375,8 @@ shared = true
             if my_test_type == 'UnitTest':
               runner = UnitTestRunner(node_test_suite)
             elif my_test_type == 'ScalabilityTest':
-              runner = ScalabilityTestRunner(node_test_suite)
+              log("instantiating runner for test suite")
+	      runner = ScalabilityTestRunner(self)
             else:
               log("testnode, Runner type %s not implemented.", my_test_type)
               raise NotImplementedError
