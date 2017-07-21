@@ -1,0 +1,216 @@
+<!-- Test whether listbox correctly sorts when clicking on column names in the table head.
+
+-  clicking at column name will cycle between DESC and ASC sorting  
+-  clicking at column name will influence sort in sort editor
+-  clicking at column name will remove any other filters
+-  clicking at column name will preserve search query if specified
+-->
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- make the listbox to sort by ID DESC  -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset?field_sort=</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Create Foo objects with IDs 0-9 -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//th/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+<!-- Issue sorting - should cycle from DESC to ASC -->
+<tr>
+  <td>click</td>
+  <td>//th/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<!-- The default sort should cycle back on the next click -->
+<tr>
+  <td>click</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<!-- Ensure sort editor changed as well --> 
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>id</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+  <td>ascending</td>
+</tr>
+
+<!-- Click to a different column should reset the default (and any other sort) --> 
+<tr>
+  <td>click</td>
+  <td>//th/a[@data-i18n='Title']</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- Test that the first sort is DESC -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='Title']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<!-- Ensure sort editor changed as well --> 
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>title</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+  <td>descending</td>
+</tr>
+
+
+<!-- Reset back to default sort 
+
+Test whether search query stays if we change the sort order
+-->
+
+<tr>
+  <td>type</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>Title</td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//button[@type="submit"]</td>
+  <td>Title</td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+
+<!-- That the last sort stayed -->
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='Title']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@role="main"]//div[@data-gadget-url="${base_url}/web_site_module/renderjs_runner/gadget_erp5_searchfield.html"]//input[@name="search"]</td>
+  <td>Title</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
