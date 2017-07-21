@@ -228,11 +228,13 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       self.REQUEST.set('current_web_section', self)
 
       actual_url = self.REQUEST.get("ACTUAL_URL", "").strip()
-      if actual_url and actual_url in actual_url and not actual_url.endswith("/"):
+      if actual_url and self.REQUEST.get("method") == "GET" and not actual_url.endswith("/"):
         query_string = self.REQUEST.get("QUERY_STRING", "")
         query_str = "?%s" % query_string if query_string else query_string
         return self.REQUEST.RESPONSE.redirect(
-          "".join([actual_url, "/", query_str]))
+          "".join([actual_url, "/", query_str]),
+          status=301
+        )
 
       if not self.REQUEST.get('editable_mode') and not self.REQUEST.get('ignore_layout'):
         document = None
