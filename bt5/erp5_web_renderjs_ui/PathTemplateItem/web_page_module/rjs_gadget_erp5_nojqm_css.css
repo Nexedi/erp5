@@ -1216,6 +1216,10 @@ div[data-gadget-scope='erp5_searchfield'] button {
   background-color: #0E81C2;
   color: #FFFFFF;
 }
+.document_table table thead a {
+  color: #FFFFFF;
+  text-decoration: underline;
+}
 .document_table table thead tr th {
   padding: 6pt 3pt;
 }

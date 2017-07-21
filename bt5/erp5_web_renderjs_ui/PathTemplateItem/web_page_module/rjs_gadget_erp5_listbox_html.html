@@ -28,7 +28,11 @@
              <th data-i18n="Jump">Jump</th>
            {{/if}}
            {{#each head_value}}
-              <th  data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>
+              {{#if sort_link}}
+              <th class="{{class_value}}"><a href="{{sort_link}}" data-i18n="{{data-i18n}}">{{text}}</a></th>
+              {{else}}
+              <th data-i18n="{{data-i18n}}" class="{{class_value}}">{{text}}</th>
+              {{/if}}
            {{/each}}
            {{#if line_icon}}
              <th></th>
