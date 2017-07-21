@@ -1,0 +1,146 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- make the listbox to sort by ID DESC  -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset?field_sort=id+%7C+DESC</td> <!-- ?field_sort="id | DESC" -->
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<!-- Create Foo objects with IDs 0-9 -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/FooModule_createObjects</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created Successfully.</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//th[@data-i18n='ID']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//th[@data-i18n='ID' and @class='ui-icon ui-icon-arrow-down']</td>
+  <td></td>
+</tr>
+
+<!-- Test whether another sorting condition does keep default sort -->
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Sort']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td></td>
+</tr>
+
+<!-- make sure the default sort if visible in "sort editor" -->
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>id</td>
+</tr>
+
+<tr>
+  <td>verifyValue</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+  <td>descending</td>
+</tr>
+
+<!-- reset sort and our set up value is the only one to sort by -->
+<tr>
+  <td>select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
+  <td>index=1</td> <!-- select title -->
+</tr>
+
+<tr>
+  <td>select</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
+  <td>index=1</td> <!-- select descending -->
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//button[@class="submit responsive ui-last-child ui-btn ui-btn-icon-left ui-icon-check"]</td>
+  <td></td>
+</tr>
+
+<!-- Wait for the Filters to be applied (maybe not the best way to do that ... but it works) -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n="Filter" and @class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementNotPresent</td>
+  <td>//button[@data-i18n="Filter" and @class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
+  <td></td>
+</tr>
+
+<!-- Check that default sort arrow disappeared -->
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//th[@data-i18n='ID' and @class='ui-icon ui-icon-arrow-up']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//th[@data-i18n='ID' and @class='ui-icon ui-icon-arrow-down']</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//th[@data-i18n='Title' and @class='ui-icon ui-icon-arrow-down']</td>
+  <td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -14,7 +14,7 @@
 <!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset?field_sort=</td>
   <td></td>
 </tr>
 
