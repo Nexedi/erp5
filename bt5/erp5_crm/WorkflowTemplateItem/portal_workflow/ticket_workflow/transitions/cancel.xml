@@ -11,6 +11,10 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string></string> </value>
         </item>
@@ -62,10 +66,12 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>permissions</string> </key>
+            <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Modify portal content</string>
+                <string>Owner</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
