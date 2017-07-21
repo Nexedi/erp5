@@ -113,7 +113,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "required": field.get_value("required"),
       # XXX Message can not be converted to json as is
       "items": field.get_value("items"),
-      "first_item": field.get_value("first_item")
+      "first_item": field.get_value("first_item"),
     }
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
   elif meta_type == "RadioField":
@@ -342,48 +342,30 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     }
     result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
   elif meta_type == "ListBox":
-    # XXX Not implemented
-    column_list = []
-    for tmp in field.get_value("columns"):
-      column_list.append((tmp[0], Base_translateString(tmp[1])))
-    editable_column_list = []
-    for tmp in field.get_value('editable_columns'):
-      editable_column_list.append((tmp[0], Base_translateString(tmp[1])))
+    """Display list of objects with optional search/sort capabilities on columns from catalog."""
+    _translate = Base_translateString
 
-    sort_column_list_tmp = []
+    column_list = [(name, _translate(title)) for name, title in field.get_value("columns")]
+    editable_column_list = [(name, _translate(title)) for name, title in field.get_value("editable_columns")]
+    catalog_column_list = [(name, title)
+                           for name, title in column_list
+                           if sql_catalog.isValidColumn(name)]
 
-    for tmp in field.get_value('sort_columns'):
-      sort_column_list_tmp.append((tmp[0], Base_translateString(tmp[1])))
+    # try to get specified searchable columns and fail back to all searchable columns
+    search_column_list = [(name, _translate(title))
+                          for name, title in field.get_value("search_columns")
+                          if sql_catalog.isValidColumn(name)] or catalog_column_list
 
-    search_column_list_tmp = []
-    for tmp in field.get_value('search_columns'):
-      search_column_list_tmp.append((tmp[0], Base_translateString(tmp[1])))
+    # try to get specified sortable columns and fail back to searchable fields
+    sort_column_list = [(name, _translate(title))
+                        for name, title in field.get_value("sort_columns")
+                        if sql_catalog.isValidColumn(name)] or search_column_list
 
-    sort_column_list = []
-    search_column_list = []
-    
-    #only get sortable&searchable column which is already displayed in listbox
-    #see https://lab.nexedi.com/nexedi/erp5/blob/HEAD/product/ERP5Form/ListBox.py#L1004
+    # requirement: get only sortable/searchable columns which are already displayed in listbox
+    # see https://lab.nexedi.com/nexedi/erp5/blob/HEAD/product/ERP5Form/ListBox.py#L1004
+    # implemented in javascript in the end
+    # see https://lab.nexedi.com/nexedi/erp5/blob/master/bt5/erp5_web_renderjs_ui/PathTemplateItem/web_page_module/rjs_gadget_erp5_listbox_js.js#L163
 
-    if search_column_list_tmp:
-      search_column_list = search_column_list_tmp
-    else:
-      for grain in column_list:
-        if sql_catalog.isValidColumn(grain[0]):
-          search_column_list.append(grain)
-
-    
-    if sort_column_list_tmp:
-      sort_column_list = sort_column_list_tmp
-    else:
-      sort_column_list = search_column_list
-
-        
-
-
-    # XXX 
-#     list_method = getattr(traversed_document, traversed_document.Listbox_getListMethodName(field))
-    # portal_types = [x[1] for x in field.get_value('portal_types')]
     portal_types = field.get_value('portal_types')
     default_params = dict(field.get_value('default_params'))
     default_params['ignore_unknown_columns'] = True
@@ -445,19 +427,17 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     result = {
       "type": meta_type,
       "editable": field.get_value("editable"),
-      # "column_list": [x[1] for x in columns],
       "column_list": column_list,
       "search_column_list": search_column_list,
       "sort_column_list": sort_column_list,
       "editable_column_list": editable_column_list,
       "show_anchor": field.get_value("anchor"),
-#       "line_list": line_list,
       "title": Base_translateString(field.get_value("title")),
       "key": key,
       "portal_type": portal_types,
       "lines": lines,
       "default_params": default_params,
-      "list_method": list_method_name
+      "list_method": list_method_name,
     }
     if (list_method_custom is not None):
       result["list_method_template"] = list_method_custom
