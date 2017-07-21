@@ -2,6 +2,8 @@
 from DateTime import DateTime
 category_list = ('a', 'b', 'a/a1', 'a/a2')
 big_category_list = ('c1', 'c10', 'c2', 'c20', 'c3', 'c4')
+start = int(start)
+num = int(num)
 
 for i in range(start, start + num):
   category = category_list[i % len(category_list)]
