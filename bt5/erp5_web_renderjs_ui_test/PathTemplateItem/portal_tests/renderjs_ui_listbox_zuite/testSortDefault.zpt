@@ -11,10 +11,10 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
-<!-- make the listbox to sort by ID DESC  -->
+<!-- make the listbox to sort by Title DESC which is not the default default now  -->
 <tr>
   <td>open</td>
-  <td>${base_url}/bar_module/ListBoxZuite_reset?field_sort=id+%7C+DESC</td> <!-- ?field_sort="id | DESC" -->
+  <td>${base_url}/foo_module/ListBoxZuite_reset?field_sort=title+%7C+DESC</td> <!-- ?field_sort="title | DESC" -->
   <td></td>
 </tr>
 
@@ -47,13 +47,13 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//th[@data-i18n='ID']</td>
+  <td>//a[@data-i18n='Title']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th[@data-i18n='ID' and @class='ui-icon ui-icon-arrow-down']</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='Title']</td>
   <td></td>
 </tr>
 
@@ -81,7 +81,7 @@
 <tr>
   <td>verifyValue</td>
   <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
-  <td>id</td>
+  <td>title</td>
 </tr>
 
 <tr>
@@ -94,13 +94,7 @@
 <tr>
   <td>select</td>
   <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[1]</td>
-  <td>index=1</td> <!-- select title -->
-</tr>
-
-<tr>
-  <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
-  <td>index=1</td> <!-- select descending -->
+  <td>index=0</td> <!-- select id -->
 </tr>
 
 <tr>
@@ -109,35 +103,25 @@
   <td></td>
 </tr>
 
-<!-- Wait for the Filters to be applied (maybe not the best way to do that ... but it works) -->
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n="Filter" and @class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>//button[@data-i18n="Filter" and @class="responsive ui-btn ui-icon-spinner ui-btn-icon-left ui-first-child ui-last-child ui-disabled ui-icon-spin"]</td>
-  <td></td>
-</tr>
+<!-- Wait for the Filters to be applied -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <!-- Check that default sort arrow disappeared -->
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//th[@data-i18n='ID' and @class='ui-icon ui-icon-arrow-up']</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='Title']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementNotPresent</td>
-  <td>//th[@data-i18n='ID' and @class='ui-icon ui-icon-arrow-down']</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='ID']</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th[@data-i18n='Title' and @class='ui-icon ui-icon-arrow-down']</td>
+  <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='ID']</td>
   <td></td>
 </tr>
 
