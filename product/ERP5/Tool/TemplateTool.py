@@ -776,7 +776,7 @@ class TemplateTool (BaseTool):
       # Add these catalog items in the object_property instead of adding
       # dummy path item for them
       if import_template.getTitle() == 'erp5_mysql_innodb_catalog':
-        template_path_list.extend('portal_catalog/erp5_mysql_innodb')
+        template_path_list.append('portal_catalog/erp5_mysql_innodb')
 
       # Add portal_property_sheets
       property_sheet_id_list = import_template.getTemplatePropertySheetIdList()
@@ -1055,7 +1055,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': ['erp5_catalog'],
           'title': 'erp5_mysql_innodb_catalog',
-          'version': '1.0'}
+          'version': '2.0'}
 
         bm_dict_2 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1109,12 +1109,29 @@ class TemplateTool (BaseTool):
           'title': 'erp5_property_sheets',
           'version': '1.0'}
 
+        bm_dict_6 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_catalog (>= 1.1)',
+                              'erp5_core_proxy_field_legacy',
+                              'erp5_property_sheets'],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_core',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': ['erp5_full_text_mroonga_catalog',
+                                    'erp5_base'],
+          'provision_list': ['erp5_auto_logout',],
+          'title': 'erp5_core',
+          'version': '1.0'}
+
         if repository.endswith('/bootstrap'):
           property_dict_list.append(bm_dict_1)
           property_dict_list.append(bm_dict_2)
           property_dict_list.append(bm_dict_3)
           property_dict_list.append(bm_dict_4)
           property_dict_list.append(bm_dict_5)
+          property_dict_list.append(bm_dict_6)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
