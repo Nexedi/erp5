@@ -52,30 +52,8 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[text()='Filter']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
 
-<tr>
-  <td>click</td>
-  <td>//button[text()='Filter']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name='heard_about']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyValue</td>
-  <td>//select[@name='heard_about']</td>
-  <td>AND</td>
-</tr>
 
 
 <tr>
@@ -142,26 +120,7 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-
-<tr>
-  <td>click</td>
-  <td>//button[text()='Filter']</td>
-  <td></td>
-</tr>
-
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name='heard_about']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyValue</td>
-  <td>//select[@name='heard_about']</td>
-  <td>AND</td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_and" />
 
 
 <tr>
@@ -210,11 +169,8 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>click</td>
-  <td>//button[text()='Filter']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_filter_or" />
+
 
 
 
@@ -235,20 +191,6 @@
   <td>verifyElementPresent</td>
   <td>//div[@class="filter_item_container"]/div[1]</td>
   <td></td>
-</tr>
-
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//select[@name='heard_about']</td>
-  <td></td>
-</tr>
-
-
-<tr>
-  <td>verifyValue</td>
-  <td>//select[@name='heard_about']</td>
-  <td>OR</td>
 </tr>
 
 

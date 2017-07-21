@@ -47,23 +47,8 @@
 
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/clear_query" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Sort']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Sort']</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
-  <td></td>
-</tr>
 
 
 
@@ -118,17 +103,8 @@
 <!-- Wait for the Filters to be applied -->
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Sort']</td>
-  <td></td>
-</tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/triggle_sort" />
 
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Sort']</td>
-  <td></td>
-</tr>
 
 <tr>
   <td>waitForElementPresent</td>
