@@ -5,14 +5,10 @@
   SimpleQuery, ComplexQuery, Query, Handlebars, console, QueryFactory) {
   "use strict";
   var gadget_klass = rJS(window),
-    listbox_hidden_thead_source = gadget_klass.__template_element
-                         .getElementById("listbox-hidden-thead-template")
+    listbox_thead_source = gadget_klass.__template_element
+                         .getElementById("listbox-thead-template")
                          .innerHTML,
-    listbox_hidden_thead_template = Handlebars.compile(listbox_hidden_thead_source),
-    listbox_show_thead_source = gadget_klass.__template_element
-                         .getElementById("listbox-show-thead-template")
-                         .innerHTML,
-    listbox_show_thead_template = Handlebars.compile(listbox_show_thead_source),
+    listbox_thead_template = Handlebars.compile(listbox_thead_source),
 
     listbox_hidden_tbody_source = gadget_klass.__template_element
                          .getElementById("listbox-hidden-tbody-template")
@@ -351,11 +347,9 @@
               hide_button_name;
 
             if (gadget.state.show_line_selector) {
-              listbox_thead_template = listbox_show_thead_template;
               hide_button_text = 'Submit';
               hide_button_name = 'SelectRows';
             } else {
-              listbox_thead_template = listbox_hidden_thead_template;
               hide_button_text = 'Hide Rows';
               hide_button_name = 'Hide';
             }
