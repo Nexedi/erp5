@@ -267,11 +267,11 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        head_value_list = [],
+        sort_key = gadget.state.key + "_sort_list:json",
         class_value,
         sort_list,
         column_list,
-        tmp,
+        sort_column_list,
         i,
         j,
         result_queue = new RSVP.Queue();
@@ -290,7 +290,7 @@
         return result_queue
           .push(function () {
             var options = {extended_search: undefined};
-            options[gadget.state.key + "_sort_list:json"] = undefined;
+            options[sort_key] = undefined;
             return gadget.getUrlFor({
               command: 'store_and_change',
               options: options
@@ -314,37 +314,64 @@
           (modification_dict.hasOwnProperty('has_error')) ||
           (modification_dict.hasOwnProperty('show_line_selector')) ||
           (modification_dict.hasOwnProperty('hide_sort')) ||
-          (modification_dict.hasOwnProperty('hide_class'))) {
+          (modification_dict.hasOwnProperty('hide_class')) ||
+          (modification_dict.hasOwnProperty('extended_search'))) {
 
         // display sorting arrow inside correct columns
-        sort_list = JSON.parse(gadget.state.sort_list_json);
-        column_list = JSON.parse(gadget.state.column_list_json);
-
-        for (i = 0; i < column_list.length; i += 1) {
-          class_value = "";
-          for (j = 0; j < sort_list.length; j += 1) {
-            tmp = sort_list[j];
-            if (tmp[0] === column_list[i][0]) {
-              if (tmp[1] === "ascending") {
-                class_value = "ui-icon ui-icon-arrow-up";
-              } else {
-                class_value = "ui-icon ui-icon-arrow-down";
-              }
-              break;
-            }
-          }
-          head_value_list.push({
-            "data-i18n": column_list[i][1],
-            "class_value": class_value,
-            "text": column_list[i][1]
-          });
-        }
+        sort_list = JSON.parse(gadget.state.sort_list_json);  // current sort
+        column_list = JSON.parse(gadget.state.column_list_json);  // shown columns
+        sort_column_list = JSON.parse(gadget.state.sort_column_list_json); // sortable columns
 
         result_queue
           .push(function () {
-            var listbox_thead_template,
-              hide_button_text,
-              hide_button_name;
+            // construct array of links for sortable columns, undefined otherwise
+            return RSVP.all(column_list.map(function (column) {
+
+              function is_current_column(item) {
+                return item[0] === column[0];
+              }
+
+              var is_sortable = sort_column_list.find(is_current_column) !== undefined,
+                current_sort = sort_list.find(is_current_column),
+                options = {};
+
+              if (is_sortable) {
+                options[sort_key] = [[column[0], 'descending']];  // make it the only new sort (replace array instead of push)
+                if (current_sort !== undefined && current_sort[1] === 'descending') {
+                  options[sort_key] = [[column[0], 'ascending']];
+                }
+                return gadget.getUrlFor({"command": 'store_and_change', "options": options});
+              }
+              return undefined;
+            }));
+          })
+          .push(function (column_sort_link_list) {
+            // here we obtain links for sorting by columns
+            // so we can construct array of header objects to be rendered in the header template
+            var hide_button_text,
+              hide_button_name,
+              current_sort,
+              head_value_list = [];
+            for (i = 0; i < column_list.length; i += 1) {
+              current_sort = sort_list.find((item) => item[0] === column_list[i][0]);
+              class_value = undefined;
+
+              if (current_sort !== undefined) {
+                if (current_sort[1] === 'ascending') {
+                  class_value = "ui-icon ui-icon-arrow-up";
+                }
+                if (current_sort[1] === 'descending') {
+                  class_value = "ui-icon ui-icon-arrow-down";
+                }
+              }
+
+              head_value_list.push({
+                "data-i18n": column_list[i][1],
+                "class_value": class_value,
+                "sort_link": column_sort_link_list[i],
+                "text": column_list[i][1]
+              });
+            }
 
             if (gadget.state.show_line_selector) {
               hide_button_text = 'Submit';

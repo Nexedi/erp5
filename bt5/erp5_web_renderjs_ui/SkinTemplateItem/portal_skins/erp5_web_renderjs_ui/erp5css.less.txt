@@ -1396,6 +1396,10 @@ div[data-gadget-scope='erp5_searchfield'] {
       background-color: @colorsubheaderbackground;
       color: @white;
 
+      a {
+        color: @white;
+        text-decoration: underline;
+      }
 
       // XXX Same than cells
       tr { th {
