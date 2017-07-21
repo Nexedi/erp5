@@ -328,7 +328,11 @@ class BusinessManager(Folder):
     for obj in imported_manager.objectValues():
       delattr(obj, '__ac_local_roles__')
       new_id = self.generateNewId()
-      self._setObject(new_id, aq_base(obj))
+      # XXX: Donot merge this, needed just for migrated erp5_core
+      try:
+        self._setObject(new_id, aq_base(obj))
+      except Exception:
+        pass
       obj.isIndexable = ConstantGetter('isIndexable', value=False)
     self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
     self.setProperty('layer', imported_manager.getProperty('layer'))
