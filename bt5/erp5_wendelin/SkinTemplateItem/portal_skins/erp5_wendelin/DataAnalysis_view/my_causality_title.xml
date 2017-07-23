@@ -88,6 +88,10 @@
                           <string>Data Ingestion</string>
                           <string>Data Ingestion</string>
                         </tuple>
+                        <tuple>
+                          <string>Data Analysis</string>
+                          <string>Data Analysis</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
