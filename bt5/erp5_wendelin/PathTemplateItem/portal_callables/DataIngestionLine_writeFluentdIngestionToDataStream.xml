@@ -87,7 +87,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Ingestion operation script to be used with Fluentd Input Bin plugin: Append given data chunk to given data stream and add windows newline character at the end of each chunk</string> </value>
+            <value> <string>Ingestion operation script to be used with Fluentd Input Bin plugin: Append given data chunk to given data stream</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
