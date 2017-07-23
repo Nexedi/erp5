@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_dtype</string> </value>
+            <value> <string>my_dtype_expression</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -78,7 +78,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_view_mode_tales_expression</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
