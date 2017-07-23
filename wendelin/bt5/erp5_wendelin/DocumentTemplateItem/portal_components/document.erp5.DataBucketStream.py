@@ -51,10 +51,12 @@ class DataBucketStream(Document):
                     , PropertySheet.SortIndex
                     )
 
-
   def __init__(self, id, **kw):
     self.initTree()
     Document.__init__(self, id, **kw)
+
+  def __len__(self):
+    return len(self._tree)
     
   def initTree(self):
     """
@@ -101,11 +103,12 @@ class DataBucketStream(Document):
       return sequence
     return sequence[:count]
     
-  def getBucketItemSequence(self, start_key=None, count=None):
+  def getBucketItemSequence(self, start_key=None, count=None,
+                            exclude_start_key=False):
     """
-      Get a lazy sequence of bucket values
+      Get a lazy sequence of bucket items
     """
-    sequence = self._tree.items(min=start_key)
+    sequence = self._tree.items(min=start_key, excludemin=exclude_start_key)
     if count is None:
       return sequence
     return sequence[:count]
