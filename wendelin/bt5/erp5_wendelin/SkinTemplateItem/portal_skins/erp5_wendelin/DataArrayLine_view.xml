@@ -75,7 +75,6 @@
                     <value>
                       <list>
                         <string>my_reference</string>
-                        <string>my_dtype</string>
                       </list>
                     </value>
                 </item>
@@ -84,6 +83,8 @@
                     <value>
                       <list>
                         <string>my_index_expression</string>
+                        <string>my_dtype_expression</string>
+                        <string>my_name_list</string>
                       </list>
                     </value>
                 </item>

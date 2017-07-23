@@ -10,19 +10,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/lines</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>List of filends name of array dtype</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>dtype_property</string> </value>
+            <value> <string>name_property</string> </value>
+        </item>
+        <item>
+            <key> <string>multivalued</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
