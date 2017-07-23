@@ -31,6 +31,19 @@ from Products.ERP5Type.Core.Folder import Folder
 from cStringIO import StringIO
 import msgpack
 
+class RestrictedUnpacker:
+  """
+  A lazy Unpacker which works in zopes restricted environment
+  """
+  def __init__(self, unpacker):
+    self.unpacker = unpacker
+    
+  def __iter__(self):
+    return self
+    
+  def next(self):
+    return self.unpacker.next()
+
 class IngestionPolicyTool(Folder):
   """
   A tool to manage so called policies for ingest data into ERP5.
@@ -63,3 +76,11 @@ class IngestionPolicyTool(Folder):
     # we need pure primitive list so we avoid zope security in restricted 
     # script environment, but we loose lazyness
     return [x for x in msgpack_list]
+    
+  def unpack_lazy(self, data, use_list=True):
+    """
+      Lazy unpack data, usable in restructed environment
+      Setting use_list=False uses tuples instead of lists which is faster
+    """
+    data_file = StringIO(data)
+    return RestrictedUnpacker(msgpack.Unpacker(data_file, use_list=use_list))
