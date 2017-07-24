@@ -35,7 +35,6 @@ from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
   Message, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, SkippedMessage)
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   DEFAULT_MAX_RETRY, ActivityRuntimeEnvironment, getTransactionalVariable)
 from Queue import Queue, VALIDATION_ERROR_DELAY, VALID, INVALID_PATH
@@ -43,6 +42,7 @@ from Products.CMFActivity.Errors import ActivityFlushError
 
 # TODO: Limit by size in bytes instead of number of rows.
 MAX_MESSAGE_LIST_SIZE = 100
+INVOKE_ERROR_STATE = -2
 
 def sort_message_key(message):
   # same sort key as in SQLBase.getMessageList
