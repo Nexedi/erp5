@@ -34,7 +34,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.Base import Base
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
+from Products.CMFActivity.Activity.SQLBase import INVOKE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
 import Products.CMFActivity.ActivityTool
