@@ -8,7 +8,6 @@ if dialog_category == 'object_report':
 elif dialog_category == 'object_exchange':
   return sorted(actions.get('object_exchange', []) + actions.get('object_exchange_jio', []), key=lambda x: x["priority"])
 elif dialog_category == 'object_action':
-  context.log(actions.get('object_action', []))
   return sorted(actions.get('object_action', []) + actions.get('object_action_jio', []), key=lambda x: x["priority"])
 if dialog_category != 'object_print':
   return actions.get(dialog_category, [])
