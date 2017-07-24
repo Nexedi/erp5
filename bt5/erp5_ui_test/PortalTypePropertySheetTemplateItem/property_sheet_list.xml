@@ -1,9 +1,0 @@
-<property_sheet_list>
- <portal_type id="Bar">
-  <item>Reference</item>
- </portal_type>
- <portal_type id="Foo">
-  <item>Amount</item>
-  <item>DublinCore</item>
- </portal_type>
-</property_sheet_list>
