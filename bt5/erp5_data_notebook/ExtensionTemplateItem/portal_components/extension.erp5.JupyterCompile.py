@@ -16,7 +16,7 @@ import transaction
 import Acquisition
 import astor
 from Products.ERP5Type.Log import log
-
+import time
 # Display matplotlib figure automatically like
 # the original python kernel
 import matplotlib
@@ -229,7 +229,33 @@ def displayDataWrapper(function):
 def Base_runJupyterCode(self, data_notebook_line, old_notebook_context):
   mime_type = 'text/plain'
   status = u'ok'
-  output = data_notebook_line.DataNotebookLine_execute()
+  activity_tool = self.getPortalObject().portal_activities
+  active_process = activity_tool.newActiveProcess()
+  log('active_process = %r' %(active_process,))
+  data_notebook_line.activate(
+    active_process=active_process
+  ).DataNotebookLine_execute(
+    active_process=active_process.getRelativeUrl())
+  transaction.commit()  # XXX stupid? --> otherwise hasActivity returns False
+  activity_error = False
+  try_num = 1
+  while True:
+    # XXX: Of course, instead of looping here, we gonna immediately return some URL,
+    #      which will be queried by Jupyter Notebook Server (the guy calling us),
+    #      inside of ERP5 kernel and it will poll.
+    log('[%s] Try %s' % (active_process.getRelativeUrl(), try_num,))
+    try_num += 1
+  # XXX: Support activity_error!!
+#    if active_process.hasErrorActivity():
+#      activity_error = True
+#      break
+    if not active_process.hasActivity():
+      break
+    time.sleep(0.5)
+    transaction.commit()  # XXX stupid? --> otherwise hasActivity state does not change
+  result_list = [q.detail for q in active_process.getResultList()]
+  log(repr(result_list))
+  output = '\n'.join(result_list)
   notebook_context = {}
   displayhook_result = None
   evalue = None

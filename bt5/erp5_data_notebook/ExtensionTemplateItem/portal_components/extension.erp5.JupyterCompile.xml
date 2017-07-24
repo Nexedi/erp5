@@ -46,10 +46,10 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W:283,  4: No exception type(s) specified (bare-except)</string>
-                <string>W:291,  6: No exception type(s) specified (bare-except)</string>
-                <string>W:654,  2: Redefining name \'IFrame\' from outer scope (line 4) (redefined-outer-name)</string>
-                <string>W: 18,  0: Unused log imported from Products.ERP5Type.Log (unused-import)</string>
+                <string>W:240,  2: Unused variable \'activity_error\' (unused-variable)</string>
+                <string>W:309,  4: No exception type(s) specified (bare-except)</string>
+                <string>W:317,  6: No exception type(s) specified (bare-except)</string>
+                <string>W:680,  2: Redefining name \'IFrame\' from outer scope (line 4) (redefined-outer-name)</string>
               </tuple>
             </value>
         </item>
