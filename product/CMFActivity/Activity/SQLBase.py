@@ -210,7 +210,8 @@ class SQLBase(Queue):
     return result[0].uid_count
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None,
-                  active_process_uid=None):
+                  active_process_uid=None,
+                  only_invalid=False):
     hasMessage = getattr(activity_tool, 'SQLBase_hasMessage', None)
     if hasMessage is not None:
       if object is None:
@@ -219,7 +220,8 @@ class SQLBase(Queue):
         path = '/'.join(object.getPhysicalPath())
       try:
         result = hasMessage(table=self.sql_table, path=path, method_id=method_id,
-          only_valid=only_valid, active_process_uid=active_process_uid)
+          only_valid=only_valid, active_process_uid=active_process_uid,
+          only_invalid=only_invalid)
       except DatabaseError:
         LOG(
           'SQLBase',
