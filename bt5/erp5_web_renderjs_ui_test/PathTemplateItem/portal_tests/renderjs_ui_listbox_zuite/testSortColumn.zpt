@@ -68,7 +68,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td><!-- verification -->
   <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='ID']</td>
   <td></td>
 </tr>
@@ -83,7 +83,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td><!-- verification -->
   <td>//th[@class='ui-icon ui-icon-arrow-up']/a[@data-i18n='ID']</td>
   <td></td>
 </tr>
@@ -130,7 +130,7 @@
 
 <!-- Test that the first sort is DESC -->
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td><!-- verification -->
   <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='Title']</td>
   <td></td>
 </tr>
@@ -200,7 +200,7 @@ Test whether search query stays if we change the sort order
 
 <!-- That the last sort stayed -->
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td><!-- verification -->
   <td>//th[@class='ui-icon ui-icon-arrow-down']/a[@data-i18n='Title']</td>
   <td></td>
 </tr>
