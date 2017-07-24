@@ -1150,6 +1150,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             self._installBusinessTemplateList(business_template_list,
                                               light_install=light_install,
                                               quiet=quiet)
+
             self._recreateCatalog()
             self._updateTranslationTable()
             self._updateConversionServerConfiguration()
@@ -1158,9 +1159,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             uf = self.getPortal().acl_users
             self.addERP5TypeTestCaseUser()
             user = uf.getUserById('ERP5TypeTestCase').__of__(uf)
-
-            # XXX: Hack for allowing reindexing after installing BM(s)
-            self.portal.isIndexingRequired = ConstantGetter('isIndexingRequired', True)
 
             self._callSetUpOnce()
             self._reindexSite()
