@@ -2321,6 +2321,8 @@ class ERP5Generator(PortalGenerator):
       self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
       self.setupERP5Promise(p,**kw)
+      # XXX: Force setting of properties setter and getters after bootstrap
+      p.portal_types.resetDynamicDocuments()
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
