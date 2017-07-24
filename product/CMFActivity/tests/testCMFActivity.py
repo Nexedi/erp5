@@ -2334,6 +2334,75 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     test(active_process, active_process=active_process)
     test(active_process, active_process=active_process.getPath())
 
+  def _test_hasErrorActivity_error(self, activity):
+    # Monkey patch Organisation to add a failing method
+    def failingMethod(self):
+      raise ValueError('This method always fail')
+    Organisation.failingMethod = failingMethod
+    active_object = self.portal.organisation_module.newContent(
+                                            portal_type='Organisation')
+    active_process = self.portal.portal_activities.newActiveProcess()
+    self.tic()
+
+
+    self.assertFalse(active_object.hasErrorActivity())
+    self.assertFalse(active_process.hasErrorActivity())
+
+    active_object.activate(
+      activity=activity, active_process=active_process).failingMethod()
+    self.commit()
+    # assert that any activity is created
+    self.assertTrue(active_object.hasActivity())
+    self.assertTrue(active_process.hasActivity())
+    # assert that no error is reported
+    self.assertFalse(active_object.hasErrorActivity())
+    self.assertFalse(active_process.hasErrorActivity())
+    self.flushAllActivities()
+    # assert that any activity is created
+    self.assertTrue(active_object.hasActivity())
+    self.assertTrue(active_process.hasActivity())
+    # assert that an error has been seen
+    self.assertTrue(active_object.hasErrorActivity())
+    self.assertTrue(active_process.hasErrorActivity())
+
+  def test_hasErrorActivity_error_SQLQueue(self):
+    self._test_hasErrorActivity_error('SQLQueue')
+
+  def test_hasErrorActivity_error_SQLDict(self):
+    self._test_hasErrorActivity_error('SQLDict')
+
+  def _test_hasErrorActivity(self, activity):
+    active_object = self.portal.organisation_module.newContent(
+                                            portal_type='Organisation')
+    active_process = self.portal.portal_activities.newActiveProcess()
+    self.tic()
+
+    self.assertFalse(active_object.hasErrorActivity())
+    self.assertFalse(active_process.hasErrorActivity())
+
+    active_object.activate(
+      activity=activity, active_process=active_process).getTitle()
+    self.commit()
+    # assert that any activity is created
+    self.assertTrue(active_object.hasActivity())
+    self.assertTrue(active_process.hasActivity())
+    # assert that no error is reported
+    self.assertFalse(active_object.hasErrorActivity())
+    self.assertFalse(active_process.hasErrorActivity())
+    self.flushAllActivities()
+    # assert that any activity is created
+    self.assertFalse(active_object.hasActivity())
+    self.assertFalse(active_process.hasActivity())
+    # assert that no error is reported
+    self.assertFalse(active_object.hasErrorActivity())
+    self.assertFalse(active_process.hasErrorActivity())
+
+  def test_hasErrorActivity_SQLQueue(self):
+    self._test_hasErrorActivity('SQLQueue')
+
+  def test_hasErrorActivity_SQLDict(self):
+    self._test_hasErrorActivity('SQLDict')
+
   def test_active_object_hasActivity_does_not_catch_exceptions(self):
     """
     Some time ago, hasActivity was doing a silent try/except, and this was
