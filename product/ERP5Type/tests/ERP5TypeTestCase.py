@@ -1053,10 +1053,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           if not quiet:
             ZopeTestCase._print('Adding %s business template ... ' % bt_title)
         bt = template_tool.download(url)
-
+        bm_list = []
         # If the bt is Business Manager, update the installation state
         if bt.getPortalType() == 'Business Manager':
-          template_tool.updateInstallationState([bt])
+          bm_list.append(bt)
           ZopeTestCase._print('(imported in %.3fs) ' % (time.time() - start))
           continue
 
@@ -1085,6 +1085,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         self.commit()
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
+
+      # Install all BM at one go
+      template_tool.updateInstallationState(bm_list)
 
     def _getSiteCreationParameterDict(self):
       kw = _getConnectionStringDict()
