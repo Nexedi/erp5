@@ -2334,6 +2334,32 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     test(active_process, active_process=active_process)
     test(active_process, active_process=active_process.getPath())
 
+  def _test_hasErrorActivity(self, activity):
+    # Monkey patch Organisation to add a failing method
+    def failingMethod(self):
+      raise ValueError('This method always fail')
+    Organisation.failingMethod = failingMethod
+    active_object = self.portal.organisation_module.newContent(
+                                            portal_type='Organisation')
+    active_process = self.portal.portal_activities.newActiveProcess()
+    self.tic()
+
+
+    self.assertFalse(active_object.hasErrorActivity())
+    self.assertFalse(active_process.hasErrorActivity())
+
+    active_object.activate(
+      activity=activity, active_process=active_process).failingMethod()
+    self.commit()
+    self.assertTrue(active_object.hasErrorActivity())
+    self.assertTrue(active_process.hasErrorActivity())
+
+  def test_hasErrorActivity_SQLQueue(self):
+    self._test_hasErrorActivity('SQLQueue')
+
+  def test_hasErrorActivity_SQLDict(self):
+    self._test_hasErrorActivity('SQLDict')
+
   def test_active_object_hasActivity_does_not_catch_exceptions(self):
     """
     Some time ago, hasActivity was doing a silent try/except, and this was
