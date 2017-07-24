@@ -33,7 +33,6 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.ConflictFree import ConflictFreeLog
 from BTrees.Length import Length
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from random import randrange
 from .ActiveResult import ActiveResult
 
