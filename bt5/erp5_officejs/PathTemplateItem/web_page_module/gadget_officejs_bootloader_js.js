@@ -5,13 +5,6 @@ var repair = false;
   ProgressEvent, console) {
   "use strict";
 
-  var remote_storage = {
-    type: "erp5",
-    url: window.location.origin +
-      window.location.pathname + "hateoasnoauth",
-    default_view_reference: "jio_view"
-  };
-
   function createStorage(version_url, manifest) {
     return jIO.createJIO({
       type: "replicate",
@@ -145,13 +138,14 @@ var repair = false;
           return;
         })
         .push(undefined, function (error) {
-          if (error instanceof ProgressEvent) {
-            if (gadget.props.sub === undefined) {
-              window.location.pathname += gadget.props.version_url;
-            }
-            return;
-          }
-          throw error;
+          return gadget.props.storage.get("status")
+            .push(function (status) {
+              if (status.installed) {
+                window.location.pathname += gadget.props.version_url;
+              } else {
+                throw error;
+              }
+            });
         });
     })
 
@@ -194,6 +188,7 @@ var repair = false;
               document.querySelector("base")
             );
           }
+          return gadget.props.storage.put("status", {'installed': true});
         });
     })
 
