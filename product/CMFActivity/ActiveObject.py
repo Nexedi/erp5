@@ -39,9 +39,6 @@ from Products.CMFCore import permissions
 
 DEFAULT_ACTIVITY = 'SQLDict'
 
-# Processing node are used to store processing state or processing node
-INVOKE_ERROR_STATE = -2
-
 _DEFAULT_ACTIVATE_PARAMETER_KEY = 'default_activate_parameter'
 
 class ActiveObject(ExtensionClass.Base):
@@ -143,7 +140,7 @@ class ActiveObject(ExtensionClass.Base):
   def hasErrorActivity(self, **kw):
     """Tells if there is failed activities for this object.
     """
-    return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
+    return self.hasActivity(only_invalid=True)
 
   def getActiveProcess(self):
     path = getActivityRuntimeEnvironment()._message.active_process

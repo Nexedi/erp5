@@ -33,7 +33,6 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.ConflictFree import ConflictFreeLog
 from BTrees.Length import Length
-from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE
 from random import randrange
 from .ActiveResult import ActiveResult
 
@@ -147,7 +146,7 @@ class ActiveProcess(Base):
     """
       Tells if some attached activities are in a error
     """
-    return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
+    return self.hasActivity(only_invalid=True)
 
   def getCreationDate(self):
     """
