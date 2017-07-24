@@ -1,1 +1,0 @@
-select distinct path from catalog

@@ -1,1 +1,0 @@
-SELECT @@optimizer_switch
