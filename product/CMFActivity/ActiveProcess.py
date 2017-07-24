@@ -147,7 +147,7 @@ class ActiveProcess(Base):
     """
       Tells if some attached activities are in a error
     """
-    return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
+    return self.hasActivity(only_valid=False)
 
   def getCreationDate(self):
     """

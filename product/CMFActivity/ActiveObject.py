@@ -144,7 +144,7 @@ class ActiveObject(ExtensionClass.Base):
   def hasErrorActivity(self, **kw):
     """Tells if there is failed activities for this object.
     """
-    return self.hasActivity(processing_node = INVOKE_ERROR_STATE)
+    return self.hasActivity(only_valid=False)
 
   def getActiveProcess(self):
     path = getActivityRuntimeEnvironment()._message.active_process
