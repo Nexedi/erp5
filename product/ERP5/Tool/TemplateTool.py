@@ -695,6 +695,27 @@ class TemplateTool (BaseTool):
         #workflow_path_list.append('portal_workflow/' + workflow + '/**')
       template_path_list.extend(workflow_path_list)
 
+      # For tests in portal components add them with portal_components head
+      test_id_list = import_template.getTemplateTestIdList()
+      test_path_list = []
+      for path in test_id_list:
+        test_path_list.append('portal_components/' + path)
+      template_path_list.extend(test_path_list)
+
+      # For documents in portal components add them with portal_components head
+      document_id_list = import_template.getTemplateDocumentIdList()
+      document_path_list = []
+      for path in document_id_list:
+        document_path_list.append('portal_components/' + path)
+      template_path_list.extend(document_path_list)
+
+      # For extensions in portal components add them with portal_components head
+      extension_id_list = import_template.getTemplateExtensionIdList()
+      extension_path_list = []
+      for path in extension_id_list:
+        extension_path_list.append('portal_components/' + path)
+      template_path_list.extend(extension_path_list)
+
       # For paths, we add them directly to the path list
       path_list = import_template.getTemplatePathList()
       for path in path_list:
