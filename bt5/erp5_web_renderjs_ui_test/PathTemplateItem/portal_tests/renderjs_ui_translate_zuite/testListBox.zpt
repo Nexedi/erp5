@@ -24,7 +24,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='document_table']//th[text() = 'biaoti']</td>
+  <td>//div[@class='document_table']//th/a[text() = 'biaoti']</td>
   <td></td>
 </tr>
 
