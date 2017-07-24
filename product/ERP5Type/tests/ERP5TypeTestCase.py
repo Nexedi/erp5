@@ -1086,8 +1086,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
+      start = time.time()
       # Install all BM at one go
       template_tool.updateInstallationState(bm_list)
+      ZopeTestCase._print('finished installation of BMs in (%.3fs)\n' % (time.time() - start))
 
     def _getSiteCreationParameterDict(self):
       kw = _getConnectionStringDict()
