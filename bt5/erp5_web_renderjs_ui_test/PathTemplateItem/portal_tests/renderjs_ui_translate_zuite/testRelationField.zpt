@@ -140,7 +140,7 @@
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th[text() = 'biaoti']</td>
+  <td>//th/a[text() = 'biaoti']</td>
   <td></td>
 </tr>
 

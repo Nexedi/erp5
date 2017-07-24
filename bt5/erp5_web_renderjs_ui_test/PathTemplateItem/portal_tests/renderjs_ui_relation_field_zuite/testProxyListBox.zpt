@@ -197,19 +197,19 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//th[@data-i18n="Title"]</td>
+  <td>//th/a[@data-i18n="Title"]</td><!-- Title is sortable -->
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th[@data-i18n="Title"]</td>
+  <td>//th/a[@data-i18n="Title"]</td>
   <td></td>
 </tr>
 
 <tr>
   <td>verifyElementPresent</td>
-  <td>//th[@data-i18n="Quantity"]</td>
+  <td>//th[@data-i18n="Quantity"]</td><!-- Quatity is not sortable (portal column) -->
   <td></td>
 </tr>
 
