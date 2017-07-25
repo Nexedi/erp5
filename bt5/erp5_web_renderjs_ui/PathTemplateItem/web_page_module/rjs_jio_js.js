@@ -6683,7 +6683,7 @@ return new Parser;
       return new RegExp("^" + stringEscapeRegexpCharacters(string) + "$");
     }
     return new RegExp("^" + stringEscapeRegexpCharacters(string)
-      .replace(regexp_percent, '.*')
+      .replace(regexp_percent, '[\\s\\S]*')
       .replace(regexp_underscore, '.') + "$");
   }
 
@@ -8958,7 +8958,184 @@ return new Parser;
       });
   }
 
-  function repairDocumentAttachment(context, id) {
+  function propagateFastAttachmentDeletion(queue, id, name, storage) {
+    return queue
+      .push(function () {
+        return storage.removeAttachment(id, name);
+      });
+  }
+
+  function propagateFastAttachmentModification(queue, id, key, source,
+                                               destination, signature, hash) {
+    return queue
+      .push(function () {
+        return signature.getAttachment(id, key, {format: 'json'})
+          .push(undefined, function (error) {
+            if ((error instanceof jIO.util.jIOError) &&
+                (error.status_code === 404)) {
+              return {hash: null};
+            }
+            throw error;
+          })
+          .push(function (result) {
+            if (result.hash !== hash) {
+              return source.getAttachment(id, key)
+                .push(function (blob) {
+                  return destination.putAttachment(id, key, blob);
+                })
+                .push(function () {
+                  return signature.putAttachment(id, key, JSON.stringify({
+                    hash: hash
+                  }));
+                });
+            }
+          });
+
+      });
+  }
+
+  function repairFastDocumentAttachment(context, id,
+                                        signature_hash,
+                                        signature_attachment_hash,
+                                        signature_from_local) {
+    if (signature_hash === signature_attachment_hash) {
+      // No replication to do
+      return;
+    }
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          context._signature_sub_storage.allAttachments(id),
+          context._local_sub_storage.allAttachments(id),
+          context._remote_sub_storage.allAttachments(id)
+        ]);
+      })
+      .push(function (result_list) {
+        var key,
+          source_attachment_dict,
+          destination_attachment_dict,
+          source,
+          destination,
+          push_argument_list = [],
+          delete_argument_list = [],
+          signature_attachment_dict = result_list[0],
+          local_attachment_dict = result_list[1],
+          remote_attachment_list = result_list[2],
+          check_local_modification =
+            context._check_local_attachment_modification,
+          check_local_creation = context._check_local_attachment_creation,
+          check_local_deletion = context._check_local_attachment_deletion,
+          check_remote_modification =
+            context._check_remote_attachment_modification,
+          check_remote_creation = context._check_remote_attachment_creation,
+          check_remote_deletion = context._check_remote_attachment_deletion;
+
+        if (signature_from_local) {
+          source_attachment_dict = local_attachment_dict;
+          destination_attachment_dict = remote_attachment_list;
+          source = context._local_sub_storage;
+          destination = context._remote_sub_storage;
+        } else {
+          source_attachment_dict = remote_attachment_list;
+          destination_attachment_dict = local_attachment_dict;
+          source = context._remote_sub_storage;
+          destination = context._local_sub_storage;
+          check_local_modification = check_remote_modification;
+          check_local_creation = check_remote_creation;
+          check_local_deletion = check_remote_deletion;
+          check_remote_creation = check_local_creation;
+          check_remote_deletion = check_local_deletion;
+        }
+
+        // Push all source attachments
+        for (key in source_attachment_dict) {
+          if (source_attachment_dict.hasOwnProperty(key)) {
+
+            if ((check_local_creation &&
+                 !signature_attachment_dict.hasOwnProperty(key)) ||
+                (check_local_modification &&
+                 signature_attachment_dict.hasOwnProperty(key))) {
+              push_argument_list.push([
+                undefined,
+                id,
+                key,
+                source,
+                destination,
+                context._signature_sub_storage,
+                signature_hash
+              ]);
+            }
+          }
+        }
+
+        // Delete remaining signature + remote attachments
+        for (key in signature_attachment_dict) {
+          if (signature_attachment_dict.hasOwnProperty(key)) {
+            if (check_local_deletion &&
+                !source_attachment_dict.hasOwnProperty(key)) {
+              delete_argument_list.push([
+                undefined,
+                id,
+                key,
+                context._signature_sub_storage
+              ]);
+            }
+          }
+        }
+        for (key in destination_attachment_dict) {
+          if (destination_attachment_dict.hasOwnProperty(key)) {
+            if (!source_attachment_dict.hasOwnProperty(key)) {
+              if ((check_local_deletion &&
+                   signature_attachment_dict.hasOwnProperty(key)) ||
+                  (check_remote_creation &&
+                   !signature_attachment_dict.hasOwnProperty(key))) {
+                delete_argument_list.push([
+                  undefined,
+                  id,
+                  key,
+                  destination
+                ]);
+              }
+            }
+          }
+        }
+
+        return RSVP.all([
+          dispatchQueue(
+            context,
+            propagateFastAttachmentModification,
+            push_argument_list,
+            context._parallel_operation_attachment_amount
+          ),
+          dispatchQueue(
+            context,
+            propagateFastAttachmentDeletion,
+            delete_argument_list,
+            context._parallel_operation_attachment_amount
+          )
+        ]);
+      })
+      .push(function () {
+        // Mark that all attachments have been synchronized
+        return context._signature_sub_storage.put(id, {
+          hash: signature_hash,
+          attachment_hash: signature_hash,
+          from_local: signature_from_local
+        });
+      });
+  }
+
+  function repairDocumentAttachment(context, id, signature_hash_key,
+                                    signature_hash,
+                                    signature_attachment_hash,
+                                    signature_from_local) {
+    if (signature_hash_key !== undefined) {
+      return repairFastDocumentAttachment(context, id,
+                                    signature_hash,
+                                    signature_attachment_hash,
+                                    signature_from_local);
+    }
+
     var skip_attachment_dict = {};
     return new RSVP.Queue()
       .push(function () {
@@ -9040,13 +9217,17 @@ return new Parser;
 
   function propagateModification(context, source, destination, doc, hash, id,
                                  skip_document_dict,
+                                 skip_deleted_document_dict,
                                  options) {
     var result = new RSVP.Queue(),
       post_id,
-      to_skip = true;
+      to_skip = true,
+      from_local;
     if (options === undefined) {
       options = {};
     }
+    from_local = options.from_local;
+
     if (doc === null) {
       result
         .push(function () {
@@ -9108,7 +9289,8 @@ return new Parser;
         .push(function () {
           to_skip = true;
           return context._signature_sub_storage.put(post_id, {
-            "hash": hash
+            hash: hash,
+            from_local: from_local
           });
         })
         .push(function () {
@@ -9120,6 +9302,7 @@ return new Parser;
           // Drop signature if the destination document was empty
           // but a signature exists
           if (options.create_new_document === true) {
+            delete skip_deleted_document_dict[id];
             return context._signature_sub_storage.remove(id);
           }
         })
@@ -9128,7 +9311,8 @@ return new Parser;
         })
         .push(function () {
           return context._signature_sub_storage.put(id, {
-            "hash": hash
+            hash: hash,
+            from_local: from_local
           });
         });
     }
@@ -9146,41 +9330,55 @@ return new Parser;
       });
   }
 
-  function propagateDeletion(context, destination, id, skip_document_dict) {
+  function propagateDeletion(context, destination, id, skip_document_dict,
+                             skip_deleted_document_dict) {
     // Do not delete a document if it has an attachment
     // ie, replication should prevent losing user data
     // Synchronize attachments before, to ensure
     // all of them will be deleted too
-    return repairDocumentAttachment(context, id)
-      .push(function () {
-        return destination.allAttachments(id);
-      })
-      .push(function (attachment_dict) {
-        if (JSON.stringify(attachment_dict) === "{}") {
-          return destination.remove(id)
-            .push(function () {
-              return context._signature_sub_storage.remove(id);
-            });
-        }
-      }, function (error) {
-        if ((error instanceof jIO.util.jIOError) &&
-            (error.status_code === 404)) {
-          return;
-        }
-        throw error;
-      })
+    var result;
+    if (context._signature_hash_key !== undefined) {
+      result = destination.remove(id)
+        .push(function () {
+          return context._signature_sub_storage.remove(id);
+        });
+    } else {
+      result = repairDocumentAttachment(context, id)
+        .push(function () {
+          return destination.allAttachments(id);
+        })
+        .push(function (attachment_dict) {
+          if (JSON.stringify(attachment_dict) === "{}") {
+            return destination.remove(id)
+              .push(function () {
+                return context._signature_sub_storage.remove(id);
+              });
+          }
+        }, function (error) {
+          if ((error instanceof jIO.util.jIOError) &&
+              (error.status_code === 404)) {
+            return;
+          }
+          throw error;
+        });
+    }
+    return result
       .push(function () {
         skip_document_dict[id] = null;
+        // No need to sync attachment twice on this document
+        skip_deleted_document_dict[id] = null;
       });
   }
 
   function checkAndPropagate(context, skip_document_dict,
+                             skip_deleted_document_dict,
                              cache, destination_key,
                              status_hash, local_hash, doc,
                              source, destination, id,
                              conflict_force, conflict_revert,
                              conflict_ignore,
                              options) {
+    var from_local = options.from_local;
     return new RSVP.Queue()
       .push(function () {
         if (options.signature_hash_key !== undefined) {
@@ -9219,7 +9417,8 @@ return new Parser;
           }
 
           return context._signature_sub_storage.put(id, {
-            "hash": local_hash
+            hash: local_hash,
+            from_local: from_local
           })
             .push(function () {
               skip_document_dict[id] = null;
@@ -9231,12 +9430,15 @@ return new Parser;
           if (local_hash === null) {
             // Deleted locally
             return propagateDeletion(context, destination, id,
-                                     skip_document_dict);
+                                     skip_document_dict,
+                                     skip_deleted_document_dict);
           }
           return propagateModification(context, source, destination, doc,
                                        local_hash, id, skip_document_dict,
+                                       skip_deleted_document_dict,
                                        {use_post: ((options.use_post) &&
                                                    (remote_hash === null)),
+                                        from_local: from_local,
                                         create_new_document:
                                           ((remote_hash === null) &&
                                            (status_hash !== null))
@@ -9252,7 +9454,8 @@ return new Parser;
           // Automatically resolve conflict or force revert
           if (remote_hash === null) {
             // Deleted remotely
-            return propagateDeletion(context, source, id, skip_document_dict);
+            return propagateDeletion(context, source, id, skip_document_dict,
+                                     skip_deleted_document_dict);
           }
           return propagateModification(
             context,
@@ -9262,8 +9465,10 @@ return new Parser;
             remote_hash,
             id,
             skip_document_dict,
+            skip_deleted_document_dict,
             {use_post: ((options.use_revert_post) &&
                         (local_hash === null)),
+              from_local: !from_local,
               create_new_document: ((local_hash === null) &&
                                     (status_hash !== null))}
           );
@@ -9274,7 +9479,9 @@ return new Parser;
           // Copy remote modification remotely
           return propagateModification(context, source, destination, doc,
                                        local_hash, id, skip_document_dict,
+                                       skip_deleted_document_dict,
                                        {use_post: options.use_post,
+                                        from_local: from_local,
                                         create_new_document:
                                           (status_hash !== null)});
         }
@@ -9288,6 +9495,7 @@ return new Parser;
   }
 
   function checkLocalDeletion(queue, context, skip_document_dict,
+                              skip_deleted_document_dict,
                               cache, destination_key,
                               destination, id, source,
                               conflict_force, conflict_revert,
@@ -9300,6 +9508,7 @@ return new Parser;
       .push(function (result) {
         status_hash = result.hash;
         return checkAndPropagate(context, skip_document_dict,
+                                 skip_deleted_document_dict,
                                  cache, destination_key,
                                  status_hash, null, null,
                                  source, destination, id,
@@ -9310,6 +9519,7 @@ return new Parser;
   }
 
   function checkSignatureDifference(queue, context, skip_document_dict,
+                                    skip_deleted_document_dict,
                                     cache, destination_key,
                                     source, destination, id,
                                     conflict_force, conflict_revert,
@@ -9332,6 +9542,7 @@ return new Parser;
 
         if (local_hash !== status_hash) {
           return checkAndPropagate(context, skip_document_dict,
+                                   skip_deleted_document_dict,
                                    cache, destination_key,
                                    status_hash, local_hash, doc,
                                    source, destination, id,
@@ -9418,6 +9629,7 @@ return new Parser;
 
             if (is_modification === true || is_creation === true) {
               argument_list.push([undefined, context, skip_document_dict,
+                                  skip_deleted_document_dict,
                                   cache, destination_key,
                                   source, destination,
                                   key,
@@ -9445,6 +9657,7 @@ return new Parser;
                 argument_list_deletion.push([undefined,
                                              context,
                                              skip_document_dict,
+                                             skip_deleted_document_dict,
                                              cache, destination_key,
                                              destination, key,
                                              source,
@@ -9472,9 +9685,14 @@ return new Parser;
       });
   }
 
-  function repairDocument(queue, context, id) {
+  function repairDocument(queue, context, id, signature_hash_key,
+                          signature_hash, signature_attachment_hash,
+                          signature_from_local) {
     queue.push(function () {
-      return repairDocumentAttachment(context, id);
+      return repairDocumentAttachment(context, id, signature_hash_key,
+                                      signature_hash,
+                                      signature_attachment_hash,
+                                      signature_from_local);
     });
   }
 
@@ -9563,7 +9781,8 @@ return new Parser;
               check_creation: context._check_local_creation,
               check_deletion: context._check_local_deletion,
               operation_amount: context._parallel_operation_amount,
-              signature_hash_key: context._signature_hash_key
+              signature_hash_key: context._signature_hash_key,
+              from_local: true
             })
               .push(function () {
               return signature_allDocs;
@@ -9592,7 +9811,8 @@ return new Parser;
               check_creation: context._check_remote_creation,
               check_deletion: context._check_remote_deletion,
               operation_amount: context._parallel_operation_amount,
-              signature_hash_key: context._signature_hash_key
+              signature_hash_key: context._signature_hash_key,
+              from_local: false
             });
         }
       })
@@ -9605,21 +9825,24 @@ return new Parser;
             context._check_remote_attachment_deletion) {
           // Attachments are synchronized if and only if their parent document
           // has been also marked as synchronized.
-          return context._signature_sub_storage.allDocs()
+          return context._signature_sub_storage.allDocs({
+            select_list: ['hash', 'attachment_hash', 'from_local']
+          })
             .push(function (result) {
               var i,
                 local_argument_list = [],
-                id,
+                row,
                 len = result.data.total_rows;
 
               for (i = 0; i < len; i += 1) {
-                id = result.data.rows[i].id;
+                row = result.data.rows[i];
                 // Do not synchronize attachment if one version of the document
                 // is deleted but not pushed to the other storage
-                if (!skip_deleted_document_dict.hasOwnProperty(id) ||
-                    skip_document_dict.hasOwnProperty(id)) {
+                if (!skip_deleted_document_dict.hasOwnProperty(row.id)) {
                   local_argument_list.push(
-                    [undefined, context, id]
+                    [undefined, context, row.id, context._signature_hash_key,
+                      row.value.hash, row.value.attachment_hash,
+                      row.value.from_local]
                   );
                 }
               }
