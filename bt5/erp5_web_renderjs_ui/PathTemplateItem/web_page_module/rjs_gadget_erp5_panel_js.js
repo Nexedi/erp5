@@ -118,7 +118,8 @@
           })
           .push(function (search_gadget) {
             return search_gadget.render({
-              focus: false
+              focus: false,
+              extended_search: ''
             });
           })
 
@@ -319,34 +320,45 @@
       return;
     })
 
-    .onEvent('submit', function () {
-      var gadget = this;
+    .onEvent('submit', function (event) {
+      var gadget = this,
+        redirect_options = {
+          page: "search"
+        };
 
       return gadget.getDeclaredGadget("erp5_searchfield")
         .push(function (search_gadget) {
           return search_gadget.getContent();
         })
         .push(function (data) {
-          var options = {
-            page: "search"
-          };
           if (data.search) {
-            options.extended_search = data.search;
+            redirect_options.extended_search = data.search;
           }
-          // Remove focus from the search field
-          document.activeElement.blur();
-          return gadget.redirect({command: 'display', options: options});
+          // don't redirect yet even when we have all necessary arguments
+          return gadget.getDeclaredGadget("erp5_searchfield");
+        })
+        .push(function (search_gadget) {
+          // we want the search field in side panel to be empty and blured
+          // but the state of the search gadget is still empty and blurred
+          // because the search gadget does not catch onSubmit
+          // thus we need to modify its state with the submitted values
+          // and then modify it back to nothing so the "nothing" gets rendered
+          return new RSVP.Queue()
+            .push(function () {
+              return search_gadget.render({
+                extended_search: redirect_options.extended_search,
+              });
+            })
+            .push(function () {
+              return search_gadget.render({
+                extended_search: ''
+              });
+            });
+        })
+        .push(function () {
+          return gadget.redirect({command: 'display', options: redirect_options});
         });
 
-    }, false, true)
-
-    .onEvent('blur', function (evt) {
-      // XXX Horrible hack to clear the search when focus is lost
-      // This does not follow renderJS design, as a gadget should not touch
-      // another gadget content
-      if (evt.target.type === 'search') {
-        evt.target.value = "";
-      }
-    }, true, false);
+    }, /*useCapture=*/false, /*preventDefault=*/true);
 
 }(window, document, rJS, Handlebars, RSVP, Node, loopEventListener));
