@@ -25,9 +25,12 @@ if dialog_id not in ('', None):
 # Prevent users who don't have rights to edit the object from
 # editing it by calling the Base_edit script with correct
 # parameters directly.
+
 if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify portal content', context) :
   msg = Base_translateString("You do not have the permissions to edit the object.")
-  redirect_url = '%s/%s?selection_index=%s&selection_name=%s&%s' % (context.absolute_url(), form_id, selection_index, selection_name, 'portal_status_message=%s' % msg)
+  context_absolute_url = context.absolute_url()
+  context_absolute_url = context_absolute_url[:-1] if context_absolute_url.endswith('/') else context_absolute_url
+  redirect_url = '%s/%s?selection_index=%s&selection_name=%s&%s' % (context_absolute_url, form_id, selection_index, selection_name, 'portal_status_message=%s' % msg)
   return request['RESPONSE'].redirect(redirect_url)
 
 # Get the form
@@ -69,7 +72,7 @@ def editListBox(listbox_field, listbox):
         if hasattr(value, 'edit'):
           encapsulated_editor_list.append(value)
         else:
-          if value == '':        
+          if value == '':
             value = None
           cleaned_v[key] = value
 
@@ -232,7 +235,7 @@ try:
     elif(field_meta_type == 'MatrixBox'):
       editMatrixBox(field, request.get(field.id))
 
-  # Return parsed values 
+  # Return parsed values
   if silent_mode: return (kw, encapsulated_editor_list), 'edit'
 
   # Maybe we should build a list of objects we need
@@ -248,12 +251,6 @@ if message_only:
 
 ignore_layout = int(ignore_layout)
 editable_mode = int(editable_mode)
-spp = context.getPhysicalPath()
-spp =list(spp)
-s_url = request["SERVER_URL"]
-spp.insert(0,s_url)
-#calculate direct the url instead of using absolute_url
-new_url = '/'.join(spp)
 
 # for web mode, we should use 'view' instead of passed form_id
 # after 'Save & View'.
@@ -261,18 +258,20 @@ if context.REQUEST.get('is_web_mode', False) and \
     not editable_mode:
   form_id = 'view'
 
+context_absolute_url = context.absolute_url()
+context_absolute_url = context_absolute_url[:-1] if context_absolute_url.endswith('/') else context_absolute_url
+
 if not selection_index:
   redirect_url = '%s/%s?ignore_layout:int=%s&editable_mode:int=%s&portal_status_message=%s' % (
-                                  context.absolute_url(),
+                                  context_absolute_url,
                                   form_id,
                                   ignore_layout,
                                   editable_mode,
                                   message)
 
-
 else:
   redirect_url = '%s/%s?selection_index=%s&selection_name=%s&ignore_layout:int=%s&editable_mode=%s&portal_status_message=%s' % (
-                              context.absolute_url(),
+                              context_absolute_url,
                               form_id,
                               selection_index,
                               selection_name,
@@ -280,8 +279,7 @@ else:
                               editable_mode,
                               message)
 
-
-result = request['RESPONSE'].redirect(redirect_url) 
+result = request['RESPONSE'].redirect(redirect_url)
 
 if silent_mode: return result, 'redirect'
 return result
