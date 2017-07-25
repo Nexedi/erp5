@@ -32,20 +32,20 @@
 <!-- Generate links to parents -->
 <tr>
   <td>assertTextPresent</td>
-  <td>Actions</td>
+  <td>Workflow-Transitions</td>
   <td></td>
 </tr>
 
 <tr>
   <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!change') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Validate Action' and contains(@href, '#!change') and contains(@href, 'validate_action') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 
 <!-- Follow one link -->
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='m']//a[text()='Do Nothing Action' and contains(@href, '#!change') and contains(@href, 'do_nothing_action_jio') and contains(@href, 'u.page=')]</td>
+  <td>//div[@data-gadget-scope='m']//a[text()='Validate Action' and contains(@href, '#!change') and contains(@href, 'validate_action') and contains(@href, 'u.page=')]</td>
   <td></td>
 </tr>
 <tr>
@@ -55,7 +55,7 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Please do nothing Dialog</td>
+  <td>Validate Workflow Action</td>
   <td></td>
 </tr>
 
