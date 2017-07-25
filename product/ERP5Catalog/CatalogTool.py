@@ -69,6 +69,15 @@ IGNORE_BASE_CATEGORY_UID = 'any'
 
 SECURITY_QUERY_ARGUMENT_NAME = 'ERP5Catalog_security_query'
 
+DYNAMIC_RELATED_KEY_FLAG_PARENT    = 1 << 0
+DYNAMIC_RELATED_KEY_FLAG_STRICT    = 1 << 1
+# Note: parsing flags backward as "pop()" is O(1), so this list contains flags
+# in right to left order.
+DYNAMIC_RELATED_KEY_FLAG_LIST = (
+  ('parent', DYNAMIC_RELATED_KEY_FLAG_PARENT),
+  ('strict', DYNAMIC_RELATED_KEY_FLAG_STRICT),
+)
+
 class IndexableObjectWrapper(object):
     __security_parameter_cache = None
     __local_role_cache = None
@@ -955,79 +964,93 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       This method will try to automatically generate new related key
       by looking at the category tree.
 
-      For exemple it will generate:
-      destination_title | category,catalog/title/z_related_destination
-      default_destination_title | category,catalog/title/z_related_destination
-      strict_destination_title | category,catalog/title/z_related_strict_destination
-
-      strict_ related keys only returns documents which are strictly member of
-      the category.
-
       Syntax:
-        [default_][strict_][parent_]<base category id>[related_]<column id>
-      "default_": No effect, useful to avoid static related keys, which would shadow desired dynamic related key.
-      "strict_": Match only strict relation members, otherwise match non-strict too.
-      "parent_": Search for documents whose parent have described relation, otherwise search for their immediate relations.
+        [[strict_][parent_]_]<base category id>__[related__]<column id>
+      "strict": Match only strict relation members, otherwise match non-strict too.
+      "parent": Search for documents whose parent have described relation, otherwise search for their immediate relations.
       <base_category_id>: The id of an existing Base Category document, or "any" to not restrict by relation type.
-      "related_": Search for reverse relationships, otherwise search for direct relationships.
+      "related": Search for reverse relationships, otherwise search for direct relationships.
       <column_id>: The name of the column to compare values against.
+
+      Old syntax is supported for backward-compatibility, but will not receive
+      further extensions:
+        [default_][strict_][parent_]<base category id>_[related_]<column id>
       """
-      related_key_list = []
-      base_cat_id_set = set(
+      base_category_id_set = set(
         self.getPortalObject().portal_categories.getBaseCategoryList()
       )
-      base_cat_id_set.discard('parent')
-      default_string = 'default_'
-      strict_string = STRICT_METHOD_NAME
-      parent_string = PARENT_METHOD_NAME
-      related_string = 'related_'
+      base_category_id_set.discard('parent')
       column_map = self.getSQLCatalog(sql_catalog_id).getColumnMap()
+      related_key_list = []
       for key in key_list:
-        prefix = ''
-        strict = 0
-        parent = 0
-        if key.startswith(default_string):
-          key = key[len(default_string):]
-          prefix = default_string
-        if key.startswith(strict_string):
-          strict = 1
-          key = key[len(strict_string):]
-          prefix += strict_string
-        if key.startswith(parent_string):
-          parent = 1
-          key = key[len(parent_string):]
-          prefix += parent_string
-        split_key = key.split('_')
-        for i in xrange(len(split_key) - 1, 0, -1):
-          expected_base_cat_id = '_'.join(split_key[0:i])
-          if expected_base_cat_id in base_cat_id_set or (
-            i == len(split_key) - 1 and expected_base_cat_id == IGNORE_BASE_CATEGORY_UID
-          ):
-            # We have found a base_category
-            end_key = '_'.join(split_key[i:])
-            related = end_key.startswith(related_string)
-            if related:
-              end_key = end_key[len(related_string):]
-            # XXX: joining with non-catalog tables is not trivial and requires
-            # ZSQLCatalog's ColumnMapper cooperation, so only allow catalog
-            # columns.
-            if 'catalog' in column_map.get(end_key, ()):
-              is_uid = end_key == 'uid'
-              if is_uid:
-                end_key = 'uid' if related else 'category_uid'
-              related_key_list.append(
-                prefix + key + ' | category' +
-                ('' if is_uid else ',catalog') +
-                '/' +
-                end_key +
-                '/' + DYNAMIC_METHOD_NAME +
-                (STRICT_METHOD_NAME if strict else '') +
-                (PARENT_METHOD_NAME if parent else '') +
-                expected_base_cat_id +
-                (RELATED_DYNAMIC_METHOD_NAME if related else '')
-              )
-              break
-
+        flag_bitmap = 0
+        if '__' in key:
+          split_key = key.split('__')
+          column_id = split_key.pop()
+          if 'catalog' not in column_map.get(column_id, ()):
+            continue
+          base_category_id = split_key.pop()
+          related = base_category_id == 'related'
+          if related:
+            base_category_id = split_key.pop()
+          if split_key:
+            flag_string, = split_key
+            flag_list = flag_string.split('_')
+            pop = flag_list.pop
+            for flag_name, flag in DYNAMIC_RELATED_KEY_FLAG_LIST:
+              if flag_list[-1] == flag_name:
+                flag_bitmap |= flag
+                pop()
+                if not flag_list:
+                  break
+            else:
+              continue
+        else:
+          # BBB: legacy related key format
+          default_string = 'default_'
+          related_string = 'related_'
+          prefix = key
+          if prefix.startswith(default_string):
+            prefix = prefix[len(default_string):]
+          if prefix.startswith(STRICT_METHOD_NAME):
+            prefix = prefix[len(STRICT_METHOD_NAME):]
+            flag_bitmap |= DYNAMIC_RELATED_KEY_FLAG_STRICT
+          if prefix.startswith(PARENT_METHOD_NAME):
+            prefix = prefix[len(PARENT_METHOD_NAME):]
+            flag_bitmap |= DYNAMIC_RELATED_KEY_FLAG_PARENT
+          split_key = prefix.split('_')
+          for i in xrange(len(split_key) - 1, 0, -1):
+            base_category_id = '_'.join(split_key[0:i])
+            if base_category_id in base_category_id_set or (
+              i == len(split_key) - 1 and base_category_id == IGNORE_BASE_CATEGORY_UID
+            ):
+              # We have found a base_category
+              column_id = '_'.join(split_key[i:])
+              related = column_id.startswith(related_string)
+              if related:
+                column_id = column_id[len(related_string):]
+              # XXX: joining with non-catalog tables is not trivial and requires
+              # ZSQLCatalog's ColumnMapper cooperation, so only allow catalog
+              # columns.
+              if 'catalog' in column_map.get(column_id, ()):
+                break
+          else:
+            continue
+        is_uid = column_id == 'uid'
+        if is_uid:
+          column_id = 'uid' if related else 'category_uid'
+        related_key_list.append(
+          key + ' | ' +
+          'category' +
+          ('' if is_uid else ',catalog') +
+          '/' +
+          column_id +
+          '/' + DYNAMIC_METHOD_NAME +
+          (STRICT_METHOD_NAME if flag_bitmap & DYNAMIC_RELATED_KEY_FLAG_STRICT else '') +
+          (PARENT_METHOD_NAME if flag_bitmap & DYNAMIC_RELATED_KEY_FLAG_PARENT else '') +
+          base_category_id +
+          (RELATED_DYNAMIC_METHOD_NAME if related else '')
+        )
       return related_key_list
 
     def _aq_dynamic(self, name):
