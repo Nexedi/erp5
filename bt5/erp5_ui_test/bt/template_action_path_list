@@ -11,6 +11,7 @@ Foo Module | list_ui
 Foo Module | search
 Foo Module | sort_on
 Foo Module | view
+Foo | do_nothing_action_jio
 Foo | do_nothing_report_jio
 Foo | dummy_listfield_report
 Foo | dummy_multicheckboxfield_report
