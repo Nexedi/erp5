@@ -27,9 +27,9 @@ if query:
       revision_list = []
       for revision_part in revision.split(','):
         repository, commit_hash = revision_part.split('-')
-        revision_list.append('%s-%s' % (repository, commit_hash[0:8]))
+        revision_list.append('%s-%s' % (repository, commit_hash[0:7]))
       revision = ",".join(revision_list)
-      test_result = {'revision': str(revision)}
+      test_result = {'revision': str(revision) + '|' + test.getStartDate().strftime("%Y/%m/%d")}
       test_result_list.append(test_result)
     for prop in 'all_tests', 'failures', 'errors':
       test_result[prop] = test_result.get(prop, 0) + test.getProperty(prop, 0)
