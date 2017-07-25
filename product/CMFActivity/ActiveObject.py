@@ -40,7 +40,6 @@ from Products.CMFCore import permissions
 DEFAULT_ACTIVITY = 'SQLDict'
 
 # Processing node are used to store processing state or processing node
-DISTRIBUTABLE_STATE = -1
 INVOKE_ERROR_STATE = -2
 
 _DEFAULT_ACTIVATE_PARAMETER_KEY = 'default_activate_parameter'
