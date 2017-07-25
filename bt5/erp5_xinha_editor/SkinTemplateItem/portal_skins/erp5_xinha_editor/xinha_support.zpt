@@ -1,7 +1,7 @@
 <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();
                        portal_url   python: site_root.absolute_url();">
   <script type="text/javascript" tal:content="structure string:
-     _editor_url = '${portal_url}/xinha'">
+     _editor_url = '${portal_url}/xinha';">
   </script>
   <script type="text/javascript" tal:attributes="src string:${portal_url}/xinha/XinhaCore.js"></script>
   <script type="text/javascript" tal:attributes="src string:${portal_url}/xinha/LoadEditor.js"></script>
