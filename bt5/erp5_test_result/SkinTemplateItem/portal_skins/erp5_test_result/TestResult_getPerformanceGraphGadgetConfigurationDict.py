@@ -7,7 +7,7 @@ list_method_template = ""
 # it allows to make jio.all_docs calling a python script
 # http://10.0.80.187:2200/erp5/web_site_module/renderjs_runner/hateoas/ERP5Document_getHateoas
 portal = context.getPortalObject()
-custom_search_template_no_editable = "%(root_url)s/%(script_id)s?mode=search" + \
+custom_search_template_no_editable = "%(root_url)s/hateoas/%(script_id)s?mode=search" + \
                      "&relative_url=%(relative_url)s" \
                      "&list_method=%(list_method)s" \
                      "&default_param_json=%(default_param_json)s" \
