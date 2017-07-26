@@ -78,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_jio_view</string> </value>
+            <value> <string>Person_viewAsJio</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
