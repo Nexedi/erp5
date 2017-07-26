@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>Ticket_init</string> </value>
+            <value> <string>TicketRecord_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
