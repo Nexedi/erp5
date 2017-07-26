@@ -175,6 +175,9 @@ erp5_launcher.html\n
 gadget_ooffice_spreadsheet_router.html\n
 gadget_officejs_jio_spreadsheet_view.html\n
 gadget_officejs_jio_spreadsheet_view.js\n
+GADGET:\n
+ooffice_spreadsheet_gadget/\n
+officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -317,7 +320,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.15342.25021.61081</string> </value>
+                <value> <string>960.25499.10547.9250</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -335,7 +338,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498735007.88</float>
+                        <float>1501062649.33</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

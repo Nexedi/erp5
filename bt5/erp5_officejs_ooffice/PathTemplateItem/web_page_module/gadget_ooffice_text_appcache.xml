@@ -119,6 +119,7 @@ gadget_officejs_liberator.html\n
 gadget_officejs_liberator.js\n
 jio_mappingstorage.js\n
 jio_fixstorage.js\n
+jio_modificationdate_updater_storage.js\n
 URI.js\n
 dygraph.js\n
 gadget_erp5.css\n
@@ -175,6 +176,9 @@ erp5_launcher.html\n
 gadget_ooffice_text_router.html\n
 gadget_officejs_jio_text_view.html\n
 gadget_officejs_jio_text_view.js\n
+GADGET:\n
+ooffice_text_gadget/\n
+officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -317,7 +321,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.15342.25021.61081</string> </value>
+                <value> <string>960.45723.63371.13721</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -335,7 +339,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498645711.33</float>
+                        <float>1501062505.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

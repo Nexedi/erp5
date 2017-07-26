@@ -175,6 +175,9 @@ erp5_launcher.html\n
 gadget_officejs_pdf_viewer_router.html\n
 gadget_officejs_jio_pdf_view.html\n
 gadget_officejs_jio_pdf_view.js\n
+GADGET:\n
+officejs_pdf_viewer_gadget/\n
+officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -317,7 +320,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.25484.60987.38638</string> </value>
+                <value> <string>960.34163.780.59682</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -335,7 +338,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499072435.87</float>
+                        <float>1501062335.67</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

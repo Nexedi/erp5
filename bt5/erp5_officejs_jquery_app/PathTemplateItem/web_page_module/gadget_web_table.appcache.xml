@@ -175,6 +175,9 @@ erp5_launcher.html\n
 gadget_officejs_web_table_router.html\n
 gadget_officejs_jio_web_table_view.html\n
 gadget_officejs_jio_web_table_view.js\n
+GADGET:\n
+officejs_web_table_editor_gadget/\n
+officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -311,7 +314,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.15342.25021.61081</string> </value>
+                <value> <string>960.31261.31766.18790</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -329,7 +332,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499068741.89</float>
+                        <float>1501062753.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
