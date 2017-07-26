@@ -5,8 +5,6 @@ var global = self, window = self;
 (function (self, fetch, Request, Response) {
   "use strict";
 
-  self.IDBTransaction = self.IDBTransaction || self.webkitIDBTransaction || self.msIDBTransaction || {READ_WRITE: "readwrite"};
-  self.IDBKeyRange = self.IDBKeyRange || self.webkitIDBKeyRange || self.msIDBKeyRange;
   self.DOMParser = {};
   self.sessionStorage = {};
   self.localStorage = {};
@@ -45,9 +43,9 @@ var global = self, window = self;
       new self.RSVP.Queue()
         .push(function () {
           if (self.storage.get === undefined) {
-            self.storage = createStorage(self.registration.scope);
+            self.storage = createStorage("ojs_source_code");
           }
-          return self.storage.getAttachment("/", relative_url)
+          return self.storage.getAttachment(self.registration.scope, relative_url)
             .push(function (blob) {
               return new Response(blob, {
                 'headers': {
