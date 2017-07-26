@@ -4,7 +4,7 @@
 (function (window, rJS, RSVP, console) {
   "use strict";
 
-  function setDropboxConfiguration(gadget) {
+  function setDropboxConfiguration(gadget, token) {
     return gadget.getSetting("portal_type")
       .push(function (portal_type) {
         var old_date = new Date(),
@@ -64,7 +64,7 @@
                 type: "drivetojiomapping",
                 sub_storage: {
                   type: "dropbox",
-                  access_token: gadget.props.access_token,
+                  access_token: token,
                   root: "sandbox"
                 }
               }
@@ -87,40 +87,11 @@
   var gadget_klass = rJS(window);
 
   gadget_klass
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.deferred = RSVP.defer();
-        });
-    })
-    .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareMethod("render", function (options) {
-      var gadget = this;
-      return gadget.updateHeader({
-        title: "Connect To Drobox Storage",
-        back_url: "#page=jio_configurator",
-        panel_action: false
-      })
-        .push(function () {
-          gadget.props.access_token = options.token;
-          return gadget.props.deferred.resolve();
-        });
-    })
-    .declareService(function () {
-      var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
-        })
-        .push(function () {
-          return setDropboxConfiguration(gadget);
-        });
+      return setDropboxConfiguration(this, options.access_token);
     });
 
 }(window, rJS, RSVP, console));
