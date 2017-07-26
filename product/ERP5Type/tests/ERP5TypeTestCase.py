@@ -999,6 +999,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
         return False
 
+      bm_list = []
       for url, bt_title in business_template_list:
         if (update_business_templates and
             erp5_load_data_fs and
@@ -1020,7 +1021,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           if not quiet:
             ZopeTestCase._print('Adding %s business template ... ' % bt_title)
         bt = template_tool.download(url)
-        bm_list = []
         # If the bt is Business Manager, update the installation state
         if bt.getPortalType() == 'Business Manager':
           bm_list.append(bt)
@@ -1055,8 +1055,9 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
       start = time.time()
       # Install all BM at one go
-      template_tool.updateInstallationState(bm_list)
-      ZopeTestCase._print('finished installation of BMs in (%.3fs)\n' % (time.time() - start))
+      if bm_list:
+        template_tool.updateInstallationState(bm_list)
+        ZopeTestCase._print('finished installation of BMs in (%.3fs)\n' % (time.time() - start))
 
     def _getSiteCreationParameterDict(self):
       kw = _getConnectionStringDict()
@@ -1168,7 +1169,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
             if hot_reindexing:
               setattr(app,'isIndexable', 1)
               portal.portal_catalog.manage_hotReindexAll()
-
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
             self.tic(not quiet)
 
