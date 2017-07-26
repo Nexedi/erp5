@@ -80,6 +80,17 @@
         return gadget.setSetting('sync_reload', true);
       })
       .push(function () {
+        // XXX Please note this is a work-around to have a usable application
+        // waiting for a bug in IndexedDB or jIO to be fixed
+        // this bug can been seen on 'fast' devices where
+        // data stored in settings is not accessible right after save.
+        // it was shown that after redirecting to sync page, the
+        // "sync_reload" value got in the sync gadget was "undefined"
+        // Hence triggering synchronization and not setting the storage first
+        // and redirecting once again on the jio configuration page
+        return gadget.getSetting('sync_reload');
+      })
+      .push(function () {
         return gadget.redirect({page: 'sync', auto_repair: 'true'});
       });
   }
