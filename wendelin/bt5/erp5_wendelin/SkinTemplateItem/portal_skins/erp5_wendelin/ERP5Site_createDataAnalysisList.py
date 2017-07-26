@@ -99,7 +99,10 @@ for movement in portal_catalog(query):
         aggregate_type_set = set(
           [portal.restrictedTraverse(a).getPortalType() for a in aggregate_set])
         for item_type in transformation_line.getAggregatedPortalTypeList():
-          if item_type not in aggregate_type_set:
+          # create item if it does note exist yet.
+          # Except if it is a Data Array Line, then it is currently created by
+          # data operation itself (probably this exception is inconsistent)
+          if item_type not in aggregate_type_set and item_type != "Data Array Line":
             module = portal.getDefaultModule(item_type)
             item = module.newContent(portal_type = item_type,
                               title = transformation.getTitle(),
