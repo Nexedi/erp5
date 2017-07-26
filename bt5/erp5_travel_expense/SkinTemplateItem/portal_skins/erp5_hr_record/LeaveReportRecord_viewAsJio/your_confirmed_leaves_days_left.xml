@@ -279,7 +279,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: 25.0 + here.getPortalObject().portal_simulation.getAvailableInventory(portal_type="Leave Request Period",node_uid=here.getDestinationUid(),)</string> </value>
+            <value> <string>python: 25.0 + here.getPortalObject().portal_simulation.getAvailableInventory(portal_type="Leave Request Period",node_uid=here.getSourceUid(),)</string> </value>
         </item>
       </dictionary>
     </pickle>
