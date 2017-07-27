@@ -228,6 +228,7 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
+    workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -333,6 +334,23 @@ class ERP5TypeInformation(XMLObject,
 
     def getTypeInitScriptId(self):
       return
+
+    def getTypeWorkflowList(self):
+      """Getter for 'type_workflow' property"""
+      return list(self.workflow_list)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'setTypeWorkflowList')
+    def setTypeWorkflowList(self, type_workflow_list):
+      """Setter for 'type_workflow' property"""
+      # We use 'sorted' below to keep an order in the workflow list. Without
+      # this line, the actions can have different order depending on the order
+      # set during the installation or later. This is bad!
+      # It might not be the ideal solution, if you need to have the workflow
+      # defined in a specific order. Then, your new implementation should use
+      # indexes on workflows as in portal types action's priority.
+      # Note: 'sorted' also convert a tuple or a set to a list
+      self.workflow_list = sorted(type_workflow_list)
 
     security.declarePrivate('_guessMethodAliases')
     def _guessMethodAliases(self):
