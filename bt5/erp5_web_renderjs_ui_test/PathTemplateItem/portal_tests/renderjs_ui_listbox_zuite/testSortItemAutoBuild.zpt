@@ -73,10 +73,10 @@
   <td></td>
 </tr>
 
-
+<!-- Wait for the Add Sort button because no default sort is correctly specified -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]</td>
+  <td>//button[@class='plus ui-btn-c ui-override-theme ui-btn ui-icon-plus ui-btn-icon-left ui-corner-all']</td>
   <td></td>
 </tr>
 
@@ -93,18 +93,20 @@
   <td></td>
 </tr>
 
+<!-- Every new Sort Editor Item is by default (ID, ascending) because those are
+     the first values in both selects. -->
 
 <tr>
   <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[1]//select[2]</td>
-  <td>index=0</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]//select[1]</td>
+  <td>index=1</td><!-- select Title in the second Sort Item -->
 </tr>
 
 
 <tr>
   <td>select</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]//select[1]</td>
-  <td>index=1</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div[2]//select[2]</td>
+  <td>index=1</td><!-- select descending in the second Sort Item -->
 </tr>
 
 <tr>
@@ -113,17 +115,8 @@
   <td></td>
 </tr>
 
-<tr>
-  <td>waitForElementNotPresent</td>
-  <td>link=Title 9</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>waitForElementPresent</td>
-  <td>link=Title 0</td>
-  <td></td>
-</tr>
+<!-- Wait for the Filters to be applied -->
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
   <td>waitForElementPresent</td>
@@ -139,7 +132,7 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']/div</td>
+  <td>//div[@class='sort_item_container ui-controlgroup ui-corner_all']//select</td>
   <td></td>
 </tr>
 
