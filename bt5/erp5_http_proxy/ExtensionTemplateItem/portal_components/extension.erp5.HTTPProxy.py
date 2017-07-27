@@ -21,6 +21,7 @@ def request(self, url, REQUEST):
     if v is not None:
       proxy_query_header[k] = v
 
+  result = ''
   try:
     proxy_response = requests.request(
       REQUEST.other['method'],
@@ -42,6 +43,7 @@ def request(self, url, REQUEST):
   except requests.exceptions.TooManyRedirects:
     status_code = 520
   else:
+    result = proxy_response.content
     status_code = proxy_response.status_code
     if status_code == 500:
       status_code = 520
@@ -58,4 +60,4 @@ def request(self, url, REQUEST):
       """
 
   RESPONSE.setStatus(status_code)
-  return proxy_response.content
+  return result
