@@ -19,10 +19,10 @@
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 
-<!-- make the listbox to sort by ID DESC  -->
+<!-- Clean Up -->
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/ListBoxZuite_reset?field_sort=</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
   <td></td>
 </tr>
 
