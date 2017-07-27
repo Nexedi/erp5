@@ -35,10 +35,9 @@
   <td></td>
 </tr>
 
-
 <tr>
   <td>open</td>
-  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity</td>
+  <td>${base_url}/foo_module/FooModule_viewFooList/listbox/ListBox_setPropertyList?field_columns=id%7CID%0Atitle%7CTitle%0Adelivery.quantity%7CQuantity&amp;field_sort=id+%7C+DESC</td>
   <td></td>
 </tr>
 
