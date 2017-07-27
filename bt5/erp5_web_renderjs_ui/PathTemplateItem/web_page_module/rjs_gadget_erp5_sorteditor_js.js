@@ -43,6 +43,12 @@
     }));
   }
 
+  /* Valid sort item is a tuple of (column-name, ordering) */
+  function isValidSortItem(sort_item) {
+    return sort_item.length === 2 &&
+           (sort_item[1] === 'ascending' || sort_item[1] === 'descending');
+  }
+
   gadget_klass
     //////////////////////////////////////////////
     // acquired method
@@ -58,17 +64,15 @@
 
       return gadget.translateHtml(sort_template())
         .push(function (translated_html) {
-          var i,
-            promise_list = [];
 
           div.innerHTML = translated_html;
 
-          for (i = 0; i < gadget.state.sort_list.length; i += 1) {
-            if (gadget.state.sort_list[i]) {
-              promise_list.push(createSortItemTemplate(gadget, gadget.state.sort_list[i]));
-            }
-          }
-          return RSVP.all(promise_list);
+          return RSVP.all(gadget.state.sort_list
+            .filter(isValidSortItem)
+            .map(function (sort_item) {
+              return createSortItemTemplate(gadget, sort_item);
+            })
+            );
         })
         .push(function (result_list) {
           var i,
