@@ -3,6 +3,13 @@
 (function (window, rJS, RSVP, URI, calculatePageTitle, Blob, URL, document, jIO) {
   "use strict";
 
+  /* Make sure that returned object is an Array instance. */
+  function ensureArray(obj) {
+    if (!obj) {return []; }
+    if (!Array.isArray(obj)) {return [obj]; }
+    return obj;
+  }
+
   function extractParamListFromContentDisposition(text) {
     // text = " ATTACHMENT; FILENAME = MyFile "
     // Returns -> [" ATTACHMENT", " FILENAME = MyFile "]
@@ -98,7 +105,7 @@
         selector = form_gadget.element.querySelector("h3"),
         title,
         i,
-        view_list = this.state.erp5_document._links.action_workflow || [];
+        view_list = ensureArray(this.state.erp5_document._links.action_workflow);
 
       title = this.state.form_definition.title;
 
@@ -126,7 +133,6 @@
           title = view_list[i].title;
         }
       }
-
 
       // Calculate the h3 properties
       return new RSVP.Queue()
