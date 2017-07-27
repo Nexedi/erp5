@@ -274,7 +274,7 @@
         </a>
         <a tal:condition="here/hasActivity | nothing" class="activity_pending"
            title="Activity Pending"
-           tal:attributes="href python: portal.portal_membership.checkPermission('View management screens', portal.portal_activities) and '%s/portal_activities/manageActivities' % (portal.portal_url()) or '#'"
+           tal:attributes="href python: portal.portal_membership.checkPermission('View management screens', portal.portal_activities) and '%s/portal_activities/view' % (portal.portal_url()) or '#'"
            i18n:attributes="title" i18n:domain="ui">
           <span class="image"></span>
           <span class="description" i18n:translate="" i18n:domain="ui">Activity Pending</span>
