@@ -27,13 +27,8 @@
         </select>
 
         <select data-wrapper-class="ui-input-has-clear" data-iconpos="left">
-          {{#equal operator "ascending"}}
-            <option selected="selected" data-i18n="ascending" value="ascending">ascending</option>
-            <option data-i18n="descending" value="descending">descending</option>
-          {{else}}
-            <option data-i18n="ascending" value="ascending">ascending</option>
-            <option selected="selected" data-i18n="descending" value="descending">descending</option>
-          {{/equal}}
+          <option {{#equal operator "ascending"}}selected="selected"{{/equal}} data-i18n="ascending" value="ascending">ascending</option>
+          <option {{#equal operator "descending"}}selected="selected"{{/equal}} data-i18n="descending" value="descending">descending</option>
         </select>
 
       </div>
