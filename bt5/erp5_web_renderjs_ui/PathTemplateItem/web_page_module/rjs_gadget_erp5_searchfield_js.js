@@ -20,15 +20,12 @@
       var gadget = this;
       return gadget.getDeclaredGadget('input')
         .push(function (input_gadget) {
-          var focus = false;
-          var focus;
-          if (gadget.state.focus === undefined) {
-            if (gadget.state.extended_search) {
-              focus = false;
-            } else {
-              focus = true;
-            }
+          var focus = gadget.state.focus || false;
+
+          if (gadget.state.focus === undefined && !gadget.state.extended_search) {
+            focus = true;
           }
+
           return input_gadget.render({
             type: "search",
             value: gadget.state.extended_search,
