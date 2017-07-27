@@ -117,7 +117,7 @@ if len(payment_transaction_list):
         amount_list = []
         for i in range(3):
           start_date = addToDate(first_date_of_month, month=-i)
-          stop_date = getLastDateOfMonth(addToDate(last_date_of_month, month=-i)) + 1
+          stop_date = getLastDateOfMonth(addToDate(first_date_of_month, month=-i)) + 1
           amount = -1. * portal.portal_simulation.getInventory(
             from_date=start_date,
             to_date=stop_date,
