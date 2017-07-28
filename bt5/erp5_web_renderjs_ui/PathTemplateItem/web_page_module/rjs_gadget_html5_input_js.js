@@ -11,7 +11,8 @@
       title: '',
       type: 'text',
       required: false,
-      trim: false
+      trim: false,
+      focus: undefined
     })
 
     .declareMethod('render', function (options) {
@@ -74,6 +75,11 @@
       if (this.state.focus === true) {
         textarea.autofocus = true;
         textarea.focus();
+      }
+
+      if (this.state.focus === false) {
+        textarea.autofocus = false;
+        textarea.blur();
       }
     })
 

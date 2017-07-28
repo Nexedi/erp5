@@ -322,38 +322,36 @@
 
     .onEvent('submit', function (event) {
       var gadget = this,
+        search_gadget,
         redirect_options = {
           page: "search"
         };
 
-      return gadget.getDeclaredGadget("erp5_searchfield")
-        .push(function (search_gadget) {
+      return gadget
+        .getDeclaredGadget("erp5_searchfield")
+        .push(function (declared_gadget) {
+          search_gadget = declared_gadget;
           return search_gadget.getContent();
         })
         .push(function (data) {
           if (data.search) {
             redirect_options.extended_search = data.search;
           }
-          // don't redirect yet even when we have all necessary arguments
-          return gadget.getDeclaredGadget("erp5_searchfield");
+          // let the search gadget know its current state (value and focus)
+          // in order to be able to zero it out in the next Promise
+          // input gadget's state does not reflect immediate reality
+          // so we need to manage its state from the parent
+          return search_gadget.render({
+            extended_search: data.search,
+            focus: true
+          });
         })
-        .push(function (search_gadget) {
+        .push(function () {
           // we want the search field in side panel to be empty and blured
-          // but the state of the search gadget is still empty and blurred
-          // because the search gadget does not catch onSubmit
-          // thus we need to modify its state with the submitted values
-          // and then modify it back to nothing so the "nothing" gets rendered
-          return new RSVP.Queue()
-            .push(function () {
-              return search_gadget.render({
-                extended_search: redirect_options.extended_search,
-              });
-            })
-            .push(function () {
-              return search_gadget.render({
-                extended_search: ''
-              });
-            });
+          return search_gadget.render({
+            extended_search: '',
+            focus: false  // we don't want focus on the empty field for sure
+          });
         })
         .push(function () {
           return gadget.redirect({command: 'display', options: redirect_options});
