@@ -1,26 +1,27 @@
 portal = context.getPortalObject()
 
-sale_supply_list = portal.portal_catalog(portal_type="Sale Supply")
-
 if project_id:
-  project_list = context.getPortalObject().portal_catalog(portal_type="Project", id=project_id)
+  project_list = portal.portal_catalog(portal_type="Project", id=project_id, limit=1)
 else:
-  project_list = context.getPortalObject().portal_catalog(portal_type="Project", validation_state="validated")
+  project_list = portal.portal_catalog(portal_type="Project", validation_state="validated", limit=1)
 
-project = project_list[0]
-service_pairs = []
+try:
+  project = project_list[0]
+except IndexError:
+  project = None
 
-for sale_supply_obj in sale_supply_list:
-  sale_supply_lines = sale_supply_obj.contentValues(portal_type='Sale Supply Line')
-  if sale_supply_obj.getDestinationProjectValue().getTitle() == project.getTitle():
-    for supply_line in sale_supply_lines:
-      service_obj = supply_line.getResourceValue()
-      service_pairs.append((service_obj.getTitle(), service_obj.getId()))
-
-result = [list(item) for item in set(service_pairs)]
+result = []
+if project is not None:
+  sale_supply_list = portal.portal_catalog(portal_type="Sale Supply", destination_project_uid=project.getUid())
+  for sale_supply in sale_supply_list:
+    sale_supply_line_list = sale_supply.contentValues(portal_type='Sale Supply Line')
+    for supply_line in sale_supply_line_list:
+      service = supply_line.getResourceValue()
+      if service is not None:
+        result.append((service.getTitle(), service.getId()))
 
 if json_flag:
   from json import dumps
   return dumps(result)
-  
+
 return result
