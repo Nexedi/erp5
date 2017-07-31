@@ -228,7 +228,6 @@ class ERP5TypeInformation(XMLObject,
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
-    workflow_list = ()
     init_script = ''
     product = 'ERP5Type'
     hidden_content_type_list = ()
@@ -335,22 +334,48 @@ class ERP5TypeInformation(XMLObject,
     def getTypeInitScriptId(self):
       return
 
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'getTypeWorkflowList')
     def getTypeWorkflowList(self):
-      """Getter for 'type_workflow' property"""
-      return list(self.workflow_list)
+      """Getter for 'type_workflow_list' property"""
+      pw = self.getPortalObject().portal_workflow
+      cbt = pw._chains_by_type
+      id = self.getId()
+      if cbt is not None and cbt.has_key(id):
+        workflow_list = list(cbt[id])
+      else:
+        workflow_list = ['(Default)',]
+      return workflow_list
 
     security.declareProtected(Permissions.ModifyPortalContent,
                               'setTypeWorkflowList')
-    def setTypeWorkflowList(self, type_workflow_list):
-      """Setter for 'type_workflow' property"""
-      # We use 'sorted' below to keep an order in the workflow list. Without
-      # this line, the actions can have different order depending on the order
-      # set during the installation or later. This is bad!
-      # It might not be the ideal solution, if you need to have the workflow
-      # defined in a specific order. Then, your new implementation should use
-      # indexes on workflows as in portal types action's priority.
-      # Note: 'sorted' also convert a tuple or a set to a list
-      self.workflow_list = sorted(type_workflow_list)
+    def _setTypeWorkflowList(self, type_workflow_list):
+      """Override Setter for 'type_workflow' property"""
+      # We use setter to update the value for Workflow chain during the
+      # installation of Business Manager. This way, we would be able to
+      # modify workflow chain without the need of saving anything in
+      # type_workflow_list property.
+
+      # If type_workflow_list is '(Default)', don't do/update anything
+      if type_workflow_list[0] != '(Default)':
+        portal = self.getPortalObject()
+        pw = portal.portal_workflow
+        cbt = pw._chains_by_type
+        id = self.getId()
+
+        # If there is already key existing in cbt, then update it
+        if cbt is not None and cbt.has_key(id):
+          workflow_list = list(cbt(id))
+
+          # If the value in cbt is '(Default)', then update it only after removing
+          # default value
+          if workflow_list[0] != '(Default)':
+            type_workflow_list = type_workflow_list.extend(workflow_list)
+            cbt[id] = type_workflow_list
+
+        cbt[id] = sorted(type_workflow_list)
+        # Update the chains dictionary for portal_workflow
+        pw._chains_by_type = cbt
 
     security.declarePrivate('_guessMethodAliases')
     def _guessMethodAliases(self):
