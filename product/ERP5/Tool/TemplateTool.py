@@ -2127,6 +2127,10 @@ class TemplateTool (BaseTool):
       """
       def comparePath(path):
         split_path_list = path.split('/')
+        # Paths with property item should have the least priority as they should
+        # be installed after installing the object only
+        if '#' in path:
+          return 11
         if len(split_path_list) == 2 and split_path_list[0] in ('portal_types', 'portal_categories'):
           return 1
         if len(split_path_list) > 2:
