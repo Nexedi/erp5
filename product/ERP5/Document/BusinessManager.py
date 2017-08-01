@@ -1024,9 +1024,13 @@ class BusinessPropertyItem(XMLObject):
     property_value = self.getProperty('item_property_value')
     # First remove the property from the existing path and keep the default
     # empty, and update only if the sign is +1
+    obj._delPropValue(property_name)
+    # Remove the '_list' from the end of property_name. This is required because
+    # of the way _setProperty is defined where if the type is list_type, it
+    # explicitly adds '_list' at the end of property_name before trying to call
+    # the accessor
     if property_name.endswith('_list'):
       property_name = property_name[:-5]
-    obj._delPropValue(property_name)
     if int(self.getProperty('item_sign')) == 1:
       obj.setProperty(property_name, property_value, property_type)
 
