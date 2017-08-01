@@ -615,6 +615,9 @@ class TemplateTool (BaseTool):
 
       export_dir = mkdtemp()
 
+      removable_property = {}
+      removable_sub_object_path = []
+
       installed_bt_list = self.getInstalledBusinessTemplatesList()
       installed_bt_title_list = [bt.title for bt in installed_bt_list]
 
@@ -646,10 +649,17 @@ class TemplateTool (BaseTool):
       # For portal_types, we have to add path and subobjects
       portal_type_id_list = import_template.getTemplatePortalTypeIdList()
       portal_type_path_list = []
+      portal_type_workflow_chain_path_list = []
       for id in portal_type_id_list:
         portal_type_path_list.append('portal_types/'+id)
-        #portal_type_path_list.append('portal_types/'+id+'/**')
+        # Add type_worklow list separately in path
+        portal_type_workflow_chain_path_list.append('portal_types/'+id+'#type_workflow_list')
+        # Remove type_workflow_list from the objects, so that we don't end up in
+        # conflict
+        portal_type_path = 'portal_types/' + id
+        removable_property[portal_type_path] = ['type_workflow_list']
       template_path_list.extend(portal_type_path_list)
+      template_path_list.extend(portal_type_workflow_chain_path_list)
 
       # For categories, we create path for category objects as well as the subcategories
       category_list = import_template.getTemplateBaseCategoryList()
@@ -779,9 +789,6 @@ class TemplateTool (BaseTool):
         'sql_catalog_security_uid_columns_list',
         'sql_catalog_topic_search_keys_list',
         ]
-
-      removable_property = {}
-      removable_sub_object_path = []
 
       if is_property_added:
         if catalog_method_path_list:
