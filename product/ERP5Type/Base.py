@@ -787,6 +787,13 @@ class Base( CopyContainer,
               pformat(rev1.__dict__),
               pformat(rev2.__dict__)))
 
+  def _delPropValue(self, property_name):
+    if self.hasProperty(property_name):
+      value = None
+      if property_name.endswith('_list'):
+        value = []
+      self._setPropValue(property_name, value)
+
   def _aq_dynamic(self, id):
     # ahah! disabled, thanks to portal type classes
     return None
