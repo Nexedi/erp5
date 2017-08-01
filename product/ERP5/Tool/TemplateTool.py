@@ -1081,10 +1081,38 @@ class TemplateTool (BaseTool):
           'title': 'erp5_performance_test',
           'version': '1.0'}
 
+        bp_dict_4 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_ui_test_core',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_ui_test',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_ui_test',
+          'version': '1.0'}
+
+        bp_dict_5 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': ['erp5_core', 'erp5_xhtml_style',],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_ui_test_core',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': [],
+          'title': 'erp5_ui_test_core',
+          'version': '1.0'}
+
         if repository.endswith('/bt5'):
           property_dict_list.append(bp_dict_1)
           property_dict_list.append(bp_dict_2)
           property_dict_list.append(bp_dict_3)
+          property_dict_list.append(bp_dict_4)
+          property_dict_list.append(bp_dict_5)
 
         bm_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
