@@ -65,7 +65,11 @@ class _ERP5(ERP5TypeTestSuite):
 class PERF(_ERP5):
 
   def getTestList(self):
-    return [x for x in self._getAllTestList() if x.find('Performance')>0]
+    test_list = [x for x in self._getAllTestList() if x.find('Performance')>0]
+    # XXX: Explicitly add the tests for running the tests inside the zexp file
+    # Should be removed after generic way to look for tests inside zexp BM
+    test_list.append('erp5_performance_test:testWorkflowPerformance')
+    return test_list
 
 class CloudPERF(_ERP5):
 
