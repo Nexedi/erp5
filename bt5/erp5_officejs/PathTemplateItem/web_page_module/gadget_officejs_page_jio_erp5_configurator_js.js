@@ -5,13 +5,13 @@
   "use strict";
 
   function setjIOERP5Configuration(gadget) {
-    var erp5_url = gadget.props.element.querySelector("input[name='erp5_url']").value;
+    var erp5_url = gadget.state.erp5_url;
     return new RSVP.Queue()
       .push(function () {
         return RSVP.all([
-          gadget.getSetting("portal_type"),
+          gadget.getSetting("portal_type", "Web Page"),
           gadget.getSetting("erp5_attachment_synchro", undefined),
-          gadget.getSetting("default_view_reference", "jio_view")
+          gadget.getSetting("default_view_reference", 'jio_view')
         ]);
       })
       .push(function (result) {
@@ -25,11 +25,14 @@
           // XXX This drop the signature lists...
           query: {
             query: 'portal_type:"' + portal_type + '"',
-            limit: [0, 30],
+            limit: [0, 50],
             sort_on: [["modification_date", "descending"]]
           },
           use_remote_post: true,
           conflict_handling: 1,
+          parallel_operation_attachment_amount: 10,
+          parallel_operation_amount: 10,
+          signature_hash_key: 'modification_date',
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
           check_remote_attachment_modification: attachment_synchro,
@@ -41,6 +44,16 @@
           check_remote_modification: true,
           check_remote_creation: true,
           check_remote_deletion: true,
+          signature_sub_storage: {
+            type: "query",
+            sub_storage: {
+              type: "uuid",
+              sub_storage: {
+                type: "indexeddb",
+                database: "officejs-hash"
+              }
+            }
+          },
           local_sub_storage: {
             type: "query",
             sub_storage: {
@@ -63,7 +76,7 @@
                 },
                 "put": {
                   "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
-                      .toString() + "/{+id}/Base_edit"
+                    .toString() + "/{+id}/Base_edit"
                 }
               }
             },
@@ -98,7 +111,7 @@
         return gadget.setSetting('sync_reload', true);
       })
       .push(function () {
-        return gadget.redirect({page: 'sync', auto_repair: 'true'});
+        return gadget.redirect({command: "display", options: {page: 'ojs_sync', auto_repair: 'true'}});
       });
   }
 
@@ -118,6 +131,7 @@
     .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareMethod("getGlobalSetting", function (key) {
       var gadget = this;
       return gadget.getDeclaredGadget("global_setting_gadget")
@@ -132,78 +146,96 @@
           return global_setting_gadget.setSetting(key, value);
         });
     })
-    .declareMethod("render", function () {
-      var gadget = this;
-      return gadget.updateHeader({
-        title: "Connect To ERP5 Storage",
-        back_url: "#page=jio_configurator",
-        panel_action: false
-      })
-        .push(function () {
-          return gadget.getSetting('jio_storage_name');
-        })
-        .push(function (jio_storage_name) {
-          if (!jio_storage_name) {
-            gadget.props.element.querySelector(".document-access").setAttribute("style", "display: none;");
-          }
-        })
-        .push(function () {
-          return gadget.props.deferred.resolve();
-        });
-    })
 
     /////////////////////////////////////////
     // Form submit
     /////////////////////////////////////////
-    .declareService(function () {
+    .onEvent('submit', function () {
       var gadget = this;
-
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
+      return gadget.getDeclaredGadget('form_view')
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
         })
-        .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('form'),
-            'submit',
-            true,
-            function () {
-              return setjIOERP5Configuration(gadget);
-            }
-          );
+        .push(function (content) {
+          gadget.state.erp5_url = content.erp5_url;
+          return setjIOERP5Configuration(gadget);
+        });
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('button[type="submit"]').click();
+    })
+
+    .declareMethod('render', function () {
+      var gadget = this;
+      return gadget.getUrlFor({command: 'display', options: {page: 'ojs_configurator'}})
+        .push(function (url) {
+          return gadget.updateHeader({
+            page_title: "Connect To ERP5 Storage",
+            back_url: url,
+            submit_action: true,
+            panel_action: false
+          });
         });
     })
 
     .declareService(function () {
       var gadget = this;
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
-        })
-        .push(function () {
-          return gadget.getSetting("global_setting_gadget_url");
-        })
+      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/development/")
         .push(function (global_setting_gadget_url) {
-          return gadget.declareGadget(
-            global_setting_gadget_url,
-            {
-              scope: "global_setting_gadget",
-              sandbox: "iframe",
-              element: gadget.props.element.querySelector(".global_setting_gadget")
-            }
-          );
+          return gadget.declareGadget(global_setting_gadget_url, {
+            "scope": "global_setting_gadget",
+            "element": gadget.element.querySelector(".global_setting_gadget"),
+            "sandbox": "iframe"
+          });
         })
         .push(function (global_setting_gadget) {
-          return global_setting_gadget.getSetting("erp5_url");
+          return global_setting_gadget.getSetting(
+            "erp5_url",
+            "https://nexedijs.erp5.net"
+          );
         })
         .push(function (erp5_url) {
-          var erp5_url_input =
-            gadget.props.element.querySelector("input[name='erp5_url']");
-          erp5_url_input.value = erp5_url || "https://www.example.org";
-          erp5_url_input.removeAttribute("disabled");
-          erp5_url_input.parentNode.classList.remove('ui-state-disabled');
-          erp5_url_input.focus();
+          gadget.state.erp5_url = erp5_url;
+          return gadget.getDeclaredGadget('form_view');
+        })
+        .push(function (form_gadget) {
+          return form_gadget.render({
+            erp5_document: {
+              "_embedded": {"_view": {
+                "my_erp5_url": {
+                  "description": "",
+                  "title": "Connection Url",
+                  "default": gadget.state.erp5_url,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1,
+                  "key": "erp5_url",
+                  "hidden": 0,
+                  "type": "StringField"
+                }
+              }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }
+            },
+            form_definition: {
+              group_list: [[
+                "top",
+                [["my_erp5_url"]]
+              ]]
+            }
+          });
+        })
+        .push(function () {
+          return gadget.getDeclaredGadget('access');
+        })
+        .push(function (sub_gadget) {
+          return sub_gadget.render("ERP5");
         });
     });
 

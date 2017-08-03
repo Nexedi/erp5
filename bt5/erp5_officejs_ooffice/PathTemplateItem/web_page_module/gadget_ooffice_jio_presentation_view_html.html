@@ -1,71 +1,26 @@
 <!doctype html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>OfficeJS Jio Web Page View</title>
-
-    <link rel="stylesheet" href="gadget_erp5.css">
+    <title>OfficeJS Jio Spreadsheet View</title>
 
     <script src="rsvp.js"></script>
     <script src="renderjs.js"></script>
     <script src="handlebars.js"></script>
-
-    <script class="view-web-page-template" type="text/x-handlebars-template">
-
-        <form class="view-web-page-form">
-
-            <div class="center">
-                <div class="ui-field-contain">
-
-                    <label data-i18n="Title:">Title:</label>
-                    <input type="text" name="title" value="{{title}}">
-                </div>
-                <button type="submit" data-i18n="Save" style="display:none;">
-                    Save
-                </button>
-            </div>
-            <div class="ui-field-contain">
-                    
-                <fieldset data-role="collapsible">
-                            
-                    <legend>Extra Properties</legend>
-
-                    <div class="ui-field-contain">
-                        <label data-i18n="Reference:">Reference:</label>
-                        <input type="text" name="reference"
-                               value="{{reference}}">
-                    </div>
-
-                    <div class="ui-field-contain">
-                        <label data-i18n="Version:">Version:</label>
-                        <input type="text" name="version"
-                               value="{{version}}"></label>
-                    </div>
-
-                    <div class="ui-field-contain">
-                        <label data-i18n="Language:">Language:</label>
-                        <input type="text" name="language" value="{{language}}">
-                    </div>
-
-                    <div class="ui-field-contain">
-                        <label data-i18n="Description:">Description:</label>
-                        <textarea name="description">{{description}}</textarea>
-                    </div>
-
-                </fieldset>
-            </div>
-            <div class='document-content'></div>
-
-        </form>
-
-    </script>
-
     <script src="gadget_officejs_jio_presentation_view.js"></script>
 
-</head>
+  </head>
 
-<body>
-</body>
+  <body>
+    <form class="save_form ui-body-c" novalidate>
+      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
+        ui-icon-edit ui-btn-icon-right ui-screen-hidden"></button>
+      <div data-gadget-url="gadget_erp5_form.html"
+              data-gadget-scope="form_view"
+              data-gadget-sandbox="public">
+      </div>
+    </form>
+  </body>
 </html>

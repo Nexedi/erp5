@@ -6,7 +6,7 @@
 
   function setjIODAVConfiguration(gadget) {
     var dav_url = gadget.props.element.querySelector("input[name='dav_url']").value;
-    return gadget.getSetting("portal_type")
+    return gadget.getSetting("portal_type", "Web Page")
       .push(function (portal_type) {
         var old_date = new Date(),
           configuration = {};
@@ -20,7 +20,7 @@
             // XX Synchonizing the whole module is too much, here is a way to start quietly
             //+ 'AND local_roles: ("Owner") '
             //+ 'AND validation_state: ("draft", "released_alive", "shared_alive", "published_alive") ',
-            limit: [0, 1234567890]
+            limit: [0, 100]
           },
           use_remote_post: false,
           conflict_handling: 2,
@@ -93,36 +93,21 @@
         return gadget.setSetting('sync_reload', true);
       })
       .push(function () {
-        return gadget.redirect({page: 'sync', auto_repair: 'true'});
+        return gadget.redirect({
+          command: "display",
+          options: {page: 'sync', auto_repair: 'true'}
+        });
       });
   }
 
-  var gadget_klass = rJS(window);
+  rJS(window)
 
-  gadget_klass
-    .ready(function (g) {
-      g.props = {};
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.deferred = RSVP.defer();
-          return g.getSetting('jio_storage_name');
-        })
-        .push(function (jio_storage_name) {
-          if (jio_storage_name === "DAV") {
-            return g.getSetting('jio_storage_description')
-              .push(function (jio_storage_description) {
-                g.props.element.querySelector("input[name='dav_url']").value =
-                  jio_storage_description.remote_sub_storage.sub_storage.sub_storage.url;
-              });
-          }
-        });
-    })
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("reload", "reload")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareMethod("getGlobalSetting", function (key) {
       var gadget = this;
       return gadget.getDeclaredGadget("global_setting_gadget")
@@ -139,67 +124,118 @@
     })
     .declareMethod("render", function () {
       var gadget = this;
-      return gadget.updateHeader({
-        title: "Connect To DAV Storage",
-        back_url: "#page=jio_configurator",
-        panel_action: false
-      }).push(function () {
-        return gadget.props.deferred.resolve();
-      });
+      return gadget.getUrlFor({command: 'display', options: {page: 'ojs_configurator'}})
+        .push(function (url) {
+          return gadget.updateHeader({
+            page_title: "Connect To DAV Storage",
+            back_url: url,
+            panel_action: false,
+            submit_action: true
+          });
+        });
     })
 
     /////////////////////////////////////////
     // Form submit
     /////////////////////////////////////////
-    .declareService(function () {
+    .onEvent('submit', function () {
       var gadget = this;
-
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
+      return gadget.getDeclaredGadget('form_view')
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
         })
-        .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('form'),
-            'submit',
-            true,
-            function () {
-              return setjIODAVConfiguration(gadget);
-            }
-          );
+        .push(function (content) {
+          return setjIODAVConfiguration(gadget, content);
         });
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('button[type="submit"]').click();
     })
 
     .declareService(function () {
       var gadget = this;
-
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
-        })
-        .push(function () {
-          return gadget.getSetting("global_setting_gadget_url");
-        })
+      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/development/")
         .push(function (global_setting_gadget_url) {
-          return gadget.declareGadget(
-            global_setting_gadget_url,
-            {
-              scope: "global_setting_gadget",
-              sandbox: "iframe",
-              element: gadget.props.element.querySelector(".global_setting_gadget")
-            }
-          );
+          return gadget.declareGadget(global_setting_gadget_url, {
+            "scope": "global_setting_gadget",
+            "element": gadget.element.querySelector(".global_setting_gadget"),
+            "sandbox": "iframe"
+          });
         })
         .push(function (global_setting_gadget) {
-          return global_setting_gadget.getSetting("dav_url");
+          return RSVP.all([
+            global_setting_gadget.getSetting(
+              "dav_url",
+              "https://exemple.com"
+            ),
+            global_setting_gadget.getSetting(
+              "username",
+              ""
+            )
+          ]);
         })
-        .push(function (dav_url) {
-          var erp5_url_input =
-            gadget.props.element.querySelector("input[name='dav_url']");
-          erp5_url_input.value = dav_url || "https://www.example.com";
-          erp5_url_input.removeAttribute("disabled");
-          erp5_url_input.parentNode.classList.remove('ui-state-disabled');
-          erp5_url_input.focus();
+        .push(function (options) {
+          gadget.state.dav_url = options[0];
+          gadget.state.username = options[1];
+          return gadget.getDeclaredGadget('form_view');
+        })
+        .push(function (form_gadget) {
+          return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              "my_dav_url": {
+                "description": "",
+                "title": "Connection Url",
+                "default": gadget.state.dav_url,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "dav_url",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              "my_username": {
+                "description": "",
+                "title": "Username",
+                "default": gadget.state.username,
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "username",
+                "hidden": 0,
+                "type": "StringField"
+              },
+              "my_password": {
+                "description": "",
+                "title": "Password",
+                "default": "",
+                "css_class": "",
+                "required": 1,
+                "editable": 1,
+                "key": "password",
+                "hidden": 0,
+                "type": "StringField"
+              }
+            }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }},
+              form_definition: {
+                group_list: [[
+                  "top",
+                  [["my_dav_url"], ["my_username"], ["my_password"]]
+                ]]
+              }
+            });
+        })
+        .push(function () {
+          return gadget.getDeclaredGadget('access');
+        })
+        .push(function (sub_gadget) {
+          return sub_gadget.render("DAV");
         });
     });
 
