@@ -91,7 +91,10 @@
         return gadget.getSetting('sync_reload');
       })
       .push(function () {
-        return gadget.redirect({page: 'sync', auto_repair: 'true'});
+        return gadget.redirect({
+          command: "display",
+          options: {page: 'ojs_sync', auto_repair: 'true'}
+        });
       });
   }
 

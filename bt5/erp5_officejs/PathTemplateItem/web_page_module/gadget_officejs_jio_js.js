@@ -7,40 +7,46 @@
   function wrapJioCall(gadget, method_name, argument_list) {
     var storage = gadget.state_parameter_dict.jio_storage;
     if (storage === undefined) {
-      return gadget.redirect({page: "jio_configurator"});
+      return gadget.redirect({command: 'display', options: {page: 'ojs_configurator'}});
     }
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
         if ((error.target !== undefined) && (error.target.status === 401)) {
           var regexp,
             site,
-            auth_page;
+            login_page;
           if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
             regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
-            auth_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(auth_page)) {
-              site = UriTemplate.parse(
-                regexp.exec(auth_page)[1]
-              ).expand({
-                came_from: window.location.href,
-                cors_origin: window.location.origin,
+            login_page = error.target.getResponseHeader('WWW-Authenticate');
+            if (regexp.test(login_page)) {
+              return gadget.getUrlFor({
+                command: 'login',
+                absolute_url: true
+              })
+                .push(function (came_from) {
+                  return gadget.redirect({
+                    command: 'raw',
+                    options: {
+                      url: UriTemplate.parse(regexp.exec(login_page)[1]).expand({came_from: came_from})
+                    }
+                  });
                 });
             }
           }
           if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
             regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
-            auth_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(auth_page)) {
+            login_page = error.target.getResponseHeader('WWW-Authenticate');
+            if (regexp.test(login_page)) {
               site = UriTemplate.parse(
-                regexp.exec(auth_page)[1]
+                regexp.exec(login_page)[1]
               ).expand({
                 back_url: window.location.href,
-                origin: window.location.origin,
-                });
+                origin: window.location.origin
+              });
             }
           }
           if (site) {
-            return gadget.redirect({ toExternal: true, url: site});
+            return gadget.redirect({ command: "row", url: site});
           }
         }
         throw error;
@@ -56,6 +62,8 @@
 
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('createJio', function (jio_options) {
       var gadget = this;

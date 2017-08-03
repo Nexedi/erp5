@@ -465,8 +465,9 @@
         </item>
         <item>
             <key> <string>configuration_sub_gadget_installer</string> </key>
-            <value> <string>officejs_ckeditor_gadget/\n
-officejs_setting_gadget/</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -717,7 +718,7 @@ officejs_setting_gadget/</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.47786.31692.33024</string> </value>
+                <value> <string>960.25484.60987.38638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -735,7 +736,7 @@ officejs_setting_gadget/</string> </value>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496218280.6</float>
+                        <float>1501061798.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

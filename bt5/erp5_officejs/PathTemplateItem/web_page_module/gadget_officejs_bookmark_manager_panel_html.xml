@@ -91,7 +91,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_bookmark_manager_panel.html</string> </value>
+            <value> <string>gadget_erp5_ojs_bookmark_panel.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -275,7 +275,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.575.7829.27238</string> </value>
+                <value> <string>961.9234.12589.52992</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -293,7 +293,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486556932.46</float>
+                        <float>1501746672.37</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

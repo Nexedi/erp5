@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_jio_configurator.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.15342.25021.61081</string> </value>
+                <value> <string>960.64671.63974.47513</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498465949.74</float>
+                        <float>1501149912.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

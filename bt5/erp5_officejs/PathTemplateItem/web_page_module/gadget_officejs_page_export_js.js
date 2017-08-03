@@ -154,13 +154,12 @@
     function fill(zip_file) {
       if (i < len) {
         var sub_app = app.sub_gadget[i];
-        return gadget.fillZip({
-          cache: application_dict[sub_app].cache,
-          site_url: origin_url + app.url,
-          zip_file: zip_file,
-          prefix: sub_app + "/",
-          take_installer: application_dict[sub_app].no_installer ? false : true
-        })
+        return gadget.fillZip(
+          application_dict[sub_app].cache,
+          origin_url + app.url,
+          zip_file,
+          sub_app + "/"
+        )
           .push(function (zip_file) {
             i += 1;
             return fill(zip_file);
@@ -169,11 +168,7 @@
       return zip_file;
     }
 
-    return gadget.fillZip({
-      cache: app.cache,
-      site_url: origin_url + app.url,
-      take_installer: app.no_installer ? false : true
-    })
+    return gadget.fillZip(app.cache, origin_url + app.url)
       .push(function (zip_file) {
         return fill(zip_file);
       })
@@ -201,7 +196,8 @@
           g.props.element = element;
         });
     })
-    .declareMethod("fillZip", function (options) {
+    .declareMethod("fillZip", function (cache_file, site_url, zip_file,
+                                         prefix) {
       var gadget = this,
         file_storage = jIO.createJIO({
         type: "replicate",
@@ -214,13 +210,13 @@
         check_remote_modification: false,
         remote_sub_storage: {
           type: "filesystem",
-          document: options.site_url,
+          document: site_url,
           sub_storage: {
             type: "appcache",
-            take_installer: options.take_installer,
-            manifest: options.cache,
-            origin_url: options.site_url,
-            prefix: options.prefix || ""
+            take_installer: true,
+            manifest: cache_file,
+            origin_url: site_url,
+            prefix: prefix || ""
           }
         },
         signature_sub_storage: {
@@ -231,7 +227,7 @@
         },
         local_sub_storage: {
           type: "zipfile",
-          file: options.zip_file
+          file: zip_file
         }
       });
       return file_storage.repair()

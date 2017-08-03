@@ -1,184 +1,62 @@
-/*global window, rJS */
+/*global window, rJS, RSVP */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS) {
+(function (window, rJS, RSVP) {
   "use strict";
 
-  var gadget_klass = rJS(window),
-    MAIN_PAGE_PREFIX = "gadget_officejs_",
-    DEFAULT_PAGE = "document_list",
-    REDIRECT_TIMEOUT = 5000;
+  var gadget_klass = rJS(window)
 
-  function listenHashChange(gadget) {
-    function extractHashAndDispatch(evt) {
-      var hash = (evt.newURL || window.location.toString()).split('#')[1],
-        subhashes,
-        subhash,
-        keyvalue,
-        index,
-        args = {};
-      if (hash !== undefined) {
-        subhashes = hash.split('&');
-        for (index in subhashes) {
-          if (subhashes.hasOwnProperty(index)) {
-            subhash = subhashes[index];
-            if (subhash !== '') {
-              keyvalue = subhash.split('=');
-              if (keyvalue.length === 2) {
-                args[decodeURIComponent(keyvalue[0])] = decodeURIComponent(keyvalue[1]);
-              }
-            }
-          }
-        }
-      }
-
-      return gadget.renderApplication({
-        args: args
-      });
-
-    }
-
-    var result = loopEventListener(window, 'hashchange', false,
-                                   extractHashAndDispatch),
-      event = document.createEvent("Event");
-    event.initEvent('hashchange', true, true);
-    event.newURL = window.location.toString();
-    window.dispatchEvent(event);
-    return result;
-  }
-
-  gadget_klass
-
-    .ready(function (gadget) {
-      gadget.props = {
-        start_deferred: RSVP.defer()
-      };
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.props.element = element;
-        });
-    })
-
-    .declareMethod("getCommandUrlFor", function(options) {
-      var prefix = '',
-        result,
-        key;
-      result = "#";
-      for (key in options) {
-        if (options.hasOwnProperty(key) && options[key] !== undefined) {
-          // Don't keep empty values
-          result += prefix + encodeURIComponent(key) + "=" + encodeURIComponent(options[key]);
-          prefix = '&';
-        }
-      }
-      return result;
-    })
-
-    .declareMethod('redirect', function (options) {
-      if (options !== undefined && options.toExternal) {
-        window.location.replace(options.url);
-        return RSVP.timeout(REDIRECT_TIMEOUT); // timeout if not redirected
-      }
-      else {
-        return this.getCommandUrlFor(options)
-          .push(function (hash) {
-            window.location.replace(hash);
-            // prevent returning unexpected response
-            // wait for the hash change to occur
-            // fail if nothing happens
-            return RSVP.timeout(REDIRECT_TIMEOUT);
-          });
-      }
-    })
-
-    .declareMethod('route', function (options) {
-      var gadget = this,
-        args = options.args;
-      gadget.options = options;
-      if (args.access_token) {
-        if (args.state === "gdrive") {
-          args.page = "jio_gdrive_configurator";
-        } else {
-          args.page = "jio_dropbox_configurator";
-        }
-      }
-      if (args.jio_key === undefined || args.jio_key === '') {
-        if (args.page === undefined || args.page === '' || args.page === "document_list") {
-          args.page = DEFAULT_PAGE;
-        }
-        return {
-          url: MAIN_PAGE_PREFIX + "page_" + args.page + ".html",
-          options: args
-        };
-      }
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.jio_get(args.jio_key),
-            gadget.getSetting("forced_view")
-          ]);
-        })
-        .push(function (result) {
-          var sub_options = {},
-            base_portal_type = result[1] === undefined ? 
-            result[0].portal_type.toLowerCase().replace(/\s/g, "_") :
-            result[1];
-          sub_options = {
-            doc: result[0],
-            jio_key: args.jio_key,
-            search: args.search
-          };
-          if (base_portal_type.search(/_temp$/) >= 0) {
-            //Remove "_temp"
-            base_portal_type = base_portal_type.substr(
-              0,
-              base_portal_type.length - 5
-            );
-          }
-          return {
-            url: MAIN_PAGE_PREFIX + "jio_"
-              + base_portal_type
-              + "_" + args.page + ".html",
-            options: sub_options
-          };
-        });
-    })
-    
-    .declareAcquiredMethod('jio_get', 'jio_get')
-    .declareAcquiredMethod('getSetting', 'getSetting')
     .declareAcquiredMethod('setSetting', 'setSetting')
-    .declareAcquiredMethod('renderApplication', 'renderApplication')
+
+    .declareMethod('redirect', function (param_list) {
+      return this.getDeclaredGadget('erp5_router')
+        .push(function (router) {
+          return router.redirect(param_list);
+        });
+    })
+
+    .declareMethod('getUrlParameter', function (param_list) {
+      return this.getDeclaredGadget('erp5_router')
+        .push(function (router) {
+          return router.getUrlParameter(param_list);
+        });
+    })
+
+    .declareMethod('getCommandUrlFor', function (param_list) {
+      return this.getDeclaredGadget('erp5_router')
+        .push(function (router) {
+          return router.getCommandUrlFor(param_list);
+        });
+    })
+
     .declareMethod('start', function () {
       var gadget = this,
         element_list =
-          gadget.props.element.querySelectorAll("[data-renderjs-configuration]"),
+          gadget.element.querySelectorAll("[data-renderjs-configuration]"),
         len = element_list.length,
         key,
         value,
         i,
         queue = new RSVP.Queue();
 
-      function push(a, b) {
+      function setSetting(key, value) {
         queue.push(function () {
-          return gadget.setSetting(a, b);
+          return gadget.setSetting(key, value);
         });
       }
 
       for (i = 0; i < len; i += 1) {
         key = element_list[i].getAttribute('data-renderjs-configuration');
         value = element_list[i].textContent;
-        push(key, value);
+        setSetting(key, value);
       }
-      this.props.start_deferred.resolve();
-    })
-    .declareService(function () {
-      var gadget = this;
-      return new RSVP.Queue()
+
+      return queue
         .push(function () {
-          return gadget.props.start_deferred.promise;
+          return gadget.getDeclaredGadget('erp5_router');
         })
-        .push(function () {
-          return listenHashChange(gadget);
+        .push(function (router) {
+          return router.start();
         });
     });
 
-}(window, rJS));
+}(window, rJS, RSVP));

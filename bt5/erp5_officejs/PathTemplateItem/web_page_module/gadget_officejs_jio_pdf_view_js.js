@@ -1,245 +1,196 @@
-/*globals window, rJS, Handlebars, RSVP, loopEventListener, console, Blob, jIO*/
-/*jslint indent: 2, nomen: true, maxlen: 80*/
-(function (window, RSVP, rJS, Handlebars, loopEventListener, Blob, jIO) {
+/*global window, rJS, RSVP, jIO, Blob */
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, RSVP, jIO, Blob) {
   "use strict";
 
-  function saveContent(gadget, submit_event) {
-    var i,
-      doc = gadget.options.doc,
-      now = new Date();
-    doc.parent_relative_url = "document_module";
-    doc.portal_type = "PDF";
-    doc.modification_date = now.toISOString();
-    for (i = 0; i < submit_event.target.length; i += 1) {
-      // XXX Should check input type instead
-      if (submit_event.target[i].name) {
-        doc[submit_event.target[i].name] = submit_event.target[i].value;
-      }
-    }
-
-    return RSVP.Queue()
-      .push(function () {
-        return gadget.getDeclaredGadget("my_text_content");
-      })
-      .push(function (text_content_gadget) {
-        return text_content_gadget.getContent();
-      })
-      .push(function (dataURI) {
-        if (dataURI.text_content === "data:") {
-          return new Blob([''], {type: 'application/pdf'});
-        }
-        return jIO.util.dataURItoBlob(dataURI.text_content);
-      })
-      .push(function (blob) {
-        return RSVP.all([
-          gadget.put(gadget.options.jio_key, doc),
-          gadget.putAttachment(gadget.options.jio_key, "data", blob)
-        ]);
-      });
-  }
-
-  function maximize(gadget) {
-    var iframe = gadget.props.element.querySelector('iframe'),
-      iframe_class_string = iframe.getAttribute('class') || "",
-      class_name = "ui-content-maximize",
-      class_index = iframe_class_string.indexOf(class_name);
-    if (class_index === -1) {
-      iframe_class_string += ' ' + class_name;
-      iframe.setAttribute('style', '');
-      iframe.setAttribute('class', iframe_class_string);
-      return;
-    }
-    iframe_class_string = iframe_class_string.substring(0, class_index) +
-      iframe_class_string.substring(class_index + class_name.length);
-    iframe.setAttribute('style', 'width:100%; border: 0 none; height: 600px');
-    iframe.setAttribute('class', iframe_class_string);
-    return;
-  }
-
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-      .querySelector(".view-web-page-template")
-      .innerHTML,
-    template = Handlebars.compile(source);
-
-
-  gadget_klass
-    .ready(function (g) {
-      g.props = {};
-      g.options = null;
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-          g.props.deferred = RSVP.defer();
-        });
-    })
-
+  rJS(window)
+    /////////////////////////////////////////////////////////////////
+    // Acquired methods
+    /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("get", "jio_get")
-    .declareAcquiredMethod("translateHtml", "translateHtml")
-    .declareAcquiredMethod("put", "jio_put")
-    .declareAcquiredMethod("putAttachment", "jio_putAttachment")
-    .declareAcquiredMethod("getAttachment", "jio_getAttachment")
-    .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
+    .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
+    .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
 
-    .allowPublicAcquisition('triggerMaximize', function () {
-      var gadget = this;
-      return RSVP.Queue()
-        .push(function () {
-          return maximize(gadget);
-        })
-        .fail(function (e) {
-          console.log(e);
-        });
-    })
-
-    .allowPublicAcquisition('triggerSubmit', function (option) {
-      if (option[0] === "maximize" || option === "maximize") {
-        var gadget = this;
-        return RSVP.Queue()
-          .push(function () {
-            return maximize(gadget);
-          });
-      }
-      return this.props.element.querySelector('button').click();
-    })
-
-    .declareMethod('triggerSubmit', function (option) {
-      if (option[0] === "maximize" || option === "maximize") {
-        var gadget = this;
-        return RSVP.Queue()
-          .push(function () {
-            return maximize(gadget);
-          });
-      }
-      return this.props.element.querySelector('button').click();
-    })
+    /////////////////////////////////////////////////////////////////
+    // declared methods
+    /////////////////////////////////////////////////////////////////
 
     .declareMethod("render", function (options) {
-      var gadget = this;
-      gadget.options = options;
-      gadget.options.doc.title = gadget.options.doc.title || "";
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.translateHtml(template(options.doc));
-        })
-        .push(function (html) {
-          gadget.props.element.innerHTML = html;
-          return gadget.updateHeader({
-            title: options.doc.title + " | PDF",
-            save_action: true,
-            maximize_action: true,
-            maximized: gadget.options.doc.title !== ""
-          });
-        })
-        .push(function () {
-          return gadget.getAttachment(gadget.options.jio_key, "data");
-        })
-        .push(
-          function (blob_result) {
-            gadget.props.blob = blob_result;
-            return gadget.props.deferred.resolve();
-          },
-          function (error) {
-            if (error.status_code === 404) {
-              gadget.props.blob = new Blob([''], {type: 'application/pdf'});
-              return gadget.props.deferred.resolve();
-            }
-            throw new Error(error);
-          }
-        );
+      return this.changeState({
+        jio_key: options.jio_key,
+        doc: options.doc,
+        editable: options.editable ? 1 : 0
+      });
     })
 
-    /////////////////////////////////////////
-    // Render text content gadget
-    /////////////////////////////////////////
-    .declareService(function () {
-      var gadget = this,
-        image_content_gadget;
-
-      return new RSVP.Queue()
+    .onEvent('submit', function () {
+      var gadget = this, doc;
+      return gadget.notifySubmitting()
         .push(function () {
-          return gadget.props.deferred.promise;
+          return gadget.getDeclaredGadget('form_view');
         })
-        .push(function () {
-          return gadget.declareGadget(
-            "../officejs_pdf_viewer_gadget/development/",
-            {
-              scope: "my_text_content",
-              sandbox: "iframe",
-              element: gadget.props.element.querySelector(".document-content")
-            }
-          );
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
         })
-        .push(function (image_gadget) {
-          image_content_gadget = image_gadget;
-          var iframe = gadget.props.element.querySelector('iframe');
-          iframe.setAttribute(
-            'style',
-            'width:100%; border: 0 none; height: 600px'
-          );
-          iframe.setAttribute('allowFullScreen', '');
-          return jIO.util.readBlobAsDataURL(gadget.props.blob);
-        })
-        .push(function (dataURL) {
-          if (dataURL.target.result.split('data:')[1] === '') {
-            dataURL = '';
+        .push(function (content) {
+          if (!gadget.state.editable) {
+            doc = content;
+            content.portal_type = gadget.state.doc.portal_type;
+            content.parent_relative_url = gadget.state.doc.parent_relative_url;
           } else {
-            dataURL = dataURL.target.result.split(
-              /data:application\/.*;base64,/
-            )[1];
+            doc = gadget.state.doc;
+            return jIO.util.dataURItoBlob(content)
+              .push(function (blob) {
+                return gadget.jio_putAttachment(gadget.state.doc.jio_key, "data", blob);
+              });
           }
-          return image_content_gadget.render({
-            "key": 'text_content',
-            "value": dataURL,
-            "name": gadget.options.jio_key
-          });
+          doc.modification_date = (new Date()).toISOString();
         })
         .push(function () {
-          if (gadget.options.doc.title !== "") {
-            return gadget.triggerSubmit("maximize");
-          }
+          return gadget.jio_put(gadget.state.jio_key, doc);
         })
-        .push(undefined, function (error) {
-          var display_error_element;
-          if (error.indexOf("Timed out after ") === 0) {
-            display_error_element =
-              gadget.props.element.querySelector(
-                "form div.center"
-              );
-            display_error_element.innerHTML =
-                  '<br/><p style="color: red"></p><br/><br/>' +
-                  display_error_element.innerHTML;
-            display_error_element.querySelector('p').textContent =
-              "TIMEOUT: The editor gadget is taking too long to load but is" +
-              " currently being cached, please wait for the page to load" +
-              " (check your browser loading icon) and then refresh.";
-          } else {
-            throw error;
-          }
+        .push(function () {
+          return gadget.notifySubmitted('Data Updated');
         });
     })
 
-    /////////////////////////////////////////
-    // Form submit
-    /////////////////////////////////////////
-    .declareService(function () {
-      var gadget = this;
+    .declareMethod("triggerSubmit", function () {
+      return this.element.querySelector('button[type="submit"]').click();
+    })
 
-      return new RSVP.Queue()
-        .push(function () {
-          return gadget.props.deferred.promise;
+    .onStateChange(function () {
+      var gadget = this, data;
+      return gadget.jio_getAttachment(gadget.state.jio_key, "data")
+        .push(undefined, function (error) {
+          if (error.status_code === 404) {
+            return new Blob([''], {type: 'application/pdf'});
+          }
+          throw new Error(error);
+        })
+        .push(function (blob) {
+          return jIO.util.readBlobAsDataURL(blob);
+        })
+        .push(function (result) {
+          data = result.target.result;
+          return gadget.getDeclaredGadget('form_view');
+        })
+        .push(function (form_gadget) {
+          var editable = gadget.state.editable;
+          return form_gadget.render({
+            erp5_document: {
+              "_embedded": {"_view": {
+                "my_title": {
+                  "description": "",
+                  "title": "Title",
+                  "default": gadget.state.doc.title,
+                  "css_class": "",
+                  "required": 1,
+                  "editable": 1 - editable,
+                  "key": "title",
+                  "hidden": editable,
+                  "type": "StringField"
+                },
+                "my_reference": {
+                  "description": "",
+                  "title": "Reference",
+                  "default": gadget.state.doc.reference,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1 - editable,
+                  "key": "reference",
+                  "hidden": editable,
+                  "type": "StringField"
+                },
+                "my_version": {
+                  "description": "",
+                  "title": "Version",
+                  "default": gadget.state.doc.version,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1 - editable,
+                  "key": "version",
+                  "hidden": editable,
+                  "type": "StringField"
+                },
+                "my_language": {
+                  "description": "",
+                  "title": "Language",
+                  "default": gadget.state.doc.language,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1 - editable,
+                  "key": "language",
+                  "hidden": editable,
+                  "type": "StringField"
+                },
+                "my_description": {
+                  "description": "",
+                  "title": "Description",
+                  "default": gadget.state.doc.description,
+                  "css_class": "",
+                  "required": 0,
+                  "editable": 1 - editable,
+                  "key": "description",
+                  "hidden": editable,
+                  "type": "StringField"
+                },
+                "my_content": {
+                  "default": data,
+                  "css_class": editable === 1 ? "content-iframe-maximize" : "",
+                  "required": 0,
+                  "editable": editable,
+                  "key": "text_content",
+                  "hidden": 0,
+                  "type": editable === 1 ? "GadgetField" : "EditorField",
+                  "url": "../officejs_pdf_viewer_gadget/development/",
+                  "sandbox": "iframe"
+                }
+              }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }
+            },
+            form_definition: {
+              group_list: [[
+                "left",
+                [["my_title"], ["my_reference"], ["my_version"], ["my_language"], ["my_description"]]
+              ], [
+                "bottom",
+                [["my_content"]]
+              ]]
+            }
+          });
         })
         .push(function () {
-          return loopEventListener(
-            gadget.props.element.querySelector('form'),
-            'submit',
-            true,
-            function (event) {
-              return saveContent(gadget, event);
-            }
-          );
+          return RSVP.all([
+            gadget.getUrlFor({command: 'history_previous'}),
+            gadget.getUrlFor({command: 'selection_previous'}),
+            gadget.getUrlFor({command: 'selection_next'}),
+            gadget.getUrlFor({command: "change", options: {editable: true}})
+          ]);
+        })
+        .push(function (url_list) {
+          var header_dict = {
+            page_title: gadget.state.doc.reference,
+            selection_url: url_list[0],
+            previous_url: url_list[1],
+            next_url: url_list[2],
+            save_action: true
+          };
+          if (gadget.state.editable) {
+            header_dict.edit_properties = url_list[3].replace("n.editable=true", "").replace("p.editable=true", "");
+          } else {
+            header_dict.edit_content = url_list[3];
+          }
+          return gadget.updateHeader(header_dict);
         });
     });
-
-}(window, RSVP, rJS, Handlebars, loopEventListener, Blob, jIO));
+}(window, rJS, RSVP, jIO, Blob));

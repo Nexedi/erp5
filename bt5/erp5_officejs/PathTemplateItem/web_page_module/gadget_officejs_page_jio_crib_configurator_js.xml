@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_jio_crib_configurator.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_crib_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -233,7 +233,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>957.15052.51030.63761</string> </value>
+                <value> <string>960.2808.36471.12765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -251,7 +251,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486735548.46</float>
+                        <float>1497451951.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

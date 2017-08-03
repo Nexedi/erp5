@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_jio_dropbox_configurator.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_dropbox_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -96,6 +96,12 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Script</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -222,7 +228,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>cedric.le.ninivin</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -236,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.64356.12053.23552</string> </value>
+                <value> <string>960.64671.63974.47513</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501058446.69</float>
+                        <float>1501593492.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -10,9 +10,8 @@
     );
 
   function repair_and_redirect(gadget) {
-    gadget.props.element.querySelector("button").disabled = true;
     return new RSVP.Queue()
-      .push(function(){
+      .push(function () {
         return gadget.getSetting('sync_reload', false);
       })
      .push(function (sync_reload) {
@@ -23,13 +22,16 @@
             });
         }
         return gadget.repair()
-         .push(function (result) {
-           if (result !== undefined && result.hasOwnProperty('redirect')){
-             return gadget.redirect(result.redirect);
-           }
-           return gadget.redirect({});
-         });
-     });
+          .push(function (result) {
+            if (result !== undefined && result.hasOwnProperty('redirect')) {
+              return gadget.redirect({
+                command: "display",
+                options: result.redirect
+              });
+            }
+            return gadget.redirect({command: "display"});
+          });
+      });
   }
 
   gadget_klass
