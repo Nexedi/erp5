@@ -5,18 +5,8 @@ var IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABUCAYAAAACoiByA
   "use strict";
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
     .declareMethod('render', function (options) {
-      this.props.element.querySelector("center")
-        .innerHTML =
+      var inner =
         "<header>OfficeJS Installer</header>" +
         "<br>" +
         "<br>" +
@@ -27,10 +17,21 @@ var IMAGE = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFoAAABUCAYAAAACoiByA
         "<br>" +
         '<img width="100" height="100" title="" alt="" src="' + IMAGE + '" />' +
         "<br>" +
-        '<div>Installing ' + options.app_name + '</div>' +
+        '<div> Preparing ' + options.app_name + '</div>' +
         "<br> We prepare your application for a 100 % offline mode" +
-        '<div class="loader"></div>';
-      return {};
+        '<div class="loader"></div>',
+          error_message;
+      if (options.retry > 0) {
+        error_message = options.error.message || 'Unknow Error';
+        inner += "<br>" +
+          "<div> Last Error: " + error_message + "</div>" +
+          "<div>Retry n° " + options.retry + "</div>";
+      }
+      inner += '<div><a href="' +
+        options.redirect_url + '">Skip</a></div>';
+      this.element.querySelector("center")
+        .innerHTML = inner;
+      return;
     });
 
 }(window, rJS));
