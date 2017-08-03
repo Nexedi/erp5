@@ -23,6 +23,7 @@
           return form_gadget.getContent();
         })
         .push(function (doc) {
+          doc.modification_date = (new Date()).toISOString();
           return gadget.jio_post(doc);
         })
         .push(function () {
