@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_jio.js</string> </value>
+            <value> <string>gadget_ojs_jio.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64903.6566.48281</string> </value>
+                <value> <string>961.7450.32421.358</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1486631142.63</float>
+                        <float>1501576382.69</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_sync.js</string> </value>
+            <value> <string>gadget_erp5_page_ojs_sync.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -238,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.4036.55463.52258</string> </value>
+                <value> <string>960.3847.13096.46165</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1482142570.33</float>
+                        <float>1500474952.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

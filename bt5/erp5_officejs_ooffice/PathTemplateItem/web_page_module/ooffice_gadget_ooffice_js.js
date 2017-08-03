@@ -60,7 +60,6 @@ if (Common === undefined) {
     })
     .declareAcquiredMethod("triggerSubmit", "triggerSubmit")
     .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
-    .declareAcquiredMethod("setFillStyle", "setFillStyle")
     .declareAcquiredMethod('getSetting', 'getSetting')
     .declareMethod("jio_getAttachment", function (docId, attId, opt) {
       var g = this,
@@ -191,13 +190,7 @@ if (Common === undefined) {
       });
     })
     .declareMethod('goBack', function (new_window) {
-      var g = this;
-      g.triggerMaximize()
-        .push(function (size) {
-          var iframe = g.props.element.querySelector('iframe');
-          iframe.style.height = size.height;
-          iframe.style.width = size.width;
-        });
+      return;
     })
     .declareMethod('requestEditRights', function () {
       var g = this;
@@ -284,17 +277,12 @@ if (Common === undefined) {
           return g.getSetting('portal_type');
         })
         .push(function (portal_type) {
-          g.props.documentType = portal_type.toLowerCase();
-          return g.setFillStyle();
-        })
-        .push(function (size) {
           var element = g.props.element,
             sdkPath,
             nameSpace,
             backboneControllers,
             styles;
-          element.style.height = size.height;
-          element.style.width = size.width;
+          g.props.documentType = portal_type.toLowerCase();
           // g.fullscreen();
           switch (g.props.documentType) {
           case 'spreadsheet':

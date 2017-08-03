@@ -116,8 +116,8 @@ gadget_erp5_nojqm.css\n
 ckeditor/adapters/jquery.js\n
 ckeditor/build-config.js\n
 ckeditor/ckeditor.js\n
-ckeditor/config.js\n
 ckeditor/contents.css\n
+ckeditor/config.js\n
 ckeditor/lang/af.js\n
 ckeditor/lang/ar.js\n
 ckeditor/lang/bg.js\n
@@ -568,7 +568,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.28759.28788.38792</string> </value>
+                <value> <string>958.44217.46814.8652</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -586,7 +586,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491383488.14</float>
+                        <float>1501162811.43</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

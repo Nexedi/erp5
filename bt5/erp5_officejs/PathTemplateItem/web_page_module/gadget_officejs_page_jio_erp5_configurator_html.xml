@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_jio_erp5_configurator.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_erp5_configurator.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -96,6 +96,12 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -236,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.64653.28215.17971</string> </value>
+                <value> <string>961.5989.20580.56712</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1485780401.63</float>
+                        <float>1501488569.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
