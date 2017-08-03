@@ -183,6 +183,9 @@ gadget_officejs_jio_crib_from.html\n
 gadget_officejs_page_jio_crib_configurator.html\n
 gadget_officejs_page_jio_crib_configurator.js\n
 gadget_officejs_crib_panel.html\n
+GADGET:\n
+officejs_codemirror/\n
+officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -325,7 +328,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.25484.60987.38638</string> </value>
+                <value> <string>960.34163.780.59682</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -343,7 +346,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499072418.75</float>
+                        <float>1501062971.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
