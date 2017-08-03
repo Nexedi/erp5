@@ -43,7 +43,7 @@
             return gadget.redirect({command: "display", options: {page: 'ojs_sync', auto_repair: 'true'}});
           });
       },
-      "name": "Local is Enought"
+      "name": "Local is Enough"
     },
     "dav": {
       "setConfiguration": function (gadget) {
