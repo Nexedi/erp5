@@ -781,8 +781,8 @@
           if (subhash !== '') {
             keyvalue = subhash.split('=');
             if (keyvalue.length === 2) {
-              key = decodeURIComponent(keyvalue[0]);
-              tmp = decodeURIComponent(keyvalue[1]);
+              key = decodeURIComponent(keyvalue[0].replace(/\+/gm, "%20"));
+              tmp = decodeURIComponent(keyvalue[1].replace(/\+/gm, "%20"));
               if (tmp && (endsWith(key, ":json"))) {
                 tmp = JSON.parse(tmp);
               }
