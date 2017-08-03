@@ -35,7 +35,6 @@
       this.props.element.querySelector('#viewBookmark').hidden = true;
       this.props.element.querySelector('#documentProperties').hidden = true;
       this.props.element.querySelector('#documentProperties').hidden = true;
-      
       return;
     })
     .declareMethod("getContent", function () {

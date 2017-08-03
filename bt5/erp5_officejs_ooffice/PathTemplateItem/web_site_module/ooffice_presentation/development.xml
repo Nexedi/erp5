@@ -269,6 +269,26 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_frontpage_gadget_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -283,7 +303,7 @@
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_html</string>
+                <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
               </tuple>
             </value>
         </item>
@@ -296,8 +316,16 @@
             <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
+            <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
+            <value> <string>ojs_document_list</string> </value>
+        </item>
+        <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
             <value> <string>jio_view_attachment</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_frontpage_gadget_url</string> </key>
+            <value> <string>ojs_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -305,11 +333,11 @@
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_officejs_header.html</string> </value>
+            <value> <string>gadget_erp5_header.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_officejs_jio.html</string> </value>
+            <value> <string>gadget_ojs_jio.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -317,7 +345,7 @@
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_officejs_application_panel.html</string> </value>
+            <value> <string>gadget_erp5_ojs_panel.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -325,7 +353,9 @@
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
-            <value> <string>gadget_translation.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -540,7 +570,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.54994.24690.51814</string> </value>
+                <value> <string>961.1764.47271.40089</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -558,7 +588,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497533538.03</float>
+                        <float>1501234963.4</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

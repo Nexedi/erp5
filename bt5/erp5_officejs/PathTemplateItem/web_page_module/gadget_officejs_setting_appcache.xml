@@ -119,8 +119,8 @@ renderjs.js\n
 rsvp.js\n
 gadget_officejs_setting.js\n
 gadget_officejs_setting.html\n
-gadget_officejs_jio.html\n
-gadget_officejs_jio.js\n
+gadget_jio.html\n
+gadget_jio.js\n
 gadget_officejs_liberator.js\n
 gadget_officejs_liberator.html\n
 NETWORK:\n
@@ -265,7 +265,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.25484.60987.38638</string> </value>
+                <value> <string>960.57151.51816.16622</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -283,7 +283,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498817454.96</float>
+                        <float>1501160529.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

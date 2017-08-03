@@ -75,7 +75,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_page_jio_dropbox_configurator.html</string> </value>
+            <value> <string>gadget_erp5_page_ojs_dropbox_configurator.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -96,6 +96,12 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Web Page</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -236,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.24259.25538.21094</string> </value>
+                <value> <string>960.57151.51816.16622</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498039956.08</float>
+                        <float>1501666467.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

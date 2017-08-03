@@ -93,8 +93,6 @@
     .allowPublicAcquisition('triggerSubmit', this_func_link('triggerMaximize'))
     .declareAcquiredMethod("triggerMaximize", "triggerMaximize")
     .allowPublicAcquisition('triggerMaximize', this_func_link('triggerMaximize'))
-    .declareAcquiredMethod("setFillStyle", "setFillStyle")
-    .allowPublicAcquisition('setFillStyle', this_func_link('setFillStyle'))
     .declareMethod('render', function (options) {
       var gadget = this;
       return RSVP.Queue()
