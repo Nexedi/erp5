@@ -37,12 +37,12 @@
                 i18n:domain="ui">-- Select Project --</option>
         <option tal:condition="project_module"
                 tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) 
-                                            for o in project_module.searchFolder()]" 
+                                            for o in project_module.searchFolder(sort_on=(('title', 'ascending')))]" 
                 tal:content="python:item[0]" 
                 tal:attributes="value python:item[1]"/>
         <option tal:condition="ticket_module"
                 tal:repeat="item python:[(o.getTitle(),o.getRelativeUrl()) 
-                                           for o in ticket_module.searchFolder()]" 
+                                           for o in ticket_module.searchFolder(sort_on=(('title', 'ascending')))]" 
                 tal:content="python:item[0]" 
                 tal:attributes="value python:item[1]"/>
       </select>
