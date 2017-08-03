@@ -1,32 +1,29 @@
-/*globals window, document, RSVP, rJS, navigator, jIO, MessageChannel, ProgressEvent, console*/
+/*globals window, document, RSVP, rJS, navigator, jIO, URL*/
 /*jslint indent: 2, maxlen: 80, nomen: true*/
 var repair = false;
-(function (window, document, RSVP, rJS, jIO, navigator, MessageChannel,
-  ProgressEvent, console) {
+(function (window, document, RSVP, rJS, jIO, navigator, URL) {
   "use strict";
 
-  var remote_storage = {
-    type: "erp5",
-    url: window.location.origin +
-      window.location.pathname + "hateoasnoauth",
-    default_view_reference: "jio_view"
-  };
-
-  function createStorage(version_url, manifest) {
+  function createStorage(gadget) {
     return jIO.createJIO({
       type: "replicate",
-      conflict_handling: 2,
       parallel_operation_attachment_amount: 10,
-      check_remote_attachment_modification: false,
+      parallel_operation_amount: 1,
+      conflict_handling: 2,
+      signature_hash_key: 'hash',
+      check_remote_attachment_modification: true,
       check_remote_attachment_creation: true,
-      check_remote_modification: false,
+      check_remote_attachment_deletion: false,
       check_remote_deletion: false,
       check_local_creation: false,
       check_local_deletion: false,
       check_local_modification: false,
-      signature_storage: {
-        type: "indexeddb",
-        database: window.location.pathname + version_url + "_hash"
+      signature_sub_storage: {
+        type: "query",
+        sub_storage: {
+          type: "indexeddb",
+          database: "officejs-hash"
+        }
       },
       local_sub_storage: {
         type: "query",
@@ -34,185 +31,140 @@ var repair = false;
           type: "uuid",
           sub_storage: {
             type: "indexeddb",
-            database: window.location.origin + window.location.pathname +
-              version_url
+            database: "ojs_source_code"
           }
         }
       },
       remote_sub_storage: {
         type: "appcache",
-        manifest: manifest,
-        version: version_url
+        manifest: gadget.state.cache_file,
+        version: gadget.state.version_url
       }
     });
   }
 
   rJS(window)
     .ready(function (gadget) {
-      var element_list =
-        gadget.element.querySelectorAll("[data-install-configuration]"),
-        i,
-        key,
-        value,
-        gadget_list = [];
-      gadget.props = {};
-      gadget.props.cached_url = [];
-      gadget.gadget_list = [];
-      gadget.props.query_list = [];
-
-      function pushGadget(url, i) {
-        var element = document.createElement("div");
-        element.setAttribute("style", "display: none");
-        gadget.element.appendChild(element);
-        return gadget.declareGadget(url,
-          {
-            "scope": "sub_app_installer_" + i,
-            "element": element,
-            "sandbox": "iframe"
-          })
-          .push(function (sub_gadget) {
-            gadget.gadget_list.push(sub_gadget);
-            return sub_gadget.setSubInstall();
-          });
-      }
+      var i,
+        state = {},
+        sub_gadget_list = [],
+        element_list =
+        gadget.element.querySelectorAll('[data-install-configuration]');
+      window.Bootloader = gadget;
 
       for (i = 0; i < element_list.length; i += 1) {
-        key = element_list[i].getAttribute('data-install-configuration');
-        value = element_list[i].textContent;
-        if (key === "sub_app_installer") {
-          if (value !== "") {
-            gadget_list = value.split('\n');
-          }
-        } else {
-          gadget.props[key] = value;
-        }
+        state[element_list[i].getAttribute('data-install-configuration')] =
+          element_list[i].textContent;
       }
-
-      return gadget.render()
-        .push(function () {
-          var promise_list = [];
-          for (i = 0; i < gadget_list.length; i += 1) {
-            promise_list.push(pushGadget(gadget_list[i], i + 1));
-          }
-          return RSVP.all(promise_list);
-        });
+      state.redirect_url = new URL(window.location);
+      state.redirect_url.pathname += state.version_url;
+      return gadget.changeState(state);
     })
 
-    .declareMethod("render", function () {
-      var gadget = this,
-        element = document.createElement("div");
-      element.className = "presentation";
-      gadget.element.insertBefore(element, gadget.element.firstChild);
-      return gadget.declareGadget(
-        "gadget_officejs_bootloader_presentation.html",
-        {"scope": "presentation", "element": element}
-      )
-        .push(function (presentation_gadget) {
-          return presentation_gadget.render(
-            {"app_name": gadget.props.app_name}
-          );
-        });
+    .allowPublicAcquisition('isChildren', function () {
+      return true;
     })
+    .declareAcquiredMethod('isChildren', 'isChildren')
 
-    .declareMethod("setSubInstall", function () {
-      this.props.sub = true;
-    })
-
-    .declareMethod("mainInstall", function () {
+    .declareService(function () {
       var gadget = this;
-
       return new RSVP.Queue()
         .push(function () {
-          if (gadget.props.document_version) {
-            return gadget.install();
-          }
+/* Workaround for renderjs issue,
+sub gadget does not have all aquired Method at this point*/
+          return RSVP.delay(500);
         })
         .push(function () {
-          var promise_list = [], i;
-          for (i = 0; i < gadget.gadget_list.length; i += 1) {
-            promise_list.push(gadget.gadget_list[i].waitInstall());
-          }
-          return RSVP.all(promise_list);
-        })
-        .push(function () {
-          gadget.props.is_installed = true;
-          if (gadget.installing !== undefined) {
-            gadget.installing.resolve();
-          }
-          if (!gadget.props.sub) {
-            window.location.pathname += gadget.props.version_url;
-          }
-          return;
+          return gadget.isChildren();
         })
         .push(undefined, function (error) {
-          if (error instanceof ProgressEvent) {
-            if (gadget.props.sub === undefined) {
-              window.location.pathname += gadget.props.version_url;
-            }
-            return;
+          if (error instanceof rJS.AcquisitionError) {
+            return RSVP.all([
+              new RSVP.Queue()
+                .push(function () {
+                  return RSVP.delay(600);
+                })
+                .push(function () {
+                  return gadget.changeState({retry: 0});
+                }),
+              gadget.install()
+                .push(function () {
+                  window.location = gadget.state.redirect_url;
+                })
+            ]);
           }
           throw error;
         });
     })
 
-    .declareMethod("waitInstall", function () {
-      if (this.props.is_installed) {
-        return;
+    .onStateChange(function () {
+      var gadget = this, element;
+      if (gadget.state.retry !== undefined) {
+        return new RSVP.Queue()
+          .push(function () {
+            if (gadget.state.retry === 0) {
+              element = document.createElement("div");
+              element.className = "presentation";
+              gadget.element.insertBefore(element, gadget.element.firstChild);
+              return gadget.declareGadget(
+                "gadget_officejs_bootloader_presentation.html",
+                {"scope": "view_gadget", "element": element}
+              );
+            }
+            return gadget.getDeclaredGadget('view_gadget');
+          })
+          .push(function (view_gadget) {
+            return view_gadget.render({
+              app_name: gadget.state.app_name,
+              retry: gadget.state.retry,
+              error: gadget.state.error,
+              redirect_url: gadget.state.redirect_url
+            });
+          });
       }
-      this.installing = RSVP.defer();
-      return this.installing.promise;
     })
 
-    .declareMethod("install", function () {
-      var gadget = this;
-
-      gadget.props.storage = createStorage(
-        gadget.props.version_url,
-        gadget.props.cache_file
-      );
-      return new RSVP.Queue()
-        .push(function () {
-          return navigator.serviceWorker.register(
-              "gadget_officejs_bootloader_serviceworker.js",
-              {"scope": gadget.props.version_url}
-            );
+    .declareMethod('declareAndInstall', function (url) {
+      var element = document.createElement("div");
+      element.setAttribute("style", "display: none");
+      this.element.appendChild(element);
+      return this.declareGadget(url,
+        {
+          "element": element,
+          "sandbox": "iframe"
         })
-        .push(function (registration) {
-          if (registration.installing) {
-            gadget.props.serviceWorker = registration.installing;
-          } else if (registration.waiting) {
-            gadget.props.serviceWorker = registration.waiting;
-          } else if (registration.active) {
-            gadget.props.serviceWorker = registration.active;
-          }
-          return gadget.props.storage.repair();
-        })
-        .push(function () {
-          // remove base if present
-          if (document.querySelector("base")) {
-            document.querySelector("head").removeChild(
-              document.querySelector("base")
-            );
-          }
+        .push(function (sub_gadget) {
+          return sub_gadget.install();
         });
     })
 
-    .declareService(function () {
-      var gadget = this;
-
-      function redirect() {
-        window.location.pathname += gadget.props.version_url;
-      }
-
-      if (navigator.serviceWorker === undefined) {
-        window.applicationCache.addEventListener("cached", redirect);
-        window.applicationCache.addEventListener('noupdate', redirect);
-        window.setTimeout(redirect, 10000);
-      } else {
-        return this.mainInstall();
-      }
+    .declareMethod("install", function () {
+      var gadget = this,
+        storage = createStorage(gadget);
+      return new RSVP.Queue()
+        .push(function () {
+          return navigator.serviceWorker.register(
+            "gadget_officejs_bootloader_serviceworker.js"
+          );
+        })
+        .push(function () {
+          return storage.repair();
+        })
+        .push(undefined, function (error) {
+          if (gadget.state.retry !== undefined) {
+            return gadget.changeState({
+              retry: gadget.state.retry += 1,
+              error: error
+            })
+            .push(function () {
+              return RSVP.delay(1000);
+            })
+            .push(function () {
+              return gadget.install();
+            });
+          }
+          throw error;
+        });
     });
 
-
-}(window, document, RSVP, rJS, jIO, navigator, MessageChannel, ProgressEvent,
-  console));
+}(window, document, RSVP, rJS, jIO, navigator, URL));
