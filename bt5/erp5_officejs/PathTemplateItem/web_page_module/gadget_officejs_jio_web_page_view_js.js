@@ -163,7 +163,7 @@
         })
         .push(function (url_list) {
           var header_dict = {
-            page_title: gadget.state.doc.reference,
+            page_title: gadget.state.doc.title,
             selection_url: url_list[0],
             previous_url: url_list[1],
             next_url: url_list[2],
