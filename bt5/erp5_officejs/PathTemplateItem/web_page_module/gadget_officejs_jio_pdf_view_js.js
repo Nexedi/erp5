@@ -76,7 +76,13 @@
           return jIO.util.readBlobAsDataURL(blob);
         })
         .push(function (result) {
-          data = result.target.result;
+          if (result.target.result.split('data:')[1] === '') {
+            data = '';
+          } else {
+            data = result.target.result.split(
+              /data:application\/.*;base64,/
+            )[1];
+          }
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
