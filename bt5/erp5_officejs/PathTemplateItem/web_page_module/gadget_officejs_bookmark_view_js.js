@@ -71,7 +71,7 @@
           return gadget.translateHtml(template({url_string: gadget.state.doc.url_string}));
         })
         .push(function (html) {
-          gadget.props.element.innerHTML = html;
+          gadget.element.querySelector('.template-view').innerHTML = html;
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {

@@ -28,7 +28,7 @@
         })
         .push(function () {
           // Workaround, find a way to open document without break gadget.
-          return gadget.redirect({"command": "change", "options": {"page": "ojs_document_list"}});
+          return gadget.redirect({"command": "change", "options": {"page": "ojs_bookmark_list"}});
         });
     })
 
@@ -77,7 +77,7 @@
                   "title": "Url",
                   "default": options.url_string || "",
                   "css_class": "",
-                  "required": 0,
+                  "required": 1,
                   "editable": 1,
                   "key": "url_string",
                   "hidden": 0,

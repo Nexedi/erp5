@@ -3,6 +3,12 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
+  var content_type = {
+    Spreadsheet: 'application/x-asc-spreadsheet',
+    Presentation: 'application/x-asc-presentation',
+    Text: 'application/x-asc-text'
+  };
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -24,6 +30,9 @@
         })
         .push(function (doc) {
           doc.modification_date = (new Date()).toISOString();
+          if (content_type.hasOwnProperty(doc.portal_type)) {
+            doc.content_type = content_type[doc.portal_type];
+          }
           return gadget.jio_post(doc);
         })
         .push(function () {
