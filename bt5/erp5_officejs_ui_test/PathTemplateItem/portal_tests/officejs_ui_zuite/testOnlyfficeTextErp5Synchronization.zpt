@@ -7,7 +7,7 @@
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Test OfficeJS UI (expected failure)</td></tr>
+<tr><td rowspan="1" colspan="3">Test OfficeJS UI</td></tr>
 </thead><tbody>
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
 <!-- Clean Up -->
@@ -24,32 +24,33 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_text/development/#page=jio_configurator</td>
+  <td>${base_url}/web_site_module/ooffice_text/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>runScript</td>
+  <td>window.indexedDB.deleteDatabase('jio:setting')</td>
+  <td></td>
+</tr>
+<!-- sometimes it take a bit more than 90s for install -->
+<tr>
+  <td>pause</td>
+  <td>10000</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Local is Enough']</td>
-  <td></td>
-</tr>
-  <tr>
-  <td>waitForElementPresent</td>
-  <td>//form[@class='select-erp5-form']/button[@data-i18n='ERP5']</td>
+  <td>link=Erp5</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//form[@class='select-erp5-form']/button[@data-i18n='ERP5']</td>
+  <td>link=Erp5</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//form[@class='erp5-configuration-form']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>6000</td>
+  <td>name=erp5_url</td>
   <td></td>
 </tr>
 <tr>
@@ -59,42 +60,22 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//form[@class='erp5-configuration-form']//button[@data-i18n='Connect']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
+  <td>name=submit</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Add']</td>
+  <td>link=Add</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Add']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>20000</td>
+  <td>link=Add</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//canvas[@id='id_target_cursor']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@id='id-toolbar-btn-pageorient']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
+  <td>identifier=title</td>
   <td></td>
 </tr>
 <tr>
@@ -124,7 +105,7 @@
 </tr>
 <tr>
   <td>type</td>
-  <td>name=description</td>
+  <td>identifier=description</td>
   <td>${description}</td>
 </tr>
 <tr>
@@ -133,28 +114,69 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Content</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Content</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//canvas[@id='id_target_cursor']</td>
+  <td></td>
+</tr>
+<tr>
   <td>pause</td>
-  <td>3000</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//button[@id='id-toolbar-btn-pageorient']</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Document List']</td>
+  <td>pause</td>
+  <td>1000</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@data-i18n='Document List']</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Properties</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='search']</td>
+  <td>identifier=title</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=Document</td>
+  <td></td>
+</tr>
+<!-- Wait for search fixed
+<tr>
+  <td>waitForElementPresent</td>
+  <td>name=search</td>
   <td></td>
 </tr>
 <tr>
@@ -163,33 +185,28 @@
   <td>${title}</td>
 </tr>
 <tr>
-  <td>click</td>
-  <td>//input[@data-i18n='[value]header-submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>3000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//table/tbody/tr[1]/td[1]/a</td>
+  <td>//button[@data-i18n='Filter']</td>
+  <td></td>
+</tr> -->
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//iframe</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>5000</td>
+  <td>identifier=title</td>
   <td></td>
 </tr>
 <tr>
@@ -203,39 +220,14 @@
   <td>${title}</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>verifyValue</td>
   <td>reference</td>
   <td>${reference}</td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
+  <td>verifyValue</td>
+  <td>description</td>
   <td>${description}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Storage Configuration']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//a[@data-i18n='Storage Configuration']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//a[@data-i18n='Synchronize']</td>
-  <td></td>
 </tr>
 <tr>
   <td>click</td>
@@ -243,13 +235,14 @@
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>10000</td>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
   <td></td>
 </tr>
+<!-- Wait for search fixed
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@name='search']</td>
+  <td>name=search</td>
   <td></td>
 </tr>
 <tr>
@@ -259,37 +252,22 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@data-i18n='[value]header-submit']</td>
+  <td>//button[@data-i18n='Filter']</td>
   <td></td>
-</tr>
+</tr> -->
 <tr>
-  <td>pause</td>
-  <td>3000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//table/tbody/tr[1]/td[1]/a</td>
+  <td>link=${title}</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//iframe</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>5000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
+  <td>identifier=title</td>
   <td></td>
 </tr>
 <tr>
@@ -298,19 +276,14 @@
   <td>${title}</td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>1000</td>
-  <td></td>
-</tr>
-<tr>
   <td>verifyValue</td>
   <td>reference</td>
   <td>${reference}</td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
+  <td>verifyValue</td>
+  <td>description</td>
   <td>${description}</td>
-  <td></td>
 </tr>
 <tr>
   <td>open</td>
