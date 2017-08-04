@@ -672,10 +672,31 @@ class BusinessItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    return super(BusinessItem, self)._edit(item_path=item_path,
+    edited = super(BusinessItem, self)._edit(item_path=item_path,
                                            item_sign=item_sign,
                                            item_layer=item_layer,
                                            **kw)
+    # Get the parent Business Manager and update the template_path_list
+    new_path = self.constructTemplatePath()
+    manager = self.aq_parent
+    if manager:
+      template_path_list = manager.getProperty('template_path_list')
+      if not template_path_list:
+        template_path_list = []
+      new_template_path_list = list(template_path_list)
+      new_template_path_list.append(new_path)
+      manager.setProperty('template_path_list', new_template_path_list)
+    return edited
+
+  def constructTemplatePath(self):
+    """
+    Create template_path in the format <path> | <sign> | <layer>
+    This path can be used to update template_path_list for the Business Manager
+    """
+    item_path = self.getProperty('item_path')
+    item_sign = self.getProperty('item_sign')
+    item_layer = self.getProperty('item_layer')
+    return (' | ').join([item_path, str(item_sign), str(item_layer)])
 
   def build(self, context, **kw):
     """
@@ -1000,10 +1021,31 @@ class BusinessPropertyItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    return super(BusinessPropertyItem, self)._edit(item_path=item_path,
+    edited = super(BusinessPropertyItem, self)._edit(item_path=item_path,
                                                    item_sign=item_sign,
                                                    item_layer=item_layer,
                                                    **kw)
+    # Get the parent Business Manager and update the template_path_list
+    new_path = self.constructTemplatePath()
+    manager = self.aq_parent
+    if manager:
+      template_path_list = manager.getProperty('template_path_list')
+      if not template_path_list:
+        template_path_list = []
+      new_template_path_list = list(template_path_list)
+      new_template_path_list.append(new_path)
+      manager.setProperty('template_path_list', new_template_path_list)
+    return edited
+
+  def constructTemplatePath(self):
+    """
+    Create template_path in the format <path> | <sign> | <layer>
+    This path can be used to update template_path_list for the Business Manager
+    """
+    item_path = self.getProperty('item_path')
+    item_sign = self.getProperty('item_sign')
+    item_layer = self.getProperty('item_layer')
+    return (' | ').join([item_path, str(item_sign), str(item_layer)])
 
   def build(self, context, **kw):
     p = context.getPortalObject()
