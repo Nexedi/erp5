@@ -399,6 +399,8 @@ class BusinessManager(Folder):
           item_sign=path_item[1],
           item_layer=path_item[2]
           )
+        resolved_path = (' | ').join((path_item[0], path_item[1], path_item[2]))
+        new_path_item_list.append(resolved_path)
       else:
         # Here we check for the path which also add sub-objects, in that case,
         # we create separate BusinessItem objects for each sub-object with
