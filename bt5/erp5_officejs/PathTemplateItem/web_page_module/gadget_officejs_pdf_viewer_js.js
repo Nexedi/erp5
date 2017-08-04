@@ -5,13 +5,6 @@
   "use strict";
 
   rJS(window)
-    .ready(function (gadget) {
-      gadget.props = {};
-      return gadget.getElement()
-        .push(function (element) {
-          gadget.props.element = element;
-        });
-    })
     .declareMethod("render", function (options) {
       [].forEach.call(window.document.head.querySelectorAll("base"), function (el) {
         // XXX GadgetField adds <base> tag to fit to the parent page location, it's BAD to remove them.
@@ -20,10 +13,17 @@
         //     we break all dynamic links. So, deleting <base> is required.
         window.document.head.removeChild(el);
       });
-      this.props.key = options.key;
-      var raw = window.atob(options.value);
-      var rawLength = raw.length;
-      var array = new Uint8Array(new ArrayBuffer(rawLength));
+      return this.changeState({
+        value: options.value,
+        key: options.key
+      });
+    })
+
+    .onStateChange(function () {
+      var gadget = this,
+        raw = window.atob(gadget.state.value),
+        rawLength = raw.length,
+        array = new Uint8Array(new ArrayBuffer(rawLength));
 
       for (var i = 0; i < rawLength; i++) {
         array[i] = raw.charCodeAt(i);
@@ -32,14 +32,14 @@
       webViewerLoad(array);
 
       // hide few buttons for now
-      this.props.element.querySelector('#viewBookmark').hidden = true;
-      this.props.element.querySelector('#documentProperties').hidden = true;
-      this.props.element.querySelector('#documentProperties').hidden = true;
+      gadget.element.querySelector('#viewBookmark').hidden = true;
+      gadget.element.querySelector('#documentProperties').hidden = true;
+      gadget.element.querySelector('#documentProperties').hidden = true;
       return;
     })
     .declareMethod("getContent", function () {
       var form_data = {};
-      var self = this;
+      var gadget = this;
       return new RSVP.Queue()
       .push(function () {
         if (PDFViewerApplication.pdfDocument) {
@@ -61,7 +61,7 @@
         });
       })
       .push(function (evt) {
-        form_data[self.props.key] = evt.target.result;
+        form_data[gadget.state.key] = evt.target.result;
         return form_data;
       });
     });
