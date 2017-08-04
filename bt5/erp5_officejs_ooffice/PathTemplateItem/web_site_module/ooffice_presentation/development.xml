@@ -317,7 +317,7 @@
         </item>
         <item>
             <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
-            <value> <string>ojs_document_list</string> </value>
+            <value> <string>ojs_controller</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -325,7 +325,7 @@
         </item>
         <item>
             <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojs_controller</string> </value>
+            <value> <string>ojs_document_list</string> </value>
         </item>
         <item>
             <key> <string>configuration_hateoas_url</string> </key>
@@ -570,7 +570,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.1764.47271.40089</string> </value>
+                <value> <string>961.10686.10882.5973</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -588,7 +588,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501234963.4</float>
+                        <float>1501848515.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
