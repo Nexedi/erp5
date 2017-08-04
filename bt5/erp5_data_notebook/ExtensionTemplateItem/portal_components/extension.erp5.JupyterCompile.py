@@ -311,6 +311,18 @@ def Base_runJupyterCode(self, jupyter_code, old_notebook_context):
       tree = ast.parse(warning)
       tree.body[0].lineno = ast_node.body[-1].lineno+5
       ast_node.body.append(tree.body[0])    
+    
+    # Whenever we have new imports we need to warn the user about the 
+    # environment
+    if (import_fixer.whitelist_breach_names != []):
+      warning = ("print '"
+                 "ERROR: You imported %s, which is not in the module whitelist. "
+                 "If you think that you should be able to use that module "
+                 "please contact the team at Nexedi. "
+                 "'") % (import_fixer.whitelist_breach_names[0])               
+      tree = ast.parse(warning)
+      tree.body[0].lineno = ast_node.body[-1].lineno+5
+      ast_node.body.append(tree.body[0]) 
 
     ast_node = print_fixer.visit(ast_node)
     ast.fix_missing_locations(ast_node)
@@ -774,6 +786,7 @@ class ImportFixer(ast.NodeTransformer):
   def __init__(self):
     self.import_func_dict = {}
     self.warning_module_names = []
+    self.whitelist_breach_names = []
   
   def visit_FunctionDef(self, node):
     """
@@ -810,6 +823,39 @@ class ImportFixer(ast.NodeTransformer):
     root_module_name = ""
 
     module_names = []
+    module_whitelist = [
+    'scipy',
+    'matplotlib',
+    'sklearn',
+    'math',
+    'pickle',
+    'keras',
+    'statsmodels',
+    'zipfile',
+    'sympy',
+    'functools',
+    'pylab',
+    'ftplib',
+    'openpyxl',
+    'pandas',
+    'numpy',
+    'datetime',
+    'wendelin.bigarray.array_zodb'
+    ]
+    
+    # check if all the modules we're importing from are whitelisted
+    source_modules = []
+    if isinstance(node, ast.Import):
+      for name in node.names:
+        source_modules.append(name.name)
+    elif isinstance(node, ast.ImportFrom):
+      source_modules.append(node.module)
+    
+    for name in source_modules:
+      if name not in module_whitelist:
+        self.whitelist_breach_names.append(name)
+        return node
+        
 
     if getattr(node, "module", None) is not None:
       # case when 'from <module_name> import <something>'
@@ -944,6 +990,13 @@ class ImportFixer(ast.NodeTransformer):
       modules.
     """
     self.warning_module_names.append(module_name)
+    
+  def newWhitelistBreachCall(self, module_name):
+    """
+      Called when a non-whitelisted module is imported and calls for an error
+      message.
+    """
+    self.whitelist_breach_names.append(module_name)
 
   
 def renderAsHtml(self, renderable_object):
