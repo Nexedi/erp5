@@ -1036,6 +1036,27 @@ class BusinessPropertyItem(XMLObject):
     if int(self.getProperty('item_sign')) == 1:
       obj.setProperty(property_name, property_value, property_type)
 
+  def getBusinessPath(self):
+    return self.getProperty('item_path')
+
+  def getBusinessPathSign(self):
+    return self.getProperty('item_sign')
+
+  def getBusinessPathLayer(self):
+    return self.getProperty('item_layer')
+
+  def getParentBusinessManager(self):
+    return self.aq_parent
+
+  def getBusinessItemPropertyName(self):
+    return self.getProperty('item_property_name')
+
+  def getBusinessItemPropertyType(self):
+    return self.getProperty('item_property_type')
+
+  def getBusinessItemPropertyValue(self):
+    return self.getProperty('item_property_value')
+
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
   # XXX: Getting parameter from request instead of dialog is bad
