@@ -155,7 +155,7 @@
 
     .declareService(function () {
       var gadget = this;
-      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/development/")
+      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/app/")
         .push(function (global_setting_gadget_url) {
           return gadget.declareGadget(global_setting_gadget_url, {
             "scope": "global_setting_gadget",

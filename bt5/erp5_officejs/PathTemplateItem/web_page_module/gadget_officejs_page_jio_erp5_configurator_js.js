@@ -10,14 +10,14 @@
       .push(function () {
         return RSVP.all([
           gadget.getSetting("portal_type", "Web Page"),
-          gadget.getSetting("erp5_attachment_synchro", undefined),
+          gadget.getSetting("erp5_attachment_synchro", ""),
           gadget.getSetting("default_view_reference", 'jio_view')
         ]);
       })
       .push(function (result) {
         var configuration = {},
           portal_type = result[0],
-          attachment_synchro = result[1] !== undefined,
+          attachment_synchro = result[1] !== "",
           extended_attachment_url = result[1];
 
         configuration = {
@@ -32,7 +32,6 @@
           conflict_handling: 1,
           parallel_operation_attachment_amount: 10,
           parallel_operation_amount: 10,
-          signature_hash_key: 'modification_date',
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
           check_remote_attachment_modification: attachment_synchro,
@@ -50,7 +49,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-hash"
+                database: "officejs-erp5-hash"
               }
             }
           },
@@ -89,13 +88,6 @@
             }
           }
         };
-                // This is only for onlyoffice
-        if (extended_attachment_url === "/{+id}/Document_downloadForOnlyOfficeApp") {
-          configuration = {
-            type: "fix_local",
-            sub_storage: configuration
-          };
-        }
         return gadget.setSetting('jio_storage_description', configuration);
       })
       .push(function () {
@@ -182,7 +174,7 @@
     .declareService(function () {
       var gadget = this;
 
-      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/development/")
+      return gadget.getSetting("global_setting_gadget_url", "../officejs_setting_gadget/app/")
         .push(function (global_setting_gadget_url) {
           return gadget.declareGadget(global_setting_gadget_url, {
             "scope": "global_setting_gadget",
