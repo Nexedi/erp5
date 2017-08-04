@@ -23,9 +23,8 @@
       return this.changeState({
         jio_key: options.jio_key,
         doc: options.doc,
-        editable: (options.doc.content_type === undefined ||
-           options.doc.content_type.indexOf("application/x-asc") === 0) ?
-            (options.editable ? 1 : 0) : 0
+        editable: options.editable ? 1 : 0,
+        content_editable: options.doc.content_type.indexOf("application/x-asc") === 0
       });
     })
 
@@ -81,7 +80,7 @@
             });
         })
         .push(function (blob) {
-          if (gadget.state.editable) {
+          if (gadget.state.content_editable) {
             return jIO.util.readBlobAsDataURL(blob);
           }
           return jIO.util.readBlobAsText(blob);
@@ -91,7 +90,7 @@
           return gadget.getDeclaredGadget('form_view');
         })
         .push(function (form_gadget) {
-          var editable = gadget.state.editable;
+          var editable = gadget.state.editable && gadget.state.content_editable;
           return form_gadget.render({
             erp5_document: {
               "_embedded": {"_view": {
@@ -151,13 +150,13 @@
                   "type": "StringField"
                 },
                 "my_content": {
-                  "default": editable ? data : "",
-                  "css_class": editable === 1 ? "content-iframe-maximize" : "",
+                  "default": ((gadget.state.editable || !gadget.state.content_editable) ? data : ""),
+                  "css_class": editable ? "content-iframe-maximize" : "",
                   "required": 0,
                   "editable": editable,
                   "key": "text_content",
                   "hidden": 0,
-                  "type": editable === 1 ? "GadgetField" : "EditorField",
+                  "type": editable ? "GadgetField" : "EditorField",
                   "url": "../ooffice_presentation_gadget/development/",
                   "sandbox": "iframe"
                 }
@@ -196,10 +195,12 @@
             next_url: url_list[2],
             save_action: true
           };
-          if (gadget.state.editable) {
-            header_dict.edit_content = url_list[3].replace("n.editable=true", "").replace("p.editable=true", "");
-          } else {
-            header_dict.edit_properties = url_list[3];
+          if (gadget.state.content_editable) {
+            if (gadget.state.editable) {
+              header_dict.edit_properties = url_list[3].replace("n.editable=true", "").replace("p.editable=true", "");
+            } else {
+              header_dict.edit_content = url_list[3];
+            }
           }
           return gadget.updateHeader(header_dict);
         });
