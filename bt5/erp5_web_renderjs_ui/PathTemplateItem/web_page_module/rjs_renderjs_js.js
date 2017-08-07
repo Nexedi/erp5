@@ -749,6 +749,19 @@ if (typeof document.contains !== 'function') {
     return new RSVP.Promise(itsANonResolvableTrap, canceller);
   }
 
+  function promiseAnimationFrame() {
+    var request_id;
+
+    function canceller() {
+      window.cancelAnimationFrame(request_id);
+    }
+
+    function resolver(resolve) {
+      request_id = window.requestAnimationFrame(resolve);
+    }
+    return new RSVP.Promise(resolver, canceller);
+  }
+
   function ajax(url) {
     var xhr;
     function resolver(resolve, reject) {
@@ -793,13 +806,13 @@ if (typeof document.contains !== 'function') {
     javascript_registration_dict = {},
     stylesheet_registration_dict = {},
     gadget_loading_klass_list = [],
-    loading_klass_promise,
     renderJS,
     Monitor,
     scope_increment = 0,
     isAbsoluteOrDataURL = new RegExp('^(?:[a-z]+:)?//|data:', 'i'),
     is_page_unloaded = false,
-    error_list = [];
+    error_list = [],
+    all_dependency_loaded_deferred;
 
   window.addEventListener('error', function (error) {
     error_list.push(error);
@@ -1160,6 +1173,34 @@ if (typeof document.contains !== 'function') {
     return this;
   };
 
+  RenderJSGadget.onLoop = function (callback, delay) {
+    if (delay === undefined) {
+      delay = 0;
+    }
+    this.__service_list.push(function () {
+      var queue_loop = new RSVP.Queue(),
+        wait = function () {
+          queue_loop
+            .push(function () {
+              return RSVP.delay(delay);
+            })
+            .push(function () {
+              // Only loop when the app has the focus
+              return promiseAnimationFrame();
+            })
+            .push(function () {
+              return callback.apply(this, []);
+            })
+            .push(function () {
+              wait();
+            });
+        };
+      wait();
+      return queue_loop;
+    });
+    return this;
+  };
+
   function runJob(gadget, name, callback, argument_list) {
     var job_promise = new RSVP.Queue()
       .push(function () {
@@ -1410,6 +1451,8 @@ if (typeof document.contains !== 'function') {
     RenderJSGadget.declareService;
   RenderJSEmbeddedGadget.onEvent =
     RenderJSGadget.onEvent;
+  RenderJSEmbeddedGadget.onLoop =
+    RenderJSGadget.onLoop;
   RenderJSEmbeddedGadget.prototype = new RenderJSGadget();
   RenderJSEmbeddedGadget.prototype.constructor = RenderJSEmbeddedGadget;
 
@@ -1473,6 +1516,8 @@ if (typeof document.contains !== 'function') {
     RenderJSGadget.declareService;
   RenderJSIframeGadget.onEvent =
     RenderJSGadget.onEvent;
+  RenderJSIframeGadget.onLoop =
+    RenderJSGadget.onLoop;
   RenderJSIframeGadget.prototype = new RenderJSGadget();
   RenderJSIframeGadget.prototype.constructor = RenderJSIframeGadget;
 
@@ -1521,7 +1566,8 @@ if (typeof document.contains !== 'function') {
     // Create the communication channel with the iframe
     gadget_instance.__chan = Channel.build({
       window: iframe.contentWindow,
-      origin: "*",
+      // origin: (new URL(url, window.location)).origin,
+      origin: '*',
       scope: "renderJS"
     });
 
@@ -1536,12 +1582,8 @@ if (typeof document.contains !== 'function') {
                 params: [
                   method_name,
                   Array.prototype.slice.call(argument_list, 0)],
-                success: function (s) {
-                  resolve(s);
-                },
-                error: function (e) {
-                  reject(e);
-                }
+                success: resolve,
+                error: reject
               });
             });
           return new RSVP.Queue()
@@ -1842,6 +1884,8 @@ if (typeof document.contains !== 'function') {
       RenderJSGadget.declareService;
     tmp_constructor.onEvent =
       RenderJSGadget.onEvent;
+    tmp_constructor.onLoop =
+      RenderJSGadget.onLoop;
     tmp_constructor.prototype = new RenderJSGadget();
     tmp_constructor.prototype.constructor = tmp_constructor;
     tmp_constructor.prototype.__path = url;
@@ -1873,9 +1917,6 @@ if (typeof document.contains !== 'function') {
       defer = RSVP.defer();
 
     gadget_model_defer_dict[url] = defer;
-
-    // Change the global variable to update the loading queue
-    loading_klass_promise = defer.promise;
 
     // Fetch the HTML page and parse it
     return new RSVP.Queue()
@@ -1989,379 +2030,385 @@ if (typeof document.contains !== 'function') {
   // Bootstrap process. Register the self gadget.
   ///////////////////////////////////////////////////
 
-  function bootstrap() {
-    var url = removeHash(window.location.href),
-      TmpConstructor,
+  // Detect when all JS dependencies have been loaded
+  all_dependency_loaded_deferred = new RSVP.defer();
+  // Manually initializes the self gadget if the DOMContentLoaded event
+  // is triggered before everything was ready.
+  // (For instance, the HTML-tag for the self gadget gets inserted after
+  //  page load)
+  renderJS.manualBootstrap = function () {
+    all_dependency_loaded_deferred.resolve();
+  };
+  document.addEventListener('DOMContentLoaded',
+                            all_dependency_loaded_deferred.resolve, false);
+
+  function configureMutationObserver(TmpConstructor, url, root_gadget) {
+    // XXX HTML properties can only be set when the DOM is fully loaded
+    var settings = renderJS.parseGadgetHTMLDocument(document, url),
+      j,
+      key,
+      fragment = document.createDocumentFragment();
+    for (key in settings) {
+      if (settings.hasOwnProperty(key)) {
+        TmpConstructor.prototype['__' + key] = settings[key];
+      }
+    }
+    TmpConstructor.__template_element = document.createElement("div");
+    root_gadget.element = document.body;
+    root_gadget.state = {};
+    for (j = 0; j < root_gadget.element.childNodes.length; j += 1) {
+      fragment.appendChild(
+        root_gadget.element.childNodes[j].cloneNode(true)
+      );
+    }
+    TmpConstructor.__template_element.appendChild(fragment);
+    return RSVP.all([root_gadget.getRequiredJSList(),
+              root_gadget.getRequiredCSSList()])
+      .then(function (all_list) {
+        var i,
+          js_list = all_list[0],
+          css_list = all_list[1];
+        for (i = 0; i < js_list.length; i += 1) {
+          javascript_registration_dict[js_list[i]] = null;
+        }
+        for (i = 0; i < css_list.length; i += 1) {
+          stylesheet_registration_dict[css_list[i]] = null;
+        }
+        gadget_loading_klass_list.shift();
+      }).then(function () {
+
+        // select the target node
+        var target = document.querySelector('body'),
+          // create an observer instance
+          observer = new MutationObserver(function (mutations) {
+            var i, k, len, len2, node, added_list;
+            mutations.forEach(function (mutation) {
+              if (mutation.type === 'childList') {
+
+                len = mutation.removedNodes.length;
+                for (i = 0; i < len; i += 1) {
+                  node = mutation.removedNodes[i];
+                  if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.hasAttribute("data-gadget-url") &&
+                        (node._gadget !== undefined)) {
+                      createMonitor(node._gadget);
+                    }
+                    added_list =
+                      node.querySelectorAll("[data-gadget-url]");
+                    len2 = added_list.length;
+                    for (k = 0; k < len2; k += 1) {
+                      node = added_list[k];
+                      if (node._gadget !== undefined) {
+                        createMonitor(node._gadget);
+                      }
+                    }
+                  }
+                }
+
+                len = mutation.addedNodes.length;
+                for (i = 0; i < len; i += 1) {
+                  node = mutation.addedNodes[i];
+                  if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.hasAttribute("data-gadget-url") &&
+                        (node._gadget !== undefined)) {
+                      if (document.contains(node)) {
+                        startService(node._gadget);
+                      }
+                    }
+                    added_list =
+                      node.querySelectorAll("[data-gadget-url]");
+                    len2 = added_list.length;
+                    for (k = 0; k < len2; k += 1) {
+                      node = added_list[k];
+                      if (document.contains(node)) {
+                        if (node._gadget !== undefined) {
+                          startService(node._gadget);
+                        }
+                      }
+                    }
+                  }
+                }
+
+              }
+            });
+          }),
+          // configuration of the observer:
+          config = {
+            childList: true,
+            subtree: true,
+            attributes: false,
+            characterData: false
+          };
+
+        // pass in the target node, as well as the observer options
+        observer.observe(target, config);
+
+        return root_gadget;
+      });
+  }
+
+  function createLastAcquisitionGadget() {
+    var last_acquisition_gadget = new RenderJSGadget();
+    last_acquisition_gadget.__acquired_method_dict = {
+      reportServiceError: function (param_list) {
+        letsCrash(param_list[0]);
+      }
+    };
+    // Stop acquisition on the last acquisition gadget
+    // Do not put this on the klass, as their could be multiple instances
+    last_acquisition_gadget.__aq_parent = function (method_name) {
+      throw new renderJS.AcquisitionError(
+        "No gadget provides " + method_name
+      );
+    };
+    return last_acquisition_gadget;
+  }
+
+/*
+  function notifyAllMethodToParent() {
+    ;
+  }
+*/
+
+  function createLoadingGadget(url) {
+    var TmpConstructor,
       root_gadget,
-      loading_gadget_promise = new RSVP.Queue(),
-      declare_method_count = 0,
       embedded_channel,
-      notifyReady,
       notifyDeclareMethod,
-      gadget_ready = false,
-      iframe_top_gadget,
-      last_acquisition_gadget,
-      declare_method_list_waiting = [],
-      gadget_failed = false,
-      gadget_error,
-      connection_ready = false;
+      declare_method_list_waiting,
+      loading_result,
+      channel_defer,
+      real_result_list;
+      // gadget_failed = false,
+      // connection_ready = false;
 
     // Create the gadget class for the current url
     if (gadget_model_defer_dict.hasOwnProperty(url)) {
       throw new Error("bootstrap should not be called twice");
     }
-    loading_klass_promise = new RSVP.Promise(function (resolve, reject) {
 
-      last_acquisition_gadget = new RenderJSGadget();
-      last_acquisition_gadget.__acquired_method_dict = {
-        reportServiceError: function (param_list) {
-          letsCrash(param_list[0]);
-        }
-      };
-      // Stop acquisition on the last acquisition gadget
-      // Do not put this on the klass, as their could be multiple instances
-      last_acquisition_gadget.__aq_parent = function (method_name) {
-        throw new renderJS.AcquisitionError(
-          "No gadget provides " + method_name
-        );
-      };
+    // Create the root gadget instance and put it in the loading stack
+    TmpConstructor = RenderJSEmbeddedGadget;
+    TmpConstructor.__ready_list = RenderJSGadget.__ready_list.slice();
+    TmpConstructor.__service_list = RenderJSGadget.__service_list.slice();
+    TmpConstructor.prototype.__path = url;
+    root_gadget = new RenderJSEmbeddedGadget();
+    setAqParent(root_gadget, createLastAcquisitionGadget());
 
-      //we need to determine tmp_constructor's value before exit bootstrap
-      //because of function : renderJS
-      //but since the channel checking is async,
-      //we can't use code structure like:
-      // if channel communication is ok
-      //    tmp_constructor = RenderJSGadget
-      // else
-      //    tmp_constructor = RenderJSEmbeddedGadget
-      if (window.self === window.top) {
-        // XXX Copy/Paste from declareGadgetKlass
-        TmpConstructor = function () {
-          RenderJSGadget.call(this);
-        };
-        TmpConstructor.declareMethod = RenderJSGadget.declareMethod;
-        TmpConstructor.declareJob = RenderJSGadget.declareJob;
-        TmpConstructor.declareAcquiredMethod =
-          RenderJSGadget.declareAcquiredMethod;
-        TmpConstructor.allowPublicAcquisition =
-          RenderJSGadget.allowPublicAcquisition;
-        TmpConstructor.__ready_list = RenderJSGadget.__ready_list.slice();
-        TmpConstructor.ready = RenderJSGadget.ready;
-        TmpConstructor.setState = RenderJSGadget.setState;
-        TmpConstructor.onStateChange = RenderJSGadget.onStateChange;
-        TmpConstructor.__service_list = RenderJSGadget.__service_list.slice();
-        TmpConstructor.declareService =
-          RenderJSGadget.declareService;
-        TmpConstructor.onEvent =
-          RenderJSGadget.onEvent;
-        TmpConstructor.prototype = new RenderJSGadget();
-        TmpConstructor.prototype.constructor = TmpConstructor;
-        TmpConstructor.prototype.__path = url;
-        gadget_model_defer_dict[url] = {
-          promise: RSVP.resolve(TmpConstructor)
-        };
+    declare_method_list_waiting = [
+      "getInterfaceList",
+      "getRequiredCSSList",
+      "getRequiredJSList",
+      "getPath",
+      "getTitle"
+    ];
 
-        // Create the root gadget instance and put it in the loading stack
-        root_gadget = new TmpConstructor();
+    // Inform parent gadget about declareMethod calls here.
+    notifyDeclareMethod = function (name) {
+      declare_method_list_waiting.push(name);
+    };
 
-        setAqParent(root_gadget, last_acquisition_gadget);
-
-      } else {
-        // Create the root gadget instance and put it in the loading stack
-        TmpConstructor = RenderJSEmbeddedGadget;
-        TmpConstructor.__ready_list = RenderJSGadget.__ready_list.slice();
-        TmpConstructor.__service_list = RenderJSGadget.__service_list.slice();
-        TmpConstructor.prototype.__path = url;
-        root_gadget = new RenderJSEmbeddedGadget();
-        setAqParent(root_gadget, last_acquisition_gadget);
-
-        // Create the communication channel
-        embedded_channel = Channel.build({
-          window: window.parent,
-          origin: "*",
-          scope: "renderJS",
-          onReady: function () {
-            var k;
-            iframe_top_gadget = false;
-            //Default: Define __aq_parent to inform parent window
-            root_gadget.__aq_parent =
-              TmpConstructor.prototype.__aq_parent = function (method_name,
-                argument_list, time_out) {
-                return new RSVP.Promise(function (resolve, reject) {
-                  embedded_channel.call({
-                    method: "acquire",
-                    params: [
-                      method_name,
-                      argument_list
-                    ],
-                    success: function (s) {
-                      resolve(s);
-                    },
-                    error: function (e) {
-                      reject(e);
-                    },
-                    timeout: time_out
-                  });
+    real_result_list = [TmpConstructor, root_gadget, embedded_channel,
+                        declare_method_list_waiting];
+    if (window.self === window.top) {
+      loading_result = real_result_list;
+    } else {
+      channel_defer = RSVP.defer();
+      loading_result = RSVP.any([
+        channel_defer.promise,
+        new RSVP.Queue()
+          .push(function () {
+            // Expect the channel to parent to be usable after 1 second
+            // If not, consider the gadget as the root
+            // Drop all iframe channel communication
+            return RSVP.delay(1000);
+          })
+          .push(function () {
+            real_result_list[2] = undefined;
+            return real_result_list;
+          })
+      ]);
+      // Create the communication channel
+      embedded_channel = Channel.build({
+        window: window.parent,
+        origin: "*",
+        scope: "renderJS",
+        onReady: function () {
+          var k,
+            len;
+          // Channel is ready, so now declare all methods
+          notifyDeclareMethod = function (name) {
+            declare_method_list_waiting.push(
+              new RSVP.Promise(function (resolve, reject) {
+                embedded_channel.call({
+                  method: "declareMethod",
+                  params: name,
+                  success: resolve,
+                  error: reject
                 });
-              };
-
-            // Channel is ready, so now declare Function
-            notifyDeclareMethod = function (name) {
-              declare_method_count += 1;
-              embedded_channel.call({
-                method: "declareMethod",
-                params: name,
-                success: function () {
-                  declare_method_count -= 1;
-                  notifyReady();
-                },
-                error: function () {
-                  declare_method_count -= 1;
-                }
-              });
-            };
-            for (k = 0; k < declare_method_list_waiting.length; k += 1) {
-              notifyDeclareMethod(declare_method_list_waiting[k]);
-            }
-            declare_method_list_waiting = [];
-            // If Gadget Failed Notify Parent
-            if (gadget_failed) {
-              embedded_channel.notify({
-                method: "failed",
-                params: gadget_error
-              });
-              return;
-            }
-            connection_ready = true;
-            notifyReady();
-            //the channel is ok
-            //so bind calls to renderJS method on the instance
-            embedded_channel.bind("methodCall", function (trans, v) {
-              root_gadget[v[0]].apply(root_gadget, v[1])
-                .then(function (g) {
-                  trans.complete(g);
-                }).fail(function (e) {
-                  trans.error(e.toString());
-                });
-              trans.delayReturn(true);
-            });
-          }
-        });
-
-        // Notify parent about gadget instanciation
-        notifyReady = function () {
-          if ((declare_method_count === 0) && (gadget_ready === true)) {
-            embedded_channel.notify({method: "ready"});
-          }
-        };
-
-        // Inform parent gadget about declareMethod calls here.
-        notifyDeclareMethod = function (name) {
-          declare_method_list_waiting.push(name);
-        };
-
-        notifyDeclareMethod("getInterfaceList");
-        notifyDeclareMethod("getRequiredCSSList");
-        notifyDeclareMethod("getRequiredJSList");
-        notifyDeclareMethod("getPath");
-        notifyDeclareMethod("getTitle");
-
-        // Surcharge declareMethod to inform parent window
-        TmpConstructor.declareMethod = function (name, callback) {
-          var result = RenderJSGadget.declareMethod.apply(
-              this,
-              [name, callback]
+              })
             );
-          notifyDeclareMethod(name);
-          return result;
-        };
-
-        TmpConstructor.declareService =
-          RenderJSGadget.declareService;
-        TmpConstructor.declareJob =
-          RenderJSGadget.declareJob;
-        TmpConstructor.onEvent =
-          RenderJSGadget.onEvent;
-        TmpConstructor.declareAcquiredMethod =
-          RenderJSGadget.declareAcquiredMethod;
-        TmpConstructor.allowPublicAcquisition =
-          RenderJSGadget.allowPublicAcquisition;
-
-        iframe_top_gadget = true;
-      }
-
-      TmpConstructor.prototype.__acquired_method_dict = {};
-      gadget_loading_klass_list.push(TmpConstructor);
-
-      function init() {
-        // XXX HTML properties can only be set when the DOM is fully loaded
-        var settings = renderJS.parseGadgetHTMLDocument(document, url),
-          j,
-          key,
-          fragment = document.createDocumentFragment();
-        for (key in settings) {
-          if (settings.hasOwnProperty(key)) {
-            TmpConstructor.prototype['__' + key] = settings[key];
-          }
-        }
-        TmpConstructor.__template_element = document.createElement("div");
-        root_gadget.element = document.body;
-        root_gadget.state = {};
-        for (j = 0; j < root_gadget.element.childNodes.length; j += 1) {
-          fragment.appendChild(
-            root_gadget.element.childNodes[j].cloneNode(true)
-          );
-        }
-        TmpConstructor.__template_element.appendChild(fragment);
-        RSVP.all([root_gadget.getRequiredJSList(),
-                  root_gadget.getRequiredCSSList()])
-          .then(function (all_list) {
-            var i,
-              js_list = all_list[0],
-              css_list = all_list[1];
-            for (i = 0; i < js_list.length; i += 1) {
-              javascript_registration_dict[js_list[i]] = null;
-            }
-            for (i = 0; i < css_list.length; i += 1) {
-              stylesheet_registration_dict[css_list[i]] = null;
-            }
-            gadget_loading_klass_list.shift();
-          }).then(function () {
-
-            // select the target node
-            var target = document.querySelector('body'),
-              // create an observer instance
-              observer = new MutationObserver(function (mutations) {
-                var i, k, len, len2, node, added_list;
-                mutations.forEach(function (mutation) {
-                  if (mutation.type === 'childList') {
-
-                    len = mutation.removedNodes.length;
-                    for (i = 0; i < len; i += 1) {
-                      node = mutation.removedNodes[i];
-                      if (node.nodeType === Node.ELEMENT_NODE) {
-                        if (node.hasAttribute("data-gadget-url") &&
-                            (node._gadget !== undefined)) {
-                          createMonitor(node._gadget);
-                        }
-                        added_list =
-                          node.querySelectorAll("[data-gadget-url]");
-                        len2 = added_list.length;
-                        for (k = 0; k < len2; k += 1) {
-                          node = added_list[k];
-                          if (node._gadget !== undefined) {
-                            createMonitor(node._gadget);
-                          }
-                        }
-                      }
-                    }
-
-                    len = mutation.addedNodes.length;
-                    for (i = 0; i < len; i += 1) {
-                      node = mutation.addedNodes[i];
-                      if (node.nodeType === Node.ELEMENT_NODE) {
-                        if (node.hasAttribute("data-gadget-url") &&
-                            (node._gadget !== undefined)) {
-                          if (document.contains(node)) {
-                            startService(node._gadget);
-                          }
-                        }
-                        added_list =
-                          node.querySelectorAll("[data-gadget-url]");
-                        len2 = added_list.length;
-                        for (k = 0; k < len2; k += 1) {
-                          node = added_list[k];
-                          if (document.contains(node)) {
-                            if (node._gadget !== undefined) {
-                              startService(node._gadget);
-                            }
-                          }
-                        }
-                      }
-                    }
-
-                  }
-                });
-              }),
-              // configuration of the observer:
-              config = {
-                childList: true,
-                subtree: true,
-                attributes: false,
-                characterData: false
-              };
-
-            // pass in the target node, as well as the observer options
-            observer.observe(target, config);
-
-            return root_gadget;
-          }).then(resolve, function (e) {
-            reject(e);
-            console.error(e);
-            throw e;
-          });
-      }
-      document.addEventListener('DOMContentLoaded', init, false);
-    });
-
-    loading_gadget_promise
-      .push(function () {
-        return loading_klass_promise;
-      })
-      .push(function (root_gadget) {
-        var i;
-
-        function ready_wrapper() {
-          return root_gadget;
-        }
-        function ready_executable_wrapper(fct) {
-          return function (g) {
-            return fct.call(g, g);
           };
-        }
-        TmpConstructor.ready(function () {
-          return startService(this);
-        });
 
-        loading_gadget_promise.push(ready_wrapper);
-        for (i = 0; i < TmpConstructor.__ready_list.length; i += 1) {
-          // Put a timeout?
-          loading_gadget_promise
-            .push(ready_executable_wrapper(TmpConstructor.__ready_list[i]))
-            // Always return the gadget instance after ready function
-            .push(ready_wrapper);
+          len = declare_method_list_waiting.length;
+          for (k = 0; k < len; k += 1) {
+            notifyDeclareMethod(declare_method_list_waiting[k]);
+          }
+
+          channel_defer.resolve(real_result_list);
         }
       });
-    if (window.self === window.top) {
-      loading_gadget_promise
-        .fail(function (e) {
-          letsCrash(e);
-          throw e;
-        });
-    } else {
-      // Inform parent window that gadget is correctly loaded
-      loading_gadget_promise
-        .then(function () {
-          gadget_ready = true;
-          if (connection_ready) {
-            notifyReady();
-          }
-        })
-        .fail(function (e) {
-          //top gadget in iframe
-          if (iframe_top_gadget) {
-            gadget_failed = true;
-            gadget_error = e.toString();
-            letsCrash(e);
-          } else {
-            embedded_channel.notify({method: "failed", params: e.toString()});
-          }
-          throw e;
-        });
+      real_result_list[2] = embedded_channel;
     }
 
+    // Surcharge declareMethod to inform parent window
+    TmpConstructor.declareMethod = function (name, callback) {
+      var result = RenderJSGadget.declareMethod.apply(
+          this,
+          [name, callback]
+        );
+      notifyDeclareMethod(name);
+      return result;
+    };
+
+    TmpConstructor.declareService =
+      RenderJSGadget.declareService;
+    TmpConstructor.declareJob =
+      RenderJSGadget.declareJob;
+    TmpConstructor.onEvent =
+      RenderJSGadget.onEvent;
+    TmpConstructor.onLoop =
+      RenderJSGadget.onLoop;
+    TmpConstructor.declareAcquiredMethod =
+      RenderJSGadget.declareAcquiredMethod;
+    TmpConstructor.allowPublicAcquisition =
+      RenderJSGadget.allowPublicAcquisition;
+
+    TmpConstructor.prototype.__acquired_method_dict = {};
+    gadget_loading_klass_list.push(TmpConstructor);
+
+    return loading_result;
   }
-  bootstrap();
+
+  function triggerReadyList(TmpConstructor, root_gadget) {
+    // XXX Probably duplicated
+    var i,
+      ready_queue = new RSVP.Queue();
+
+    function ready_wrapper() {
+      return root_gadget;
+    }
+    function ready_executable_wrapper(fct) {
+      return function (g) {
+        return fct.call(g, g);
+      };
+    }
+    TmpConstructor.ready(function () {
+      return startService(this);
+    });
+
+    ready_queue.push(ready_wrapper);
+    for (i = 0; i < TmpConstructor.__ready_list.length; i += 1) {
+      // Put a timeout?
+      ready_queue
+        .push(ready_executable_wrapper(TmpConstructor.__ready_list[i]))
+        // Always return the gadget instance after ready function
+        .push(ready_wrapper);
+    }
+    return ready_queue;
+  }
+
+  function finishAqParentConfiguration(TmpConstructor, root_gadget,
+                                       embedded_channel) {
+    // Define __aq_parent to inform parent window
+    root_gadget.__aq_parent =
+      TmpConstructor.prototype.__aq_parent = function (method_name,
+                                                       argument_list,
+                                                       time_out) {
+        return new RSVP.Promise(function (resolve, reject) {
+          embedded_channel.call({
+            method: "acquire",
+            params: [
+              method_name,
+              argument_list
+            ],
+            success: function (s) {
+              resolve(s);
+            },
+            error: function (e) {
+              reject(e);
+            },
+            timeout: time_out
+          });
+        });
+      };
+
+    // bind calls to renderJS method on the instance
+    embedded_channel.bind("methodCall", function (trans, v) {
+      root_gadget[v[0]].apply(root_gadget, v[1])
+        .push(function (g) {
+          trans.complete(g);
+        }, function (e) {
+          trans.error(e.toString());
+        });
+      trans.delayReturn(true);
+    });
+  }
+
+  function bootstrap(url) {
+    // Create the loading gadget
+    var wait_for_gadget_loaded = createLoadingGadget(url),
+      TmpConstructor,
+      root_gadget,
+      embedded_channel,
+      declare_method_list_waiting;
+
+    return new RSVP.Queue()
+      .push(function () {
+        // Wait for the loading gadget to be created
+        return wait_for_gadget_loaded;
+      })
+      .push(function (result_list) {
+        TmpConstructor = result_list[0];
+        root_gadget = result_list[1];
+        embedded_channel = result_list[2];
+        declare_method_list_waiting = result_list[3];
+        // Wait for all the gadget dependencies to be loaded
+        return all_dependency_loaded_deferred.promise;
+      })
+      .push(function () {
+        // Wait for all methods to be correctly declared
+        return RSVP.all(declare_method_list_waiting);
+      })
+      .push(function (result_list) {
+        if (embedded_channel !== undefined) {
+          finishAqParentConfiguration(TmpConstructor, root_gadget,
+                                      embedded_channel);
+        }
+        // Check all DOM modifications to correctly start/stop services
+        return configureMutationObserver(TmpConstructor, url, root_gadget);
+      })
+      .push(function () {
+        // Trigger all ready functions
+        return triggerReadyList(TmpConstructor, root_gadget);
+      })
+      .push(function () {
+        if (embedded_channel !== undefined) {
+          embedded_channel.notify({method: "ready"});
+        }
+      })
+      .push(undefined, function (e) {
+        letsCrash(e);
+        if (embedded_channel !== undefined) {
+          embedded_channel.notify({method: "failed", params: e.toString()});
+        }
+        throw e;
+      });
+  }
+
+  bootstrap(
+    removeHash(window.location.href)
+  );
 
 }(document, window, RSVP, DOMParser, Channel, MutationObserver, Node,
   FileReader, Blob, navigator, Event, URL));
