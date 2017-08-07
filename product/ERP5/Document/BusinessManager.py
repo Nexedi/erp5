@@ -706,7 +706,8 @@ class BusinessItem(XMLObject):
       new_template_path_list = list(template_path_list)
       # Remove the old path and append it with new path in template_path_list
       # for the parent Business Manager
-      new_template_path_list.remove(old_path)
+      if old_path:
+        new_template_path_list.remove(old_path)
       new_template_path_list.append(new_path)
       manager.setProperty('template_path_list', new_template_path_list)
     return edited
@@ -719,7 +720,14 @@ class BusinessItem(XMLObject):
     item_path = self.getProperty('item_path')
     item_sign = self.getProperty('item_sign')
     item_layer = self.getProperty('item_layer')
-    return (' | ').join([item_path, str(item_sign), str(item_layer)])
+    # Try creating template path from the item path,layer and sign
+    try:
+      path =  (' | ').join([item_path, str(item_sign), str(item_layer)])
+    except TypeError:
+      # In case any of item_sign, item_path or item_layer are NoneType or empty,
+      # just return None
+      path = None
+    return path
 
   def build(self, context, **kw):
     """
@@ -1059,7 +1067,8 @@ class BusinessPropertyItem(XMLObject):
       new_template_path_list = list(template_path_list)
       # Remove the old path and append it with new path in template_path_list
       # for the parent Business Manager
-      new_template_path_list.remove(old_path)
+      if old_path:
+        new_template_path_list.remove(old_path)
       new_template_path_list.append(new_path)
       manager.setProperty('template_path_list', new_template_path_list)
     return edited
@@ -1072,7 +1081,14 @@ class BusinessPropertyItem(XMLObject):
     item_path = self.getProperty('item_path')
     item_sign = self.getProperty('item_sign')
     item_layer = self.getProperty('item_layer')
-    return (' | ').join([item_path, str(item_sign), str(item_layer)])
+    # Try creating template path from the item path,layer and sign
+    try:
+      path =  (' | ').join([item_path, str(item_sign), str(item_layer)])
+    except TypeError:
+      # In case any of item_sign, item_path or item_layer are NoneType or empty,
+      # just return None
+      path = None
+    return path
 
   def build(self, context, **kw):
     p = context.getPortalObject()
