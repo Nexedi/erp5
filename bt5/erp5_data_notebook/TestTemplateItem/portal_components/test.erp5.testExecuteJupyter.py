@@ -1012,3 +1012,45 @@ print os.path
 
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
+
+  def checkEgg(self, egg):
+    '''
+      Returns whether an egg is available.
+    '''
+
+    reference = 'Test.Notebook.EnvironmentObject.Errors.EggImport'
+
+    try:
+      result = self.portal.Base_executeJupyter(
+        reference=reference,
+        python_expression='import %s as _' % egg
+      )
+    except Exception:
+      result = json.dumps(dict(status='error'))
+    self.tic()
+
+    result = json.loads(result)
+
+    return result['status'] == 'ok'
+
+  def testEggs(self):
+    '''
+      Test whether essential modules are available.
+    '''
+    self.login('dev_user')
+
+    egg_list = [
+      'datetime',
+      'h5py',
+      'math',
+      'matplotlib',
+      'openpyxl',
+      'pandas',
+      'pylab',
+      'scipy',
+      'sklearn',
+      'statsmodels',
+      'sympy',
+    ]
+    imported_egg_list = [egg for egg in egg_list if self.checkEgg(egg)]
+    self.assertEqual(set(egg_list), set(imported_egg_list))
