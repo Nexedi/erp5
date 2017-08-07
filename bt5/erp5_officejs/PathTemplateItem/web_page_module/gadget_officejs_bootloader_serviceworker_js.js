@@ -12,7 +12,7 @@ var global = self, window = self;
   self.DOMError = {};
   self.postMessage = function () {return; };
 
-  self.importScripts('development/rsvp.js', 'development/jiodev.js');
+  self.importScripts('app/rsvp.js', 'app/jiodev.js');
 
   self.storage = {};
 

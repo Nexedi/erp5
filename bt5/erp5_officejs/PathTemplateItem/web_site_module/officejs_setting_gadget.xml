@@ -274,7 +274,7 @@
         </item>
         <item>
             <key> <string>configuration_redirect_url</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
@@ -509,7 +509,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.7903.39730.26094</string> </value>
+                <value> <string>961.16277.24517.44253</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -527,7 +527,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502093797.86</float>
+                        <float>1502106386.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

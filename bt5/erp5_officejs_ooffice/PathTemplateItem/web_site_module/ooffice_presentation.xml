@@ -457,7 +457,7 @@
         </item>
         <item>
             <key> <string>configuration_redirect_url</string> </key>
-            <value> <string>development/</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
@@ -718,7 +718,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.10686.10882.5973</string> </value>
+                <value> <string>961.16277.24517.44253</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -736,7 +736,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502094070.52</float>
+                        <float>1502106598.52</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
