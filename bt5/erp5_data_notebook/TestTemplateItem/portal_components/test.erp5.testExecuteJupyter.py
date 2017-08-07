@@ -72,6 +72,23 @@ class TestExecuteJupyter(ERP5TypeTestCase):
       notebook_code=notebook_code,
       batch_mode=True
       )
+  
+  def checkEgg(self, import_code):
+    '''
+      Returns whether an egg is available.
+    '''
+    
+    reference = 'Test.Notebook.EnvironmentObject.Errors.EggImport'
+    
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+    
+    result = json.loads(result)
+    
+    return result['status'] == 'ok'
 
   def testJupyterCompileErrorRaise(self):
     """
@@ -991,3 +1008,31 @@ print os.path
 
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
+  
+  def testEggs(self):
+    '''
+      Test whether essential modules are available.
+    '''
+    
+    self.login('dev_user')
+    
+    egg_list = ['scipy', 'sklearn', 'pandas', 'matplotlib', 'math', 'sympy',
+      'pylab', 'openpyxl', 'statsmodels', 'datetime', 'h5py']
+    result_dict = {}
+    final_output = 'The following eggs can not be imported by Jupyter: '
+    noErrors = True
+      
+    for egg in egg_list:
+      result_dict[egg] = (self.checkEgg('import %s as _' %egg))
+      noErrors = result_dict[egg] and noErrors
+            
+    if noErrors:
+      final_output = 'Success'
+    else:
+      for egg, result in result_dict.iteritems():
+        if result is False:
+          final_output += ('%s, ' %egg)
+      final_output = final_output[:-2]
+    
+    self.assertEquals(final_output, 'Success')
+
