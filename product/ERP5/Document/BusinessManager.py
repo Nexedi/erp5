@@ -672,6 +672,7 @@ class BusinessItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
+    old_path = self.constructTemplatePath()
     edited = super(BusinessItem, self)._edit(item_path=item_path,
                                            item_sign=item_sign,
                                            item_layer=item_layer,
@@ -684,6 +685,9 @@ class BusinessItem(XMLObject):
       if not template_path_list:
         template_path_list = []
       new_template_path_list = list(template_path_list)
+      # Remove the old path and append it with new path in template_path_list
+      # for the parent Business Manager
+      new_template_path_list.remove(old_path)
       new_template_path_list.append(new_path)
       manager.setProperty('template_path_list', new_template_path_list)
     return edited
@@ -1021,6 +1025,7 @@ class BusinessPropertyItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
+    old_path = self.constructTemplatePath()
     edited = super(BusinessPropertyItem, self)._edit(item_path=item_path,
                                                    item_sign=item_sign,
                                                    item_layer=item_layer,
@@ -1033,6 +1038,9 @@ class BusinessPropertyItem(XMLObject):
       if not template_path_list:
         template_path_list = []
       new_template_path_list = list(template_path_list)
+      # Remove the old path and append it with new path in template_path_list
+      # for the parent Business Manager
+      new_template_path_list.remove(old_path)
       new_template_path_list.append(new_path)
       manager.setProperty('template_path_list', new_template_path_list)
     return edited
