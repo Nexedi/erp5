@@ -2076,12 +2076,21 @@ class TemplateTool (BaseTool):
       if isProperty:
         obj_dict = object
       else:
+
         klass = object.__class__
         classname = klass.__name__
         obj_dict = object.__dict__.copy()
+
+        # If the dict is empty, do calculate hash of None as it stays same on
+        # one platform and in any case its impossiblt to move live python
+        # objects from one seeion to another
+        if not bool(obj_dict):
+          return hash(None)
+
         attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
                     'last_id', 'uid', '_mt_index', '_count', '_tree',
-                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__'}
+                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
+                    'workflow_history',}
 
         attr_set.update(('isIndexable',))
 
