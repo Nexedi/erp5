@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test OfficeJS UI</title>
+  <script src="../../web_site_module/officejs_text_editor/rsvp.js"></script>
+  <script src="../../web_site_module/officejs_text_editor/jiodev.js"></script>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
@@ -51,6 +53,11 @@
 <tr>
   <td>open</td>
   <td>${base_url}/web_site_module/${test_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>runScript</td>
+  <td>window.indexedDB.deleteDatabase('jio:setting')</td>
   <td></td>
 </tr>
 <tr>
