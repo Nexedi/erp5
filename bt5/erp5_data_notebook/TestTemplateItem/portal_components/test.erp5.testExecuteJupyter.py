@@ -991,3 +991,43 @@ print os.path
 
     result = json.loads(result)
     self.assertEquals(result['status'], 'ok')
+
+  def testEgg(self, import_code = 'import scipy as _', no_login = False):
+    '''
+      Test whether an egg is available.
+    '''
+    
+    if not no_login:
+      self.login('dev_user')
+    reference = 'Test.Notebook.EnvironmentObject.Errors.EggImport'
+    
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=import_code
+    )
+    self.tic()
+    
+    result = json.loads(result)
+    self.assertEquals(result['status'], 'ok')
+  
+  def testEggs(self):
+    '''
+      Test whether essential modules are available.
+    '''
+    
+    self.login('dev_user')
+    
+    self.testEgg('import scipy as _', True)	 
+    self.testEgg('import sklearn as _', True)
+    self.testEgg('import pandas as _', True)
+    self.testEgg('import matplotlib as _', True)
+    self.testEgg('import math as _', True)
+    self.testEgg('import sympy as _', True)
+    self.testEgg('import pylab as _', True)
+    self.testEgg('import openpyxl as _', True)
+    self.testEgg('import statsmodels as _', True)
+    self.testEgg('import zipfile as _', True)
+    self.testEgg('import ftplib as _', True)
+    self.testEgg('import datetime as _', True)
+    self.testEgg('import h5py as _', True)
+    
