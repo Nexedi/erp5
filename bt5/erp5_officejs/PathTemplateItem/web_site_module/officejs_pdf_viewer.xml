@@ -445,7 +445,7 @@
         </item>
         <item>
             <key> <string>configuration_latest_version</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>

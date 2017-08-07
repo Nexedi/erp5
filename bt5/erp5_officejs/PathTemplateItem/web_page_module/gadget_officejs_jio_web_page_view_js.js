@@ -131,7 +131,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable === 1 ? "GadgetField" : "EditorField",
-                  "url": "../officejs_ckeditor_gadget/development/",
+                  "url": "../officejs_ckeditor_gadget/app/",
                   "sandbox": "iframe"
                 }
               }},

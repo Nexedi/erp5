@@ -435,7 +435,7 @@
         </item>
         <item>
             <key> <string>configuration_latest_version</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -702,7 +702,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.28726.54566.6007</string> </value>
+                <value> <string>960.25499.10547.9250</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -720,7 +720,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491232513.67</float>
+                        <float>1502094028.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

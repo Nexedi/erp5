@@ -157,7 +157,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable ? "GadgetField" : "EditorField",
-                  "url": "../ooffice_presentation_gadget/development/",
+                  "url": "../ooffice_presentation_gadget/app/",
                   "sandbox": "iframe"
                 }
               }},

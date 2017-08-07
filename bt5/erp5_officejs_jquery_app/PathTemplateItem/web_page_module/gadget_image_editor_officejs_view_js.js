@@ -151,7 +151,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable === 1 ? "GadgetField" : "EditorField",
-                  "url": "../officejs_image_editor_gadget/development/",
+                  "url": "../officejs_image_editor_gadget/app/",
                   "sandbox": "iframe"
                 }
               }},

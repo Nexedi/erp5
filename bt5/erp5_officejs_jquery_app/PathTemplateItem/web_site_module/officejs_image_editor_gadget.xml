@@ -435,7 +435,7 @@
         </item>
         <item>
             <key> <string>configuration_latest_version</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
@@ -692,7 +692,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string>Deleted objects: []</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -700,7 +702,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.45146.26450.19592</string> </value>
+                <value> <string>960.31261.31766.18790</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -718,7 +720,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496060225.02</float>
+                        <float>1502094113.27</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

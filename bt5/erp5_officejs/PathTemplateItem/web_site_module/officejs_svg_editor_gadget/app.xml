@@ -133,7 +133,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/development</string>
+                        <string>ERP5 Web Section/app</string>
                       </tuple>
                     </key>
                     <value>
@@ -172,27 +172,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_application_title</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_jio_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_content_security_policy</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -242,16 +222,6 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_manifest_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
                       <value> <string>configuration_x_frame_options</string> </value>
                   </item>
                   <item>
@@ -262,7 +232,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_default_view_action_reference</string> </value>
+                      <value> <string>configuration_manifest_url</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -272,17 +242,7 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>configuration_default_jio_document_page_gadget_url</string> </value>
-                  </item>
-                  <item>
-                      <key> <string>type</string> </key>
-                      <value> <string>string</string> </value>
-                  </item>
-                </dictionary>
-                <dictionary>
-                  <item>
-                      <key> <string>id</string> </key>
-                      <value> <string>configuration_frontpage_gadget_url</string> </value>
+                      <value> <string>configuration_content_security_policy</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
@@ -303,53 +263,47 @@
             <value>
               <tuple>
                 <string>caching_policy/must-revalidate</string>
-                <string>aggregate/web_page_module/rjs_gadget_erp5_launcher_html</string>
+                <string>aggregate/web_page_module/gadget_officejs_svg_editor_html</string>
               </tuple>
             </value>
-        </item>
-        <item>
-            <key> <string>configuration_application_title</string> </key>
-            <value> <string>Presentation</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
             <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
-            <key> <string>configuration_default_jio_document_page_gadget_url</string> </key>
-            <value> <string>ojs_controller</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_default_view_action_reference</string> </key>
-            <value> <string>jio_view_attachment</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_frontpage_gadget_url</string> </key>
-            <value> <string>ojs_document_list</string> </value>
-        </item>
-        <item>
             <key> <string>configuration_hateoas_url</string> </key>
-            <value> <string>hateoas/</string> </value>
+            <value> <string>hateoas</string> </value>
         </item>
         <item>
             <key> <string>configuration_header_gadget_url</string> </key>
-            <value> <string>gadget_erp5_header.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
-            <value> <string>gadget_ojs_jio.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_ooffice_presentation.appcache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
-            <value> <string>gadget_erp5_ojs_panel.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_ooffice_presentation_router.html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -359,7 +313,7 @@
         </item>
         <item>
             <key> <string>configuration_x_frame_options</string> </key>
-            <value> <string>SAMEORIGIN</string> </value>
+            <value> <string>ALLOW-FROM-ALL</string> </value>
         </item>
         <item>
             <key> <string>container_layout</string> </key>
@@ -385,7 +339,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
@@ -407,7 +361,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Presentation Development</string> </value>
+            <value> <string>SVG Editor Gadget Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -503,7 +457,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>vincent</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -525,7 +479,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487770889.36</float>
+                        <float>1487773579.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -570,7 +524,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.10686.10882.5973</string> </value>
+                <value> <string>960.25484.60987.38638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -588,7 +542,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501848515.74</float>
+                        <float>1502093773.11</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

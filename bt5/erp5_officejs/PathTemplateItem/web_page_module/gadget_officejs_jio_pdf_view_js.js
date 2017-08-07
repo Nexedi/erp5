@@ -153,7 +153,7 @@
                   "key": "text_content",
                   "hidden": 0,
                   "type": editable === 1 ? "GadgetField" : "EditorField",
-                  "url": "../officejs_pdf_viewer_gadget/development/",
+                  "url": "../officejs_pdf_viewer_gadget/app/",
                   "sandbox": "iframe"
                 }
               }},
