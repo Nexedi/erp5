@@ -130,7 +130,7 @@
                 "key": "text_content",
                 "hidden": 0,
                 "type": editable === 1 ? "GadgetField" : "EditorField",
-                "url": "../officejs_web_table_editor_gadget/development/",
+                "url": "../officejs_web_table_editor_gadget/app/",
                 "sandbox": "iframe"
               }
             }},
