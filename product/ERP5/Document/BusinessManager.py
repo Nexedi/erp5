@@ -286,6 +286,25 @@ class BusinessManager(Folder):
     final_prop_map = prop_map+self._properties
     return final_prop_map
 
+  def createTemplatePathListFromItemList(self):
+    """
+    This function is to clean and create a new template_path_list from the
+    sub-objects (Business Item or Business Property Item).
+
+    WARNING: Shouldn't be used in general to edit. Only to be used in cases to
+    clear template_path_list.
+    """
+    template_path_list = []
+
+    # Get the sub-objects and construct their template path, i.e, path in format
+    # of <path> | <sign> | <layer>
+    for item in self.objectValues():
+      path = item.constructTemplatePath()
+      template_path_list.append(path)
+
+    # Add the updated template_path_list in the BM
+    self.setProperty('template_path_list', template_path_list)
+
   def export(self, path=None, **kw):
     """
     Export the object as zexp file
