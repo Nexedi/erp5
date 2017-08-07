@@ -133,7 +133,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/development</string>
+                        <string>ERP5 Web Section/app</string>
                       </tuple>
                     </key>
                     <value>
@@ -309,7 +309,7 @@
         </item>
         <item>
             <key> <string>configuration_application_title</string> </key>
-            <value> <string>Office Image Editor</string> </value>
+            <value> <string>Office Web Table Editor</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -341,7 +341,7 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs_image_editor.appcache</string> </value>
+            <value> <string>gadget_officejs_web_table_editor.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -349,7 +349,7 @@
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
-            <value> <string>gadget_officejs_image_editor_router.html</string> </value>
+            <value> <string>gadget_officejs_web_table_router.html</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -385,7 +385,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
@@ -407,7 +407,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Image Editor Development</string> </value>
+            <value> <string>Web Table Editor Development</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -503,7 +503,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -525,7 +525,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1487775923.92</float>
+                        <float>1487769800.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -570,7 +570,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.1780.39525.6280</string> </value>
+                <value> <string>961.10686.10882.5973</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -588,7 +588,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501235817.8</float>
+                        <float>1502094106.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
