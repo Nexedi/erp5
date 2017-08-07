@@ -50,7 +50,7 @@
               type: "uuid",
               sub_storage: {
                 type: "indexeddb",
-                database: "officejs-hash"
+                database: "officejs-erp5-hash"
               }
             }
           },
@@ -65,7 +65,7 @@
             }
           },
           remote_sub_storage: {
-            type: "mapping",
+            type: "mapping",²
             attachment_list: ["data"],
             attachment: {
               "data": {
@@ -175,7 +175,7 @@
     .declareService(function () {
       var gadget = this;
 
-      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/development/")
+      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/app/")
         .push(function (global_setting_gadget_url) {
           return gadget.declareGadget(global_setting_gadget_url, {
             "scope": "global_setting_gadget",
