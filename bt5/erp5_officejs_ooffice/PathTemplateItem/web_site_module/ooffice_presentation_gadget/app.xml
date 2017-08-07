@@ -133,7 +133,7 @@
                     <key>
                       <tuple>
                         <int>99</int>
-                        <string>ERP5 Web Section/development</string>
+                        <string>ERP5 Web Section/app</string>
                       </tuple>
                     </key>
                     <value>
@@ -159,7 +159,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>aggregate/web_page_module/gadget_ooffice_text_gadget_landing_page_html</string>
+                <string>aggregate/web_page_module/ooffice_presentation_gadget_landing_page_html</string>
               </tuple>
             </value>
         </item>
@@ -179,7 +179,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>development</string> </value>
+            <value> <string>app</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -197,7 +197,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OnlyOffice Text Gadget</string> </value>
+            <value> <string>OnlyOffice Presentation Gadget</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -315,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496060996.88</float>
+                        <float>1496060785.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -360,7 +360,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.45165.9935.31061</string> </value>
+                <value> <string>960.25499.10547.9250</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -378,7 +378,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496060990.47</float>
+                        <float>1502094059.64</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
