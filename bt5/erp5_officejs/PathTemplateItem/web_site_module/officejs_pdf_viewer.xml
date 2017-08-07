@@ -457,7 +457,7 @@
         </item>
         <item>
             <key> <string>configuration_redirect_url</string> </key>
-            <value> <string>development/</string> </value>
+            <value> <string>app/</string> </value>
         </item>
         <item>
             <key> <string>configuration_router_gadget_url</string> </key>
