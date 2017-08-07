@@ -341,7 +341,7 @@
         </item>
         <item>
             <key> <string>configuration_manifest_url</string> </key>
-            <value> <string>gadget_officejs.appcache</string> </value>
+            <value> <string>gadget_officejs_illustration.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -570,7 +570,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.7630.60361.20326</string> </value>
+                <value> <string>961.16277.24517.44253</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -588,7 +588,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502093787.74</float>
+                        <float>1502116126.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
