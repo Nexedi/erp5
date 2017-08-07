@@ -65,7 +65,7 @@
             }
           },
           remote_sub_storage: {
-            type: "mapping",²
+            type: "mapping",
             attachment_list: ["data"],
             attachment: {
               "data": {
