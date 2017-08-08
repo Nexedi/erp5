@@ -1,5 +1,7 @@
 Business Item | content_view
 Business Manager | build
 Business Manager | content_view
+Business Manager | update_template_path_list
 Business Package | content_view
 Business Package | export
+Business Property Item | content_view
