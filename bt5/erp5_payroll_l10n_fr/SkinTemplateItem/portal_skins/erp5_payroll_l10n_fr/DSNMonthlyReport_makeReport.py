@@ -81,8 +81,9 @@ employee_result_list = [
 
 employee_data_list, paysheet_data_list = zip(*employee_result_list)
 
+insurance_contract_id_list = set()
 for employee_data_dict, paysheet_data_dict in employee_result_list:
-  insurance_contract_id_list = set([x[1] for x in paysheet_data_dict['taxable_base']])
+  insurance_contract_id_list.update(set([x[1] for x in paysheet_data_dict['taxable_base']]))
 
 collective_contract_list = getDSNBlockDict(block_id='S21.G00.15')
 for collective_contract in collective_contract_list:
