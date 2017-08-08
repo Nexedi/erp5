@@ -53,9 +53,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -76,6 +74,7 @@
                       <list>
                         <string>my_item_path</string>
                         <string>my_item_sign</string>
+                        <string>my_item_layer</string>
                       </list>
                     </value>
                 </item>
@@ -83,7 +82,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_item_layer</string>
+                        <string>my_item_property_name</string>
+                        <string>my_item_property_type</string>
+                        <string>my_item_property_value</string>
                       </list>
                     </value>
                 </item>
@@ -92,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessItem_view</string> </value>
+            <value> <string>BusinessPropertyItem_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
