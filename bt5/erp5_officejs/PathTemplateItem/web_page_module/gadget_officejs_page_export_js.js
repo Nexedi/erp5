@@ -12,6 +12,11 @@
       "cache": "gadget_officejs_text_editor.appcache",
       "sub_gadget": ["officejs_ckeditor_gadget", "officejs_setting_gadget"]
     },
+    "Wall Search": {
+      "url": "officejs_facebook_posts/",
+      "cache": "gadget_erp5_page_ojs_fb_posts.appcache",
+      "sub_gadget": []
+    },
     "Illustration Editor": {
       "url": "officejs_svg_editor/",
       "cache": "gadget_officejs_illustration.appcache",
