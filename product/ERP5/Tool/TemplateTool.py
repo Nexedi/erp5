@@ -2075,6 +2075,10 @@ class TemplateTool (BaseTool):
       """
       if isProperty:
         obj_dict = object
+        # Have compatibilty between tuples and list while comparing as we face
+        # this situation a lot especially for list type properties
+        if isinstance(obj_dict, list):
+          obj_dict = tuple(obj_dict)
       else:
 
         klass = object.__class__
