@@ -125,7 +125,6 @@ font-awesome/font-awesome-webfont.svg\n
 gadget_erp5_nojqm.css\n
 jio_mappingstorage.js\n
 jio_fixstorage.js\n
-jio_fbstorage.js\n
 gadget_erp5_global.js\n
 URI.js\n
 dygraph.js\n
@@ -149,8 +148,6 @@ gadget_translation.js\n
 gadget_translation_data.js\n
 gadget_erp5_editor_panel.html\n
 gadget_erp5_editor_panel.js\n
-gadget_erp5_page_ojs_fb_posts_panel.html\n
-gadget_erp5_page_ojs_fb_posts_panel.js\n
 gadget_erp5_header.html\n
 gadget_erp5_header.js\n
 gadget_ojs_jio.html\n
@@ -161,12 +158,8 @@ gadget_erp5_page_ojs_add_document.html\n
 gadget_erp5_page_ojs_add_document.js\n
 gadget_erp5_page_ojs_configurator.html\n
 gadget_erp5_page_ojs_configurator.js\n
-gadget_erp5_page_ojs_facebook_configurator.html\n
-gadget_erp5_page_ojs_facebook_configurator.js\n
 gadget_erp5_page_ojs_sync.html\n
 gadget_erp5_page_ojs_sync.js\n
-gadget_erp5_page_ojs_fb_posts_document_list.html\n
-gadget_erp5_page_ojs_fb_posts_document_list.js\n
 gadget_ojs_configurator_access.html\n
 gadget_ojs_configurator_access.js\n
 gadget_html5_input.html\n
@@ -197,11 +190,15 @@ gadget_erp5_field_gadget.html\n
 gadget_erp5_field_gadget.js\n
 \n
 gadget_erp5_page_ojs_fb_posts_router.html\n
-gadget_officejs_jio_web_page_view.html\n
-gadget_officejs_jio_web_page_view.js\n
+gadget_erp5_page_ojs_facebook_configurator.html\n
+gadget_erp5_page_ojs_facebook_configurator.js\n
+gadget_erp5_page_ojs_fb_posts_document_list.html\n
+gadget_erp5_page_ojs_fb_posts_document_list.js\n
+gadget_erp5_page_ojs_fb_posts_panel.html\n
+gadget_erp5_page_ojs_fb_posts_panel.js\n
+jio_fbstorage.js\n
+gadget_erp5_page_ojs_fb_posts_jio.html\n
 GADGET:\n
-officejs_ckeditor_gadget/\n
-officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
         </item>
@@ -344,7 +341,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.16174.64924.29252</string> </value>
+                <value> <string>961.17876.53189.13602</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -362,7 +359,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502099464.35</float>
+                        <float>1502201569.89</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
