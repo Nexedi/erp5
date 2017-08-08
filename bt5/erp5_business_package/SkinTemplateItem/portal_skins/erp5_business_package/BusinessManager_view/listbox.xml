@@ -83,6 +83,10 @@
                           <string>item_layer</string>
                           <string>layer</string>
                         </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Portal Type</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -126,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

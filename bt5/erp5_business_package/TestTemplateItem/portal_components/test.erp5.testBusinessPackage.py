@@ -899,7 +899,7 @@ class TestBusinessPackage(ERP5TypeTestCase):
     Case X:
     A       A       A :       A
     """
-    portal_templates = self.portal.portal_templates
+    portal_templates = self.portal.portal_templatesd
     managerA = self._createBusinessManager()
     test_folder = self._addFolderInERP5()
     test_folder.setProperty('short_title', 'foo')
@@ -1293,22 +1293,71 @@ class TestBusinessPackage(ERP5TypeTestCase):
     self.assertTrue('Trying to remove changes at ZODB at test_folder#short_title'
                      in context.exception)
 
+  def test_brokenModuleOnImport(self):
+    """
+    Reproduce the broken object error in case of exporting and importing a
+    module object with the base type on which it depends on in the same Business
+    Manager
+    """
+    import transaction
+
+    base_type = self.portal.portal_types.newContent(
+        id='type_%s' % time.time(),
+        portal_type='Base Type',
+        type_class='Folder',
+        )
+
+    self.tic()
+    test_module = self.portal.newContent(
+                          id='module_%s' % time.time(),
+                          portal_type=base_type.id)
+
+
+    manager = self._createBusinessManager()
+    portal_templates = self.portal.portal_templates
+
+    path_item_list = [
+                      'portal_types/%s | 1 | 1' % base_type.id,
+                      '%s | 1 | 1' % test_module.id,
+                      ]
+
+    manager.setProperty('template_path_list', path_item_list)
+    manager.build()
+    self.tic()
+    # Export the manager
+    manager.export('/srv/slapgrid/slappart16/srv/runner/instance/slappart6/tmp')
+
+    self.portal.manage_delObjects(['%s' % test_module.id])
+    self.portal.portal_types.manage_delObjects(['%s' % base_type.id])
+
+    portal_templates._delOb(manager.id)
+
+    transaction.commit()
+
+    import pdb; pdb.set_trace()
+
+    # Import the Business Manager
+    imported_manager = portal_templates._importObjectFromFile('/srv/slapgrid/slappart16/srv/runner/instance/slappart6/tmp/%s.zexp' % manager.id)
+
+    self.tic()
+
   def test_migrateCatalogBTToBM(self):
     """
     Try to export-import-install erp5_mysql_innodb_catalog BT to BM. This
     would help to keep track of the erp5_catalog which we use.
     """
+    manager_A = self._createBusinessManager()
     portal_templates = self.portal.portal_templates
-    managerA = self._createBusinessManager(title='erp5_performance_test')
 
-    path_list = ['portal_skins/erp5_core_proxy_field_legacy | 1 | 1']
-    # Set catalog path item as path_item in managerA
-    managerA.setProperty('template_path_list', path_list)
-    # Copy the Business Manager object
-    managerA_new, = self._copyBusinessManager([managerA.id,])
-    managerA_new.build()
-    path  = self._exportBusinessManager(managerA_new)
-    imported_manager = self._importBusinessManager(managerA_new, path, 1)
+    path_item_list = [
+                      'person_module | 1 | 1',
+                     ]
+
+    manager_A.setProperty('template_path_list' ,path_item_list)
+
+    self.tic()
+
+    portal_templates.migrateBTToBM('/srv/slapgrid/slappart16/srv/runner/software/43d62734835a4a6fe6c005cf13c62653/parts/erp5/product/ERP5/bootstrap/erp5_core')
 
   def _globalInstallationOfBusinessTemplate(self):
     """
