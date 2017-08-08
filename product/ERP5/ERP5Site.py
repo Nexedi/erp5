@@ -2196,7 +2196,7 @@ class ERP5Generator(PortalGenerator):
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
-    if not kw.get('reindex', 1):
+    if kw.get('reindex', 1):
       setattr(p, 'isIndexingRequired', ConstantGetter('isIndexingRequired', value=True))
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
