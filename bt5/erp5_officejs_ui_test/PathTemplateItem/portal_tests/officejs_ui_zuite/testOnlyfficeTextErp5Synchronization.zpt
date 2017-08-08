@@ -99,7 +99,7 @@
 </tr>
 <tr>
   <td>type</td>
-  <td>name=description</td>
+  <td>identifier=description</td>
   <td>${description}</td>
 </tr>
 <tr>
@@ -219,13 +219,18 @@
   <td>${reference}</td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
+  <td>verifyValue</td>
+  <td>description</td>
   <td>${description}</td>
-  <td></td>
 </tr>
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Synchronize']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Filter']</td>
   <td></td>
 </tr>
 <!-- Wait for search fixed
@@ -238,11 +243,6 @@
   <td>type</td>
   <td>name=search</td>
   <td>${title}</td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Filter']</td>
-  <td></td>
 </tr>
 <tr>
   <td>click</td>
@@ -265,16 +265,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${title}</td>
-  <td></td>
-</tr>
-<tr>
   <td>verifyValue</td>
   <td>title</td>
   <td>${title}</td>
@@ -285,9 +275,9 @@
   <td>${reference}</td>
 </tr>
 <tr>
-  <td>assertTextPresent</td>
+  <td>verifyValue</td>
+  <td>description</td>
   <td>${description}</td>
-  <td></td>
 </tr>
 <tr>
   <td>open</td>
