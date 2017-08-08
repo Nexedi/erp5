@@ -96,11 +96,11 @@ gadget_klass
       });
     FB.getLoginStatus(function(response) {
       if (response.status == 'connected') {
-        document.getElementById('status').innerHTML = 'logged in';
+        document.getElementById('status').innerHTML = ' Logged in';
         //gadget.changeState({logged: true});
       }
       else {
-        document.getElementById('status').innerHTML = 'logged out';
+        document.getElementById('status').innerHTML = ' Logged out';
       }
       })
   })
@@ -109,11 +109,11 @@ gadget_klass
       var status;
       if (modification_dict.hasOwnProperty('logged')) {
         if(modification_dict.logged) {
-          document.getElementById('status').innerHTML = 'logged in';
+          document.getElementById('status').innerHTML = ' Logged in';
           return setFacebookConfiguration(gadget, FB.getAccessToken(), FB.getUserID());
         }
         else {
-          document.getElementById('status').innerHTML = 'logged out';
+          document.getElementById('status').innerHTML = ' Logged out';
         }
       }
     })
@@ -136,7 +136,7 @@ gadget_klass
       }
       else if (event.target.id == 'logout') {
         FB.logout(function(response) {
-          document.getElementById('status').innerHTML = 'logged out';
+          document.getElementById('status').innerHTML = ' Logged out';
           gadget.changeState({logged: false});
     });
       }

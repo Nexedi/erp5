@@ -22,7 +22,6 @@
     }
     this._access_token = spec.access_token;
     this._user_id = spec.user_id;
-    console.log('FEFAULTFIELDLIST', spec.default_field_list);
     this._default_field_list = spec.default_field_list;
     delete this._default_field_list.__id;
     this._default_limit = spec.default_limit || 500;

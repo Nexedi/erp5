@@ -140,7 +140,7 @@
           // Update the global links
           .push(function () {
             return RSVP.all([
-              context.getUrlFor({command: 'display', options: {page: "ojs_document_list"}}),
+              context.getUrlFor({command: 'display', options: {page: "ojs_fb_posts_document_list"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_facebook_configurator"}}),
               context.getUrlFor({command: 'display', options: {page: "ojs_sync", 'auto_repair': true}})
             ]);
