@@ -47,9 +47,8 @@ var repair = false;
     .ready(function (gadget) {
       var i,
         state = {},
-        sub_gadget_list = [],
         element_list =
-        gadget.element.querySelectorAll('[data-install-configuration]');
+          gadget.element.querySelectorAll('[data-install-configuration]');
       window.Bootloader = gadget;
 
       for (i = 0; i < element_list.length; i += 1) {
@@ -58,6 +57,14 @@ var repair = false;
       }
       state.redirect_url = new URL(window.location);
       state.redirect_url.pathname += state.version_url;
+      // This is a bad hack to support dropbox.
+      if (state.redirect_url.hash &&
+          state.redirect_url.hash.startsWith('#access_token')) {
+        state.redirect_url.hash = state.redirect_url.hash.replace(
+          '#access_token',
+          '#/?page=ojs_dropbox_configurator&access_token'
+        );
+      }
       return gadget.changeState(state);
     })
 
@@ -68,15 +75,7 @@ var repair = false;
 
     .declareService(function () {
       var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-/* Workaround for renderjs issue,
-sub gadget does not have all aquired Method at this point*/
-          return RSVP.delay(500);
-        })
-        .push(function () {
-          return gadget.isChildren();
-        })
+      return gadget.isChildren()
         .push(undefined, function (error) {
           if (error instanceof rJS.AcquisitionError) {
             return RSVP.all([
@@ -131,6 +130,7 @@ sub gadget does not have all aquired Method at this point*/
       return this.declareGadget(url,
         {
           "element": element,
+          "scope": url,
           "sandbox": "iframe"
         })
         .push(function (sub_gadget) {
@@ -141,30 +141,28 @@ sub gadget does not have all aquired Method at this point*/
     .declareMethod("install", function () {
       var gadget = this,
         storage = createStorage(gadget);
-      return new RSVP.Queue()
-        .push(function () {
-          return navigator.serviceWorker.register(
-            "gadget_officejs_bootloader_serviceworker.js"
-          );
-        })
-        .push(function () {
-          return storage.repair();
-        })
-        .push(undefined, function (error) {
-          if (gadget.state.retry !== undefined) {
+      if (navigator.serviceWorker !== undefined) {
+        return storage.repair()
+          .push(undefined, function (error) {
             return gadget.changeState({
-              retry: gadget.state.retry += 1,
+              retry: gadget.state.retry !== undefined ?
+                  gadget.state.retry + 1 : 0,
               error: error
             })
-            .push(function () {
-              return RSVP.delay(1000);
-            })
-            .push(function () {
-              return gadget.install();
-            });
-          }
-          throw error;
-        });
+              .push(function () {
+                return RSVP.delay(1000);
+              })
+              .push(function () {
+                return gadget.install();
+              });
+          })
+          .push(function () {
+            return navigator.serviceWorker.register(
+              "gadget_officejs_bootloader_serviceworker.js"
+            );
+          });
+      }
+      return;
     });
 
 }(window, document, RSVP, rJS, jIO, navigator, URL));
