@@ -368,7 +368,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_officejs_text_editor.appcache</string> </value>
+            <value> <string>gadget_erp5_page_ojs_fb_posts.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -685,7 +685,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.7746.16017.10632</string> </value>
+                <value> <string>961.17867.3045.38314</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -703,7 +703,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502200982.62</float>
+                        <float>1502282648.28</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
