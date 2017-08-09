@@ -56,7 +56,9 @@
       ['cut_url', 'Cut', 'scissors'],
       ['add_url', 'Add', 'plus'],
       ['previous_url', 'Previous', 'carat-l'],
-      ['next_url', 'Next', 'carat-r']
+      ['next_url', 'Next', 'carat-r'],
+      ['edit_content', 'Content', 'file-text'],
+      ['edit_properties', 'Properties', 'info']
     ];
 
   gadget_klass
