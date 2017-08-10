@@ -188,7 +188,7 @@ class FunctionalTestRunner:
 
   def processResult(self, iframe):
     tbody = iframe.xpath('.//body/table/tbody')[0]
-    tr_count = failure_amount = expected_failure_amount = 0
+    tr_count = failure_amount = expected_failure_amount = failuere = 0
     error_title_list = []
     detail = ""
     for tr in tbody:
