@@ -17,9 +17,15 @@
       i, j, AXIS_MAPPING_DICT,
       mapped_axis_list,
       axis_list_dict = {};
+
     AXIS_MAPPING_DICT = {0: "x",
                          1: "y",
                          2: "z"};
+
+    if (configuration_dict.constructor === String) {
+      configuration_dict = JSON.parse(configuration_dict);
+    }
+
     console.log("getGraphDataAndParameterFromConfiguration 1");
     graph_data_and_parameter.data_list = [];
     graph_data_and_parameter.layout = {modeBarButtonsToRemove: ['sendDataToCloud']};
@@ -115,35 +121,30 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (configuration_dict) {
+    .declareMethod('render', function (option_dict) {
 
 
       var gadget = this,
           container,
           graph_data_and_parameter,
-          chart;
+          chart,
+          graph_value;
 
       container = gadget.element.querySelector(".graph-content");
       gadget.property_dict.container = container;
       console.log("container inside iframe");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
+      graph_value = option_dict.value;
+      if (graph_value.constructor === String) {
+        graph_value = JSON.parse(graph_value);
+      }
+      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(graph_value);
       console.log("graph_data_and_parameter", graph_data_and_parameter);
+      if (gadget.property_dict.already_rendered === true) {
+        Plotly.purge(container);
+      }
       Plotly.plot(container, graph_data_and_parameter.data_list, graph_data_and_parameter.layout, graph_data_and_parameter.bar_config);
+      gadget.property_dict.already_rendered = true;
 
-    })
-    .declareMethod('updateConfiguration', function (configuration_dict) {
-      /* Update the graph with new data/configuration.
-
-        There is many functions in Plotly for updating style, adding points to data, for adding new series of data, etc.
-        Though, this is way too complex to guess what has been changed to know if we could just call a few functions to
-        take into account changes. Therefore just erase and redraw the whole graph.
-      */
-      var gadget = this,
-          graph_data_and_parameter;
-      console.log("updateConfiguration");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
-      Plotly.purge(gadget.property_dict.container);
-      Plotly.plot(gadget.property_dict.container, graph_data_and_parameter.data_list, graph_data_and_parameter.layout, graph_data_and_parameter.bar_config);
     });
 
 }(window, rJS, RSVP, Plotly));

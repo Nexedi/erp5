@@ -27,6 +27,11 @@
         serie_value_list = [],
         serie_value_mapping = {},
         i, j;
+
+    if (configuration_dict.constructor === String) {
+      configuration_dict = JSON.parse(configuration_dict);
+    }
+
     axis_dict = layout.axis_dict || {};
     x_label = (axis_dict[0] || {}).title;
     y_label = (axis_dict[1] || {}).title;
@@ -142,24 +147,17 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (configuration_dict) {
+    .declareMethod('render', function (option_dict) {
 
       var gadget = this,
           container,
           graph_data_and_parameter;
 
       container = gadget.element.querySelector(".graph-content");
-
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
+      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(option_dict.value);
       gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);
-    })
-    .declareMethod('updateConfiguration', function (configuration_dict) {
-      var gadget = this,
-          graph_data_and_parameter;
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
-      gadget.property_dict.graph.updateOptions({'file': graph_data_and_parameter.dygraph_data});
     });
 
 
