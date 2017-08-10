@@ -46,8 +46,8 @@
             <key> <string>text_content_warning_message</string> </key>
             <value>
               <tuple>
-                <string>W: 54, 21: Redefining built-in \'id\' (redefined-builtin)</string>
-                <string>W: 67, 18: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W: 55, 21: Redefining built-in \'id\' (redefined-builtin)</string>
+                <string>W: 68, 18: Redefining built-in \'id\' (redefined-builtin)</string>
               </tuple>
             </value>
         </item>

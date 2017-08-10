@@ -35,7 +35,8 @@ from Products.ERP5Type.BTreeData import PersistentString
 
 class DataBucketStream(Document):
   """
-  Represents data stored in many small files.
+  Represents data stored in many small files inside a "stream".
+  Each file is "addressed" by its key similar to dict.
   """
 
   meta_type = 'ERP5 Data Bucket Stream'
