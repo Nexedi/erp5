@@ -51,6 +51,13 @@ class TestExecuteJupyter(ERP5TypeTestCase):
     user_folder._doAddUser('member_user', '', ['Member','Authenticated',], [])
     # Assign developer role to user
     addUserToDeveloperRole('dev_user')
+    # Create script to mock execution
+    createZODBPythonScript(self.getPortal().portal_skins.custom, "ERP5Site_isDataNotebookEnabled", '', "return True")
+
+    self.tic()
+
+  def beforeTearDown(self):
+    removeZODBPythonScript(self.getPortal().portal_skins.custom, "ERP5Site_isDataNotebookEnabled")
     self.tic()
 
   def _newNotebook(self, reference=None):
@@ -128,6 +135,20 @@ portal.%s()
     # Test that calling Base_runJupyter shouldn't change the context Title
     self.assertNotEqual(portal.getTitle(), new_test_title)
     
+  def testBase_executeJupyterRespectPreference(self):
+    self.login('dev_user')
+    removeZODBPythonScript(self.getPortal().portal_skins.custom, "ERP5Site_isDataNotebookEnabled")
+    createZODBPythonScript(self.getPortal().portal_skins.custom, "ERP5Site_isDataNotebookEnabled", '', "return False")
+    self.tic()
+
+    jupyter_code = "a = 1\na"
+    reference = 'Test.Notebook.PreferenceHandle'
+    result = self.portal.Base_executeJupyter(
+      reference=reference,
+      python_expression=jupyter_code
+    )
+    self.assertEqual(result, 'The synchronous and unrestricted implementation is not enabled on the server')
+
   def testJupyterCompileInvalidPythonSyntax(self):
     """
     Test how the JupyterCompile extension behaves when it receives Python

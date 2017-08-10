@@ -43,6 +43,9 @@ except ImportError:
 
 def Base_executeJupyter(self, python_expression=None, reference=None, \
                         title=None, request_reference=False, **kw):
+  # Check if implementation is enabled
+  if not self.getPortalObject().ERP5Site_isDataNotebookEnabled():
+    return "The synchronous and unrestricted implementation is not enabled on the server"
   # Check permissions for current user and display message to non-authorized user 
   if not self.Base_checkPermission('portal_components', 'Manage Portal'):
     return "You are not authorized to access the script"
