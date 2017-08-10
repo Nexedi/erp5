@@ -13,7 +13,7 @@
   Form style based on Aleksandar Vacić's work,
   ditributed under Creative Commons Paternity Licence:
     * http://creativecommons.org/licenses/by/2.0/
-    * http://www.aplus.co.yu/css/forms/?css=1
+    * http://aplus.rs/lab/forms/
 -->
 
 <style type="text/css">
@@ -91,11 +91,11 @@ label {
     </div>
     <div>
       <label class="form-label" for="erp5_sql_connection_string">ERP5 Database</label>
-      <input class="form-element" name="erp5_sql_connection_string" id="erp5_sql_connection_string" type="text" size="40" value="test test"/>
+      <input class="form-element" name="erp5_sql_connection_string" id="erp5_sql_connection_string" type="text" size="60" value="test test"/>
     </div>
     <div>
       <label class="form-label" for="cmf_activity_sql_connection_string">CMF Activity Database</label>
-      <input class="form-element" name="cmf_activity_sql_connection_string" id="cmf_activity_sql_connection_string" type="text" size="40" value="test test"/>
+      <input class="form-element" name="cmf_activity_sql_connection_string" id="cmf_activity_sql_connection_string" type="text" size="60" value="test test"/>
     </div>
     <div>
       <label class="form-label" for="sql_reset">Drop any existing table</label>
@@ -104,6 +104,19 @@ label {
     <div>
       <p>The connection strings used for Z MySQL Database Connections are of the form:</p>
       <blockquote><code>database[@host[:port]] [user [password [unix_socket]]]</code></blockquote>
+    </div>
+    <br/>
+  </fieldset>
+
+  <fieldset>
+    <legend class="form-title">Business Templates</legend>
+    <div title="Business Template names, or (TODO) URL pointing to a file in BT5 or ZEXP format.">
+      <label class="form-label" for="bt5">Install BT5</label>
+      <input class="form-element" name="bt5" id="bt5" type="text" size="60"/>
+    </div>
+    <div>
+      <label class="form-label" for="bt5_repository_url">Repositories</label>
+      <textarea class="form-element" name="bt5_repository_url" id="bt5_repository_url" cols="60" rows="4"></textarea>
     </div>
     <br/>
   </fieldset>
