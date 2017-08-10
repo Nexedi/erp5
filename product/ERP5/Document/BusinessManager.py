@@ -171,7 +171,6 @@ class BusinessManager(Folder):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   template_format_version = 3
-  status = 'uninstalled'
 
   # Factory Type Information
   factory_type_information = \
@@ -206,24 +205,27 @@ class BusinessManager(Folder):
   def getShortRevision(self):
     return None
 
-  def getStatus(self):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getBuildingState')
+  def getBuildingState(self, default=None, id_only=1):
     """
-    installed       :BI(s) are installed in OFS.
-    uninstalled     :Values for BI(s) at the current version removed from OFS.
-    reduced         :No two BI of same path exist at different layers.
-    flatenned       :BI(s) should be at the zeroth layer.
-    built           :BI(s) do have values from the OS DB.
+      Returns the current state in building
     """
-    return self.status
+    portal_workflow = getToolByName(self, 'portal_workflow')
+    wf = portal_workflow.getWorkflowById(
+                        'business_manager_building_workflow')
+    return wf._getWorkflowStateOf(self, id_only=id_only )
 
-  def getInstallationState(self):
-    return self.status
-
-  def setStatus(self, status=None):
-    if not status:
-      raise ValueError, 'No status provided'
-    else:
-      self.status = status
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInstallationState')
+  def getInstallationState(self, default=None, id_only=1):
+    """
+      Returns the current state in installation
+    """
+    portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
+    wf = portal_workflow.getWorkflowById(
+                         'business_manager_installation_workflow')
+    return wf._getWorkflowStateOf(self, id_only=id_only )
 
   def applytoERP5(self, DB):
     """Apply the flattened/reduced Business Manager to the DB"""
@@ -257,7 +259,7 @@ class BusinessManager(Folder):
     """
     Export the object as zexp file
     """
-    if not self.getStatus() == 'built':
+    if not self.getBuildingState() == 'built':
       raise ValueError, 'Manager not built properly'
     f = StringIO()
 
@@ -440,7 +442,6 @@ class BusinessManager(Folder):
         kwargs['removable_property_list'] = removable_property_dict.get(item_path, [])
         kwargs['remove_sub_objects'] = item_path in removable_sub_object_path_list
         path_item.build(self, **kwargs)
-      self.status = 'built'
     return self
 
   def flattenBusinessManager(self):
@@ -543,7 +544,6 @@ class BusinessManager(Folder):
         reduced_path_item_list.append(prioritized_path_item[0])
 
     self._path_item_list = reduced_path_item_list
-    self.setStatus('reduced')
 
   def _simplifyValueIntersection(self, added_value, subtracted_value):
     """
