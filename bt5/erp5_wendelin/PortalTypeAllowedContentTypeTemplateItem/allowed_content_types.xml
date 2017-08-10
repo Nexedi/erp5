@@ -45,6 +45,7 @@
   <item>Data Set</item>
  </portal_type>
  <portal_type id="Data Stream Module">
+  <item>Data Bucket Stream</item>
   <item>Data Stream</item>
  </portal_type>
  <portal_type id="Data Supply">
