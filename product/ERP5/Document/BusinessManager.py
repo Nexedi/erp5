@@ -763,7 +763,6 @@ class BusinessItem(XMLObject):
         remove_sub_objects = kw.get('remove_sub_objects')
         if remove_sub_objects:
           removable_property_list.append('_tree')
-
         obj = self.removeProperties(obj, 1, properties=removable_property_list)
         obj = obj.__of__(context)
         # XXX: '_recursiveRemoveUid' is not working as expected
@@ -1023,10 +1022,10 @@ class BusinessItem(XMLObject):
     return self.getProperty('item_path')
 
   def getBusinessPathSign(self):
-    return self.getProperty('item_sign')
+    return self.getProperty('item_sign', 1)
 
   def getBusinessPathLayer(self):
-    return self.getProperty('item_layer')
+    return self.getProperty('item_layer', 1)
 
   def getParentBusinessManager(self):
     return self.aq_parent
@@ -1125,10 +1124,10 @@ class BusinessPropertyItem(XMLObject):
     return self.getProperty('item_path')
 
   def getBusinessPathSign(self):
-    return self.getProperty('item_sign')
+    return self.getProperty('item_sign', 1)
 
   def getBusinessPathLayer(self):
-    return self.getProperty('item_layer')
+    return self.getProperty('item_layer', 1)
 
   def getParentBusinessManager(self):
     return self.aq_parent
