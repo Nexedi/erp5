@@ -80,6 +80,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_preferred_cluster_data_notebook_enabled</string>
                         <string>my_preferred_data_notebook_enabled</string>
                       </list>
                     </value>
