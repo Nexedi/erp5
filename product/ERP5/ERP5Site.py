@@ -17,7 +17,7 @@
 
 import threading
 from weakref import ref as weakref
-from OFS.Application import Application
+from OFS.Application import Application, AppInitializer
 from Products.ERP5Type import Globals
 from Products.ERP5Type.Globals import package_home
 
@@ -68,7 +68,7 @@ def manage_addERP5Site(self,
                        email_from_address='postmaster@localhost',
                        email_from_name='Portal Administrator',
                        validate_email=0,
-                       erp5_catalog_storage='',
+                       erp5_catalog_storage='erp5_mysql_innodb_catalog',
                        erp5_sql_connection_string='test test',
                        cmf_activity_sql_connection_string='test test',
                        light_install=0,
@@ -2281,3 +2281,65 @@ class ERP5Generator(PortalGenerator):
       template_tool.installBusinessTemplateListFromRepository(
           ['erp5_promise'], activate=True, install_dependency=True)
       p.portal_alarms.subscribe()
+
+
+# Zope offers no mechanism to extend AppInitializer so let's monkey-patch.
+AppInitializer_initialize = AppInitializer.initialize
+def initialize(self):
+  AppInitializer.initialize = AppInitializer_initialize.__func__
+  self.initialize()
+  try:
+    kw = getConfiguration().product_config['initsite']
+  except KeyError:
+    return
+  meta_type = ERP5Site.meta_type
+  for _ in self.getApp().objectIds(meta_type):
+    return
+
+  # We defer the call to manage_addERP5Site via ZServer.PubCore because:
+  # - we use ZPublisher so that get_request() works
+  #   (see new_publish in Localizer.patches)
+  # - we want errors to be logged correctly
+  #   (see Zope2.zpublisher_exception_hook in Zope2.App.startup)
+  from AccessControl.SecurityManagement import newSecurityManager
+  from cStringIO import StringIO
+  from inspect import getcallargs
+  from Products.ZMySQLDA.db import DB
+  from ZPublisher import HTTPRequest, HTTPResponse
+  from ZServer.PubCore import handle
+  def addERP5Site():
+    default_kw = getcallargs(manage_addERP5Site, None, '')
+    # The lock is to avoid that multiple zopes try to create a site when
+    # they're started at the same time, because this is a quite long operation
+    # (-> high probably of conflict with a lot of wasted CPU).
+    # Theoretically, the same precaution should be taken for previous initial
+    # commits, but they're small operations. At worst, SlapOS restarts zopes
+    # automatically.
+    # A ZODB lock would be better but unless we extend ZODB, this is only
+    # possible with NEO, by voting a change to oid 0 in a parallel transaction
+    # (and abort at the end): thanks to locking at object-level, this would not
+    # block the main transaction.
+    with DB(kw.get('erp5_sql_connection_string') or
+            default_kw['erp5_sql_connection_string']).lock():
+      transaction.begin()
+      app = request['PARENTS'][0] = request['PARENTS'][0]()
+      for _ in app.objectIds(meta_type):
+        return
+      uf = app.acl_users
+      user = uf.getUser(kw.pop('owner'))
+      if not user.has_role('Manager'):
+        response.unauthorized()
+      newSecurityManager(None, user.__of__(uf))
+      manage_addERP5Site(app.__of__(RequestContainer(REQUEST=request)),
+        **{k: kw.get(k, v) for k, v in default_kw.iteritems()
+                           if isinstance(v, str)})
+      transaction.get().note('Created ' + meta_type)
+      transaction.commit()
+  response = HTTPResponse.HTTPResponse(stdout=StringIO())
+  response._finish = lambda: None
+  request = HTTPRequest.HTTPRequest(
+    StringIO(), dict(REQUEST_METHOD='GET', SERVER_URL=''), response)
+  request.traverse = lambda *args, **kw: addERP5Site
+  handle('Zope2', request, response)
+
+AppInitializer.initialize = initialize

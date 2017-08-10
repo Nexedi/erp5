@@ -492,7 +492,7 @@ class DB(TM):
         if m is None:
             return
         name = m.group(2)
-        # Lock automaticaly unless src__ is True, because the caller may have
+        # Do not lock automatically if src__ is True because the caller may have
         # already done it (in case that it plans to execute the returned query).
         with (nested if src__ else self.lock)():
             try:
