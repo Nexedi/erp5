@@ -7,6 +7,9 @@ Data Analysis | edit_workflow
 Data Analysis | validation_workflow
 Data Array | edit_workflow
 Data Array | validation_workflow
+Data Bucket Stream | data_stream_interaction_workflow
+Data Bucket Stream | edit_workflow
+Data Bucket Stream | validation_workflow
 Data Event | edit_workflow
 Data Ingestion Line | edit_workflow
 Data Ingestion | edit_workflow
