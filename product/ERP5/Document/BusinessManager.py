@@ -170,29 +170,6 @@ class BusinessManager(Folder):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  """
-  _properties = (
-    {'id': 'template_path_list',
-     'type': 'lines',
-     'default': 'python: ()',
-     'acquisition_base_category': (),
-     'acquisition_portal_type': (),
-     'acquisition_depends': None,
-     'acquisition_accessor_id': 'getTemplatePathList',
-     'override': 1,
-     'mode': 'w'},
-     {'id': 'template_format_version',
-     'type': 'int',
-     'default': 'python: 3',
-     'acquisition_base_category': (),
-     'acquisition_portal_type': (),
-     'acquisition_depends': None,
-     'acquisition_accessor_id': 'getTemplateFormatVersion',
-     'override': 1,
-     'mode': 'w'},
-     )
-  """
-
   template_format_version = 3
   status = 'uninstalled'
 
@@ -259,16 +236,6 @@ class BusinessManager(Folder):
     """
     self.title = value
 
-  def edit(self, template_path_list=[], layer=1, **kw):
-    """
-    Explicilty edit the class instance
-    XXX: No need of this class ? as we already have _edit from ERP5Type.Folder
-    """
-    super(BusinessManager, self).edit(
-                    template_path_list=template_path_list,
-                    layer=layer,
-                    **kw)
-
   def getPathItemList(self):
     return self.objectValues()
 
@@ -285,25 +252,6 @@ class BusinessManager(Folder):
     prop_map = super(BusinessManager, self).propertyMap()
     final_prop_map = prop_map+self._properties
     return final_prop_map
-
-  def createTemplatePathListFromItemList(self):
-    """
-    This function is to clean and create a new template_path_list from the
-    sub-objects (Business Item or Business Property Item).
-
-    WARNING: Shouldn't be used in general to edit. Only to be used in cases to
-    clear template_path_list.
-    """
-    template_path_list = []
-
-    # Get the sub-objects and construct their template path, i.e, path in format
-    # of <path> | <sign> | <layer>
-    for item in self.objectValues():
-      path = item.constructTemplatePath()
-      template_path_list.append(path)
-
-    # Add the updated template_path_list in the BM
-    self.setProperty('template_path_list', template_path_list)
 
   def export(self, path=None, **kw):
     """
@@ -353,16 +301,12 @@ class BusinessManager(Folder):
       except Exception:
         pass
       obj.isIndexable = ConstantGetter('isIndexable', value=False)
-    self.setProperty('template_path_list', imported_manager.getProperty('template_path_list'))
-    self.setProperty('layer', imported_manager.getProperty('layer'))
 
   def __add__(self, other):
     """
     Adds the Business Item objects for the given Business Manager objects
     """
-    self._path_item_list.extend(other._path_item_list)
-    template_path_list = list(self.template_path_list)+list(other.template_path_list)
-    self.template_path_list = template_path_list
+    # XXX: Still to define
     return self
 
   __radd__ = __add__
@@ -397,62 +341,39 @@ class BusinessManager(Folder):
     """
     portal = self.getPortalObject()
     LOG('Business Manager', INFO, 'Storing Manager Data')
-    path_item_list = self.getProperty('template_path_list')
-    if not path_item_list:
-      path_item_list = ()
-    # Delete all the older Business Item objects while rebuilding
-    exisiting_path_item_id_list = [l for l in self.objectIds()]
-    self.manage_delObjects(ids=exisiting_path_item_id_list)
 
-    if path_item_list:
-      path_item_list = [l.split(' | ') for l in path_item_list]
+    to_delete_id_list = []
+    for item in self.objectValues():
 
-    new_path_item_list = []
+      # Only try to resolve the Business Item objects
+      if item.getPortalType() != 'Business Item':
+        continue
 
-    for path_item in path_item_list:
-      if '#' in  str(path_item[0]):
-        PathItem = self.newContent(portal_type='Business Property Item')
-        # If its a property, no need to resolve the path
-        PathItem.edit(
-          item_path=path_item[0],
-          item_sign=path_item[1],
-          item_layer=path_item[2]
-          )
-        resolved_path = (' | ').join((path_item[0], path_item[1], path_item[2]))
-        new_path_item_list.append(resolved_path)
+      item_path = item.getProperty('item_path')
+      # Resolve the path and update sub-objects lists
+      path_list = self._resolvePath(portal, [], item_path.split('/'))
+
+      if len(path_list) == 1 and path_list[0] == item_path:
+        continue
       else:
-        # Here we check for the path which also add sub-objects, in that case,
-        # we create separate BusinessItem objects for each sub-object with
-        # same layer and sign
-        # XXX: Not very effective as it tries to get all the objects which makes
-        # it vey slow
-        if isBuild:
-          # If build process, then resolve path and then update the path list
-          # and path item list for the BusinessItem
-          path_list = self._resolvePath(portal, [], path_item[0].split('/'))
-          for path in path_list:
-            try:
-              PathItem = self.newContent(portal_type='Business Item')
-              PathItem.edit(
-                item_path=path,
-                item_sign=path_item[1],
-                item_layer=path_item[2]
-                )
-              resolved_path = (' | ').join((path, path_item[1], path_item[2]))
-              new_path_item_list.append(resolved_path)
-            except IndexError:
-              pass
-        else:
-          PathItem = self.newContent(portal_type='Business Item')
-          PathItem.edit(
-            item_path=path_item[0],
-            item_sign=path_item[1],
-            item_layer=path_item[2]
+        item_sign = item.getProperty('item_sign')
+        item_layer = item.getProperty('item_layer')
+        # Create new Business Item objects with path in path_list and sign and
+        # layer same as that of the path used for resolving to new paths.
+        for path in path_list:
+          path_item = self.newContent(portal_type='Business Item')
+          path_item.edit(
+            item_path=path,
+            item_sign=item_sign,
+            item_layer=item_layer
             )
+        # Add Id of BusinessItem to be deleted as we do already have resolved
+        # path and new sub-objects based on resolved paths
+        to_delete_id_list.append(item.getId())
 
-    if isBuild:
-      # If build process, update the path list of the Business Manager
-      self.setProperty('template_path_list', new_path_item_list)
+    # Now, delete the original Business Item(s) sub-object as we do have
+    # Business Item created from resolved paths
+    self.manage_delObjects(ids=to_delete_id_list)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -530,20 +451,7 @@ class BusinessManager(Folder):
     A reduced Business Manager BT is said to be flattened if and only if:
     flatten(BT) = BT
     """
-    portal = self.getPortalObject()
-    if self.getStatus() != 'reduced':
-      raise ValueError, 'Please reduce the BT before flatenning'
-      # XXX: Maybe call reduce function on BT by itself here rather than just
-      # raising the error, because there is no other choice
-    else:
-      path_list = self.getTemplatePathList()
-      for path_item in self._path_item_list:
-        path = path_item.path
-        layer = path_item.layer
-        # Flatten the BusinessItem to the lowest layer ?? Why required, no change
-        if layer != 0:
-          path_item.layer = 0
-      self.status = 'flattened'
+    pass
 
   def preinstall(self, check_dependencies=1, **kw):
     pass
@@ -691,43 +599,10 @@ class BusinessItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    old_path = self.constructTemplatePath()
-    edited = super(BusinessItem, self)._edit(item_path=item_path,
+    return super(BusinessItem, self)._edit(item_path=item_path,
                                            item_sign=item_sign,
                                            item_layer=item_layer,
                                            **kw)
-    # Get the parent Business Manager and update the template_path_list
-    new_path = self.constructTemplatePath()
-    manager = self.aq_parent
-    if manager:
-      template_path_list = manager.getProperty('template_path_list')
-      if not template_path_list:
-        template_path_list = []
-      new_template_path_list = list(template_path_list)
-      # Remove the old path and append it with new path in template_path_list
-      # for the parent Business Manager
-      if old_path:
-        new_template_path_list.remove(old_path)
-      new_template_path_list.append(new_path)
-      manager.setProperty('template_path_list', new_template_path_list)
-    return edited
-
-  def constructTemplatePath(self):
-    """
-    Create template_path in the format <path> | <sign> | <layer>
-    This path can be used to update template_path_list for the Business Manager
-    """
-    item_path = self.getProperty('item_path')
-    item_sign = self.getProperty('item_sign')
-    item_layer = self.getProperty('item_layer')
-    # Try creating template path from the item path,layer and sign
-    try:
-      path =  (' | ').join([item_path, str(item_sign), str(item_layer)])
-    except TypeError:
-      # In case any of item_sign, item_path or item_layer are NoneType or empty,
-      # just return None
-      path = None
-    return path
 
   def build(self, context, **kw):
     """
@@ -740,6 +615,12 @@ class BusinessItem(XMLObject):
     we can have URL delimiters like ?, #, = in the path
     """
     LOG('Business Manager', INFO, 'Building Business Item')
+
+    # Remove the old sub-objects if exisiting before building
+    id_list = [l for l in self.objectIds()]
+    if id_list:
+      self.manage_delObjects(ids=id_list)
+
     p = context.getPortalObject()
     path = self.getProperty('item_path')
     try:
@@ -774,17 +655,6 @@ class BusinessItem(XMLObject):
     except AttributeError:
       # In case the object doesn't exist, just pass without raising error
       pass
-
-  def applyValueToPath(self):
-    """
-    Apply the value to the path given.
-
-    1. If the path doesn't exist, and its a new object, create the object.
-    2. If the path doesn't exist, and its a new property, apply the property on
-      the object.
-    3. If the path doesn't exist, and its a new property, raise error.
-    """
-    pass
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
@@ -1051,43 +921,10 @@ class BusinessPropertyItem(XMLObject):
     """
     Overriden function so that we can update attributes for BusinessItem objects
     """
-    old_path = self.constructTemplatePath()
-    edited = super(BusinessPropertyItem, self)._edit(item_path=item_path,
+    return super(BusinessPropertyItem, self)._edit(item_path=item_path,
                                                    item_sign=item_sign,
                                                    item_layer=item_layer,
                                                    **kw)
-    # Get the parent Business Manager and update the template_path_list
-    new_path = self.constructTemplatePath()
-    manager = self.aq_parent
-    if manager:
-      template_path_list = manager.getProperty('template_path_list')
-      if not template_path_list:
-        template_path_list = []
-      new_template_path_list = list(template_path_list)
-      # Remove the old path and append it with new path in template_path_list
-      # for the parent Business Manager
-      if old_path:
-        new_template_path_list.remove(old_path)
-      new_template_path_list.append(new_path)
-      manager.setProperty('template_path_list', new_template_path_list)
-    return edited
-
-  def constructTemplatePath(self):
-    """
-    Create template_path in the format <path> | <sign> | <layer>
-    This path can be used to update template_path_list for the Business Manager
-    """
-    item_path = self.getProperty('item_path')
-    item_sign = self.getProperty('item_sign')
-    item_layer = self.getProperty('item_layer')
-    # Try creating template path from the item path,layer and sign
-    try:
-      path =  (' | ').join([item_path, str(item_sign), str(item_layer)])
-    except TypeError:
-      # In case any of item_sign, item_path or item_layer are NoneType or empty,
-      # just return None
-      path = None
-    return path
 
   def build(self, context, **kw):
     p = context.getPortalObject()
