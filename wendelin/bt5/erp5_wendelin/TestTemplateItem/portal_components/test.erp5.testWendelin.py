@@ -307,4 +307,37 @@ context.activate().DataStream_readChunkListAndTransform( \
     self.assertTrue(
            np.array_equal(data_array.getArraySlice(0,100), \
                           new_array[:100]))
+
+  def test_04_DataBucket(self):
+    """
+      Test data bucket
+    """
+    bucket_stream = self.portal.data_stream_module.newContent( \
+                                portal_type = 'Data Bucket Stream')
+    self.tic()
     
+    self.assertEqual(0, len(bucket_stream))
+    
+    # test set and get
+    bin_string = "1"*100000
+    key = len(bucket_stream) + 1
+    bucket_stream.insertBucket(key, bin_string )
+    self.assertEqual(bin_string, bucket_stream.getBucket(key))
+    
+    # test sequence
+    self.assertEqual(1, len(bucket_stream))
+    
+    # test pop
+    bucket_stream.popBucket(key)
+    self.assertEqual(0, len(bucket_stream))
+    
+    # set many buckets
+    for i in range(100):
+      bucket_stream.insertBucket(i, i*10000)
+
+    self.assertEqual(100, len(bucket_stream))
+    self.assertEqual(range(100), bucket_stream.getKeyList())
+    
+    # test as sequence
+    bucket = bucket_stream.getBucketItemSequence(start_key=10, count=1)[0]
+    self.assertEqual(100000, bucket[1].value)
