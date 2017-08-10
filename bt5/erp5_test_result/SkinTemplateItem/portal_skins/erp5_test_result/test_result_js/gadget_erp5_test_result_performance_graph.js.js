@@ -61,8 +61,8 @@
             }
           }
           gadget.property_dict.graph_data_dict.data = graph_data_list;
-          return gadget.property_dict.graph_widget.updateConfiguration(
-            gadget.property_dict.graph_data_dict);
+          return gadget.property_dict.graph_widget.render(
+            {value: gadget.property_dict.graph_data_dict});
         });
       }
     };

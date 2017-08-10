@@ -24,6 +24,9 @@
         type = 'bar',
         x_label, y_label;
 
+    if (configuration_dict.constructor === String) {
+      configuration_dict = JSON.parse(configuration_dict);
+    }
 
     /* title seems to be ignored by Chart.js, so do not handle it for now */
 
@@ -91,7 +94,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('render', function (configuration_dict) {
+    .declareMethod('render', function (option_dict) {
 
 
       var gadget = this,
@@ -100,28 +103,11 @@
           chart;
 
       container = gadget.element.querySelector(".graph-content");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
+      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(option_dict.value);
       console.log("graph_data_and_parameter", graph_data_and_parameter);
       chart = new Chart(container, graph_data_and_parameter);
       gadget.property_dict.chart = chart;
 
-    })
-    .declareMethod('updateConfiguration', function (configuration_dict) {
-      /* Update the graph with new data/configuration.
-
-        Chart.js support update of data, so you update values, it should nicely retransform the graph
-        with new values. However, it does sounds to works well when everything is changed (like more
-        lines, or deep reconfiguration). So just fully redraw a graph instead. This might be improved
-        later.
-      */
-      var gadget = this,
-          graph_data_and_parameter,
-          container = gadget.element.querySelector(".graph-content"),
-          chart;
-      gadget.property_dict.chart.destroy();
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(configuration_dict);
-      chart = new Chart(container, graph_data_and_parameter);
-      gadget.property_dict.chart = chart;
     });
 
 
