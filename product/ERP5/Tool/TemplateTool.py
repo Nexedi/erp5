@@ -2055,14 +2055,12 @@ class TemplateTool (BaseTool):
         installation_process._setObject(new_id, aq_base(item),
                                         suppress_events=True)
 
-      error_list = self.compareOldStateToOFS(installation_process, old_installation_state)
+      change_list = self.compareOldStateToOFS(installation_process, old_installation_state)
 
-      # Change status of all BM installed
-      for bm in bm_list:
-        bm.setStatus('installed')
+      if change_list:
+        change_list = [(l[0].item_path, l[1]) for l in change_list]
 
-      if error_list:
-        raise ValueError(' '.join(error_list))
+      return change_list
 
     installMultipleBusinessManager = updateInstallationState
 
@@ -2163,7 +2161,9 @@ class TemplateTool (BaseTool):
       to_update_path_list = installation_process.getPathList()
       portal = self.getPortalObject()
 
-      error_list = []
+      # List to store what changes will be done to which path. Here we compare
+      # with all the states (old version, new version and state of object at ZODB)
+      change_list = []
 
       to_update_path_list = self.sortPathList(to_update_path_list)
 
@@ -2215,14 +2215,14 @@ class TemplateTool (BaseTool):
               if new_item.getProperty('item_sha') == obj_sha:
                 if int(new_item.getProperty('item_sign')) == -1:
                   # If the sign is negative, remove the value from the path
-                  new_item.install(installation_process)
+                  change_list.append((new_item, 'Removing'))
                 else:
                   # If same hash, and +1 sign, do nothing
                   continue
 
               else:
                 # Install the new_item
-                new_item.install(installation_process)
+                change_list.append((new_item, 'Adding'))
 
             else:
               # Change at ZODB, so get the new item
@@ -2234,8 +2234,8 @@ class TemplateTool (BaseTool):
                 continue
 
               else:
-                # Raise error
-                error_list.append('Trying to remove changes at ZODB at %s' % path)
+                # Trying to update change at ZODB
+                change_list.append((new_item, 'Updating'))
 
           else:
             # Object created at ZODB by the user
@@ -2247,8 +2247,8 @@ class TemplateTool (BaseTool):
               continue
 
             else:
-              # Raise error
-              error_list.append('Trying to remove changes at ZODB at %s' % path)
+              # Trying to update change at ZODB
+              change_list.append((new_item, 'Updating'))
 
         except (AttributeError, KeyError) as e:
           # Get item at old state
@@ -2262,7 +2262,8 @@ class TemplateTool (BaseTool):
             # Check sign of new_item
 
             if int(new_item.getProperty('item_sign')) == 1:
-              error_list.append('Object at %s removed by user' % path)
+              # Object at ZODB has been removed by the user
+              change_item.append((new_item, 'Adding'))
 
           else:
             # If there is  no item at old state, install the new_item
@@ -2275,9 +2276,10 @@ class TemplateTool (BaseTool):
                 value =  new_item.objectValues()[0]
               except IndexError:
                 continue
-            new_item.install(installation_process)
+            # Installing a new item
+            change_list.append((new_item, 'Adding'))
 
-      return error_list
+      return change_list
 
     def getInstalledBusinessManagerList(self):
       bm_list = self.objectValues(portal_type='Business Manager')
