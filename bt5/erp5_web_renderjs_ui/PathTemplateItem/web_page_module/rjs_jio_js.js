@@ -5716,7 +5716,7 @@ case 5: case 8: case 11: case 14: case 16:
  this.$ = $$[$0]; 
 break;
 case 6:
- this.$ = mkComplexQuery('OR', [$$[$0-1], $$[$0]]); 
+ this.$ = mkComplexQuery('AND', [$$[$0-1], $$[$0]]); 
 break;
 case 7:
  this.$ = mkComplexQuery('OR', [$$[$0-2], $$[$0]]); 
@@ -6985,7 +6985,8 @@ return new Parser;
       matchMethod = null,
       operator = this.operator,
       value = null,
-      key = this.key;
+      key = this.key,
+      k;
 
     if (!(regexp_comparaison.test(operator))) {
       // `operator` is not correct, we have to change it to "like" or "="
@@ -7002,6 +7003,22 @@ return new Parser;
 
     if (this._key_schema.key_set && this._key_schema.key_set[key] !== undefined) {
       key = this._key_schema.key_set[key];
+    }
+
+    // match with all the fields if key is empty
+    if (key === '') {
+      matchMethod = this.like;
+      value = '%' + this.value + '%';
+      for (k in item) {
+        if (item.hasOwnProperty(k)) {
+          if (k !== '__id') {
+            if (matchMethod(item[k], value) === true) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
     }
 
     if (typeof key === 'object') {
@@ -8207,7 +8224,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -13227,24 +13244,29 @@ return new Parser;
 (function (jIO, RSVP, DOMException, Blob, crypto, Uint8Array, ArrayBuffer) {
   "use strict";
 
+  /*
+  The cryptography system used by this storage is AES-GCM.
+  Here is an example of how to generate a key to the json format:
 
-  // you the cryptography system used by this storage is AES-GCM.
-  // here is an example of how to generate a key to the json format.
+  return new RSVP.Queue()
+    .push(function () {
+      return crypto.subtle.generateKey({name: "AES-GCM", length: 256},
+                                       true, ["encrypt", "decrypt"]);
+    })
+    .push(function (key) {
+      return crypto.subtle.exportKey("jwk", key);
+    })
+    .push(function (json_key) {
+      var jio = jIO.createJIO({
+        type: "crypt",
+        key: json_key,
+        sub_storage: {storage_definition}
+      });
+    });
 
-  // var key,
-  //     jsonKey;
-  // crypto.subtle.generateKey({name: "AES-GCM",length: 256},
-  //                           (true), ["encrypt", "decrypt"])
-  // .then(function(res){key = res;});
-  //
-  // window.crypto.subtle.exportKey("jwk", key)
-  // .then(function(res){jsonKey = val})
-  //
-  //var storage = jIO.createJIO({type: "crypt", key: jsonKey,
-  //                             sub_storage: {...}});
-
-  // find more informations about this cryptography system on
-  // https://github.com/diafygi/webcrypto-examples#aes-gcm
+  Find more informations about this cryptography system on
+  https://github.com/diafygi/webcrypto-examples#aes-gcm
+  */
 
   /**
    * The JIO Cryptography Storage extension
