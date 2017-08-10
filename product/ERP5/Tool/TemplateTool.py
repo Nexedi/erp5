@@ -1940,6 +1940,7 @@ class TemplateTool (BaseTool):
       old_installation_state = self.newContent(
                                   portal_type='Business Manager',
                                   title='Old Installation State',
+                                  temp_object=True,
                                   )
 
       for item in combined_installed_path_item:
@@ -1966,6 +1967,7 @@ class TemplateTool (BaseTool):
       new_installation_state = self.newContent(
                                   portal_type='Business Manager',
                                   title='New Installation State',
+                                  temp_object=True,
                                   )
 
       for item in combined_new_path_item:
@@ -1979,6 +1981,7 @@ class TemplateTool (BaseTool):
       installation_process = self.newContent(
                                   portal_type='Business Manager',
                                   title='Installation Process',
+                                  temp_object=True,
                                   )
 
       # Get path list for old and new states
