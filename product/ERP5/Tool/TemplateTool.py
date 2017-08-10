@@ -2283,7 +2283,8 @@ class TemplateTool (BaseTool):
 
     def getInstalledBusinessManagerList(self):
       bm_list = self.objectValues(portal_type='Business Manager')
-      installed_bm_list = [bm for bm in bm_list if bm.getStatus() == 'installed']
+      installed_bm_list = [bm for bm in bm_list
+                          if bm.getInstallationState() == 'installed']
       return installed_bm_list
 
     def getInstalledBusinessManagerTitleList(self):
