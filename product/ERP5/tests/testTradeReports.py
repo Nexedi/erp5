@@ -104,7 +104,12 @@ class TestTradeReports(ERP5ReportTestCase):
                               title='Organisation_1',
                               id='Organisation_1',
                               group='g1',
-                              site='demo_site_A')
+                              site='demo_site_A',
+                              default_email_coordinate_text='organisation1@example.com',
+                              default_telephone_coordinate_text='11111',
+                              default_address_street_address='1 Organisation Street',
+                              default_address_zip_code='111',
+                              default_address_city='City', )
     if not self.organisation_module.has_key('Organisation_2'):
       org = self.portal.organisation_module.newContent(
                               portal_type='Organisation',
@@ -1392,6 +1397,128 @@ class TestTradeReports(ERP5ReportTestCase):
                              translated_portal_type='',
                              state='Draft',
                              count=3)
+
+  def testShipmentReport(self):
+    first = self.portal.sale_packing_list_module.newContent(
+        portal_type='Sale Packing List',
+        title='%s 1' % self.id(),
+        destination_value=self.organisation_module.Organisation_1,
+        destination_section_value=self.organisation_module.Organisation_1,
+        source_value=self.organisation_module.Organisation_2,
+        source_section_value=self.organisation_module.Organisation_2,
+        start_date=DateTime(2006, 2, 2),
+        description='The description',
+    )
+    first.newContent(
+        portal_type='Sale Packing List Line',
+        resource_value=self.portal.product_module.product_A,
+        quantity=1,
+        price=10,
+    )
+    first.newContent(
+        portal_type='Sale Packing List Line',
+        resource_value=self.portal.product_module.product_B,
+        quantity=1,
+        price=3,
+    )
+
+    second = self.portal.sale_packing_list_module.newContent(
+        portal_type='Sale Packing List',
+        title='%s 1' % self.id(),
+        destination_value=self.organisation_module.Organisation_1,
+        destination_section_value=self.organisation_module.Organisation_1,
+        source_value=self.organisation_module.Organisation_2,
+        source_section_value=self.organisation_module.Organisation_2,
+        start_date=DateTime(2006, 2, 2),
+    )
+    line_with_variation = second.newContent(
+        portal_type='Sale Packing List Line',
+        resource_value=self.portal.product_module.product_C,
+        variation_category_list=['colour/colour1', 'colour/colour2'],
+        price=10,
+    )
+    base_id = 'movement'
+    cell1 = line_with_variation.newCell(
+        base_id=base_id,
+        portal_type='Sale Packing List Cell',
+        *['colour/colour1'])
+    cell1.setVariationCategoryList(['colour/colour1'])
+    cell1.setQuantity(3)
+    cell2 = line_with_variation.newCell(
+        base_id=base_id,
+        portal_type='Sale Packing List Cell',
+        *['colour/colour2'])
+    cell2.setVariationCategoryList(['colour/colour2'])
+    cell2.setQuantity(2)
+
+    second.newContent(
+        portal_type='Sale Packing List Line',
+        resource_value=self.portal.product_module.product_B,
+        quantity=1,
+        price=3,
+    )
+    self.tic()
+
+    # Display the module to set selection name in REQUEST
+    self.portal.sale_packing_list_module.view()
+    request = self.portal.REQUEST
+    self.portal.portal_selections.setSelectionParamsFor(
+        request['selection_name'],
+        {"uid": (first.getUid(), second.getUid())})
+    self.portal.portal_selections.setSelectionSortOrder(
+        request['selection_name'],
+        (('reference', 'asc', ),))
+
+    request['delivery_line_list_mode'] = True
+    request['delivery_list_mode'] = True
+    report_section_list = self.getReportSectionList(
+        self.portal.sale_packing_list_module,
+        'DeliveryModule_viewShipmentReport')
+    self.assertEqual(2, len(report_section_list))
+
+    # Delivery Lines
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(5, len(data_line_list)) # 5 movements
+
+    self.checkLineProperties(
+        data_line_list[0],
+        delivery_reference=first.getReference(),
+        destination_default_address_text='1 Organisation Street\n111 City',
+        destination_default_telephone_coordinate_text='11111',
+        quantity=1,
+        resource_reference='ref 2',
+        resource_title='product_A',
+        start_date=DateTime(2006, 2, 2),
+        description='The description',)
+    # a variated line
+    self.checkLineProperties(
+        data_line_list[2],
+        quantity=3,
+        resource_reference='ref 3',
+        resource_title='variated product',
+        variation='colour1')
+
+
+    # Deliveries
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(2, len(data_line_list)) # 2 deliveries
+
+    self.checkLineProperties(
+        data_line_list[0],
+        delivery_reference=first.getReference(),
+        destination_default_address_text='1 Organisation Street\n111 City',
+        destination_default_telephone_coordinate_text='11111',
+        # delivery_resource_text shows only resource references, as we have one piece of each product
+        delivery_resource_text="ref 1\nref 2",
+        start_date=DateTime(2006, 2, 2),
+        description='The description',)
+
+    self.checkLineProperties(
+        data_line_list[1],
+        # delivery_resource_text shows quantities and variations
+        delivery_resource_text="ref 1: 1.0\nref 3 colour1: 3.0\nref 3 colour2: 2.0")
 
 
 def test_suite():
