@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Monitoring Promise Status Page</title>
+
+    <link href="gadget_monitoring_custom.css" rel="stylesheet" type="text/css"/>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+
+    <script src="gadget_monitoring_promise_interface.js"></script>
+
+    <script id="promise-widget-template" type="text/x-handlebars-template">
+      {{#with element}}
+        {{#if warning}}
+        <p class="ui-text-error"><i class="fa fa-info-circle" aria-hidden="true"></i> Status was changed to WARNING as last sync of this instance failed.</p>
+        {{/if}}
+        <table data-role="table" data-mode="columntoggle" class="table-stroke">
+          <tr>
+            <th><i class="fa fa-tachometer"></i> Promise Status</th>
+            <td><span class="label label-{{status}}">{{status}}</span></td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-calendar"></i> Status Since</th>
+            <td title="The date of this status.">{{status_date}}</td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-clock-o"></i> Report Date</th>
+            <td title="The date when the promise result was collected.">{{start-date}}</td>
+          </tr>
+          <tr>
+            <th><i class="fa fa-file-o" aria-hidden="true"></i> Promise name</th>
+            <td>{{title}}</td>
+          </tr>
+        </table>
+        <br>
+        <h2>Promise Output message</h2>
+        <div style="border: 1px solid rgba(0,0,0,0.1); margin-top: 10px;">
+          <div class="ui-body">
+          {{#if message}}
+            <p><strong>{{status}}</strong>: {{message}}</p>
+          {{else}}
+            <p><strong>No output message!</strong></p>
+          {{/if}}
+          </div>
+        </div>
+        <br/>
+      {{/with}}
+    </script>
+    
+    <script id="pinstance-widget-template" type="text/x-handlebars-template">
+      <h2><i class="fa fa-cubes"></i><strong> Software Instance State</strong></h2>
+      <table data-role="table" data-mode="columntoggle" class="table-stroke">
+        <tr>
+          <th><i class="fa fa-tachometer"></i> Full Instance Status</th>
+          <td><span class="label label-{{status}}">{{status}}</span></td>
+        </tr>
+        <tr title="Hosting Subscription">
+          <th><i class="fa fa-puzzle-piece"></i> H. Subscription</th>
+          <td title="Hosting Subscription title"><a class="inline-link" href="{{hosting_url}}">{{root_title}}</a></td>
+        </tr>
+        <tr>
+          <th><i class="fa fa-cube"></i> Instance Name</th>
+          <td title="Software Instance title"><a class="inline-link" href="{{instance_url}}">{{title}}</a></td>
+        </tr>
+        <tr>
+          <th><i class="fa fa-clock-o"></i> Report Date</th>
+          <td title="The date when the instance status was collected.">{{date}}</td>
+        </tr>
+        <tr>
+          <th><i class="fa fa-line-chart" aria-hidden="true"></i> Promises Errors</th>
+          <td title="Percentage of promises errors in Software Instance">{{errors}}</td>
+        </tr>
+        <tr>
+          <th><i class="fa fa-line-chart" aria-hidden="true"></i> Promises Success</th>
+          <td title="Percentage of promises success in Software Instance">{{success}}</td>
+        </tr>
+      </table>
+      {{#with instance}}
+      <br>
+      <h2><i class="fa fa-cubes"></i><strong> Software Instance Info</strong></h2>
+      <table data-role="table" data-mode="columntoggle" class="table-stroke">
+        <tr>
+          <th>Computer Reference</th>
+          <td>{{computer}}</td>
+        </tr>
+        <tr>
+          <th>Computer Partition</th>
+          <td>{{partition}}</td>
+        </tr>
+        <tr>
+          <th>IPv4</th>
+          <td>{{ipv4}}</td>
+        </tr>
+        <tr>
+          <th>IPv6</th>
+          <td>{{ipv6}}</td>
+        </tr>
+        <tr>
+          <th>Software Type</th>
+          <td>{{software-type}}</td>
+        </tr>
+        <tr>
+          <th>Software Release</th>
+          <td><a class="inline-link" href="{{software-release}}" title="{{software-release}}" target='_blank'>Click to open <i class="fa fa-external-link"></i></a></td>
+        </tr>
+        <tr>
+          <th><i class="fa fa-folder-open-o"></i> Public Logs</th>
+          <td><a class="inline-link" target='_blank' href="{{../public_url}}" title="Public Logs">Click to open <i class="fa fa-external-link"></i></a></td>
+        </tr>
+        <tr>
+          <th><i class="fa fa-folder-open-o"></i> Private Logs</th>
+          <td><a class="inline-link" target='_blank' href="{{../private_url}}" title="Private Logs">Click to open <i class="fa fa-external-link"></i></a></td>
+        </tr>
+      </table>
+      {{/with}}
+    </script>
+
+    <script id="plinks-widget-template" type="text/x-handlebars-template">
+      <h2><i class="fa fa-external-link"></i> <strong>Web Directories Access</strong></h2>
+      <div class="ui-field-contain">
+        <fieldset data-role="controlgroup" data-type="horizontal">
+          {{#if public_url}}
+          <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{public_url}}" title="Public Directory"><i class="fa fa-folder-open-o"></i> Public Folder</a>
+          {{/if}}
+          {{#if private_url}}
+          <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{private_url}}" title="Private Directory"><i class="fa fa-lock"></i> Private Folder</a>
+          {{/if}}
+        </fieldset>
+      </div>
+    </script>
+
+    <script id="phistory-widget-template" type="text/x-handlebars-template">
+      <h2><i class="fa fa-history"></i> <strong>Promise Status History</strong></h2>
+      <div class="loadbox">
+        <div class="signal ui-content-hidden"></div>
+        <div class="loadwait">
+          <a>Load History</a>
+        </div>
+      </div>
+    </script>
+
+    <script id="load-history-template" type="text/x-handlebars-template">
+      <div class="signal ui-content-hidden"></div>
+      {{#if history_list}}
+      <div class="load-content" style="max-height: 300px;">
+        <table data-role="table" data-mode="columntoggle" class="table-stroke">
+          {{#each history_list}}
+          <tr title="{{message}}">
+            <td style="text-align: center;"><i class="fa fa-circle status-text-{{status}}"></i></td>
+            <td style="text-align: center;">{{start-date}}</td>
+            <td class="text-overview">{{message}}</td>
+          </tr>
+          {{/each}}
+        </table>
+      <div>
+      {{else}}
+      <div class="loadwait">
+        <a>No History Found!</a>
+      </div>
+      {{/if}}
+    </script>
+
+  </head>
+
+  <body>
+    <div data-gadget-url="gadget_monitoring_jio.html" data-gadget-scope="jio_gadget" data-gadget-sandbox="public"></div>
+    <div class="ui-panel-overview">
+      <div class="overview-details">
+        <div class="overview-header">
+          <div class='content-title ui-instance-title'>
+            <div class="overview-title">
+              <div data-gadget-url="gadget_monitoring_breadcrumb.html" data-gadget-scope="breadcrumb_gadget" data-gadget-sandbox="public"></div>
+            </div>
+            <div class="commands">
+  
+            </div>
+          </div>
+        </div>
+        <div class="content-details">
+          <div class="ui-grid-a ui-responsive">
+            <div class="ui-block-a">
+              <h2><i class="fa fa-check" aria-hidden="true"></i> <strong>Promise Result View</strong></h2>
+            </div>
+            <div class="ui-block-b">
+              <div class="promise-instance">
+              </div>
+              <div class="promise-links">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<div class="ui-promise-content">
+      <div class="ui-promise-body">
+        <div class="ui-promise-title">
+          <h2></h2>
+        </div>
+        <div id="promise-overview" class="custom-grid-wrap">
+          <div class="custom-grid ui-corner-all ui-shadow ui-body-inherit">
+            <div class="ui-grid-a ui-responsive" style="padding: 15px;">
+              <div class="ui-block-a">
+                <h2><i class="fa fa-check" aria-hidden="true"></i> <strong>Promise Result View</strong></h2>
+              </div>
+              <div class="ui-block-b">
+                <div class="promise-instance">
+                </div>
+                <div class="promise-links">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>-->
+  </body>
+</html>

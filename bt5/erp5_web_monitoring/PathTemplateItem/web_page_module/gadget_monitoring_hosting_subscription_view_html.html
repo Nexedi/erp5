@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Monitoring Hosting Subscription View</title>
+
+    <link href="gadget_monitoring_custom.css" rel="stylesheet" type="text/css"/>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+
+    <script id="instance-details-widget-overview" type="text/x-handlebars-template">
+      {{#if status_list_url}}
+      <!--<div data-role="controlgroup">
+        <a class="ui-btn ui-corner-all" href="{{status_list_url}}" title="Promises"><i class="fa fa-check-square"></i> Promises</a>
+      </div>-->
+      {{/if}}
+      <div class="ui-listview-container">
+        <ul data-role="listview" class="ui-listview-outer" data-inset="true">
+          {{#each instance_list}}
+            <li>
+              <a href="#" class="ui-btn ui-btn-icon-right ui-icon-plus">
+              <span class="ui-status-icon ui-status-{{status}}"></span>
+              <span class="ui-status-text">{{title}}</span>
+              </a>
+              <div class="ui-collapse-content ui-content-hidden">
+                <fieldset>
+                  <div>
+                    <div style="float: left; margin-right: 10px;">
+                      <fieldset data-role="controlgroup" data-type="horizontal">
+                        {{#if ../status_list_url}}
+                        <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" href="{{../status_list_url}}" title="Instance Promises List"><i class="fa fa-check-square"></i> Promises</a>
+                        {{/if}}
+                        {{#if instance_url}}
+                        <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" href="{{instance_url}}" title="Access Software Instance"><i class="fa fa-cube"></i> Instance</a>
+                        {{/if}}
+                        <!--
+                        {{#if public_url}}
+                        <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{public_url}}" title="Public Logs Directory"><i class="fa fa-folder-open-o"></i> Public Logs</a>
+                        {{/if}}
+                        {{#if private_url}}
+                        <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{private_url}}" title="Browse Private Logs Directory"><i class="fa fa-lock"></i> Private Logs</a>
+                        {{/if}}
+                        -->
+                      </fieldset>
+                    </div>
+                    <div style="float: left">
+                      <fieldset data-role="controlgroup" data-type="horizontal">
+                        {{#if rss_url}}
+                        <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{rss_url}}" title="RSS"><i class="fa f-2x fa-rss-square"></i></a>
+                        {{/if}}
+                        {{#if resource_url }}
+                        <a href="{{resource_url}}" class="ui-btn ui-corner-all ui-btn-inline ui-mini" title="Instance Resource comsumption"><i class="fa f-2x fa-pie-chart"> Ressources</i></a>
+                        {{/if}}
+                        {{#if process_url }}
+                        <a href="{{process_url}}" class="ui-btn ui-corner-all ui-btn-inline ui-mini" title="Processes usage"><i class="fa f-2x fa-list-alt"></i> Processes</a>
+                        {{/if}}
+                      </fieldset>
+                    </div>
+                    <div class="clear"></div>
+                  </div>
+                  <table data-role="table" data-mode="columntoggle" class="ui-responsive table-stroke">
+                    <tr>
+                      <th><i class="fa fa-tachometer"></i> <strong>Status</strong></th>
+                      <td><span class="label label-{{status}}">{{status}}</span></td>
+                      <td>{{date}}</td>
+                    </tr>
+                    
+                    {{#with instance}}
+                    <tr>
+                      <th><i class="fa fa-desktop"></i> <strong>Computer</strong></th>
+                      <td title="Computer Reference">{{computer}}</td>
+                      <td title="Partition Reference">{{partition}}</td>
+                    </tr>
+                    <tr>
+                      <th><i class="fa fa-globe"></i> <strong>IP Addresses</strong></th>
+                      <td title="IPv4">{{ipv4}}</td>
+                      <td title="IPv6">{{ipv6}}</td>
+                    </tr>
+                    <tr>
+                      <th><i class="fa fa-square-o" aria-hidden="true"></i> <strong>Software Type</strong></th>
+                      <td title="Software type">{{software-type}}</td>
+                      <td><a style="padding: 0; min-height: initial;" href="{{software-release}}" title="{{software-release}}" target='_blank'>Click to open <i class="fa fa-external-link"></i></a></td>
+                    </tr>
+                    {{/with}}
+                  </table>
+                  {{#if warning}}
+                  <p class="ui-text-error"><i class="fa fa-info-circle" aria-hidden="true"></i> Status was changed to WARNING as last sync of this instance failed.</p>
+                  {{/if}}
+                </fieldset>
+              </div>
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </script>
+
+    <script id="parameters-widget-template" type="text/x-handlebars-template">
+      {{#if parameter_list}}
+        {{#each parameter_list}}
+          {{#if parameters}}
+          <h3 class="margin-0 padding-tb-10">{{title}} <i class="fa fa-angle-up"></i></h3>
+          <table data-role="table" data-mode="columntoggle" class="table-stroke" title="{{title}}">
+            {{#each parameters}}
+              <tr>
+                <td><strong>{{title}}</strong></td>
+                {{#if key}}
+                  <td class="v-{{key}}">{{value}}</td>
+                {{else}}
+                  <td>{{value}}</td>
+                {{/if}}
+                <td class="ui-text-center">
+                  {{#if key}}
+                  <!--<a rel="{{../index}}" class="prop-edit" title='Edit this value'><i class="fa fa-pencil"></i></a>-->
+                  <!-- disable edit for now -->
+                  <a><span class="ui-text-desabled" title='Edit this value'><i class="fa fa-pencil"></i></span></a>
+                  {{else}}
+                  <a><span class="ui-text-desabled" title='Edit this value'><i class="fa fa-pencil"></i></span></a>
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+          </table>
+          {{/if}}
+        {{/each}}
+        <div class="alert alert-info ui-content-hidden">Your Changes can take a few minutes to appear in this screen!</div>
+      {{else}}
+        <h2>No parameters.</h2>
+      {{/if}}
+    </script>
+    
+    <script src="gadget_monitoring_hosting_subscription_view.js"></script>
+
+  </head>
+
+  <body>
+    <div class="ui-responsive hosting-block">
+      <div class="signal ui-content-hidden"></div>
+      <div class="ui-panel-overview">
+        <div class="overview-header">
+          <div class='content-title ui-instance-title'>
+            <div class="overview-title">
+              <i class="fa fa-share-alt"></i> <span></span>
+            </div>
+            <div class="commands">
+            </div>
+          </div>
+        </div>
+        <div class="content-details">
+          <h2><i class="fa fa-wrench"></i> <strong>Monitoring Parameters</strong></h2>
+          <div style="overflow: auto;" class="padding-lr-10 instances-parameters">
+          </div>
+          <div class="padding-5"></div>
+          <h2><i class="fa fa-cubes"></i> <strong>Software Instances Status</strong></h2>
+          <div class="instances-status">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

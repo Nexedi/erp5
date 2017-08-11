@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Monitoring Hosting Subscription</title>
+
+    <link href="gadget_monitoring_custom.css" rel="stylesheet" type="text/css"/>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+
+    <script id="template-hostings-list" type="text/x-handlebars-template">
+      {{#each hosting_list}}
+      <tr>
+        <td>
+          <a class="ui-link" href="{{href}}"><span class="label label-{{status}}">{{status}}</span></a>
+        </td>
+        <td>
+          <a class="ui-link" href="{{href}}">{{title}}</a>
+        </td>
+        <td class="m-hidden">
+          <a class="ui-link" href="{{href}}">{{date}}</a>
+        </td>
+        <td class="m-hidden">
+          <a class="ui-link" href="{{href}}">{{amount}}</a>
+        </td>
+      </tr>
+      {{/each}}
+    </script>
+
+    <script src="gadget_monitoring_hosting_subscription_list.js"></script>
+  </head>
+
+  <body>
+    <!--<div data-gadget-url="gadget_monitoring_document_edit.html" data-gadget-scope="config_gadget" data-gadget-sandbox="public"></div>-->
+    <div class="ui-panel-overview hosting-list" style="min-height: 450px;">
+      <div class="overview-header">
+        <div class='content-title ui-instance-title'>
+          <div class="overview-title">
+            <i class="fa fa-globe"></i> <span>Hosting Subscriptions</span>
+          </div>
+          <div class="commands">
+          </div>
+        </div>
+      </div>
+      <div class="overview-content">
+      
+        <div class="ui-listview-container">
+          <table class="ui-responsive ui-body-c ui-table-inset instance-overview">
+            <thead class="ui-bar-inherit">
+              <tr>
+                <th class="padding-10">Status</th>
+                <th>Hosting Subscription Name</th>
+                <th class="m-hidden">Status Date</th>
+                <th class="m-hidden">Software Instance Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+            <tfoot class="ui-bar-inherit"></tfoot>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </body>
+</html>

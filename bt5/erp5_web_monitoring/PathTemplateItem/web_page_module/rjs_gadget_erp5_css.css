@@ -1,0 +1,5007 @@
+/*  ---------------------------  gadget_core.css -------------------------- */
+/*
+   =========================================================================
+   ================================ fonts  =================================
+   =========================================================================
+*/
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('font-awesome/font-awesome-webfont.eot');
+  src: url('font-awesome/font-awesome-webfont.eot') format('embedded-opentype'), url('font-awesome/font-awesome-webfont.woff2') format('woff2'), url('font-awesome/font-awesome-webfont.woff') format('woff'), url('font-awesome/font-awesome-webfont.ttf') format('truetype'), url('font-awesome/font-awesome-webfont.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+/* global reference font-size (.9em = 14.4px) */
+html.ui-mobile body div p,
+html.ui-mobile body div a,
+html.ui-mobile body div button,
+html.ui-mobile body div h1,
+html.ui-mobile body div h2,
+html.ui-mobile body div h3,
+html.ui-mobile body div h4,
+html.ui-mobile body div h5,
+html.ui-mobile body div h6,
+html.ui-mobile body div input,
+html.ui-mobile body div select,
+html.ui-mobile body div label,
+html.ui-mobile body div legend,
+html.ui-mobile body div option,
+html.ui-mobile body div span,
+html.ui-mobile body div textarea,
+html.ui-mobile body th,
+html.ui-mobile body td,
+
+/* ...sigh ... */
+html.ui-mobile body li.ui-li-divider,
+html.ui-mobile body .ui-input-btn,
+html.ui-mobile body th .ui-btn,
+html.ui-mobile body .ui-header h1.ui-title {
+  font-size: .9em;
+  font-weight: 400;
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+/* ...sigh sigh ... */
+html.ui-mobile body th a,
+html.ui-mobile body td a,
+html.ui-mobile body th a.ui-btn,
+html.ui-mobile body td a.ui-btn,
+html.ui-mobile body .ui-header .ui-title .ui-btn {
+  font-size: 100%;
+}
+
+/* responsive listview-table */
+@media (max-width: 48em) {
+  html table tbody tr td:first-child ~ td a,
+  html table tbody tr th:first-child ~ th a,
+  html table tbody tr td:first-child ~ td a,
+  html table tbody tr th:first-child ~ th a {
+    font-size: 85%;
+  }
+}
+
+/* force all code to look like code */
+html.ui-mobile body div pre * {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* from here on in % of whatever is set above */
+.ui-content-header-section .ui-content-title {
+  font-size: 500%;
+  letter-spacing: -0.05em;
+}
+.ui-content-header-fullwidth .ui-content-title,
+.ui-content-header-plain .ui-content-title {
+  font-size: 150%;
+}
+.ui-content-header-fullwidth .ui-content-subtitle,
+.ui-content-header-section .ui-content-subtitle {
+  font-size: 100%;
+}
+@media (max-width: 62em) {
+  .ui-content-header-section .ui-content-title {
+    font-size: 300%;
+  }
+  .ui-content-header-fullwidth .ui-content-title,
+  .ui-content-header-plain .ui-content-title {
+    font-size: 150%;
+  }
+}
+@media (max-width: 48em) {
+  .ui-content-header-section .ui-content-title {
+    font-size: 150%;
+  }
+  .ui-content-header-fullwidth .ui-content-title,
+  .ui-content-header-plain .ui-content-title {
+    font-size: 100%;
+  }
+}
+
+/*
+   =========================================================================
+   =========================  panel f&$* up  ===============================
+   =========================================================================
+*/
+/*
+@media (min-width: 64em) { 
+  div[data-gadget-scope='header'] > div,
+  article {
+    margin-left: 17em;
+    width: auto;
+  }
+  html body button.responsive[data-i18n='Menu'] {
+    display: none;
+  }
+  .jqm-navmenu-panel .ui-header .ui-controlgroup-controls form .ui-btn {
+    display: none;
+  }
+}
+*/
+/*
+   =========================================================================
+   ======================== overwriting widgets  ===========================
+   =========================================================================
+*/
+
+/*
+   -------------------------------------------------------------------------
+   ------------------------------- Loader ----------------------------------
+   -------------------------------------------------------------------------
+*/
+/* don't fade spinner */
+html body .ui-icon-spinner.ui-icon-spin {
+  opacity: 1;
+}
+
+/*
+   -------------------------------------------------------------------------
+   -------------------------------- Page -----------------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* page theme backgrounds */
+html body,
+html body .ui-page,
+html body .ui-page .ui-panel-wrapper {
+  background: none;
+  border-color: transparent;
+  color: inherit;
+  text-shadow: none;
+}
+
+/* page padding - JQM tries to set this through the wrapping page-div. Once
+   this is gone, remove rule */
+html body .ui-page-header-fixed {
+  padding-top: 41px !important;
+}
+
+/*
+   -------------------------------------------------------------------------
+   ------------------------------- Content ---------------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* dimensions inset header/content */
+.ui-content-header-section,
+.ui-content-section {
+  border-style: solid;
+  border-width: 1px;
+  /* max-width: 85%; */
+  margin: 0 auto;
+}
+.ui-content-header-plain {
+  /*  max-width: 85%; */
+  margin: 0 auto;
+}
+
+/* MOVE: icon positioning */
+.ui-content-header-plain .ui-content-title span {
+  padding-right: .5em;
+}
+
+/* fullwidth header box-shadow and max-height */
+.ui-content-header-fullwidth {
+  padding: 1em;
+  border-width: 0;
+  border-bottom-width: 1px;
+  -webkit-box-shadow: 0 1px 3px #aaa;
+  -moz-box-shadow: 0 1px 3px #aaa;
+  box-shadow: 0 1px 3px #aaa;
+  max-height: 5em;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  /* with navbar margin: 5em -1em 0; */
+  margin: -0.5em -1em 0;
+  width: auto;
+}
+
+/* indent fullwidth header text */
+.ui-content-header-fullwidth .ui-content-title,
+.ui-content-header-fullwidth .ui-content-subtitle {
+  margin: 0;
+}
+
+/* spacing of content-header = independent of global header */
+.ui-content-header-section,
+.ui-content-header-plain {
+  margin-top: 5%;
+}
+@media (max-width: 48em) {
+  .ui-content-header-section,
+  .ui-content-header-plain {
+    margin-top: 10%;
+  }
+  .ui-content-header-plain {
+    max-width: none;
+  }
+}
+
+.ui-content-header-section {
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  padding-bottom: .5em;
+}
+
+/* add box shadow and border radius */
+.ui-content-section {
+  margin-top: 1em;
+  padding: 1em;
+  -webkit-border-radius: .3125em;
+  border-radius: .3125em;
+  -webkit-box-shadow: 0 2px 2px #aaa;
+  -moz-box-shadow: 0 2px 2px #aaa;
+  box-shadow: 0 2px 2px #aaa;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* dock section following header to header */
+.ui-content-header-section ~ .ui-content-section {
+  border-top-width: 0;
+  padding-top: 0;
+  margin-top: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+/* add space between sections */
+.ui-content-section ~ .ui-content-section {
+  margin: 1em auto;
+}
+
+/* add top border */
+html body .ui-content-header-plain ~ .ui-content-section {
+  border-top-width: 1px;
+}
+
+
+/* custom icon positioning */
+.ui-content-menu .ui-controlgroup-controls .ui-icon-custom {
+  margin: 0 1em;
+  border: 0 none;
+  border-radius: 1em;
+  border-radius: 1.25em;
+  -webkit-box-sizing: padding-box;
+  -moz-box-sizing: padding-box;
+  box-sizing: padding-box;
+  height: 2.5em;
+  width: 2.5em;
+}
+.ui-content-menu .ui-icon-custom:after {
+  font-size: 150%;
+  border-radius: 1em;
+  padding: 0.4em;
+  vertical-align: middle;
+  left: 29%;
+  top: 30%;
+  margin-left: -11px;
+}
+.ui-content-header-section .ui-content-title,
+.ui-content-header-section .ui-content-subtitle,
+.ui-content-header-section .ui-content-menu,
+.ui-content-header-fullwidth .ui-content-menu {
+  text-align: center;
+}
+
+
+@media (max-width: 48em) {
+  .ui-content-header-section,
+  .ui-content-section {
+    max-width: 100%;
+  }
+}
+
+/* section and form section header */
+html body section ~ .ui-content-section .ui-content-header-inline,
+html.ui-mobile body form .ui-content-header-inline {
+  display: block;
+  font-weight: 700;
+  border-bottom: 1px solid rgb(115, 115, 115);
+  border-bottom: 1px solid rgba(0,0,0,.3);
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  padding-bottom: 1em;
+}
+
+/* Maximize content section*/
+html body .ui-content-maximize {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 2.4em !important;
+  left: 0 !important;
+  z-index: 900 !important;
+  overflow: hidden !important;
+  height: 94%;
+  width: 100%;}
+
+/*
+   -------------------------------------------------------------------------
+   ---------------------- Form Field Positioning ---------------------------
+   -------------------------------------------------------------------------
+*/
+/* form validation (assuming label>span is used) */
+form label span {
+  color: red;
+}
+
+/* stretch controlgroup controls in case they don't */
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls {
+  width: 100%;
+}
+/* remove double borders on vertical fieldsets TODO: no pseudo, not generic! */
+html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup-vertical .ui-controlgroup-controls > * .ui-btn {
+  border-bottom-width: 0;
+}
+html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup-vertical .ui-controlgroup-controls > *:last-child .ui-btn {
+  border-bottom-width: 1px;
+}
+
+.left,
+.right,
+.center,
+.bottom {
+  vertical-align: top;
+  padding: 0 2%;
+}
+.center,
+.bottom  {
+  width: 96%;
+  display: block;
+}
+.left,
+.right {
+  display: inline-block;
+  width: 45%;
+}
+
+/* add JQM float ourselves, but only for form elements! */
+.ui-field-contain > label ~ [class*="ui-"],
+.ui-field-contain fieldset .ui-controlgroup-controls,
+.ui-field-contain > label + div {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  float: left;
+}
+
+/* stretch textarea */
+.left textara,
+.right textarea {
+  width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* override JQM forcing 78% on textrea */
+.ui-field-contain > label ~ textarea[class*="ui-"] {
+  width: 67%;
+}
+
+/* override border-radius for all inputs to match buttons XXX Punting with center */
+html.ui-mobile head + body .center .ui-input-text.ui-corner-all {
+  -webkit-border-radius: .325em;
+  border-radius: .325em;
+}
+/* field-containers with add on button have no right corners */
+html.ui-mobile head + body .center .ui-field-contain > :first-child:nth-last-child(2) {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* remove left corners and margin from side button */
+html.ui-mobile head + body .ui-field-contain > :first-child:nth-last-child(2) ~ .ui-btn {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin: 0;
+  border-left-width: 0;
+}
+
+
+/* labels width */
+html.ui-mobile head + body label:not(.ui-btn),
+html.ui-mobile head + body fieldset div.ui-controlgroup-label {
+  max-width: 31%;
+  min-width: 31%;
+}
+/* label center/bottom has double space, so needs half of the above */
+html.ui-mobile head + body .center label:not(.ui-btn),
+html.ui-mobile head + body .center fieldset div.ui-controlgroup-label,
+html.ui-mobile head + body .bottom label:not(.ui-btn),
+html.ui-mobile head + body .bottom fieldset div.ui-controlgroup-label {
+  max-width: 15%;
+  min-width: 15%;
+  margin-right: 0.5%; /* not perfetct, redo, this should be 1% */
+}
+
+/* input width depending on number of inputs (allow 3 selects side-by-side) */
+/* <label><div.gadget> */
+html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {
+  width: 67%;
+}
+/* <label><div.gadget><label><div.gadget>
+html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(4) ~ div,
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(4) ~ div {
+  width: 50%;
+}
+*/
+/* <label><div.gadget><label><div.gadget><label><div.gadget> 
+html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(6) ~ div,
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(6) ~ div {
+  width: 32.99%;
+}
+*/
+/* reset for collections of checkbox/radio (up to 6) */
+html.ui-mobile head + body .ui-field-contain > div:first-of-type + div,
+html.ui-mobile head + body .ui-field-contain > div:first-of-type + div + div,
+html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup div.ui-controlgroup-controls > div:first-of-type + div,
+html.ui-mobile head + body .ui-field-contain fieldset.ui-controlgroup div.ui-controlgroup-controls > div:first-of-type + div + div {
+  width: auto;
+}
+
+/* and textarea/other elements in center/bottom */
+html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,
+html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,
+/* include gadget */
+html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div,
+html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div {
+  width: 84.5%;
+}
+/* and gadget child textarea width */
+html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div textarea,
+html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div textarea {
+  width: 100%;
+}
+
+/* input vs side icon dimensions */
+html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {
+  width: 79%;
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  padding-right: 9%;
+  vertical-align: middle;
+}
+/* icon next to input */
+html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  -webkit-border-radius: .325em;
+  padding: .2em .5%;
+  border-radius: .325em;
+  width: 8%;
+  vertical-align: middle;
+}
+/* extend only-child inputs without side icons  */
+html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon:only-child {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media (min-width: 62em) {
+  /* USED for searchfield + icon */
+  /* XXX: this should not be necessary! fullwidth fields need different dimensions */
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain div .ui-input-has-icon {
+    width: 87%;
+    padding-right: 9%;
+  }
+  /* icon next to input */
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {
+    width: 2%;
+  }
+}
+
+/* remove duplicate border on fieldset and set corners XXX IE8*/
+html.ui-mobile head + body .ui-field-contain fieldset label {
+  border-top-width: 0;
+}
+/* properly inherit corners into fieldset XXX IE8 */
+html.ui-mobile head + body .ui-controlgroup-controls div:first-of-type label {
+  border-top-width: 1px;
+  -webkit-border-top-left-radius: .325em;
+  border-top-left-radius: .325em;
+  -webkit-border-top-right-radius: .325em;
+  border-top-right-radius: .325em;
+}
+html.ui-mobile head + body .ui-controlgroup-controls div:last-of-type label {
+  -webkit-border-bottom-left-radius: .325em;
+  border-bottom-left-radius: .325em;
+  -webkit-border-bottom-right-radius: .325em;
+  border-bottom-right-radius: .325em;
+}
+
+/* input with icon on the right > needs specificty to overwriter JQM height */
+html.ui-mobile head + body div.ui-field-contain > a.ui-btn {
+    border-radius: 0 0.325em 0.325em 0;
+    height: 2.2em;
+    margin: 0 .4em 0 0;
+    width: 2.2em;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* make sure search input has no margin, to not offset right hand icon */
+html .ui-input-text,
+html .ui-input-search,
+html .ui-select {
+  margin: 0;
+}
+
+/* pre-enhanced input fix */
+html.ui-mobile head + body div.ui-field-contain div.ui-input-text div.ui-input-btn {
+  width: 1.75em;
+}
+
+/* border-radius for inputs and inputs with icon */
+html.ui-mobile head + body .ui-field-contain > div {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+html.ui-mobile head + body .ui-field-contain > :last-child {
+  -webkit-border-top-right-radius: .325em;
+  border-top-right-radius: .325em;
+  -webkit-border-bottom-right-radius: .325em;
+  border-bottom-right-radius: .325em;
+}
+
+/* middle screen */
+@media (max-width: 62em) {
+
+  /* set width and spacing */
+  .left,
+  .right,
+  .center,
+  .bottom {
+    display: block;
+    -webkit-box-sizing: padding-box;
+    -moz-box-sizing: padding-box;
+    box-sizing: padding-box;
+  }
+  
+  /* set width (XXX assume listbox ONLY is in bottom, otherwise padded side */
+  .left,
+  .right,
+  .bottom,
+  .center {
+    width: auto;
+  }
+
+  /* reset min/max width and shrink labels ... */
+  html.ui-mobile head + body label,
+  html.ui-mobile head + body legend {
+    min-width: 0;
+    max-width: none;
+    font-size: 80%;
+  }
+  /* same for legend, except shrinking */
+  html.ui-mobile head + body label:not(.ui-btn),
+  html.ui-mobile head + body fieldset div.ui-controlgroup-label {
+    min-width: 0;
+    max-width: none;
+  }
+
+  /* <label><div.gadget> */
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div,
+  .ui-field-contain > label ~ textarea[class*="ui-"] {
+    width: 78%;
+  }
+  /* <label><div.gadget><label><div.gadget> 
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(4) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroupcontrols :first-child:nth-last-child(4) ~ div {
+    width: 46%;
+  } */
+  /* <label><div.gadget><label><div.gadget><label><div.gadget> 
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(6) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(6) ~ div {
+    width: 32.99%;
+  }*/
+
+
+  /* bottom/center > 94.4% + 2x2% padding + 2x.25padding */
+  /* extend textarea and fullwidth element container */
+  html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,
+  html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain label + div,
+  html.ui-mobile head + body .field_container .center div.ui-field-contain label + div {
+    width: 78.4%;
+  }
+
+  /* textarea has double space, so needs half of the above */
+  html.ui-mobile head + body div.center div.ui-field-contain  label,
+  html.ui-mobile head + body div.bottom div.ui-field-contain label,
+  html.ui-mobile head + body div.ui-field-contain div.ui-field-contain label {
+    max-width: 20%;
+    min-width: 20%;
+    margin-right: 1.6%; /* no good either, should be 2% */
+  }
+  
+  /* input vs side icon dimensions */
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {
+    width: 84.5%;
+    padding-right: 9%;
+  }
+  /* icon next to input */
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {
+    width: 4%;
+  }
+}
+
+@media (max-width: 48em) {
+
+   /* set width and spacing */
+  .left,
+  .right,
+  .center,
+  .bottom {
+    width: auto;
+    display: block;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  /* <label><div.gadget> */
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div,
+  .ui-field-contain > label ~ textarea[class*="ui-"] {
+    max-width: 88%;
+  }
+  /* <label><div.gadget><label><div.gadget> 
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(4) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(4) ~ div {
+    max-width: 88%;
+  }*/
+  /* <label><div.gadget><label><div.gadget><label><div.gadget> 
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(6) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(6) ~ div {
+    width: 32.99%;
+  }*/
+
+  /* bottom/center > 94.4% + 2x2% padding + 2x.25padding */
+  /* extend textarea and fullwidth element container 
+  html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,
+  html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text {
+    max-width: 90%;
+  }*/
+
+  /* and textarea/other elements in center/bottom */
+  html.ui-mobile head + body .center textarea,
+  html.ui-mobile head + body .bottom textarea,
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div,
+  html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div {
+    max-width: 100%;
+  }
+
+  /* input vs side icon dimensions */
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {
+    width: 83%;
+    padding-right: 7%;
+  }
+  /* icon next to input */
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {
+    width: 6.5%;
+  }
+
+  /* extend textarea and fullwidth element container */
+  .center .ui-field-contain {
+    width: auto;
+  }
+}
+
+/* need to override JQM breakpoint */
+@media (max-width: 28em) {
+
+  /* remove float */
+  .ui-field-contain > label ~ [class*="ui-"],
+  .ui-field-contain fieldset .ui-controlgroup-controls,
+  .ui-field-contain > label + div {
+    margin: auto;
+    float: none;
+  }
+
+  /* unset max-width */
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div,
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(3) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(3) ~ div {
+    max-width: none;
+  }
+
+  /* make sure there is a bottom border */
+  .ui-field-contain,
+  .ui-field-contain:last-child {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  /* JQM switches margin to padding on the field-container to show the border,
+     adjust add-on icon position matching padding-top: .8em */
+  html.ui-mobile head + body div.ui-field-contain > a.ui-btn {
+    top: 22%;
+  }
+
+  /* <label><div.gadget> */
+  html.ui-mobile head + body .ui-field-contain :first-child:nth-last-child(2) ~ div,
+  html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls :first-child:nth-last-child(2) ~ div {
+    width: 100%;
+    max-width: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  /* and textarea/other elements in center/bottom */
+  html.ui-mobile head + body .bottom div.ui-field-contain textarea.ui-input-text,
+  html.ui-mobile head + body .center div.ui-field-contain textarea.ui-input-text,
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain label ~ div,
+  html.ui-mobile head + body .field_container .center div.ui-field-contain label ~ div {
+    max-width: none;
+    width: 100%;
+  }
+
+  /* input vs side icon dimensions */
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon {
+    width: 81%;
+    padding-right: 7%;
+  }
+  /* icon next to input */
+  html.ui-mobile head + body .field_container div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {
+    width: 8%;
+  }
+  /* bottom icon (center, too) need different dimensions */
+  html.ui-mobile head + body .field_container .bottom div.ui-field-contain div .ui-input-has-icon ~ .ui-btn {
+    width: 9.5%;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+  
+  /* extend textarea and fullwidth element container */
+  .center .ui-field-contain {
+    width: auto;
+  }
+}
+/*
+   -------------------------------------------------------------------------
+   ---------------------------- Collapsible --------------------------------
+   -------------------------------------------------------------------------
+*/
+.ui-collapsible .ui-listview .ui-last-child {
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.ui-collapsible-set > .ui-last-child .ui-listview > .ui-last-child {
+  -webkit-border-bottom-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+  -webkit-border-bottom-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+
+/* collapsible inside listview (make collapsible look like divider) */
+/* XXX: not sure this is so good */
+html .ui-listview > li.ui-collapsible {
+  margin: 0;
+  padding: 0;
+}
+/* no padding for header */
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading {
+  padding: 0;
+}
+/* format button inside header */
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading a {
+  background: 0 none;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  padding: 0 0 0 1.5em;
+  text-decoration: none;
+  width: 100%;
+  pointer-events: none;
+}
+/* icon size */ 
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading a:after {
+  background: 0 none;
+}
+/* remove background on fake caret icon on header */
+html .ui-listview > li.ui-collapsible .ui-collapsible-heading:after {
+  background: 0 none;
+}
+/* remove margin and padding on collapsible content */
+html .ui-listview > li.ui-collapsible .ui-collapsible-content {
+  padding: 0;
+}
+html .ui-listview > li.ui-collapsible .ui-collapsible-content > fieldset {
+  margin: 0;
+}
+html .ui-listview > li.ui-collapsible .ui-collapsible-content > fieldset form .ui-btn {
+  border-right-width: 0;
+  border-left-width: 0;
+  text-align: left;
+}
+html .ui-listview > li.ui-collapsible .ui-collapsible-content > fieldset form:last-child .ui-btn {
+  border-bottom-width: 0;
+}
+/*
+   -------------------------------------------------------------------------
+   ------------------------------ Table --------t----------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* default table styles */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  padding: 0;
+  width: 100%;
+}
+table th,
+table td {
+  line-height: 1.5em;
+  text-align: left;
+  min-height: 2.5em; /* hardcoded if no links;*/
+  vertical-align: middle;
+  padding: 0;
+}
+table th .ui-btn,
+table td .ui-btn {
+  line-height: normal;
+}
+table th {
+  font-weight: bold;
+}
+table caption {
+  text-align: left;
+  margin-bottom: 1.4em;
+  opacity: .5;
+}
+
+/* table header  (not thead!) */
+.ui-table-header ~ table {
+  border-top-width: 0;
+}
+
+  
+/* hard-lock margin */
+html body .ui-table-header .ui-title {
+  margin: 0 30%
+}
+
+
+/* radius */
+.ui-table-inset {
+  -webkit-border-radius: .3125em;
+  border-radius: .3125em;
+}
+
+/* hover table header radius */
+.ui-table-header .ui-btn-left .ui-first-child:hover {
+  -webkit-border-top-left-radius: .325em;
+  border-top-left-radius: .325em;
+}
+.ui-table-header .ui-btn-right .ui-last-child:hover {
+  -webkit-border-top-right-radius: .325em;
+  border-top-right-radius: .325em;
+}
+
+/* reset page header customizations ... */
+.ui-table-header .ui-controlgroup-horizontal .ui-controlgroup-controls,
+.ui-table-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn, 
+.ui-table-header .ui-controlgroup-controls .ui-btn-icon-notext,
+/* reset field-container capturing table-header controlgroups as listbox is inside field-container... */
+html.ui-mobile head + body .ui-field-contain *:first-child:nth-last-child(3) ~ div, 
+html.ui-mobile head + body .ui-field-contain fieldset .ui-controlgroup-controls *:first-child:nth-last-child(3) ~ div {
+  width: auto;
+}
+
+.ui-table-inset thead,
+.ui-table-inset thead tr:first-child {
+  -webkit-border-top-left-radius: inherit;
+  border-top-left-radius: inherit;
+  -webkit-border-top-right-radius: inherit;
+  border-top-right-radius: inherit;
+}
+.ui-table-inset thead tr:first-child td:first-child,
+.ui-table-inset thead tr:first-child th:first-child,
+.ui-table-header ~ .ui-table-inset {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+}
+.ui-table-inset thead tr:first-child td:last-child,
+.ui-table-inset thead tr:first-child th:last-child,
+.ui-table-header ~ .ui-table-inset {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.ui-table-inset tbody tr:last-child td:first-child,
+.ui-table-inset tbody tr:last-child th:first-child,
+.ui-table-header {
+  -webkit-border-bottom-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+.ui-table-inset tbody tr:last-child td:last-child,
+.ui-table-inset tbody tr:last-child th:last-child,
+.ui-table-header {
+  -webkit-border-bottom-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+/* table footer */
+tfoot,
+tfoot tr,
+.ui-table-inset tfoot tr:last-child th:last-child,
+.ui-table-inset tfoot tr:last-child td:last-child,
+.ui-table-inset tfoot .ui-corner-all {
+  -webkit-border-bottom-right-radius: .325em;
+  border-bottom-right-radius: .325em;
+}
+tfoot,
+tfoot tr,
+.ui-table-inset tfoot tr:last-child th:first-child,
+.ui-table-inset tfoot tr:last-child td:first-child,
+.ui-table-inset tfoot .ui-corner-all {
+  -webkit-border-bottom-left-radius: .325em;
+  border-bottom-left-radius: .325em;
+}
+
+/* make sure JQM does not mess up table footer */
+html .ui-field-contain tfoot .ui-controlgroup-controls {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    float: none;
+    width: auto;
+}
+html .ui-field-contain tfoot .ui-controlgroup-controls {
+    margin: auto;
+}
+
+/* box size everything */
+html table td,
+html table th,
+html table td a,
+html table th a {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* header cell formatting */
+html table thead th,
+html table thead td {
+  text-shadow: none;
+  font-weight: normal;
+  vertical-align: middle;
+  text-align: center;
+  padding: .5em 0; /* must be changed if there is a link in the header! */
+}
+
+/* uncss and stretch table body links */
+html table tbody td a,
+html table tbody th a {
+  text-decoration: none;
+  font-weight: normal;
+  width: 100%;
+  display: block;
+  padding: .4em .25em;
+  min-height: inherit;
+}
+html table tbody td:hover a,
+html table tbody th:hover a {
+  text-decoration: none;
+}
+
+/* override JQM default format */
+html table {
+  border: 1px solid;
+}
+/* alignment */
+html table thead th .ui-btn,
+html table thead td .ui-btn {
+  text-align: left;
+}
+
+/* center rowspan header cells */
+html table thead th[colspan] {
+  text-align: center;
+}
+
+html .ui-listbox-error {
+  text-align: center;
+}
+
+
+
+html .ui-content-non-editable {
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+
+/* cell background */
+html table thead tr,
+html table tfoot tr,
+html table tbody tr:nth-child(even) {
+  background-color: #eeeeee;
+  background-color: rgba(0,0,0,.04);
+}
+
+/* cell strokes */
+html table tbody th,
+html table tbody td,
+html table thead th {
+  border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid rgba(0,0,0,.05);
+  border-right: 1px solid #e6e6e6;
+  border-right: 1px solid rgba(0,0,0,.05);
+}
+html table tbody tr:last-child td:last-child {
+  border-right: 0;
+}
+
+/* vertical strokes */
+html table thead tr td,
+html table thead tr th,
+html table tbody tr td,
+html table tbody tr th {
+  border-right-width: 1px;
+  border-left-width: 1px;
+}
+html table thead tr td:first-child,
+html table thead tr th:first-child,
+html table tbody tr td:first-child,
+html table tbody tr th:first-child {
+  border-left-width: 0;
+}
+html table thead tr td:last-child,
+html table thead tr th:last-child,
+html table tbody tr td:last-child,
+html table tbody tr th:last-child {
+  border-right-width: 0;
+}
+
+/* footer always blocks */
+tfoot th,
+tfoot td {
+  padding: 0;
+}
+/* pagination */
+tfoot .ui-controlgroup {
+  margin: 0;
+  width: 100%;
+  text-align: right;
+}
+/* cut corners */
+tfoot .ui-controlgroup .ui-controlgroup-controls .ui-first-child {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+tfoot .ui-controlgroup.ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn.ui-last-child {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  border-right-width: 0;
+}
+tfoot .ui-controlgroup .ui-controlgroup-controls span,
+tfoot .ui-controlgroup .ui-controlgroup-controls a {
+  border-bottom-width: 0;
+  border-top-width: 0;
+}
+
+/* paging-menu records indicator height XXX not sure, don't like */
+.ui-paging-menu .ui-controlgroup-controls > span {
+  line-height: 1.6em;
+}
+
+/* hide table header border */
+div.ui-table-header {
+  border-width: 1px;
+}
+/* need pseudo to add transparency over ui-bar-xxx */
+html .ui-table-header:before {
+  background-color: rgba(0, 0, 0, 0.04);
+  content: "";
+  height: 39px; /* not nice */
+  position: absolute;
+  width: 100%;
+}
+
+/* convert to listview look */
+@media (max-width: 62em) {
+
+  /* show or hide table header/footer */
+  html table thead,
+  html table tfoot {
+    width: 100%;
+    display: block;
+  }
+  
+  table th, table td {
+    min-height: 0;
+  }
+
+  /* accessibly hide table header if there is a hand made table-header */
+  html .ui-table-header ~ table thead {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px,1px,1px,1px);
+  }
+  
+  /* remove bottom border */
+  html div.ui-table-header {
+    border-bottom-width: 0;
+  }
+  /* overwrite JQM icon positioning */
+  html .ui-table-header .ui-controlgroup-controls .ui-btn:after {
+    left: .6em;
+  }
+
+  /* fix pagination width */
+  html .ui-field-contain tfoot .ui-controlgroup-controls {
+    width: 100%;
+  }
+
+  /* hide all but first row and first cell */
+  html table thead tr,
+  html table thead tr:first-child td,
+  html table thead tr:first-child th {
+    display: none;
+  }
+  html table thead tr:first-child,
+  html table thead tr:first-child td:first-child,
+  html table thead tr.first-child th:first-child {
+    display: block;
+  }
+
+  /* center first cell */
+  html table thead tr:first-child td:first-child,
+  html table thead tr:first-child th:first-child {
+    text-align: center;
+  }
+
+  /* remove all cell borders */
+  html body table tbody td,
+  html body table tbody th,
+  html body table thead td,
+  html body table thead th {
+    border-right-width: 0;
+    border-left-width: 0;
+  }
+
+  /* hide background and borders */
+  html table tbody tr:nth-child(odd) td,
+  html table tbody tr:nth-child(odd) th {
+    background-color: transparent;
+    border-right-width: 0;
+    border-left-width: 0;
+  }
+  html table tbody tr td,
+  html table tbody tr th {
+    border-bottom-width: 0;
+  }
+
+  /* block the table, set to overflow to cover leaking cells */
+  table.ui-responsive,
+  table.ui-responsive tbody {
+    display: block;
+    width: 100%;
+  }
+
+  /* each row becomes a table, now block */
+  table.ui-responsive tr {
+    display: block;
+    line-height: 1.5em;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  /* all cells inline-block */
+  table.ui-responsive tr td,
+  table.ui-responsive tr th {
+    display: inline-block;
+  }
+  
+  /* first cell must be locked */
+  table.ui-responsive tr td:first-child,
+  table.ui-responsive tr th:first-child {
+    display: inline-block;
+    width: 100%;
+  }
+
+  /* link icon for table rows */
+  table.ui-responsive tbody tr {
+    min-height: 3.9em;
+    max-height: 3.9em;
+    position: relative;
+    line-height: 1.1em;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-top: 1px solid;
+    padding: .4em .25em;
+  }
+
+  /* bottom border on last row */  
+  table.ui-responsive tbody tr:last-child {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+  }
+
+  /* icon itself */
+  table.ui-responsive tbody tr:after {
+    font-size: 1.25em;
+    background: transparent;
+    border-radius: 0;
+    content: "";   /* Thanks FontAwesome */
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    right: 0;
+    margin-top: -11px;
+    top: 50%;
+    display: block;
+    height: 22px;
+    position: absolute;
+    width: 22px;
+  }
+
+  /* stretch first link to full width (positioned relative to <tr>) */
+  html table tbody tr td:first-child a,
+  html table tbody tr th:first-child a {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    margin-left: -.25em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  /* set line height on cells after first row */
+  table tbody tr th:first-child ~ th {
+    line-height: 0;
+  }
+
+  /* disactivate all links in these cells and set line-height, too */
+  html table tbody tr td:first-child ~ td a,
+  html table tbody tr th:first-child ~ th a,
+  html table tbody tr td:first-child ~ td a,
+  html table tbody tr th:first-child ~ th a {
+    display: inline-block;
+    padding: 0;
+    pointer-events: none;
+    line-height: 1em;
+    max-height: 1.05em;
+    overflow: hidden;
+  }
+  
+  /* pad non-empty cells just a little */
+  html table tbody tr td:first-child ~ td a:not(:empty),
+  html table tbody tr th:first-child ~ td a:not(:empty),
+  html table tbody tr td:first-child ~ th a:not(:empty),
+  html table tbody tr th:first-child ~ th a:not(:empty) {
+    padding: 0 0.1em;
+  }
+  
+  /* add tide */
+  html table tbody tr td:first-child ~ td:not(:last-child) a:not(:empty):after,
+  html table tbody tr th:first-child ~ td:not(:last-child) a:not(:empty):after,
+  html table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after, 
+  html table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after {
+    content: " ~ ";
+  }
+
+  /* pad top row */
+  html table tbody tr td:first-child, tbody tr th:first-child {
+    line-height: 1em;
+    padding-bottom: 1.25em;
+  }
+
+  /* expand to fullwidth */
+  tfoot .ui-controlgroup-controls {
+    width: 100%;
+  }
+
+  /* straighten corners of first/last child */
+  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-first-child {
+    -webkit-border-top-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left-width: 0;
+    -webkit-border-bottom-left-radius: .325em;
+    border-bottom-left-radius: .325em;
+  }
+  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-last-child {
+    -webkit-border-top-right-radius: 0;
+    border-top-right-radius: 0;
+    border-right-width: 0;
+  }
+  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls a,
+  tfoot .ui-controlgroup-horizontal .ui-controlgroup-controls span {
+    border-bottom-width: 0;
+    border-top-width: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 48em) {
+  /* give more space to record counter and move icons to the middle */
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > span {
+    width: 50%;
+  }
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn {
+    width: 25%;
+  }
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn-icon-left:after {
+    right: .5em;
+  }
+  tfoot .ui-paging-menu.ui-controlgroup-horizontal .ui-controlgroup-controls > a.ui-btn-icon-right:after {
+    left: .5em;
+  }
+}
+
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Textinput ---------------------------------
+   -------------------------------------------------------------------------
+*/
+/* remove JQM icons */
+.ui-input-search:after {
+  background-image: none;
+}
+/* pre-enhanced clear button padding */
+.ui-input-has-clear .ui-btn input {
+    padding-left: 0;
+    padding-right: 0;
+}
+/* multiline */
+.ui-input-has-multiline {
+  padding-left: 2.375em;
+}
+.ui-input-has-multiline textarea {
+  width: 100%;
+}
+/* correctly display loader TODO: REMOVE */
+html body .ui-input-has-clear .ui-icon-spinner:after {
+    font-size: 1.5em;
+}
+/* disable spinner href */
+html body .ui-input-has-clear .ui-icon-spinner {
+	cursor: default !important;
+	pointer-events: none;
+}
+/* autocomplete font-size TODO: Verify absolute works... */
+html body .ui-input-has-clear ul.ui-listview {
+  position: absolute;
+  margin: .5em 0 0 0;
+  width: 100%;
+  z-index: 501;
+}
+/* add side borders to results */
+html body .ui-input-has-clear ul.ui-listview li.ui-li-static,
+html body .ui-input-has-clear ul.ui-listview li.ui-li-divider {
+  border-left-width: 1px;
+  border-right-width: 1px;
+}
+/* font size should not be set here */
+html body .ui-input-has-clear ul.ui-listview li.ui-li-static {
+  font-size: .85em;
+  cursor: pointer;
+}
+/* borders, TODO: no font size here, TODO: theme this! */
+html body .ui-input-has-clear ul.ui-listview li.ui-li-divider {
+  font-size: .7em;
+  color: #777;
+  text-align: center;
+}
+
+/* hide background on search icon */
+html body .ui-input-has-clear .ui-listview li.ui-btn-icon-right:after {
+  background: 0 none;
+}
+/*
+   -------------------------------------------------------------------------
+   --------------------------- Inputs:readonly -----------------------------
+   -------------------------------------------------------------------------
+*/
+/* remove box-shadow on readonly elements */
+.ui-state-readonly,
+.ui-state-readonly:focus,
+.ui-state-readonly input.ui-focus,
+.ui-state-readonly select.ui-focus {
+	cursor: default !important;
+	pointer-events: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border: 0 none;
+  text-align: left;
+  padding-left: 0;
+}
+html body .ui-select .ui-state-readonly {
+  padding-left: .4em;
+  padding-top: .4em;
+  padding-bottom: .4em;
+}
+html body .ui-state-readonly:after {
+  content: none;
+}
+/* skin readonly jump, too */
+html body .ui-state-readonly ~ .ui-btn {
+  border: 0 none;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Checkbox ----------------------------------
+   -------------------------------------------------------------------------
+*/
+/* overwrite JQM logos */
+html body form .ui-icon-check:after,
+html body form .ui-btn.ui-checkbox-on.ui-checkbox-on:after,
+html body form .ui-btn.ui-checkbox-off:after {
+  background: 0 none;
+  border: 0;
+  text-shadow: none;
+  color: inherit;
+  margin: -7px 2px 0;
+}
+html.ui-mobile body .ui-radio-on:after,
+html.ui-mobile body .ui-btn.ui-radio-on:after {
+  background: 0 none;
+  border: 0;
+  text-shadow: none;
+}
+
+/* fix double borders in groups of radios/checks */
+html.ui-mobile body .ui-controlgroup .ui-checkbox label {
+  border-bottom-width: 0px;
+}
+html.ui-mobile body .ui-controlgroup .ui-checkbox:last-child label {
+  border-bottom-width: 1px;
+}
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Select ------------------------------------
+   -------------------------------------------------------------------------
+*/
+/* align with height of inputs */
+html body div.ui-select div {
+    height: 2em;
+    line-height: 2em;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+html body div.ui-select div span {
+  height: 100%;
+  vertical-align: middle ;
+}
+
+/* at least fit a year in a select without truncating */
+.ui-select .ui-btn > span:not(.ui-li-count) {
+  min-width: 3em;
+}
+
+/*
+   -------------------------------------------------------------------------
+   ------------------------------- Panel -----------------------------------
+   -------------------------------------------------------------------------
+*/
+/* panel header height and border (hardcode height for now) */
+html .ui-panel .ui-header {
+  border-bottom-width: 1px;
+  height: 39px;
+}
+html .ui-panel .ui-header .ui-btn,
+html .ui-panel .ui-header:hover .ui-btn {
+  min-height: 39px;
+}
+
+/* we should not need to set this, JQM does it too */
+html .ui-panel .ui-panel-inner {
+  padding: 0;
+}
+/* position panel content elements */
+html .ui-panel .ui-content > .ui-listview,
+html .ui-panel .ui-content > form,
+html .ui-panel .ui-panel-inner .ui-panel .ui-content .ui-listview {
+  margin: 1em -1em auto;
+}
+html .ui-panel .ui-content .center,
+html .ui-panel .ui-content .bottom {
+  padding: 0;
+}
+html .ui-panel .ui-content .ui-field-contain {
+  margin: 0;
+}
+/* fix font-size inside panel header/footer buttons */
+html body .ui-panel .ui-header .ui-controlgroup .ui-btn-icon-notext,
+html body .ui-panel .ui-footer .ui-controlgroup .ui-btn-icon-notext {
+  font-size: 100%;
+}
+/* content sections inside panels */
+html .ui-panel .ui-panel-inner .ui-content-section {
+  border: 0 none;
+  border-radius: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+/* handle listviews inside panels */
+html body .ui-listview .ui-li-divider {
+  font-weight: 700;
+  padding: 0.5em 1em;
+  border-bottom-width: 0;
+}
+/* padding for custom icons */
+html .ui-panel .ui-listview li a,
+html .ui-panel .ui-listview li div.ui-btn {
+  /*padding: .4em 2.75em .4em 1em;*/
+  padding: .4em 2.75em !important
+}
+/*
+html .ui-panel .ui-listview .ui-li-has-icon a {
+  padding-left: 2.75em;
+}
+*/
+
+.ui-panel .ui-listview > li p {
+  font-size: 70%;
+  margin: 0;
+}
+.ui-panel .ui-listview .ui-li-has-thumb > img:first-child,
+.ui-panel .ui-listview .ui-li-has-thumb > .ui-btn > img:first-child {
+  max-height: 2.5em;
+  max-width: 2.5em;
+  overflow: hidden;
+  padding: 0.2em 0;
+}
+/* form elements inside panel */
+html .ui-panel .ui-panel-inner .ui-corner-all {
+  -webkit-border-radius: 0.3125em;
+  border-radius: 0.3125em;
+}
+/* clean controlgroup borders (not nice, should be ui-content) */
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:first-of-type .ui-btn {
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div:last-of-type .ui-btn {
+  -webkit-border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top-color: transparent;
+}
+
+html .ui-panel .ui-content-section {
+  margin-top: 0;
+}
+/* XXX: not generic!!! */ 
+/* side by side buttons (normally this should be done by postion:abs, but requires another wrapper */
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select:last-of-type {
+  display: inline-block;
+  vertical-align: top;
+  width: 81.25%; /* BAD! use wrapper & position */
+  padding: 0;
+}
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select:last-of-type ~ button {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: -4px; /* to remove space between elements */
+  -webkit-border-bottom-right-radius: .3125em;
+  border-bottom-right-radius: .3125em;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  padding-bottom: .75em;
+}
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select:last-of-type .ui-btn {
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+/* element padding */
+html .ui-panel .ui-content-section .ui-controlgroup-controls > div.ui-select .ui-btn {
+  padding: 4px 0;
+}
+/* nasty padding */ 
+html .ui-controlgroup-controls ~.ui-controlgroup-controls {
+  padding: .5em 0;
+}
+  
+
+/*
+   -------------------------------------------------------------------------
+   ------------------------------- Grid ------------------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* overwrite copy JQM CSS */
+.ui-grid-container > ul, .ui-grid-container > ul li {
+    list-style: none outside none;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+}
+
+/* cutoff overlapping content*/
+.ui-grid-container > ul {
+    overflow: hidden;
+    margin: 0;
+}
+
+/* box-size */
+.ui-grid-container > ul > li {
+  float: left;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* clear out */
+.ui-grid-container > ul > li:first-child {
+  clear: left;
+}
+
+/* thx: Lea Verou - http://bit.ly/1rAhqzm */
+/* grid cell width depending on number of elements, up to 10 */
+
+/* override JQM */
+.ui-grid-container > li.ui-block-a,
+.ui-grid-container > li.ui-block-b {
+  clear: none;
+}
+
+/* base width */
+.ui-grid-container.ui-responsive > ul > li {
+  width: auto;
+}
+
+/* "cell width" */
+.ui-grid-container > ul > li:first-child:nth-last-child(1) {
+  width: 100%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(2),
+.ui-grid-container > ul > li:first-child:nth-last-child(2) ~ li {
+  width: 50%;
+}
+.ui-grid-container > ul li:first-child:nth-last-child(3),
+.ui-grid-container > ul li:first-child:nth-last-child(3) ~ li,
+.ui-grid-container > ul.ui-grid-column-3 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-3 > li:first-child:nth-last-child(n) ~ li  {
+  width: 33.3333%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(4),
+.ui-grid-container > ul > li:first-child:nth-last-child(4) ~ li,
+.ui-grid-container > ul.ui-grid-column-4 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-4 > li:first-child:nth-last-child(n) ~ li {
+  width: 25%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(5),
+.ui-grid-container > ul > li:first-child:nth-last-child(5) ~ li,
+.ui-grid-container > ul.ui-grid-column-5 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-5 > li:first-child:nth-last-child(n) ~ li {
+  width: 20%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(6),
+.ui-grid-container > ul > li:first-child:nth-last-child(6) ~ li,
+.ui-grid-container > ul.ui-grid-column-6 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-6 > li:first-child:nth-last-child(n) ~ li {
+  width: 16.666%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(7),
+.ui-grid-container > ul > li:first-child:nth-last-child(7) ~ li,
+.ui-grid-container > ul.ui-grid-column-7 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-7 > li:first-child:nth-last-child(n) ~ li {
+  width: 14.285714286%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(8),
+.ui-grid-container > ul > li:first-child:nth-last-child(8) ~ li,
+.ui-grid-container > ul.ui-grid-column-8 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-8 > li:first-child:nth-last-child(n) ~ li {
+  width: 12.5%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(9),
+.ui-grid-container > ul > li:first-child:nth-last-child(9) ~ li,
+.ui-grid-container > ul.ui-grid-column-9 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-9 > li:first-child:nth-last-child(n) ~ li {
+  width: 11.112%;
+}
+.ui-grid-container > ul > li:first-child:nth-last-child(10),
+.ui-grid-container > ul > li:first-child:nth-last-child(10) ~ li,
+.ui-grid-container > ul.ui-grid-column-10 > li:first-child:nth-last-child(n),
+.ui-grid-container > ul.ui-grid-column-10 > li:first-child:nth-last-child(n) ~ li {
+  width: 10%;
+}
+
+/* rowspan */
+/* 3 cells */
+html .ui-grid-container > ul.ui-grid-column-3 > li:nth-child(-n+2).ui-grid-span-2 {
+  width: 66.666%;
+}
+/* 4 cells */
+html .ui-grid-container > ul.ui-grid-column-4 > li:nth-child(-n+3).ui-grid-span-2 {
+  width: 50%;
+}
+html .ui-grid-container > ul.ui-grid-column-4 > li:nth-child(-n+2).ui-grid-span-3 {
+  width: 75%;
+}
+/* 5 cells */
+html .ui-grid-container > ul.ui-grid-column-5 > li:nth-child(-n+4).ui-grid-span-2 {
+  width: 40%;
+}
+html .ui-grid-container > ul.ui-grid-column-5 > li:nth-child(-n+3).ui-grid-span-3 {
+  width: 60%;
+}
+html .ui-grid-container > ul.ui-grid-column-5 > li:nth-child(-n+2).ui-grid-span-4 {
+  width: 80%;
+}
+/* 6 cells */
+html .ui-grid-container > ul.ui-grid-column-6 > li:nth-child(-n+5).ui-grid-span-2 {
+  width: 33.33%;
+}
+html .ui-grid-container > ul.ui-grid-column-6 > li:nth-child(-n+4).ui-grid-span-3 {
+  width: 50%;
+}
+html .ui-grid-container > ul.ui-grid-column-6 > li:nth-child(-n+4).ui-grid-span-4 {
+  width: 66.66%;
+}
+html .ui-grid-container > ul.ui-grid-column-6 > li:nth-child(-n+4).ui-grid-span-5 {
+  width: 83.33%;
+}
+/* 7 cells */
+html .ui-grid-container > ul.ui-grid-column-7 > li:nth-child(-n+6).ui-grid-span-2 {
+  width: 28.571428571%;
+}
+html .ui-grid-container > ul.ui-grid-column-7 > li:nth-child(-n+5).ui-grid-span-3 {
+  width: 42.857142857%;
+}
+html .ui-grid-container > ul.ui-grid-column-7 > li:nth-child(-n+4).ui-grid-span-4 {
+  width: 57.142857142%;
+}
+html .ui-grid-container > ul.ui-grid-column-7 > li:nth-child(-n+3).ui-grid-span-5 {
+  width: 71.428571428%;
+}
+html .ui-grid-container > ul.ui-grid-column-7 > li:nth-child(-n+2).ui-grid-span-6 {
+  width: 85.714285714%;
+}
+
+/* 8 cells */
+html .ui-grid-container > ul.ui-grid-column-8 > li:nth-child(-n+7).ui-grid-span-2 {
+  width: 25%;
+}
+html .ui-grid-container > ul.ui-grid-column-8 > li:nth-child(-n+6).ui-grid-span-3 {
+  width: 37.5%;
+}
+html .ui-grid-container > ul.ui-grid-column-8 > li:nth-child(-n+5).ui-grid-span-4 {
+  width: 50%;
+}
+html .ui-grid-container > ul.ui-grid-column-8 > li:nth-child(-n+4).ui-grid-span-5 {
+  width: 62.5%;
+}
+html .ui-grid-container > ul.ui-grid-column-8 > li:nth-child(-n+3).ui-grid-span-6 {
+  width: 75%;
+}
+html .ui-grid-container > ul.ui-grid-column-8 > li:nth-child(-n+2).ui-grid-span-7 {
+  width: 87.5%;
+}
+
+/* 9 cells */
+
+/* 10 cells */
+
+/* responsiveness */
+@media (max-width: 32em) {
+  html.ui-mobile .ui-grid-container.ui-responsive > ul > li,
+  html.ui-mobile .ui-grid-container.ui-responsive > ul[class*="ui-grid-column"] > li {
+    width: 100%;
+  }
+}
+
+/* spacing for grid content  (3rd party), simulate a table */
+/* NOTE: assumes there will be a gadget wrapping grid cell content */
+.ui-grid-container li > div {
+  display: table;
+  border-spacing: .25em;
+  width: 100%;
+}
+.ui-grid-container li > div .ui-grid-content-wrap {
+  display: table-row;
+}
+.ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content {
+  display: table-cell;
+  border-width: 1px;
+  border-style: solid;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* prevent table cells from breaking */
+.ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content .ui-link {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* hardcode table cell width (needs: table-layout:fixed, not IE) */
+@media (min-width: 62em) {
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table {
+    table-layout: fixed;
+  }
+  /* set width depending on number of cols... */
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(1),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(1) {
+    max-width: 100%;
+  }
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(2),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(2) ~ th,
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(2),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(2) ~ td {
+    max-width: 50%;
+  }
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(3),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(3) ~ th,
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(3),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(3) ~ td {
+    max-width: 33.3333%;
+  }
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(4),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(4) ~ th,
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(4),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(4) ~ td {
+    max-width: 25%;
+  }
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(5),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr th:first-child:nth-last-child(5) ~ th,
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(5),
+  .ui-grid-container li > div .ui-grid-content-wrap .ui-grid-content table tr td:first-child:nth-last-child(5) ~ td {
+    max-width: 20%;
+  }
+}
+
+/* set correct border-radius */
+.ui-grid-content .ui-header {
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-top-left-radius: .3125em;
+  border-top-left-radius: .3125em;
+  -webkit-border-top-right-radius: .3125em;
+  border-top-right-radius: .3125em;
+}
+
+/* reset border-spacing and max-width of header */
+.ui-grid-content .ui-header .ui-controlgroup {
+  max-width: none;
+  min-width: 0;
+  border-spacing: 0;
+}
+/* remove button border */
+.ui-grid-content .ui-header .ui-controlgroup-controls .ui-btn {
+  border: 0 none;
+}
+/* remove top borders on tables inside grid */
+.ui-grid-content .ui-table-inset {
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+/* remove margin on search field */
+.ui-grid-content .ui-field-contain {
+  margin: 0;
+}
+
+/* add top border to table with header and search form in between */
+.ui-grid-content .ui-table-header ~ form ~ table {
+  border-top-width: 1px;
+}
+/* remove margin from listview and top borders */
+.ui-grid-content .ui-table-header ~ .ui-listview {
+  margin: 0;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.ui-grid-content .ui-table-header ~ .ui-listview > li.ui-first-child > a.ui-btn {
+  border-top-width: 0;
+}
+/* corners again */
+.ui-grid-content .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-first-child {
+  -webkit-border-top-left-radius: .3125em;
+  border-top-left-radius: .3125em;
+    -webkit-border-bottom-left-radius: .3125em;
+  border-bottom-left-radius: .3125em;
+}
+.ui-grid-content .ui-controlgroup-controls .ui-btn.ui-corner-all.ui-last-child {
+  -webkit-border-top-right-radius: .3125em;
+  border-top-right-radius: .3125em;
+  -webkit-border-bottom-right-radius: .3125em;
+  border-bottom-right-radius: .3125em;
+}
+
+/* ================================ */
+/* content spacing 
+.ui-grid-content-wrap {
+  position: relative;
+  display: block;
+  width: 99%;
+  margin: 0 0.5% 1em;    
+}
+.ui-grid-content-wrap:before {
+  content: "";
+  padding-top: 100%;
+}
+.ui-grid-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+*/
+/* ================================ */
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Listview ----------------------------------
+   -------------------------------------------------------------------------
+*/
+/* override JQM list divider px font-size */
+.ui-listview li.ui-li-divider {
+  font-size: inherit;
+}
+.ui-listview li h4.ui-li-divider {
+  font-size: 1em; 
+}
+/* space between listviews */
+html .ui-listview ~ .ui-listview {
+  margin-top: 1em;
+}
+/* remove margin on headers */
+html body .ui-listview > li h1,
+html body .ui-listview > li h2,
+html body .ui-listview > li h3,
+html body .ui-listview > li h4,
+html body .ui-listview > li h5,
+html body .ui-listview > li h6 {
+  margin: 0;
+}
+
+/* support checkbox/radio split buttons */
+html body .ui-listview li.ui-li-has-checkbox {
+  padding-right: 2.25em;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+}
+html body .ui-listview .ui-radio .ui-btn.ui-radio-on:after,
+html body .ui-listview .ui-checkbox .ui-btn.ui-checkbox-on:after {
+  background: 0 none;
+  border: 0 none;
+  height: auto;
+  width: auto;
+}
+html body .ui-listview li.ui-li-has-checkbox label {
+  border-left-width: 0px;
+  -moz-box-sizing: border-box;
+}
+html .ui-listview li.ui-li-has-alt a.ui-btn.ui-icon-caret-right:after,
+html .ui-listview li.ui-li-has-alt a.ui-btn.ui-icon-carat-r:after {
+  content: "";
+}
+html .ui-listview li div.ui-radio,
+html .ui-listview li div.ui-checkbox {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 2.5em;
+  z-index: 2;
+}
+html body .ui-listview li div.ui-radio label.ui-btn,
+html body .ui-listview li div.ui-checkbox label.ui-btn {
+  border-radius: .375em;
+  height: 100%;
+  min-height: 1em;
+  padding: 0;
+  width: auto;
+  border-bottom-width: 0;
+  border-right-width: 0;
+}
+html body .ui-listview li div.ui-radio,
+html body .ui-listview li div.ui-radio label.ui-btn,
+html body .ui-listview li div.ui-checkbox,
+html body .ui-listview li div.ui-checkbox label.ui-btn {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+html body .ui-listview li.ui-first-child div.ui-radio,
+html body .ui-listview li.ui-first-child div.ui-radio label.ui-btn,
+html body .ui-listview li.ui-first-child div.ui-checkbox,
+html body .ui-listview li.ui-first-child div.ui-checkbox label.ui-btn {
+  -webkit-border-top-right-radius: .375em;
+  border-top-right-radius: .375em;
+}
+html body .ui-listview li.ui-last-child div.ui-radio,
+html body .ui-listview li.ui-last-child div.ui-radio label,
+html body .ui-listview li.ui-last-child div.ui-checkbox,
+html body .ui-listview li.ui-last-child div.ui-checkbox label {
+  -webkit-border-bottom-right-radius: .375em;
+  border-bottom-right-radius: .375em;
+  border-bottom-width: 1px;
+  margin-bottom: -1px;
+}
+/* custom icons */
+.ui-listview li span.ui-li-icon-custom {
+  bottom: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  font-size: 1.2em;
+  height: 100%;
+  left: 0.25em;
+  line-height: 1em;
+  margin: 0;
+  max-height: 80px;
+  max-width: 80px;
+  position: absolute;
+  text-align: center;
+  width: 22px;
+  top: 29%; /* no friend... */
+}
+.ui-listview li span.ui-li-icon-custom:after {
+  background: none repeat scroll 0 center transparent;
+}
+
+/* color even odd */
+html .ui-listview li:nth-child(even),
+html .ui-listview li:nth-child(even) > .ui-btn {
+  background-color: #fff;
+  background-color: rgba(0,0,0,0);
+}
+
+/* fix relation string field background transparent error */
+html .ui-listview li.ui-autocomplete ~ li {
+  background-color: white;
+}
+
+/*
+   -------------------------------------------------------------------------
+   ----------------------------- Controlgroup ------------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* fix button font-size */
+html body .ui-header .ui-controlgroup .ui-btn-icon-notext,
+html body .ui-footer .ui-controlgroup .ui-btn-icon-notext {
+  font-size: 100%;
+}
+/* search tag list needs to inline controlgroups */
+.ui-tag-list .ui-controlgroup {
+  display: inline-block;
+  vertical-align: top;
+}
+/* need to overwrite */
+html.ui-mobile head + body .ui-field-contain .ui-input-text .ui-tag-list > .ui-controlgroup {
+  width: auto;
+}
+/* set padding if text and notext controlgroups are combined */
+html body .ui-controlgroup-horizontal .ui-btn ~ .ui-btn-icon-notext {
+  padding-left: .2em;
+  padding-right: .2em;
+}
+/* set all paddings */
+html body .ui-tag-list .ui-controlgroup-horizontal .ui-btn {
+  font-size: .85em;
+  padding-top: .4em;
+  padding-bottom: .4em;
+}
+/*inset tag list */
+html body .ui-tag-list-inset {
+  position: absolute;
+  top: 0;
+  right: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+/* indent if there is clear button */
+html body .ui-input-has-clear .ui-tag-list-inset {
+  right: 2em;
+}
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls {
+  margin-top: .2em;
+  margin-bottom: .2em;
+  margin-right: .2em;
+  width: 100%;
+}
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn {
+  font-size: .75em;
+  border-right-width: 1px;
+}
+/* fix size in tag XXX: remove font-size property here */
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-controlgroup-controls .ui-btn span {
+  font-size: 100%;
+}
+/* position input so events can be detected, does not work with label for unknown reason */
+/* TODO not sure if this is so smart*/
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox input {
+  top: 0;
+  left: 9px;
+  padding: 0;
+  z-index: 505;
+}
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox label {
+  cursor: pointer;
+}
+html body .ui-tag-list-inset .ui-controlgroup-horizontal .ui-checkbox .ui-btn-active {
+  text-shadow: none;
+  color: black;
+}
+
+/*
+   -------------------------------------------------------------------------
+   -------------------------------- Button ---------------------------------
+   -------------------------------------------------------------------------
+*/
+/* fix text-indent when trying to use custom icons on iconpos-notext buttons */
+.ui-btn-icon-notext:after {
+  text-indent: 0;
+}
+/* set icon dimensions */
+.ui-btn-icon-left:after,
+.ui-btn-icon-right:after {
+  width: auto;
+  height: auto;
+}
+
+/*
+   -------------------------------------------------------------------------
+   ---------------------------- Listview/Cards -----------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* overwrite JQM font-size */
+.ui-card-deck > li p {
+  font-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-line;
+  height: 2.6em; /* because JQM sets line-height to 1.3em and we need 2 lines*/
+}
+
+/* center and override inset in case it is set */
+.ui-card-deck.ui-listview-inset {
+  margin: 0 -1em;
+  border-width: 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+/* set card-deck icon corners on small screens */
+.ui-card-deck > .ui-first-child .ui-icon-custom {
+  -webkit-border-top-left-radius: inherit;
+  border-top-left-radius: inherit;
+}
+.ui-card-deck > .ui-last-child .ui-icon-custom {
+  -webkit-border-bottom-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+
+/* overrule list item padding on cards */
+.ui-card-deck .ui-li-static,
+.ui-card-deck li > .ui-btn {
+  padding-top: 0;
+  padding-bottom: 0;
+  -webkit-box-shadow: 0px 3px 4px #aaa;
+  -moz-box-shadow: 0px 3px 4px #aaa;
+  box-shadow: 0px 3px 4px #aaa;
+}
+/* override padding left (needs more specifity for JQM) */
+ul.ui-card-deck > .ui-li-has-icon > .ui-btn,
+ul.ui-card-deck > .ui-li-static.ui-li-has-icon {
+  padding-left: 5em;
+}
+
+/* set card-deck icon dimensions on small screens */
+ul.ui-card-deck .ui-li-has-icon.ui-li-static .ui-icon-custom,
+ul.ui-card-deck .ui-li-has-icon > .ui-btn .ui-icon-custom {
+  height: 100%;
+  top: 0;
+  left: 0;
+  max-height: 10em; /* doesn't work without hardcoding a value somewhere */
+  min-height: 10em;
+  line-height: 8em;
+  max-width: 5em;
+  width: 5em;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* double borders */
+ul.ui-card-deck .ui-li-has-icon.ui-li-static .ui-icon-custom,
+ul.ui-card-deck .ui-li-has-icon > .ui-btn .ui-icon-custom {
+  border-right: 1px solid rgb(64, 0, 0); /* IE8 */
+  border-right: 1px solid rgba(0, 0, 0, 0.25)
+}
+
+/* icon size in regular listview */
+ul.ui-card-deck li > .ui-btn .ui-icon-custom:after,
+ul.ui-card-deck .ui-li-static .ui-icon-custom:after {
+    font-size: 200%;
+    border-radius: 1em;
+    padding: 0.25em;
+    vertical-align: middle;
+}
+
+/* set header inside cards */
+.ui-card-deck .ui-card-title {
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 0;
+    padding: 0.75em;
+    text-transform: uppercase;
+}
+
+/* and text inside cards */
+.ui-card-deck .ui-card-text {
+  margin: 0;
+  padding: 0 0.75em;
+  text-align: left;
+}
+
+/* push button menu to the right */
+.ui-card-deck li .ui-controlgroup {
+  text-align: right;
+}
+
+
+/* 3 column layout. Tiles 250x250 pixels incl. margin at the breakpoint. */
+@media (min-width: 48em) {
+
+  /* pad deck */
+  ul.ui-card-deck {
+    padding: .5em 0;
+  }
+
+  /* single item needs bottom corners on small screens */
+  ul.ui-card-deck > .ui-first-child:only-child {
+    -webkit-border-bottom-right-radius: .3125em;
+    -webkit-border-bottom-left-radius: .3125em;
+    border-bottom-right-radius: .3125em;
+    border-bottom-left-radius: .3125em;
+  }
+
+  /* reset inset */
+  ul.ui-card-deck.ui-listview-inset {
+    margin: 0 auto;
+    -webkit-border-radius: .3125em;
+    border-radius: .3125em;
+  }
+
+  /* box shadow cards (not list!) */
+  ul.ui-card-deck .ui-li-static,
+  ul.ui-card-deck > li .ui-btn {
+    -moz-box-shadow: 0 1px 3px 0 #aaa;
+    -webkit-box-shadow: 0 1px 3px 0 #aaa;
+    box-shadow: 0 1px 3px 0 #aaa;
+  }
+
+  /* card deck header corners */
+  .ui-card-deck .ui-li-custom-icon {
+    -webkit-border-bottom-right-radius: 0;
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  /* set card dimensions */
+  .ui-card-deck > .ui-li-static,
+  .ui-card-deck > li > .ui-btn {
+    float: left;
+    width: 30.9333%;
+    height: 14.5em;
+    margin: .5625em 1.2%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  /* set padding */
+  ul.ui-card-deck > .ui-li-has-icon > .ui-btn,
+  ul.ui-card-deck > .ui-li-static.ui-li-has-icon{
+    padding: 0;
+  }
+
+  /* icon positioning */
+  ul.ui-card-deck .ui-li-has-icon.ui-li-static .ui-icon-custom,
+  ul.ui-card-deck .ui-li-has-icon > .ui-btn .ui-icon-custom {
+    display: inline-block;
+    line-height: 4em;
+    max-height: 4em;
+    max-width: initial;
+    min-height: 4em;
+    min-width: initial;
+    position: static;
+    width: 100%;
+  }
+
+  /* double borders */
+  ul.ui-card-deck .ui-li-has-icon.ui-li-static .ui-icon-custom,
+  ul.ui-card-deck .ui-li-has-icon > .ui-btn .ui-icon-custom {
+    border-right: none;
+    border-bottom: 1px solid rgb(232, 232, 232); /* IE8 */
+    border-bottom: 1px solid rgba(232, 232, 232, 0.5);
+  }
+
+  /* bottom corners on all li */
+  ul.ui-card-deck li > .ui-btn,
+  ul.ui-card-deck .ui-li-static {
+    height: 100%;
+    border-bottom-width: 1px;
+  }
+
+  /* Make all list items and anchors inherit the border-radius from the UL. */
+  ul.ui-card-deck li,
+  ul.ui-card-deck li .ui-btn,
+  ul.ui-card-deck .ui-li-thumb,
+  ul.ui-card-deck .ui-li-icon-custom {
+    -webkit-border-radius: inherit;
+    border-radius: inherit;
+  }
+
+  /* clear bottom corners */
+  ul.ui-card-deck > .ui-last-child .ui-icon-custom {
+    -webkit-border-bottom-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  ul.ui-card-deck > .ui-first-child .ui-icon-custom {
+    -webkit-border-bottom-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* re-scale images */
+  ul.ui-card-deck li.ui-li-has-thumb .ui-li-thumb,
+  ul.ui-card-deck li.ui-li-has-icon .ui-li-icon-custom {
+    height: auto;
+    max-width: 100%;
+    max-height: none;
+  }
+}
+
+/* 4 column layout.  */
+@media (min-width: 62em) {
+
+  /* prevent over-stretching cells 1200px by locking deck */
+  ul.ui-card-deck {
+    max-width: 75em;
+    max-width: 80vw;
+    margin: 0 auto;
+    clear: both;
+  }
+
+  /* max-width */
+  .ui-card-deck > .ui-li-static,
+  .ui-card-deck > li > .ui-btn {
+    max-width: 23%;
+    margin: .625em 1%;
+  }
+}
+
+/*
+   -------------------------------------------------------------------------
+   ---------------------------- HEADER/FOOTER ------------------------------
+   -------------------------------------------------------------------------
+*/
+
+/* NOTE: height of header will only be set through title (font + padding)! */
+/* NOTE: width-% does not work inside clear:left, only px */
+
+/* padding to match font-size (= .9em) */
+html .ui-header .ui-title,
+html .ui-footer .ui-title {
+  padding: 0.7em 0;
+  margin: 0 45px;
+}
+/* logo dimensions  XXX: remove? */
+html .ui-header img.ui-title {
+  max-height: 24px; 
+  padding: 0.5em 1.7em;
+  margin: 0 30%;
+}
+
+/* forms in controlgroup must behave like a buttons */
+.ui-controlgroup-horizontal .ui-controlgroup-controls > form {
+  float: left;
+	clear: none;
+}
+
+/* only-child forms inside controlgroups must stretch to full width, so... */
+.ui-controlgroup-horizontal .ui-controlgroup-controls > form:only-child {
+  float: none;
+}
+
+/* all controlgroups should at least be 45px, large screen 8% (below) */
+.ui-header .ui-controlgroup-horizontal {
+  min-width: 45px;
+}
+
+/* controlgroup dimensions (height used to be 100%) */
+.ui-header .ui-controlgroup, .ui-panel .ui-header .ui-controlgroup {
+  max-width: none;
+  height: inherit;
+}
+.ui-header .ui-controlgroup .ui-controlgroup-controls,
+.ui-panel .ui-header .ui-controlgroup .ui-controlgroup-controls {
+  height: inherit;
+  width: 100%;
+  min-width: inherit;
+}
+
+/* sizing for all header buttons  */
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn,
+.ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn,
+.ui-header .ui-controlgroup-controls .ui-btn-icon-notext {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  min-width: inherit;
+}
+/* panel button only stretches using 100% */
+.ui-panel .ui-header .ui-controlgroup-controls button.ui-btn:only-child,
+.ui-panel .ui-header .ui-controlgroup-controls a.ui-btn:only-child,
+.ui-panel .ui-header .ui-controlgroup-controls .ui-btn-icon-notext:only-child {
+  width: 100%
+}
+
+/* breadcrumb button inside title (depends on font size of title) */
+html .ui-title .ui-btn[class*="ui-icon-"]:after, 
+html .ui-title .ui-btn[class*="ui-icon-"]:after {
+    font-size: 1.15em;
+}
+
+/* breadcrumb button dimensions, not sure negative margin is good with padding */
+html .ui-header .ui-title .ui-btn {
+  display: block;
+  margin: -0.9em 0;
+  max-height: 3.1em;
+  border: 0 none;
+}
+
+/* pages with subheader increase padding on ui-content */
+.ui-has-subheader {
+  padding-top: 4.5em;
+}
+
+/* inset shadow for subheader */
+html body.ui-mobile-viewport .ui-subheader,
+html body .ui-mobile-viewport .ui-subheader {
+  -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+  -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.2);
+}
+html body.ui-mobile-viewport .ui-subheader,
+html body .ui-mobile-viewport .ui-subheader {
+  border-top-color: rgb(115, 115, 115); /* IE8 */
+  border-top-color:   rgba(0, 0, 0, .25);
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+
+/* remove border on header */
+.ui-header {
+  border-width: 0;
+}
+
+/* double borders header */
+html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-btn {
+  border-right: 1px solid rgb(115, 115, 115); /* IE8 */
+  border-right: 1px solid rgba(0, 0, 0, 0.55);
+}
+html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-btn:before {
+  right: 0;
+  border-right: 1px solid rgb(232, 232, 232); /* IE8 */
+  border-right: 1px solid rgba(232, 232, 232, 0.5);
+}
+html body .ui-header .ui-btn-right .ui-controlgroup-controls .ui-btn,
+html body .ui-subheader.ui-navbar .ui-btn  {
+  border-left: 1px solid rgb(115, 115, 115); /* IE8 */
+  border-left: 1px solid rgba(0, 0, 0, 0.55);
+}
+html body .ui-header .ui-btn-right .ui-controlgroup-controls .ui-btn:before,
+html body .ui-subheader.ui-navbar .ui-btn:before  {
+  left: 0;
+  border-left: 1px solid rgb(232, 232, 232); /* IE8 */
+  border-left: 1px solid rgba(232, 232, 232, 0.5);
+}
+/* clear first cell left border */
+html body .ui-navbar ul li .ui-btn.ui-first-child,
+html body .ui-navbar ul li .ui-btn.ui-first-child:before {
+  border-left-width: 0;
+}
+html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-first-child,
+html body .ui-header .ui-btn-left .ui-controlgroup-controls .ui-first-child:before {
+  border-left-width: 0;
+}
+
+/* position */
+.ui-header .ui-btn-left, .ui-header .ui-btn-right {
+  bottom: 0;
+  position: absolute;
+  top: 0;
+}
+.ui-header .ui-btn-left {
+  left: 0;
+}
+.ui-header .ui-btn-right {
+  right: 0;
+}
+
+/* overwrite JQM icon position */
+.ui-btn-icon-notext:after,
+.ui-btn-icon-left:after,
+.ui-btn-icon-right:after {
+  margin-top: -8px;
+}
+
+/* overwrite JQM icons and clear :before for double border */
+.ui-header .ui-btn:before {
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: 0;
+  bottom: 0;
+  top: 0;
+}
+
+/* remove outside borders of first and last button > Hard to overwrite JQM */
+html .ui-header .ui-btn-left .ui-btn.ui-last-child {
+  border-left-width: 0;
+}
+html .ui-header .ui-btn-right .ui-controlgroup-controls .ui-btn.ui-last-child {
+  border-right-width: 0;
+}
+
+/* set button dimensions */
+html .ui-header .ui-btn {
+  line-height: 3.1em; /* ~ 40px = what's needed */
+  padding-bottom: 0;
+  padding-top: 0;
+  border-top: 0;
+  border-bottom: 0;
+}
+
+/* hide button text on small screens, center icon */
+.responsive.ui-btn,
+.ui-responsive.ui-btn {
+  text-indent: -9999px;
+}
+.responsive.ui-btn:after,
+.ui-responsive.ui-btn:after {
+  text-indent: 0;
+}
+
+.ui-header .responsive .ui-btn:after,
+.ui-header .responsive.ui-btn:after {
+  left: .8em;
+}
+
+/* subheader reset formatting for subheader buttons */
+.ui-header .ui-subheader .ui-btn.ui-btn-icon-top {
+    line-height: 3.25em;
+    padding-top: 1.5em;
+}
+
+@media (max-width: 32em) {
+  /* fix icon size on title (depends on font size of title) XXX move up */
+  html .ui-title .ui-btn[class*="ui-icon-"]:after, 
+  html .ui-title .ui-btn[class*="ui-icon-"]:after {
+      font-size: 1.35em;
+  }
+}
+
+/* reset on larger screens */
+@media (min-width: 48em) {
+
+
+  /* hard locked margin for single button (Thierry request) */
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal {
+    min-width: 8%;
+  }
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal + .ui-title {
+    margin: 0 8%;
+  }
+  
+  /* stretch single button */ 
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls button.ui-btn:only-child,
+  .ui-page > div > .ui-header .ui-controlgroup-horizontal .ui-controlgroup-controls a.ui-btn:only-child,
+  .ui-page > div > .ui-header .ui-controlgroup-controls .ui-btn-icon-notext:only-child {
+    max-width: 100%;
+    min-width: 100%;
+  }
+  
+  html .ui-header img.ui-title {
+    margin: 0 30%;
+  }
+
+  /* unset for everywhere else a header is used.*/
+  html body div.ui-table-header div.ui-controlgroup {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .responsive.ui-btn:after,
+  .ui-header .responsive.ui-btn-icon-left:after,
+  .ui-footer .responsive.ui-btn-icon-left:after,
+  .responsive.ui-btn,
+  .ui-responsive.ui-btn {
+    text-indent: 0;
+  }
+}
+
+
+
+/*  ---------------------------  gadget_themes.css -------------------------- */
+
+/*
+ ==========================================================================
+ ============================== Themes ====================================
+ ==========================================================================
+*/
+
+/*
+  > JQM Default: > http://demos.jquerymobile.com/1.4.3/theme-default/
+
+  > NOTE all ui-page-theme-[x] have been removed and overwritten!
+
+  > Polymere suggestion: Primary + Accent (3-4 colors), plus dark, light
+  > http://www.google.com/design/spec/style/color.html#color-ui-color-palette
+
+  > Create color theme based on uploaded image: > http://pictaculous.com/
+
+  > Color Converter rgba > rgb > http://yolijn.com/convert-rgba-to-rgb
+
+  1. Primary (JQM: a)
+    Main:  #0E81C2
+    Dark:  #085078
+    Light: #85D8CE
+    Text:  #f8fff3
+
+  2. Accent (JQM: b)
+    Main: #ffff00
+    Dark: #f57f17
+    Light: #ffff8d
+    Text:  #757575
+
+  3. Light (JQM: c)
+    Main: #eeeeee  | #e0e0e0    |  
+    Dark: #aaaaaa  | #f0f0f0    |  #777777
+    Light: #ffffff | #f5f5f5    |  
+    Text: #444444  | #757575    |  #222222
+
+  4. Dark (JQM: d)
+    Main: #444444
+    Dark: #25292b
+    Light: #888888
+    Text: #ffffff
+
+
+*/
+/* ============================= A (Primary) ============================== */
+/* Page background (needs manual setting on body!) */
+html head + body.ui-overlay-a,
+html head + body.ui-overlay-a .ui-page,
+html head + body.ui-overlay-a .ui-page .ui-panel-wrapper{
+  background-color: rgb(255, 255, 255);
+}
+
+/* Text Color */
+html .ui-body-a,
+html .ui-bar-a,
+html .ui-btn-a,
+html .ui-bar-a .ui-body-inherit,
+html .ui-body-a .ui-link,
+html .ui-body-a .ui-body-inherit,
+html .ui-bar-a .ui-bar-inherit,
+html .ui-body-a .ui-bar-inherit,
+html .ui-bar-a .ui-btn-inherit,
+html .ui-body-a .ui-btn-inherit,
+html body .ui-group-theme-a .ui-bar-inherit,
+html body .ui-group-theme-a .ui-body-inherit,
+html body .ui-group-theme-a .ui-btn-inherit,
+html head + body .ui-body-a tbody tr td a,
+html head + body .ui-body-a tbody tr th a {
+  color: #f8fff3;
+}
+
+/* === CUSTOM === */
+/* Constrast labels in light color */
+html .ui-body-a label,
+html .ui-bar-a label,
+html .ui-btn-a label,
+html .ui-body-a thead th,
+html .ui-bar-a thead th,
+html.ui-mobile .ui-bar-a .ui-override-theme.ui-btn,
+html.ui-mobile .ui-bar-a .ui-override-theme.ui-title {
+  color: #085078;
+}
+/* Custom Icon Color and background opacity */
+html .ui-body-a.ui-icon-custom:after,
+html .ui-bar-a .ui-icon-custom.ui-body-inherit:after,
+html .ui-body-a .ui-icon-custom.ui-body-inherit:after,
+html .ui-group-theme-a .ui-icon-custom.ui-body-inherit:after,
+html .ui-icon-custom.ui-body-a:after {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #f8fff3;
+}
+
+/* No borders on custom icon elements */
+html .ui-body-a.ui-icon-custom,
+html .ui-bar-a .ui-icon-custom.ui-body-inherit,
+html .ui-body-a .ui-icon-custom.ui-body-inherit,
+html .ui-group-theme-a .ui-icon-custom.ui-body-inherit {
+  border-width: 0;
+}
+/* === CUSTOM END === */
+
+/* Bar */
+html .ui-body-a,
+html .ui-bar-a,
+html .ui-bar-a h1,
+html .ui-bar-a .ui-bar-inherit,
+html .ui-bar-a .ui-body-inherit,
+html .ui-body-a .ui-bar-inherit,
+html .ui-body-a .ui-body-inherit,
+html body .ui-group-theme-a .ui-bar-inherit,
+html body .ui-group-theme-a .ui-body-inherit {
+  text-shadow: none;
+  border-color: rgb(14, 129, 124);
+  border-color: rgba(255, 255, 255, .4);
+  font-weight: normal;
+}
+
+/* Bar Background = Solid/Dark (Contrast)  */
+html .ui-bar-a,
+html .ui-bar-a .ui-bar-inherit,
+html body .ui-body-a .ui-bar-inherit,
+html body .ui-group-theme-a .ui-bar-inherit {
+  background-color: #085078;
+}
+
+/* Body Background Solid/Main > also used for button! */
+html .ui-body-a:not(.ui-loader),
+html .ui-btn-a,
+html body .ui-bar-a.ui-btn-a, /* XXX not good */
+html .ui-bar-a .ui-body-inherit,
+html .ui-bar-a .ui-btn-inherit,
+html .ui-body-a .ui-body-inherit, /* panel background */
+html body .ui-body-a .ui-btn-inherit,
+html body .ui-group-theme-a .ui-body-inherit,
+html body .ui-group-theme-a .ui-btn-inherit {
+  background-color: #0E81C2;
+}
+
+/* Body Background Linear (add .ui-linear) */
+html .ui-body-a.ui-linear,
+html .ui-bar-a .ui-body-inherit.ui-linear,
+html .ui-body-a .ui-body-inherit.ui-linear, /* panel background */
+html body .ui-group-theme-a .ui-body-inherit.ui-linear {
+  background: #0E81C2;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#085078), to(#85D8CE));
+  background-image: -webkit-linear-gradient(#085078, #85D8CE);
+  background-image:    -moz-linear-gradient(#085078, #85D8CE);
+  background-image:     -ms-linear-gradient(#085078, #85D8CE);
+  background-image:      -o-linear-gradient(#085078, #85D8CE);
+  background-image:         linear-gradient(#085078, #85D8CE);
+}
+
+/* Body background radial (add .ui-radial) */
+html .ui-body-a.ui-radial,
+html .ui-bar-a .ui-body-inherit.ui-radial,
+html .ui-body-a .ui-body-inherit.ui-radial, /* panel background */
+html body .ui-group-theme-a .ui-body-inherit.ui-radial {
+  background-color: #0E81C2;
+  background: -webkit-radial-gradient(100% 100%, ellipse farthest-side, #f8fff3 10%, #85D8CE 50%, #085078 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:         radial-gradient(ellipse farthest-side at 100% 100% , #f8fff3 10%, #85D8CE 50%, #085078 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:    -moz-radial-gradient(ellipse farthest-side at 100% 100% , #f8fff3 10%, #85D8CE 50%, #085078 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:     -ms-radial-gradient(ellipse farthest-side at 100% 100% , #f8fff3 10%, #85D8CE 50%, #085078 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:      -o-radial-gradient(ellipse farthest-side at 100% 100% , #f8fff3 10%, #85D8CE 50%, #085078 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+
+}
+
+/* Button on background */
+html .ui-btn.ui-btn-a,
+html .ui-bar-a .ui-btn,
+html .ui-body-a .ui-btn,
+html .ui-group-theme-a .ui-btn,
+html .ui-group-theme-a .ui-btn.ui-btn-a,
+
+/* Table row */
+html .ui-body-a tbody tr,
+
+/* Button Visited */
+html head + body .ui-bar-a .ui-btn:visited,
+html head + body .ui-body-a .ui-btn:visited,
+html head + body .ui-btn.ui-btn-a:visited,
+html head + body .ui-group-theme-a .ui-btn:visited,
+html head + body .ui-group-theme-a .ui-btn.ui-btn-a:visited,
+
+/* Link Visited|Active|Hover..... */
+html head + body .ui-bar-a .ui-link:visited,
+html head + body .ui-body-a .ui-link:visited,
+html head + body .ui-group-theme-a .ui-link:visited,
+
+html head + body .ui-bar-a .ui-link:active,
+html head + body .ui-body-a .ui-link:active,
+html head + body .ui-group-theme-a .ui-link:active,
+
+html head + body .ui-bar-a .ui-link:hover,
+html head + body .ui-body-a .ui-link:hover,
+html head + body .ui-group-theme-a .ui-link:hover {
+  background: none repeat scroll 0 0 transparent;
+  border-color: rgb(14, 129, 124);
+  border-color: rgba(255, 255, 255, .4);
+  color: #f8fff3;
+  text-shadow: none;
+}
+
+/* Hover */
+html head + body .ui-bar-a .ui-btn:hover,
+html head + body .ui-body-a .ui-btn:hover,
+html head + body .ui-btn.ui-btn-a:hover,
+html head + body .ui-group-theme-a .ui-btn:hover,
+html head + body .ui-group-theme-a .ui-btn.ui-btn-a:hover,
+html head + body .ui-group-theme-a .ui-btn.ui-btn-a:active,
+
+/* Button Active (JQM overwrite requires double classes)*/
+html head + body .ui-bar-a .ui-btn:active,
+html head + body .ui-body-a .ui-btn:active,
+html head + body .ui-btn.ui-btn-a:active,
+html head + body .ui-group-theme-a .ui-btn:active,
+html head + body .ui-group-theme-a .ui-btn-a:active,
+
+html head + body .ui-bar-a .ui-btn.ui-btn-active,
+html head + body .ui-body-a .ui-btn.ui-btn-active,
+html head + body .ui-btn.ui-btn-a.ui-btn-active,
+html head + body .ui-group-theme-a .ui-btn-active,
+html head + body .ui-group-theme-a .ui-btn-a.ui-btn-active {
+  background-color: #085078;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#85D8CE), to(#0E81C2));
+  background:        -webkit-linear-gradient(bottom, #85D8CE, #0E81C2);
+  background:                linear-gradient(bottom, #85D8CE, #0E81C2);
+  background:           -moz-linear-gradient(bottom, #85D8CE, #0E81C2);
+  background:             -o-linear-gradient(bottom, #85D8CE, #0E81C2);
+  background:            -ms-linear-gradient(bottom, #85D8CE, #0E81C2);
+  border-color: rgb(14, 129, 124);
+  border-color: rgba(255, 255, 255, .4);
+  color: #f8fff3;
+  text-shadow: none;
+}
+
+
+/* ============================= B (Accent) ============================= */
+
+/* Accent > needs a lot of specificity */
+html.ui-mobile body.ui-mobile-viewport .ui-accent {
+    color: #f57f17;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 0 none;
+}
+
+/* Table row */
+html head + body table tbody tr:hover,
+
+/* Save button XXX: should not depend on icon!*/
+html body .ui-header .ui-icon-save,
+html body .ui-header .ui-icon-exclamation,
+html body .ui-header .ui-icon-warning {
+  background: none repeat scroll 0 0 #e4ebf1;
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #777;
+  text-shadow: none;
+}
+
+/* Focus */
+
+/* Button Focus */
+html body .ui-btn:focus,
+html body .ui-focus {
+  box-shadow: 0 0 12px #add8e6;
+}
+
+
+/* ============================= C (Light) ============================== */
+
+/* Page background (needs manual setting on body!) */
+html head + body.ui-overlay-c,
+html head + body.ui-overlay-c .ui-page,
+html head + body.ui-overlay-c .ui-page .ui-panel-wrapper{
+  background-color: rgb(241, 241, 241);
+}
+
+/* Text Color */
+html .ui-body-c,
+html .ui-btn-c,
+html .ui-bar-c,
+html .ui-body-c .ui-link,
+html .ui-bar-c .ui-body-inherit,
+html .ui-bar-c .ui-btn-inherit,
+html .ui-body-c .ui-body-inherit,
+html .ui-bar-c .ui-bar-inherit,
+html .ui-body-c .ui-btn-inherit,
+html .ui-body-c .ui-bar-inherit,
+html body .ui-group-theme-c .ui-btn-inherit,
+html body .ui-group-theme-c .ui-bar-inherit,
+html body .ui-group-theme-c .ui-body-inherit,
+html head + body .ui-body-c tbody tr td a,
+html head + body .ui-body-c tbody tr th a {
+  color: #222222;
+}
+
+
+/* === CUSTOM === */
+/* Constrast labels in light color */
+html .ui-body-c label,
+html .ui-bar-c label,
+html .ui-btn-c label,
+html .ui-body-c thead th,
+html .ui-bar-c thead th,
+html.ui-mobile .ui-bar-c .ui-override-theme.ui-btn,
+html.ui-mobile .ui-bar-c .ui-override-theme.ui-title {
+  color: #777777;
+}
+/* Custom Icon Color and background opacity */
+html .ui-body-c.ui-icon-custom:after,
+html .ui-bar-c .ui-icon-custom.ui-body-inherit:after,
+html .ui-body-c .ui-icon-custom.ui-body-inherit:after,
+html .ui-group-theme-c .ui-icon-custom.ui-body-inherit:after,
+html .ui-icon-custom.ui-body-c:after {
+  background-color: rgba(0, 0, 0, 0.15);
+  color: #222222;
+}
+
+/* No borders on custom icon elements */
+html .ui-body-c.ui-icon-custom,
+html .ui-bar-c .ui-icon-custom.ui-body-inherit,
+html .ui-body-c .ui-icon-custom.ui-body-inherit,
+html .ui-group-theme-c .ui-icon-custom.ui-body-inherit {
+  border-width: 0;
+}
+/* === CUSTOM END === */
+
+/* Bar */
+html .ui-body-c,
+html .ui-bar-c,
+html .ui-bar-c h1,
+html .ui-bar-c .ui-bar-inherit,
+html .ui-bar-c .ui-body-inherit,
+html .ui-body-c .ui-bar-inherit,
+html .ui-body-c .ui-body-inherit,
+html body .ui-group-theme-c .ui-bar-inherit,
+html body .ui-group-theme-c .ui-body-inherit {
+  text-shadow: none;
+  border-color: rgb(0, 0, 0);
+  border-color: rgba(0, 0, 0, 0.3);
+  font-weight: normal;
+}
+
+/* Bar Background = Solid/Dark (Contrast) */
+html .ui-bar-c,
+html .ui-bar-c .ui-bar-inherit,
+html body .ui-body-c .ui-bar-inherit,
+html body .ui-group-theme-c .ui-bar-inherit {
+  background-color: #f0f0f0;
+}
+
+/* Body Background Solid/Main  - also used for buttons */
+html .ui-body-c:not(.ui-loader),
+html .ui-btn-c,
+html body .ui-bar-c.ui-btn-c, /* XXX not good */
+html .ui-bar-c .ui-body-inherit,
+html .ui-bar-c .ui-btn-inherit,
+html .ui-body-c .ui-body-inherit, /* panel background */
+html body .ui-body-c .ui-btn-inherit,
+html body .ui-group-theme-c .ui-body-inherit,
+html body .ui-group-theme-c .ui-btn-inherit  {
+  background-color: #ffffff;
+}
+
+/* Body Background Linear (add .ui-linear) */
+html .ui-body-c.ui-linear,
+html .ui-bar-c .ui-body-inherit.ui-linear,
+html .ui-body-c .ui-body-inherit.ui-linear, /* panel background */
+html body .ui-group-theme-c .ui-body-inherit.ui-linear {
+  background: #e0e0e0;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e0e0e0));
+  background-image: -webkit-linear-gradient(#ffffff, #e0e0e0);
+  background-image:    -moz-linear-gradient(#ffffff, #e0e0e0);
+  background-image:     -ms-linear-gradient(#ffffff, #e0e0e0);
+  background-image:      -o-linear-gradient(#ffffff, #e0e0e0);
+  background-image:         linear-gradient(#ffffff, #e0e0e0);
+}
+
+/* Body background radial (add .ui-radial) */
+html .ui-body-c.ui-radial,
+html .ui-bar-c .ui-body-inherit.ui-radial,
+html .ui-body-c .ui-body-inherit.ui-radial, /* panel background */
+html body .ui-group-theme-c .ui-body-inherit.ui-radial {
+  background-color: #e0e0e0;
+  background: -webkit-radial-gradient(100% 100%, ellipse farthest-side, #e0e0e0 10%, #eeeeee 50%, #f5f5f5 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:         radial-gradient(ellipse farthest-side at 100% 100% , #e0e0e0 10%, #eeeeee 50%, #f5f5f5 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:    -moz-radial-gradient(ellipse farthest-side at 100% 100% , #e0e0e0 10%, #eeeeee 50%, #f5f5f5 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:     -ms-radial-gradient(ellipse farthest-side at 100% 100% , #e0e0e0 10%, #eeeeee 50%, #f5f5f5 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:      -o-radial-gradient(ellipse farthest-side at 100% 100% , #e0e0e0 10%, #eeeeee 50%, #f5f5f5 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+
+}
+
+/* Button On Background (<select>, too) */
+html .ui-btn.ui-btn-c,
+html .ui-bar-c .ui-btn,
+html .ui-body-c .ui-btn,
+html .ui-group-theme-c .ui-btn,
+html .ui-group-theme-c .ui-btn.ui-btn-c,
+
+/* Table Row */
+html .ui-body-c tbody tr,
+
+/* Button Visited */
+html head + body .ui-bar-c .ui-btn:visited,
+html head + body .ui-body-c .ui-btn:visited,
+html head + body .ui-btn.ui-btn-c:visited,
+html head + body .ui-group-theme-c .ui-btn:visited,
+html head + body .ui-group-theme-c .ui-btn.ui-btn-c:visited,
+
+/* Link Visited|Active|Hover..... */
+html head + body .ui-bar-c .ui-link:visited,
+html head + body .ui-body-c .ui-link:visited,
+html head + body .ui-group-theme-c .ui-link:visited,
+
+html head + body .ui-bar-c .ui-link:active,
+html head + body .ui-body-c .ui-link:active,
+html head + body .ui-group-theme-c .ui-link:active,
+
+html head + body .ui-bar-c .ui-link:hover,
+html head + body .ui-body-c .ui-link:hover,
+html head + body .ui-group-theme-c .ui-link:hover {
+  background: none repeat scroll 0 0 transparent;
+  color: #222222;
+  text-shadow: none;
+  border-color: rgb(0, 0, 0);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Button Hover */
+html head + body .ui-bar-c .ui-btn:hover,
+html head + body .ui-body-c .ui-btn:hover,
+html head + body .ui-btn.ui-btn-c:hover,
+html head + body .ui-group-theme-c .ui-btn:hover,
+html head + body .ui-group-theme-c .ui-btn.ui-btn-c:hover,
+
+/* Button Active (JQM overwrite requires double classes)*/
+html head + body .ui-bar-c .ui-btn:active,
+html head + body .ui-body-c .ui-btn:active,
+html head + body .ui-btn.ui-btn-c:active,
+html head + body .ui-group-theme-c .ui-btn:active,
+html head + body .ui-group-theme-c .ui-btn-c:active
+
+html head + body .ui-bar-c .ui-btn.ui-btn-active,
+html head + body .ui-body-c .ui-btn.ui-btn-active,
+html head + body .ui-btn.ui-btn-c.ui-btn-active,
+html head + body .ui-group-theme-c .ui-btn-active,
+html head + body .ui-group-theme-c .ui-btn-c.ui-btn-active {
+  background-color: #e0e0e0;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eeeeee), to(#f5f5f5));
+  background:        -webkit-linear-gradient(bottom, #eeeeee, #f5f5f5);
+  background:                linear-gradient(bottom, #eeeeee, #f5f5f5);
+  background:           -moz-linear-gradient(bottom, #eeeeee, #f5f5f5);
+  background:             -o-linear-gradient(bottom, #eeeeee, #f5f5f5);
+  background:            -ms-linear-gradient(bottom, #eeeeee, #f5f5f5);
+  color: #222222;
+  text-shadow: none;
+  border-color: rgb(0, 0, 0);
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+
+/* ============================= D (Dark) =============================== */
+html head + body.ui-overlay-d,
+html head + body.ui-overlay-d .ui-page,
+html head + body.ui-overlay-d .ui-page .ui-panel-wrapper{
+  background-color: rgb(241, 241, 241);
+}
+
+
+/* Text Color */
+html .ui-body-d,
+html .ui-btn-d,
+html .ui-bar-d,
+html .ui-body-d .ui-link,
+html .ui-body-d .ui-btn-inherit,
+html .ui-bar-d .ui-btn-inherit,
+html .ui-bar-d .ui-bar-inherit,
+html .ui-bar-d .ui-body-inherit,
+html .ui-body-d .ui-bar-inherit,
+html .ui-body-d .ui-body-inherit,
+html body .ui-group-theme-d .ui-bar-inherit,
+html body .ui-group-theme-d .ui-body-inherit,
+html body .ui-group-theme-d .ui-btn-inherit,
+html head + body .ui-body-d tbody tr td a,
+html head + body .ui-body-d tbody tr th a {
+  color: #ffffff;
+}
+/* === CUSTOM === */
+/* Constrast labels in light color */
+html .ui-body-d label,
+html .ui-bar-d label,
+html .ui-btn-d label, 
+html .ui-body-d thead th,
+html .ui-bar-d thead th,
+html.ui-mobile .ui-bar-d .ui-override-theme.ui-btn,
+html.ui-mobile .ui-bar-d .ui-override-theme.ui-title {
+  color: #444444;
+}
+/* Custom Icon Color and background opacity */
+html .ui-body-d.ui-icon-custom:after,
+html .ui-bar-d .ui-icon-custom.ui-body-inherit:after,
+html .ui-body-d .ui-icon-custom.ui-body-inherit:after,
+html .ui-group-theme-d .ui-icon-custom.ui-body-inherit:after,
+html .ui-icon-custom.ui-body-d:after {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* No borders on custom icon elements */
+html .ui-body-d.ui-icon-custom,
+html .ui-bar-d .ui-icon-custom.ui-body-inherit,
+html .ui-body-d .ui-icon-custom.ui-body-inherit,
+html .ui-group-theme-d .ui-icon-custom.ui-body-inherit {
+  border-width: 0;
+}
+/* === CUSTOM END === */
+
+/* Bar */
+html .ui-body-d,
+html .ui-bar-d,
+html .ui-bar-d h1,
+html .ui-bar-d .ui-body-inherit,
+html .ui-bar-d .ui-bar-inherit,
+html .ui-body-d .ui-body-inherit,
+html .ui-body-d .ui-bar-inherit,
+html body .ui-group-theme-d .ui-bar-inherit,
+html body .ui-group-theme-d .ui-body-inherit {
+  text-shadow: none;
+  border-color: #888888;
+  font-weight: normal;
+}
+
+/* Bar Background = Solid/Dark (Contrast) */
+html .ui-bar-d,
+html .ui-bar-d .ui-bar-inherit,
+html body .ui-body-d .ui-bar-inherit,
+html body .ui-group-theme-d .ui-bar-inherit {
+  background-color: #25292b;
+}
+
+/* Body Background Solid/Main > also used for buttons */
+html .ui-btn-d,
+html body .ui-bar-d.ui-btn-d, /* XXX not good */
+html .ui-body-d:not(.ui-loader),
+html .ui-bar-d .ui-btn-inherit,
+html .ui-bar-d .ui-body-inherit,
+html body .ui-body-d .ui-btn-inherit,
+html .ui-body-d .ui-body-inherit, /* panel background */
+html body .ui-group-theme-d .ui-body-inherit,
+html body .ui-group-theme-d .ui-btn-inherit {
+  background-color: #444444;
+}
+
+/* Body Background Linear (add .ui-linear) */
+html .ui-body-d.ui-linear,
+html .ui-bar-d .ui-body-inherit.ui-linear,
+html .ui-body-d .ui-body-inherit.ui-linear, /* panel background */
+html body .ui-group-theme-d .ui-body-inherit.ui-linear {
+  background: #25292b;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#444), to(#222));
+  background-image: -webkit-linear-gradient(#444, #222);
+  background-image:    -moz-linear-gradient(#444, #222);
+  background-image:     -ms-linear-gradient(#444, #222);
+  background-image:      -o-linear-gradient(#444, #222);
+  background-image:         linear-gradient(#444, #222);
+}
+
+/* Body background radial (add .ui-radial) */
+html .ui-body-d.ui-radial,
+html .ui-bar-d .ui-body-inherit.ui-radial,
+html .ui-body-d .ui-body-inherit.ui-radial, /* panel background */
+html body .ui-group-theme-d .ui-body-inherit.ui-radial {
+  background-color: #25292b;
+  background: -webkit-radial-gradient(100% 100%, ellipse farthest-side, #888888 10%, #444444 50%, #25292b 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:         radial-gradient(ellipse farthest-side at 100% 100% , #888888 10%, #444444 50%, #25292b 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:    -moz-radial-gradient(ellipse farthest-side at 100% 100% , #888888 10%, #444444 50%, #25292b 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:     -ms-radial-gradient(ellipse farthest-side at 100% 100% , #888888 10%, #444444 50%, #25292b 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background:      -o-radial-gradient(ellipse farthest-side at 100% 100% , #888888 10%, #444444 50%, #25292b 120%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+
+}
+
+/* Button On Background (<select> too */
+html .ui-btn.ui-btn-d,
+html .ui-bar-d .ui-btn,
+html .ui-body-d .ui-btn,
+html .ui-group-theme-d .ui-btn,
+html .ui-group-theme-d .ui-btn.ui-btn-d,
+
+/* Table Row */
+html .ui-body-d tbody tr,
+
+/* Button Visited (... sigh ...) */
+html head + body .ui-bar-d .ui-btn:visited,
+html head + body .ui-body-d .ui-btn:visited,
+html head + body .ui-btn.ui-btn-d:visited,
+html head + body .ui-group-theme-d .ui-btn:visited,
+html head + body .ui-group-theme-d .ui-btn.ui-btn-d:visited,
+
+/* Link Visited|Active|Hover..... */
+html head + body .ui-bar-d .ui-link:visited,
+html head + body .ui-body-d .ui-link:visited,
+html head + body .ui-group-theme-d .ui-link:visited,
+
+html head + body .ui-bar-d .ui-link:active,
+html head + body .ui-body-d .ui-link:active,
+html head + body .ui-group-theme-d .ui-link:active,
+
+html head + body .ui-bar-d .ui-link:hover,
+html head + body .ui-body-d .ui-link:hover,
+html head + body .ui-group-theme-d .ui-link:hover {
+  background: none repeat scroll 0 0 transparent; /* why is this transparent? */
+  color: #ffffff;
+  text-shadow: none;
+  border-color: rgb(136, 136, 136); /*  #888888; IE8 */
+  border-color: rgba(255,255,255, .3);
+}
+
+/* Hover */
+html head + body .ui-bar-d .ui-btn:hover,
+html head + body .ui-body-d .ui-btn:hover,
+html head + body .ui-btn.ui-btn-d:hover,
+html head + body .ui-group-theme-d .ui-btn:hover,
+html head + body .ui-group-theme-d .ui-btn.ui-btn-d:hover,
+
+/* Button Active (JQM overwrite requires double classes)*/
+html head + body .ui-bar-d .ui-btn:active,
+html head + body .ui-body-d .ui-btn:active,
+html head + body .ui-btn.ui-btn-d:active,
+html head + body .ui-group-theme-d .ui-btn:active,
+html head + body .ui-group-theme-d .ui-btn.ui-btn-d:active,
+
+html head + body .ui-bar-d .ui-btn.ui-btn-active,
+html head + body .ui-body-d .ui-btn.ui-btn-active,
+html head + body .ui-btn.ui-btn-d.ui-btn-active,
+html head + body .ui-group-theme-d .ui-btn.ui-btn-active,
+html head + body .ui-group-theme-d .ui-btn.ui-btn-d.ui-btn-active {
+  background-color: #25292b;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#444444), to(#25292b));
+  background:        -webkit-linear-gradient(bottom, #444444, #25292b);
+  background:                linear-gradient(bottom, #444444, #25292b);
+  background:           -moz-linear-gradient(bottom, #444444, #25292b);
+  background:             -o-linear-gradient(bottom, #444444, #25292b);
+  background:            -ms-linear-gradient(bottom, #444444, #25292b);
+  color: #ffffff;
+  text-shadow: none;
+  border-color: rgb(136, 136, 136); /*  #888888; IE8 */
+  border-color: rgba(255,255,255, .3);
+}
+
+
+
+
+/*  ---------------------  fontawesome_import.css --------------------------- */
+
+
+/* imports separated from rest, so fonts can be fetched from CDN
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.1.0');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'),
+       url('../fonts/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+       url('../fonts/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+       url('../fonts/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+*/
+/*  ---------------------  fontawesome_custom.css --------------------------- */
+
+
+/* imports separated from rest, so fonts can be fetched from CDN */
+/* CUSTOMIZED:
+ * 1. update path @font-face
+ * 2. icons: change fa- to html ui-icon-
+ * 3. change :before to JQM :after
+ * 4. update first html .ui-icon (former .fa)
+ * 5. add checkbox-on/off, radio on/off icons to fontawesome icons
+ * 6. add JQM compat at end
+ * 7. replace all updated name in code... times
+ * 8. JQM uses carat-t/b/l/r, add those to caret-left/right/top/bottom
+ * 9. Add checkbox-on/off, radio on/off to icons (why JQM, why????)
+ * 10: add :after to spin/2x/3x...
+ */
+
+
+/*!
+ *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+/* FONT PATH
+ * -------------------------- */
+ /*
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.1.0');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.1.0') format('embedded-opentype'),
+       url('../fonts/fontawesome-webfont.woff?v=4.1.0') format('woff'),
+       url('../fonts/fontawesome-webfont.ttf?v=4.1.0') format('truetype'),
+       url('../fonts/fontawesome-webfont.svg?v=4.1.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+*/
+html [class^="ui-icon-"]:after,
+html [class*=" ui-icon-"]:after,
+html .ui-checkbox-on:after,
+html .ui-checkbox-off:after,
+html .ui-radio-on:after,
+html .ui-radio-off:after {
+  display: inline-block;
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* makes the font 33% larger relative to the icon container */
+html .ui-icon-lg {
+  font-size: 1.33333333em;
+  line-height: 0.75em;
+  vertical-align: -15%;
+}
+html .ui-icon-2x:after {
+  font-size: 2em;
+}
+html .ui-icon-3x:after {
+  font-size: 3em;
+}
+html .ui-icon-4x:after {
+  font-size: 4em;
+}
+html .ui-icon-5x:after {
+  font-size: 5em;
+}
+html .ui-icon-fw {
+  width: 1.28571429em;
+  text-align: center;
+}
+html .ui-icon-ul {
+  padding-left: 0;
+  margin-left: 2.14285714em;
+  list-style-type: none;
+}
+html .ui-icon-ul > li {
+  position: relative;
+}
+html .ui-icon-li {
+  position: absolute;
+  left: -2.14285714em;
+  width: 2.14285714em;
+  top: 0.14285714em;
+  text-align: center;
+}
+html .ui-icon-lihtml .ui-icon-lg {
+  left: -1.85714286em;
+}
+html .ui-icon-border {
+  padding: .2em .25em .15em;
+  border: solid 0.08em #eeeeee;
+  border-radius: .1em;
+}
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}
+html .ui-icon.pull-left {
+  margin-right: .3em;
+}
+html .ui-icon.pull-right {
+  margin-left: .3em;
+}
+html .ui-icon-spin:after {
+  -webkit-animation: spin .5s infinite linear;
+  -moz-animation: spin .5s infinite linear;
+  -o-animation: spin .5s infinite linear;
+  animation: spin .5s infinite linear;
+}
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+html .ui-icon-rotate-90:after {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+html .ui-icon-rotate-180:after {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+html .ui-icon-rotate-270:after {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  -webkit-transform: rotate(270deg);
+  -moz-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  -o-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+html .ui-icon-flip-horizontal:after {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
+}
+html .ui-icon-flip-vertical:after {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1);
+  -webkit-transform: scale(1, -1);
+  -moz-transform: scale(1, -1);
+  -ms-transform: scale(1, -1);
+  -o-transform: scale(1, -1);
+  transform: scale(1, -1);
+}
+html .ui-icon-stack {
+  position: relative;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  vertical-align: middle;
+}
+html .ui-icon-stack-1x,
+html .ui-icon-stack-2x {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+html .ui-icon-stack-1x {
+  line-height: inherit;
+}
+html .ui-icon-stack-2x {
+  font-size: 2em;
+}
+html .ui-icon-inverse {
+  color: #ffffff;
+}
+/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
+   readers do not read off random characters that represent icons */
+html .ui-icon-glass:after {
+  content: "\f000";
+}
+html .ui-icon-music:after {
+  content: "\f001";
+}
+html .ui-icon-search:after {
+  content: "\f002";
+}
+html .ui-icon-envelope-o:after {
+  content: "\f003";
+}
+html .ui-icon-heart:after {
+  content: "\f004";
+}
+html .ui-icon-star:after {
+  content: "\f005";
+}
+html .ui-icon-star-o:after {
+  content: "\f006";
+}
+html .ui-icon-user:after {
+  content: "\f007";
+}
+html .ui-icon-film:after {
+  content: "\f008";
+}
+html .ui-icon-th-large:after {
+  content: "\f009";
+}
+html .ui-icon-th:after {
+  content: "\f00a";
+}
+html .ui-icon-th-list:after {
+  content: "\f00b";
+}
+html .ui-icon-check:after {
+  content: "\f00c";
+}
+html .ui-icon-times:after,
+html .ui-icon-delete:after {
+  content: "\f00d";
+}
+html .ui-icon-search-plus:after {
+  content: "\f00e";
+}
+html .ui-icon-search-minus:after {
+  content: "\f010";
+}
+html .ui-icon-power-off:after {
+  content: "\f011";
+}
+html .ui-icon-signal:after {
+  content: "\f012";
+}
+html .ui-icon-gear:after,
+html .ui-icon-cog:after {
+  content: "\f013";
+}
+html .ui-icon-trash-o:after {
+  content: "\f014";
+}
+html .ui-icon-home:after {
+  content: "\f015";
+}
+html .ui-icon-file-o:after {
+  content: "\f016";
+}
+html .ui-icon-clock-o:after {
+  content: "\f017";
+}
+html .ui-icon-road:after {
+  content: "\f018";
+}
+html .ui-icon-download:after {
+  content: "\f019";
+}
+html .ui-icon-arrow-circle-o-down:after {
+  content: "\f01a";
+}
+html .ui-icon-arrow-circle-o-up:after {
+  content: "\f01b";
+}
+html .ui-icon-inbox:after {
+  content: "\f01c";
+}
+html .ui-icon-play-circle-o:after {
+  content: "\f01d";
+}
+html .ui-icon-rotate-right:after,
+html .ui-icon-repeat:after {
+  content: "\f01e";
+}
+html .ui-icon-refresh:after {
+  content: "\f021";
+}
+html .ui-icon-list-alt:after {
+  content: "\f022";
+}
+html .ui-icon-lock:after {
+  content: "\f023";
+}
+html .ui-icon-flag:after {
+  content: "\f024";
+}
+html .ui-icon-headphones:after {
+  content: "\f025";
+}
+html .ui-icon-volume-off:after {
+  content: "\f026";
+}
+html .ui-icon-volume-down:after {
+  content: "\f027";
+}
+html .ui-icon-volume-up:after {
+  content: "\f028";
+}
+html .ui-icon-qrcode:after {
+  content: "\f029";
+}
+html .ui-icon-barcode:after {
+  content: "\f02a";
+}
+html .ui-icon-tag:after {
+  content: "\f02b";
+}
+html .ui-icon-tags:after {
+  content: "\f02c";
+}
+html .ui-icon-book:after {
+  content: "\f02d";
+}
+html .ui-icon-bookmark:after {
+  content: "\f02e";
+}
+html .ui-icon-print:after {
+  content: "\f02f";
+}
+html .ui-icon-camera:after {
+  content: "\f030";
+}
+html .ui-icon-font:after {
+  content: "\f031";
+}
+html .ui-icon-bold:after {
+  content: "\f032";
+}
+html .ui-icon-italic:after {
+  content: "\f033";
+}
+html .ui-icon-text-height:after {
+  content: "\f034";
+}
+html .ui-icon-text-width:after {
+  content: "\f035";
+}
+html .ui-icon-align-left:after {
+  content: "\f036";
+}
+html .ui-icon-align-center:after {
+  content: "\f037";
+}
+html .ui-icon-align-right:after {
+  content: "\f038";
+}
+html .ui-icon-align-justify:after {
+  content: "\f039";
+}
+html .ui-icon-list:after {
+  content: "\f03a";
+}
+html .ui-icon-dedent:after,
+html .ui-icon-outdent:after {
+  content: "\f03b";
+}
+html .ui-icon-indent:after {
+  content: "\f03c";
+}
+html .ui-icon-video-camera:after {
+  content: "\f03d";
+}
+html .ui-icon-photo:after,
+html .ui-icon-image:after,
+html .ui-icon-picture-o:after {
+  content: "\f03e";
+}
+html .ui-icon-pencil:after {
+  content: "\f040";
+}
+html .ui-icon-map-marker:after {
+  content: "\f041";
+}
+html .ui-icon-adjust:after {
+  content: "\f042";
+}
+html .ui-icon-tint:after {
+  content: "\f043";
+}
+html .ui-icon-edit:after,
+html .ui-icon-pencil-square-o:after {
+  content: "\f044";
+}
+html .ui-icon-share-square-o:after {
+  content: "\f045";
+}
+html .ui-icon-check-square-o:after,
+html .ui-icon-checkbox-on:after,
+html .ui-checkbox-on:after {
+  content: "\f046";
+}
+html .ui-icon-arrows:after {
+  content: "\f047";
+}
+html .ui-icon-step-backward:after {
+  content: "\f048";
+}
+html .ui-icon-fast-backward:after {
+  content: "\f049";
+}
+html .ui-icon-backward:after {
+  content: "\f04a";
+}
+html .ui-icon-play:after {
+  content: "\f04b";
+}
+html .ui-icon-pause:after {
+  content: "\f04c";
+}
+html .ui-icon-stop:after {
+  content: "\f04d";
+}
+html .ui-icon-forward:after {
+  content: "\f04e";
+}
+html .ui-icon-fast-forward:after {
+  content: "\f050";
+}
+html .ui-icon-step-forward:after {
+  content: "\f051";
+}
+html .ui-icon-eject:after {
+  content: "\f052";
+}
+html .ui-icon-chevron-left:after {
+  content: "\f053";
+}
+html .ui-icon-chevron-right:after {
+  content: "\f054";
+}
+html .ui-icon-plus-circle:after {
+  content: "\f055";
+}
+html .ui-icon-minus-circle:after {
+  content: "\f056";
+}
+html .ui-icon-times-circle:after {
+  content: "\f057";
+}
+html .ui-icon-check-circle:after {
+  content: "\f058";
+}
+html .ui-icon-question-circle:after {
+  content: "\f059";
+}
+html .ui-icon-info-circle:after {
+  content: "\f05a";
+}
+html .ui-icon-crosshairs:after {
+  content: "\f05b";
+}
+html .ui-icon-times-circle-o:after {
+  content: "\f05c";
+}
+html .ui-icon-check-circle-o:after,
+html .ui-icon-radio-off:after,
+html .ui-radio-on:after {
+  content: "\f05d";
+}
+html .ui-icon-ban:after {
+  content: "\f05e";
+}
+html .ui-icon-arrow-left:after {
+  content: "\f060";
+}
+html .ui-icon-arrow-right:after {
+  content: "\f061";
+}
+html .ui-icon-arrow-up:after {
+  content: "\f062";
+}
+html .ui-icon-arrow-down:after {
+  content: "\f063";
+}
+html .ui-icon-mail-forward:after,
+html .ui-icon-share:after {
+  content: "\f064";
+}
+html .ui-icon-expand:after {
+  content: "\f065";
+}
+html .ui-icon-compress:after {
+  content: "\f066";
+}
+html .ui-icon-plus:after {
+  content: "\f067";
+}
+html .ui-icon-minus:after {
+  content: "\f068";
+}
+html .ui-icon-asterisk:after {
+  content: "\f069";
+}
+html .ui-icon-exclamation-circle:after {
+  content: "\f06a";
+}
+html .ui-icon-gift:after {
+  content: "\f06b";
+}
+html .ui-icon-leaf:after {
+  content: "\f06c";
+}
+html .ui-icon-fire:after {
+  content: "\f06d";
+}
+html .ui-icon-eye:after {
+  content: "\f06e";
+}
+html .ui-icon-eye-slash:after {
+  content: "\f070";
+}
+html .ui-icon-warning:after,
+html .ui-icon-exclamation-triangle:after {
+  content: "\f071";
+}
+html .ui-icon-plane:after {
+  content: "\f072";
+}
+html .ui-icon-calendar:after {
+  content: "\f073";
+}
+html .ui-icon-random:after {
+  content: "\f074";
+}
+html .ui-icon-comment:after {
+  content: "\f075";
+}
+html .ui-icon-magnet:after {
+  content: "\f076";
+}
+html .ui-icon-chevron-up:after {
+  content: "\f077";
+}
+html .ui-icon-chevron-down:after {
+  content: "\f078";
+}
+html .ui-icon-retweet:after {
+  content: "\f079";
+}
+html .ui-icon-shopping-cart:after {
+  content: "\f07a";
+}
+html .ui-icon-folder:after {
+  content: "\f07b";
+}
+html .ui-icon-folder-open:after {
+  content: "\f07c";
+}
+html .ui-icon-arrows-v:after {
+  content: "\f07d";
+}
+html .ui-icon-arrows-h:after {
+  content: "\f07e";
+}
+html .ui-icon-bar-chart-o:after {
+  content: "\f080";
+}
+html .ui-icon-twitter-square:after {
+  content: "\f081";
+}
+html .ui-icon-facebook-square:after {
+  content: "\f082";
+}
+html .ui-icon-camera-retro:after {
+  content: "\f083";
+}
+html .ui-icon-key:after {
+  content: "\f084";
+}
+html .ui-icon-gears:after,
+html .ui-icon-cogs:after {
+  content: "\f085";
+}
+html .ui-icon-comments:after {
+  content: "\f086";
+}
+html .ui-icon-thumbs-o-up:after {
+  content: "\f087";
+}
+html .ui-icon-thumbs-o-down:after {
+  content: "\f088";
+}
+html .ui-icon-star-half:after {
+  content: "\f089";
+}
+html .ui-icon-heart-o:after {
+  content: "\f08a";
+}
+html .ui-icon-sign-out:after {
+  content: "\f08b";
+}
+html .ui-icon-linkedin-square:after {
+  content: "\f08c";
+}
+html .ui-icon-thumb-tack:after {
+  content: "\f08d";
+}
+html .ui-icon-external-link:after {
+  content: "\f08e";
+}
+html .ui-icon-sign-in:after {
+  content: "\f090";
+}
+html .ui-icon-trophy:after {
+  content: "\f091";
+}
+html .ui-icon-github-square:after {
+  content: "\f092";
+}
+html .ui-icon-upload:after {
+  content: "\f093";
+}
+html .ui-icon-lemon-o:after {
+  content: "\f094";
+}
+html .ui-icon-phone:after {
+  content: "\f095";
+}
+html .ui-icon-square-o:after,
+html .ui-icon-checkbox-off:after,
+html .ui-checkbox-off:after {
+  content: "\f096";
+}
+html .ui-icon-bookmark-o:after {
+  content: "\f097";
+}
+html .ui-icon-phone-square:after {
+  content: "\f098";
+}
+html .ui-icon-twitter:after {
+  content: "\f099";
+}
+html .ui-icon-facebook:after {
+  content: "\f09a";
+}
+html .ui-icon-github:after {
+  content: "\f09b";
+}
+html .ui-icon-unlock:after {
+  content: "\f09c";
+}
+html .ui-icon-credit-card:after {
+  content: "\f09d";
+}
+html .ui-icon-rss:after {
+  content: "\f09e";
+}
+html .ui-icon-hdd-o:after {
+  content: "\f0a0";
+}
+html .ui-icon-bullhorn:after {
+  content: "\f0a1";
+}
+html .ui-icon-bell:after {
+  content: "\f0f3";
+}
+html .ui-icon-certificate:after {
+  content: "\f0a3";
+}
+html .ui-icon-hand-o-right:after {
+  content: "\f0a4";
+}
+html .ui-icon-hand-o-left:after {
+  content: "\f0a5";
+}
+html .ui-icon-hand-o-up:after {
+  content: "\f0a6";
+}
+html .ui-icon-hand-o-down:after {
+  content: "\f0a7";
+}
+html .ui-icon-arrow-circle-left:after {
+  content: "\f0a8";
+}
+html .ui-icon-arrow-circle-right:after {
+  content: "\f0a9";
+}
+html .ui-icon-arrow-circle-up:after {
+  content: "\f0aa";
+}
+html .ui-icon-arrow-circle-down:after {
+  content: "\f0ab";
+}
+html .ui-icon-globe:after {
+  content: "\f0ac";
+}
+html .ui-icon-wrench:after {
+  content: "\f0ad";
+}
+html .ui-icon-tasks:after {
+  content: "\f0ae";
+}
+html .ui-icon-filter:after {
+  content: "\f0b0";
+}
+html .ui-icon-briefcase:after {
+  content: "\f0b1";
+}
+html .ui-icon-arrows-alt:after {
+  content: "\f0b2";
+}
+html .ui-icon-group:after,
+html .ui-icon-users:after {
+  content: "\f0c0";
+}
+html .ui-icon-chain:after,
+html .ui-icon-link:after {
+  content: "\f0c1";
+}
+html .ui-icon-cloud:after {
+  content: "\f0c2";
+}
+html .ui-icon-flask:after {
+  content: "\f0c3";
+}
+html .ui-icon-cut:after,
+html .ui-icon-scissors:after {
+  content: "\f0c4";
+}
+html .ui-icon-copy:after,
+html .ui-icon-files-o:after {
+  content: "\f0c5";
+}
+html .ui-icon-paperclip:after {
+  content: "\f0c6";
+}
+html .ui-icon-save:after,
+html .ui-icon-floppy-o:after {
+  content: "\f0c7";
+}
+html .ui-icon-square:after {
+  content: "\f0c8";
+}
+html .ui-icon-navicon:after,
+html .ui-icon-reorder:after,
+html .ui-icon-bars:after {
+  content: "\f0c9";
+}
+html .ui-icon-list-ul:after {
+  content: "\f0ca";
+}
+html .ui-icon-list-ol:after {
+  content: "\f0cb";
+}
+html .ui-icon-strikethrough:after {
+  content: "\f0cc";
+}
+html .ui-icon-underline:after {
+  content: "\f0cd";
+}
+html .ui-icon-table:after {
+  content: "\f0ce";
+}
+html .ui-icon-magic:after {
+  content: "\f0d0";
+}
+html .ui-icon-truck:after {
+  content: "\f0d1";
+}
+html .ui-icon-pinterest:after {
+  content: "\f0d2";
+}
+html .ui-icon-pinterest-square:after {
+  content: "\f0d3";
+}
+html .ui-icon-google-plus-square:after {
+  content: "\f0d4";
+}
+html .ui-icon-google-plus:after {
+  content: "\f0d5";
+}
+html .ui-icon-money:after {
+  content: "\f0d6";
+}
+html .ui-icon-caret-down:after,
+html .ui-icon-carat-d:after {
+  content: "\f0d7";
+}
+html .ui-icon-caret-up:after,
+hmtl .ui-icon-carat-u:after{
+  content: "\f0d8";
+}
+html .ui-icon-caret-left:after,
+html .ui-icon-carat-l:after {
+  content: "\f0d9";
+}
+html .ui-icon-caret-right:after,
+html .ui-icon-carat-r:after {
+  content: "\f0da";
+}
+html .ui-icon-columns:after {
+  content: "\f0db";
+}
+html .ui-icon-unsorted:after,
+html .ui-icon-sort:after {
+  content: "\f0dc";
+}
+html .ui-icon-sort-down:after,
+html .ui-icon-sort-desc:after {
+  content: "\f0dd";
+}
+html .ui-icon-sort-up:after,
+html .ui-icon-sort-asc:after {
+  content: "\f0de";
+}
+html .ui-icon-envelope:after {
+  content: "\f0e0";
+}
+html .ui-icon-linkedin:after {
+  content: "\f0e1";
+}
+html .ui-icon-rotate-left:after,
+html .ui-icon-undo:after {
+  content: "\f0e2";
+}
+html .ui-icon-legal:after,
+html .ui-icon-gavel:after {
+  content: "\f0e3";
+}
+html .ui-icon-dashboard:after,
+html .ui-icon-tachometer:after {
+  content: "\f0e4";
+}
+html .ui-icon-comment-o:after {
+  content: "\f0e5";
+}
+html .ui-icon-comments-o:after {
+  content: "\f0e6";
+}
+html .ui-icon-flash:after,
+html .ui-icon-bolt:after {
+  content: "\f0e7";
+}
+html .ui-icon-sitemap:after {
+  content: "\f0e8";
+}
+html .ui-icon-umbrella:after {
+  content: "\f0e9";
+}
+html .ui-icon-paste:after,
+html .ui-icon-clipboard:after {
+  content: "\f0ea";
+}
+html .ui-icon-lightbulb-o:after {
+  content: "\f0eb";
+}
+html .ui-icon-exchange:after {
+  content: "\f0ec";
+}
+html .ui-icon-cloud-download:after {
+  content: "\f0ed";
+}
+html .ui-icon-cloud-upload:after {
+  content: "\f0ee";
+}
+html .ui-icon-user-md:after {
+  content: "\f0f0";
+}
+html .ui-icon-stethoscope:after {
+  content: "\f0f1";
+}
+html .ui-icon-suitcase:after {
+  content: "\f0f2";
+}
+html .ui-icon-bell-o:after {
+  content: "\f0a2";
+}
+html .ui-icon-coffee:after {
+  content: "\f0f4";
+}
+html .ui-icon-cutlery:after {
+  content: "\f0f5";
+}
+html .ui-icon-file-text-o:after {
+  content: "\f0f6";
+}
+html .ui-icon-building-o:after {
+  content: "\f0f7";
+}
+html .ui-icon-hospital-o:after {
+  content: "\f0f8";
+}
+html .ui-icon-ambulance:after {
+  content: "\f0f9";
+}
+html .ui-icon-medkit:after {
+  content: "\f0fa";
+}
+html .ui-icon-fighter-jet:after {
+  content: "\f0fb";
+}
+html .ui-icon-beer:after {
+  content: "\f0fc";
+}
+html .ui-icon-h-square:after {
+  content: "\f0fd";
+}
+html .ui-icon-plus-square:after {
+  content: "\f0fe";
+}
+html .ui-icon-angle-double-left:after {
+  content: "\f100";
+}
+html .ui-icon-angle-double-right:after {
+  content: "\f101";
+}
+html .ui-icon-angle-double-up:after {
+  content: "\f102";
+}
+html .ui-icon-angle-double-down:after {
+  content: "\f103";
+}
+html .ui-icon-angle-left:after {
+  content: "\f104";
+}
+html .ui-icon-angle-right:after {
+  content: "\f105";
+}
+html .ui-icon-angle-up:after {
+  content: "\f106";
+}
+html .ui-icon-angle-down:after {
+  content: "\f107";
+}
+html .ui-icon-desktop:after {
+  content: "\f108";
+}
+html .ui-icon-laptop:after {
+  content: "\f109";
+}
+html .ui-icon-tablet:after {
+  content: "\f10a";
+}
+html .ui-icon-mobile-phone:after,
+html .ui-icon-mobile:after {
+  content: "\f10b";
+}
+html .ui-icon-circle-o:after,
+html .ui-radio-off:after {
+  content: "\f10c";
+}
+html .ui-icon-quote-left:after {
+  content: "\f10d";
+}
+html .ui-icon-quote-right:after {
+  content: "\f10e";
+}
+html .ui-icon-spinner:after {
+  content: "\f110";
+}
+html .ui-icon-circle:after {
+  content: "\f111";
+}
+html .ui-icon-mail-reply:after,
+html .ui-icon-reply:after {
+  content: "\f112";
+}
+html .ui-icon-github-alt:after {
+  content: "\f113";
+}
+html .ui-icon-folder-o:after {
+  content: "\f114";
+}
+html .ui-icon-folder-open-o:after {
+  content: "\f115";
+}
+html .ui-icon-smile-o:after {
+  content: "\f118";
+}
+html .ui-icon-frown-o:after {
+  content: "\f119";
+}
+html .ui-icon-meh-o:after {
+  content: "\f11a";
+}
+html .ui-icon-gamepad:after {
+  content: "\f11b";
+}
+html .ui-icon-keyboard-o:after {
+  content: "\f11c";
+}
+html .ui-icon-flag-o:after {
+  content: "\f11d";
+}
+html .ui-icon-flag-checkered:after {
+  content: "\f11e";
+}
+html .ui-icon-terminal:after {
+  content: "\f120";
+}
+html .ui-icon-code:after {
+  content: "\f121";
+}
+html .ui-icon-mail-reply-all:after,
+html .ui-icon-reply-all:after {
+  content: "\f122";
+}
+html .ui-icon-star-half-empty:after,
+html .ui-icon-star-half-full:after,
+html .ui-icon-star-half-o:after {
+  content: "\f123";
+}
+html .ui-icon-location-arrow:after {
+  content: "\f124";
+}
+html .ui-icon-crop:after {
+  content: "\f125";
+}
+html .ui-icon-code-fork:after {
+  content: "\f126";
+}
+html .ui-icon-unlink:after,
+html .ui-icon-chain-broken:after {
+  content: "\f127";
+}
+html .ui-icon-question:after {
+  content: "\f128";
+}
+html .ui-icon-info:after {
+  content: "\f129";
+}
+html .ui-icon-exclamation:after {
+  content: "\f12a";
+}
+html .ui-icon-superscript:after {
+  content: "\f12b";
+}
+html .ui-icon-subscript:after {
+  content: "\f12c";
+}
+html .ui-icon-eraser:after {
+  content: "\f12d";
+}
+html .ui-icon-puzzle-piece:after {
+  content: "\f12e";
+}
+html .ui-icon-microphone:after {
+  content: "\f130";
+}
+html .ui-icon-microphone-slash:after {
+  content: "\f131";
+}
+html .ui-icon-shield:after {
+  content: "\f132";
+}
+html .ui-icon-calendar-o:after {
+  content: "\f133";
+}
+html .ui-icon-fire-extinguisher:after {
+  content: "\f134";
+}
+html .ui-icon-rocket:after {
+  content: "\f135";
+}
+html .ui-icon-maxcdn:after {
+  content: "\f136";
+}
+html .ui-icon-chevron-circle-left:after {
+  content: "\f137";
+}
+html .ui-icon-chevron-circle-right:after {
+  content: "\f138";
+}
+html .ui-icon-chevron-circle-up:after {
+  content: "\f139";
+}
+html .ui-icon-chevron-circle-down:after {
+  content: "\f13a";
+}
+html .ui-icon-html5:after {
+  content: "\f13b";
+}
+html .ui-icon-css3:after {
+  content: "\f13c";
+}
+html .ui-icon-anchor:after {
+  content: "\f13d";
+}
+html .ui-icon-unlock-alt:after {
+  content: "\f13e";
+}
+html .ui-icon-bullseye:after {
+  content: "\f140";
+}
+html .ui-icon-ellipsis-h:after {
+  content: "\f141";
+}
+html .ui-icon-ellipsis-v:after {
+  content: "\f142";
+}
+html .ui-icon-rss-square:after {
+  content: "\f143";
+}
+html .ui-icon-play-circle:after {
+  content: "\f144";
+}
+html .ui-icon-ticket:after {
+  content: "\f145";
+}
+html .ui-icon-minus-square:after {
+  content: "\f146";
+}
+html .ui-icon-minus-square-o:after {
+  content: "\f147";
+}
+html .ui-icon-level-up:after {
+  content: "\f148";
+}
+html .ui-icon-level-down:after {
+  content: "\f149";
+}
+html .ui-icon-check-square:after {
+  content: "\f14a";
+}
+html .ui-icon-pencil-square:after {
+  content: "\f14b";
+}
+html .ui-icon-external-link-square:after {
+  content: "\f14c";
+}
+html .ui-icon-share-square:after {
+  content: "\f14d";
+}
+html .ui-icon-compass:after {
+  content: "\f14e";
+}
+html .ui-icon-toggle-down:after,
+html .ui-icon-caret-square-o-down:after {
+  content: "\f150";
+}
+html .ui-icon-toggle-up:after,
+html .ui-icon-caret-square-o-up:after {
+  content: "\f151";
+}
+html .ui-icon-toggle-right:after,
+html .ui-icon-caret-square-o-right:after {
+  content: "\f152";
+}
+html .ui-icon-euro:after,
+html .ui-icon-eur:after {
+  content: "\f153";
+}
+html .ui-icon-gbp:after {
+  content: "\f154";
+}
+html .ui-icon-dollar:after,
+html .ui-icon-usd:after {
+  content: "\f155";
+}
+html .ui-icon-rupee:after,
+html .ui-icon-inr:after {
+  content: "\f156";
+}
+html .ui-icon-cny:after,
+html .ui-icon-rmb:after,
+html .ui-icon-yen:after,
+html .ui-icon-jpy:after {
+  content: "\f157";
+}
+html .ui-icon-ruble:after,
+html .ui-icon-rouble:after,
+html .ui-icon-rub:after {
+  content: "\f158";
+}
+html .ui-icon-won:after,
+html .ui-icon-krw:after {
+  content: "\f159";
+}
+html .ui-icon-bitcoin:after,
+html .ui-icon-btc:after {
+  content: "\f15a";
+}
+html .ui-icon-file:after {
+  content: "\f15b";
+}
+html .ui-icon-file-text:after {
+  content: "\f15c";
+}
+html .ui-icon-sort-alpha-asc:after {
+  content: "\f15d";
+}
+html .ui-icon-sort-alpha-desc:after {
+  content: "\f15e";
+}
+html .ui-icon-sort-amount-asc:after {
+  content: "\f160";
+}
+html .ui-icon-sort-amount-desc:after {
+  content: "\f161";
+}
+html .ui-icon-sort-numeric-asc:after {
+  content: "\f162";
+}
+html .ui-icon-sort-numeric-desc:after {
+  content: "\f163";
+}
+html .ui-icon-thumbs-up:after {
+  content: "\f164";
+}
+html .ui-icon-thumbs-down:after {
+  content: "\f165";
+}
+html .ui-icon-youtube-square:after {
+  content: "\f166";
+}
+html .ui-icon-youtube:after {
+  content: "\f167";
+}
+html .ui-icon-xing:after {
+  content: "\f168";
+}
+html .ui-icon-xing-square:after {
+  content: "\f169";
+}
+html .ui-icon-youtube-play:after {
+  content: "\f16a";
+}
+html .ui-icon-dropbox:after {
+  content: "\f16b";
+}
+html .ui-icon-stack-overflow:after {
+  content: "\f16c";
+}
+html .ui-icon-instagram:after {
+  content: "\f16d";
+}
+html .ui-icon-flickr:after {
+  content: "\f16e";
+}
+html .ui-icon-adn:after {
+  content: "\f170";
+}
+html .ui-icon-bitbucket:after {
+  content: "\f171";
+}
+html .ui-icon-bitbucket-square:after {
+  content: "\f172";
+}
+html .ui-icon-tumblr:after {
+  content: "\f173";
+}
+html .ui-icon-tumblr-square:after {
+  content: "\f174";
+}
+html .ui-icon-long-arrow-down:after {
+  content: "\f175";
+}
+html .ui-icon-long-arrow-up:after {
+  content: "\f176";
+}
+html .ui-icon-long-arrow-left:after {
+  content: "\f177";
+}
+html .ui-icon-long-arrow-right:after {
+  content: "\f178";
+}
+html .ui-icon-apple:after {
+  content: "\f179";
+}
+html .ui-icon-windows:after {
+  content: "\f17a";
+}
+html .ui-icon-android:after {
+  content: "\f17b";
+}
+html .ui-icon-linux:after {
+  content: "\f17c";
+}
+html .ui-icon-dribbble:after {
+  content: "\f17d";
+}
+html .ui-icon-skype:after {
+  content: "\f17e";
+}
+html .ui-icon-foursquare:after {
+  content: "\f180";
+}
+html .ui-icon-trello:after {
+  content: "\f181";
+}
+html .ui-icon-female:after {
+  content: "\f182";
+}
+html .ui-icon-male:after {
+  content: "\f183";
+}
+html .ui-icon-gittip:after {
+  content: "\f184";
+}
+html .ui-icon-sun-o:after {
+  content: "\f185";
+}
+html .ui-icon-moon-o:after {
+  content: "\f186";
+}
+html .ui-icon-archive:after {
+  content: "\f187";
+}
+html .ui-icon-bug:after {
+  content: "\f188";
+}
+html .ui-icon-vk:after {
+  content: "\f189";
+}
+html .ui-icon-weibo:after {
+  content: "\f18a";
+}
+html .ui-icon-renren:after {
+  content: "\f18b";
+}
+html .ui-icon-pagelines:after {
+  content: "\f18c";
+}
+html .ui-icon-stack-exchange:after {
+  content: "\f18d";
+}
+html .ui-icon-arrow-circle-o-right:after {
+  content: "\f18e";
+}
+html .ui-icon-arrow-circle-o-left:after {
+  content: "\f190";
+}
+html .ui-icon-toggle-left:after,
+html .ui-icon-caret-square-o-left:after {
+  content: "\f191";
+}
+html .ui-icon-dot-circle-o:after {
+  content: "\f192";
+}
+html .ui-icon-wheelchair:after {
+  content: "\f193";
+}
+html .ui-icon-vimeo-square:after {
+  content: "\f194";
+}
+html .ui-icon-turkish-lira:after,
+html .ui-icon-try:after {
+  content: "\f195";
+}
+html .ui-icon-plus-square-o:after {
+  content: "\f196";
+}
+html .ui-icon-space-shuttle:after {
+  content: "\f197";
+}
+html .ui-icon-slack:after {
+  content: "\f198";
+}
+html .ui-icon-envelope-square:after {
+  content: "\f199";
+}
+html .ui-icon-wordpress:after {
+  content: "\f19a";
+}
+html .ui-icon-openid:after {
+  content: "\f19b";
+}
+html .ui-icon-institution:after,
+html .ui-icon-bank:after,
+html .ui-icon-university:after {
+  content: "\f19c";
+}
+html .ui-icon-mortar-board:after,
+html .ui-icon-graduation-cap:after {
+  content: "\f19d";
+}
+html .ui-icon-yahoo:after {
+  content: "\f19e";
+}
+html .ui-icon-google:after {
+  content: "\f1a0";
+}
+html .ui-icon-reddit:after {
+  content: "\f1a1";
+}
+html .ui-icon-reddit-square:after {
+  content: "\f1a2";
+}
+html .ui-icon-stumbleupon-circle:after {
+  content: "\f1a3";
+}
+html .ui-icon-stumbleupon:after {
+  content: "\f1a4";
+}
+html .ui-icon-delicious:after {
+  content: "\f1a5";
+}
+html .ui-icon-digg:after {
+  content: "\f1a6";
+}
+html .ui-icon-pied-piper-square:after,
+html .ui-icon-pied-piper:after {
+  content: "\f1a7";
+}
+html .ui-icon-pied-piper-alt:after {
+  content: "\f1a8";
+}
+html .ui-icon-drupal:after {
+  content: "\f1a9";
+}
+html .ui-icon-joomla:after {
+  content: "\f1aa";
+}
+html .ui-icon-language:after {
+  content: "\f1ab";
+}
+html .ui-icon-fax:after {
+  content: "\f1ac";
+}
+html .ui-icon-building:after {
+  content: "\f1ad";
+}
+html .ui-icon-child:after {
+  content: "\f1ae";
+}
+html .ui-icon-paw:after {
+  content: "\f1b0";
+}
+html .ui-icon-spoon:after {
+  content: "\f1b1";
+}
+html .ui-icon-cube:after {
+  content: "\f1b2";
+}
+html .ui-icon-cubes:after {
+  content: "\f1b3";
+}
+html .ui-icon-behance:after {
+  content: "\f1b4";
+}
+html .ui-icon-behance-square:after {
+  content: "\f1b5";
+}
+html .ui-icon-steam:after {
+  content: "\f1b6";
+}
+html .ui-icon-steam-square:after {
+  content: "\f1b7";
+}
+html .ui-icon-recycle:after {
+  content: "\f1b8";
+}
+html .ui-icon-automobile:after,
+html .ui-icon-car:after {
+  content: "\f1b9";
+}
+html .ui-icon-cab:after,
+html .ui-icon-taxi:after {
+  content: "\f1ba";
+}
+html .ui-icon-tree:after {
+  content: "\f1bb";
+}
+html .ui-icon-spotify:after {
+  content: "\f1bc";
+}
+html .ui-icon-deviantart:after {
+  content: "\f1bd";
+}
+html .ui-icon-soundcloud:after {
+  content: "\f1be";
+}
+html .ui-icon-database:after {
+  content: "\f1c0";
+}
+html .ui-icon-file-pdf-o:after {
+  content: "\f1c1";
+}
+html .ui-icon-file-word-o:after {
+  content: "\f1c2";
+}
+html .ui-icon-file-excel-o:after {
+  content: "\f1c3";
+}
+html .ui-icon-file-powerpoint-o:after {
+  content: "\f1c4";
+}
+html .ui-icon-file-photo-o:after,
+html .ui-icon-file-picture-o:after,
+html .ui-icon-file-image-o:after {
+  content: "\f1c5";
+}
+html .ui-icon-file-zip-o:after,
+html .ui-icon-file-archive-o:after {
+  content: "\f1c6";
+}
+html .ui-icon-file-sound-o:after,
+html .ui-icon-file-audio-o:after {
+  content: "\f1c7";
+}
+html .ui-icon-file-movie-o:after,
+html .ui-icon-file-video-o:after {
+  content: "\f1c8";
+}
+html .ui-icon-file-code-o:after {
+  content: "\f1c9";
+}
+html .ui-icon-vine:after {
+  content: "\f1ca";
+}
+html .ui-icon-codepen:after {
+  content: "\f1cb";
+}
+html .ui-icon-jsfiddle:after {
+  content: "\f1cc";
+}
+html .ui-icon-life-bouy:after,
+html .ui-icon-life-saver:after,
+html .ui-icon-support:after,
+html .ui-icon-life-ring:after {
+  content: "\f1cd";
+}
+html .ui-icon-circle-o-notch:after {
+  content: "\f1ce";
+}
+html .ui-icon-ra:after,
+html .ui-icon-rebel:after {
+  content: "\f1d0";
+}
+html .ui-icon-ge:after,
+html .ui-icon-empire:after {
+  content: "\f1d1";
+}
+html .ui-icon-git-square:after {
+  content: "\f1d2";
+}
+html .ui-icon-git:after {
+  content: "\f1d3";
+}
+html .ui-icon-hacker-news:after {
+  content: "\f1d4";
+}
+html .ui-icon-tencent-weibo:after {
+  content: "\f1d5";
+}
+html .ui-icon-qq:after {
+  content: "\f1d6";
+}
+html .ui-icon-wechat:after,
+html .ui-icon-weixin:after {
+  content: "\f1d7";
+}
+html .ui-icon-send:after,
+html .ui-icon-paper-plane:after {
+  content: "\f1d8";
+}
+html .ui-icon-send-o:after,
+html .ui-icon-paper-plane-o:after {
+  content: "\f1d9";
+}
+html .ui-icon-history:after {
+  content: "\f1da";
+}
+html .ui-icon-circle-thin:after {
+  content: "\f1db";
+}
+html .ui-icon-header:after {
+  content: "\f1dc";
+}
+html .ui-icon-paragraph:after {
+  content: "\f1dd";
+}
+html .ui-icon-sliders:after {
+  content: "\f1de";
+}
+html .ui-icon-share-alt:after {
+  content: "\f1e0";
+}
+html .ui-icon-share-alt-square:after {
+  content: "\f1e1";
+}
+html .ui-icon-bomb:after {
+  content: "\f1e2";
+}
+
+/* JQM compat */
+/* clear background */
+html .ui-btn:after {
+  background: 0 none;
+  border-radius: 0;
+  -webkit-border-radius: 0;
+}
+
+/* iconsize, positioning */
+html .ui-btn[class*="ui-icon-"]:after,
+html .ui-btn[class*="ui-icon-"]:after {
+  font-size: 1.25em;
+}
+/* panel get less XXX: keep? */
+html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after,
+html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {
+  font-size: 1em;
+}
+
+@media (max-width: 32em) {
+  html .ui-btn[class*="ui-icon-"]:after,
+  html .ui-btn[class*="ui-icon-"]:after {
+    font-size: 1.5em;
+  }
+  html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after,
+  html .ui-panel .ui-content .ui-btn[class*="ui-icon-"]:after {
+    font-size: 1.25em;
+  }
+}
+
+/* FALLBACK Icons - JQM compat: user, reorder, search, delete */
+/* bars */
+.ui-nosvg .ui-icon-reorder:after {
+  background-image: url(img/jquery-mobile/icons-png/bars-black.png);
+}
+/* delete */
+.ui-nosvg .ui-icon-delete:after {
+  background-image: url(images/icons-png/delete-black.png);
+}
+/* search */
+.ui-nosvg .ui-icon-search:after {
+  background-image: url(images/icons-png/search-black.png);
+}
+/* user */
+.ui-nosvg .ui-icon-user:after {
+  background-image: url(images/icons-png/user-white.png);
+}
+
