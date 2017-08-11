@@ -61,9 +61,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_template_path_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -89,7 +87,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_status</string>
+                        <string>my_translated_building_state_title</string>
+                        <string>my_translated_installation_state_title</string>
                       </list>
                     </value>
                 </item>
