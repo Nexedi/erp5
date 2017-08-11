@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title>Monitoring Software Instance</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+    <script src="handlebars.js"></script>
+
+    <script id="details-widget-overview" type="text/x-handlebars-template">
+      <div class="ui-text-left" style="padding-bottom: 15px;">
+        <h2><i class="fa fa-info-circle"></i> <strong>Software Instance State Information <a target='_blank' href="{{rss_url}}" title="RSS"><i class="fa fa-rss-square"></i></a></strong></h2>
+        <div class="padding-10">
+          <div class="ui-grid-a ui-responsive">
+            <div class="ui-block-a">
+              <fieldset data-role="controlgroup" data-type="horizontal">
+                {{#if resource_url }}
+                <a href="{{resource_url}}" class="ui-btn ui-corner-all ui-btn-inline ui-mini" title="Software Instance Resource comsumption"><i class="fa fa-pie-chart"></i> Resources</a>
+                {{/if}}
+                {{#if process_url }}
+                <a href="{{process_url}}" class="ui-btn ui-corner-all ui-btn-inline ui-mini" title="Processes usage"><i class="fa fa-list-alt"></i> Processes</a>
+                {{/if}}
+              </fieldset>
+            </div>
+            <div class="ui-block-b">
+              <fieldset data-role="controlgroup" data-type="horizontal">
+                {{#if private_url}}
+                <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{private_url}}" title="Browse Private Logs Directory"><i class="fa fa-lock"></i> Private Logs</a>
+                {{/if}}
+                {{#if public_url}}
+                  <a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{public_url}}" title="Public Logs Directory"><i class="fa fa-folder-open-o"></i> Public Logs</a>
+                {{/if}}
+                {{#if rss_url}}
+                  <!--<a class="ui-btn ui-corner-all ui-btn-inline ui-mini" target='_blank' href="{{rss_url}}" title="RSS"><i class="fa fa-rss-square"></i> RSS</a>-->
+                {{/if}}
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="ui-grid-a ui-responsive">
+            {{#if warning}}
+            <p class="ui-text-error"><i class="fa fa-info-circle" aria-hidden="true"></i> Status was changed to WARNING as last sync of this instance failed.</p>
+            {{/if}}
+            {{#with instance}}
+            <div class="ui-block-a">
+              <table data-role="table" data-mode="columntoggle" class="table-stroke">
+                <tr>
+                  <th><i class="fa fa-tachometer m-hidden"></i> Instance Status</th>
+                  <td><span class="label label-{{../status}}">{{../status}}</span></td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-clock-o m-hidden" aria-hidden="true"></i> Report Date</th>
+                  <td title="Report Date">{{../date}}</td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-link" aria-hidden="true"></i> Software Release</th>
+                  <td><a style="padding: 0; min-height: initial;" href="{{software-release}}" title="{{software-release}}" target='_blank'>Click to open <i class="fa fa-external-link"></i></a></td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-line-chart" aria-hidden="true"></i> Promises Error</th>
+                  <td title="Number of promises error in Software Instance">{{../error}}</td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-line-chart" aria-hidden="true"></i> Promises OK</th>
+                  <td title="Number of promises OK in Software Instance">{{../success}}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="ui-block-b">
+              <table data-role="table" data-mode="columntoggle" class="table-stroke">
+                <tr>
+                  <th><i class="fa fa-desktop m-hidden"></i> Computer</th>
+                  <td title="Computer Reference">{{computer}}</td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-square m-hidden"></i> Computer Partition</th>
+                  <td title="Partition Reference">{{partition}}</td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-globe m-hidden"></i> IPv4 Address</th>
+                  <td title="IPv4">{{ipv4}}</td>
+                </tr>
+                <tr>
+                  <th><i class="fa fa-globe m-hidden"></i> IPv6 Address</th>
+                  <td title="IPv6">{{ipv6}}</td>
+                </tr>
+                <tr>
+                  <th>Software Type</th>
+                  <td title="Software type">{{software-type}}</td>
+                </tr>
+              </table>
+            </div>
+            {{/with}}
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <script id="promiselist-widget-template" type="text/x-handlebars-template">
+      {{#if promise_list}}
+      <h2><i class="fa fa-th-list"></i> <strong>Software Instance Promises</strong></h2>
+      <div style="overflow: auto;" class="padding-lr-10">
+        <table data-role="table" data-mode="columntoggle" class="table-stroke ui-table-custom">
+          {{#each promise_list}}
+          <tr title="{{message}}">
+            <td><a href="{{href}}">{{title}}</a></td>
+            <td class="m-hidden" style="text-align: center;">{{date}}</td>
+            <td style="text-align: center;"><span class="label label-{{status}}">{{status}}</span></td>
+          </tr>
+          {{/each}}
+        </table>
+      </div>
+      {{/if}}
+    </script>
+
+    <!-- custom script -->
+    <script src="gadget_monitoring_software_instance_view.js" type="text/javascript"></script>
+
+    </head>
+  <body>
+    <div data-gadget-url="gadget_monitoring_jio.html" data-gadget-scope="jio_gadget" data-gadget-sandbox="public"></div>
+    <div class="ui-panel-overview">
+      <div class="overview-details">
+        <div class="overview-header">
+          <div class='content-title ui-instance-title'>
+            <div class="overview-title">
+              <div data-gadget-url="gadget_monitoring_breadcrumb.html" data-gadget-scope="breadcrumb_gadget" data-gadget-sandbox="public"></div>
+            </div>
+            <div class="commands">
+  
+            </div>
+          </div>
+        </div>
+        <div class="content-details">
+        </div>
+      </div>
+      <div class="graph-full">
+        <div class="signal ui-content-hidden"></div>
+        <h2><i class="fa fa-line-chart" aria-hidden="true"></i> <strong>Promises result progression</strong></h2>
+        <div data-gadget-url="gadget_erp5_graph.html" data-gadget-scope="graph_gadget" class="graph graph-medium "></div>
+      </div>
+      <div class="promise-list">
+      </div>
+    </div>
+  </body>
+</html>
