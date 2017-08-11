@@ -11,43 +11,8 @@
     }
     return storage[method_name].apply(storage, argument_list)
       .push(undefined, function (error) {
-        if ((error.target !== undefined) && (error.target.status === 401)) {
-          var regexp,
-            site,
-            login_page;
-          if (gadget.state_parameter_dict.jio_storage_name === "ERP5") {
-            regexp = /^X-Delegate uri=\"(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)\"$/;
-            login_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(login_page)) {
-              return gadget.getUrlFor({
-                command: 'login',
-                absolute_url: true
-              })
-                .push(function (came_from) {
-                  return gadget.redirect({
-                    command: 'raw',
-                    options: {
-                      url: UriTemplate.parse(regexp.exec(login_page)[1]).expand({came_from: came_from})
-                    }
-                  });
-                });
-            }
-          }
-          if (gadget.state_parameter_dict.jio_storage_name === "DAV") {
-            regexp = /^Nayookie login_url=(http[s]?:\/\/[\/\-\[\]{}()*+=:?&.,\\\^$|#\s\w%]+)$/;
-            login_page = error.target.getResponseHeader('WWW-Authenticate');
-            if (regexp.test(login_page)) {
-              site = UriTemplate.parse(
-                regexp.exec(login_page)[1]
-              ).expand({
-                back_url: window.location.href,
-                origin: window.location.origin
-              });
-            }
-          }
-          if (site) {
-            return gadget.redirect({ command: "row", url: site});
-          }
+        if (error.status_code === 400) {
+          return gadget.redirect({command: "display", options: {page: 'ojs_facebook_configurator'}});
         }
         throw error;
       });

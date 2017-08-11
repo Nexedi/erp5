@@ -85,9 +85,11 @@
 
   FBStorage.prototype.buildQuery = function (query) {
     console.log('QueryRecieved', query);
-    var that = this, template_argument = {user_id: this._user_id, limit: 100,
-      access_token: this._access_token}, fields = [],
-      limit = this._default_limit;
+    var that = this, fields = [], limit = this._default_limit,
+      template_argument = {
+        user_id: this._user_id,
+        limit: limit,
+        access_token: this._access_token};
     if (query.include_docs) {
       fields = fields.concat(that._default_field_list);
     }

@@ -320,7 +320,7 @@
         })
         .push(function (data) {
           var options = {
-            page: "ojs_document_list"
+            page: "ojs_fb_posts_document_list"
           };
           if (data.search) {
             options.extended_search = data.search;

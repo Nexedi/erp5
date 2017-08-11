@@ -79,20 +79,16 @@ gadget_klass
   .declareAcquiredMethod("getSetting", "getSetting")
   .declareAcquiredMethod("setSetting", "setSetting")
   .declareMethod("render", function (options) {
-    var gadget = this;
-    return gadget.updateHeader({
-      title: "Connect To Facebook Storage",
-      back_url: "#page=document_list",
-      panel_action: false
-    })
+      var gadget = this;
+      return gadget.updateHeader({page_title: "Facebook Login"})
   })
   .declareService(function () {
     var gadget = this;
     FB.init({
         appId      : '1917551475189095',
-        cookie     : true,   
-        xfbml      : true,  
-        version    : 'v2.8' 
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v2.8'
       });
     FB.getLoginStatus(function(response) {
       if (response.status == 'connected') {
@@ -117,7 +113,7 @@ gadget_klass
         }
       }
     })
-    
+
     .onEvent("click", function (event) {
       var gadget = this;
       if (event.target.id == 'login') {

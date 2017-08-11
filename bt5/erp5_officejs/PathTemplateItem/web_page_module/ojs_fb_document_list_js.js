@@ -20,13 +20,16 @@
 
     .allowPublicAcquisition("jio_allDocs", function (param_list) {
       var gadget = this;
+      console.log(param_list);
+      param_list[0].select_list.push('story');
+      param_list[0].select_list.push('link');
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          var i, date, len = result.data.total_rows;
+          var i, date, message, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
-            if (result.data.rows[i].value.hasOwnProperty("modification_date")) {
-              date = new Date(result.data.rows[i].value.modification_date);
-              result.data.rows[i].value.modification_date = {
+            if (result.data.rows[i].value.hasOwnProperty("created_time")) {
+              date = new Date(result.data.rows[i].value.created_time);
+              result.data.rows[i].value.created_time = {
                 allow_empty_time: 0,
                 ampm_time_style: 0,
                 css_class: "date_field",
@@ -36,10 +39,10 @@
                 hidden: 0,
                 hidden_day_is_last_day: 0,
                 default: date.toUTCString(),
-                key: "modification_date",
+                key: "created_time",
                 required: 0,
                 timezone_style: 0,
-                title: "Modification Date",
+                title: "Creation Time",
                 type: "DateTimeField"
               };
               result.data.rows[i].value["listbox_uid:list"] = {
@@ -47,6 +50,22 @@
                 value: 2713
               };
             }
+            if (!result.data.rows[i].value.message) {
+              message = '';
+            }
+            else {
+              message = result.data.rows[i].value.message;
+            }
+            if (result.data.rows[i].value.story) {
+              message += ' ' + result.data.rows[i].value.story;
+            }
+            var link = result.data.rows[i].value.link;
+            if (link) {
+              if (!(message == link.slice(0, -1) || message == link)) {
+                message += ' ' + result.data.rows[i].value.link.slice(0, 100) + '...';
+              }
+            }
+            result.data.rows[i].value.message = message;
           }
           return result;
         });
