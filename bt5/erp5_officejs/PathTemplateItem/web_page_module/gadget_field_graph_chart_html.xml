@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,8 +78,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_field_graph_chart.js</string> </value>
+            <value> <string>gadget_field_graph_chart.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,17 +93,15 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_widget_graph_chart_js</string> </value>
+            <value> <string>gadget_field_graph_chart_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -109,13 +111,11 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Field Graph With Chart.js JS</string> </value>
+            <value> <string>Field Graph With Chart.js HTML</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>001</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -197,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490800384.41</float>
+                        <float>1490800391.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.21870.15852.42137</string> </value>
+                <value> <string>961.20699.46746.19319</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502452731.55</float>
+                        <float>1502442080.86</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
@@ -317,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490797998.89</float>
+                        <float>1490797992.07</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

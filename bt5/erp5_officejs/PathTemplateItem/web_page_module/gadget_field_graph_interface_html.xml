@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_field_graph_plotly.html</string> </value>
+            <value> <string>gadget_field_graph_interface.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_widget_graph_plotly_html</string> </value>
+            <value> <string>gadget_field_graph_interface_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Field Graph With plotly.js HTML</string> </value>
+            <value> <string>Field Graph Interface</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491827494.68</float>
+                        <float>1490867578.7</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.20697.17932.14216</string> </value>
+                <value> <string>961.20698.64270.36761</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502370931.02</float>
+                        <float>1502370917.57</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
@@ -317,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491827288.35</float>
+                        <float>1490866250.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

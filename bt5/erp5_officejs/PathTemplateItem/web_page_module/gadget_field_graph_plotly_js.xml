@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>gadget_officejs_widget_graph_plotly_js</string> </value>
+            <value> <string>gadget_field_graph_plotly_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
