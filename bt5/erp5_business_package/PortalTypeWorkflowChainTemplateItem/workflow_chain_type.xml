@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Business Package</type>
-  <workflow>business_package_building_workflow, business_package_installation_workflow</workflow>
+  <type>Business Manager</type>
+  <workflow>business_manager_building_workflow, business_manager_installation_workflow</workflow>
  </chain>
 </workflow_chain>
