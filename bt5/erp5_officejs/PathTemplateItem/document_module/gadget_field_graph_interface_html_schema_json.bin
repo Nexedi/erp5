@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Field parameters for rendering graph",
+  "properties": {
+    "value": {
+      "description": "Parameters to generate a graph",
+      "properties": {
+        "layout": {
+          "description": "definition of layout",
+          "properties": {
+            "title": {
+              "description": "The title of the graph",
+              "type": "string"
+            },
+            "axis_dict": {
+              "properties": {
+                ".*": {
+                  "description": "layout definition of one axis",
+                  "properties": {
+                    "title": {
+                      "description": "label to display on axis n",
+                      "type": "string"
+                    },
+                    "scale_type": {
+                      "description": "type of axis",
+                      "enum": [
+                        "linear",
+                        "logarithmic"
+                      ],
+                      "default": "linear",
+                      "type": "string"
+                    },
+                    "value_type": {
+                      "description": "value type for data on this axis",
+                      "enum": [
+                        "number",
+                        "date",
+                        "string"
+                      ],
+                      "default": "number",
+                      "type": "string"
+                    },
+                    "position": {
+                      "description": "where to place the axis, only y axis for now",
+                      "enum": [
+                        "left",
+                        "right"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "additionalProperties": false
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": "object",
+          "additionalProperties": false
+        },
+        "data": {
+          "description": "the list of data sets",
+          "items": {
+            "properties": {
+              "value_dict": {
+                "[0-9]*": {
+                  "description": "values for the axis number n",
+                  "type": "array"
+                },
+                "type": "object"
+              },
+              "type": {
+                "description": "type of trace that should be displayed",
+                "enum": [
+                  "pie",
+                  "bar",
+                  "scatter",
+                  "marker",
+                  "surface",
+                  "line"
+                ],
+                "default": "scatter",
+                "type": "string"
+              },
+              "title": {
+                "description": "label for this data set",
+                "type": "string"
+              },
+              "label_list": {
+                "description": "title for every value",
+                "type": "array"
+              },
+              "axis_mapping_id_dict": {
+                "[0-9]*": {
+                  "description": "mapping id for the axis number n, this is optional and allows to have several scales per axis, several data set might use same name if they should be grouped on the same scale",
+                  "type": "string"
+                },
+                "type": "object"
+              }
+            },
+            "additionalProperties": false,
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "additionalProperties": false
+    },
+  },
+  "type": "object"
+}
