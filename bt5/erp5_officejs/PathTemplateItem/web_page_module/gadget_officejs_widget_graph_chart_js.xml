@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_widget_graph_chart.js</string> </value>
+            <value> <string>gadget_field_graph_chart.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Widget Graph With Chart.js JS</string> </value>
+            <value> <string>Field Graph With Chart.js JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.33098.23392.23722</string> </value>
+                <value> <string>961.21870.15852.42137</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,8 +260,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491491186.21</float>
-                        <string>UTC</string>
+                        <float>1502452731.55</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

@@ -63,6 +63,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -129,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {\'graph_gadget\': \'unsafe/gadget_officejs_widget_graph_dygraph.html\'}</string> </value>
+            <value> <string>python: {\'graph_gadget\': \'unsafe/gadget_field_graph_dygraph.html\'}</string> </value>
         </item>
       </dictionary>
     </pickle>

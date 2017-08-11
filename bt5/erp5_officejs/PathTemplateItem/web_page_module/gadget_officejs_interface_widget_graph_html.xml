@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_interface_widget_graph.html</string> </value>
+            <value> <string>gadget_field_graph_interface.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Graph Interface</string> </value>
+            <value> <string>Field Graph Interface</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.33138.49196.3857</string> </value>
+                <value> <string>961.20698.64270.36761</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,8 +260,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491493841.53</float>
-                        <string>UTC</string>
+                        <float>1502370917.57</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

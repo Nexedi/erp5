@@ -10,7 +10,7 @@
 
   var getGraphDataAndParameterFromConfiguration = function (configuration_dict) {
     var graph_data_and_parameter = {},
-      given_data_list = configuration_dict.data,
+      given_data_list,
       current_data,
       given_data,
       axis_mapping_id_dict,
@@ -25,8 +25,9 @@
     if (configuration_dict.constructor === String) {
       configuration_dict = JSON.parse(configuration_dict);
     }
+    given_data_list = configuration_dict.data;
 
-    console.log("getGraphDataAndParameterFromConfiguration 1");
+    console.log("getGraphDataAndParameterFromConfiguration 1 configuration_dict", configuration_dict);
     graph_data_and_parameter.data_list = [];
     graph_data_and_parameter.layout = {modeBarButtonsToRemove: ['sendDataToCloud']};
 
@@ -37,7 +38,7 @@
       current_data[axis_id] = axis_value_list;
     }
     console.log("getGraphDataAndParameterFromConfiguration 2");
-    console.log("given_data_list", given_data_list);
+    console.log("plotly given_data_list", given_data_list);
     function setAxisLayout(axis_mapping) {
       var axis_id = AXIS_MAPPING_DICT[axis_mapping[0]],
           axis_identifier = axis_mapping[1],
@@ -122,7 +123,13 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (option_dict) {
-
+      var gadget = this;
+      //delegate rendering to onStateChange to avoid redrawing the graph
+      //every time render is called (a form might call render every time
+      //some other fields needs update
+      gadget.changeState({value: option_dict.value});
+    })
+    .onStateChange(function (modification_dict) {
 
       var gadget = this,
           container,
@@ -133,12 +140,9 @@
       container = gadget.element.querySelector(".graph-content");
       gadget.property_dict.container = container;
       console.log("container inside iframe");
-      graph_value = option_dict.value;
-      if (graph_value.constructor === String) {
-        graph_value = JSON.parse(graph_value);
-      }
+      graph_value = modification_dict.value;
       graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(graph_value);
-      console.log("graph_data_and_parameter", graph_data_and_parameter);
+      console.log("plotly graph_data_and_parameter", graph_data_and_parameter);
       if (gadget.property_dict.already_rendered === true) {
         Plotly.purge(container);
       }
@@ -148,8 +152,3 @@
     });
 
 }(window, rJS, RSVP, Plotly));
-
-
-
-
-
