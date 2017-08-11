@@ -25,7 +25,7 @@
       param_list[0].select_list.push('link');
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
-          var i, date, message, len = result.data.total_rows;
+          var i, date, message, link, len = result.data.total_rows;
           for (i = 0; i < len; i += 1) {
             if (result.data.rows[i].value.hasOwnProperty("created_time")) {
               date = new Date(result.data.rows[i].value.created_time);
@@ -59,9 +59,9 @@
             if (result.data.rows[i].value.story) {
               message += ' ' + result.data.rows[i].value.story;
             }
-            var link = result.data.rows[i].value.link;
+            link = result.data.rows[i].value.link;
             if (link) {
-              if (!(message == link.slice(0, -1) || message == link)) {
+              if (message.indexOf(link.slice(0, -1)) == -1) {
                 message += ' ' + result.data.rows[i].value.link.slice(0, 100) + '...';
               }
             }

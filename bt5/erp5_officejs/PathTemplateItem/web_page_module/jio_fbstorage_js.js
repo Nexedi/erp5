@@ -32,7 +32,6 @@
     return new RSVP.Queue()
       .push(function () {
         console.log('Ajax fetch for get');
-        console.log(that._default_field_list);
         return jIO.util.ajax({
           type: "GET",
           url: get_post_template.expand({post_id: id,
@@ -44,6 +43,9 @@
       },
       function (err) {
         console.log('Ajax fetch for get failed', err);
+        if (err.message) {
+          return {'message': err.message};
+        }
       });
   };
 
