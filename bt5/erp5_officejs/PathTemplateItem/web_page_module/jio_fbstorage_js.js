@@ -43,10 +43,13 @@
       },
       function (err) {
         console.log('Ajax fetch for get failed', err);
-        if (err.message) {
-          return {'message': err.message};
+        if (err.target.response) {
+          return {'message': JSON.parse(err.target.response).message};
         }
-      });
+        else {
+          return {'message': ''};
+        }
+        });
   };
 
   function paginateResult(url, result, select_list) {
