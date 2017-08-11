@@ -10,7 +10,7 @@
 
   var getGraphDataAndParameterFromConfiguration = function (configuration_dict) {
     var graph_data_and_parameter = {},
-        data = configuration_dict.data || [],
+        data,
         trace,
         trace_type,
         type_list = [],
@@ -19,14 +19,17 @@
         dataset_list = [],
         dataset,
         i, j,
-        layout = configuration_dict.layout || {},
-        title = layout.title,
+        layout,
+        title,
         type = 'bar',
         x_label, y_label;
 
     if (configuration_dict.constructor === String) {
       configuration_dict = JSON.parse(configuration_dict);
     }
+    data = configuration_dict.data || [];
+    layout = configuration_dict.layout || {};
+    title = layout.title;
 
     /* title seems to be ignored by Chart.js, so do not handle it for now */
 
@@ -97,17 +100,23 @@
     .declareMethod('render', function (option_dict) {
 
 
+      var gadget = this;
+      //delegate rendering to onStateChange to avoid redrawing the graph
+      //every time render is called (a form might call render every time
+      //some other fields needs update
+      gadget.changeState({value: option_dict.value});
+
+    })
+    .onStateChange(function (modification_dict) {
       var gadget = this,
           container,
           graph_data_and_parameter,
           chart;
-
       container = gadget.element.querySelector(".graph-content");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(option_dict.value);
+      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(modification_dict.value);
       console.log("graph_data_and_parameter", graph_data_and_parameter);
       chart = new Chart(container, graph_data_and_parameter);
       gadget.property_dict.chart = chart;
-
     });
 
 

@@ -133,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: {\'graph_gadget\': \'unsafe/gadget_officejs_widget_graph_plotly.html\'}</string> </value>
+            <value> <string>python: {\'graph_gadget\': \'unsafe/gadget_field_graph_plotly.html\'}</string> </value>
         </item>
       </dictionary>
     </pickle>

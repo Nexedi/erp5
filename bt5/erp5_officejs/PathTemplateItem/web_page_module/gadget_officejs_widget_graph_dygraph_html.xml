@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_widget_graph_dygraph.html</string> </value>
+            <value> <string>gadget_field_graph_dygraph.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Widget Graph With Dygraph</string> </value>
+            <value> <string>Field Graph With Dygraph</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.28489.56960.4983</string> </value>
+                <value> <string>961.20695.23642.40482</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,8 +254,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491487527.75</float>
-                        <string>UTC</string>
+                        <float>1502370959.51</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

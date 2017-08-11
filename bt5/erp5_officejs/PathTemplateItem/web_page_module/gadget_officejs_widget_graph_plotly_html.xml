@@ -83,7 +83,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_officejs_widget_graph_plotly.html</string> </value>
+            <value> <string>gadget_field_graph_plotly.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>OfficeJS Widget Graph With plotly.js HTML</string> </value>
+            <value> <string>Field Graph With plotly.js HTML</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -242,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.44543.29683.48588</string> </value>
+                <value> <string>961.20697.17932.14216</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,8 +260,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1492178387.52</float>
-                        <string>UTC</string>
+                        <float>1502370931.02</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>

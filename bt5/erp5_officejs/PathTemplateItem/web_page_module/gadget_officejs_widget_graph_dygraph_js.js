@@ -10,8 +10,8 @@
 
   var getGraphDataAndParameterFromConfiguration = function (configuration_dict) {
     var graph_data_and_parameter = {},
-        layout = configuration_dict.layout || {},
-        data = configuration_dict.data || [],
+        layout,
+        data,
         x_label, y_label,
         label_list = [],
         trace_value_dict,
@@ -31,7 +31,8 @@
     if (configuration_dict.constructor === String) {
       configuration_dict = JSON.parse(configuration_dict);
     }
-
+    layout = configuration_dict.layout || {};
+    data = configuration_dict.data || [];
     axis_dict = layout.axis_dict || {};
     x_label = (axis_dict[0] || {}).title;
     y_label = (axis_dict[1] || {}).title;
@@ -148,13 +149,20 @@
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (option_dict) {
+      var gadget = this;
+      //delegate rendering to onStateChange to avoid redrawing the graph
+      //every time render is called (a form might call render every time
+      //some other fields needs update
+      gadget.changeState({value: option_dict.value});
+    })
+    .onStateChange(function (modification_dict) {
 
       var gadget = this,
           container,
           graph_data_and_parameter;
 
       container = gadget.element.querySelector(".graph-content");
-      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(option_dict.value);
+      graph_data_and_parameter = getGraphDataAndParameterFromConfiguration(modification_dict.value);
       gadget.property_dict.graph = new Dygraph(container,
                                                graph_data_and_parameter.dygraph_data,
                                                graph_data_and_parameter.dygraph_parameter_dict);
