@@ -1,33 +1,49 @@
-/*global window, rJS, RSVP, URI, location,
-    loopEventListener, btoa */
+/*global window, rJS, RSVP*/
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, console) {
+(function (window, rJS, RSVP) {
   "use strict";
 
   function setDropboxConfiguration(gadget, token) {
-    return gadget.getSetting("portal_type")
-      .push(function (portal_type) {
-        var old_date = new Date(),
-          configuration = {};
-        // We are looking for documents modified in the past 3 month
-        old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all([
+          gadget.getSetting("portal_type"),
+          gadget.getSetting("erp5_attachment_synchro", "")
+        ]);
+      })
+      .push(function (setting) {
+        var configuration = {},
+          attachment_synchro = setting[1] !== "";
         configuration = {
           type: "replicate",
-          // XXX This drop the signature lists...
           query: {
-            query: 'portal_type:"' + portal_type + '" ',
-            // XX Synchonizing the whole module is too much, here is a way to start quietly
-            // Supsended until modification_date is handled for synchronization
-            limit: [0, 1234567890]
+            query: 'portal_type:"' + setting[0] + '" ',
+            limit: [0, 100],
+            sort_on: [["modification_date", "descending"]]
           },
           use_remote_post: false,
           conflict_handling: 2,
+          check_local_attachment_modification: attachment_synchro,
+          check_local_attachment_creation: attachment_synchro,
+          check_remote_attachment_modification: attachment_synchro,
+          check_remote_attachment_creation: attachment_synchro,
+          check_remote_attachment_deletion: attachment_synchro,
           check_local_modification: true,
           check_local_creation: true,
           check_local_deletion: false,
           check_remote_modification: true,
           check_remote_creation: true,
           check_remote_deletion: true,
+          signature_sub_storage: {
+            type: "query",
+            sub_storage: {
+              type: "uuid",
+              sub_storage: {
+                type: "indexeddb",
+                database: "officejs-dropbox-hash"
+              }
+            }
+          },
           local_sub_storage: {
             type: "mapping",
             attachment: {
