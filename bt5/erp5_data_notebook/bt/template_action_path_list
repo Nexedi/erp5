@@ -1,6 +1,11 @@
+Cluster Data Notebook Line | view
 Cluster Data Notebook Module | view
 Cluster Data Notebook | post_execution
 Cluster Data Notebook | view
+Cluster Data Script | proxy_role_view
+Cluster Data Script | repository_history_view
+Cluster Data Script | run
+Cluster Data Script | view
 Data Notebook Line | new_notebook_line
 Data Notebook Line | view
 Data Notebook Module | view

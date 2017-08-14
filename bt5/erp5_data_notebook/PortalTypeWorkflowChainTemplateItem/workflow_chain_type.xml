@@ -4,6 +4,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Cluster Data Notebook Line</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Data Notebook</type>
   <workflow>edit_workflow</workflow>
  </chain>
