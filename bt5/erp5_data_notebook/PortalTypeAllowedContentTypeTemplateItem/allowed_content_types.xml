@@ -1,4 +1,10 @@
 <allowed_content_type_list>
+ <portal_type id="Cluster Data Notebook">
+  <item>Cluster Data Notebook Line</item>
+ </portal_type>
+ <portal_type id="Cluster Data Notebook Line">
+  <item>Cluster Data Script</item>
+ </portal_type>
  <portal_type id="Cluster Data Notebook Module">
   <item>Cluster Data Notebook</item>
  </portal_type>

@@ -18,7 +18,7 @@
             <key> <string>description</string> </key>
             <value> <string>When enabled will allow to execute restricted and asynchronous Data Notebook code.\n
 \n
-Note: This is safe implementation, which restricts execution using PyData Script.</string> </value>
+Note: This is safe implementation, which restricts execution using Cluster Data Script.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

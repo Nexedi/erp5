@@ -53,15 +53,16 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_default_code_body</string>
+                        <string>my_result</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -81,7 +82,9 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_state</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -89,7 +92,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ClusterDataNotebook_view</string> </value>
+            <value> <string>ClusterDataNotebookLine_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -97,7 +100,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ClusterDataNotebook_view</string> </value>
+            <value> <string>ClusterDataNotebookLine_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -113,7 +116,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Cluster Data Notebook</string> </value>
+            <value> <string>Cluster Data Notebook Line</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
