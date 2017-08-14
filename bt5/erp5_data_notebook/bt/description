@@ -1,6 +1,3 @@
-Interaction between Jupyter (former IPython Notebook) and ERP5.
+Provides Jupyter kernel backend on ERP5.
 
-!WARNING!
-This business template is unsafe to install on a public server as one of the extensions uses eval and allows remote code execution. Proper security should be taken into account. 
-This template includes a highly experimental integration with PivotTableJs which doesn't follow ERP5 JavaScript standards and will be re factored to use jIO and RenderJS.
-!WARNING!
+Note: This Business Template allows to execute code in unrestricted environment. By default this functionality is disabled. In order to being able to execute Jupyter code one shall enable it in System Preferences on Data Notebook tab with option "Enable Data Notebook (synchronous, unrestricted, unsafe, obsolete)"
