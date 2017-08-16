@@ -143,7 +143,7 @@ class TemplateTool (BaseTool):
                                                'Business Package',
                                                'Business Manager']):
         if bt.getPortalType() == 'Business Manager':
-          if bt.getStatus() == 'installed' and bt.title == title:
+          if bt.getInstallationState() == 'installed' and bt.title == title:
             return bt
           else:
             continue
