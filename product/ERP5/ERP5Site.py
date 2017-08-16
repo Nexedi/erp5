@@ -1952,6 +1952,19 @@ class ERP5Generator(PortalGenerator):
     return p
 
   @classmethod
+  def bootstrap_bm(cls, portal, bm_name, path_list):
+    """
+    Bootstrap Business Item from the paths needed
+    """
+    bm_path = getBootstrapBusinessTemplateUrl(bm_name)
+    template_tool = portal.portal_templates
+    manager = template_tool.newContent(portal_type='Business Manager')
+    manager.importFile(bm_path + '/' + bm_name + '.zexp')
+    for path in path_list:
+      item = manager.getBusinessItemByPath(path)
+      item.install(manager)
+
+  @classmethod
   def bootstrap(cls, context, bt_name, item_name, content_id_list):
     bt_path = getBootstrapBusinessTemplateUrl(bt_name)
     from Products.ERP5.Document.BusinessTemplate import quote
@@ -2189,9 +2202,12 @@ class ERP5Generator(PortalGenerator):
     """
     workflow_list = ['business_template_building_workflow',
                      'business_template_installation_workflow']
+    manager_workflow_list = ['business_manager_building_workflow',
+                             'business_manager_installation_workflow']
     tool = p.portal_workflow
     tool.manage_delObjects(filter(tool.hasObject, workflow_list))
     self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
+    self.bootstrap(tool, 'erp5_business_package', 'WorkflowTemplateItem', manager_workflow_list)
     tool.setChainForPortalTypes(('Business Template',), workflow_list)
 
   def setupIndex(self, p, **kw):
