@@ -47,6 +47,7 @@
                         <string>simple_plotly_graph_gadget</string>
                         <string>simple_chart_graph_gadget</string>
                         <string>simple_dygraph_graph_gadget</string>
+                        <string>simple_echarts_graph_gadget</string>
                       </list>
                     </value>
                 </item>
