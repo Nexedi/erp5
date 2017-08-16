@@ -4,22 +4,14 @@
 (function (window, rJS, RSVP) {
   "use strict";
 
-  function setjIODAVConfiguration(gadget) {
-    var dav_url = gadget.props.element.querySelector("input[name='dav_url']").value;
+  function setjIODAVConfiguration(gadget, options) {
     return gadget.getSetting("portal_type", "Web Page")
       .push(function (portal_type) {
-        var old_date = new Date(),
-          configuration = {};
-        // We are looking for documents modified in the past 3 month
-        old_date = new Date(old_date.getFullYear(), old_date.getMonth() - 3);
-        configuration = {
+        var configuration = {
           type: "replicate",
           // XXX This drop the signature lists...
           query: {
             query: 'portal_type:"' + portal_type + '" ',
-            // XX Synchonizing the whole module is too much, here is a way to start quietly
-            //+ 'AND local_roles: ("Owner") '
-            //+ 'AND validation_state: ("draft", "released_alive", "shared_alive", "published_alive") ',
             limit: [0, 100]
           },
           use_remote_post: false,
@@ -66,14 +58,13 @@
                   property: {
                     "portal_type": [
                       "switchPropertyValue",
-                      {"PDF":"pdf", "Web Page": "txt"}
+                      {"PDF": "pdf", "Web Page": "txt"}
                     ]
                   },
                   sub_storage: {
                     type: "dav",
-                    url: gadget.props.element.querySelector("input[name='dav_url']").value,
-                    basic_login: btoa(gadget.props.element.querySelector("input[name='dav_username']").value
-                      + ':' + gadget.props.element.querySelector("input[name='dav_password']").value),
+                    url: options.dav_url,
+                    basic_login: btoa(options.username + ':' + options.password),
                     with_credentials: true
                   }
                 }
@@ -87,7 +78,7 @@
         return gadget.setSetting('jio_storage_name', "DAV");
       })
       .push(function () {
-        return gadget.setGlobalSetting('dav_url', dav_url);
+        return gadget.setGlobalSetting('dav_url', options.dav_url);
       })
       .push(function () {
         return gadget.setSetting('sync_reload', true);
@@ -95,7 +86,7 @@
       .push(function () {
         return gadget.redirect({
           command: "display",
-          options: {page: 'sync', auto_repair: 'true'}
+          options: {page: 'ojs_sync', auto_repair: 'true'}
         });
       });
   }
@@ -155,7 +146,7 @@
 
     .declareService(function () {
       var gadget = this;
-      return gadget.getSetting("global_setting_gadget_url", "officejs_setting_gadget/app/")
+      return gadget.getSetting("global_setting_gadget_url", "../officejs_setting_gadget/app/")
         .push(function (global_setting_gadget_url) {
           return gadget.declareGadget(global_setting_gadget_url, {
             "scope": "global_setting_gadget",
@@ -214,7 +205,7 @@
                 "editable": 1,
                 "key": "password",
                 "hidden": 0,
-                "type": "StringField"
+                "type": "PasswordField"
               }
             }},
               "_links": {
