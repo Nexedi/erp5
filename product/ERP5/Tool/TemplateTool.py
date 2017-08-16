@@ -1916,7 +1916,7 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.ManagePortal,
             'updateInstallationState')
-    def updateInstallationState(self, bm_list):
+    def compareInstallationState(self, bm_list):
       """
       Run installation after comparing combined Business Manager status
 
@@ -2062,7 +2062,60 @@ class TemplateTool (BaseTool):
 
       return change_list
 
+    def updateInstallationState(self, bm_list, force=1):
+      """
+      First compare installation state and then install the final value
+      """
+      change_list = self.compareInstallationState(bm_list)
+
+      if force:
+        to_install_path_list = [l[0] for l in change_list]
+        to_install_path_list = self.sortPathList(to_install_path_list)
+
+        # Install the path items with bm_list as context
+        self.installBusinessItemList(bm_list, to_install_path_list)
+
     installMultipleBusinessManager = updateInstallationState
+
+    def installBusinessItemList(self, manager_list, item_path_list):
+      """
+      Install Business Item/Business Property Item from the current Installation
+      Process given the change_list which carries the list of paths to be
+      installed
+      """
+      LOG('INFO', 0, '%s' % [item_path_list])
+
+      # Create BM for new installation state and update its path item list
+      new_installation_state = self.newContent(
+                                  portal_type='Business Manager',
+                                  title='Final Installation State',
+                                  temp_object=True,
+                                  )
+      combined_new_path_item_list = [item for bm
+                                in manager_list
+                                for item in bm.objectValues()]
+
+      for item in combined_new_path_item_list:
+        item.isIndexable = ConstantGetter('isIndexable', value=False)
+        new_id = new_installation_state.generateNewId()
+        new_installation_state._setObject(new_id, aq_base(item),
+                                        suppress_events=True)
+
+      for path in item_path_list:
+        item = new_installation_state.getBusinessItemByPath(path)
+        if item is None:
+          raise ValueError("Couldn't find path in current Installation State")
+        item.install(new_installation_state)
+
+      # Update workflow history of the installed Business Manager(s)
+      # Get the 'business_manager_installation_workflow' as it is already
+      # bootstrapped and installed
+      portal_workflow = self.getPortalObject().portal_workflow
+      wf = portal_workflow._getOb('business_manager_installation_workflow')
+
+      # Change the installation state for all the BM(s) in manager_list.
+      for manager in manager_list:
+        wf._executeMetaTransition(manager, 'installed')
 
     def calculateComparableHash(self, object, isProperty=False):
       """
