@@ -322,13 +322,15 @@
               type: "erp5",
               url: hateoas_url,
               default_view_reference: default_view
+            },
+            signature_sub_storage: {
+              type: "query",
+              sub_storage: {
+                type: "indexeddb",
+                database: "expense-hash-list"
+              }
             }
           });
-          gadget.state_parameter_dict.jio_storage.__storage._signature_sub_storage = jIO.createJIO({
-            type: "indexeddb",
-            database: gadget.state_parameter_dict.jio_storage.__storage._signature_hash
-          });
-          gadget.state_parameter_dict.jio_storage.__storage._signature_sub_storage.__storage._sub_storage = gadget.state_parameter_dict.jio_storage.__storage._local_sub_storage;
         });
 
     })

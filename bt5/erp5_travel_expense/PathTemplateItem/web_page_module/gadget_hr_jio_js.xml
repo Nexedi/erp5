@@ -68,6 +68,7 @@
             <value>
               <tuple>
                 <string>contributor/person_module/2</string>
+                <string>contributor/person_module/5</string>
               </tuple>
             </value>
         </item>
@@ -224,7 +225,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>supercedriclen</string> </value>
+                <value> <string>cedric.le.ninivin</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -238,7 +239,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.57502.32307.34304</string> </value>
+                <value> <string>961.29586.17351.25838</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +257,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1490349163.71</float>
+                        <float>1502904164.51</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
