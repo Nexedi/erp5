@@ -193,6 +193,8 @@ gadget_erp5_search_editor.js\n
 gadget_erp5_sort_editor.html\n
 gadget_erp5_sort_editor.js\n
 \n
+gadget_erp5_field_checkbox.html\n
+gadget_erp5_field_checkbox.js\n
 gadget_officejs_bookmark_manager_router.html\n
 gadget_officejs_jio_bookmark_view.html\n
 gadget_officejs_jio_bookmark_view.js\n
@@ -350,7 +352,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.11869.34421.55569</string> </value>
+                <value> <string>961.16277.24517.44253</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +370,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501841135.17</float>
+                        <float>1502876178.53</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

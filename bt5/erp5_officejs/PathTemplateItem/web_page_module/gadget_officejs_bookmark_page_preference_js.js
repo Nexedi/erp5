@@ -3,18 +3,6 @@
 (function (window, RSVP, rJS, URL) {
   "use strict";
 
-  function saveOptionDict(gadget) {
-    var option_dict = {
-      search_engine: gadget.element.querySelector(
-        ".options input[name=\"search_engine\"]"
-      ).value,
-      auto_redirect: gadget.element.querySelector(
-        ".options input[name=\"auto_redirect\"]"
-      ).checked
-    };
-    return gadget.setSetting("option", option_dict);
-  }
-
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -23,6 +11,8 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -83,7 +73,7 @@
                   "css_class": "",
                   "required": 1,
                   "editable": 1,
-                  "key": "title",
+                  "key": "auto_redirect",
                   "hidden": 0,
                   "type": "CheckBoxField"
                 },
@@ -116,7 +106,23 @@
         });
     })
     .onEvent("submit", function () {
-      saveOptionDict(this);
+      var gadget = this;
+      return gadget.notifySubmitting()
+        .push(function () {
+          return gadget.getDeclaredGadget("form_view");
+        })
+        .push(function (form_gadget) {
+          return form_gadget.getContent();
+        })
+        .push(function (content) {
+          return RSVP.all([
+            gadget.setSetting('bookmark_auto_redirect', content.auto_redirect),
+            gadget.setSetting('bookmark_search_engine', content.search_engine)
+          ]);
+        })
+        .push(function () {
+          return gadget.notifySubmitted('Preferences Saved');
+        });
     });
 
 }(window, RSVP, rJS, URL));
