@@ -410,6 +410,7 @@
                   .push(function (result) {
                     img = new Image();
                     img.src = result.target.result;
+                    gadget.options.doc.photo_data = img.src;
                     
                     return RSVP.all([
                       gadget.props.deferred1.promise,
@@ -426,7 +427,6 @@
                     ctx.fillText('Longitude: ' + gadget.props.geoLocation.coords.longitude +" Latitude: " + gadget.props.geoLocation.coords.latitude, 0, canvas.height - 20);
                     gadget.options.doc.photo_data = canvas.toDataURL();
                     */
-                    gadget.options.doc.photo_data = img.src;
                     preview.src = gadget.options.doc.photo_data;
                   });
               }

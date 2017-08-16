@@ -68,6 +68,7 @@
             <value>
               <tuple>
                 <string>contributor/person_module/2</string>
+                <string>contributor/person_module/5</string>
               </tuple>
             </value>
         </item>
@@ -232,7 +233,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>P4</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -246,7 +247,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>956.44329.14852.21316</string> </value>
+                <value> <string>960.56103.37527.44765</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -264,7 +265,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1484576962.29</float>
+                        <float>1502900981.42</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
