@@ -301,7 +301,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<a href="%(image_url)s"><img src="%(image_url)s?display=large"></a>\' % {\'image_url\': here.ExpenseValidationRequest_getRelatedExpenseProofUrl()}
+python:\'<a href="%(image_url)s"><img src="%(image_url)s?format=png&display=large"></a>\' % {\'image_url\': here.ExpenseValidationRequest_getRelatedExpenseProofUrl()}
 
 ]]></string> </value>
         </item>

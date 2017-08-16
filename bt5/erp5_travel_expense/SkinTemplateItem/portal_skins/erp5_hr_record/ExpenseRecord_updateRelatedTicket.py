@@ -74,13 +74,17 @@ publication_section = portal.ERP5Site_getPreferredExpenseDocumentPublicationSect
 photo_data = record.getPhotoData()
 if photo_data:
   if "," in photo_data and ticket:
-    photo_data = photo_data.split(",")[1]
+    photo_type, photo_data = photo_data.split(",")
+    filename="tmp.png"
+    # XXX This is getting more hackish
+    if "application/pdf" in photo_type:
+      filename="tmp.pdf"
     image = portal.portal_contributions.newContent(
       data = photo_data.decode('base64'),
       reference=ticket.getReference()+ "-justificatif",
       title = ticket.getReference() + " Justificatif",
       description = ticket.getDescription(),
-      filename="tmp.png",
+      filename=filename,
       follow_up=ticket.getRelativeUrl(),
       publication_section=publication_section.getRelativeUrl(),
       group=ticket.getDestinationDecisionValue().getGroup()
