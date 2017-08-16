@@ -111,7 +111,7 @@
                   "hidden": 0,
                   "type": "StringField"
                 },
-                "description": {
+                "my_description": {
                   "description": "",
                   "title": "Description",
                   "default": gadget.state.doc.description,
