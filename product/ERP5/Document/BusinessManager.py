@@ -956,7 +956,7 @@ class BusinessPropertyItem(XMLObject):
     if property_name.endswith('_list'):
       property_name = property_name[:-5]
     if int(self.getProperty('item_sign')) == 1:
-      obj.setProperty(property_name, property_value, property_type)
+      obj._setProperty(property_name, property_value, property_type)
 
   def getBusinessPath(self):
     return self.getProperty('item_path')
