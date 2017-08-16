@@ -222,7 +222,8 @@ class BusinessManager(Folder):
     """
       Returns the current state in installation
     """
-    portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
+    portal = self.getPortalObject()
+    portal_workflow = portal.portal_workflow
     wf = portal_workflow.getWorkflowById(
                          'business_manager_installation_workflow')
     return wf._getWorkflowStateOf(self, id_only=id_only )
