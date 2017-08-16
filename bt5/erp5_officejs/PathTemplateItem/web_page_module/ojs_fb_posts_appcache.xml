@@ -197,8 +197,13 @@ gadget_erp5_page_ojs_fb_posts_document_list.js\n
 gadget_erp5_page_ojs_fb_posts_panel.html\n
 gadget_erp5_page_ojs_fb_posts_panel.js\n
 jio_fbstorage.js\n
+jio_wrapperstorage.js\n
 gadget_erp5_page_ojs_fb_posts_jio.html\n
 gadget_ojs_fb_posts_jio.js\n
+gadget_erp5_sort_editor.html\n
+gadget_erp5_sort_editor.js\n
+gadget_erp5_search_editor.js\n
+gadget_erp5_search_editor.html\n
 GADGET:\n
 NETWORK:\n
 *</string> </value>
@@ -342,7 +347,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.20841.15763.31249</string> </value>
+                <value> <string>961.26541.35617.5188</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -360,7 +365,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502440236.9</float>
+                        <float>1502876355.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

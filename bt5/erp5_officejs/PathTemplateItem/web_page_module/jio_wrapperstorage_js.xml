@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -71,47 +68,45 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>text/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_fb_posts_jio.html</string> </value>
+            <value> <string>jio_wrapperstorage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Jio access</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_fb_posts_jio_html</string> </value>
+            <value> <string>jio_wrapperstorage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value> <string>en</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Wrapper Storage</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Jio Gadget for OfficeJS FB posts</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Wrapper Storage</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
-            <value> <string>001</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -167,7 +162,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -193,7 +188,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502097507.25</float>
+                        <float>1502875938.04</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -202,7 +197,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -238,7 +233,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.29117.52664.59050</string> </value>
+                <value> <string>961.29118.7130.30566</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -256,7 +251,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502876063.05</float>
+                        <float>1502876057.97</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -279,7 +274,9 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -295,7 +292,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -313,7 +310,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502096211.8</float>
+                        <float>1502875843.15</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
