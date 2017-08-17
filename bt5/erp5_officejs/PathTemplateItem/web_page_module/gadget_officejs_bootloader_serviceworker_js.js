@@ -25,6 +25,20 @@ var global = self, window = self;
     });
   }
 
+  function getFromLocal(relative_url) {
+    if (self.storage.get === undefined) {
+      self.storage = createStorage("ojs_source_code");
+    }
+    return self.storage.getAttachment(self.registration.scope, relative_url)
+      .push(function (blob) {
+        return new Response(blob, {
+          'headers': {
+            'content-type': blob.type
+          }
+        });
+      });
+  }
+
   self.addEventListener('install', function (event) {
     event.waitUntil(self.skipWaiting());
   });
@@ -43,33 +57,41 @@ var global = self, window = self;
       event.respondWith(new Response(self.cache_list));
       return;
     }
-    event.respondWith(
-      new self.RSVP.Queue()
-        .push(function () {
-          if (self.storage.get === undefined) {
-            self.storage = createStorage("ojs_source_code");
-          }
-          return self.storage.getAttachment(self.registration.scope, relative_url)
-            .push(function (blob) {
-              return new Response(blob, {
-                'headers': {
-                  'content-type': blob.type
-                }
-              });
-            });
-        })
-        .push(undefined, function (error) {
-          if (error instanceof self.jIO.util.jIOError) {
-            if (relative_url.indexOf('http') === -1) {
-              if (self.cache_list.indexOf(relative_url) === -1) {
-                self.cache_list.push(relative_url);
-              }
-            }
+    else if (event.request !== undefined && event.request.referrer === self.registration.scope) {
+      event.respondWith(
+        new self.RSVP.Queue()
+          .push(function () {
             return fetch(event.request);
-          }
-          return new Response(error, {"statusText": error.message, "status": 500});
-        })
-    );
+          })
+          .push(function (response) {
+            if (response.status === 200) {
+              return response;
+            }
+            return getFromLocal(relative_url);
+          })
+          .push(undefined, function (error) {
+            return new Response(error, {"statusText": error.message, "status": 500});
+          })
+      );
+    } else {
+      event.respondWith(
+        new self.RSVP.Queue()
+          .push(function () {
+            return getFromLocal(relative_url);
+          })
+          .push(undefined, function (error) {
+            if (error instanceof self.jIO.util.jIOError) {
+              if (relative_url.indexOf('http') === -1) {
+                if (self.cache_list.indexOf(relative_url) === -1) {
+                  self.cache_list.push(relative_url);
+                }
+              }
+              return fetch(event.request);
+            }
+            return new Response(error, {"statusText": error.message, "status": 500});
+          })
+      );
+    }
   });
 
 }(self, fetch, Request, Response));
