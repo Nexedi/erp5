@@ -1648,6 +1648,39 @@ return True
       sorted([i.getUid() for i in img_list]),
     )
 
+  def test_checkWebSiteFileViewConsistency(self):
+    """
+      Checks that the default view action of a File, viewing from a web site,
+      is File_viewAsWeb.
+      (i.e .../document_module/1/ == .../document_module/1/File_viewAsWeb)
+    """
+    web_site = self.setupWebSite()
+    # check when the file is empty
+    file_object = self.portal.document_module.newContent(portal_type="File")
+    file_object.publish()
+    self.tic()
+    path = '%s/document_module/%s/' % (
+      web_site.absolute_url_path(),
+      file_object.getId())
+    response_a = self.publish(path)
+    response_b = self.publish(path + "File_viewAsWeb")
+    self.assertEqual(response_a.getBody(), response_b.getBody())
+
+  def test_checkWebSiteImageViewConsistency(self):
+    """
+      Checks that the default view action of a Image, viewing from a web site,
+      is Image_viewAsWeb.
+      (i.e .../image_module/1/ == .../image_module/1/Image_viewAsWeb)
+    """
+    web_site = self.setupWebSite()
+    image_object = self.portal.image_module.newContent(portal_type="Image")
+    image_object.publish()
+    self.tic()
+    path = '%s/image_module/%s/' % (web_site.absolute_url_path(), image_object.getId())
+    response_a = self.publish(path)
+    response_b = self.publish(path + "Image_viewAsWeb")
+    self.assertEqual(response_a.getBody(), response_b.getBody())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
