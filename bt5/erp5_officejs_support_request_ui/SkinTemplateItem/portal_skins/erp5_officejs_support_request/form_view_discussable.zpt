@@ -1,4 +1,10 @@
-<tal:comment tal:replace="nothing"><!-- This form_view_discussable is for show the OfficeJS View in classic ERP5 view --></tal:comment>
+<tal:comment tal:replace="nothing">
+<!--
+  The "form_view_discussable" was copied from "form_view".
+  It is for show the OfficeJS View in classic ERP5 view.
+  And the "discussable" part is not implemented on this page template.
+-->
+</tal:comment>
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
            xmlns:metal="http://xml.zope.org/namespaces/metal"
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">

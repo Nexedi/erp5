@@ -64,6 +64,14 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>contributor/person_module/erp5_officejs_support_request_ui_test_person_002</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -230,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.35777.20882.61627</string> </value>
+                <value> <string>961.26247.21765.27153</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499343497.75</float>
+                        <float>1502725442.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
