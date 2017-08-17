@@ -7011,7 +7011,7 @@ return new Parser;
       value = '%' + this.value + '%';
       for (k in item) {
         if (item.hasOwnProperty(k)) {
-          if (k !== '__id') {
+          if (k !== '__id' && item[k]) {
             if (matchMethod(item[k], value) === true) {
               return true;
             }
