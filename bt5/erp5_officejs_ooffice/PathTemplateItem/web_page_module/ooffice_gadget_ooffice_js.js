@@ -548,8 +548,10 @@ if (Common === undefined) {
         return save_defer.promise;
       })
         .push(function (data) {
-          var body = data[g.props.key];
-          return zip.putAttachment('/', 'body.txt', body);
+          if (data) {
+            var body = data[g.props.key];
+            return zip.putAttachment('/', 'body.txt', body);
+          }
         })
         .push(function () {
           return zip.getAttachment('/', '/');
