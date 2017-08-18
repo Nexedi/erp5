@@ -33,6 +33,20 @@
           });
         });
     })
+    .declareMethod('getDocumentUrl', function (raw_url) {
+      var gadget = this;
+      return gadget.jio_getAttachment(raw_url, "links")
+          .push(function (links) {
+          var full_size_url = links._links.view[4].href;
+          return gadget.getUrlFor({
+            command: 'display',
+            options: {
+              jio_key: "document_module",
+              view: full_size_url
+            }
+          });
+        });
+    })
     .declareMethod('render', function (options) {
       var gadget = this;
       gadget.options = options;
@@ -124,6 +138,8 @@
             for (i = 0; i < post_list.length; i += 1) {
               if (post_list[i][3] !== null && post_list[i][3].indexOf("image_module") !== -1) {
                 queue_list.push(gadget.getImageUrl(post_list[i][3]));
+              } else if (post_list[i][3] !== null && post_list[i][3].indexOf("document_module") !== -1) {
+                queue_list.push(gadget.getDocumentUrl(post_list[i][3]));
               } else {
                 queue_list.push(null);
               }
@@ -140,7 +156,7 @@
               s += '<li>' +
                 'By <strong>' + post_list[i][0] + '</strong>' +
                 ' - <time>' + post_list[i][1] + '</time><br/>';
-              if (post_list[i][3] !== null && post_list[i][3].indexOf("image_module") !== -1) {
+              if (post_list[i][3] !== null && result_list[i] !== null) {
                 post_list[i][3] = result_list[i];
               }
               if (post_list[i][2]) {
