@@ -51,16 +51,12 @@
         });
     })
 
-    .onEvent('submit', function () {
+    .declareMethod("triggerSubmit", function () {
       var argument_list = arguments;
       return this.getDeclaredGadget('form_list')
         .push(function (gadget) {
           return gadget.triggerSubmit.apply(gadget, argument_list);
         });
-    })
-
-    .declareMethod("triggerSubmit", function () {
-      return this.element.querySelector('button[type="submit"]').click();
     })
 
     .declareMethod("render", function () {
