@@ -36,7 +36,7 @@ support_request.edit(
 support_request.submit()
 
 # create an HTML Post
-if description or file != 'undefined':
+if description or file is not None:
   post_module = portal.post_module
   post_1 = post_module.newContent(portal_type='HTML Post')
   
