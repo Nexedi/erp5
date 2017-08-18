@@ -1072,7 +1072,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_core_proxy_field_legacy',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bp_dict_2 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1085,7 +1085,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_pdm',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bp_dict_3 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1098,7 +1098,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_performance_test',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bp_dict_4 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1111,7 +1111,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_ui_test',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bp_dict_5 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1124,7 +1124,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_ui_test_core',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         if repository.endswith('/bt5'):
           property_dict_list.append(bp_dict_1)
@@ -1144,7 +1144,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': ['erp5_catalog'],
           'title': 'erp5_mysql_innodb_catalog',
-          'version': '2.0'}
+          'version': '5.4.7'}
 
         bm_dict_2 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1157,7 +1157,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': ['erp5_view_style'],
           'title': 'erp5_xhtml_style',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bm_dict_3 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1170,7 +1170,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': ['erp5_catalog'],
           'title': 'erp5_mysql_ndb_catalog',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bm_dict_4 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1183,7 +1183,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_jquery',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bm_dict_5 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1196,7 +1196,7 @@ class TemplateTool (BaseTool):
           'test_dependency_list': [],
           'provision_list': [],
           'title': 'erp5_property_sheets',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         bm_dict_6 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
@@ -1212,7 +1212,7 @@ class TemplateTool (BaseTool):
                                     'erp5_base'],
           'provision_list': ['erp5_auto_logout',],
           'title': 'erp5_core',
-          'version': '1.0'}
+          'version': '5.4.7'}
 
         if repository.endswith('/bootstrap'):
           property_dict_list.append(bm_dict_1)
