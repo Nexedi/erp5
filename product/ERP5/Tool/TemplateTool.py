@@ -827,7 +827,26 @@ class TemplateTool (BaseTool):
       # XXX: Add layer=1 and sign=1 for default for all paths
       template_path_list = [l + ' | 1 | 1' for l in template_path_list]
 
-      migrated_bm.setProperty('template_path_list', template_path_list)
+      # Create new sub-objects instead based on template_path_list
+      for path in template_path_list:
+
+        path_list = path.split(' | ')
+
+        # Create Business Property Item for objects with property in path
+        if '#' in path_list[0]:
+          migrated_bm.newContent(
+                portal_type='Business Property Item',
+                item_path=path_list[0],
+                item_sign=path_list[1],
+                item_layer=path_list[2],
+                )
+        else:
+          migrated_bm.newContent(
+                portal_type='Business Item',
+                item_path=path_list[0],
+                item_sign=path_list[1],
+                item_layer=path_list[2],
+                )
 
       kw['removable_property'] = removable_property
       kw['removable_sub_object_path'] = removable_sub_object_path
