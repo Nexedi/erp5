@@ -4,9 +4,8 @@ portal = context.getPortalObject()
 
 support_request_list = portal.portal_catalog(portal_type="Support Request")
 
-
-count_by_state = {"validated": 0, "submitted": 0, "suspended": 0, "invalidated": 0, "draft": 0, "cancelled": 0}
-count_by_date = {"le2": count_by_state.copy(), "2to7": count_by_state.copy(), "7to30": count_by_state.copy(), "gt30": count_by_state.copy()}
+count_by_state = {}
+count_by_date = {"le2": {}, "2to7": {}, "7to30": {}, "gt30": {}}
 
 # Get the split date
 now_date = DateTime()
@@ -22,6 +21,13 @@ date_30_midnight = DateTime(str(date_30.year()) + "-" + str(date_30.month()) + "
 for sr in support_request_list:
   sr_date = sr.getModificationDate()
   sr_state = sr.getSimulationState()
+
+  if sr_state not in count_by_state:
+    count_by_state[sr_state] = 0
+
+  if sr_state not in count_by_date["le2"]:
+    for date_category in count_by_date:
+      count_by_date[date_category][sr_state] = 0
 
   if sr_date >= date_2_midnight:
     count_by_date["le2"][sr_state] = count_by_date["le2"][sr_state] + 1
