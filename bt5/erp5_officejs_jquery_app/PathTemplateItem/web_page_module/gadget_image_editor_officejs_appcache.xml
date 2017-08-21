@@ -198,6 +198,8 @@ gadget_erp5_sort_editor.js\n
 gadget_erp5_field_password.html\n
 gadget_erp5_field_password.js\n
 \n
+gadget_erp5_field_image.html\n
+gadget_erp5_field_image.js\n
 gadget_officejs_image_editor_router.html\n
 gadget_officejs_jio_image_view.html\n
 gadget_officejs_jio_image_view.js\n
@@ -346,7 +348,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.10686.10882.5973</string> </value>
+                <value> <string>961.30792.56927.40004</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -364,7 +366,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502956919.7</float>
+                        <float>1503306177.8</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
