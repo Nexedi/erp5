@@ -4,7 +4,7 @@ now = DateTime()
 
 # create an HTML Post
 post_module = portal.post_module
-post_1 = post_module.newContent(portal_type='HTML Post')
+post = post_module.newContent(portal_type='HTML Post')
 
 # get the related object
 object_list = portal.portal_catalog(relative_url=follow_up) # with id keyword, this function will return a sequence data type which contains one element.
@@ -18,7 +18,7 @@ follow_up_object.edit(
   modification_date = now
 )
 
-post_1.edit(
+post.edit(
   start_date=now,
   follow_up_value=follow_up_object,
   predecessor_value = predecessor if predecessor else None,
@@ -32,12 +32,13 @@ if file != "undefined":
                   'file': file}
   document = context.Base_contribute(**document_kw)
   # set relation between post and document
-  post_1.setSuccessorValueList([document])
+  post.setSuccessorValueList([document])
   # depending on security model this should be changed accordingly
   document.publish()
 
+post.publish()
 # We need to reindex the object on server. So the page will get the post which
 # just submmitted.
-post_1.immediateReindexObject()
+post.immediateReindexObject()
 
 return
