@@ -38,9 +38,9 @@ support_request.submit()
 # create an HTML Post
 if description or file is not None:
   post_module = portal.post_module
-  post_1 = post_module.newContent(portal_type='HTML Post')
+  post = post_module.newContent(portal_type='HTML Post')
   
-  post_1.edit(
+  post.edit(
     start_date=now,
     follow_up_value=support_request,
     text_content=description,
@@ -54,12 +54,12 @@ if description or file is not None:
     document = context.Base_contribute(**document_kw)
 
     # set relation between post and document
-    post_1.setSuccessorValueList([document])
+    post.setSuccessorValueList([document])
   
     # depending on security model this should be changed accordingly
     document.publish()
-    
-  post_1.immediateReindexObject()
+  post.publish()
+  post.immediateReindexObject()
 
 support_request.immediateReindexObject()
 
