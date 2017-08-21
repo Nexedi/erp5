@@ -1056,14 +1056,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         )
       return related_key_list
 
-    security.declarePublic('getCategoryParameterDict')
-    def getCategoryParameterDict(self, category_list, category_table='category', strict_membership=True, forward=True, onMissing=lambda category: True):
+    security.declarePublic('getCategoryValueDictParameterDict')
+    def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True):
       """
-      From a list of categories, produce a catalog keyword argument dictionary
-      testing (strict or not, forward or reverse relation) membership to these
-      categories.
+      From a mapping from base category ids to lists of documents, produce a
+      catalog keyword argument dictionary testing (strict or not, forward or
+      reverse relation) membership to these documents with their respective
+      base categories.
 
-      category_list (list of category relative urls with their base categories)
+      base_category_dict (dict with base category ids as keys and document lists
+      as values)
+        Note: mutated by this method.
       category_table ('category' or 'predicate_category')
         Controls the table to use for membership lookup.
       strict_membership (bool)
@@ -1072,12 +1075,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       forward (bool)
         Whether document being looked up bears the relation (true) or is its
         target (false).
-      onMissing (callable)
-        Called for each category which does not exist.
-        Receives faulty relative url as "category" argument.
-        False return value skips the entry.
-        True return value causes a None placeholder to be inserted.
-        Raised exceptions will propagate.
 
       Return a dictionnary whose keys are catalog parameter names and values
       are sets of uids.
@@ -1091,25 +1088,48 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         flag_list.append('strict')
       prefix = ('_'.join(flag_list) + '__') if flag_list else ''
       suffix = ('' if forward else '__related') + '__uid'
-      base_category_dict = {}
-      portal_categories = self.getPortalObject().portal_categories
-      getBaseCategoryId = portal_categories.getBaseCategoryId
-      getCategoryUid = portal_categories.getCategoryUid
-      for relative_url in category_list:
-        category_uid = getCategoryUid(relative_url)
-        if category_uid is not None or onMissing(category=relative_url):
-          base_category_dict.setdefault(
-            getBaseCategoryId(relative_url),
-            set(),
-          ).add(category_uid)
       parent_uid_set = base_category_dict.pop('parent', None)
+      base_category_uid_dict = {
+        base_category_id: {document.getUid() for document in document_set}
+        for base_category_id, document_set in base_category_dict.iteritems()
+      }
       result = {
         prefix + x + suffix: y
-        for x, y in base_category_dict.iteritems()
+        for x, y in base_category_uid_dict.iteritems()
       }
       if parent_uid_set is not None:
         result['parent_uid'] = parent_uid_set
       return result
+
+    security.declarePublic('getCategoryParameterDict')
+    def getCategoryParameterDict(self, category_list, onMissing=lambda category: True, **kw):
+      """
+      From a list of categories, produce a catalog keyword argument dictionary
+      testing (strict or not, forward or reverse relation) membership to these
+      categories.
+
+      category_list (list of category relative urls with their base categories)
+      onMissing (callable)
+        Called for each category which does not exist.
+        Receives faulty relative url as "category" argument.
+        False return value skips the entry.
+        True return value causes a None placeholder to be inserted.
+        Raised exceptions will propagate.
+
+      Other arguments & return value: see getCategoryValueDictParameterDict.
+      """
+      base_category_dict = defaultdict(set)
+      portal_categories = self.getPortalObject().portal_categories
+      getBaseCategoryId = portal_categories.getBaseCategoryId
+      getCategoryValue = portal_categories.getCategoryValue
+      for relative_url in category_list:
+        category_uid = getCategoryValue(relative_url)
+        if category_uid is not None or onMissing(category=relative_url):
+          base_category_dict[getBaseCategoryId(relative_url)].add(category_uid)
+      return self.getCategoryValueDictParameterDict(
+        base_category_dict,
+        **kw
+      )
 
     def _aq_dynamic(self, name):
       """
