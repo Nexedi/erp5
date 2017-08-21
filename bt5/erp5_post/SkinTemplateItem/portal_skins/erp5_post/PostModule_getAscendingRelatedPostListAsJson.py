@@ -14,8 +14,7 @@ else:
   raise NotImplementedError(follow_up)
   
 # get the all HTML Posts which related to this follow up object
-post_list = portal.portal_catalog(portal_type="HTML Post", strict_follow_up_uid=follow_up_object.getUid()) # with id keyword, this function will return a sequence data type which contains one element.
-post_list = sorted(post_list, key=lambda x:x.getStartDate(), reverse=False)
+post_list = portal.portal_catalog(portal_type="HTML Post", strict_follow_up_uid=follow_up_object.getUid(), sort_on=(('modification_date', 'ascending'),), validation_state="published") # with id keyword, this function will return a sequence data type which contains one element.
 
 preferred_date_order = portal.portal_preferences.getPreferredDateOrder()
 
