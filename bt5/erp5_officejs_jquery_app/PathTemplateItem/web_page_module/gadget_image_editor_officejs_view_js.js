@@ -150,7 +150,7 @@
                   "editable": editable,
                   "key": "text_content",
                   "hidden": 0,
-                  "type": editable === 1 ? "GadgetField" : "EditorField",
+                  "type": editable === 1 ? "GadgetField" : "ImageField",
                   "url": "../officejs_image_editor_gadget/app/",
                   "sandbox": "iframe"
                 }
