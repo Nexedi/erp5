@@ -143,6 +143,10 @@ else:
 UID_BUFFER_SIZE = 300
 OBJECT_LIST_SIZE = 300 # XXX 300 is arbitrary value of catalog object list
 MAX_PATH_LEN = 255
+DOMAIN_STRICT_MEMBERSHIP_DICT = {
+  'selection_domain': False,
+  'selection_report': True,
+}
 
 manage_addSQLCatalogForm = DTMLFile('dtml/addSQLCatalog',globals())
 
@@ -2229,6 +2233,13 @@ class Catalog(Folder,
     empty_value_dict = {}
     for key, value in kw.iteritems():
       result = None
+      if key in DOMAIN_STRICT_MEMBERSHIP_DICT:
+        if value is None:
+          continue
+        value = self.getPortalObject().portal_selections.asDomainQuery(
+          value,
+          strict_membership=DOMAIN_STRICT_MEMBERSHIP_DICT[key],
+        )
       if isinstance(value, dict_type_list):
         # Cast dict-ish types into plain dicts.
         value = dict(value)
@@ -2547,8 +2558,6 @@ class Catalog(Folder,
         REQUEST=None,
         src__=0,
         build_sql_query_method=None,
-        selection_domain=None,
-        selection_report=None,
         # XXX should get zsql_brain from ZSQLMethod class itself
         zsql_brain=None,
         implicit_join=False,
@@ -2564,8 +2573,8 @@ class Catalog(Folder,
     return sql_method(
       src__=src__,
       zsql_brain=zsql_brain,
-      selection_domain=selection_domain,
-      selection_report=selection_report,
+      selection_domain=None, # BBB
+      selection_report=None, # BBB
       where_expression=query['where_expression'],
       select_expression=query['select_expression'],
       group_by_expression=query['group_by_expression'],
