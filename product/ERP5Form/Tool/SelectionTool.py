@@ -46,6 +46,7 @@ from urlparse import urlsplit, urlunsplit
 from zLOG import LOG, INFO, WARNING
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
+from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 import warnings
 
 
@@ -1331,6 +1332,38 @@ class SelectionTool( BaseTool, SimpleItem ):
           return getattr(o.__of__(self.getWebSectionValue()), dialog_id)(REQUEST=REQUEST)
         # Return the search dialog
         return getattr(o, dialog_id)(REQUEST=REQUEST)
+
+    security.declarePublic('asDomainSelection')
+    def asDomainQuery(self, domain, strict_membership=False):
+      if isinstance(domain, DomainSelection):
+        warnings.warn("To pass a DomainSelection instance is deprecated.\n"
+                      "Please use a domain dict instead.",
+                      DeprecationWarning)
+      else:
+        domain = DomainSelection(domain).__of__(self)
+      relation_dict = {}
+      query_list = []
+      append = query_list.append
+      domain_item_dict = domain.asDomainItemDict()
+      # XXX: why even put Nones in domain if they are ignored ?
+      domain_item_dict.pop(None, None)
+      for key, value in domain_item_dict.iteritems():
+        if getattr(aq_base(value), 'isPredicate', 0):
+          append(
+            value.asQuery(strict_membership=strict_membership),
+          )
+        else:
+          relation_dict[key] = [value]
+      if relation_dict:
+        append(
+          self.getPortalObject().portal_catalog.getCategoryValueDictParameterDict(
+            relation_dict,
+            strict_membership=strict_membership,
+          ),
+        )
+      if query_list:
+        return ComplexQuery(query_list)
+      return SimpleQuery(uid=0, comparison_operator='>')
 
     security.declarePublic('buildSQLJoinExpressionFromDomainSelection')
     def buildSQLJoinExpressionFromDomainSelection(self, selection_domain,
