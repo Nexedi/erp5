@@ -1648,38 +1648,51 @@ return True
       sorted([i.getUid() for i in img_list]),
     )
 
+  def checkWebSiteDocumentViewConsistency(self, portal_type, module_id="document_module"):
+    """
+      Checks that the default view action of a <portal_type>, viewing from a web site,
+      is `web_view`.
+      (e.g. output of .../document_module/1/ differs if `web_view` visible or not)
+    """
+    portal = self.portal
+    web_site = self.setupWebSite()
+
+    # extract script id from `web_view` action
+    # Use `contentValues` because `searchFolder` does not find any web_view action.
+    for action in portal.portal_types[portal_type].contentValues(portal_type="Action Information"):
+      if action.getReference() == "web_view":
+        break
+    else:
+      raise LookupError("No action with reference 'web_view' found")
+    assert action.getVisible() is 1
+
+    # check when the file is empty
+    document_object = portal[module_id].newContent(portal_type=portal_type)
+    document_object.publish()
+    self.tic()
+    path = '%s/%s/%s/' % (
+      web_site.absolute_url_path(),
+      module_id,
+      document_object.getId())
+    response_a = self.publish(path)
+    action.setVisible(0)
+    self.tic()
+    response_b = self.publish(path)
+    self.assertNotEqual(response_a.getBody(), response_b.getBody())
+
   def test_checkWebSiteFileViewConsistency(self):
     """
       Checks that the default view action of a File, viewing from a web site,
-      is File_viewAsWeb.
-      (i.e .../document_module/1/ == .../document_module/1/File_viewAsWeb)
+      is `web_view`.
     """
-    web_site = self.setupWebSite()
-    # check when the file is empty
-    file_object = self.portal.document_module.newContent(portal_type="File")
-    file_object.publish()
-    self.tic()
-    path = '%s/document_module/%s/' % (
-      web_site.absolute_url_path(),
-      file_object.getId())
-    response_a = self.publish(path)
-    response_b = self.publish(path + "File_viewAsWeb")
-    self.assertEqual(response_a.getBody(), response_b.getBody())
+    self.checkWebSiteDocumentViewConsistency("File")
 
   def test_checkWebSiteImageViewConsistency(self):
     """
       Checks that the default view action of a Image, viewing from a web site,
-      is Image_viewAsWeb.
-      (i.e .../image_module/1/ == .../image_module/1/Image_viewAsWeb)
+      is `web_view`.
     """
-    web_site = self.setupWebSite()
-    image_object = self.portal.image_module.newContent(portal_type="Image")
-    image_object.publish()
-    self.tic()
-    path = '%s/image_module/%s/' % (web_site.absolute_url_path(), image_object.getId())
-    response_a = self.publish(path)
-    response_b = self.publish(path + "Image_viewAsWeb")
-    self.assertEqual(response_a.getBody(), response_b.getBody())
+    self.checkWebSiteDocumentViewConsistency("Image", module_id="image_module")
 
 def test_suite():
   suite = unittest.TestSuite()
