@@ -624,38 +624,27 @@ class BusinessItem(XMLObject):
 
     p = context.getPortalObject()
     path = self.getProperty('item_path')
-    try:
-      # XXX: After we apply _resolve path list while storing Data for the
-      # Business Manager, this should be of no use as there will be no path
-      # where we are going to achieve something different for relative_path
-      # from the result of _resolvePath on a given path.
-      # TODO: Remove this after checking successfull implementation of
-      # _resolve path in Business Manager in storeTemplateData
-      for relative_url in self._resolvePath(p, [], path.split('/')):
-        obj = p.unrestrictedTraverse(relative_url)
-        obj = obj._getCopy(context)
+    obj = p.unrestrictedTraverse(path)
+    obj = obj._getCopy(context)
 
-        # We should remove the extra properties of object so that there
-        # shouldn't be redundancy of the proeprties
-        removable_property_list = kw.get('removable_property_list')
+    # We should remove the extra properties of object so that there
+    # shouldn't be redundancy of the proeprties
+    removable_property_list = kw.get('removable_property_list')
 
-        # We should also add extra parameter to remove sub-objects by removing
-        # `_tree` for any erp5 object. This way we can have control over adding
-        # sub-objects as new Business Item objects
-        remove_sub_objects = kw.get('remove_sub_objects')
-        if remove_sub_objects:
-          removable_property_list.append('_tree')
-        obj = self.removeProperties(obj, 1, properties=removable_property_list)
-        obj = obj.__of__(context)
-        # XXX: '_recursiveRemoveUid' is not working as expected
-        _recursiveRemoveUid(obj)
-        obj = aq_base(obj)
-        obj.isIndexable = ConstantGetter('isIndexable', value=False)
-        new_id = self.generateNewId()
-        self._setObject(new_id, obj, suppress_events=True)
-    except AttributeError:
-      # In case the object doesn't exist, just pass without raising error
-      pass
+    # We should also add extra parameter to remove sub-objects by removing
+    # `_tree` for any erp5 object. This way we can have control over adding
+    # sub-objects as new Business Item objects
+    remove_sub_objects = kw.get('remove_sub_objects')
+    if remove_sub_objects:
+      removable_property_list.append('_tree')
+    obj = self.removeProperties(obj, 1, properties=removable_property_list)
+    obj = obj.__of__(context)
+    # XXX: '_recursiveRemoveUid' is not working as expected
+    _recursiveRemoveUid(obj)
+    obj = aq_base(obj)
+    obj.isIndexable = ConstantGetter('isIndexable', value=False)
+    new_id = self.generateNewId()
+    self._setObject(new_id, obj, suppress_events=True)
 
   def _resolvePath(self, folder, relative_url_list, id_list):
     """
