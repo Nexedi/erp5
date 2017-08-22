@@ -511,7 +511,17 @@ class SimulationTool(BaseTool):
         # catalog
         new_kw.pop('ignore_group_by', None)
 
-        sql_kw.update(ctool.buildSQLQuery(**new_kw))
+        catalog_sql_kw = ctool.buildSQLQuery(**new_kw)
+        from_table_dict = dict(sql_kw.pop('from_table_list', []))
+        for alias, table in catalog_sql_kw.pop('from_table_list', None) or []:
+          assert from_table_dict.get(alias) in (None, table), (
+            alias,
+            table,
+            from_table_dict[alias],
+          )
+          from_table_dict[alias] = table
+        sql_kw.update(catalog_sql_kw)
+        sql_kw['from_table_list'] = from_table_dict.items()
         return sql_kw
 
     def _generateKeywordDict(self,
@@ -599,6 +609,9 @@ class SimulationTool(BaseTool):
         # sort_on
         sort_on=None,
         group_by=None,
+        # selection
+        selection_domain=None,
+        selection_report=None,
         # keywords for related keys
         **kw):
       """
@@ -613,6 +626,32 @@ class SimulationTool(BaseTool):
       # input and output are used by getTrackingList
       sql_kw['input'] = input
       sql_kw['output'] = output
+      # selection_{domain,report}
+      portal = self.getPortalObject()
+      if selection_domain is None:
+        # Short-circuit DTML missing parameter lookup by always providing these
+        selection_domain_sql_dict = {
+          'from_expression': None,
+          'where_expression': None,
+          'from_table_list': [],
+        }
+      else:
+        # selection_domain has to be handled inside the ZSQLMethod as it does
+        # not apply to default query table (here, "stock") but to the catalog
+        # representing the "node". Hardcode table name to avoid calling from
+        # inside DTML.
+        selection_domain_sql_dict = portal.portal_catalog.buildSQLQuery(
+          selection_domain=selection_domain,
+          query_table_alias='node', # XXX: hard-coded value from ZSQLMethod
+        )
+      sql_kw['selection_domain_from_expression'] = selection_domain_sql_dict['from_expression']
+      sql_kw['selection_domain_where_expression'] = selection_domain_sql_dict['where_expression']
+      sql_kw['from_table_list'] = selection_domain_sql_dict['from_table_list']
+      if selection_report is not None:
+        new_kw['selection_report'] = selection_report
+      # BBB
+      sql_kw['selection_domain'] = sql_kw['selection_report'] = None
+
       # Add sort_on parameter if defined
       if sort_on is not None:
         new_kw['sort_on'] = sort_on
@@ -1185,7 +1224,6 @@ class SimulationTool(BaseTool):
                          omit_simulation=0,
                          only_accountable=True,
                          default_stock_table='stock',
-                         selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1,
                          precision=None, connection_id=None,
                          **kw):
@@ -1266,8 +1304,6 @@ class SimulationTool(BaseTool):
         'standardise': standardise,
         'omit_simulation': omit_simulation,
         'only_accountable': only_accountable,
-        'selection_domain': selection_domain,
-        'selection_report': selection_report,
         'precision': precision,
         'inventory_list': inventory_list,
         'connection_id': connection_id,
@@ -1890,8 +1926,7 @@ class SimulationTool(BaseTool):
     def getInventoryHistoryList(self, src__=0, ignore_variation=0,
                                 standardise=0, omit_simulation=0,
                                 only_accountable=True, omit_input=0,
-                                omit_output=0, selection_domain=None,
-                                selection_report=None, precision=None, **kw):
+                                omit_output=0, precision=None, **kw):
       """
       Returns a time based serie of inventory values
       for a single or a group of resource, node, section, etc. This is useful
@@ -1907,8 +1942,7 @@ class SimulationTool(BaseTool):
                       standardise=standardise, omit_simulation=omit_simulation,
                       only_accountable=only_accountable,
                       omit_input=omit_input, omit_output=omit_output,
-                      selection_domain=selection_domain,
-                      selection_report=selection_report, precision=precision,
+                      precision=precision,
                       **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1917,8 +1951,7 @@ class SimulationTool(BaseTool):
                                  standardise=0, omit_simulation=0,
                                  only_accountable=True,
                                  omit_input=0, omit_output=0,
-                                 selection_domain=None,
-                                 selection_report=None, precision=None, **kw):
+                                 precision=None, **kw):
       """
       getInventoryHistoryChart is the pensing to getInventoryHistoryList
       to ease the rendering of time based graphs which show the evolution
@@ -1933,8 +1966,7 @@ class SimulationTool(BaseTool):
                     standardise=standardise, omit_simulation=omit_simulation,
                     only_accountable=only_accountable,
                     omit_input=omit_input, omit_output=omit_output,
-                    selection_domain=selection_domain,
-                    selection_report=selection_report, precision=precision,
+                    precision=precision,
                     **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -1944,7 +1976,6 @@ class SimulationTool(BaseTool):
                                omit_input=0, omit_output=0,
                                only_accountable=True,
                                omit_asset_increase=0, omit_asset_decrease=0,
-                               selection_domain=None, selection_report=None,
                                initial_running_total_quantity=0,
                                initial_running_total_price=0, precision=None,
                                **kw):
@@ -1972,8 +2003,6 @@ class SimulationTool(BaseTool):
                          omit_input=omit_input, omit_output=omit_output,
                          omit_asset_increase=omit_asset_increase,
                          omit_asset_decrease=omit_asset_decrease,
-                         selection_domain=selection_domain,
-                         selection_report=selection_report,
                          initial_running_total_quantity=
                                   initial_running_total_quantity,
                          initial_running_total_price=
@@ -2072,7 +2101,6 @@ class SimulationTool(BaseTool):
     # Traceability management
     security.declareProtected(Permissions.AccessContentsInformation, 'getTrackingList')
     def getTrackingList(self, src__=0,
-        selection_domain=None, selection_report=None,
         strict_simulation_state=1, history=0, **kw) :
       """
       Returns a list of items in the form
@@ -2178,8 +2206,6 @@ class SimulationTool(BaseTool):
         new_kw['simulation_state_list'] =  None
 
       return self.Resource_zGetTrackingList(src__=src__,
-                                            selection_domain=selection_domain,
-                                            selection_report=selection_report,
                                             **new_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getCurrentTrackingList')
