@@ -1,8 +1,15 @@
-<dtml-let query="getattr(search_context, 'buildSQLQuery', portal_catalog.buildSQLQuery)(query=portal_catalog.getSecurityQuery(**kw), **kw)"
-          selection_domain="kw.get('selection_domain', None)"
-          selection_report="kw.get('selection_report', None)"
-          optimizer_switch_key_list="getOptimizerSwitchKeyList()">
-
+<dtml-let
+  asQuery="getattr(search_context, 'asQuery', None)"
+  dummy="None if asQuery is None else kw.update({'websection_query': asQuery()})"
+  query="
+    buildSQLQuery(
+      security_query=getSecurityQuery(sql_catalog_id=getId(),
+      local_roles=kw.pop('local_roles', None)),
+      **kw
+    )
+  "
+  optimizer_switch_key_list="getOptimizerSwitchKeyList()"
+>
   <dtml-comment>
     Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog
     can support more features which are needed here. Once SQLCatalog supports those feature,
@@ -39,23 +46,11 @@
         <dtml-in prefix="table" expr="query['from_table_list']">
           <dtml-var table_item> AS <dtml-var table_key>,
         </dtml-in>
-        <dtml-if selection_domain>
-          <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)">,
-        </dtml-if>
-        <dtml-if selection_report>
-          <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)">,
-        </dtml-if>
         versioning AS my_versioning
       WHERE
         my_versioning.uid = catalog.uid
         <dtml-if "query['where_expression']">
           AND <dtml-var "query['where_expression']">
-        </dtml-if>
-        <dtml-if selection_domain>
-          AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">
-        </dtml-if>
-        <dtml-if selection_report>
-          AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report)">
         </dtml-if>
         <dtml-if strict_language>
           AND my_versioning.language IN (<dtml-sqlvar language type="string">, '')
