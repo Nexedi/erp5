@@ -1694,6 +1694,34 @@ return True
     """
     self.checkWebSiteDocumentViewConsistency("Image", module_id="image_module")
 
+  def test_checkWebSiteTextViewConsistency(self):
+    """
+      Checks that the default view action of a Text, viewing from a web site,
+      is `web_view`.
+    """
+    self.checkWebSiteDocumentViewConsistency("Text")
+
+  def test_checkWebSitePresentationViewConsistency(self):
+    """
+      Checks that the default view action of a Presentation, viewing from a web
+      site, is `web_view`.
+    """
+    self.checkWebSiteDocumentViewConsistency("Presentation")
+
+  def test_checkWebSiteSpreadsheetViewConsistency(self):
+    """
+      Checks that the default view action of a Spreadsheet, viewing from a web
+      site, is `web_view`.
+    """
+    self.checkWebSiteDocumentViewConsistency("Spreadsheet")
+
+  def test_checkWebSiteDrawingViewConsistency(self):
+    """
+      Checks that the default view action of a Drawing, viewing from a web site,
+      is `web_view`.
+    """
+    self.checkWebSiteDocumentViewConsistency("Drawing")
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
