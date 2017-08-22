@@ -55,8 +55,7 @@ FROM
   </dtml-if>
 </dtml-in>
 </dtml-if>
-  <dtml-if selection_domain><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>
-  <dtml-if selection_report><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report, category_table_alias='report_category')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>
+<dtml-if "selection_domain_from_expression">, <dtml-var "selection_domain_from_expression"> </dtml-if>
 
 WHERE
   stock.uid = catalog.uid
@@ -132,11 +131,11 @@ WHERE
     <dtml-unless sequence-end> OR </dtml-unless></dtml-in>)
 </dtml-if>
 
-<dtml-if selection_domain>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category', join_table='stock', join_column='node_uid')">
-</dtml-if>
-<dtml-if selection_report>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, category_table_alias='report_category', strict_membership=1)">
+<dtml-if "selection_domain_where_expression">
+  <dtml-in selection_domain_catalog_alias_set>
+    AND stock.<dtml-var sequence-item>_uid = <dtml-var sequence-item>.uid
+  </dtml-in>
+  AND <dtml-var "selection_domain_where_expression">
 </dtml-if>
 
 <dtml-if group_by_expression>

@@ -75,8 +75,8 @@ FROM
     (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid
     AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)
 </dtml-if>
-  <dtml-if selection_domain><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>
-  <dtml-if selection_report><dtml-let expression="portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report, category_table_alias='report_category')"><dtml-if expression>, <dtml-var expression></dtml-if></dtml-let></dtml-if>
+  <dtml-if "selection_domain_from_expression">, <dtml-var "selection_domain_from_expression"> </dtml-if>
+
   <dtml-if transformed_uid>, transformation, catalog as transformed_resource</dtml-if>
 
 WHERE
@@ -102,11 +102,11 @@ WHERE
 <dtml-if only_accountable>
   AND <dtml-var stock_table_id>.is_accountable
 </dtml-if>
-<dtml-if selection_domain>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, category_table_alias='domain_category', join_table=stock_table_id, join_column='node_uid')">
-</dtml-if>
-<dtml-if selection_report>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, category_table_alias='report_category', strict_membership=1)">
+<dtml-if "selection_domain_where_expression">
+  <dtml-in selection_domain_catalog_alias_set>
+    AND <dtml-var stock_table_id>.<dtml-var sequence-item>_uid = <dtml-var sequence-item>.uid
+  </dtml-in>
+  AND <dtml-var "selection_domain_where_expression">
 </dtml-if>
 
 <dtml-if convert_quantity_result>
