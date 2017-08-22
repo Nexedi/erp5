@@ -438,16 +438,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>post_start_date_hidden</string>
-                          <string>Comment Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>post_start_date</string>
-                          <string>Comment Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -485,7 +476,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Folder_searchFolderSortByReferenceDescending</string> </value>
+            <value> <string>UpdateTestList</string> </value>
         </item>
       </dictionary>
     </pickle>

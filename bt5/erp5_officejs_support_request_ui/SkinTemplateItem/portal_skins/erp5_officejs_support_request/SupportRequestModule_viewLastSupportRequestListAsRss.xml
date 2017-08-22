@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,17 +89,23 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_stop_date</string>
+                        <string>listbox_delivery_stop_date</string>
                         <string>listbox_destination_decision_language</string>
                         <string>listbox_causality_translated_portal_type</string>
-                        <string>listbox_start_date</string>
+                        <string>listbox_delivery_start_date</string>
+                        <string>listbox_post_start_date_hidden</string>
+                        <string>listbox_post_user</string>
+                        <string>listbox_post_start_date</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_post_content</string>
+                        <string>listbox_support_link</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -113,7 +119,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SupportRequestModule_viewForOfficejsSupportRequest</string> </value>
+            <value> <string>SupportRequestModule_viewLastSupportRequestListAsRss</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -121,11 +127,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SupportRequestModule_viewForOfficejsSupportRequest</string> </value>
+            <value> <string>SupportRequestModule_viewLastSupportRequestListAsRss</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>rss_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -137,7 +143,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Tickets</string> </value>
+            <value> <string>Render Latest Content List as RSS</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
