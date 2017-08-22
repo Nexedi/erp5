@@ -424,8 +424,9 @@ where_expression\r\n
 order_by_expression\r\n
 group_by_expression\r\n
 limit_expression\r\n
-selection_domain\r\n
-selection_report\r\n
+selection_domain_from_expression\r\n
+selection_domain_where_expression\r\n
+selection_domain_catalog_alias_set\r\n
 ignore_variation\r\n
 standardize\r\n
 omit_simulation\r\n

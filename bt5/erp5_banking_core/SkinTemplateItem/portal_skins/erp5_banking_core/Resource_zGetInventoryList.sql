@@ -76,12 +76,11 @@ FROM
     AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)
 </dtml-if>
 <dtml-in prefix="table" expr="from_table_list">
-  <dtml-if expr="table_key not in ('catalog', stock_table_id)">
+  <dtml-if expr="table_key not in ('catalog', 'node', stock_table_id)">
   , <dtml-var table_item> AS <dtml-var table_key>
   </dtml-if>
 </dtml-in>
-  <dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>
-  <dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>
+  <dtml-if "selection_domain_from_expression">, <dtml-var "selection_domain_from_expression"> </dtml-if>
   , catalog as node, catalog as resource <dtml-if transformed_uid>, transformation, catalog as transformed_resource</dtml-if>
 
 WHERE
@@ -110,11 +109,8 @@ WHERE
   AND catalog.portal_type != 'Simulation Movement'
 </dtml-if>
 
-<dtml-if selection_domain>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table=stock_table_id, join_column='node_uid')">
-</dtml-if>
-<dtml-if selection_report>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">
+<dtml-if "selection_domain_where_expression">
+  AND <dtml-var "selection_domain_where_expression">
 </dtml-if>
 
 <dtml-if convert_quantity_result>
