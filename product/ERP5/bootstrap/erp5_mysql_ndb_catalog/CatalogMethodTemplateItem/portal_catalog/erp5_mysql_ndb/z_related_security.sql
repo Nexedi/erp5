@@ -1,1 +1,0 @@
-<dtml-var table_0>.uid = catalog.security_uid

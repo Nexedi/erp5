@@ -1,1 +1,0 @@
-select * from catalog where <dtml-sqltest uid op=eq type="int">

@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS full_text
