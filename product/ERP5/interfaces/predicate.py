@@ -68,3 +68,14 @@ class IPredicate(Interface):
     implement test, results obtained through asSQLExpression
     must be additionnaly tested by invoking test().
     """
+
+  def asQuery():
+    """
+    A Predicate can be rendered as a set of catalog conditions. This
+    can be useful to create reporting trees based on the
+    ZSQLCatalog. This condition set is however partial since
+    python scripts which are used by the test method of the predicate
+    cannot be converted to catalog conditions. If a python script is defined to
+    implement test, results obtained through asQuery must be additionnaly
+    tested by invoking test().
+    """
