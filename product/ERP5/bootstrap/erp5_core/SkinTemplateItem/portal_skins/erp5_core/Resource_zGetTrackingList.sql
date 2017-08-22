@@ -14,10 +14,8 @@ FROM
     <dtml-if expr="table_key != 'item'">, <dtml-var table_item> AS <dtml-var table_key></dtml-if>
   </dtml-in>
 </dtml-if>
-<dtml-if selection_domain>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)"> </dtml-if>
-<dtml-if selection_report>, <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)"> </dtml-if>
+<dtml-if "selection_domain_from_expression">, <dtml-var "selection_domain_from_expression"> </dtml-if>
 , item
-
 
 <dtml-if join_on_item>
   LEFT JOIN 
@@ -65,12 +63,11 @@ WHERE
   AND next_item.uid IS NULL
 </dtml-if>
 
-
-<dtml-if selection_domain>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain, join_table='item', join_column='node_uid')">
-</dtml-if>
-<dtml-if selection_report>
-  AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report, strict_membership=1)">
+<dtml-if "selection_domain_where_expression">
+  <dtml-in selection_domain_catalog_alias_set>
+    AND <dtml-var stock_table_id>.<dtml-var sequence-item>_uid = <dtml-var sequence-item>.uid
+  </dtml-in>
+  AND <dtml-var "selection_domain_where_expression">
 </dtml-if>
 
 <dtml-if group_by_expression>
