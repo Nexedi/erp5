@@ -119,9 +119,8 @@ class RelatedKey(SearchKey):
     self._buildRelatedKey(related_key_definition)
     if isinstance(search_value, Query):
       search_value.setGroup(self.getColumn())
-    join_condition = search_value
     return RelatedQuery(search_key=self,
-                        join_condition=join_condition)
+                        join_condition=search_value)
 
   def registerColumnMap(self, column_map, table_alias_list=None):
     related_column = self.getColumn()
