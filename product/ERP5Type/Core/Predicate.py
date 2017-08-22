@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import itertools
 from types import MethodType
 import zope.interface
 from warnings import warn
@@ -40,7 +41,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Cache import readOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ZSQLCatalog.SQLCatalog import SQLQuery
+from Products.ZSQLCatalog.SQLCatalog import SQLQuery, SimpleQuery, ComplexQuery
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.Expression import Expression
@@ -348,19 +349,100 @@ class Predicate(XMLObject):
   security.declareProtected( Permissions.AccessContentsInformation, 'asSqlJoinExpression' )
   asSqlJoinExpression = asSQLJoinExpression
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'asQuery')
+  def asQuery(self, strict_membership=False):
+    """
+    A Predicate can be rendered as a set of catalog conditions. This
+    can be useful to create reporting trees based on the
+    ZSQLCatalog. This condition set is however partial since
+    python scripts which are used by the test method of the predicate
+    cannot be converted to catalog conditions. If a python script is defined to
+    implement test, results obtained through asQuery must be additionnaly
+    tested by invoking test().
+    """
+    portal_catalog = self.getPortalObject().portal_catalog
+    buildSingleQuery = portal_catalog.getSQLCatalog().buildSingleQuery
+    getCategoryParameterDict = portal_catalog.getCategoryParameterDict
+    def filterCategoryList(base_category_set, category_list):
+      return [
+        x for x in category_list
+        if x.split('/', 1)[0] in base_category_set
+      ]
+    next_join_counter = itertools.count().next
+    def buildSeparateJoinQuery(name, value):
+      query = buildSingleQuery(name, value)
+      suffix = str(next_join_counter())
+      # XXX: using a deprecated API and accessing properties which are not part
+      # of the API. Of course this will never break !
+      query.setTableAliasList([
+        (x, x + suffix) for x in query.search_key.table_list
+      ])
+      return query
+
+    query_list = []
+    append = query_list.append
+
+    for buildQuery, getBaseCategorySet, getCategoryList in (
+      ( # Single-membership criterion
+        lambda name, value: buildSingleQuery(name, value),
+        self.getMembershipCriterionBaseCategoryList,
+        self.getMembershipCriterionCategoryList,
+      ),
+      ( # Multi-membership criterion
+        buildSeparateJoinQuery,
+        self.getMultimembershipCriterionBaseCategoryList,
+        self.getMembershipCriterionCategoryList,
+      ),
+    ):
+      append(
+        getCategoryParameterDict(
+          filterCategoryList(getBaseCategorySet(), getCategoryList()),
+          strict_membership=strict_membership,
+          onMissing=lambda category: False,
+        ),
+      )
+
+    # Value criterion
+    for criterion in self.getCriterionList():
+      if not criterion.min and not criterion.max:
+        append(buildSingleQuery(criterion.property, criterion.identity))
+        continue
+      if criterion.min:
+        append(SimpleQuery(
+          comparison_operator='>=',
+          **{criterion.property: criterion.min}
+        ))
+      if criterion.max:
+        append(SimpleQuery(
+          comparison_operator='<=',
+          **{criterion.property: criterion.max}
+        ))
+
+    if query_list:
+      return ComplexQuery(query_list, logical_operator='AND')
+    elif not getattr(self, 'isEmptyCriterionValid', lambda: True)():
+      # By catalog definition, no object has uid 0, so this condition forces an
+      # empty result.
+      return SimpleQuery(uid=0)
+    return SimpleQuery(uid=0, comparison_operator='>')
+
   security.declareProtected(Permissions.AccessContentsInformation, 'searchResults')
   def searchResults(self, **kw):
     """
     """
     return self.getPortalObject().portal_catalog.searchResults(
-      build_sql_query_method=self.buildSQLQuery, **kw)
+      predicate_internal_query=self.asQuery(),
+      **kw
+    )
 
   security.declareProtected(Permissions.AccessContentsInformation, 'countResults')
   def countResults(self, REQUEST=None, used=None, **kw):
     """
     """
     return self.getPortalObject().portal_catalog.countResults(
-      build_sql_query_method=self.buildSQLQuery, **kw)
+      predicate_internal_query=self.asQuery(),
+      **kw
+    )
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getCriterionList' )
   def getCriterionList(self, **kw):
