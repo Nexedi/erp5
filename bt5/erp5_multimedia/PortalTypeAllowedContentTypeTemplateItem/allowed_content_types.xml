@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Sound Module">
+  <item>Sound</item>
+ </portal_type>
+ <portal_type id="Video Module">
+  <item>Video</item>
+ </portal_type>
+</allowed_content_type_list>

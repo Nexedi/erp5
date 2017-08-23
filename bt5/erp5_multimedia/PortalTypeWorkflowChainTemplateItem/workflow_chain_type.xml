@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Sound</type>
+  <workflow>document_publication_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Video</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>
