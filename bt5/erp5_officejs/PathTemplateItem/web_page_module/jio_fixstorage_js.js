@@ -113,6 +113,6 @@
     );
   };
 
-  jIO.addStorage('fix_local', CompatibilityStorage);
+  jIO.addStorage('compatibility', CompatibilityStorage);
 
 }(jIO, Blob, Rusha, RSVP, URI));
