@@ -77,10 +77,6 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
-                        <tuple>
-                          <string>relative_url</string>
-                          <string>URL</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
