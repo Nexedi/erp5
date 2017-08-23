@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>default</string>
+                <string>required</string>
                 <string>title</string>
               </list>
             </value>
@@ -85,6 +86,10 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
