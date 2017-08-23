@@ -1,0 +1,12 @@
+#generate-rss  {
+  padding: 8pt;
+  margin-top: 30pt;
+  margin-right: 12pt;
+  background-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 1px;
+  border-style: solid;
+  min-width: 8em;
+  line-height: 1.5;
+}

@@ -1,6 +1,6 @@
-/*global document, window, Option, rJS, RSVP, Chart*/
+/*global document, window, Option, rJS, RSVP, Chart, loopEventListener*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP) {
+(function (window, rJS, RSVP, loopEventListener) {
   "use strict";
 
   rJS(window)
@@ -157,6 +157,36 @@
           });
         });
     })
+    .declareService(function () {
+      var gadget = this;
+      function getRSS(click_event) {
+        var rss_button = gadget.element.querySelector("#generate-rss");
+        if (rss_button.href === '') {
+          return gadget.getSetting("hateoas_url")
+            .push(function (hateoas_url) {
+              return gadget.jio_getAttachment(
+                'support_request_module',
+                hateoas_url + 'support_request_module'
+                  + "/SupportRequestModule_generateRSSLinkAsJson"
+              )
+                .push(function (result) {
+                  rss_button.href = result.restricted_access_url;
+                  rss_button.innerHTML = "RSS Link";
+                  rss_button.target = "_blank";
+                });
+            });
+        }
+        click_event.returnValue = true;
+      }
+
+      // Listen to form submit
+      return loopEventListener(
+        gadget.element.querySelector("#generate-rss"),
+        'click',
+        false,
+        getRSS
+      );
+    })
     .onEvent('change', function (evt) {
       if (evt.target.id === "field_your_project") {
         var gadget = this;
@@ -203,4 +233,4 @@
         });
     });
 
-}(window, rJS, RSVP));
+}(window, rJS, RSVP, loopEventListener));
