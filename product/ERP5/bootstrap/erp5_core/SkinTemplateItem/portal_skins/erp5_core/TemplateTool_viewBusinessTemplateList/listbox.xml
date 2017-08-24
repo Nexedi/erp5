@@ -145,6 +145,10 @@
                           <string>translated_building_state_title</string>
                           <string>Building State</string>
                         </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -199,12 +203,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>ascending</string>
-                        </tuple>
-                        <tuple>
-                          <string>revision</string>
-                          <string>ascending</string>
+                          <string>modification_date</string>
+                          <string>descending</string>
                         </tuple>
                       </list>
                     </value>
