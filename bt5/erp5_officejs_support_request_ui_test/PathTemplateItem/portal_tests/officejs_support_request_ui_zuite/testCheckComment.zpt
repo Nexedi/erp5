@@ -41,6 +41,11 @@ field_my_description
   <td>RobotMaking</td>
 </tr>
 <tr>
+  <td>waitForTextPresent</td>
+  <td>FeatureRequire</td>
+  <td></td>
+</tr>
+<tr>
   <td>select</td>
   <td>field_your_resource</td>
   <td>FeatureRequire</td>
