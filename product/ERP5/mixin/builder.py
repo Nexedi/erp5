@@ -167,7 +167,9 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
-  def generateMovementListForStockOptimisation(self, group_by_node=1, **kw):
+  def generateMovementListForStockOptimisation(self, group_by_node=1,
+                                               allow_intermediate_negative_stock=True,
+                                               **kw):
     from Products.ERP5Type.Document import newTempMovement
     now = DateTime()
     movement_list = []
@@ -229,22 +231,32 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           min_flow = resource.getProperty(supply_prefix + '_supply_line_min_flow', 0)
           max_delay = resource.getProperty(supply_prefix + '_supply_line_max_delay', 0)
           min_stock = resource.getProperty(supply_prefix + '_supply_line_min_stock', 0)
-        if round(inventory_item.inventory, 5) < min_stock:
+        if round(inventory_item.inventory, 5) < min_stock\
+            or allow_intermediate_negative_stock == False:
           stop_date = resource.getNextAlertInventoryDate(
                                reference_quantity=min_stock,
                                variation_text=inventory_item.variation_text,
                                from_date=now,
                                group_by_node=group_by_node,
+                               look_for_minimal=not allow_intermediate_negative_stock,
                                **kw)
           if stop_date is None:
             stop_date = now
-          movement = newMovement(inventory_item, resource)
-          movement.edit(
-            start_date=stop_date-max_delay,
-            stop_date=stop_date,
-            quantity=max(min_flow, -inventory_item.inventory),
-          )
-          movement_list.append(movement)
+          min_inventory = resource.getFutureInventory(
+            variation_text=inventory_item.variation_text,
+            at_date=stop_date,
+            **kw
+            )
+          quantity = max(min_flow, -min_inventory)
+          # No need to create a movement with quantity == 0
+          if quantity != 0:
+            movement = newMovement(inventory_item, resource)
+            movement.edit(
+              start_date=stop_date-max_delay,
+              stop_date=stop_date,
+              quantity=quantity,
+            )
+            movement_list.append(movement)
         # We could need to cancel automated stock optimization if for some reasons
         # previous optimisations are obsolete
         elif round(inventory_item.inventory, 5) > min_stock:
