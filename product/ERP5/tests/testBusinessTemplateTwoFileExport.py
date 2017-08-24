@@ -1155,4 +1155,4 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
     # the PythonScript is recognised as modified
     result = second_import_template.preinstall()
     self.assertEquals(result.get('portal_skins/%s/%s' % (skin_folder_id, python_script_id)),
-                      ('Modified', 'Skin'))
+                      ['Modified', 'Skin'])
