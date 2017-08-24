@@ -50,7 +50,7 @@
             doc = gadget.state.doc;
             doc.text_content = content.text_content;
           }
-          doc.modification_date = (new Date()).toISOString();
+          doc.modification_date = (new Date()).toUTCString();
           return gadget.jio_put(gadget.state.jio_key, doc);
         })
         .push(function () {
@@ -120,7 +120,7 @@
                   "editable": 1,
                   "key": "description",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "TextAreaField"
                 }
               }},
               "_links": {

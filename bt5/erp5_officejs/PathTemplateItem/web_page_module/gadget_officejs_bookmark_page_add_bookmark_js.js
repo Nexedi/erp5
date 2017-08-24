@@ -23,7 +23,7 @@
           return form_gadget.getContent();
         })
         .push(function (doc) {
-          doc.modification_date = (new Date()).toISOString();
+          doc.modification_date = (new Date()).toUTCString();
           return gadget.jio_post(doc);
         })
         .push(function () {
@@ -92,7 +92,7 @@
                   "editable": 1,
                   "key": "description",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "TextAreaField"
                 },
                 "my_portal_type": {
                   "description": "The name of a document in ERP5",
