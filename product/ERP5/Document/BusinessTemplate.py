@@ -525,15 +525,15 @@ class BaseTemplateItem(Implicit, Persistent):
         new_obj_xml = self.generateXml(path=path)
         old_obj_xml = installed_item.generateXml(path=path)
         if new_obj_xml != old_obj_xml:
-          modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+          modified_object_list[path] = 'Modified', self.__class__.__name__[:-12]
         # else, compared versions are identical, don't overwrite the old one
       else: # new object
-        modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+        modified_object_list[path] = 'New', self.__class__.__name__[:-12]
     # list removed objects
     old_keys = installed_item._objects.keys()
     for path in old_keys:
       if path not in self._objects:
-        modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+        modified_object_list[path] = 'Removed', self.__class__.__name__[:-12]
     return modified_object_list
 
   def install(self, context, trashbin, **kw):
@@ -1937,7 +1937,7 @@ class SkinTemplateItem(ObjectTemplateItem):
           if upd_obj_path.startswith(bt_obj_path):
             # a child of the ERP5 Form must be updated, so the form too
             if not modified_object_list.has_key(bt_obj_path):
-              modified_object_list.update({bt_obj_path: ['Modified', self.__class__.__name__[:-12]]})
+              modified_object_list[bt_obj_path] = 'Modified', self.__class__.__name__[:-12]
     return modified_object_list
 
   def install(self, context, trashbin, **kw):
@@ -2089,14 +2089,14 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
         new_object = self._objects[path]
         old_object = installed_item._objects[path]
         if new_object != old_object:
-          modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+          modified_object_list[path] = 'Modified', self.__class__.__name__[:-12]
       else: # new object
-        modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+        modified_object_list[path] = 'New', self.__class__.__name__[:-12]
     # get removed object
     old_keys = installed_item._objects.keys()
     for path in old_keys:
       if path not in self._objects:
-        modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+        modified_object_list[path] = 'Removed', self.__class__.__name__[:-12]
     return modified_object_list
 
   def _importFile(self, file_name, file):
@@ -2205,14 +2205,14 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
       if old_object is not None:
         # Compare object to see it there is any change
         if new_object != old_object:
-          modified_object_list.update({path : ['Modified', class_name_prefix]})
+          modified_object_list[path] = 'Modified', class_name_prefix
       else:
-        modified_object_list.update({path : ['New', class_name_prefix]})
+        modified_object_list.update[path] = 'New', class_name_prefix
 
     # Get removed objects
     for path in installed_item._objects:
       if path not in self._objects:
-        modified_object_list.update({path : ['Removed', class_name_prefix]})
+        modified_object_list.update[path] = 'Removed', class_name_prefix
 
     return modified_object_list
 
@@ -2650,13 +2650,13 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
         new_object.sort()
         old_object.sort()
         if new_object != old_object:
-          modified_object_list.update({path : ['Modified', self.getTemplateTypeName()]})
+          modified_object_list[path] = 'Modified', self.getTemplateTypeName()
       else: # new object
-        modified_object_list.update({path : ['New', self.getTemplateTypeName()]})
+        modified_object_list[path] = 'New', self.getTemplateTypeName()
     # get removed object
     for path in installed_item._objects:
       if path not in self._objects:
-        modified_object_list.update({path : ['Removed', self.getTemplateTypeName()]})
+        modified_object_list[path] = 'Removed', self.getTemplateTypeName()
     return modified_object_list
 
   def _importFile(self, file_name, file):
@@ -2751,13 +2751,13 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         new_object.sort()
         old_object.sort()
         if new_object != old_object:
-          modified_object_list.update({path : ['Modified', self.getTemplateTypeName()]})
+          modified_object_list[path] = 'Modified', self.getTemplateTypeName()
       else: # new object
-        modified_object_list.update({path : ['New', self.getTemplateTypeName()]})
+        modified_object_list.update[path] = 'New', self.getTemplateTypeName()
     # get removed object
     for path in installed_item._objects:
       if path not in self._objects:
-        modified_object_list.update({path : ['Removed', self.getTemplateTypeName()]})
+        modified_object_list.update[path] = 'Removed', self.getTemplateTypeName()
     return modified_object_list
 
   def _importFile(self, file_name, file):
@@ -3760,19 +3760,16 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
         old_obj_code = installed_item._objects[path]
         if new_obj_code != old_obj_code:
           # Note: Magical way to have unique paths
-          modified_object_list.update(
-              {self._getKey(path) : ['Modified', self.__class__.__name__[:-12]]})
+          modified_object_list[self._getKey(path)] = 'Modified', self.__class__.__name__[:-12]
       else: # new object
         # Note: Magical way to have unique paths
-        modified_object_list.update(
-              {self._getKey(path) : ['New', self.__class__.__name__[:-12]]})
+        modified_object_list[self._getKey(path)] = 'New', self.__class__.__name__[:-12]
         # get removed object
     old_keys = installed_item._objects.keys()
     for path in old_keys:
       if path not in self._objects:
         # Note: Magical way to have unique paths
-        modified_object_list.update(
-              {self._getKey(path) : ['Removed', self.__class__.__name__[:-12]]})
+        modified_object_list[self._getKey(path)] = 'Removed', self.__class__.__name__[:-12]
     return modified_object_list
 
   def install(self, context, trashbin, **kw):
@@ -4320,12 +4317,12 @@ class RoleTemplateItem(BaseTemplateItem):
       if installed_item._objects.has_key(role):
         continue
       else: # only show new roles
-        modified_object_list.update({role : ['New', 'Role']})
+        modified_object_list[role] = 'New', 'Role'
     # get removed roles
     old_roles = installed_item._objects.keys()
     for role in old_roles:
       if role not in self._objects:
-        modified_object_list.update({role : ['Removed', self.__class__.__name__[:-12]]})
+        modified_object_list[role] = 'Removed', self.__class__.__name__[:-12]
     return modified_object_list
 
   def install(self, context, trashbin, **kw):
@@ -4611,14 +4608,14 @@ class MessageTranslationTemplateItem(BaseTemplateItem):
         new_obj_code = self._objects[path]
         old_obj_code = installed_item._objects[path]
         if new_obj_code != old_obj_code:
-          modified_object_list.update({path : ['Modified', self.__class__.__name__[:-12]]})
+          modified_object_list[path] = 'Modified', self.__class__.__name__[:-12]
       else: # new object
-        modified_object_list.update({path : ['New', self.__class__.__name__[:-12]]})
+        modified_object_list[path] = 'New', self.__class__.__name__[:-12]
     # get removed object
     old_keys = installed_item._objects.keys()
     for path in old_keys:
       if path not in self._objects:
-        modified_object_list.update({path : ['Removed', self.__class__.__name__[:-12]]})
+        modified_object_list[path] = 'Removed', self.__class__.__name__[:-12]
     return modified_object_list
 
   def _splitKey(self,key):
@@ -5241,8 +5238,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
             if len(modified_object) > 0:
               modified_object_list.update(modified_object)
           else:
-            for path in new_item._objects.keys():
-              modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
+            modified_object_list.update(dict.fromkeys(new_item._objects,
+              ('New', new_item.__class__.__name__[:-12])))
 
       if reinstall:
         self.portal_templates.manage_delObjects(ids=[INSTALLED_BT_FOR_DIFF])

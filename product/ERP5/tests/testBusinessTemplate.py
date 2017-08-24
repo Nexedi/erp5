@@ -346,7 +346,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
 
   def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
-    self.assertEqual(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ['Modified', 'CatalogMethod']})
+    self.assertEqual(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ('Modified', 'CatalogMethod')})
 
   def stepCheckInstalledInstallationState(self, sequence=None, **kw):
     """
