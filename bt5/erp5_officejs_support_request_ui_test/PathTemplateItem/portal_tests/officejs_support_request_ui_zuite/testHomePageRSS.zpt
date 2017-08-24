@@ -25,33 +25,28 @@
   <td></td>
 </tr>
 <tr>
+  <td>click</td>
+  <td>//a[@id='generate-rss']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>RSS Link</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>//canvas[@id='bar-chart-grouped']</td>
+  <td>//a[contains(@href,'${base_url}/web_site_module/erp5_officejs_support_request_ui/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss')]</td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//canvas[@id='pie-chart']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Recent Updates</td>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Comment Date</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Comment Author</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForTextPresent</td>
-  <td>Customer Support Dashboard</td>
+  <td>application/rss+xml</td>
   <td></td>
 </tr>
 </tbody></table>
