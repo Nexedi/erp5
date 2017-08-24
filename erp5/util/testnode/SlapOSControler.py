@@ -37,6 +37,8 @@ import argparse
 import json
 from slapos import client
 
+from ConfigParser import ConfigParser
+
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
 
@@ -78,7 +80,7 @@ class SlapOSControler(object):
   #TODO: implement a method to get all instance related the slapOS account
   # and deleting all old instances (based on creation date or name etc...)
 
-  def createSlaposConfigurationFileAccount(self, key, certificate, slapos_url, config):
+  def createSlaposConfigurationFileAccount(self, key, certificate, slapos_url, config, slapos_rest_url):
     # Create "slapos_account" directory in the "slapos_directory"
     slapos_account_directory = os.path.join(config['slapos_directory'], "slapos_account")
     createFolder(slapos_account_directory)
@@ -86,9 +88,10 @@ class SlapOSControler(object):
     slapos_account_key_path = os.path.join(slapos_account_directory, "key")
     slapos_account_certificate_path = os.path.join(slapos_account_directory, "certificate")
     configuration_file_path = os.path.join(slapos_account_directory, "slapos.cfg")
-    configuration_file_value = "[slapos]\nmaster_url = %s\n\
+    configuration_file_value = "[slapos]\nmaster_url = %s\nmaster_rest_url = %s\n\
 [slapconsole]\ncert_file = %s\nkey_file = %s" %(
                                   slapos_url,
+                                  slapos_rest_url,
                                   slapos_account_certificate_path,
                                   slapos_account_key_path)
     createFile(slapos_account_key_path, "w", key)
@@ -109,11 +112,19 @@ class SlapOSControler(object):
     parser.add_argument("software_url")
     parser.add_argument("node")
     if os.path.exists(self.configuration_file_path):
+      self.log("configuration_file_path: " + str(self.configuration_file_path))
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
-      config = client.Config()
-      config.setConfig(args, args.configuration_file)
+      self.log("parsed args: " + str(args))
+      #config = client.Config()
+      #config.setConfig(args, args.configuration_file)
+      self.log("Creating clientConfig...")
+      configp = ConfigParser()
+      configp.read(self.configuration_file_path)
+      config = client.ClientConfig(args, configp)
       try:
-        local = client.init(config)
+        self.log("config instantiated. Calling client.init(config)...")
+        local = client.init(config, self.log)
+        self.log("local instantiated with client.init!")
         local['supply'](software_url, computer_guid=computer_id, state=state)
         self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
       except:
