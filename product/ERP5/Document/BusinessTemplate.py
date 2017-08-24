@@ -1073,7 +1073,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       if installed_item._objects.has_key(path):
         upgrade_list.append((path, installed_item._objects[path]))
       else: # new object
-        modified_object_list[path] = 'New', type_name
+        modified_object_list[path] = ['New', type_name]
 
     # update _p_jar property of objects cleaned by removeProperties
     transaction.savepoint(optimistic=True)
@@ -1094,15 +1094,15 @@ class ObjectTemplateItem(BaseTemplateItem):
       old_io.close()
       if new_obj_xml != old_obj_xml:
         if context.isKeepObject(path):
-          modified_object_list[path] = 'Modified but should be kept', type_name
+          modified_object_list[path] = ['Modified but should be kept', type_name]
         else:
-          modified_object_list[path] = 'Modified', type_name
+          modified_object_list[path] = ['Modified', type_name]
     # get removed object
     for path in set(installed_item._objects) - set(self._objects):
       if context.isKeepObject(path):
-        modified_object_list[path] = 'Removed but should be kept', type_name
+        modified_object_list[path] = ['Removed but should be kept', type_name]
       else:
-        modified_object_list[path] = 'Removed', type_name
+        modified_object_list[path] = ['Removed', type_name]
     return modified_object_list
 
   def _backupObject(self, action, trashbin, container_path, object_id, **kw):

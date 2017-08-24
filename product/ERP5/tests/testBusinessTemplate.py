@@ -6857,7 +6857,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       shutil.rmtree(export_dir)
     self.assertEqual(
-       {'test_document': ('Removed but should be kept', 'Path')},
+       {'test_document': ['Removed but should be kept', 'Path']},
        new_bt.preinstall())
 
   def test_update_business_template_with_template_keep_path_list_catalog_method(self):
@@ -6912,7 +6912,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       shutil.rmtree(export_dir)
     self.assertEqual(
        {'portal_catalog/erp5_mysql_innodb/z_fake_method':
-         ('Removed but should be kept', 'CatalogMethod')},
+         ['Removed but should be kept', 'CatalogMethod']},
        new_bt.preinstall())
 
   def test_BusinessTemplateWithTest(self):
