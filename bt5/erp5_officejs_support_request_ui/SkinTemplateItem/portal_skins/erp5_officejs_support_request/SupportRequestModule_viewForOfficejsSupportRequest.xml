@@ -121,7 +121,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SaleOpportunityModule_viewSaleOpportunityList</string> </value>
+            <value> <string>SupportRequestModule_viewForOfficejsSupportRequest</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
