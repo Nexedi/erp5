@@ -313,11 +313,11 @@ class DB(TM):
     def _query(self, query, allow_reconnect=False):
         """
           Send a query to MySQL server.
-          It reconnects automaticaly if needed and the following conditions are
+          It reconnects automatically if needed and the following conditions are
           met:
            - It has not just tried to reconnect (ie, this function will not
-             attemp to connect twice per call).
-           - This conection is not transactionnal and has set not MySQL locks,
+             attempt to connect twice per call).
+           - This connection is not transactional and has set not MySQL locks,
              because they are bound to the connection. This check can be
              overridden by passing allow_reconnect with True value.
         """
@@ -492,7 +492,7 @@ class DB(TM):
         if m is None:
             return
         name = m.group(2)
-        # Lock automaticaly unless src__ is True, because the caller may have
+        # Lock automatically unless src__ is True, because the caller may have
         # already done it (in case that it plans to execute the returned query).
         with (nested if src__ else self.lock)():
             try:
