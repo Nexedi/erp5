@@ -96,6 +96,9 @@ class EntireQuery(object):
                             )
       self.column_map = column_map
     if 1:
+      column_map.registerTable(
+        self.catalog_table_name,
+      )
       for extra_column in self.extra_column_list:
         table, column = extra_column.replace('`', '').split('.')
         if table != self.catalog_table_name:
