@@ -68,6 +68,7 @@ Skinnable.SkinnableObjectManager.initializeCache = CMFCoreSkinnableSkinnableObje
 def skinResolve(self, selection, name):
   try:
     portal_skins = aq_base(self.portal_skins)
+    portal_callables = aq_base(self.portal_callables)
   except AttributeError:
     raise AttributeError, name
   try:
@@ -87,7 +88,7 @@ def skinResolve(self, selection, name):
         return
       skin_list = portal_skins._getSelections()[selection[0]].split(',') \
                   + ['portal_callables']
-      skin_selection_mapping[selection] = skin_list = _initializeCache(
+      skin_selection_mapping[selection] = skin_list = _initializeCache(portal_callables,
         portal_skins, skin_list[1+skin_list.index(selection[1]):])
       try:
         skin_folder_id = skin_list[name]
