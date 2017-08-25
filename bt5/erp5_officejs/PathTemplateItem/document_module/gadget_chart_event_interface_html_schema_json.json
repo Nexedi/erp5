@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Field parameters for response an event",
+  "properties": {
+    "value": {
+      "description": "Parameters which a event should contiains",
+      "properties": {
+        "chartType": {
+          "description": "Chart type, e.g 'line', 'bar', 'pie' , etc...",
+          "type": "string"
+        },
+        "itemType": {
+          "description": "Item type name, e.g 'series', 'markLine', 'markPoint', 'timeLine' ",
+          "type": "string"
+        },
+        "itemCategory": {
+          "description": "The category which this item belong. e.g. The item state marked as \"Opened\".",
+          "type": "string"
+        },
+        "itemGroup": {
+          "description": "The group which this item belong. e.g. The item grouped as \"Less than 2 days\".",
+          "type": "string"
+        },
+        "chartItemValue": {
+          "description": "The value of a certain chart item. Which may not a number, maybe a date, or what ever. So use string to represent.",
+          "type": "string"
+        },
+        "chartItemColor": {
+          "description": "The color of a certain chart item",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object"
+}

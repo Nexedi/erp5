@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Graph Introspection Interface(Draft)</title>
+  </head>
+  <body>
+    <h1>chart_introspection_interface</h1>
+    <h3>List of chart introspection interfaces which can let gadget to introspect the inside of a chart.</h3>
+    
+    <p>
+    The purpose of this interface definition is to provide an unique
+    API for various charting libraries to introspect the chart itself. Then other gadget can provide these functions to introspect the chart.
+    </p>
+
+    <p>
+    Suppose a gadget want to a value of a specific item in a chart. It can aquire the correspond function by <code>declareAcquiredMethod</code>.
+    In this case, it is <code>getChartItemValue</code>. Chart wrapper gadget need to provide this function by using <code>allowPublicAcquisition</code>.
+    </p>
+    <p>
+    For now, the chart item was identified by <code>name</code> field. This need to do more investivation, For example, I'm not sure that if all chart
+    libraries support to assign different names for all items in the combined-bar chart.
+    </p>
+    <dl>
+      <dt>getChartItemValue</dt>
+      <dd>Get the value of an item in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">item_name</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_introspection_interface_html_schema.json">gadget_chart_introspection_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+            Get the value of one item in a chart which specified by item name.
+            
+            For now, the chart was idendifed by gadget id.
+            
+            The chart item was identified by <code>name</code> field. This need to do more investivation,
+            For example, I'm not sure that if all chart libraries support to assign different names for all items in the combined-bar chart.
+          </code></dd>
+      </dl>
+    </dl>
+    <dl>
+      <dt>getChartItemColor</dt>
+      <dd>Get the color of an item in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">item_name</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_introspection_interface_html_schema.json">gadget_chart_introspection_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+            Get the color of one item in a chart which specified by item name.
+            
+            Parameter: Same as above.
+          </code>
+        </dd>
+      </dl>
+    </dl>
+    <dl>
+      <dt>getChartItemCategory</dt>
+      <dd>Get the category of an item which belonged to in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">item_name</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_introspection_interface_html_schema.json">gadget_chart_introspection_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+            Get the category of an item which belonged to in a chart which specified by item name.
+            
+            Parameter: Same as above.
+          </code></dd>
+      </dl>
+    </dl>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Graph Event Interface</title>
+  </head>
+  <body>
+    <h1>chart_event_interface(Draft)</h1>
+    <h3>List of chart events interface which can reponse the correspond events in a chart.</h3>
+    <p>
+    The purpose of this interface definition is to provide an unique API for various charting
+    libraries event processing. Then other gadget can provide these function to reponse chart's events.
+    </p>
+
+    <p>
+    Suppose a user use mouse to click one item in a chart. If another gadget want to reponse that event.
+    It need to provide the correspond function by <code>allowPublicAcquisition</code>. In this case,
+    the function is <code>chartItemClicked</code>. Chart gadget will pass parameters to this function.
+    Then the gadget can do some custom processing with the parameters in this function.
+    </p>
+    <dl>
+      <dt>chartItemClicked</dt>
+      <dd>Cilck an item in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">event_params</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_event_interface_html_schema.json">gadget_chart_event_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+          One item in a chart was clicked. Any gadget which defined this function
+          can do some custom processing to response that event.
+          
+          Please see json schema for supported parameters.
+          </code></dd>
+      </dl>
+    </dl>
+    <dl>
+      <dt>chartItemDblClick</dt>
+      <dd>Double cilck an item in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">event_params</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_event_interface_html_schema.json">gadget_chart_event_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+          One item in a chart was double clicked. Any gadget which defined this
+          function can do some custom processing to response that event.
+          
+          Please see json schema for supported parameters.
+          </code></dd>
+      </dl>
+    </dl>
+    <dl>
+      <dt>chartItemHover</dt>
+      <dd>Mouse pointer hovers on an item in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">event_params</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_event_interface_html_schema.json">gadget_chart_event_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+          Mouse pointer hovers on one item in a chart. Any gadget which defined
+          this function can do some custom processing to response that event.
+          
+          Please see json schema for supported parameters.
+          </code></dd>
+      </dl>
+    </dl>
+    <dl>
+      <dt>chartItemOut</dt>
+      <dd>Mouse pointer move out an item in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">event_params</dt>
+        <dd>
+          Schema available here : <a href="gadget_chart_event_interface_html_schema.json">gadget_chart_event_interface_html_schema.json</a><br>
+          <code style="display:block;white-space:pre-wrap">
+          Mouse pointer move out an item in a chart. This is the counter part of
+          <code>chartItemHover</code>. Any gadget which defined this function
+          can do some custom processing to response that event.
+          
+          Please see json schema for supported parameters.
+          </code></dd>
+      </dl>
+    </dl>
+    <dl>
+      <dt>chartItemSelected</dt>
+      <dd><strong>(Draft)</strong> One or more items were get selected in a chart.</dd>
+      <dl>
+        <dt data-parameter-required="required" data-parameter-type="object">event_params</dt>
+        <dd>
+          There must have a mechanism to save the items which current get selected.
+          I need to find out how does this get implemented in different chart libaries.
+        </dd>
+      </dl>
+    </dl>
+  </body>
+</html>

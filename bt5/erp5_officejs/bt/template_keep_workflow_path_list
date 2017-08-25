@@ -3,6 +3,7 @@ image_module/officejs_todomvc_*
 web_site_module/officejs_todomvc
 web_page_module/ckeditor_*
 image_module/ckeditor_*
+web_page_module/gadget_chart_*
 web_page_module/gadget_ckeditor_*
 web_page_module/gadget_officejs_*
 image_module/gadget_officejs_*

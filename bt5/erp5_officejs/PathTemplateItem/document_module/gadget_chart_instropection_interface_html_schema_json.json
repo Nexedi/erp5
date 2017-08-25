@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Field parameters to specify an item in a certain chart gadget.",
+  "properties": {
+    "value": {
+      "description": "Parameters which a used to identify an item.",
+      "properties": {
+        "chartId": {
+          "description": "The id of a chart gadget.",
+          "type": "string"
+        },
+        "itemName": {
+          "description": "The chart item name.",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "type": "object"
+}
