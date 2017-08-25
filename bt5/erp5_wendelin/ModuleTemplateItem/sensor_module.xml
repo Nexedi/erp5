@@ -1,6 +1,36 @@
 <module>
  <id>sensor_module</id>
  <permission_list>
+  <permission type='tuple'>
+   <name>Access Transient Objects</name>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Access contents information</name>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>Access session data</name>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>List folder contents</name>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>View</name>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
+  <permission type='tuple'>
+   <name>View History</name>
+   <role>Auditor</role>
+   <role>Manager</role>
+  </permission>
  </permission_list>
  <portal_type>Sensor Module</portal_type>
  <title>Sensors</title>
