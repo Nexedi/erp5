@@ -2002,6 +2002,7 @@ class SimulationTool(BaseTool):
                        range='min',
                        initial_inventory_kw=None,
                        inventory_list_kw=None,
+                       look_for_minimal=False,
                        **kw):
       """
       Give the next date where the quantity is lower than the
@@ -2016,6 +2017,8 @@ class SimulationTool(BaseTool):
 
       inventory_list_kw - additional parameters for looking at next movements
                           (exemple: use omit_output)
+
+      look_for_minimal - Return the date when the inventory is the lowest
       """
       result = None
       # First look at current inventory, we might have already an inventory
@@ -2040,7 +2043,7 @@ class SimulationTool(BaseTool):
       inventory_method = getattr(self, "get%sInventory" % simulation_period)
       initial_inventory = inventory_method(at_date=from_date,
                            **getAugmentedInventoryKeyword(initial_inventory_kw))
-      if checkQuantity(initial_inventory):
+      if checkQuantity(initial_inventory) and not look_for_minimal:
         result = from_date
       else:
         inventory_list_method = getattr(self,
@@ -2056,7 +2059,11 @@ class SimulationTool(BaseTool):
             total_inventory += inventory['inventory']
             if checkQuantity(total_inventory):
               result = inventory['date']
-              break
+              if look_for_minimal:
+                reference_quantity = total_inventory
+                checkQuantity = getCheckQuantityMethod()
+              else:
+                break
       return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
