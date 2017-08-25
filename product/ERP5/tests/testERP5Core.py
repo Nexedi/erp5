@@ -222,6 +222,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                             'id': 'bt_tool'},
                            {'title': 'Configure Categories',
                             'id': 'category_tool'},
+                           {'title': 'Manage Callables',
+                            'id': 'callable_tool'},
                            {'title': 'Create Module',
                             'id': 'create_module'},
                            {'title': 'Configure Portal Types',
