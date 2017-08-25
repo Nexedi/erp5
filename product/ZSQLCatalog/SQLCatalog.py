@@ -2362,7 +2362,10 @@ class Catalog(Folder,
     return order_by_list
 
   security.declarePrivate('buildEntireQuery')
-  def buildEntireQuery(self, kw, query_table='catalog', ignore_empty_string=1,
+  def buildEntireQuery(self, kw,
+                       query_table='catalog',
+                       query_table_alias=None,
+                       ignore_empty_string=1,
                        limit=None, extra_column_list=(),
                        ignore_unknown_columns=False):
     kw = self.getCannonicalArgumentDict(kw)
@@ -2402,11 +2405,14 @@ class Catalog(Folder,
       implicit_join=implicit_join,
       limit=limit,
       catalog_table_name=query_table,
+      catalog_table_alias=query_table_alias,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
 
   security.declarePublic('buildSQLQuery')
-  def buildSQLQuery(self, query_table='catalog', REQUEST=None,
+  def buildSQLQuery(self, query_table='catalog',
+                          query_table_alias=None,
+                          REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
@@ -2414,6 +2420,7 @@ class Catalog(Folder,
     return self.buildEntireQuery(
       kw,
       query_table=query_table,
+      query_table_alias=query_table_alias,
       ignore_empty_string=ignore_empty_string,
       limit=limit,
       extra_column_list=extra_column_list,

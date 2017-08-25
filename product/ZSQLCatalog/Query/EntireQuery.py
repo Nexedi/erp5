@@ -62,6 +62,7 @@ class EntireQuery(object):
                inner_join_list=(),
                limit=None,
                catalog_table_name=None,
+               catalog_table_alias=None,
                extra_column_list=(),
                from_expression=None,
                order_by_override_list=None,
@@ -75,6 +76,7 @@ class EntireQuery(object):
     self.inner_join_list = inner_join_list
     self.limit = limit
     self.catalog_table_name = catalog_table_name
+    self.catalog_table_alias = catalog_table_alias
     self.extra_column_list = list(extra_column_list)
     self.from_expression = from_expression
     self.implicit_join = implicit_join
@@ -98,6 +100,7 @@ class EntireQuery(object):
     if 1:
       column_map.registerTable(
         self.catalog_table_name,
+        self.catalog_table_alias,
       )
       for extra_column in self.extra_column_list:
         table, column = extra_column.replace('`', '').split('.')
