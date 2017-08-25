@@ -162,15 +162,20 @@ CREATE TABLE alternate_roles_and_users (
       # low level check of the security query of a logged in user
       self.loginByUserName('user1')
       security_query = self.portal.portal_catalog.getSecurityQuery()
-      # This query is a complex query wrapping another complex query with a
-      # criterion on altenate_security_uid. This check is quite low level and
-      # is subject to change.
-      security_uid_query = security_query.query_list[0]
-      alternate_security_query, = [q for q in
-          security_query.query_list[0].query_list if
-          q.kw.get('alternate_security_uid')]
-      self.assertEqual([user1_alternate_security_uid],
-        alternate_security_query.kw['alternate_security_uid'])
+      # XXX: this test is introspecting too much, but there is currently no
+      # obvious better way.
+      # security_query can be:
+      # - None if caller is superuser (must not be the case here)
+      # - a SimpleQuery if caller has no view permissions at all (must not be
+      #   the case here)
+      # - a ComplexQuery containing SimpleQueries detailing security conditions
+      #   (this is what is expected here)
+      alternate_security_query, = [
+        q for q in security_query.query_list
+        if q.column == 'alternate_security_uid'
+      ]
+      self.assertEqual(user1_alternate_security_uid,
+        alternate_security_query.value)
 
       # high level check that that logged in user can see document
       self.assertEqual([user1],

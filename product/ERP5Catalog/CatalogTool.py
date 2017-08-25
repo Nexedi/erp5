@@ -32,7 +32,7 @@ from collections import defaultdict
 from math import ceil
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.User import system as system_user
@@ -637,39 +637,27 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             sql_catalog_id=sql_catalog_id,
             local_roles=local_roles,
           )
-
-      role_query = None
-      security_uid_query = None
-      if role_column_dict:
-        query_list = []
-        for key, value in role_column_dict.items():
-          new_query = Query(**{key : value})
-          query_list.append(new_query)
-        role_query = ComplexQuery(logical_operator='OR', *query_list)
+      query_list = []
+      append = query_list.append
+      for key, value in role_column_dict.iteritems():
+        append(SimpleQuery(**{key : value}))
       if security_uid_dict:
-        catalog_security_uid_groups_columns_dict = \
-            self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
-
-        query_list = []
-        for local_roles_group_id, security_uid_list in\
-                 security_uid_dict.iteritems():
+        catalog_security_uid_groups_columns_dict = self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
+        for local_roles_group_id, security_uid_list in security_uid_dict.iteritems():
           assert security_uid_list
-          query_list.append(Query(**{
-            catalog_security_uid_groups_columns_dict[local_roles_group_id]:
-                  security_uid_list,
-            'operator': 'IN'}))
-
-        security_uid_query = ComplexQuery(*query_list, logical_operator='OR')
-
-      if role_query:
-        if security_uid_query:
-          # merge
-          query = ComplexQuery(security_uid_query, role_query, logical_operator='OR')
-        else:
-          query = role_query
-      elif security_uid_query:
-        query = security_uid_query
-
+          append(SimpleQuery(
+            **{catalog_security_uid_groups_columns_dict[local_roles_group_id]: security_uid_list}
+          ))
+      if query_list:
+        query = ComplexQuery(query_list, logical_operator='OR')
+        if local_role_column_dict:
+          query = ComplexQuery(
+            [
+              SimpleQuery(**{key : value})
+              for key, value in local_role_column_dict.items()
+            ] + [query],
+            logical_operator='AND',
+          )
       else:
         # XXX A false query has to be generated.
         # As it is not possible to use SQLKey for now, pass impossible value
@@ -677,16 +665,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # column range)
         # Do not pass security_uid_list as empty in order to prevent useless
         # overhead
-        query = Query(uid=-1)
-
-      if local_role_column_dict:
-        query_list = []
-        for key, value in local_role_column_dict.items():
-          new_query = Query(**{key : value})
-          query_list.append(new_query)
-        local_role_query = ComplexQuery(logical_operator='AND', *query_list)
-        query = ComplexQuery(query, local_role_query, logical_operator='AND')
-
+        query = SimpleQuery(uid=-1)
       return query
 
     # searchResults has inherited security assertions.
