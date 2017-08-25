@@ -181,6 +181,10 @@
                           <string>owner_title</string>
                           <string>PythonScript_getViewActionUrl</string>
                         </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>PythonScript_getViewActionUrl</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
