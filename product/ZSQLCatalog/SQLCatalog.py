@@ -2405,7 +2405,7 @@ class Catalog(Folder,
       extra_column_list=extra_column_list,
       from_expression=from_expression)
 
-  security.declarePrivate('buildSQLQuery')
+  security.declarePublic('buildSQLQuery')
   def buildSQLQuery(self, query_table='catalog', REQUEST=None,
                           ignore_empty_string=1, only_group_columns=False,
                           limit=None, extra_column_list=(),
