@@ -2839,10 +2839,20 @@ class Base( CopyContainer,
   security.declarePublic('reindexObject')
   def reindexObject(self, *args, **kw):
     """
-      Reindexes an object
+      Reindexes an object. If you want to exclude your ERP5 object from 
+      reindexing, add it to the 'explicitly_deny_object_reindexation_list' 
+      element in your transaction variables.
       args / kw required since we must follow API
     """
-    self._reindexObject(*args, **kw)
+    transactional_variable = getTransactionalVariable()
+
+    try:
+      no_reindex = transactional_variable['explicitly_deny_object_reindexation_list']
+    except KeyError:
+      no_reindex = []
+
+    if not self in no_reindex:
+      self._reindexObject(*args, **kw)
 
   def _reindexObject(self, activate_kw=None, **kw):
     # When the activity supports group methods, portal_catalog/catalogObjectList is called instead of
