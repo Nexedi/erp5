@@ -11,7 +11,9 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>editable_columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -78,6 +80,14 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -86,12 +96,27 @@
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Source</string>
+                          <string>use</string>
+                          <string>Use</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
                         </tuple>
                         <tuple>
-                          <string>destination_title</string>
-                          <string>Destination</string>
+                          <string>reference</string>
+                          <string>reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>use</string>
+                          <string>use</string>
                         </tuple>
                       </list>
                     </value>
@@ -118,6 +143,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>data_acquisition_sensor_module_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>ascending</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

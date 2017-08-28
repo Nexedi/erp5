@@ -10,9 +10,14 @@ Data Array Line
 Data Array Line Existence Constraint
 Data Array Module
 Data Bucket Stream
+Data Configuration Module
+Data Descriptor Module
+Data Descriptor Type
 Data Event
 Data Event Module
 Data Ingestion
+Data Ingestion Batch
+Data Ingestion Batch Module
 Data Ingestion Line
 Data Ingestion Module
 Data License
@@ -30,7 +35,15 @@ Data Stream Module
 Data Supply
 Data Supply Line
 Data Supply Module
+Data Transformation
+Data Transformation Module
+Data Transformation Operation Line
+Data Transformation Resource Line
+Device Configuration Module
+Device Configuration Type
 Ingestion Policy
 Ingestion Policy Tool
+Progress Indicator
+Progress Indicator Module
 Sensor
 Sensor Module

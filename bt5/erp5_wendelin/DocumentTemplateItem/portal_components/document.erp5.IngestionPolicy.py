@@ -28,7 +28,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Core.Folder import Folder
-from zExceptions import BadRequest
+from zExceptions import BadRequest, NotFound
 
 class IngestionPolicy(Folder):
   """
@@ -60,9 +60,49 @@ class IngestionPolicy(Folder):
     if self.REQUEST.method != 'POST':
       raise BadRequest('Only POST request is allowed.')
       
-    script_id = self.getScriptId()
-    if script_id is not None:
-      script = getattr(self, script_id, None)
-      if script is not None:
-        # leave it all to responsible script who should do real ingestion
-        script(**kw)
+    tag_parsing_script_id = self.getScriptId()
+    
+    if tag_parsing_script_id is None:
+      raise NotFound('No tag parsing script found.')
+
+    tag_parsing_script = getattr(self, tag_parsing_script_id, None)
+    if tag_parsing_script is None:
+      raise NotFound('No tag parsing script found.')
+      
+    # XXX Compatibility with old ingestion. Must be dropped before merging
+    # with wendelin master
+    if tag_parsing_script_id == "ERP5Site_handleDefaultFluentdIngestion":
+      return tag_parsing_script(**kw)
+    
+    reference = self.REQUEST.get('reference')
+    data_chunk = self.REQUEST.get('data_chunk')  
+
+    # the script parses the fluentd tag (reference) and returns a dictionary
+    # which describes the ingestion movement. Then we use this dictionary to
+    # search  for an existing movement and if we do not find one, we create
+    # a new one.
+    movement_dict = tag_parsing_script(reference)
+    if not movement_dict:
+    # unsuccessfull parsing log and do not process
+      self.log("Bad tag: %s" %reference)
+      return
+
+    # to simplyfy the catalog query, at the moment we assume that aggregate
+    # and resource are defined on Data Ingestion Line and the rest is
+    # defined on Data Ingestion. This assumption should be dropped later and
+    # simulation be used instead.
+    ingestion_operation, parameter_dict = \
+      self.IngestionPolicy_getIngestionOperationAndParameterDict(movement_dict,
+                                                                 reference)
+    if ingestion_operation is None:
+      raise NotFound('No ingestion operation found.')
+
+    ingestion_script_id = ingestion_operation.getScriptId()
+    if ingestion_script_id is None:
+      raise NotFound('No ingestion operation script id defined.')
+    
+    ingestion_script = getattr(self, ingestion_script_id, None)
+    if ingestion_script is None:
+      raise NotFound('No such ingestion script found: %s' %ingestion_script_id)
+    
+    ingestion_script(data_chunk=data_chunk, **parameter_dict)
