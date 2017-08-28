@@ -637,7 +637,15 @@ class BusinessItem(XMLObject):
     remove_sub_objects = kw.get('remove_sub_objects')
     if remove_sub_objects:
       removable_property_list.append('_tree')
-    obj = self.removeProperties(obj, 1, properties=removable_property_list)
+    keep_workflow_history = False
+    # For portal_components object, we need validation_history
+    if self.getProperty('item_path').startswith('portal_components'):
+      keep_workflow_history = True
+    obj = self.removeProperties(obj,
+                                1,
+                                properties=removable_property_list,
+                                keep_workflow_history=keep_workflow_history,
+                                )
     obj = obj.__of__(context)
     # XXX: '_recursiveRemoveUid' is not working as expected
     _recursiveRemoveUid(obj)
