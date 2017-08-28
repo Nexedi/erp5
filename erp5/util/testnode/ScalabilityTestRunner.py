@@ -109,6 +109,7 @@ class ScalabilityTestRunner():
       #self.slapos_controler.supply(software_path, computer_guid)
 
       #self.slapos_communicator._supply("available")
+      self.slapos_communicator._supply("started")
       # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
     else:
@@ -164,7 +165,11 @@ class ScalabilityTestRunner():
       self.slapos_communicator.setName(instance_title)
       self.slapos_communicator.setRequestParameters(request_kw)
       # ROQUE: request commented because it's failing. Instance manually requested. 
-      #self.slapos_communicator._request("started")
+      comp_partition = self.slapos_communicator._request("started")
+      self.log("Requested computer partition: ")
+      self.log(str(comp_partition))
+      self.log("Computer partition certificate:")
+      self.log(str(comp_partition.getCertificate()))
       # ROQUE: harcoded state (that should happens in the ._request )
       self.slapos_communicator.forceSetState('started')
       self.authorize_request = False
@@ -209,7 +214,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     # TODO : implement -> communication with SlapOS master
     # this simulate a SlapOS answer
-    return self.simulateSlapOSAnswer()
+    #return self.simulateSlapOSAnswer()
+    self.log("Current software state: " + str(self.slapos_communicator._getSoftwareState()))
+    return self.slapos_communicator._getSoftwareState() == SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
   
   def remainSoftwareToInstall(self):
     """
@@ -238,6 +245,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Wait for 'max_time' an instance specific state
     """
+    # ROQUE: hardcoded max_time because instance installation fails
     max_time = 20
     self.log("Wait for instance state: %s" %state)
     start_time = time.time()
@@ -252,7 +260,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Do you use instance state propagation in your project?")
       self.log("Instance '%s' will be stopped and test avorted." %instance_title)
       # What if we wanted to stop ?
-      self.slapos_controler.stopInstance(instance_title)
+      #self.slapos_controler.stopInstance(instance_title)
+      self.slapos_communicator._request('stopped')
       # XXX: _waitInstance call here ? recursive call ?
       # XXX: sleep 60 seconds.
       time.sleep(60) 
@@ -353,12 +362,15 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
       
       # Create an obfuscated link to the testsuite directory
+      self.log("### Creating an obfuscated link to the testsuite directory")
       path_to_suite = os.path.join(
                       self.testnode.config['working_directory'],
                       node_test_suite.reference)
+      self.log("Path to suite: " + path_to_suite)
       self.obfuscated_link_path = os.path.join(
                       self.testnode.config['software_directory'],
                       self.randomized_path)
+      self.log("Obfuscated path: " + self.obfuscated_link_path)
       if ( not os.path.lexists(self.obfuscated_link_path) and
            not os.path.exists(self.obfuscated_link_path) ) :
         try :
@@ -371,14 +383,18 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
       
       # Construct the ipv6 obfuscated url of the software profile reachable from outside
+      self.log("Constructing the ipv6 obfuscated url of the software profile reachable from outside")
       self.reachable_address = os.path.join(
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
         self.randomized_path)
       self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
+      self.log("Reachable address: " + self.reachable_address)
+      self.log("Reachable profile: " + self.reachable_profile)
 
       # Write the reachable address in the software.cfg file,
       # by replacing <obfuscated_url> occurences by the current reachable address.
       software_file = open(node_test_suite.custom_profile_path, "r")
+      self.log("Writing obfuscated url in software.cfg file: " + node_test_suite.custom_profile_path)
       file_content = software_file.readlines()
       new_file_content = []
       for line in file_content:
@@ -394,9 +410,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
-        self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester("NAME", self.log, slap, supply, order, self.reachable_profile, computer_guid=computer_guid)
-	# ROQUE: "_prepareSlapOS" is commented because the instance request is not working (manually created for dev purposes)
-        #self._prepareSlapOS(self.reachable_profile, computer_guid) 
+        self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester("NAME", self.log, slap, order, supply, self.reachable_profile, computer_guid=computer_guid)
+        # ROQUE: _prepareSlapOS commented because software installation fails.
+        self._prepareSlapOS(self.reachable_profile, computer_guid) 
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
       # TODO : remove the line below wich simulate an answer from slapos master
@@ -420,8 +436,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       try:
 	# ROQUE: the instance title is harcoded because the instance request is not working (this one was manually created)
         self.instance_title = "nxdcloud-onlinenet-scalabilitynode-001-TESTINSTANCE"
-        self._createInstance(self.reachable_profile, configuration_list[0],
-                              self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+        #self._createInstance(self.reachable_profile, configuration_list[0],
+        #                     self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
         self.log("Scalability instance requested.")
       except:
         self.log("Unable to launch instance")
@@ -468,6 +484,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if not self.launchable:
       self.log("Current test_suite is not actually launchable.")
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
+    if True:
+      self.log("FORCE EXIT WITH ERROR UNTIL SOFTWARE INSTALLATION BUG IS FIXED.")
+      return {'status_code' : 1} 
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
     # create test_result
@@ -490,14 +509,16 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       # First configuration doesn't need XML configuration update.
       if count > 0:
         # Stop instance
-        self.slapos_controler.stopInstance(self.instance_title)
+        #self.slapos_controler.stopInstance(self.instance_title)
+        self.slapos_communicator._request('stopped')
         self._waitInstance(self.instance_title, 'stopped')
         # Update instance XML configuration 
         self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
         self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
         # Start instance
-        self.slapos_controler.startInstance(self.instance_title)
+        #self.slapos_controler.startInstance(self.instance_title)
+        self.slapos_communicator._request('started')
         
       # XXX: Dirty hack used to force haproxy to restart in time
       # with all zope informations.
@@ -546,7 +567,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         break
 
     # Stop current instance
-    self.slapos_controler.stopInstance(self.instance_title)
+    #self.slapos_controler.stopInstance(self.instance_title)
+    self.slapos_communicator._request('stopped')
     self._waitInstance(self.instance_title, 'stopped')
 
     # Delete old instances

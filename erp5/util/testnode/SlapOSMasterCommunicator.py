@@ -105,7 +105,7 @@ class SlapOSMasterCommunicator(object):
   @retryOnNetworkFailure
   def _supply(self, state):
     if self.computer_guid is None:
-      self._logger.log('Nothing to supply for %s.' % (self.name))
+      self._logger ('Nothing to supply for %s.' % (self.name))
       return None
     self._logger("From SlapOSMasterCommunicator")
     self._logger('Supply %s@%s: %s', self.url, self.computer_guid,
@@ -115,7 +115,7 @@ class SlapOSMasterCommunicator(object):
 
   @retryOnNetworkFailure
   def _request(self, state):
-    self._logger.info('Request %s@%s: %s', self.url, self.name, state)
+    self._logger('Request %s@%s: %s', self.url, self.name, state)
     self.latest_state = state
     return self.slap_order.request(
           software_release=self.url,
