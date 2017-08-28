@@ -26,6 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+import numpy as np
 from Products.ERP5Type.Base import TempBase
 from erp5.component.document.DataArray import DataArray
 from Products.ERP5Type.Utils import createExpressionContext, \
@@ -51,14 +52,26 @@ class DataArrayLine(DataArray):
     Get numpy view of Parent Data Array according to index.
     """
     getindex = GetIndex("getindex")
-    expression_context = createExpressionContext(None, portal=getindex)
     index = evaluateExpressionFromString(
-      expression_context,
+      createExpressionContext(None, portal=getindex),
       "python: portal[%s]" %self.getIndexExpression()
     )
-    array_view = self.getParentValue().getArray()[index]
-    dtype = self.getDtype()
-    if dtype is not None:
+    zbigarray = self.getParentValue().getArray()
+    try:
+      array_view = zbigarray[index]
+    except TypeError:
+      array = zbigarray[:]
+      new_dtype = np.dtype({name:array.dtype.fields[name] for name in index})
+      array_view = np.ndarray(array.shape, new_dtype, array, 0, array.strides)
+    name_list = self.getNameList()
+    dtype_expression = self.getDtypeExpression()
+    if dtype_expression is not None or name_list:
+      if dtype_expression is None:
+        dtype = np.dtype(array_view.dtype)
+      else:
+        dtype = evaluateExpressionFromString(
+        createExpressionContext(None, portal=getindex),
+        dtype_expression)
+      dtype.names = name_list
       return array_view.view(dtype=dtype)
-    else:
-      return array_view
+    return array_view

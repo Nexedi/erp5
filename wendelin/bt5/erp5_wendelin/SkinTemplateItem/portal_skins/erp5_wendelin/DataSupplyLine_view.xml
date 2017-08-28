@@ -59,7 +59,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -73,7 +75,11 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_int_index</string>
                         <string>my_resource_title</string>
+                        <string>my_aggregate_title_list</string>
+                        <string>my_use</string>
                       </list>
                     </value>
                 </item>
@@ -81,8 +87,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_source_title_list</string>
-                        <string>my_destination_title_list</string>
+                        <string>my_quantity</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>

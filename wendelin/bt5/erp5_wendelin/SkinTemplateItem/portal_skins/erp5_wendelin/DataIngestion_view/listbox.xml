@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -77,20 +78,28 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>int_index</string>
+                          <string>Index</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
                           <string>Reference</string>
                         </tuple>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>resource_title</string>
                           <string>Resource</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
-                          <string>Description</string>
+                          <string>use</string>
+                          <string>Use</string>
+                        </tuple>
+                        <tuple>
+                          <string>quantity</string>
+                          <string>Quantity</string>
                         </tuple>
                       </list>
                     </value>
@@ -110,6 +119,17 @@
                         <tuple>
                           <string>Content Type</string>
                           <string>Content Type</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
                         </tuple>
                       </list>
                     </value>

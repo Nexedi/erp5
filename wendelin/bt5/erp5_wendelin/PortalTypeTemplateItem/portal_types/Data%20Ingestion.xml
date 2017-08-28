@@ -49,7 +49,7 @@ An ingestion is usually as simple as saving a raw data passed to us from remote 
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>PackingList</string> </value>
+            <value> <string>Delivery</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

@@ -90,15 +90,15 @@
                           <string>Destination</string>
                         </tuple>
                         <tuple>
-                          <string>resource_title</string>
+                          <string>resource_translated_title</string>
                           <string>Event Nature</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Start Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Stop Date</string>
                         </tuple>
                       </list>
