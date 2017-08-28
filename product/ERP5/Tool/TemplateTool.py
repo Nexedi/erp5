@@ -2219,6 +2219,10 @@ class TemplateTool (BaseTool):
           return 11
         if len(split_path_list) == 2 and split_path_list[0] in ('portal_types', 'portal_categories'):
           return 1
+        # portal_transforms objects needs portal_components installed first so
+        # as to register the modules
+        if len(split_path_list) == 2 and split_path_list[0] == 'portal_transforms':
+          return 12
         if len(split_path_list) > 2:
           return 10
         if len(split_path_list) == 1:
