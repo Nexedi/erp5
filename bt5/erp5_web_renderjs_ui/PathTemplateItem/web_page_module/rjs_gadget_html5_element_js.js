@@ -56,6 +56,19 @@
         element.removeChild(element.firstChild);
       }
       element.appendChild(new_element);
+    })
+
+    /** Because of meta-fields (controlling MatrixBox for example) we need to
+     * obtain value of readonly fields.
+     * In order to make it more developer-friendly, only named fields return their values.
+     */
+    .declareMethod("getContent", function () {
+      var data = {};
+      if (!this.state.name) {
+        return data;
+      }
+      data[this.state.name] = this.state.text_content || this.state.inner_html || "";
+      return data;
     });
 
 }(window, document, rJS));
