@@ -3,6 +3,20 @@
 (function (window, rJS, RSVP, calculatePageTitle) {
   "use strict";
 
+  function isGoodNonEditableField(field) {
+    // ListBox and FormBox should always get a chance to render
+    if (field.type === "ListBox") {return true; }
+    if (field.type === "FormBox") {return true; }
+    // hidden fields should not be obviously rendered
+    if (field.hidden === 1) {return false; }
+    // field without default
+    if (!field.default) {return false; }
+    if (field.default.length === 0) {return false; }
+    if (field.default.length === 1 && (!field.default[0])) {return false; }
+
+    return true;
+  }
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -11,11 +25,26 @@
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
 
     /////////////////////////////////////////////////////////////////
+    // Proxy methods to the child gadget
+    /////////////////////////////////////////////////////////////////
+    .declareMethod('checkValidity', function () {
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return declared_gadget.checkValidity();
+        });
+    })
+    .declareMethod('getContent', function () {
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return declared_gadget.getContent();
+        });
+    })
+    /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('render', function (options) {
       var state_dict = {
-        id: options.jio_key,
+        jio_key: options.jio_key,
         view: options.view,
         editable: options.editable,
         erp5_document: options.erp5_document,
@@ -33,18 +62,13 @@
         .push(function (erp5_form) {
           var form_options = gadget.state.erp5_form,
             rendered_form = gadget.state.erp5_document._embedded._view,
-            rendered_field,
             key;
 
-          // Remove all empty fields, and mark all others as non editable
+          // Remove all empty or otherwise bad non-editable fields
           for (key in rendered_form) {
             if (rendered_form.hasOwnProperty(key) && (key[0] !== "_")) {
-              rendered_field = rendered_form[key];
-              if ((rendered_field.type !== "ListBox") && ((!rendered_field.default) || (rendered_field.hidden === 1) || (rendered_field.default.length === 0)
-                   || (rendered_field.default.length === 1 && (!rendered_field.default[0])))) {
+              if (!isGoodNonEditableField(rendered_form[key])) {
                 delete rendered_form[key];
-              } else {
-                rendered_field.editable = 0;
               }
             }
           }
@@ -52,6 +76,8 @@
           form_options.erp5_document = gadget.state.erp5_document;
           form_options.form_definition = gadget.state.form_definition;
           form_options.view = gadget.state.view;
+          form_options.jio_key = gadget.state.jio_key;
+          form_options.editable = 0;
 
           return erp5_form.render(form_options);
         })

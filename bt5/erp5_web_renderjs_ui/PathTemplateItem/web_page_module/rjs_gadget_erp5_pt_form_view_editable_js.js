@@ -17,6 +17,21 @@
                            "displayFormulatorValidationError")
 
     /////////////////////////////////////////////////////////////////
+    // Proxy methods to the child gadget
+    /////////////////////////////////////////////////////////////////
+    .declareMethod('checkValidity', function () {
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return declared_gadget.checkValidity();
+        });
+    })
+    .declareMethod('getContent', function () {
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return declared_gadget.getContent();
+        });
+    })
+    /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
     .declareMethod('triggerSubmit', function () {
@@ -25,7 +40,7 @@
 
     .declareMethod('render', function (options) {
       var state_dict = {
-        id: options.jio_key,
+        jio_key: options.jio_key,
         view: options.view,
         editable: options.editable,
         erp5_document: options.erp5_document,
@@ -55,6 +70,8 @@
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
           form_options.view = form_gadget.state.view;
+          form_options.jio_key = form_gadget.state.jio_key;
+          form_options.editable = 1;
 
           return erp5_form.render(form_options);
         })
@@ -129,7 +146,7 @@
                 return RSVP.all([
                   form_gadget.notifySubmitting(),
                   form_gadget.jio_putAttachment(
-                    form_gadget.state.id,
+                    form_gadget.state.jio_key,
                     action.href,
                     data
                   )

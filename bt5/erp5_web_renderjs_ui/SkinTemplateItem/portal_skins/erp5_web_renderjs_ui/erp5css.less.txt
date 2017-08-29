@@ -1116,6 +1116,12 @@ div[data-gadget-scope='header'] .ui-header {
       width: 100%;
     }
   }
+  /* Disclaimer: It is here only for backward-compatibility! Don't rely on
+                 this class because it will be removed.
+                 It was used to force horizontal rendering of fields inside FormBox. */
+  .horizontal_align_form_box .ui-field-contain > div {
+    display: block-inline;
+  }
 
   .ui-content-header-plain {
     font-size: 150%;
@@ -1206,6 +1212,12 @@ div[data-gadget-scope='header'] .ui-header {
       & > label {
         flex: 1;
         color: @grey;
+        /* Disclaimer: It is here only for backward-compatibility! Don't rely on
+                       this class because it will be removed.
+                       It was used to hide the label of a FormBox. */
+        &.invisible {
+          display: none;
+        }
       }
       & > label + div {
         flex: 3;
