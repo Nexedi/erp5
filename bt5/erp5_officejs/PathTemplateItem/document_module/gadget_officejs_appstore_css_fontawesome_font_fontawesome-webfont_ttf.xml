@@ -61,6 +61,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>1dc35d25e61d819a9c357074014867ab</string> </value>
+        </item>
+        <item>
             <key> <string>content_type</string> </key>
             <value> <string>font/truetype</string> </value>
         </item>
@@ -69,12 +73,34 @@
             <value> <string>css/fontawesome/font/fontawesome-webfont.ttf</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>filename</string> </key>
+            <value> <string>font-awesome-webfont.ttf</string> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>gadget_officejs_appstore_css_fontawesome_font_fontawesome-webfont_ttf</string> </value>
         </item>
         <item>
+            <key> <string>language</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>File</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -193,7 +219,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -201,7 +229,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>960.25484.60987.38638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -219,7 +247,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861288.79</float>
+                        <float>1504006367.99</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
