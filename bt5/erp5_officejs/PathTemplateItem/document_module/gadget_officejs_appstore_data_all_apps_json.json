@@ -55,7 +55,17 @@
         {"type": "a", "direct":{"className":"action", "href":""}, "attributes":{"data-i18n":"global.pagination.last", "data-action":"last", "data-icon":"step-forward", "data-iconpos":"notext"}, "logic": {"text": "Last"}}
       ]
     }]
-  }]
+  },
+  {
+    "generate":"widget",
+    "type": "controlbar",
+    "class_list": "responsive",
+    "children": [
+    {
+        "type": "a",
+        "attributes": {"href":"www.miitbeian.gov.cn"},
+        "logic": {"text": "沪ICP备14008524号"}
+    }]
+   }]
 }
-  
 
