@@ -225,6 +225,12 @@ class ERP5TypeInformation(XMLObject,
     # Declarative properties
     property_sheets = ( PropertySheet.BaseType, )
 
+    _properties = (
+      { 'id'      : 'type_workflow',
+      'type'    : 'multiple selection',
+      'mode'    : 'w' },
+      )
+
     acquire_local_roles = False
     property_sheet_list = ()
     base_category_list = ()
