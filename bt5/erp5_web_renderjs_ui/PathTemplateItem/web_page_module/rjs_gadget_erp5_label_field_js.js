@@ -20,16 +20,14 @@
     .setState({
       label_text: '',
       error_text: '',
-      label: true,
+      label: true,  // the label element is already present in the HTML template
       css_class: ''
     })
 
     .ready(function () {
       return this.changeState({
-        label_element: this.element.querySelector('label'),
-        label_text_element: this.element.querySelector('label').firstChild,
-        error_element: this.element.querySelector('span'),
-        container_element: this.element.querySelector('div')
+        container_element: this.element.querySelector('div'),  // matches the closest div
+        label_element: this.element.querySelector('label')
       });
     })
 
@@ -44,6 +42,11 @@
         hidden: options.field_json.hidden,
         css_class: options.field_json.css_class
       };
+      // RenderJS would overwrite default value with empty variables :-(
+      // So we have to mitigate this behaviour
+      if (state_dict.label === undefined) {
+        state_dict.label = true;
+      }
       return this.changeState(state_dict);
     })
 
@@ -58,7 +61,7 @@
       }
 
       if (modification_dict.hasOwnProperty('label_text')) {
-        this.state.label_text_element.textContent = this.state.label_text;
+        this.state.label_element.textContent = this.state.label_text;
       }
       this.state.label_element.setAttribute('for', gadget.state.scope);
 
@@ -67,11 +70,16 @@
       }
 
       if (modification_dict.hasOwnProperty('error_text')) {
-        this.state.error_element.textContent = "";
+        // first remove old errors
+        span = this.state.container_element.querySelector('span');
+        if (span) {
+          this.state.container_element.removeChild(span);
+        }
+        // display new error if present
         if (this.state.error_text) {
           span = document.createElement('span');
           span.textContent = this.state.error_text;
-          this.state.error_element.appendChild(span);
+          this.state.container_element.appendChild(span);
         }
       }
 
