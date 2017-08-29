@@ -1286,6 +1286,21 @@ div[data-gadget-scope='header'] .ui-header {
 }
 
 /**********************************************
+* Gadget: HTML5 input field
+**********************************************/
+.gadget-content .ui-field-contain {
+  .ui-input-has-appendinx,
+  .ui-input-has-prependinx {
+    display: flex;
+    i {
+      display: block;
+      padding: 3pt;
+      color: #777777;
+      font-weight: 400;
+    }
+  }
+}
+/**********************************************
 * Gadget: relation field
 **********************************************/
 .relation-input {
