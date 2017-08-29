@@ -932,7 +932,6 @@ div[data-gadget-scope='header'] .ui-header ul {
     }
   }
 */
-  /* form validation (assuming label>span is used) */
 }
 .gadget-content div[data-gadget-scope='m'] {
   animation: fadein 0.2s ease-out;
@@ -1069,26 +1068,26 @@ div[data-gadget-scope='header'] .ui-header ul {
     flex: 7;
   }
 }
-.gadget-content form label {
+.gadget-content form .ui-field-contain {
   position: relative;
 }
-.gadget-content form label span span {
+.gadget-content form .ui-field-contain > span {
   animation: fadein 0.2s ease-out;
 }
 @media not screen and (max-width: 85em), only screen and (min-width: 45em) and (max-width: 85em) {
-  .gadget-content form label span span {
+  .gadget-content form .ui-field-contain > span {
     background-color: #FF6600;
     color: #f8fff3;
-    left: 110%;
+    left: 25%;
     position: absolute;
-    bottom: 130%;
+    bottom: 110%;
     white-space: pre;
     padding: 6pt;
     border-radius: 0.325em;
     width: auto;
     z-index: 1001;
   }
-  .gadget-content form label span span:before {
+  .gadget-content form .ui-field-contain > span:before {
     position: absolute;
     top: 100%;
     left: 2em;
@@ -1100,7 +1099,7 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 @media not screen and (min-width: 45em) {
-  .gadget-content form label span span {
+  .gadget-content form .ui-field-contain > span {
     margin-left: 6pt;
     color: #FF6600;
   }

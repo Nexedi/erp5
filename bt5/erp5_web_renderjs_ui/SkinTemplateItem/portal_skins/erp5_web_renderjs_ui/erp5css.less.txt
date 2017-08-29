@@ -1247,19 +1247,19 @@ div[data-gadget-scope='header'] .ui-header {
   }
 */
 
-  /* form validation (assuming label>span is used) */
-  form label {
+  form .ui-field-contain {
+    // relative for displaying popups with errors
     position: relative;
 
-    span span {
+    & > span {
       animation: fadein @transition-timing;
 
       @media @desktop, @tablet {
         background-color: @coloraccent;
         color: @colorsubheaderlink;
-        left: 110%;
+        left: 25%;
         position: absolute;
-        bottom: 130%;
+        bottom: 110%;
         white-space: pre;
         padding: @margin-size;
         border-radius: @border-radius;
