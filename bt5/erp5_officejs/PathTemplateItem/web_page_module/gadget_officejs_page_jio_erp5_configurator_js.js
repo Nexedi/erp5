@@ -55,12 +55,18 @@
             }
           },
           local_sub_storage: {
-            type: "query",
+            type: "mapping",
+            property: {
+              "modification_date": ["formatDate", ["toISOString", "rfc822"]]
+            },
             sub_storage: {
-              type: "uuid",
+              type: "query",
               sub_storage: {
-                type: "indexeddb",
-                database: "officejs-erp5"
+                type: "uuid",
+                sub_storage: {
+                  type: "indexeddb",
+                  database: "officejs-erp5"
+                }
               }
             }
           },

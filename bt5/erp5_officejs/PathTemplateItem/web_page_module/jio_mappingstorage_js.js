@@ -133,6 +133,21 @@
           }
         }
       }
+    },
+    "formatDate": {
+      "mapToSubProperty": function (property, sub_doc, doc, args) {
+        sub_doc[property] = (new Date(doc[property]))[args[0]]();
+        return property;
+      },
+      "mapToMainProperty": function (property, sub_doc, doc, args) {
+        if (args[1] === 'rfc822') {
+          doc[property] = (new Date(sub_doc[property]))
+            .toUTCString().replace('GMT', '+0000');
+        } else {
+          doc[property] = (new Date(sub_doc[property]))[args[1]]();
+        }
+        return property;
+      }
     }
   };
   /*jslint unparam: false*/
