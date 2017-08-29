@@ -9,10 +9,13 @@
       value: undefined,
       checked: undefined,
       title: '',
+      name: '',
       type: 'text',
-      required: false,
-      trim: false,
-      focus: undefined
+      required: false, // mandatory field
+      trim: false, // trim content for spaces
+      focus: undefined, // has focus by default
+      prepend: undefined, // text to prepend infront the field
+      append: undefined // text to apend after the field
     })
 
     .declareMethod('render', function (options) {
@@ -27,13 +30,17 @@
           focus: options.focus,
           step: options.step,
           hidden: options.hidden,
-          trim: options.trim || false
+          trim: options.trim || false,
+          append: options.append,
+          prepend: options.prepend
         };
       return this.changeState(state_dict);
     })
 
-    .onStateChange(function () {
-      var textarea = this.element.querySelector('input');
+    .onStateChange(function (modification_dict) {
+      var textarea = this.element.querySelector('input'),
+        tmp; // general use short-scope variable
+
       if (this.state.type === 'checkbox') {
         textarea.checked = this.state.checked;
       } else {
@@ -80,6 +87,22 @@
       if (this.state.focus === false) {
         textarea.autofocus = false;
         textarea.blur();
+      }
+      
+      if (modification_dict.append) {
+        this.element.classList.add('ui-input-has-appendinx');
+        tmp = document.createElement('i');
+        tmp.appendChild(document.createTextNode(modification_dict.append));
+        this.element.appendChild(tmp);
+        tmp = undefined;
+      }
+      
+      if (modification_dict.prepend) {
+        this.element.classList.add('ui-input-has-prependinx');
+        tmp = document.createElement('i');
+        tmp.appendChild(document.createTextNode(modification_dict.append));
+        this.element.insertBefore(tmp, textarea);
+        tmp = undefined;
       }
     })
 
