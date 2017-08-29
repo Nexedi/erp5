@@ -1242,10 +1242,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             db.query(r)
       return src
 
-    # XXX which permission ?
-    # XXX API parameters should be explicitly defined in interface
-    # instead of **kw
-    def getDocumentValueList(self, **kw):
+    security.declarePublic('getDocumentValueList')
+    def getDocumentValueList(self, sql_catalog_id=None,
+                             search_context=None, language=None, all_languages=None,
+                             all_versions=None, now=None, **kw):
       """
         Return the list of documents which belong to the
         current section. The API is designed to
@@ -1256,7 +1256,27 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         This method must be implemented through a
         catalog method script :
           SQLCatalog_getDocumentValueList
+
+        Here is the list of arguments :
+          * search_context
+          * language
+          * all_languages
+          * all_versions
+          * now
+
+        If you specify search_context, its predicate will be
+        respected,
+        i.e. web_section.WebSection_getDocumentValueList is
+        equivalent to
+        portal_catalog.getDocumentValueList(search_context=web_section)
       """
-      return self.getSQLCatalog().SQLCatalog_getDocumentValueList(**kw)
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      return catalog.SQLCatalog_getDocumentValueList(
+          search_context=search_context,
+          language=language,
+          all_languages=all_languages,
+          all_versions=all_versions,
+          now=now,
+          **kw)
 
 InitializeClass(CatalogTool)
