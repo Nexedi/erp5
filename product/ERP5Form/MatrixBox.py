@@ -390,20 +390,16 @@ class MatrixBoxWidget(Widget.Widget):
                   if form.has_field(my_field_id):
                     my_field = form.get_field(my_field_id)
                     key = my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
-                    if cell is not None:
-                      attribute_value = my_field.get_value('default',
-                             cell=cell, cell_index=kw, cell_position = ((i,j,k)+extra_dimension_position))
+                    default_value = my_field.get_value(
+                      'default', cell=cell, cell_index=kw, cell_position=((i,j,k)+extra_dimension_position))
+                    display_value = default_value
+                    if field_errors:
+                      # Display previous value in case of any error in this form because
+                      # we have no cell to get value from
+                      display_value = REQUEST.get('field_%s' % key, default_value)
 
+                    if cell is not None:
                       if render_format=='html':
-                        display_value = attribute_value
-                        if field_errors:
-                          # Display previous value in case of any error
-                          # in this form because we have no cell to get
-                          # value from
-                          display_value = REQUEST.get('field_%s' % key,
-                                                    attribute_value)
-                        else:
-                          display_value = attribute_value
                         cell_html = my_field.render(value=display_value,
                                               REQUEST=REQUEST,
                                               key=key)
@@ -422,23 +418,8 @@ class MatrixBoxWidget(Widget.Widget):
                         else:
                           cell_body += '<span class="input">%s</span>' % (
                                           cell_html )
-
-                      elif render_format == 'list':
-                        if not my_field.get_value('hidden'):
-                          list_result_lines.append(attribute_value)
-
                     else:
-                      attribute_value = my_field.get_value('default', cell=None,
-                          cell_index=kw, cell_position=((i,j,k)+extra_dimension_position))
                       if render_format == 'html':
-                        if field_errors:
-                          # Display previous value in case of any error
-                          # in this form because we have no cell to get
-                          # value from
-                          display_value = REQUEST.get('field_%s' % key,
-                                                    attribute_value)
-                        else:
-                          display_value = attribute_value
                         if key in field_errors:
                           # Display error message if this cell has an error
                           has_error = True
@@ -453,8 +434,17 @@ class MatrixBoxWidget(Widget.Widget):
                                               value=display_value,
                                               REQUEST=REQUEST,
                                               key=key)
-                      elif render_format == 'list':
-                        list_result_lines.append(None)
+
+                    if render_format == 'list':
+                      # list rendering doesn't make difference when cell exists or not
+                      list_result_lines.append({
+                        'default': default_value,
+                        'value': display_value,
+                        'key': key,
+                        'type': my_field.meta_type if my_field.meta_type != "ProxyField" else my_field.getRecursiveTemplateField().meta_type,
+                        'field_id': my_field.id,
+                        'error_text': u"%s" % (translateString(field_errors[key].error_text) if key in field_errors else '')
+                      })
 
                 css = td_css
                 if has_error:
