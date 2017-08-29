@@ -194,7 +194,7 @@ class Field:
                 return "Unknown error: %s" % name
 
     security.declarePrivate('_render_helper')
-    def _render_helper(self, key, value, REQUEST, render_prefix=None, editable=None):
+    def _render_helper(self, key, value, REQUEST, render_prefix=None, editable=None, **kw):
       value = self._get_default(key, value, REQUEST)
       __traceback_info__ = ('key=%s value=%r' % (key, value))
       if self.get_value('hidden', REQUEST=REQUEST):
@@ -204,10 +204,10 @@ class Field:
           editable = self.get_value('editable', REQUEST=REQUEST)
         if not editable:
           return self.widget.render_view(self, value, REQUEST=REQUEST,
-                                         render_prefix=render_prefix)
+                                         render_prefix=render_prefix, **kw)
         else:
           return self.widget.render(self, key, value, REQUEST,
-                                    render_prefix=render_prefix)
+                                    render_prefix=render_prefix, **kw)
 
     security.declarePrivate('_render_odt_helper')
     def _render_odt_helper(self, key, value, as_string, ooo_builder,
@@ -261,7 +261,7 @@ class Field:
       return REQUEST.form[key]
 
     security.declareProtected('View', 'render')
-    def render(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None, editable=None):
+    def render(self, value=None, REQUEST=None, key=None, render_prefix=None, key_prefix=None, editable=None, **kw):
       """Render the field widget.
       value -- the value the field should have (for instance
                 from validation).
@@ -279,6 +279,7 @@ class Field:
         REQUEST,
         render_prefix=render_prefix,
         editable=editable,
+        **kw
       )
 
     security.declareProtected('View', 'render_view')
