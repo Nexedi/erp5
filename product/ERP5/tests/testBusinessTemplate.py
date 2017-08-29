@@ -7323,6 +7323,241 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       self.assertEqual(True, method("aa/bb"))
       self.assertEqual(True, method("aa/bb/cc"))
 
+  def stepCreateDocumentComponentWhichTriggersAnOperationWhenSubDocumentIsAdded(
+        self, sequence=None, **kw):
+    from textwrap import dedent
+    # The source code of the component
+    document_data = dedent(
+    """
+    from Products.ERP5Type.Tool.BaseTool import BaseTool
+    from Products.ERP5Type.Core.Folder import Folder
+
+    class MyTool(BaseTool):
+      ''' my tool '''
+      id = 'portal_mytools'
+      meta_type = 'ERP5 MyTool'
+      portal_type = 'My Tool'
+
+      def _setOb(self, id, object):
+        '''
+          override
+        '''
+        Folder._setOb(self, id, object)
+    """)
+
+    component_id_prefix = DocumentComponent._getIdPrefix()
+    component_portal_type = DocumentComponent.portal_type
+    tool_type = 'My Tool'
+    tool_class = 'MyTool'
+    document_id = component_id_prefix + '.erp5.' + tool_class
+    component = self.portal.portal_components.newContent(
+      id=document_id,
+      version='erp5',
+      reference=tool_class,
+      text_content=document_data,
+      portal_type=component_portal_type)
+    component.validate()
+    sequence.edit(document_title=tool_class,
+                  document_id=document_id,
+                  document_data=document_data,
+                  tool_id='portal_mytools',
+                  tool_type=tool_type,
+                  tool_class=tool_class,
+                  type_allowed_content_type_list =('Python Script', ),
+                  template_property='template_document_id_list')
+    self.portal.portal_components.reset(force=True)
+
+  def stepCreateMyToolPortalType(self, sequence=None, **kw):
+    pt = self.getTypeTool()
+    kwdict = dict(type_class=sequence['tool_class'])
+    allowed_type_list = sequence['type_allowed_content_type_list']
+    if allowed_type_list:
+      kwdict['type_allowed_content_type_list'] = allowed_type_list
+    object_type = pt.newContent(sequence['tool_type'], 'Base Type', **kwdict)
+    self.assertTrue(object_type is not None)
+    sequence.edit(object_ptype_id=object_type.getId())
+
+  def stepAddMyToolToERP5Site(self, sequence=None, **kw):
+    from Products.ERP5 import ERP5Site
+    tool_id = sequence['tool_id']
+    ERP5Site.addERP5Tool(self.portal, tool_id, sequence['tool_type'])
+    sequence.edit(parent_document=self.portal[tool_id])
+
+  def stepSetSubdocumentAsMyScript(self, sequence=None, **kw):
+    sequence.edit(subdocument_id='my_script',
+                  subdocument_portal_type='Python Script')
+
+  def stepCreateSubDocument(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    self.assertTrue(parent_document != None)
+    subdocument_portal_type = sequence['subdocument_portal_type']
+    sub_document = parent_document.newContent(sequence['subdocument_id'],
+                                              portal_type=subdocument_portal_type,
+                                              body='# zzz')
+    sequence.edit(template_path_list=[sub_document.getRelativeUrl()])
+
+  def stepRemoveDocumentComponent(self, sequence=None, **kw):
+    document_id = sequence['document_id']
+    self.portal.portal_components.manage_delObjects(document_id)
+    self.assertEqual(getattr(self.portal.portal_components, document_id, None),
+                     None)
+
+  def stepRemoveSubDocument(self, sequence=None, **kw):
+    subdocument_id = sequence['subdocument_id']
+    parent_document = sequence['parent_document']
+    parent_document.manage_delObjects([subdocument_id])
+    self.assertEqual(getattr(parent_document, subdocument_id, None),
+                     None)
+
+  def stepAddDocumentComponentToBusinessTemplate(self, sequence=None, **kw):
+    sequence['current_bt'].setProperty(sequence['template_property'],
+                                       sequence['document_id'])
+
+  def stepAddTestComponentToBusinessTemplate(self, sequence=None, **kw):
+    sequence['current_bt'].setProperty('template_test_id_list',
+                                      ['test.erp5.testActivityTool'])
+
+  def stepAddMyToolPortalTypeToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence.get('current_bt', None)
+    self.assertTrue(bt is not None)
+    ptype_ids = []
+    ptype_ids.append(sequence.get('object_ptype_id', ''))
+    bt.edit(template_portal_type_id_list=ptype_ids)
+
+  def stepAddSubDocumentPathToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence.get('current_bt', None)
+    self.assertTrue(bt is not None)
+    bt.edit(template_path_list=sequence['template_path_list'])
+
+  def stepCheckDocumentComponentIsInstalled(self, sequence=None, **kw):
+    my_tool = getattr(self.portal.portal_components, sequence['document_id'],
+                      None)
+    self.assertNotEqual(my_tool, None)
+    self.assertEqual(my_tool.getPortalType(), 'Document Component')
+
+  def stepCheckParentDocumentIsExist(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    self.assertNotEqual(parent_document, None)
+    self.assertEqual(parent_document.getPortalType(), sequence['tool_type'])
+
+  def stepCheckSubDocumentIsInstalled(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    subdocument_id = sequence['subdocument_id']
+    subdocument = getattr(parent_document, subdocument_id, None)
+    self.assertNotEqual(subdocument, None)
+
+  def stepModifySubDocument(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    subdocument_id = sequence['subdocument_id']
+    parent_document[subdocument_id].edit(body='# yyy')
+
+  def stepRevertSubDocument(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    subdocument_id = sequence['subdocument_id']
+    parent_document[subdocument_id].edit(body='# zzz')
+
+  def stepCheckSubDocumentIsReverted(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    subdocument_id = sequence['subdocument_id']
+    body = parent_document[subdocument_id].getBody().rstrip()
+    self.assertEqual(body, '# zzz')
+
+  def stepCheckSubDocumentIsModified(self, sequence=None, **kw):
+    parent_document = sequence['parent_document']
+    subdocument_id = sequence['subdocument_id']
+    body = parent_document[subdocument_id].getBody().rstrip()
+    self.assertEqual(body, '# yyy')
+
+  def stepCreateDifferentBusinessTemplateForInstall(self, sequence=None, **kw):
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.assertTrue(template.getBuildingState() == 'draft')
+    self.assertTrue(template.getInstallationState() == 'not_installed')
+    template.edit(title='different template',
+                  version='1.0',
+                  description='bt for unit_test')
+    # set current_bt and import_bt for install
+    sequence.edit(current_bt=template)
+    sequence.edit(import_bt=template)
+
+  def stepSimulateToCreateNewRequest(self, sequence=None, **kw):
+    """
+     Remove the caches in _module_cache_set to simulate to create new REQUEST
+
+     Why we need this is because:
+     - ZODB Components relies on this cache to prevend gc of the component,
+     - Since Unit Test environment patches get_request() and publish(),
+       and everything run in a single thread, the REQUEST is not recreated
+       even if the request (transaction) is finished.
+     This removal imitates the behavior in a real ZOPE environment
+    """
+    from Products.ERP5Type.Globals import get_request
+    request_obj = get_request()
+    module_cache_set = getattr(request_obj, '_module_cache_set', None)
+    # delete the reference (decrement the reference count)
+    module_cache_set.clear()
+
+  def stepAddExtensionComponentToBusinessTemplate(self, sequence=None, **kw):
+    sequence['current_bt'].setProperty('template_extension_id_list',
+                                      ['extension.erp5.InventoryBrain'])
+
+
+  def testUpdateDocumentWhichIsInsideZODBDocumentFolder(self):
+    """
+      Test a case when the subobject of a ZODBComponent is updated as a path,
+      and at the same time, the component is triggered while the installation.
+    """
+    sequence_list = SequenceList()
+    sequence_string = """
+      CreateDocumentComponentWhichTriggersAnOperationWhenSubDocumentIsAdded
+      CreateMyToolPortalType
+      AddMyToolToERP5Site
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddDocumentComponentToBusinessTemplate
+      AddMyToolPortalTypeToBusinessTemplate
+      FillPortalTypesFields
+      Tic
+      BuildBusinessTemplate
+      SaveBusinessTemplate
+      Tic
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      InstallWithoutForceBusinessTemplate
+      Tic
+      SetSubdocumentAsMyScript
+      CreateSubDocument
+      Tic
+      CreateDifferentBusinessTemplateForInstall
+      AddSubDocumentPathToBusinessTemplate
+      AddTestComponentToBusinessTemplate
+      BuildBusinessTemplate
+      SaveBusinessTemplate
+      InstallWithoutForceBusinessTemplate
+      Tic
+      ModifySubDocument
+      SimulateToCreateNewRequest
+      Tic
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      BuildBusinessTemplate
+      Tic
+      InstallWithoutForceBusinessTemplate
+      Tic
+      RevertSubDocument
+      SimulateToCreateNewRequest
+      Tic
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      AddExtensionComponentToBusinessTemplate
+      BuildBusinessTemplate
+      InstallWithoutForceBusinessTemplate
+      Tic
+      """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 class TestDocumentTemplateItem(BusinessTemplateMixin):
