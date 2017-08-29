@@ -1,0 +1,167 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<!-- Test MatrixBox functionality to
+-  create one embedded Cell Line
+-  create second embedded Cell Line
+-->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test MatrixBox Column Title</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test MatrixBox Column Title</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
+<!-- Shortcut for full renderjs url and matrixbox gadget -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>listbox_table</td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="MatrixBox"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="MatrixBox"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//input[@name="field_matrixbox_quantity_cell_0_0_0"]</td><td></td></tr>
+
+<tr><td>type</td>
+    <td>field_matrixbox_quantity_cell_0_0_0</td>
+    <td>1.0</td></tr>
+<tr><td>click</td>
+    <td>//button[@data-i18n="Save"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>waitForTextPresent</td>
+    <td>Data updated.</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_0_0_0</td>
+    <td>1.0</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_0_1_0</td>
+    <td></td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_1_0_0</td>
+    <td></td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_1_1_0</td>
+    <td></td></tr>
+
+<!-- Test that exactly one record was created using general-purpose ListBox -->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="ListBox"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="ListBox"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${listbox_table}/tbody/tr</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>${listbox_table}/tbody/tr[2]</td><td></td></tr>
+
+<tr><td>goBack</td><td></td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="MatrixBox"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="MatrixBox"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//input[@name="field_matrixbox_quantity_cell_0_1_0"]</td><td></td></tr>
+
+<tr><td>type</td>
+    <td>field_matrixbox_quantity_cell_0_1_0</td>
+    <td>2.0</td></tr>
+<tr><td>click</td>
+    <td>//button[@data-i18n="Save"]</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>waitForTextPresent</td>
+    <td>Data updated.</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_0_0_0</td>
+    <td>1.0</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_0_1_0</td>
+    <td>2.0</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_1_0_0</td>
+    <td></td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_1_1_0</td>
+    <td></td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="ListBox"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="ListBox"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${listbox_table}/tbody/tr</td><td></td></tr>
+<tr><td>verifyElementPresent</td>
+    <td>${listbox_table}/tbody/tr[2]</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>${listbox_table}/tbody/tr[3]</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>2 Records</td><td></td></tr>
+
+<!-- Matrix box editable fields can use the cell coordinates as "cell_index" in their TALES-->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/0/1/cell_0_0/getTitle</td><td></td></tr>
+<tr><td>verifyTextPresent</td>
+    <td>a,one</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/0/1/cell_0_1/getTitle</td><td></td></tr>
+<tr><td>verifyTextPresent</td>
+    <td>a,two</td><td></td></tr>
+
+<!-- Matrix box global properties fields can be used to edit all cells with the
+same values. The field must be in the 'bottom' group for this to work.
+
+Kato: I don't understand this part of the test - just copy&pasted from the old test.
+-->
+<tr><td>open</td>
+    <td>${base_url}/foo_module/0/1/cell_0_0/getFooCategoryTitleList</td><td></td></tr>
+<tr><td>verifyTextPresent</td>
+    <td>['a', 'b']</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/0/1/cell_0_1/getFooCategoryTitleList</td><td></td></tr>
+<tr><td>verifyTextPresent</td>
+    <td>['a', 'b']</td><td></td></tr>
+
+</tbody>
+</table>
+</body>
+</html>

@@ -15,3 +15,4 @@ test.erp5.testFunctionalRJSLogout
 test.erp5.testFunctionalRJSTranslation
 test.erp5.testFunctionalRJSLogoutTranslation
 test.erp5.testFunctionalRJSNotification
+test.erp5.testFunctionalRJSMatrixbox
