@@ -16,16 +16,20 @@
     this._prefix = spec.prefix || "";
     this._documents = {};
     // Harcoded here, find a better way.
-    this._relative_url_list = [
-      this._prefix + "/",
-      this._prefix + "gadget_officejs_bootloader.js",
-      this._prefix + "gadget_officejs_bootloader_presentation.html",
-      this._prefix + "gadget_officejs_bootloader_presentation.js",
-      this._prefix + "gadget_officejs_bootloader_presentation.css",
-      this._prefix + "gadget_officejs_bootloader_serviceworker.js",
-      this._prefix + "gadget_erp5_nojqm.css",
-      this._prefix + "jio_appcachestorage.js"
-    ];
+    if (this._take_installer) {
+      this._relative_url_list = [
+        this._prefix + "/",
+        this._prefix + "gadget_officejs_bootloader.js",
+        this._prefix + "gadget_officejs_bootloader_presentation.html",
+        this._prefix + "gadget_officejs_bootloader_presentation.js",
+        this._prefix + "gadget_officejs_bootloader_presentation.css",
+        this._prefix + "gadget_officejs_bootloader_serviceworker.js",
+        this._prefix + "gadget_erp5_nojqm.css",
+        this._prefix + "jio_appcachestorage.js"
+      ];
+    } else {
+      this._relative_url_list = [this._prefix + "/"];
+    }
     if (this._take_installer) {
       this._version = 'app/';
     }
