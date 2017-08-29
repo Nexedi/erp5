@@ -5,6 +5,9 @@ Bar | view
 Bar | view_datetime_field
 Foo Bar Module | view
 Foo Line | view
+Foo Line | view_contentlist
+Foo Line | view_dynamic_matrixbox
+Foo Line | view_matrixbox
 Foo Module | do_nothing_report_jio
 Foo Module | list
 Foo Module | list_ui
