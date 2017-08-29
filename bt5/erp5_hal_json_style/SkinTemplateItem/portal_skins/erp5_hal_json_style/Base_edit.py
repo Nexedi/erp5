@@ -1,8 +1,12 @@
-"""
-  This script validates a form to the current REQUEST,
-  processes the REQUEST to extract form data and editors,
-  then updates the current context with the form data
-  by calling edit on it or by invoking editors.
+"""Handle form - REQUEST interaction.
+
+-  Validate a form to the current REQUEST
+-  Extract form data and editors from REQUEST,
+-  Update current context with form data by calling edit or invoking editors
+
+:param silent: int (0|1) means that the edit action is not invoked by a form
+               submit but rather by an internal code thus the return value
+               contains as much usefull info as possible
 
   TODO: split the generic form validation logic
   from the context update logic
@@ -36,7 +40,7 @@ if not silent_mode and not request.AUTHENTICATED_USER.has_permission('Modify por
 try:
   # Validate
   form.validate_all_to_request(request, key_prefix=key_prefix)
-except FormValidationError, validation_errors:
+except FormValidationError as validation_errors:
   # Pack errors into the request
   field_errors = form.ErrorFields(validation_errors)
   request.set('field_errors', field_errors)
@@ -51,37 +55,39 @@ except FormValidationError, validation_errors:
   request.RESPONSE.setStatus(400)
   return context.ERP5Document_getHateoas(form=form, REQUEST=request, mode='form')
 
+
 def editListBox(listbox_field, listbox):
-  """ Function called to edit a listbox
-  """
-  if listbox is not None:
-    gv = {}
-    if listbox_field.has_value('global_attributes'):
-      hidden_attributes = map(lambda x:x[0], listbox_field.get_value('global_attributes'))
-      for k in hidden_attributes:
-        gv[k] = getattr(request, k, None)
-    for url, v in listbox.items():
-      v.update(gv)
-      # Form: '' -> ERP5: None
-      encapsulated_editor_list = []
-      cleaned_v = {}
-      for key, value in v.items():
-        if hasattr(value, 'edit'):
-          encapsulated_editor_list.append(value)
-        else:
-          if value == '':        
-            value = None
-          cleaned_v[key] = value
+  """Go through every item in the listbox and call its `edit` with modified values."""
+  if listbox is None:
+    return
 
-      if cleaned_v:
-        if listbox_edit is None:
-          obj = context.restrictedTraverse(url)
-          obj.edit(edit_order=edit_order, **cleaned_v)
-        else:
-          listbox_edit(url, edit_order, cleaned_v)
+  # extract hidden (global) attributes from request to be used in listbox's update
+  global_attr = {hidden_key: getattr(request, hidden_key, None)
+                 for hidden_key, _ in listbox_field.get_value('global_attributes')} \
+                if listbox_field.has_value('global_attributes') \
+                else {}
 
-      for encapsulated_editor in encapsulated_editor_list:
-        encapsulated_editor.edit(obj)
+  for item_url, item_value in listbox.items():
+    item_value.update(global_attr)
+    # Form: '' -> ERP5: None
+    editor_list = []
+    value_dict = {}
+    for key, value in item_value.items():
+      # for every value decide whether it is an attribute or an editor
+      if hasattr(value, 'edit'):
+        editor_list.append(value)
+      else:
+        value_dict[key] = value if value != '' else None
+
+    if value_dict:
+      if listbox_edit is None:
+        obj = context.restrictedTraverse(item_url)
+        obj.edit(edit_order=edit_order, **value_dict)
+        for editor in editor_list:
+          editor.edit(obj)
+      else:
+        listbox_edit(item_url, edit_order, value_dict)
+
 
 def editMatrixBox(matrixbox_field, matrixbox):
   """ Function called to edit a Matrix box
@@ -184,43 +190,24 @@ def editMatrixBox(matrixbox_field, matrixbox):
         else:
           return "Cell %s does not exist" % str(k)
 
-field_prefix_len = len(field_prefix)
 
-def parseField(f):
-  """
-   Parse given form field, to put them in
-   kw or in encapsulated_editor_list
-  """
-  k = f.id
-  if f.has_value('alternate_name'):
-    k = f.get_value('alternate_name') or f.id
-  v = getattr(request, k, MARKER)
-  if hasattr(v, 'edit'):
-    # This is an encapsulated editor
-    # call it
-    encapsulated_editor_list.append(v)
-  elif v is not MARKER:
-    if k.startswith(field_prefix):
-      # We only take into account
-      # the object attributes
-      k = k[field_prefix_len:]
-      # Form: '' -> ERP5: None
-      if v == '':
-        v = None
-      kw[k] = v
-
-# Some initilizations
-kw = {}
-encapsulated_editor_list = []
-MARKER = []
+edit_kwargs = {}  # keyword arguments for `edit` function on context
+encapsulated_editor_list = []  # editors placed inside REQUEST object
+MARKER = []  # placeholder for an empty value
 message = Base_translateString("Data updated.")
 
 try:
-  # We process all the field in form and
-  # we check if they are in the request,
-  # then we edit them
+  # extract all listbox's object form fields from the request and `edit` the object
   for field in form.get_fields():
-    parseField(field)
+    # Dispatch field either to `edit_kwargs` (in case of simple fields) or to `encapsulated_editor_list` in case of editors
+    field_name = field.id if not field.has_value('alternate_name') else (field.get_value('alternate_name') or field.id)
+    field_value = getattr(request, field_name, MARKER)
+    if hasattr(field_value, 'edit'):
+      # field is an encapsulated editor; call it later
+      encapsulated_editor_list.append(field_value)
+    elif field_value is not MARKER and field_name.startswith(field_prefix):
+      # object own attribute (fix value Form: '' -> ERP5: None)
+      edit_kwargs[field_name[len(field_prefix):]] = field_value if field_value != '' else None
 
     ## XXX We need to find a way not to use meta_type.
     field_meta_type = field.meta_type
@@ -229,19 +216,19 @@ try:
 
     if(field_meta_type == 'ListBox'):
       editListBox(field, request.get(field.id))
-    elif(field_meta_type == 'MatrixBox'):
+    if(field_meta_type == 'MatrixBox'):
       editMatrixBox(field, request.get(field.id))
 
   # Return parsed values 
-  if silent_mode: return (kw, encapsulated_editor_list), 'edit'
+  if silent_mode: return (edit_kwargs, encapsulated_editor_list), 'edit'
 
   # Maybe we should build a list of objects we need
   # Update basic attributes
-  context.edit(REQUEST=request, edit_order=edit_order, **kw)
+  context.edit(REQUEST=request, edit_order=edit_order, **edit_kwargs)
   for encapsulated_editor in encapsulated_editor_list:
     encapsulated_editor.edit(context)
-except ActivityPendingError,e:
-  message = Base_translateString("%s" % e)
+except ActivityPendingError as e:
+  message = Base_translateString(str(e))
 
 if message_only:
   return message
