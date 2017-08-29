@@ -21,24 +21,24 @@
     })
 
     .declareMethod('render', function (options) {
-      var state_dict = {
-          value: options.value,
-          editable: options.editable,
-          name: options.name,
-          title: options.title,
-          hidden: options.hidden
-        };
-      return this.changeState(state_dict);
+      return this.changeState(options);
     })
 
-    .onStateChange(function () {
+    .onStateChange(function (modification_dict) {
       var textarea = this.element.querySelector('textarea');
-      // textarea.setAttribute('value', this.state.value);
-      textarea.value = this.state.value;
-      textarea.setAttribute('name', this.state.name);
-      textarea.setAttribute('id', this.state.name);
 
-      textarea.setAttribute('title', this.state.title);
+      if (modification_dict.hasOwnProperty("value")) {
+        textarea.value = modification_dict.value;
+      }
+
+      if (modification_dict.hasOwnProperty("name")) {
+        textarea.setAttribute('name', modification_dict.name);
+        textarea.setAttribute('id', modification_dict.name);
+      }
+
+      if (modification_dict.hasOwnProperty("title")) {
+        textarea.setAttribute('title', modification_dict.title);
+      }
 
       if (this.state.required) {
         textarea.setAttribute('required', 'required');
