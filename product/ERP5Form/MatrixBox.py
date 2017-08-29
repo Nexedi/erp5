@@ -591,8 +591,15 @@ class MatrixBoxValidator(Validator.Validator):
                           cell=cell, cell_index=kw, cell_position = ((i,j,k)+extra_dimension_position))
                       value = None
                       try :
-                        value = my_field.validator.validate(
-                                        my_field, key, REQUEST)
+                        # We call directly Validator's validate method to pass our own key
+                        # because Field.validate always computes the key from field properties
+                        value = my_field.validator.validate(my_field, key, REQUEST)
+                        # Unfortunately the call to external validator is implemented within
+                        # field's `validate` method. Since we call the validator's validate
+                        # directly, we need to copy&paste call to external validator from Field's validate here
+                        external_validator = my_field.get_value('external_validator')
+                        if external_validator and not external_validator(value, REQUEST):
+                            my_field.validator.raise_error('external_validator_failed', my_field)
                       except ValidationError, err :
                         err.field_id = my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
                         error_list.append(err)
