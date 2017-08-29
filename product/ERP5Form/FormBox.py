@@ -42,6 +42,7 @@ from Products.PythonScripts.standard import url_quote_plus
 from Products.Formulator.Errors import FormValidationError, ValidationError
 
 import string
+import copy
 
 class FormBoxWidget(Widget.Widget):
   """
@@ -123,9 +124,15 @@ class FormBoxEditor:
   """
   A class holding all values required to update the object
   """
-  def __init__(self, field_id, result):
+  def __init__(self, field_id, result, context=None):
+    """Initialize with all necessary information for editing.
+
+    Keep a reference to the correct context and don't expect the caller to provide it
+    during the edit phase because they don't have access to the widget anymore.
+    """
     self.field_id = field_id
-    self.result = result
+    self.attr_dict, self.editor_list = result
+    self.context = context
 
   def view(self):
     return self.__dict__
@@ -134,8 +141,12 @@ class FormBoxEditor:
     pass
 
   def edit(self, context):
-    context.edit(**self.result[0])
-    for encapsulated_editor in self.result[1]:
+    """Edit inside correct context."""
+    if self.context is not None:
+        context = self.context
+
+    context.edit(**self.attr_dict)
+    for encapsulated_editor in self.editor_list:
       encapsulated_editor.edit(context)
 
   def as_dict(self):
@@ -144,8 +155,8 @@ class FormBoxEditor:
     XXX This API is probably not stable and may change, as some editors are used to
     edit multiple objects.
     """
-    result_dict = self.result[0]
-    for encapsulated_editor in self.result[1]:
+    result_dict = copy.copy(self.attr_dict)
+    for encapsulated_editor in self.editor_list:
       if hasattr(encapsulated_editor, 'as_dict'):
         result_dict.update(
             encapsulated_editor.as_dict())
@@ -181,7 +192,7 @@ class FormBoxValidator(Validator.Validator):
     # XXX Hardcode script name
     result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
     if result_type == 'edit':
-      return FormBoxEditor(field.id, result)
+      return FormBoxEditor(field.id, result, context=here)
     elif result_type == 'form':
       formbox_field_errors = REQUEST.get('field_errors', [])
       current_field_errors.extend(formbox_field_errors)
