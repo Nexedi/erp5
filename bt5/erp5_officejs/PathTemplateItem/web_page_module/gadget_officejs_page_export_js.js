@@ -75,7 +75,7 @@
       "no_installer": true,
       "sub_gadget": ["connection"]
     },
-    "Appstore": {
+    "App Store": {
       "url": "officejsoldv1/",
       "cache": "officejs_store.appcache",
       "no_installer": true,
@@ -141,8 +141,7 @@
       i = 0,
       form_result = {},
       len = event.target.length,
-      app,
-      take_installer;
+      app;
 
     for (j = 0; j < len; j += 1) {
       form_result[event.target[j].name] = event.target[j].value;
@@ -157,6 +156,7 @@
         return gadget.fillZip(
           application_dict[sub_app].cache,
           origin_url + app.url,
+          application_dict[sub_app].no_installer,
           zip_file,
           sub_app + "/"
         )
@@ -168,7 +168,7 @@
       return zip_file;
     }
 
-    return gadget.fillZip(app.cache, origin_url + app.url)
+    return gadget.fillZip(app.cache, origin_url + app.url, app.no_installer)
       .push(function (zip_file) {
         return fill(zip_file);
       })
@@ -196,8 +196,8 @@
           g.props.element = element;
         });
     })
-    .declareMethod("fillZip", function (cache_file, site_url, zip_file,
-                                         prefix) {
+    .declareMethod("fillZip", function (cache_file, site_url, no_installer,
+                                         zip_file, prefix) {
       var gadget = this,
         file_storage = jIO.createJIO({
         type: "replicate",
@@ -213,7 +213,7 @@
           document: site_url,
           sub_storage: {
             type: "appcache",
-            take_installer: true,
+            take_installer: no_installer === undefined,
             manifest: cache_file,
             origin_url: site_url,
             prefix: prefix || ""

@@ -60,10 +60,9 @@
     "generate":"widget",
     "type": "controlbar",
     "class_list": "responsive",
-    "children": [
-    {
+    "children": [{
         "type": "a",
-        "attributes": {"href":"www.miitbeian.gov.cn"},
+        "attributes": {"href":"http://www.miitbeian.gov.cn", "style": "padding-top: 1em;" },
         "logic": {"text": "沪ICP备14008524号"}
     }]
    }]
