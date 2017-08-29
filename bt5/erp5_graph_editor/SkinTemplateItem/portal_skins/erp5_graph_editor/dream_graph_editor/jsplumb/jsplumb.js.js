@@ -16,7 +16,7 @@
   * You should have received a copy of the GNU Lesser General Public License
   * along with DREAM.  If not, see <http://www.gnu.org/licenses/>.
   * ==========================================================================*/
- /*global console, window, RSVP, rJS, $, jsPlumb, Handlebars,
+ /*global console, window, Node, RSVP, rJS, $, jsPlumb, Handlebars,
      loopEventListener, promiseEventListener, DOMParser, Springy */
  /*jslint unparam: true todo: true */
  (function(RSVP, rJS, $, jsPlumb, Handlebars, loopEventListener, promiseEventListener, DOMParser, Springy) {
@@ -611,10 +611,6 @@
      });
    }
 
-   function waitForNodeClick(gadget, node) {
-     gadget.props.nodes_click_monitor.monitor(loopEventListener(node, "dblclick", false, openNodeEditionDialog.bind(null, gadget, node)));
-   }
-
    function waitForConnection(gadget) {
      return loopJsplumbBind(gadget, "connection", function(info, originalEvent) {
        updateConnectionData(gadget, info.connection, false);
@@ -661,7 +657,6 @@
        name: node_data.name || node_data.id
      }), "text/html").querySelector(".window");
      render_element.append(domElement);
-     waitForNodeClick(gadget, domElement);
      box = $(gadget.props.element).find("#" + dom_element_id);
      absolute_position = convertToAbsolutePosition(gadget, coordinate.left, coordinate.top);
      if (class_definition && class_definition.css) {
@@ -801,6 +796,13 @@
      }
      return JSON.stringify(this.props.data);
    })
+   .onEvent("dblclick", function (evt) {
+      var node = evt.target;
+      if ((node.nodeType === Node.ELEMENT_NODE) &&
+          (node.tagName === "DIV") && node.classList.contains(['window'])) {
+        return openNodeEditionDialog(this, node);
+      }
+    })
    .declareService(function() {
      var gadget = this, jsplumb_instance;
      this.props.main = this.props.element.querySelector(".graph_container");
@@ -835,7 +837,6 @@
      });
      draggable(gadget);
 
-     this.props.nodes_click_monitor = this.__monitor;
      return RSVP.all([waitForDrop(gadget),
        waitForConnection(gadget),
        waitForConnectionDetached(gadget),
