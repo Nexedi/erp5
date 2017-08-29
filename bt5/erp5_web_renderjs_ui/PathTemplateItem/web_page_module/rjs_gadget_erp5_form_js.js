@@ -1,64 +1,15 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /*global window, document, rJS, RSVP*/
 
+/** Form is one of a complicated gadget!
+ *
+ * Editability - the form overrides editability of its fields. Editability is
+ *               hard-coded changed either in Page Templates or soft-coded
+ *               changed in FormBox gadget which renders form as a subgadget
+**/
+
 (function (window, document, rJS, RSVP) {
   "use strict";
-
-  /** Form is one of a complicated gadget!
-   *
-   * Editability - the form overrides editability of its fields. Editability is
-   *               hard-coded changed either in Page Templates or soft-coded
-   *               changed in FormBox gadget which renders form as a subgadget
-  **/
-
-  function getFieldTypeGadgetUrl(type) {
-    var field_url = 'gadget_erp5_field_readonly.html';
-    if (type === 'ListField') {
-      field_url = 'gadget_erp5_field_list.html';
-    } else if ((type === 'ParallelListField') ||
-               (type === 'MultiListField')) {
-      field_url = 'gadget_erp5_field_multilist.html';
-    } else if (type === 'CheckBoxField') {
-      field_url = 'gadget_erp5_field_checkbox.html';
-    } else if (type === 'MultiCheckBoxField') {
-      field_url = 'gadget_erp5_field_multicheckbox.html';
-    } else if (type === 'StringField') {
-      field_url = 'gadget_erp5_field_string.html';
-    } else if (type === 'PasswordField') {
-      field_url = 'gadget_erp5_field_password.html';
-    } else if (type === 'RelationStringField') {
-      field_url = 'gadget_erp5_field_relationstring.html';
-    } else if (type === 'MultiRelationStringField') {
-      field_url = 'gadget_erp5_field_multirelationstring.html';
-    } else if (type === 'TextAreaField') {
-      field_url = 'gadget_erp5_field_textarea.html';
-    } else if (type === 'DateTimeField') {
-      field_url = 'gadget_erp5_field_datetime.html';
-    } else if (type === 'FloatField') {
-      field_url = 'gadget_erp5_field_float.html';
-    } else if (type === 'FileField') {
-      field_url = 'gadget_erp5_field_file.html';
-    } else if (type === 'IntegerField') {
-      field_url = 'gadget_erp5_field_integer.html';
-    } else if (type === 'ListBox') {
-      field_url = 'gadget_erp5_field_listbox.html';
-    } else if (type === 'EditorField') {
-      field_url = 'gadget_erp5_field_editor.html';
-      // field_url = 'gadget_codemirror.html';
-      // sandbox = 'iframe';
-    } else if (type === 'GadgetField') {
-      field_url = 'gadget_erp5_field_gadget.html';
-    } else if (type === 'RadioField') {
-      field_url = 'gadget_erp5_field_radio.html';
-    } else if (type === 'ImageField') {
-      field_url = 'gadget_erp5_field_image.html';
-    } else if (type === 'EmailField') {
-      field_url = 'gadget_erp5_field_email.html';
-    } else if (type === 'FormBox') {
-      field_url = 'gadget_erp5_field_formbox.html';
-    }
-    return field_url;
-  }
 
   /**
    * Physically append rendered field to DOM.
@@ -79,7 +30,7 @@
     suboptions = {
       hide_enabled: form_definition.hide_enabled, // listbox specific
       extended_search: form_definition.extended_search, // searchfield specific
-      field_url: getFieldTypeGadgetUrl(rendered_document[field_name].type),
+      field_type: rendered_document[field_name].type,
       label: ((group_name !== "bottom") && (rendered_document[field_name].title.length > 0)), // no label for bottom group and field without title
       field_json: rendered_document[field_name] // pass
     };
@@ -111,9 +62,11 @@
           // XXX Hardcoded to get one listbox gadget
           //pt form list gadget will get this listbox's info
           //then pass to search field gadget
-          if (suboptions.field_url === "gadget_erp5_field_listbox.html") {
+          if (suboptions.field_type === 'ListBox') {
             form_gadget.props.listbox_gadget = label_gadget;
           }
+
+          // gadget_list hold references to all created gadgets
           form_gadget.props.gadget_list.push(label_gadget);
         }
         return label_gadget.render(suboptions);
@@ -169,9 +122,6 @@
       editable: undefined
     })
 
-    .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
-      return getFieldTypeGadgetUrl(param_list[0]);
-    })
     .allowPublicAcquisition("getFormContent", function (param_list) {
       return this.getContent(param_list[0]);
     })
