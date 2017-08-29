@@ -1,0 +1,108 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<!-- Test FormBox with different context than its parent.
+
+-  ensure that formbox shows in non-editable mode
+-  ensure that formbox shows in editable mode
+-  ensure formbox saves its values into the correct document
+-->
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form Box With Embedded Context</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Form Box Dialog</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/0</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="FormBox FooLine"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="FormBox FooLine"]</td><td></td></tr>
+
+<!-- Check non-editable rendering shows datetime field inside formbox -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_fooline_my_start_date"]/div/label</td><td></td></tr>
+
+<!-- Check editable rendering and functionality -->
+<tr><td>click</td>
+    <td>//a[@data-i18n="Editable"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_fooline_my_start_date"]//input</td><td></td></tr>
+
+
+<!-- Fill in FormBox form -->
+<tr><td>type</td>
+    <td>field_my_title</td>
+    <td>FooObject</td></tr>
+<tr><td>type</td>
+    <td>field_fooline_my_title</td>
+    <td>FooLine</td></tr>
+<tr><td>type</td>
+    <td>field_fooline_my_start_date</td>
+    <td>2016-12-24</td></tr>
+
+<tr><td>click</td>
+    <td>//button[@name="submit" and @data-i18n="Save"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//button[@type="submit" and text()="Data updated."]</td><td></td></tr>
+
+<!-- Verify saving of values. -->
+<tr><td>verifyValue</td>
+    <td>field_my_title</td>
+    <td>FooObject</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_fooline_my_title</td>
+    <td>FooLine</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_fooline_my_start_date</td>
+    <td>2016-12-24</td></tr>
+
+<!-- Verify saved values in basic view -->
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_datetime.html"]//input</td><td></td></tr>
+<tr><td>verifyValue</td>
+    <td>field_my_title</td>
+    <td>FooObject</td></tr>
+<!-- Verify values rendered in ListBox this time -->
+<tr><td>verifyValue</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_datetime.html" and @line="0"]//input</td>
+    <td>2016-12-24</td></tr>
+<tr><td>verifyValue</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_string.html" and @line="0"]//input[@title="Title"]</td>
+    <td>FooLine</td></tr>
+
+</tbody></table>
+</body>
+</html>

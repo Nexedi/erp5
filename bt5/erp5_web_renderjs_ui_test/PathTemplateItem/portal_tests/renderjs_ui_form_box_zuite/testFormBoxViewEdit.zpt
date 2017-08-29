@@ -1,0 +1,119 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<!-- Test FormBox rendering inside dialog page template
+
+This FormBox has a slight speciality - CSS class "invisible" which despite
+its name should onnly hide label of the FormBox field.
+
+-  ensure that formbox shows in non-editable mode
+-  ensure that formbox shows in editable mode
+-  ensure formbox saves its values into the document
+-->
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form Box Dialog</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Form Box Dialog</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/RelationFieldZuite_CommonTemplate/macros/init" />
+
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/0</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="FormBox"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="FormBox"]</td><td></td></tr>
+
+<!-- Check non-editable rendering -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope="field_my_formbox"]/div/label[@for="field_my_formbox"]</td><td></td></tr>
+<!-- verifyNotVisible does not work in automated tests
+<tr><td>verifyNotVisible</td>
+    <td>//div[@data-gadget-scope="field_my_formbox"]/div/label[@for="field_my_formbox"]</td><td></td></tr> -->
+<tr><td>verifyTextPresent</td>
+    <td>Title 0</td><td></td></tr>
+
+<!-- Check editable rendering and functionality -->
+<tr><td>click</td>
+    <td>//a[@data-i18n="Editable"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name="field_my_formbox_my_title"]</td><td></td></tr>
+
+<!-- Fill in FormBox form -->
+<!-- RenderJS is not ready for that yet...
+<tr><td>type</td>
+    <td>field_my_id</td>
+    <td>55</td></tr>-->
+<tr><td>type</td>
+    <td>field_my_formbox_my_title</td>
+    <td>QWERTY</td></tr>
+<tr><td>type</td>
+    <td>field_my_formbox_my_quantity</td>
+    <td>99</td></tr>
+<tr><td>type</td>
+    <td>field_my_formbox_my_description</td>
+    <td>AZERTY</td></tr>
+
+<tr><td>click</td>
+    <td>//button[@name="submit" and @data-i18n="Save"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//button[@type="submit" and text()="Data updated."]</td><td></td></tr>
+
+<!-- Verify saving of values. -->
+<!-- RenderJS is not ready for that yet...
+<tr><td>verifyValue</td>
+    <td>field_my_id</td>
+    <td>0</td></tr>-->
+<tr><td>verifyValue</td>
+    <td>field_my_formbox_my_title</td>
+    <td>QWERTY</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_my_formbox_my_quantity</td>
+    <td>99</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_my_formbox_my_description</td>
+    <td>AZERTY</td></tr>
+
+<!-- Verify saved values in basic view -->
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="View"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name="field_my_title"]</td><td></td></tr>
+<tr><td>verifyValue</td>
+    <td>field_my_title</td>
+    <td>QWERTY</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_my_quantity</td>
+    <td>99.0</td></tr>
+
+</tbody></table>
+</body>
+</html>
