@@ -50,13 +50,13 @@
     gadget.props.cell_gadget_list = [];
     function renderSubCell(element, sub_field_json) {
       sub_field_json.editable = sub_field_json.editable && gadget.state.editable; // XXX 
-      return gadget.getFieldTypeGadgetUrl(sub_field_json.type)
-        .push(function (gadget_url) {
-          return gadget.declareGadget(gadget_url, {element: element});
-        })
+      return gadget.declareGadget('gadget_erp5_label_field.html', {element: element, scope: sub_field_json.key})
         .push(function (cell_gadget) {
           gadget.props.cell_gadget_list.push(cell_gadget);
-          return cell_gadget.render({field_json: sub_field_json});
+          return cell_gadget.render({
+            field_type: sub_field_json.type,
+            field_json: sub_field_json,
+            label: false});
         });
     }
     for (i = 0; i < element_list.length; i += 1) {
@@ -144,7 +144,6 @@
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
-    .declareAcquiredMethod("getFieldTypeGadgetUrl", "getFieldTypeGadgetUrl")
     .declareAcquiredMethod("renderEditorPanel", "renderEditorPanel")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("translate", "translate")

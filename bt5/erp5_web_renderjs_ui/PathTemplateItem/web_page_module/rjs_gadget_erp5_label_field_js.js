@@ -16,6 +16,59 @@
 
   var SCOPE = 'field';
 
+  function getFieldTypeGadgetUrl(field_type) {
+    var field_url = 'gadget_erp5_field_readonly.html';
+    if (field_type === 'ListField') {
+      field_url = 'gadget_erp5_field_list.html';
+    } else if ((field_type === 'ParallelListField') ||
+               (field_type === 'MultiListField')) {
+      field_url = 'gadget_erp5_field_multilist.html';
+    } else if (field_type === 'CheckBoxField') {
+      field_url = 'gadget_erp5_field_checkbox.html';
+    } else if (field_type === 'MultiCheckBoxField') {
+      field_url = 'gadget_erp5_field_multicheckbox.html';
+    } else if (field_type === 'StringField') {
+      field_url = 'gadget_erp5_field_string.html';
+    } else if (field_type === 'LinesField') {
+      field_url = 'gadget_erp5_field_lines.html';
+    } else if (field_type === 'PasswordField') {
+      field_url = 'gadget_erp5_field_password.html';
+    } else if (field_type === 'RelationStringField') {
+      field_url = 'gadget_erp5_field_relationstring.html';
+    } else if (field_type === 'MultiRelationStringField') {
+      field_url = 'gadget_erp5_field_multirelationstring.html';
+    } else if (field_type === 'TextAreaField') {
+      field_url = 'gadget_erp5_field_textarea.html';
+    } else if (field_type === 'DateTimeField') {
+      field_url = 'gadget_erp5_field_datetime.html';
+    } else if (field_type === 'FloatField') {
+      field_url = 'gadget_erp5_field_float.html';
+    } else if (field_type === 'FileField') {
+      field_url = 'gadget_erp5_field_file.html';
+    } else if (field_type === 'IntegerField') {
+      field_url = 'gadget_erp5_field_integer.html';
+    } else if (field_type === 'ListBox') {
+      field_url = 'gadget_erp5_field_listbox.html';
+    } else if (field_type === 'EditorField') {
+      field_url = 'gadget_erp5_field_editor.html';
+      // field_url = 'gadget_codemirror.html';
+      // sandbox = 'iframe';
+    } else if (field_type === 'GadgetField') {
+      field_url = 'gadget_erp5_field_gadget.html';
+    } else if (field_type === 'RadioField') {
+      field_url = 'gadget_erp5_field_radio.html';
+    } else if (field_type === 'ImageField') {
+      field_url = 'gadget_erp5_field_image.html';
+    } else if (field_type === 'EmailField') {
+      field_url = 'gadget_erp5_field_email.html';
+    } else if (field_type === 'FormBox') {
+      field_url = 'gadget_erp5_field_formbox.html';
+    } else if (field_type === 'MatrixBox') {
+      field_url = 'gadget_erp5_field_matrixbox.html';
+    }
+    return field_url;
+  }
+
   rJS(window)
     .setState({
       label_text: '',
@@ -35,7 +88,7 @@
       var state_dict = {
         label_text: options.field_json.title || '',
         label: options.label,
-        field_url: options.field_url,
+        field_url: getFieldTypeGadgetUrl(options.field_type),
         error_text: options.field_json.error_text || '',
         options: options,
         scope: options.field_json.key,
