@@ -78,7 +78,21 @@
     .declareAcquiredMethod("displayFormulatorValidationError",
                            "displayFormulatorValidationError")
 
-
+    /////////////////////////////////////////////////////////////////
+    // Proxy methods to the child gadget
+    /////////////////////////////////////////////////////////////////
+    .declareMethod('checkValidity', function () {
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return declared_gadget.checkValidity();
+        });
+    })
+    .declareMethod('getContent', function () {
+      return this.getDeclaredGadget("erp5_form")
+        .push(function (declared_gadget) {
+          return declared_gadget.getContent();
+        });
+    })
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
@@ -88,7 +102,7 @@
 
     .declareMethod('render', function (options) {
       var state_dict = {
-        id: options.jio_key,
+        jio_key: options.jio_key,
         view: options.view,
         editable: options.editable,
         erp5_document: options.erp5_document,
@@ -158,6 +172,9 @@
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
           form_options.view = form_gadget.state.view;
+          form_options.jio_key = form_gadget.state.jio_key;
+          form_options.editable = form_gadget.state.editable;
+
           return erp5_form.render(form_options);
         })
         .push(function () {
@@ -217,7 +234,7 @@
           }
 
           return form_gadget.jio_putAttachment(
-            form_gadget.state.id,
+            form_gadget.state.jio_key,
             action.href,
             data
           );
@@ -267,7 +284,7 @@
               form_gadget.deferRevokeObjectUrlWithLink(object_url, a);
             } else {
               jio_key = new URI(location).segment(2);
-              if (form_gadget.state.id === jio_key) {
+              if (form_gadget.state.jio_key === jio_key) {
                 // Do not update navigation history if dialog redirect to the same document
                 list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, view: "view", page: undefined, editable: form_gadget.state.editable}}));
               } else {

@@ -1,5 +1,16 @@
 /*global window, document, rJS, RSVP */
 /*jslint indent: 2, maxerr: 3 */
+/**
+ * Label gadget takes care of displaying validation errors and label.
+ *
+ * Every form field is wrapped in that widget which has some consequences:
+ *
+ * -  CSS classes sharing: label copy CSS classes of embedded field for itself
+ *    because CSS selectors are not good in selectin up the DOM tree
+ *    -  class "invisible" despite its name is supposed to hide only label
+ *    -  class "horizontal_align_form_box" will prevent any label to show as well
+ *
+ */
 (function (window, document, rJS, RSVP) {
   "use strict";
 
@@ -9,8 +20,10 @@
     .setState({
       label_text: '',
       error_text: '',
-      label: true
+      label: true,
+      css_class: ''
     })
+
     .ready(function () {
       return this.changeState({
         label_element: this.element.querySelector('label'),
@@ -28,7 +41,8 @@
         error_text: options.field_json.error_text || '',
         options: options,
         scope: options.field_json.key,
-        hidden: options.field_json.hidden
+        hidden: options.field_json.hidden,
+        css_class: options.field_json.css_class
       };
       return this.changeState(state_dict);
     })
@@ -47,6 +61,10 @@
         this.state.label_text_element.textContent = this.state.label_text;
       }
       this.state.label_element.setAttribute('for', gadget.state.scope);
+
+      if (modification_dict.hasOwnProperty('css_class') && this.state.css_class) {
+        this.state.label_element.classList.add(this.state.css_class);
+      }
 
       if (modification_dict.hasOwnProperty('error_text')) {
         this.state.error_element.textContent = "";
