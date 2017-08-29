@@ -1,0 +1,93 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Validation on editable cells</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test validation on editable cells</td></tr>
+</thead><tbody>
+
+<tal:block metal:use-macro="here/MatrixBoxZuite_CommonTemplate/macros/init" />
+<!-- Shortcut for full renderjs url -->
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_matrixbox.html"]//table</td>
+    <td>matrixbox_table</td></tr>
+<tr><td>store</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table</td>
+    <td>listbox_table</td></tr>
+
+<tr><td>open</td>
+    <td>${base_url}/foo_module/FooModule_createObjects?create_line:int=1</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Created Successfully.</td><td></td></tr>
+<tr><td>open</td>
+    <td>${base_url}/foo_module/Zuite_waitForActivities</td><td></td></tr>
+<tr><td>assertTextPresent</td>
+    <td>Done.</td><td></td></tr>
+
+
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/0/1?editable=1</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Views"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n="Dynamic MatrixBox"]</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n="Dynamic MatrixBox"]</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>${matrixbox_table}//input[@name="field_matrixbox_quantity_cell_0_0_0"]</td><td></td></tr>
+
+<!-- We cannot just type garbage like in XHTML skin because we are using proper
+     number fields. Thus there is an external validator which raises when the
+     value is < 0 -->
+<tr><td>type</td>
+    <td>field_matrixbox_quantity_cell_0_0_0</td>
+    <td>-2</td></tr>
+<tr><td>type</td>
+    <td>field_matrixbox_quantity_cell_0_1_0</td>
+    <td>2</td></tr>
+
+<tr><td>click</td>
+    <td>//button[@data-i18n="Save"]</td><td></td></tr>
+<tr><td>waitForTextPresent</td>
+    <td>Input data has errors.</td><td></td></tr>
+
+<!-- Verify no data loss (and correct formating with precision=1)-->
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_0_0_0</td>
+    <td>-2.0</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_0_1_0</td>
+    <td>2.0</td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_1_0_0</td>
+    <td></td></tr>
+<tr><td>verifyValue</td>
+    <td>field_matrixbox_quantity_cell_1_1_0</td>
+    <td></td></tr>
+
+<!-- create cells -->
+<tr><td>type</td>
+    <td>field_matrixbox_quantity_cell_0_0_0</td>
+    <td>1</td></tr>
+<tr><td>type</td>
+    <td>field_matrixbox_quantity_cell_0_1_0</td>
+    <td>2</td></tr>
+
+<tr><td>click</td>
+    <td>//button[@data-i18n="Save"]</td><td></td></tr>
+<tr><td>waitForTextPresent</td>
+    <td>Data updated.</td><td></td></tr>
+
+</tbody>
+</table>
+</body>
+</html>

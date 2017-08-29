@@ -12,6 +12,8 @@ portal_tests/renderjs_ui_logout_translate_zuite
 portal_tests/renderjs_ui_logout_translate_zuite/**
 portal_tests/renderjs_ui_logout_zuite
 portal_tests/renderjs_ui_logout_zuite/**
+portal_tests/renderjs_ui_matrixbox_zuite
+portal_tests/renderjs_ui_matrixbox_zuite/**
 portal_tests/renderjs_ui_multi_check_box_field_zuite
 portal_tests/renderjs_ui_multi_check_box_field_zuite/**
 portal_tests/renderjs_ui_multi_list_field_zuite
