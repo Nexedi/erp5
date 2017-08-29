@@ -62,11 +62,11 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>9c311f9675ab48ad2124ca39ae8dfb4b</string> </value>
+            <value> <string>5d593f5b74d90f39e5e2271a02c8f1c8</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/json</string> </value>
+            <value> <string>text/json</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
@@ -197,7 +197,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -205,7 +207,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>961.47837.55773.26948</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -223,7 +225,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497861289.0</float>
+                        <float>1503999280.62</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
