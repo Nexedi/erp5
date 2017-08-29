@@ -52,14 +52,12 @@
         });
     })
 
+    /** Return content even for non-editable cells - be backward compatible! */
     .declareMethod('getContent', function () {
-      if (this.state.editable) {
-        return this.getDeclaredGadget('sub')
-          .push(function (gadget) {
-            return gadget.getContent();
-          });
-      }
-      return {};
+      return this.getDeclaredGadget('sub')
+        .push(function (gadget) {
+          return gadget.getContent();
+        });
     })
 
     .declareMethod('checkValidity', function () {
