@@ -952,6 +952,22 @@ class BusinessPropertyItem(XMLObject):
     # the accessor
     if property_name.endswith('_list'):
       property_name = property_name[:-5]
+
+    # XXX: Explicit addition of property_type for 'type_workflow' property on
+    # 'ERP5Type' objects. This is required as we have created an explicit
+    # property outside of property sheet for ERP5Type objects, but at the same
+    # time, the object(s) also have property sheet for them. Since, there is no
+    # functions like _setProperty, hasProperty, etc to combine both of them
+    # we have to end up using explicit mention of 'list' property_value here
+    # 1. Other option can be to override hasProperty or _setProperty for ERP5Type
+    # object and write it so that it can handle both _properties attribute as
+    # well as accessor holders generated from property sheet(s).
+    # 2. After that we can use hasProperty here for objects to check their
+    # property_type and then just use the generic '_setProperty' function.
+    # XXX: For now, we just put this explicitly/hard-code
+    if property_name == 'type_workflow':
+      property_type = 'multiple selection'
+
     if int(self.getProperty('item_sign')) == 1:
       obj._setProperty(property_name, property_value, property_type)
 
