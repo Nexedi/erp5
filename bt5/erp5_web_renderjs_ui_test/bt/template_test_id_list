@@ -10,6 +10,7 @@ test.erp5.testFunctionalRJSPageTemplate
 test.erp5.testFunctionalRJSPage
 test.erp5.testFunctionalRJSRouter
 test.erp5.testFunctionalRJSListbox
+test.erp5.testFunctionalRJSFormbox
 test.erp5.testFunctionalRJSLogout
 test.erp5.testFunctionalRJSTranslation
 test.erp5.testFunctionalRJSLogoutTranslation
