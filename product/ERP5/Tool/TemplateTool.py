@@ -365,10 +365,10 @@ class TemplateTool (BaseTool):
       if id is None:
         id = self.generateNewId()
 
-      urltype, name = splittype(url)
-      if WIN and urltype and '\\' in name:
+      urltype, path = splittype(url)
+      if WIN and urltype and '\\' in path:
         urltype = None
-        name = url
+        path = url
       if urltype and urltype != 'file':
         if '/portal_templates/asRepository/' in url:
           # In this case, the downloaded BT is already built.
@@ -378,7 +378,8 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
-        bt = self._download_local(os.path.normpath(name), id)
+        path = os.path.normpath(os.path.expanduser(path))
+        bt = self._download_local(path, id)
 
       bt.build(no_action=True)
       return bt
@@ -590,8 +591,10 @@ class TemplateTool (BaseTool):
       """
         Update the information on Business Templates from repositories.
 
-      For local repositories, if bt5list is missing or if genbt5list > 1,
-      bt5list is automatically generated (but not saved on disk).
+      For local repositories, genbt5list > 0 enables automatic generation
+      of bt5list, without saving it on disk:
+      - genbt5list=1: only if bt5list is missing
+      - genbt5list>1: always
       """
       self.repository_dict = PersistentMapping()
       property_list = ('title', 'version', 'revision', 'description', 'license',
@@ -607,6 +610,7 @@ class TemplateTool (BaseTool):
         if urltype and urltype != 'file':
           f = urlopen(repository + '/bt5list')
         else:
+          url = os.path.expanduser(url)
           bt5list = os.path.join(url, 'bt5list')
           if genbt5list > os.path.exists(bt5list):
             f = generateInformation(url)
