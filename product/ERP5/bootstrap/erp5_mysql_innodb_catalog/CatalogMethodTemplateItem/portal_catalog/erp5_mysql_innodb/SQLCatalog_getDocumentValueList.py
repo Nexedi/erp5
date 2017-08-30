@@ -52,10 +52,10 @@ try:
   if not language:
     language = portal.Localizer.get_selected_language()
 
-  if 'portal_type' not in kw:
+  if not kw.get('portal_type'):
     kw['portal_type'] = portal.getPortalDocumentTypeList()
 
-  if 'validation_state' not in kw:
+  if not kw.get('validation_state'):
     # XXX hardcoded validation state list.
     # Use predicate or layout property instead
     kw['validation_state'] = ('released', 'released_alive', 'published',
