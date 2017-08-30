@@ -321,7 +321,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' *.app.officejs.com data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' data:; script-src \'self\' \'unsafe-eval\'; font-src \'self\'; style-src \'self\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_default_view_action_reference</string> </key>
@@ -592,7 +592,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.9326.59090.45687</string> </value>
+                <value> <string>961.46664.19323.17902</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -610,7 +610,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503561733.43</float>
+                        <float>1504082669.35</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -185,7 +185,7 @@
     })
     .declareService(function () {
       var gadget = this;
-      return gadget.declareGadget("https://texteditor.app.officejs.com/d8f869616f/officejs_ckeditor_gadget/app/",
+      return gadget.declareGadget("officejs_ckeditor_gadget/development/",
         {
           element: gadget.element.querySelector('.editor'),
           sandbox: 'iframe',
