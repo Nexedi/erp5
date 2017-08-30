@@ -134,7 +134,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: field.restrictedTraverse("officejs_ckeditor_gadget/development").absolute_url() + "/"</string> </value>
+            <value> <string>python: field.restrictedTraverse("officejs_ckeditor_gadget/app").absolute_url() + "/"</string> </value>
         </item>
       </dictionary>
     </pickle>
