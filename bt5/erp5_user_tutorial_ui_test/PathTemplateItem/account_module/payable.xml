@@ -78,6 +78,7 @@
               <tuple>
                 <string>account_type/liability/payable</string>
                 <string>gap/my_country/my_accounting_standards/4/40</string>
+                <string>gap/de/skr04/3/3/1/4/1</string>
               </tuple>
             </value>
         </item>
@@ -96,12 +97,16 @@
             <value> <string>payable</string> </value>
         </item>
         <item>
+            <key> <string>is_credit_account</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Account</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payable</string> </value>
+            <value> <string>Lieferanten</string> </value>
         </item>
       </dictionary>
     </pickle>

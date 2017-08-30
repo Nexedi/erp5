@@ -1,7 +1,7 @@
 account_module/bank
-account_module/collected_vat  
-account_module/equity  
-account_module/fixed_assets  
+account_module/collected_vat
+account_module/equity
+account_module/fixed_assets
 account_module/goods_purchase
 account_module/goods_sales
 account_module/payable

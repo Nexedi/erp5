@@ -62,6 +62,14 @@
             </value>
         </item>
         <item>
+            <key> <string>codification</string> </key>
+            <value> <string>SALE-MAN</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>MAN</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
@@ -72,12 +80,20 @@
             <value> <string>manager</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
         <item>
-            <key> <string>title</string> </key>
+            <key> <string>short_title</string> </key>
             <value> <string>Manager</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Sales Manager</string> </value>
         </item>
       </dictionary>
     </pickle>
