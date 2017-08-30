@@ -96,11 +96,10 @@
     <td>field_my_title</td>
     <td>FooObject</td></tr>
 <!-- Verify values rendered in ListBox this time -->
+<tr><td>verifyElementPresent</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/tbody/tr[1]//input[@value="2016-12-24" and @type="date"]</td><td></td></tr>
 <tr><td>verifyValue</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_datetime.html" and @line="0"]//input</td>
-    <td>2016-12-24</td></tr>
-<tr><td>verifyValue</td>
-    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_string.html" and @line="0"]//input[@title="Title"]</td>
+    <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_listbox.html"]//table/tbody/tr[1]//input[@title="Title"]</td>
     <td>FooLine</td></tr>
 
 </tbody></table>
