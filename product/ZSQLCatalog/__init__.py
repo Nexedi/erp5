@@ -38,7 +38,7 @@ def initialize(context):
 from AccessControl import ModuleSecurityInfo, ClassSecurityInfo
 ModuleSecurityInfo('Products.ZSQLCatalog.SQLCatalog').declarePublic(
             'ComplexQuery', 'Query', 'NegatedQuery', 'AndQuery', 'OrQuery',
-            'BaseQuery', 'SQLQuery')
+            'BaseQuery')
 
 from Query import Query, SimpleQuery
 from SearchKey import SearchKey

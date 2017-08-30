@@ -2594,6 +2594,5 @@ def getComparisonOperatorInstance(operator):
   return operator_dict[operator]
 
 from Query.EntireQuery import EntireQuery
-from Query.SQLQuery import SQLQuery
 
 verifyClass(ISearchKeyCatalog, Catalog)
