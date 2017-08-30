@@ -38,7 +38,8 @@ var repair = false;
       remote_sub_storage: {
         type: "appcache",
         manifest: gadget.state.cache_file,
-        version: gadget.state.version_url
+        version: gadget.state.version_url,
+        take_installer: true
       }
     });
   }
