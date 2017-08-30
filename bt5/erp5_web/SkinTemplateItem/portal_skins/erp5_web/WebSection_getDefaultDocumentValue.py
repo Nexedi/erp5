@@ -30,9 +30,4 @@
 reference_list = context.getAggregateReferenceList()
 if not reference_list: return None # Quick return
 
-# We should only display those documents which are shared
-# to some extend. This list takes into account some common
-# state IDs used in ERP5.
-return context.getDocumentValue(name=reference_list,
-            validation_state=('released', 'released_alive', 'published', 'published_alive',
-                              'shared', 'shared_alive', 'public', 'validated'))
+return context.getDocumentValue(name=reference_list)

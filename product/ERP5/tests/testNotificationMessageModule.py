@@ -83,6 +83,8 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     self.tic()
     result = tool.getDocumentValue(reference='A')
     self.assertEqual(result.getRelativeUrl(), n_m_en.getRelativeUrl())
+    result = tool.getDocumentValue(reference='A', language='fr')
+    self.assertEqual(result.getRelativeUrl(), n_m_en.getRelativeUrl())
     #Same Document A in French
     n_m_fr = module.newContent(portal_type='Notification Message',
                                reference='A',
@@ -90,6 +92,8 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                version='01')
     n_m_fr.validate()
     self.tic()
+    result = tool.getDocumentValue(reference='A')
+    self.assertEqual(result.getRelativeUrl(), n_m_en.getRelativeUrl())
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr.getRelativeUrl())
     #Duplicate Document A French with upgraded version
@@ -99,6 +103,8 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                   version='02')
     n_m_fr_02.validate()
     self.tic()
+    result = tool.getDocumentValue(reference='A')
+    self.assertEqual(result.getRelativeUrl(), n_m_en.getRelativeUrl())
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr_02.getRelativeUrl())
 

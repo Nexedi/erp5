@@ -75,10 +75,13 @@ try:
       logical_operator='or',
     )
 
+  if all_languages:
+    strict_language = False
   if all_versions:
-    if not all_languages:
-      kw['language'] = language
-    return search_context.searchResults(src__=src__, **kw)
+    if all_languages or not strict_language:
+      return search_context.searchResults(src__=src__, **kw)
+    else:
+      return search_context.searchResults(src__=src__, language=language, **kw)
   else:
     group_by_list = set(kw.get('group_by_list', []))
     if all_languages:
@@ -94,6 +97,7 @@ try:
       for x in extra_column_set if not x.endswith('__score__'))
     return context.SQLCatalog_zGetDocumentValueList(search_context=search_context,
                                                     language=language,
+                                                    strict_language=strict_language,
                                                     all_languages=all_languages,
                                                     src__=src__,
                                                     kw=kw)

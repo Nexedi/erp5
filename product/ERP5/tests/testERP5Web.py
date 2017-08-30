@@ -645,6 +645,13 @@ Hé Hé Hé!""", page.asText().strip())
         self.assertEqual(5, len([w.getLanguage() for w in en_document_value_list \
                                 if w.getLanguage() == 'ja']))
 
+      # Tests for strict_language=False
+      fallback_document_value_list = websection.getDocumentValueList(strict_language=False, language='ja')
+      self.assertEqual(
+        [('en', 'D'), ('ja', 'A'), ('ja', 'B'), ('ja', 'C'), ('ja', 'E'), ('pt', 'F')],
+        sorted([(x.getLanguage(), x.getReference()) for x in fallback_document_value_list])
+      )
+
       # Tests for sort_on parameter
       self.assertEqual(['A', 'B', 'C', 'D'],
                        [w.getReference() for w in \

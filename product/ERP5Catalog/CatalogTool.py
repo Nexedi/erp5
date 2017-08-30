@@ -1244,7 +1244,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     security.declarePublic('getDocumentValueList')
     def getDocumentValueList(self, sql_catalog_id=None,
-                             search_context=None, language=None, all_languages=None,
+                             search_context=None, language=None,
+                             strict_language=True, all_languages=None,
                              all_versions=None, now=None, **kw):
       """
         Return the list of documents which belong to the
@@ -1260,6 +1261,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         Here is the list of arguments :
           * search_context
           * language
+          * strict_language
           * all_languages
           * all_versions
           * now
@@ -1274,6 +1276,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return catalog.SQLCatalog_getDocumentValueList(
           search_context=search_context,
           language=language,
+          strict_language=strict_language,
           all_languages=all_languages,
           all_versions=all_versions,
           now=now,

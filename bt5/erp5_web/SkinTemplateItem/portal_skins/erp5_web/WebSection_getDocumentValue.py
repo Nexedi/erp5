@@ -9,6 +9,7 @@ if portal is None:
 document_list = portal.portal_catalog.getDocumentValueList(
   reference=name,
   language=language,
+  strict_language=strict_language,
   now=now,
   **kw
 )
