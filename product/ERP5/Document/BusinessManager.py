@@ -228,6 +228,17 @@ class BusinessManager(Folder):
                          'business_manager_installation_workflow')
     return wf._getWorkflowStateOf(self, id_only=id_only )
 
+  def changeBuildingStatetoModified(self):
+    """
+    Change building_state to 'modified'. This is needed specifically as we want
+    to update the building state even if we change any sub-objects(Business Item
+    or Business Property Item) of Business Manager.
+    """
+    portal_workflow = self.getPortalObject().portal_workflow
+    wf = portal_workflow._getOb('business_manager_building_workflow')
+
+    wf._executeMetaTransition(self, 'modified')
+
   def applytoERP5(self, DB):
     """Apply the flattened/reduced Business Manager to the DB"""
     portal = self.getPortalObject()
