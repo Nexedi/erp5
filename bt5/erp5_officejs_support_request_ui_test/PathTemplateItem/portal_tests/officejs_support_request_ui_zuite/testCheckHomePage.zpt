@@ -21,11 +21,6 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//a[@id='generate-rss']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
   <td>//canvas[@id='bar-chart-grouped']</td>
   <td></td>
 </tr>
