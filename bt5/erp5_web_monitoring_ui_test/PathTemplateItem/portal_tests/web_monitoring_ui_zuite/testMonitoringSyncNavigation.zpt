@@ -1,0 +1,372 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test SlapOS Monitoring UI (expected failure)</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test SlapOS Monitoring UI (expected failure)</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/bar_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/monitoring_render_js/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=settings_configurator']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//span[@data-i18n="Configure monitoring OPML"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@href='#config-add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[@data-i18n='Add OPML']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>http://localhost:5378/rootInstance/public/feeds</td>
+  <td>opml_url</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>admin</td>
+  <td>username</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>zwkuyjdl</td>
+  <td>password</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=url</td>
+  <td>${opml_url}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=username</td>
+  <td>${username}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=password</td>
+  <td>${password}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Add OPML']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>Failed to access OPML URL</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Monitoring Promises Status</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[contains(@class, 'sync-all')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=settings_configurator']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//table[contains(@class, 'opml-tablelinks')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${opml_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeElementPresent</td>
+  <td>//table[contains(@class, 'opml-tablelinks')]/tbody/tr[1]/td[3]/a</td>
+  <td>has_hosting</td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>//table[contains(@class, 'opml-tablelinks')]/tbody/tr[1]/td[3]/a</td>
+  <td>hosting_title</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[contains(@class, 'sync-all')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Synchronizing Data...</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Synchronisation finished</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=hosting_subscription_list']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table[contains(@class, 'instance-overview')]/tbody/tr[1]/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/monitoring_render_js/app/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//span[@data-i18n="Monitoring Promises Status"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table[contains(@class, 'ui-responsive')]/tbody/tr[1]/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Done.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/monitoring_render_js/app/#page=settings_configurator</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table[contains(@class, 'opml-tablelinks')]/tbody/tr[1]/td[3]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Add OPML']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//label[contains(@class, 'configure-auth')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//label[@data-i18n="Confirm New Password:"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=new_password_confirm</td>
+  <td>${password}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=new_password</td>
+  <td>${password}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Add OPML']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//button[contains(@class, 'sync-all')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[contains(@class, 'sync-all')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Synchronizing Data...</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Synchronisation finished</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='opml-all']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//a[contains(@class, 'opml-delete')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>${opml_url}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@href='#page=hosting_subscription_list']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextNotPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
