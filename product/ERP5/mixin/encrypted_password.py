@@ -78,7 +78,7 @@ class EncryptedPasswordMixin:
 
   def _setEncodedPassword(self, value, format='default'):
     password = getattr(aq_base(self), 'password', None)
-    if password is None:
+    if password is None or isinstance(password, basestring):
       password = self.password = PersistentMapping()
     self.password[format] = value
 
