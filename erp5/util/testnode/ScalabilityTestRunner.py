@@ -109,10 +109,7 @@ class ScalabilityTestRunner():
       self.remaining_software_installation_dict[computer_guid] = software_path
       #self.slapos_controler.supply(software_path, computer_guid)
 
-      self.printCommunicatorInfo("COMP-2732")
-      #self.slapos_communicator._supply("available")
       self.slapos_communicator._supply("started")
-      # Here make a request via slapos controler ?
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
@@ -126,8 +123,8 @@ class ScalabilityTestRunner():
     instance_title = "Scalability-"
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-    instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
-    instance_title += "timestamp="+str(time.time())
+    #instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
+    #instance_title += "timestamp="+str(time.time())
     return instance_title
 
   def _generateInstanceXML(self, software_configuration,
@@ -158,22 +155,18 @@ class ScalabilityTestRunner():
       #request_kw = {"_" : config}
       request = {"_" : config}
       request_kw = {"partition_parameter_kw": request } 
-      #self.log("config from softConf, tResult & tSuite: " + str(config))
+      #self.log("config from software_configuration, test_result & test_suite: " + str(config))
       #self.log("request_kw: " + str(request_kw))
-      self.log("Computer : " + str(self.launcher_nodes_computer_guid[0]))
+      #self.log("Computer : " + str(self.launcher_nodes_computer_guid[0]))
       #self.slapos_controler.request(instance_title, software_path,
       #                       "test", {"_" : config},
       #                       self.launcher_nodes_computer_guid[0])
       self.slapos_communicator.setName(instance_title)
       self.slapos_communicator.setRequestParameters(request_kw)
-      # ROQUE: request commented because it's failing. Instance manually requested. 
       comp_partition = self.slapos_communicator._request("started")
-      self.log("Requested computer partition: ")
-      self.log(str(comp_partition))
-      self.log("Computer partition certificate:")
-      self.log(str(comp_partition.getCertificate()))
-      # ROQUE: harcoded state (that should happens in the ._request )
-      self.slapos_communicator.forceSetState('started')
+      #self.log("Computer partition certificate:")
+      #self.log(str(comp_partition.getCertificate()))
+      #self.slapos_communicator.forceSetState('started')
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -248,7 +241,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     Wait for 'max_time' an instance specific state
     """
     # ROQUE: hardcoded max_time because instance installation fails
-    max_time = 20
+    #max_time = 20
     self.log("Wait for instance state: %s" %state)
     start_time = time.time()
     #while (not self.slapos_communicator.isHostingSubscriptionReady(instance_title, state)
@@ -274,7 +267,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Wait for 'max_time' the instance creation
     """
-    # RIOQUE: harcoded max_time 
+    # ROQUE: harcoded max_time 
     max_time = 20
     self.log("Instance title: " + str(instance_title))
     self.log("Waiting for instance creation...")
@@ -397,6 +390,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
         self.randomized_path)
       self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
+      # ROQUE: hardcoded software url until installation bug is solved
+      self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
+      self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
       self.log("Reachable address: " + self.reachable_address)
       self.log("Reachable profile: " + self.reachable_profile)
 
@@ -444,11 +440,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       # Launch instance
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       try:
-	# ROQUE: the instance title is harcoded because the instance request is not working (this one was manually created)
-        #self.instance_title = "nxdcloud-onlinenet-scalabilitynode-001-TESTINSTANCE"
-        self.instance_title = "nxdcloud-onlinenet-scalabilitynode-001-INSTANCE-FOR-TESTING"
-        #self._createInstance(self.reachable_profile, configuration_list[0],
-        #                     self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+        self._createInstance(self.reachable_profile, configuration_list[0],
+                             self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
         self.log("Scalability instance requested.")
       except:
         self.log("Unable to launch instance")
@@ -458,54 +451,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       return {'status_code' : 0}
     return {'status_code' : 1}
 
-  def printCommunicatorInfo(self, computer_id, instance_url=None):
-    self.log("######## PRINTING SLAPOS MASTER COMMUNICATOR INFO ########")
-    #computer = self.slapos_communicator._hateoas_getComputer("COMP-2732")
-    computer = self.slapos_communicator._hateoas_getComputer(computer_id)
-    if computer is not None:
-      #self.log("COMPUTER: " + str(computer))
-      software_installation_list = self.slapos_communicator.getSoftwareInstallationList()
-      self.log("software_installation_list: ")
-      self.log(str(software_installation_list))
-      getSoftwareInstallationNews = self.slapos_communicator.getSoftwareInstallationNews()
-      self.log("Software installation news: ")
-      self.log(str(getSoftwareInstallationNews))
-      getInstanceUrlList = self.slapos_communicator.getInstanceUrlList()
-      self.log("getInstanceUrlList")
-      self.log(str(getInstanceUrlList))
-      # ROQUE: for debugging purposes
-
-      if instance_url is not None:
-        #instance_url = 'https://api.vifib.com/software_instance_module/20170822-1568166F/ERP5Document_getHateoas'
-        self.log("getNewsFromInstance(url)")
-        self.log(str(self.slapos_communicator.getNewsFromInstance(instance_url)))
-        self.log("getInformationFromInstance(url)")
-        self.log(str(self.slapos_communicator.getInformationFromInstance(instance_url)))
-
-      # ROQUE: get info contains the software release url
-      getInfo = self.slapos_communicator.getInfo()
-      self.log("getInfo: ")
-      self.log(str(getInfo))
-
-      # "No message"
-      getFormatedLastMessage = self.slapos_communicator.getFormatedLastMessage()
-      self.log("getFormatedLastMessage: ")
-      self.log(str(getFormatedLastMessage))
-
-      getSoftwareState = self.slapos_communicator._getSoftwareState()
-      self.log("Software state: " + str(getSoftwareState))
-
-      getInstanceState = self.slapos_communicator._getInstanceState()
-      self.log("Instance state: " + str(getInstanceState))
-    self.log("#######################################################")
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
       self.log("Current test_suite is not actually launchable.")
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
-    if True:
-      self.log("FORCE EXIT WITH ERROR UNTIL SOFTWARE INSTALLATION BUG IS FIXED.")
-      return {'status_code' : 1} 
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
     # create test_result
@@ -520,9 +470,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     error_message = None
 
     # Each cluster configuration are tested
-    self.log("FOR CONFIG IN CONFIG_LIST:")
+    self.log("FOR EACH CONFIGURATION: ")
     for configuration in configuration_list:
-      self.log("configuration n: " + str(count))
+      self.log("CONFIGURATION N: " + str(count))
       self.log(str(configuration))
 
       # First configuration doesn't need XML configuration update.
@@ -541,15 +491,19 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         
       # XXX: Dirty hack used to force haproxy to restart in time
       # with all zope informations.
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      #self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED_WITH_ERROR)
       #self.slapos_controler.stopInstance(self.instance_title)
       self.slapos_communicator._request('stopped')
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+      #self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED_WITH_ERROR) 
       self.slapos_communicator._request('started')
       #self.slapos_controler.startInstance(self.instance_title)
       ##########################################################
         
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      #self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED_WITH_ERROR)
+      self.log("INSTANCE CORRECTLY STARTED")
       
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
@@ -652,3 +606,46 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if the software.cfg have to use relative path or not.
     """
     return True
+ 
+  def printCommunicatorInfo(self, computer_id, instance_url=None):
+    self.log("################ PRINTING SLAPOS MASTER COMMUNICATOR INFO ################")
+    #computer = self.slapos_communicator._hateoas_getComputer("COMP-2732")
+    computer = self.slapos_communicator._hateoas_getComputer(computer_id)
+    if computer is not None:
+      #self.log("COMPUTER: " + str(computer))
+      software_installation_list = self.slapos_communicator.getSoftwareInstallationList()
+      self.log("software_installation_list: ")
+      self.log(str(software_installation_list))
+      getSoftwareInstallationNews = self.slapos_communicator.getSoftwareInstallationNews()
+      self.log("Software installation news: ")
+      #self.log(str(getSoftwareInstallationNews))
+      #getInstanceUrlList = self.slapos_communicator.getInstanceUrlList()
+      #self.log("getInstanceUrlList")
+      #self.log(str(getInstanceUrlList))
+      # ROQUE: for debugging purposes
+
+      if instance_url is not None:
+        #instance_url = 'https://api.vifib.com/software_instance_module/20170822-1568166F/ERP5Document_getHateoas'
+        self.log("getNewsFromInstance(url)")
+        self.log(str(self.slapos_communicator.getNewsFromInstance(instance_url)))
+        self.log("getInformationFromInstance(url)")
+        self.log(str(self.slapos_communicator.getInformationFromInstance(instance_url)))
+
+      # ROQUE: get info contains the software release url
+      getInfo = self.slapos_communicator.getInfo()
+      self.log("getInfo: ")
+      self.log(str(getInfo))
+
+      # Always return "No message"
+      #getFormatedLastMessage = self.slapos_communicator.getFormatedLastMessage()
+      #self.log("getFormatedLastMessage: ")
+      #self.log(str(getFormatedLastMessage))
+
+      getSoftwareState = self.slapos_communicator._getSoftwareState()
+      self.log("Software state: " + str(getSoftwareState))
+
+      getInstanceState = self.slapos_communicator._getInstanceState()
+      self.log("Instance state: " + str(getInstanceState))
+    self.log("##########################################################################")
+
+

@@ -411,7 +411,6 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
         info_created_at = "-1"
         is_slave = information['slave']
         if is_slave:
-          self._logger.debug('Instance is slave')
           if (information["connection_dict"]) > 0:
             state =  INSTANCE_STATE_STARTED
         else:
@@ -440,15 +439,22 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
           monitor_v6_url = information["connection_dict"].get("monitor_v6_url")
           try:
             monitor_information_dict = self.getRSSEntryFromMonitoring(monitor_v6_url)
-            self._logger("[DEBUG] monitor information dictionary: ")
-	    self._logger(str(monitor_information_dict))
+            #self._logger("[DEBUG] monitor information dictionary: ")
+	    #self._logger(str(monitor_information_dict))
           except Exception:
             self._logger.exception('Unable to download promises for: %s' % (instance["title"]))
-            self._logger.info(traceback.format_exc())
+            self._logger (traceback.format_exc())
             monitor_information_dict = {"message": "Unable to download"}
 
+        #self._logger('Information of instance ' + instance["title"])
+        #self._logger("{")
         self._logger ('Instance state: %s -> %s' % (instance['title'], state))
-        self._logger ('Instance Created at: %s -> %s' % (instance['title'], info_created_at))
+        #self._logger ('Instance Created at: %s -> %s' % (instance['title'], info_created_at))
+        #self._logger(str(information))
+        #self._logger("Instance news: ")
+        #self._logger(str(news))
+        self._logger("News: " + str(news[0]["text"]))
+        #self._logger("}")
  
         message_list.append({
           'title': instance["title"],
@@ -464,12 +470,16 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
             'its state')
       return INSTANCE_STATE_UNKNOWN
  
+    #self._logger("COMPLETE MESSAGE LIST: ")
+    #self._logger(str(message_list))
+
     started = 0
     stopped = 0
     self.message_history.append(message_list)
     for instance in message_list:
       if not instance['slave'] and \
         instance['state'] in (INSTANCE_STATE_UNKNOWN, INSTANCE_STATE_STARTED_WITH_ERROR):
+        self._logger("RETURNING INSTANCE STATE: " + instance['state'] + " (not slave)")
         return instance['state']
       elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STARTED:
         started = 1
@@ -477,15 +487,19 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
         stopped = 1
       
       if instance['slave'] and instance['state'] == INSTANCE_STATE_UNKNOWN:
+        self._logger("RETURNING INSTANCE STATE: UNKNOWN (slave+unknown)")
         return instance['state']
 
     if started and stopped:
+      self._logger("RETURNING INSTANCE STATE: UNKNOWN (started+stopped)")
       return INSTANCE_STATE_UNKNOWN
     
     if started:
+      self._logger("RETURNING INSTANCE STATE: STARTED")
       return INSTANCE_STATE_STARTED
 
     if stopped:
+      self._logger("RETURNING INSTANCE STATE: STOPPED")
       return INSTANCE_STATE_STOPPED
 
   @retryOnNetworkFailure
@@ -493,7 +507,7 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
     """
     Interrupt a running test sequence, putting it in idle state.
     """
-    self._logger.info('Invoking TearDown for %s@%s' % (self.url, self.name))
+    self._logger ('Invoking TearDown for %s@%s' % (self.url, self.name))
     if self.request_kw is not None:
        self._request('destroyed')
     if self.computer_guid is not None:
@@ -505,7 +519,7 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
     Check for missed deadlines (-> test failure), conditions for moving to
     next state, and actually moving to next state (executing its payload).
     """
-    self._logger.debug('TIC')
+    self._logger ('[DEBUG] TIC')
     deadline = self.deadline
 
     if deadline < now and deadline is not None:
@@ -519,7 +533,7 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
           instance_state is None or
           instance_state == self._getInstanceState()):
 
-      self._logger.debug('Going to state %s (%r)', next_state, instance_state)
+      self._logger ('[DEBUG] Going to state %s (%r)', next_state, instance_state)
       if next_state is None:
         return None
 
