@@ -324,6 +324,13 @@ class TestCommerce(ERP5TypeTestCase):
       self.tic()
 
     website.WebSite_setupECommerceWebSite()
+    for section in website.WebSite_getMainSectionList():
+      # Default site template defines no predicate on web sections, which makes
+      # sense for a template, but prevents this test from checking whether
+      # website products are properly listed. To not encourage newcommers to
+      # set this (performance-wise) dangerous flag but rather to define
+      # predicate criterion on web sections, set this flag in tests.
+      section.setEmptyCriterionValid(True)
     self.initialiseSupplyLine()
     self.tic()
 
