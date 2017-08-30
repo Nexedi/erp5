@@ -32,7 +32,6 @@
           conflict_handling: 1,
           parallel_operation_attachment_amount: 10,
           parallel_operation_amount: 10,
-          signature_hash_key: "modification_date",
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
           check_remote_attachment_modification: attachment_synchro,
@@ -55,46 +54,37 @@
             }
           },
           local_sub_storage: {
-            type: "mapping",
-            property: {
-              "modification_date": ["formatDate", ["toISOString", "rfc822"]]
-            },
+            type: "query",
             sub_storage: {
-              type: "query",
+              type: "uuid",
               sub_storage: {
-                type: "uuid",
-                sub_storage: {
-                  type: "indexeddb",
-                  database: "officejs-erp5"
-                }
+                type: "indexeddb",
+                database: "officejs-erp5"
               }
             }
           },
           remote_sub_storage: {
-            type: "saferepair",
-            sub_storage: {
-              type: "mapping",
-              attachment_list: ["data"],
-              attachment: {
-                "data": {
-                  "get": {
-                    "uri_template": (new URI("hateoas"))
-                                   .absoluteTo(erp5_url)
-                                   .toString() + extended_attachment_url
-                  },
-                  "put": {
-                    "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
-                      .toString() + "/{+id}/Base_edit"
-                  }
+            type: "mapping",
+            attachment_list: ["data"],
+            attachment: {
+              "data": {
+                "get": {
+                  "uri_template": (new URI("hateoas"))
+                                 .absoluteTo(erp5_url)
+                                 .toString() + extended_attachment_url
+                },
+                "put": {
+                  "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
+                    .toString() + "/{+id}/Base_edit"
                 }
-              },
-              sub_storage: {
-                type: "erp5",
-                url: (new URI("hateoas"))
-                    .absoluteTo(erp5_url)
-                    .toString(),
-                default_view_reference: result[2]
               }
+            },
+            sub_storage: {
+              type: "erp5",
+              url: (new URI("hateoas"))
+                  .absoluteTo(erp5_url)
+                  .toString(),
+              default_view_reference: result[2]
             }
           }
         };
