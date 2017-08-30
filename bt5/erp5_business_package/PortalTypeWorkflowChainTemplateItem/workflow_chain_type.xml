@@ -1,6 +1,14 @@
 <workflow_chain>
  <chain>
+  <type>Business Item</type>
+  <workflow>business_manager_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Business Manager</type>
   <workflow>business_manager_building_workflow, business_manager_installation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Business Property Item</type>
+  <workflow>business_manager_interaction_workflow</workflow>
  </chain>
 </workflow_chain>
