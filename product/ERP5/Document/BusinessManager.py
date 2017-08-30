@@ -233,6 +233,29 @@ class BusinessManager(Folder):
     portal = self.getPortalObject()
     pass
 
+  def _clean(self):
+    """
+      Clean built information.
+      Remove all the built sub-objects from Business Item or Business Property
+      Item.
+    """
+    for item in self.objectValues():
+      if item.getPortalType() == 'Business Item':
+        # Delete the sub-object
+        id_list = [l for l in item.objectIds()]
+        if id_list:
+          item.manage_delObjects(ids=id_list)
+      elif item.getPortalType() == 'Business Property Item':
+        # Add empty property item_property_name, value and type
+        # XXX: Shouldn't we check if the properties exist and then just delete
+        # them ?
+        item.setProperty('item_property_name', '')
+        item.setProperty('item_property_value', '')
+        item.setProperty('item_property_type', '')
+
+  security.declareProtected(Permissions.ManagePortal, 'clean')
+  clean = _clean
+
   def _setTitle(self, value):
     """
     Override required due to bootstrap
