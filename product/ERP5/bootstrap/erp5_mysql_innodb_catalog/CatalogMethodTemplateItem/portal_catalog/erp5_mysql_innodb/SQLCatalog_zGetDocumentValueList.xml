@@ -24,6 +24,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>search_context\r\n
 language\r\n
+strict_language\r\n
 all_languages\r\n
 kw</string> </value>
         </item>

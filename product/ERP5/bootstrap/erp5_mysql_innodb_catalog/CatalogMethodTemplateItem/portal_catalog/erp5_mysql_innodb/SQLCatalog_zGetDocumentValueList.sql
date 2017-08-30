@@ -57,8 +57,7 @@
         <dtml-if selection_report>
           AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report)">
         </dtml-if>
-        <dtml-if all_languages>
-        <dtml-else>
+        <dtml-if strict_language>
           AND my_versioning.language IN (<dtml-sqlvar language type="string">, '')
         </dtml-if>
 
