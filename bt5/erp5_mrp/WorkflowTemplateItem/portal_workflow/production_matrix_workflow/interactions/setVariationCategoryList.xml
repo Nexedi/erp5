@@ -60,7 +60,7 @@
               <list>
                 <string>Production Order Line</string>
                 <string>Production Packing List Line</string>
-                <string>Production Report Line</string>
+                <string>Manufacturing Execution Line</string>
               </list>
             </value>
         </item>

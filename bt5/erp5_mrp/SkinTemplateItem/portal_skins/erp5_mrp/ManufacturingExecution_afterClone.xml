@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProductionReport_afterClone</string> </value>
+            <value> <string>ManufacturingExecution_afterClone</string> </value>
         </item>
       </dictionary>
     </pickle>

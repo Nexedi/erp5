@@ -1,3 +1,14 @@
+Manufacturing Execution Cell | delivery_movement_causality_interaction_workflow
+Manufacturing Execution Cell | delivery_movement_simulation_interaction_workflow
+Manufacturing Execution Line | delivery_movement_causality_interaction_workflow
+Manufacturing Execution Line | delivery_movement_simulation_interaction_workflow
+Manufacturing Execution Line | edit_workflow
+Manufacturing Execution Line | production_matrix_workflow
+Manufacturing Execution | delivery_causality_interaction_workflow
+Manufacturing Execution | delivery_causality_workflow
+Manufacturing Execution | delivery_simulation_interaction_workflow
+Manufacturing Execution | edit_workflow
+Manufacturing Execution | production_packing_list_workflow
 Production Order Cell | delivery_movement_causality_interaction_workflow
 Production Order Cell | delivery_movement_simulation_interaction_workflow
 Production Order Cell | edit_workflow
@@ -22,17 +33,6 @@ Production Packing List | delivery_causality_workflow
 Production Packing List | delivery_simulation_interaction_workflow
 Production Packing List | edit_workflow
 Production Packing List | production_packing_list_workflow
-Production Report Cell | delivery_movement_causality_interaction_workflow
-Production Report Cell | delivery_movement_simulation_interaction_workflow
-Production Report Line | delivery_movement_causality_interaction_workflow
-Production Report Line | delivery_movement_simulation_interaction_workflow
-Production Report Line | edit_workflow
-Production Report Line | production_matrix_workflow
-Production Report | delivery_causality_interaction_workflow
-Production Report | delivery_causality_workflow
-Production Report | delivery_simulation_interaction_workflow
-Production Report | edit_workflow
-Production Report | production_packing_list_workflow
 Transformation Simulation Rule | edit_workflow
 Transformation Simulation Rule | rule_validation_workflow
 Transformation Sourcing Simulation Rule | edit_workflow

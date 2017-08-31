@@ -31,13 +31,13 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.DeliveryLine import DeliveryLine
 
-class ProductionReportLine(DeliveryLine):
+class ManufacturingExecutionLine(DeliveryLine):
   """
-  Production Report Lines allow to ...
+  Manufacturing Execution Lines allow to ...
   """
 
-  meta_type = 'ERP5 Production Report Line'
-  portal_type = 'Production Report Line'
+  meta_type = 'ERP5 Manufacturing Execution Line'
+  portal_type = 'Manufacturing Execution Line'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -57,7 +57,7 @@ class ProductionReportLine(DeliveryLine):
                     )
 
   security.declareProtected( Permissions.ModifyPortalContent, 'newCellContent')
-  def newCellContent(self, id, portal_type='Production Report Cell', **kw):
+  def newCellContent(self, id, portal_type='Manufacturing Execution Cell', **kw):
     """Overriden to specify default portal type
     """
     return self.newContent(id=id, portal_type=portal_type, **kw)

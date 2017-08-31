@@ -12,13 +12,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Production Reports to Confirm (%(count)s)</string> </value>
+            <value> <string>Manufacturing Executions to Confirm (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-production_report_module?simulation_state=draft&portal_type=Production+Report&local_roles:list=Owner&reset=1
+manufacturing_execution_module?simulation_state=draft&portal_type=Production+Report&local_roles:list=Owner&reset=1
 
 ]]></string> </value>
         </item>
@@ -34,7 +34,7 @@ production_report_module?simulation_state=draft&portal_type=Production+Report&lo
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>06_draft_production_report_list</string> </value>
+            <value> <string>06_draft_manufacturing_execution_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -82,7 +82,7 @@ production_report_module?simulation_state=draft&portal_type=Production+Report&lo
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Production Report</string>
+                        <string>Manufacturing Execution</string>
                       </tuple>
                     </value>
                 </item>

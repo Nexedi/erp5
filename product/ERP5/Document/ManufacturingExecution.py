@@ -31,15 +31,15 @@ from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.Delivery import Delivery
 
-class ProductionReport(Delivery):
+class ManufacturingExecution(Delivery):
     """
       A Transaction object allows to add
       elementary accounting transactions in the general ledger
     """
 
     # CMF Type Definition
-    meta_type = 'ERP5 Production Report'
-    portal_type = 'Production Report'
+    meta_type = 'ERP5 Manufacturing Execution'
+    portal_type = 'Manufacturing Execution'
 
     # Declarative security
     security = ClassSecurityInfo()

@@ -4,6 +4,6 @@ Production Order | aggregate_item
 Production Packing List Line | item_creation
 Production Packing List Line | select_item_fast_input
 Production Packing List | aggregate_item
-Production Report Line | item_creation
-Production Report Line | select_item_fast_input
-Production Report | aggregate_item
+Manufacturing Execution Line | item_creation
+Manufacturing Execution Line | select_item_fast_input
+Manufacturing Execution | aggregate_item
