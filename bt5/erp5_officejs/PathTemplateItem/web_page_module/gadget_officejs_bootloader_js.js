@@ -45,6 +45,7 @@ var repair = false;
   }
 
   rJS(window)
+    .setState({error_amount: 0})
     .ready(function (gadget) {
       var i,
         state = {},
@@ -73,6 +74,7 @@ var repair = false;
       return true;
     })
     .declareAcquiredMethod('isChildren', 'isChildren')
+    .declareAcquiredMethod('renderError', 'renderError')
 
     .declareService(function () {
       var gadget = this;
@@ -85,7 +87,7 @@ var repair = false;
                   return RSVP.delay(600);
                 })
                 .push(function () {
-                  return gadget.changeState({retry: 0});
+                  return gadget.changeState({main: true});
                 }),
               gadget.install()
                 .push(function () {
@@ -97,30 +99,48 @@ var repair = false;
         });
     })
 
-    .onStateChange(function () {
-      var gadget = this, element;
-      if (gadget.state.retry !== undefined) {
-        return new RSVP.Queue()
-          .push(function () {
-            if (gadget.state.retry === 0) {
-              element = document.createElement("div");
-              element.className = "presentation";
-              gadget.element.insertBefore(element, gadget.element.firstChild);
-              return gadget.declareGadget(
-                "gadget_officejs_bootloader_presentation.html",
-                {"scope": "view_gadget", "element": element}
-              );
-            }
-            return gadget.getDeclaredGadget('view_gadget');
-          })
+    .allowPublicAcquisition('renderError', function (param_list) {
+      param_list[0].error_amount = this.state.error_amount + 1;
+      return this.changeState(param_list[0]);
+    })
+
+    .declareMethod('render', function (options) {
+      return this.getDeclaredGadget('view_gadget')
+        .push(function (view_gadget) {
+          return view_gadget.render(options);
+        });
+    })
+
+    .onStateChange(function (modification_dict) {
+      var gadget = this, element, options;
+      if (modification_dict.main) {
+        element = document.createElement("div");
+        element.className = "presentation";
+        gadget.element.insertBefore(element, gadget.element.firstChild);
+        return gadget.declareGadget(
+          "gadget_officejs_bootloader_presentation.html",
+          {"scope": "view_gadget", "element": element}
+        )
           .push(function (view_gadget) {
             return view_gadget.render({
               app_name: gadget.state.app_name,
-              retry: gadget.state.retry,
-              error: gadget.state.error,
               redirect_url: gadget.state.redirect_url
             });
           });
+      }
+      if (modification_dict.error) {
+        options = {
+          error: gadget.state.error,
+          error_amount: gadget.state.error_amount
+        };
+        if (modification_dict.error_source) {
+          options.error_source = gadget.state.error_source;
+        }
+        if (gadget.state.main) {
+          return gadget.render(options);
+        }
+        options.error_source = gadget.state.app_name;
+        return gadget.renderError(options);
       }
     })
 
@@ -146,8 +166,7 @@ var repair = false;
         return storage.repair()
           .push(undefined, function (error) {
             return gadget.changeState({
-              retry: gadget.state.retry !== undefined ?
-                  gadget.state.retry + 1 : 0,
+              error_amount: gadget.state.error_amount + 1,
               error: error
             })
               .push(function () {
