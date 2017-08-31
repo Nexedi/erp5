@@ -1067,7 +1067,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         flag_list.append('strict')
       prefix = ('_'.join(flag_list) + '__') if flag_list else ''
       suffix = ('' if forward else '__related') + '__uid'
-      parent_uid_set = base_category_dict.pop('parent', None)
+      parent_document_set = base_category_dict.pop('parent', None)
       base_category_uid_dict = {
         base_category_id: {document.getUid() for document in document_set}
         for base_category_id, document_set in base_category_dict.iteritems()
@@ -1076,8 +1076,34 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         prefix + x + suffix: y
         for x, y in base_category_uid_dict.iteritems()
       }
-      if parent_uid_set is not None:
-        result['parent_uid'] = parent_uid_set
+      if parent_document_set:
+        if forward:
+          if strict_membership:
+            result['parent_uid'] = {
+              document.getUid()
+              for document in parent_document_set
+            }
+          else:
+            # XXX: is this intentionaly used somewhere ?
+            result['path'] = {
+              x.getPath().replace('_', r'\_') + '/%'
+              for x in parent_document_set
+            }
+        else:
+          # XXX: is this intentionaly used somewhere ?
+          parent_uid_set = {
+            document.getUid()
+            for document in parent_document_set
+          }
+          if not strict_membership:
+            for document in parent_document_set:
+              while True:
+                document = document.getParentValue()
+                uid = getattr(document, 'getUid', lambda: None)()
+                if uid is None:
+                  break
+                parent_uid_set.add(uid)
+          result['uid'] = parent_uid_set
       return result
 
     security.declarePublic('getCategoryParameterDict')
