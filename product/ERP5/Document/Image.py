@@ -34,6 +34,7 @@ import os
 import string
 import struct
 import subprocess
+import re
 from cStringIO import StringIO
 
 from AccessControl import ClassSecurityInfo
@@ -358,6 +359,15 @@ class Image(TextConvertableMixin, File, OFSImage):
 
     env = os.environ.copy()
     env.update({'LC_NUMERIC':'C'})
+    ##### BEGIN WORKAROUND XXX##
+    # To avoid such an error
+    # convert: not authorized `/tmp/magick-21492bHsMuWjOhmCg' @ error/constitute.c/ReadImage/416.
+    # convert: no images defined `png:-' @ error/convert.c/ConvertImageCommand/3253.
+    if "LD_PRELOAD" in env:
+      env["LD_PRELOAD"] = re.sub(r"(^|:)[^:]+/parts/userhosts/userhosts(:|$)", r"\2", env["LD_PRELOAD"])
+      if env["LD_PRELOAD"] == "":
+        del env["LD_PRELOAD"]
+    ##### END WORKAROUND #####
     process = subprocess.Popen(parameter_list,
                                env=env,
                                stdin=subprocess.PIPE,
