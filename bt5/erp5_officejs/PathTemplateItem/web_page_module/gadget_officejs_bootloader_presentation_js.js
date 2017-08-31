@@ -1,62 +1,43 @@
-/*global window, rJS, document*/
+/*global window, rJS*/
 /*jslint nomen: true, maxlen:80, indent:2*/
-(function (window, rJS, document) {
+(function (window, rJS) {
   "use strict";
 
   rJS(window)
     .declareMethod('render', function (options) {
-      var element = this.element.querySelector("center"),
-        img, div, i, header, p, loader, error, skip;
+      return this.changeState(options);
+    })
+    .onStateChange(function (modification_dict) {
+      var skip_link, error_div, app_name_div, message,
+        gadget = this;
 
-      header = document.createElement('header');
-      header.textContent = "OfficeJS Installer";
-      element.appendChild(header);
-
-      for (i = 0; i < 7; i += 1) {
-        element.appendChild(document.createElement('br'));
+      if (modification_dict.app_name) {
+        app_name_div = gadget.element.querySelector(".app-name");
+        app_name_div.textContent = gadget.state.app_name +
+          " is being prepared for 100 % offline mode";
       }
-
-      img = document.createElement('img');
-      img.setAttribute('width', '100');
-      img.setAttribute('height', '100');
-      img.setAttribute('src', 'officejs_logo.png');
-      element.appendChild(img);
-      element.appendChild(document.createElement('br'));
-
-      div = document.createElement('div');
-      p = document.createElement('p');
-      p.textContent = "Preparing " + options.app_name;
-      div.appendChild(p);
-      div.appendChild(document.createElement('br'));
-      p = document.createElement('p');
-      p.textContent =
-        "Your application is being prepared for a 100 % offline mode";
-      div.appendChild(p);
-      loader = document.createElement('div');
-      loader.setAttribute('class', 'loader');
-      element.appendChild(div);
-      div.appendChild(document.createElement('br'));
-      element.appendChild(loader);
-      if (options.retry > 0) {
-        element.appendChild(document.createElement('br'));
-        error = document.createElement('div');
-        p = document.createElement('p');
-        p.textContent = "Last Error: " +
-          options.error.message || 'Unknow Error';
-        element.appendChild(p);
-        element.appendChild(document.createElement('br'));
-        p = document.createElement('p');
-        p.textContent = "Retry n° " + options.retry;
-        element.appendChild(p);
+      if (modification_dict.error_source) {
+        app_name_div = gadget.element.querySelector(".error-source");
+        app_name_div.textContent = "Source: " + gadget.state.error_source;
       }
-      div = document.createElement('div');
-      skip = document.createElement('a');
-      skip.textContent = 'Skip';
-      skip.setAttribute('href', options.redirect_url);
-      div.appendChild(skip);
-      element.appendChild(document.createElement('br'));
-      element.appendChild(skip);
-      return;
+      if (modification_dict.error_amount) {
+        app_name_div = gadget.element.querySelector(".error-amount");
+        app_name_div.textContent = "Retry: " + gadget.state.error_amount;
+      }
+      if (modification_dict.error) {
+        error_div = gadget.element.querySelector(".error-message");
+        message = "Last Error: ";
+        if (gadget.state.error.message) {
+          message += gadget.state.error.message;
+        } else {
+          message += JSON.stringify(gadget.state.error);
+        }
+        error_div.textContent = message;
+      }
+      if (modification_dict.redirect_url) {
+        skip_link = gadget.element.querySelector(".skip-link");
+        skip_link.setAttribute('href', gadget.state.redirect_url);
+      }
     });
 
-}(window, rJS, document));
+}(window, rJS));
