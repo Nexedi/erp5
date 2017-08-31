@@ -3,7 +3,6 @@
    fix acquisition issues within the _aq_dynamic
    lookup from WebSection class.
 """
-from Products.ZSQLCatalog.SQLCatalog import SimpleQuery, ComplexQuery
 if portal is None:
   portal = context.getPortalObject()
 document_list = portal.portal_catalog.getDocumentValueList(
