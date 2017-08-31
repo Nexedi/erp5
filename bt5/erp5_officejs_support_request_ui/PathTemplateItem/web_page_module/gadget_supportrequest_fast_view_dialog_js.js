@@ -37,6 +37,7 @@
           gadget.form = form;
           return form.render({
             view: view,
+            editable: true,
             jio_key: options.jio_key
           });
         })

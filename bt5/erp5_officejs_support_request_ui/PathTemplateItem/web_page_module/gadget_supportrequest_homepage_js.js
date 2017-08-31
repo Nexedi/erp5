@@ -223,7 +223,6 @@
             options: {
               jio_key: "support_request_module",
               view: fast_create_url,
-              editable: true,
               page: 'support_request_fast_view_dialog'
             }
           });
