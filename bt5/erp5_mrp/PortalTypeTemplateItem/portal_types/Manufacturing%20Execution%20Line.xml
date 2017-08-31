@@ -37,19 +37,19 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>folder_icon.gif</string> </value>
+            <value> <string>organisation_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
+            <value> <string>ERP5 Manufacturing Execution Line</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Holds Production Reports</string> </value>
+            <value> <string>Manufacturing Execution Line defines quantity, prices, dates of resource that has to be consumed/produced.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addFolder</string> </value>
+            <value> <string>addManufacturingExecutionLine</string> </value>
         </item>
         <item>
             <key> <string>filter_actions</string> </key>
@@ -63,17 +63,17 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>module</string>
+                <string>delivery_movement</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Production Report Module</string> </value>
+            <value> <string>Manufacturing Execution Line</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_initIntIndexAndReference</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
@@ -83,28 +83,21 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
-        <item>
-            <key> <string>type_class</string> </key>
-            <value> <string>Folder</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.TranslationProviderBase</string>
-          <string>TranslationInformation</string>
-        </tuple>
-        <none/>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -116,18 +109,15 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.ERP5Type.TranslationProviderBase</string>
-          <string>TranslationInformation</string>
-        </tuple>
-        <none/>
+        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_ui</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

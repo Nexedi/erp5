@@ -73,7 +73,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ProductionReportModule_viewProductionReportList</string> </value>
+            <value> <string>ManufacturingExecutionModule_viewManufacturingExecutionList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>ProductionReportModule_viewProductionReportList</string> </value>
+            <value> <string>ManufacturingExecutionModule_viewManufacturingExecutionList</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -97,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Production Report</string> </value>
+            <value> <string>Manufacturing Execution</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

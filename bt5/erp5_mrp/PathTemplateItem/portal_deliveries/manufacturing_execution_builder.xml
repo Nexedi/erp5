@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>delivery_cell_portal_type</string> </key>
-            <value> <string>Production Report Cell</string> </value>
+            <value> <string>Manufacturing Execution Cell</string> </value>
         </item>
         <item>
             <key> <string>delivery_cell_separate_order</string> </key>
@@ -70,15 +70,15 @@
         </item>
         <item>
             <key> <string>delivery_line_portal_type</string> </key>
-            <value> <string>Production Report Line</string> </value>
+            <value> <string>Manufacturing Execution Line</string> </value>
         </item>
         <item>
             <key> <string>delivery_module</string> </key>
-            <value> <string>production_report_module</string> </value>
+            <value> <string>manufacturing_execution_module</string> </value>
         </item>
         <item>
             <key> <string>delivery_portal_type</string> </key>
-            <value> <string>Production Report</string> </value>
+            <value> <string>Manufacturing Execution</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -88,7 +88,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>production_report_builder</string> </value>
+            <value> <string>manufacturing_execution_builder</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -96,11 +96,11 @@
         </item>
         <item>
             <key> <string>simulation_select_method_id</string> </key>
-            <value> <string>ProductionReport_selectMovement</string> </value>
+            <value> <string>ManufacturingExecution_selectMovement</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Production Report Builder</string> </value>
+            <value> <string>Manufacturing Execution Builder</string> </value>
         </item>
       </dictionary>
     </pickle>

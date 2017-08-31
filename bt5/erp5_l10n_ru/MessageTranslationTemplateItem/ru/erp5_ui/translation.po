@@ -2270,19 +2270,19 @@ msgstr "Производственные Накладные"
 msgid "Production Packing Lists to Confirm"
 msgstr "Производственные Накладные к Подтверждению"
 
-msgid "Production Report"
+msgid "Manufacturing Execution"
 msgstr "Производственный Отчет"
 
-msgid "Production Report Line"
+msgid "Manufacturing Execution Line"
 msgstr "Строка Производственного Отчета"
 
-msgid "Production Report Lines"
+msgid "Manufacturing Execution Lines"
 msgstr "Строки Производственного Отчета"
 
-msgid "Production Reports"
+msgid "Manufacturing Executions"
 msgstr "Производственные Отчеты"
 
-msgid "Production Reports to Confirm"
+msgid "Manufacturing Executions to Confirm"
 msgstr "Производственные Отчеты к Подтверждению"
 
 msgid "Products"
@@ -2567,7 +2567,7 @@ msgstr "Подчиненная Оплата"
 msgid "Related Production Packing List"
 msgstr "Подчиненная Производственная Накладная"
 
-msgid "Related Production Report"
+msgid "Related Manufacturing Execution"
 msgstr "Подчиненный Производственный Отчет"
 
 msgid "Related Purchase Invoice"
