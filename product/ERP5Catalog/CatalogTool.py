@@ -1043,7 +1043,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       reverse relation) membership to these documents with their respective
       base categories.
 
-      base_category_dict (dict with base category ids as keys and document lists
+      base_category_dict (dict with base category ids as keys and document sets
       as values)
         Note: mutated by this method.
       category_table ('category' or 'predicate_category')
@@ -1068,13 +1068,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       prefix = ('_'.join(flag_list) + '__') if flag_list else ''
       suffix = ('' if forward else '__related') + '__uid'
       parent_uid_set = base_category_dict.pop('parent', None)
-      base_category_uid_dict = {
-        base_category_id: {document.getUid() for document in document_set}
-        for base_category_id, document_set in base_category_dict.iteritems()
-      }
       result = {
-        prefix + x + suffix: y
-        for x, y in base_category_uid_dict.iteritems()
+        prefix + base_category_id + suffix: {
+          document.getUid() for document in document_set
+        }
+        for base_category_id, document_set in base_category_dict.iteritems()
       }
       if parent_uid_set is not None:
         result['parent_uid'] = parent_uid_set
