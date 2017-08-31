@@ -1,5 +1,5 @@
+portal_deliveries/manufacturing_execution_builder
+portal_deliveries/manufacturing_execution_builder/**
 portal_deliveries/production_packing_list_builder
 portal_deliveries/production_packing_list_builder/**
-portal_deliveries/production_report_builder
-portal_deliveries/production_report_builder/**
 portal_domains/production_order_module_specialise_domain

@@ -32,14 +32,14 @@ from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
-class ProductionReportCell(DeliveryCell):
+class ManufacturingExecutionCell(DeliveryCell):
     """
       A DeliveryCell allows to define specific quantities
       for each variation of a resource in a delivery line.
     """
 
-    meta_type = 'ERP5 Production Report Cell'
-    portal_type = 'Production Report Cell'
+    meta_type = 'ERP5 Manufacturing Execution Cell'
+    portal_type = 'Manufacturing Execution Cell'
 
     # Declarative security
     security = ClassSecurityInfo()

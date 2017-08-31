@@ -164,7 +164,7 @@ class TestMRPMixin(TestBPMMixin):
   def createBusinessProcess1(self, node_p0=None):
     """
     PPL : Production Packing List
-    PR  : Production Report
+    PR  : Manufacturing Execution
     PO  : Production Order
         order      p0      s0      p1     deliver
        ------- S0 ---- S1 ---- S2 ---- S3 ------- S4
@@ -176,7 +176,7 @@ class TestMRPMixin(TestBPMMixin):
     phase_list = [('default/order', None, ('confirmed',)),
                   ('default/delivery', builder, completed)]
     phase_list[1:1] = [('mrp/p' + str(i),
-                        'portal_deliveries/production_report_builder',
+                        'portal_deliveries/manufacturing_execution_builder',
                         completed)
                        for i in xrange(2)]
     if node_p0 is not None:
@@ -274,7 +274,7 @@ class TestMRPImplementation(TestMRPMixin):
     def getRelatedDeliveryList(portal_type):
       return order.getCausalityRelatedValueList(portal_type=portal_type)
 
-    pr1, = getRelatedDeliveryList("Production Report")
+    pr1, = getRelatedDeliveryList("Manufacturing Execution")
     pr1.start()
     pr1.deliver()
     order.localBuild()
@@ -289,7 +289,7 @@ class TestMRPImplementation(TestMRPMixin):
     self.tic()
     self.checkStock(resource, (self.workshop, variation, 10))
 
-    pr2, = (x for x in getRelatedDeliveryList("Production Report")
+    pr2, = (x for x in getRelatedDeliveryList("Manufacturing Execution")
               if x.aq_base is not pr1.aq_base)
     pr2.start()
     pr2.deliver()
@@ -316,7 +316,7 @@ class TestMRPImplementation(TestMRPMixin):
 
   def testOrderWithItem(self):
     """
-    Check item propagation from Production Order to Production Report
+    Check item propagation from Production Order to Manufacturing Execution
     and Production Packing List
     """
     self.createMRPOrder(use_item=True)
@@ -327,13 +327,13 @@ class TestMRPImplementation(TestMRPMixin):
     resource = order_line.getResourceValue()
     self.tic()
 
-    production_report, = order.getCausalityRelatedValueList(
-                                portal_type="Production Report")
+    manufacturing_execution, = order.getCausalityRelatedValueList(
+                                portal_type="Manufacturing Execution")
     #                        resource,            quantity, item
     expected_line_list = [(self.produced_resource, 10.0, self.item),
                           (self.consumed_resource_1, -30.0, None),
                           (self.consumed_resource_2, -10.0, None)]
-    self.checkExpectedLineList(production_report, expected_line_list)
+    self.checkExpectedLineList(manufacturing_execution, expected_line_list)
 
   def _test_add_and_clone_tranformed_resource(self, portal_type):
     test_product = self.portal.product_module.newContent()

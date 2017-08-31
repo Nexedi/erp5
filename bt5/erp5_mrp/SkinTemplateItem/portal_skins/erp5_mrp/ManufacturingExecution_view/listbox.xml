@@ -82,7 +82,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>production_report_line_selection</string> </value>
+                    <value> <string>manufacturing_execution_line_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Production Report Lines</string> </value>
+                    <value> <string>Manufacturing Execution Lines</string> </value>
                 </item>
               </dictionary>
             </value>

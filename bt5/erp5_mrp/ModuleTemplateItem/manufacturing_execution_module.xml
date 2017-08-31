@@ -2,7 +2,7 @@
  <category_list>
   <category>business_application/pdm</category>
  </category_list>
- <id>production_report_module</id>
+ <id>manufacturing_execution_module</id>
  <permission_list>
   <permission type='tuple'>
    <name>Access contents information</name>
@@ -76,6 +76,6 @@
    <role>Manager</role>
   </permission>
  </permission_list>
- <portal_type>Production Report Module</portal_type>
- <title>Production Reports</title>
+ <portal_type>Manufacturing Execution Module</portal_type>
+ <title>Manufacturing Executions</title>
 </module>

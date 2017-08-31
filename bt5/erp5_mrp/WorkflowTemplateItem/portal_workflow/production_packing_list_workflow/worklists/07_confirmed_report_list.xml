@@ -12,13 +12,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Production Reports to Ready (%(count)s)</string> </value>
+            <value> <string>Manufacturing Executions to Ready (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-production_report_module?simulation_state=confirmed&portal_type=Production+Report&local_roles:list=Assignor&local_roles:list=Assignee&reset=1
+manufacturing_execution_module?simulation_state=confirmed&portal_type=Production+Report&local_roles:list=Assignor&local_roles:list=Assignee&reset=1
 
 ]]></string> </value>
         </item>
@@ -83,7 +83,7 @@ production_report_module?simulation_state=confirmed&portal_type=Production+Repor
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Production Report</string>
+                        <string>Manufacturing Execution</string>
                       </tuple>
                     </value>
                 </item>

@@ -2208,19 +2208,19 @@ msgstr "Moduł listy paczek zamówień produkcyjnych"
 msgid "Production Packing Lists"
 msgstr "Listy paczek zamówień produkcyjnych"
 
-msgid "Production Report"
+msgid "Manufacturing Execution"
 msgstr "Raport produkcyjny"
 
-msgid "Production Report Cell"
+msgid "Manufacturing Execution Cell"
 msgstr "Komórka raportu produkcyjnego"
 
-msgid "Production Report Line"
+msgid "Manufacturing Execution Line"
 msgstr "Linia raportu produkcyjnego"
 
-msgid "Production Report Module"
+msgid "Manufacturing Execution Module"
 msgstr "Moduł raportów produkcyjnych"
 
-msgid "Production Reports"
+msgid "Manufacturing Executions"
 msgstr "Raporty produkcyjne"
 
 msgid "Products"
@@ -2412,7 +2412,7 @@ msgstr "Obiekty powiązane"
 msgid "Related Production Packing List"
 msgstr "Powiązana lista paczek produkcyjnych"
 
-msgid "Related Production Report"
+msgid "Related Manufacturing Execution"
 msgstr "Powiązany raport produkcyjny"
 
 msgid "Related Purchase Invoice"

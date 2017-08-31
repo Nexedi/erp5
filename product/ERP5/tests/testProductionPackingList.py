@@ -37,7 +37,7 @@ from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProductionPackingReportListMixin(TestProductionOrderMixin, TestPackingListMixin, \
                           ERP5TypeTestCase):
-  """Mixin for testing Production Packing Lists and Production Reports"""
+  """Mixin for testing Production Packing Lists and Manufacturing Executions"""
 
   def modifyPackingListState(self, transition_name,
                              sequence,packing_list=None):
@@ -406,7 +406,7 @@ class TestProductionDelivery(TestProductionPackingReportListMixin):
   def test_01_sourcingDelivery(self, quiet=0,
                                           run=run_all_test):
     """
-    Test for sourcing type of delivery (Production Report and Production Packing Lists).
+    Test for sourcing type of delivery (Manufacturing Execution and Production Packing Lists).
     """
     # XXX: Need to split to separate test (Luke)
     if not run: return
