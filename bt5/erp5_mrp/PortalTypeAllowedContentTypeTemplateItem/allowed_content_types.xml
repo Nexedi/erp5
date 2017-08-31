@@ -1,4 +1,13 @@
 <allowed_content_type_list>
+ <portal_type id="Manufacturing Execution">
+  <item>Manufacturing Execution Line</item>
+ </portal_type>
+ <portal_type id="Manufacturing Execution Line">
+  <item>Manufacturing Execution Cell</item>
+ </portal_type>
+ <portal_type id="Manufacturing Execution Module">
+  <item>Manufacturing Execution</item>
+ </portal_type>
  <portal_type id="Production Order">
   <item>Payment Condition</item>
   <item>Production Order Line</item>
@@ -17,15 +26,6 @@
  </portal_type>
  <portal_type id="Production Packing List Module">
   <item>Production Packing List</item>
- </portal_type>
- <portal_type id="Production Report">
-  <item>Production Report Line</item>
- </portal_type>
- <portal_type id="Production Report Line">
-  <item>Production Report Cell</item>
- </portal_type>
- <portal_type id="Production Report Module">
-  <item>Production Report</item>
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Transformation Simulation Rule</item>
