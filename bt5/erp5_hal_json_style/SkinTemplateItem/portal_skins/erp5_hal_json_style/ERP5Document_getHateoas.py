@@ -7,6 +7,7 @@ import datetime
 import time
 from email.Utils import formatdate
 import re
+from zExceptions import Unauthorized
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -209,10 +210,16 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
 
       accessor_name = 'get%sValueList' % \
         ''.join([part.capitalize() for part in base_category.split('_')])
-      jump_reference_list = getattr(traversed_document, accessor_name)(
-        portal_type=[x[0] for x in field.get_value('portal_type')],
-        filter=kw
-      ) or []
+      try:
+        jump_reference_list = getattr(traversed_document, accessor_name)(
+          portal_type=[x[0] for x in field.get_value('portal_type')],
+          filter=kw
+        ) or []
+      except Unauthorized:
+        jump_reference_list = []
+        result.update({
+          "editable": False 
+        })
     query = url_template_dict["jio_search_template"] % {
       "query": make_query({"query": sql_catalog.buildQuery(
         {"portal_type": portal_type_list}
