@@ -106,7 +106,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]</td>
+  <td>//div[@data-gadget-scope='panel' and contains(@class, 'visible')]//a[text()='lishi']</td>
   <td></td>
 </tr>
 <tr>

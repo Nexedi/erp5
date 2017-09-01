@@ -207,13 +207,13 @@
   <tal:block metal:define-macro="check_search_in_form_list">
     <tr>
       <td>waitForElementPresent</td>
-      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//input[@name='search']</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//input[@name='search']</td>
       <td></td>
     </tr>
     <tr>
-      <td>assertElementPresent</td>
-      <td tal:content="python: &quot;//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//input[@value='%s' and @type='search' and @name='search']&quot; % search_query"></td>
-      <td></td>
+      <td>assertValue</td>
+      <td>//div[contains(@data-gadget-url, 'gadget_erp5_pt_form_list.html')]//div[@data-gadget-scope='erp5_searchfield']//input[@name='search' and @type='search']</td>
+      <td tal:content="search_query"></td>
     </tr>
   </tal:block>
 
