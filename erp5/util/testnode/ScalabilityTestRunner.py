@@ -133,7 +133,9 @@ class ScalabilityTestRunner():
     Generate a complete scalability instance XML configuration
     """
     config_cluster = software_configuration.copy()
-    config = {'cluster':config_cluster}
+    #config = {'cluster':config_cluster}
+    # ROQUE: Avoiding to use key 'cluster'. Directly pass the content 
+    config = config_cluster   
     config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
     config.update({'scalability-launcher-title':'MyTestNodeTitle'})
     config.update({'test-result-path':test_result.test_result_path})
@@ -233,15 +235,17 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
                                   test_result, test_suite)
     config = json.dumps(config)
     self.log("testnode, updateInstanceXML : %s", instance_title)
-    self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
+    #self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
+    request = {"_" : config}
+    request_kw = {"partition_parameter_kw": request }
+    self.slapos_communicator.setRequestParameters(request_kw)
+    self.slapos_communicator._request("started")
     return {'status_code' : 0} 
 
   def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
     """
     Wait for 'max_time' an instance specific state
     """
-    # ROQUE: hardcoded max_time because instance installation fails
-    #max_time = 20
     self.log("Wait for instance state: %s" %state)
     start_time = time.time()
     #while (not self.slapos_communicator.isHostingSubscriptionReady(instance_title, state)
@@ -256,7 +260,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Instance '%s' will be stopped and test avorted." %instance_title)
       # What if we wanted to stop ?
       #self.slapos_controler.stopInstance(instance_title)
-      self.slapos_communicator._request('stopped')
+      #self.slapos_communicator._request('stopped')
       # XXX: _waitInstance call here ? recursive call ?
       # XXX: sleep 60 seconds.
       time.sleep(60) 
@@ -267,8 +271,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Wait for 'max_time' the instance creation
     """
-    # ROQUE: harcoded max_time 
-    max_time = 20
     self.log("Instance title: " + str(instance_title))
     self.log("Waiting for instance creation...")
     start_time = time.time()
@@ -457,6 +459,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Current test_suite is not actually launchable.")
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     configuration_list = node_test_suite.configuration_list
+    #self.log("CONFIGURATION LIST:")
+    #self.log(str(configuration_list))
     test_list = range(0, len(configuration_list))
     # create test_result
     self.log("Creating Test Result...")
@@ -469,18 +473,22 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     count = 0
     error_message = None
 
+    self.log("[DEBUG] WAITING INSTANCE STATE STARTED...")
+    self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+
     # Each cluster configuration are tested
-    self.log("FOR EACH CONFIGURATION: ")
+    #self.log("[DEBUG] Number of configurations: " + str(len(configuration_list)))
+    #self.log("[DEBUG] FOR EACH CONFIGURATION: ")
     for configuration in configuration_list:
-      self.log("CONFIGURATION N: " + str(count))
-      self.log(str(configuration))
+      #self.log(str(configuration))
 
       # First configuration doesn't need XML configuration update.
       if count > 0:
+        self.log("[DEBUG] COUNT > 0 : updating XML configuration...")
         # Stop instance
         #self.slapos_controler.stopInstance(self.instance_title)
         self.slapos_communicator._request('stopped')
-        self._waitInstance(self.instance_title, 'stopped')
+        self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
         # Update instance XML configuration 
         self._updateInstanceXML(configuration, self.instance_title,
                       node_test_suite.test_result, node_test_suite.test_suite)
@@ -489,22 +497,30 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         #self.slapos_controler.startInstance(self.instance_title)
         self.slapos_communicator._request('started')
         
+      '''
       # XXX: Dirty hack used to force haproxy to restart in time
       # with all zope informations.
-      #self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED_WITH_ERROR)
+      self.log("[DEBUG] HACK- waiting instance started")
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
       #self.slapos_controler.stopInstance(self.instance_title)
+      self.log("[DEBUG] HACK- stopping instance")
       self.slapos_communicator._request('stopped')
-      #self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED_WITH_ERROR) 
+      self.log("[DEBUG] HACK- waiting instance stopped")
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+      self.log("[DEBUG] HACK- starting instance")
       self.slapos_communicator._request('started')
       #self.slapos_controler.startInstance(self.instance_title)
       ##########################################################
-        
-      #self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED_WITH_ERROR)
-      self.log("INSTANCE CORRECTLY STARTED")
+      '''        
+
+      self.log("[DEBUG] waiting instance started")
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
       
+      if True:
+        self.log("FORCE QUITTING BEFORE RUN THE TESTS.")
+        return {'status_code' : 1 , 'error_message' : 'FORCE QUITTING FOR DEBUG'} 
+
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
@@ -542,7 +558,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     # Stop current instance
     #self.slapos_controler.stopInstance(self.instance_title)
     self.slapos_communicator._request('stopped')
-    self._waitInstance(self.instance_title, 'stopped')
+    self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
 
     # Delete old instances
     self._cleanUpOldInstance()

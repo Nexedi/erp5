@@ -448,12 +448,12 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
 
         #self._logger('Information of instance ' + instance["title"])
         #self._logger("{")
-        self._logger ('Instance state: %s -> %s' % (instance['title'], state))
+        #self._logger ('Instance state: %s -> %s' % (instance['title'], state))
         #self._logger ('Instance Created at: %s -> %s' % (instance['title'], info_created_at))
         #self._logger(str(information))
         #self._logger("Instance news: ")
         #self._logger(str(news))
-        self._logger("News: " + str(news[0]["text"]))
+        #self._logger("News: " + str(news[0]["text"]))
         #self._logger("}")
  
         message_list.append({
@@ -492,6 +492,8 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
 
     if started and stopped:
       self._logger("RETURNING INSTANCE STATE: UNKNOWN (started+stopped)")
+      self._logger("HACK - RETURNING STOPPED")
+      return INSTANCE_STATE_STOPPED
       return INSTANCE_STATE_UNKNOWN
     
     if started:
