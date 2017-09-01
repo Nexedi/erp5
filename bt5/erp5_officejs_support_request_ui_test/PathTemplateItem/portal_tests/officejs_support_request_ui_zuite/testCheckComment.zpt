@@ -29,7 +29,6 @@
   <td>//input[@data-i18n="[value]Proceed"]</td>
   <td></td>
 </tr>
-field_my_description
 <tr>
   <td>type</td>
   <td>//input[@name='field_your_title']</td>
@@ -41,13 +40,30 @@ field_my_description
   <td>RobotMaking</td>
 </tr>
 <tr>
+  <td>waitForTextPresent</td>
+  <td>FeatureRequire</td>
+  <td></td>
+</tr>
+<tr>
   <td>select</td>
   <td>field_your_resource</td>
   <td>FeatureRequire</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']</td>
+  <td>//iframe</td>
+  <td></td>
+</tr>
+<!--
+Temparory fixing:
+Pause Selenium test for 5 seconds. Give some time to let the editor show up.
+Because now the editor is inside a iframe. And the iframe protects the content
+if the domain differs. So we can not test the element inside an iframe. For now,
+just wait 5 seconds and hope the editor can be loaded.
+-->
+<tr>
+  <td>pause</td>
+  <td>5000</td>
   <td></td>
 </tr>
 <tr>
@@ -62,22 +78,24 @@ field_my_description
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n="[value]Reply"]</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
   <td></td>
 </tr>
+<!--
+Temparory fixing:
+Pause Selenium test for 5 seconds. Give some time to let the editor show up.
+Because now the editor is inside a iframe. And the iframe protects the content
+if the domain differs. So we can not test the element inside an iframe. For now,
+just wait 5 seconds and hope the editor can be loaded.
+-->
 <tr>
-  <td>waitForElementPresent</td>
-  <td>//div[@id="cke_editor1"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']</td>
+  <td>pause</td>
+  <td>5000</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@data-i18n='[value]Reply']</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
   <td></td>
 </tr>
 <tr>
