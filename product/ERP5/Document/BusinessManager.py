@@ -469,15 +469,27 @@ class BusinessManager(Folder):
     LOG('Business Manager', INFO, 'Building Business Manager')
     removable_sub_object_path_list = kw.get('removable_sub_object_path', [])
     removable_property_dict = kw.get('removable_property', {})
-    if not no_action:
-      self.storeTemplateData(isBuild=True, **kw)
-      for path_item in self.objectValues():
-        kwargs = {}
-        item_path = path_item.getProperty('item_path')
-        kwargs['removable_property_list'] = removable_property_dict.get(item_path, [])
-        kwargs['remove_sub_objects'] = item_path in removable_sub_object_path_list
-        path_item.build(self, **kwargs)
-    return self
+    # Now, we need to put a check here for returning whih objects should be
+    # updated during rebuild of BM
+    checkNeeded = kw.get('checkNeeded', False)
+    # Build all paths if there is no check required(i.e, its a new build action)
+    if not checkNeeded:
+      if not no_action:
+        self.storeTemplateData(isBuild=True, **kw)
+        for path_item in self.objectValues():
+          kwargs = {}
+          item_path = path_item.getProperty('item_path')
+          kwargs['removable_property_list'] = removable_property_dict.get(item_path, [])
+          kwargs['remove_sub_objects'] = item_path in removable_sub_object_path_list
+          path_item.build(self, **kwargs)
+      return self
+    else:
+      item_path_list = kw.get('item_path_list', [])
+      if item_path_list:
+        for path in item_path_list:
+          item = self.getBusinessItemByPath(path)
+          item.build(self)
+          return self
 
   def flattenBusinessManager(self):
     """
