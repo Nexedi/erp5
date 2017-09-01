@@ -1,6 +1,6 @@
-/*global document, window, Option, rJS, RSVP, Chart, loopEventListener*/
-/*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, loopEventListener) {
+/*global document, window, Option, rJS, RSVP, Chart*/
+/*jslint nomen: true, indent: 2, maxerr: 150 */
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -26,136 +26,322 @@
     .allowPublicAcquisition("updateHeader", function () {
       return;
     })
-
+    .declareMethod('getSearchCriteria', function(name, seriesName) {
+      console.log("In getSearchCriteria");
+      var search_criteria;
+      console.log(name, seriesName);
+      if (seriesName != 'Support Request') {
+        var cur_mid_night = new Date();
+        cur_mid_night.setHours(0, 0, 0, 0);
+        cur_mid_night.setDate(cur_mid_night.getDate() + 1);
+        var days_2 = new Date(), days_7 = new Date(), days_30 = new Date();
+        days_2.setDate(cur_mid_night.getDate() - 2);
+        days_7.setDate(cur_mid_night.getDate() - 7);
+        days_30.setDate(cur_mid_night.getDate() - 30);
+        days_2.setHours(0, 0, 0, 0);
+        days_7.setHours(0, 0, 0, 0);
+        days_30.setHours(0, 0, 0, 0);
+        
+        var begin_date, end_date;
+        if (name === 'Less than 2 days') {
+          begin_date = days_2;
+          cur_mid_night.setDate(cur_mid_night.getDate() + 1);
+          end_date = cur_mid_night;
+        } else if (name === '2-7 days') {
+          begin_date = days_7;
+          end_date = days_2;
+        } else if (name === '7-30 days') {
+          begin_date = days_30;
+          end_date = days_7;
+        } else {
+          begin_date = new Date(1970, 1, 1);
+          end_date = days_30;
+        }
+        console.log(begin_date, end_date);
+        console.log(seriesName);
+        console.log(name);
+        console.log(end_date);
+        console.log(end_date.toISOString());
+        search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND modification_date: >= ' + begin_date.toISOString().slice(0,10) + ' AND modification_date: < ' + end_date.toISOString().slice(0,10) + ' )';
+      }
+      else {
+        search_criteria = '( translated_simulation_state_title: "' + name + '")';
+      }
+      console.log("Search criteria: ", search_criteria);
+      return search_criteria;
+    })
+    .allowPublicAcquisition("chartItemClick", function (params) {
+      var gadget = this;
+      console.log("Item clicked");
+      console.log(params);
+      return gadget.getDeclaredGadget("test")
+      .push(function (test) {
+        //console.log(params.name);
+        //console.log(params.seriesName);
+        console.log(params[0][1]);
+        // console.log("(%20translated_simulation_state_title%3A%20%20%22" + params[0][1] + "%22%20)");
+        return gadget.getSearchCriteria(params[0][0], params[0][1])
+        .push(function (search_criteria) {
+          console.log("What is the result: ", search_criteria);
+          gadget.changeState({extended_search: search_criteria});
+          // gadget.changeState({extended_search: '( translated_simulation_state_title: "Submitted" )'});
+        });
+      });
+      // method code
+    })
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
-      return new RSVP.Queue()
-        .push(function () {
-          return RSVP.all([
-            gadget.jio_getAttachment("support_request_module", "links"),
-            gadget.getDeclaredGadget("last")
-          ]);
+    
+      return gadget.changeState({
+        render: true
+      })
+      .push(function () {
+        return gadget.changeState({
+          field_listbox_begin_from: options.field_listbox_begin_from
         })
-        .push(function (result_list) {
-          var i,
-            erp5_document = result_list[0],
-            view_list = erp5_document._links.action_object_view || [],
-            last_href;
-
-          if (view_list.constructor !== Array) {
-            view_list = [view_list];
-          }
-
-          for (i = 0; i < view_list.length; i += 1) {
-            if (view_list[i].name === 'view_last_support_request') {
-              last_href = view_list[i].href;
-            }
-          }
-          if (last_href === undefined) {
-            throw new Error('Cant find the list document view');
-          }
-
-          return RSVP.all([
-            result_list[1].render({
-              jio_key: "support_request_module",
-              view: last_href
-            })
-          ]);
-        })
-        .push(function () {
-          return gadget.updateHeader({
-            page_title: 'Support Requests Home Page'
-          });
+      })
+      .push(function () {
+        return gadget.updateHeader({
+          page_title: 'Support Requests Home Page'
         });
+      });
     })
-    .declareService(function () {
-      var gadget = this;
+    .declareJob("renderGraph", function () {
+      var gadget = this,
+        option_dict = gadget.property_dict.option_dict;
       return gadget.getSetting("hateoas_url")
         .push(function (hateoas_url) {
-          return gadget.jio_getAttachment(
+          return RSVP.all([gadget.jio_getAttachment(
             'support_request_module',
             hateoas_url + 'support_request_module'
               + "/SupportRequest_getSupportRequestStatisticsAsJson"
-          );
+          ),
+            gadget.declareGadget(
+              option_dict.graph_gadget,
+              {
+                scope: "graph",
+                sandbox: "iframe",
+                element: gadget.property_dict.element.querySelector("#wrap1")
+              }
+            ),
+            gadget.declareGadget(
+              option_dict.graph_gadget,
+              {
+                scope: "graph",
+                sandbox: "iframe",
+                element: gadget.property_dict.element.querySelector("#wrap2")
+              }
+            )
+            ]);
         })
         .push(function (result) {
-          new Chart(document.getElementById("bar-chart-grouped"), {
-            type: 'bar',
-            data: {
-              labels: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
-              datasets: [
-                {
-                  label: "Opened",
-                  backgroundColor: "#3e95cd",
-                  data: [
-                    result.le2.validated,
-                    result['2to7'].validated,
-                    result['7to30'].validated,
-                    result.gt30.validated
-                  ]
-                },
-                {
-                  label: "Submitted",
-                  backgroundColor: "#e8c3b9",
-                  data: [
-                    result.le2.submitted,
-                    result['2to7'].submitted,
-                    result['7to30'].submitted,
-                    result.gt30.submitted
-                  ]
-                },
-                {
-                  label: "Suspended",
-                  backgroundColor: "#3cba9f",
-                  data: [
-                    result.le2.suspended,
-                    result['2to7'].suspended,
-                    result['7to30'].suspended,
-                    result.gt30.suspended
-                  ]
-                },
-                {
-                  label: "Closed",
-                  backgroundColor: "#8e5ea2",
-                  data: [
-                    result.le2.invalidated,
-                    result['2to7'].invalidated,
-                    result['7to30'].invalidated,
-                    result.gt30.invalidated
-                  ]
+          var bar_chart = document.getElementById("wrap1"),
+            pie_chart = document.getElementById("wrap2"),
+            loader = document.getElementsByClassName("graph-spinner");
+            loader[0].style.display = "none";
+            loader[1].style.display = "none";
+            bar_chart.style.display = "block";
+            pie_chart.style.display = "block";
+          return result;
+        })
+        .push(function (result_list) {
+          var sp_data = result_list[0], graph_gadget_1 = result_list[1], graph_gadget_2 = result_list[2];
+          gadget.property_dict.graph_widget = graph_gadget_1;
+          return RSVP.all([graph_gadget_1.render(
+            {
+              value: {
+                data: [
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.validated,
+                        sp_data['2to7'].validated,
+                        sp_data['7to30'].validated,
+                        sp_data.gt30.validated
+                      ]
+                    },
+                    colors: ['#d48265'],
+                    type: "bar",
+                    title: "Opened"
+                  },
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.submitted,
+                        sp_data['2to7'].submitted,
+                        sp_data['7to30'].submitted,
+                        sp_data.gt30.submitted
+                      ]
+                    },
+                    colors: ['#61a0a8'],
+                    type: "bar",
+                    title: "Submitted"
+                  },
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.suspended,
+                        sp_data['2to7'].suspended,
+                        sp_data['7to30'].suspended,
+                        sp_data.gt30.suspended
+                      ]
+                    },
+                    colors: ['#c23531'],
+                    type: "bar",
+                    title: "Suspended"
+                  },
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.invalidated,
+                        sp_data['2to7'].invalidated,
+                        sp_data['7to30'].invalidated,
+                        sp_data.gt30.invalidated
+                      ]
+                    },
+                    colors: ['#2f4554'],
+                    type: "bar",
+                    title: "Closed"
+                  }
+                ],
+                layout: {
+                  axis_dict : {
+                    '0': {"title": "Days"},
+                    '1': {"title": "Number", "value_type": "number"}
+                  },
+                  title: "Support Request state since last 30 days"
                 }
-              ]
-            },
-            options: {
-              responsive : true,
-              title: {
-                display: true,
-                text: 'Support Requests activities'
               }
             }
-          });
-          new Chart(document.getElementById("pie-chart"), {
-            type: 'pie',
-            data: {
-              labels: ["Opened", "Closed", "Suspended", "Submitted"],
-              datasets: [{
-                label: "All Support Requests Status",
-                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"],
-                data: [result.validated, result.invalidated, result.suspended, result.submitted]
-              }]
-            },
-            options: {
-              responsive : true,
-              title: {
-                display: true,
-                text: 'Support Requests state since last 30 days'
+          ),
+            sp_data,
+            graph_gadget_2
+            ]);
+        })
+        .push(function (result_list) {
+          var sp_data = result_list[1], graph_gadget = result_list[2];
+          gadget.property_dict.graph_widget = graph_gadget;
+          return graph_gadget.render({
+            value:
+              {
+                data: [
+                  {
+                    value_dict: {
+                      0: ["Opened", "Submitted", "Suspended", "Closed"],
+                      1: [sp_data.validated, sp_data.submitted, sp_data.suspended, sp_data.invalidated]
+                    },
+                    colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
+                    type: "pie",
+                    title: "Support Request"
+                  }
+                ],
+                layout: {
+                  axis_dict : {
+                    0: {"title": "date"},
+                    1: {"title": "value",  "value_type": "number"}
+                  },
+                  title: "Support Request activites"
+                }
               }
             }
-          });
+          );
         });
+    })
+    .onStateChange(function (modification_dict) {
+      var gadget = this,
+        queue = new RSVP.Queue();
+      if (modification_dict.hasOwnProperty("extended_search")) {
+        console.log("On state change!!!");
+        // render the erp5 form
+        queue
+        .push(function () {
+          return gadget.getDeclaredGadget("test")
+        })
+        .push(function (result_list) {
+          var erp5_form = result_list,
+            tmp;
+
+          tmp = JSON.parse(erp5_form.state.erp5_form);
+          tmp.extended_search = modification_dict.extended_search;
+          
+          return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
+        });
+      }
+      if (modification_dict.hasOwnProperty("field_listbox_begin_from")) {
+        // render the erp5 form
+                  queue
+        .push(function () {
+          return gadget.getDeclaredGadget("test")
+        })
+        .push(function (result_list) {
+          var erp5_form = result_list,
+            tmp;
+    
+          tmp = JSON.parse(erp5_form.state.erp5_form);
+          tmp.field_listbox_begin_from = modification_dict.field_listbox_begin_from;
+          return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
+        });
+      }
+      if (modification_dict.hasOwnProperty("render")) {
+        queue
+          .push(function () {
+            return RSVP.all([
+              gadget.jio_getAttachment("support_request_module", "links"),
+              gadget.getDeclaredGadget("last"),
+              gadget.getDeclaredGadget("test")
+            ]);
+          })
+          .push(function (result_list) {
+            var i,
+              erp5_document = result_list[0],
+              view_list = erp5_document._links.action_object_view || [],
+              test_href,
+              last_href;
+  
+            if (view_list.constructor !== Array) {
+              view_list = [view_list];
+            }
+  
+            for (i = 0; i < view_list.length; i += 1) {
+              if (view_list[i].name === 'view_last_support_request') {
+                last_href = view_list[i].href;
+              }
+              if (view_list[i].name === 'view_test_support_request') {
+                test_href = view_list[i].href;
+              }
+            }
+  
+            if (last_href === undefined) {
+              throw new Error('Cant find the list document view');
+            }
+            gadget.property_dict.option_dict = {graph_gadget: "unsafe/gadget_field_graph_echarts.html"};
+            return RSVP.all([
+              result_list[1].render({
+                jio_key: "support_request_module",
+                view: last_href
+              }),
+              result_list[2].render({
+                jio_key: "support_request_module",
+                view: test_href
+              }),
+              gadget.renderGraph(), //Launched as service, not blocking
+            ]);
+          });
+      }
+      queue
+        .push(undefined, function (error) {
+          console.log(error);
+        });
+      return queue;
+
+     //}) 
     })
     .declareService(function () {
       var gadget = this;
@@ -167,25 +353,25 @@
               return gadget.jio_getAttachment(
                 'support_request_module',
                 hateoas_url + 'support_request_module'
-                  + "/SupportRequestModule_generateRSSLinkAsJson"
-              )
-                .push(function (result) {
-                  rss_button.href = result.restricted_access_url;
-                  rss_button.innerHTML = "RSS Link";
-                  rss_button.target = "_blank";
-                });
+                 + "/SupportRequestModule_generateRSSLinkAsJson"
+                 )
+                 .push(function (result) {
+                   rss_button.href = result.restricted_access_url;
+                   rss_button.innerHTML = "RSS Link";
+                   rss_button.target = "_blank";
+                 });
             });
         }
         click_event.returnValue = true;
       }
-
-      // Listen to form submit
-      return loopEventListener(
-        gadget.element.querySelector("#generate-rss"),
-        'click',
-        false,
-        getRSS
-      );
+        
+        // Listen to form submit
+        return loopEventListener(        
+         gadget.element.querySelector("#generate-rss"),      
+         'click',        
+         false,      
+         getRSS      
+       );
     })
     .onEvent('change', function (evt) {
       if (evt.target.id === "field_your_project") {
@@ -232,4 +418,4 @@
         });
     });
 
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS, RSVP));
