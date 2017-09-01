@@ -52,10 +52,10 @@ try:
   if not language:
     language = portal.Localizer.get_selected_language()
 
-  if 'portal_type' not in kw:
+  if not kw.get('portal_type'):
     kw['portal_type'] = portal.getPortalDocumentTypeList()
 
-  if 'validation_state' not in kw:
+  if not kw.get('validation_state'):
     # XXX hardcoded validation state list.
     # Use predicate or layout property instead
     kw['validation_state'] = ('released', 'released_alive', 'published',
@@ -75,10 +75,13 @@ try:
       logical_operator='or',
     )
 
+  if all_languages:
+    strict_language = False
   if all_versions:
-    if not all_languages:
-      kw['language'] = language
-    return search_context.searchResults(src__=src__, **kw)
+    if all_languages or not strict_language:
+      return search_context.searchResults(src__=src__, **kw)
+    else:
+      return search_context.searchResults(src__=src__, language=language, **kw)
   else:
     group_by_list = set(kw.get('group_by_list', []))
     if all_languages:
@@ -94,6 +97,7 @@ try:
       for x in extra_column_set if not x.endswith('__score__'))
     return context.SQLCatalog_zGetDocumentValueList(search_context=search_context,
                                                     language=language,
+                                                    strict_language=strict_language,
                                                     all_languages=all_languages,
                                                     src__=src__,
                                                     kw=kw)
