@@ -16,11 +16,11 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Build Manager Template</string> </value>
+            <value> <string>Build Business Manager</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=build_action</string> </value>
+            <value> <string>%(content_url)s/BusinessManager_viewBuildingDialog?workflow_action=build_action</string> </value>
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
