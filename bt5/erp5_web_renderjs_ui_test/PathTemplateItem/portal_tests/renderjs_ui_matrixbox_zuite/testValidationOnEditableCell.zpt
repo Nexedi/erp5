@@ -50,10 +50,10 @@
      value is < 0 -->
 <tr><td>type</td>
     <td>field_matrixbox_quantity_cell_0_0_0</td>
-    <td>-2</td></tr>
+    <td>-2.0</td></tr>
 <tr><td>type</td>
     <td>field_matrixbox_quantity_cell_0_1_0</td>
-    <td>2</td></tr>
+    <td>2.0</td></tr>
 
 <tr><td>click</td>
     <td>//button[@data-i18n="Save"]</td><td></td></tr>
@@ -77,10 +77,10 @@
 <!-- create cells -->
 <tr><td>type</td>
     <td>field_matrixbox_quantity_cell_0_0_0</td>
-    <td>1</td></tr>
+    <td>1.0</td></tr>
 <tr><td>type</td>
     <td>field_matrixbox_quantity_cell_0_1_0</td>
-    <td>2</td></tr>
+    <td>2.0</td></tr>
 
 <tr><td>click</td>
     <td>//button[@data-i18n="Save"]</td><td></td></tr>
