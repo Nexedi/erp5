@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_crm</string> </value>
+            <value> <string>erp5_business_bot</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>CRM features for Web</string> </value>
+            <value> <string>Business Bot</string> </value>
         </item>
       </dictionary>
     </pickle>
