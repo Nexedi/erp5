@@ -54,6 +54,12 @@
 
 <!-- Header has a link to the action page -->
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Add']</td>
+  <td></td>
+</tr>
+
+<tr>
   <td>assertElementPresent</td>
   <td>//div[@data-gadget-scope='header']//a[text()='Add' and contains(@href, '#!change') and contains(@href, 'view%3Dcreate_a_document')]</td>
   <td></td>
