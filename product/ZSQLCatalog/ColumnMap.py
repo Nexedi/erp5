@@ -170,26 +170,6 @@ class ColumnMap(object):
     self.related_group_dict[group] = related_column
     return group
 
-  def registerCatalog(self):
-    """
-      Register catalog as being in use in query, and aliased with its own
-      name.
-
-      This is used by SearchKey/RelatedKey.py: there is no way to reliably
-      detect if catalog table is used in a related key, so the catalog table
-      might be absent from final table mapping.
-      DO NOT USE IT ANYWHERE ELSE, this will go away...
-
-      This must be changed by designing a new related key API, which must:
-      - state *all* tables they use in their definition
-      - return Query instances instead of raw SQL code
-      This will allow chaining related keys and consequently allow
-      simplifying redundant code.
-    """
-    assert self.catalog_table_name is not None
-    self.registerTable(self.catalog_table_name)
-    self.resolveTable(self.catalog_table_name, self.catalog_table_name)
-
   def registerRelatedKeyColumn(self, related_column, position, group):
     assert group in self.related_group_dict, (group, self.related_group_dict)
     group = self.getRelatedKeyGroup(position, group)
