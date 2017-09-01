@@ -161,9 +161,6 @@ class RelatedKey(SearchKey):
     # Resolve (and register) related key column in related key group with its last table.
     column_map.registerColumn(self.real_column, group=group)
     column_map.resolveColumn(self.real_column, table_name, group=group)
-    # Always register catalog, since it is always the "base" table of
-    # RelatedKeys.
-    column_map.registerCatalog()
     return group
 
   def stitchJoinDefinition(self, table_alias_list, join_query_list, column_map):

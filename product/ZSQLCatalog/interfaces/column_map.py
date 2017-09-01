@@ -142,14 +142,6 @@ class IColumnMap(Interface):
         For example, it's "title" for "source_title" related key.
     """
 
-  def registerCatalog():
-    """
-      Register catalog table as being used in default group.
-
-      This is for backward compatibility with text-only related keys, since
-      they often hardcode catalog table name.
-    """
-
   def registerRelatedKeyColumn(related_column, position, group):
     """
       Register given column as part of already registered virtual column.
