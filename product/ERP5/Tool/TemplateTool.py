@@ -1933,6 +1933,76 @@ class TemplateTool (BaseTool):
 
       bm.setStatus('installed')
 
+    def rebuildBusinessManager(self, bm):
+      """
+      Compare the sub-objects in the Business Manager to the previous built
+      state to give user powet to decide on which item to rebuild.
+      """
+      checkNeeded = True
+      changed_path_list = []
+
+      if bm.getBuildingState() not in  ['built', 'modified']:
+        # In case the building_state is not built, we build the BM without
+        # comparing anything
+        checkNeeded = False
+        return checkNeeded, changed_path_list
+
+      portal = self.getPortalObject()
+      for item in bm.objectValues():
+        # Check for the change compared to old building state, i.e, if there is
+        # some change made at ZODB state(it also count changes made due to
+        # change while installation of other BM)
+        path = item.getProperty('item_path')
+
+        try:
+          if item.isProperty:
+            # Get the value for Business Property Item
+            value = item.getProperty('item_property_value')
+            # Get the value at ZODB
+            relative_url, property_id = path.split('#')
+            obj = portal.restrictedTraverse(relative_url)
+            property_value = obj.getProperty(property_id)
+
+            # If the value at ZODB for the property is none, raise KeyError
+            # This is important to have compatibility between the way we check
+            # path as well as property. Otherwise, if we install a new property,
+            # we are always be getting an Error that there is change made at
+            # ZODB for this property
+            if not property_value:
+              raise KeyError
+
+            obj = property_value
+          else:
+            # Get the value of the Business Path Item
+            value_list = item.objectValues()
+            if value_list:
+              value = value_list[0]
+            else:
+              # If there is no value, it means the path_item is new, thus no
+              # need to comapre hash and check anything
+              changed_path_list.append((path, 'New'))
+              continue
+
+            # Get the object at ZODB
+            obj = portal.restrictedTraverse(path)
+
+          # Calculate hash for value at ZODB
+          obj_sha = self.calculateComparableHash(obj, item.isProperty)
+          # Calculate hash for value at property_value
+          item_sha = self.calculateComparableHash(value, item.isProperty)
+
+          # Compare the hash with the item hash
+          if obj_sha != item_sha:
+            changed_path_list.append((path, 'Changed'))
+          else:
+            changed_path_list.append((path, 'Unchanged'))
+
+        # KeyError is raised in case the value/object has been deleted at ZODB
+        except KeyError:
+          changed_path_list.append((path, 'Deleted'))
+
+      return checkNeeded, changed_path_list
+
     security.declareProtected(Permissions.ManagePortal,
             'updateInstallationState')
     def compareInstallationState(self, bm_list):
