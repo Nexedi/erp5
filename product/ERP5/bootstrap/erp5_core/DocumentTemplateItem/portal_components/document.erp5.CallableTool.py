@@ -27,13 +27,14 @@
 #
 ##############################################################################
 from Products.ERP5Type.Core.Folder import Folder
-from Products.CMFCore.utils import UniqueObject                                  
+from Products.CMFCore.utils import UniqueObject
 
 class CallableTool(UniqueObject, Folder):
   """
-  XXXXX
-
+  A tool that can be used to add scripts and other callable methods (including 
+  ZSQL templates and HTML templates) to ERP5. It replaces portal_skins.
   """
+
   id = 'portal_callables'
   meta_type = 'ERP5 Callable Tool'
   portal_type = 'Callable Tool'
