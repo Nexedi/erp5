@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,6 +64,12 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -71,11 +77,13 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_list.html</string> </value>
+            <value> <string>gadget_erp5_pt_form_view_discussable.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +93,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_listpage_html</string> </value>
+            <value> <string>gadget_supportrequest_pt_form_view_discussable_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +101,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,7 +111,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 List</string> </value>
+            <value> <string>Gadget Support Request Discussable CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -189,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497910732.61</float>
+                        <float>1498047483.61</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -234,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.10458.57670.27852</string> </value>
+                <value> <string>961.52427.49644.32460</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497912469.33</float>
+                        <float>1504274901.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -309,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497909778.2</float>
+                        <float>1498047276.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

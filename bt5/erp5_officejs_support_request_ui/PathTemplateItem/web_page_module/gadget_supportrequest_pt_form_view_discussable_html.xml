@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_form_view_discussable_html</string> </value>
+            <value> <string>gadget_supportrequest_pt_form_view_discussable_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -103,7 +103,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Form Discussable View</string> </value>
+            <value> <string>Gadget Support Request Form Discussable View</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -234,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.51743.34230.33211</string> </value>
+                <value> <string>961.56636.3721.3345</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1500301444.13</float>
+                        <float>1504536429.08</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
