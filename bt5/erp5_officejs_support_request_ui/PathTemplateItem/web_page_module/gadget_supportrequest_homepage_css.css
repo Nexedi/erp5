@@ -18,3 +18,9 @@
 #wrap2 iframe {
   height: 100%;
 }
+
+.gadget-content .ui-field-contain .graph-spinner {
+  position: relative;
+  top: 100px;
+  width: 120px;
+}
