@@ -1,0 +1,30 @@
+<tal tal:omit-tag="" tal:content="structure python: here.portal_skins.erp5_web_renderjs_ui['erp5css.less']"></tal>
+
+@tablet: ~"only screen and (min-width: 45em) and (max-width: 2713em)";
+@desktop: ~"not screen and (max-width: 2713em)";
+
+.content-iframe-maximize {
+  position: fixed;
+  @media @desktop {
+    left: @panelwidth;
+    top: 2 * @headerheight;
+    iframe {
+      width: ~"calc(100vw - "@panelwidth~")";
+      height: ~"calc(100vh - "2 * @headerheight~")";
+    }
+  }
+  @media @tablet {
+    left: 0;
+    top: @headerheight;
+    iframe {
+      height: ~"calc(100vh - "@headerheight~")";
+    }
+  }
+  @media @smartphone {
+    left: 0;
+    top: @headerheight;
+    iframe {
+      height: ~"calc(100vh - "@headerheight~")";
+    }
+  }
+}
