@@ -1,5 +1,3 @@
 web_page_module/gadget_supportrequest_*
-web_page_module/rjs_gadget_erp5_pt_form_view_discussable_*
-web_page_module/rjs_gadget_erp5_pt_listpage_*
 web_site_module/erp5_officejs_support_request_ui
 web_site_module/erp5_officejs_support_request_ui/**
