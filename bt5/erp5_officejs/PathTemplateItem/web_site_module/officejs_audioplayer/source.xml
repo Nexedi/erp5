@@ -167,11 +167,23 @@
         </item>
         <item>
             <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>source</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -186,6 +198,18 @@
         <item>
             <key> <string>skin_selection_name</string> </key>
             <value> <string>Officejs</string> </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -352,7 +376,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.12889.44960.28177</string> </value>
+                <value> <string>960.25484.60987.38638</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -370,7 +394,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498056644.84</float>
+                        <float>1504539838.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

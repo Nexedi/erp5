@@ -259,6 +259,14 @@
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
         <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>reference</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>custom_render_method_id</string> </key>
             <value> <string>WebSection_renderDefaultPageAsGadget</string> </value>
         </item>
@@ -273,8 +281,20 @@
             <value> <string>officejs_export</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewRenderJSPreference</string> </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -293,6 +313,18 @@
         <item>
             <key> <string>static_language_selection</string> </key>
             <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
@@ -328,7 +360,16 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary/>
+              <dictionary>
+                <item>
+                    <key> <string>reference</string> </key>
+                    <value>
+                      <list>
+                        <string>%%</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>
@@ -459,7 +500,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>958.33047.65271.20104</string> </value>
+                <value> <string>961.56401.19702.50705</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -477,7 +518,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491489164.67</float>
+                        <float>1504515999.0</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
