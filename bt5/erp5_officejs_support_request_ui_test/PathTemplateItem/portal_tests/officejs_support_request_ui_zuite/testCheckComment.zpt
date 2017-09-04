@@ -29,7 +29,6 @@
   <td>//input[@data-i18n="[value]Proceed"]</td>
   <td></td>
 </tr>
-field_my_description
 <tr>
   <td>type</td>
   <td>//input[@name='field_your_title']</td>
@@ -39,6 +38,11 @@ field_my_description
   <td>select</td>
   <td>field_your_project</td>
   <td>RobotMaking</td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>FeatureRequire</td>
+  <td></td>
 </tr>
 <tr>
   <td>select</td>
