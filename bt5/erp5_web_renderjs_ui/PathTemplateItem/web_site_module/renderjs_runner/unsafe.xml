@@ -163,11 +163,23 @@
         </item>
         <item>
             <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>unsafe</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -177,6 +189,18 @@
             <key> <string>short_title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
