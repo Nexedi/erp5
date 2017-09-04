@@ -391,9 +391,7 @@
         </item>
         <item>
             <key> <string>configuration_stylesheet_url</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>gadget_officejs_nojqm.css</string> </value>
         </item>
         <item>
             <key> <string>configuration_translation_gadget_url</string> </key>
@@ -666,7 +664,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.56843.9723.38348</string> </value>
+                <value> <string>961.16277.24517.44253</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -684,7 +682,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504539684.91</float>
+                        <float>1504529296.63</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
