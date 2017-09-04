@@ -12,9 +12,6 @@
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
 
-    <!-- libraries needed for graphs -->
-    <script src="chart.js" type="text/javascript"></script>
-
     <!-- custom script -->
     <script src="gadget_erp5_page_homepage.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="gadget_erp5_page_homepage.css">
@@ -24,31 +21,26 @@
     <h1 style="font-size:2em;font-weight:bold;text-align:center">Customer Support Dashboard</h1>
     <form>
       <div style="text-align:center;">
-        <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Submit New Support Request" value="Submit New Support Request" data-icon="check" name="create"/>
+        <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Submit New Support Request" value="Submit New Support Request" data-icon="check" />
       </div>
-
       <div class='ui-field-contain'>
-        <div class='left'>
-          <div style="width: 100% height: 200%">
-            <canvas id="bar-chart-grouped" responsive="true"></canvas>
-          </div>
+        <div class='left' style="height:50%; width:100%">
+          <div class="ui-icon-spinner ui-btn-icon-notext first-loader graph-spinner"></div>
+          <div id="wrap1" style="height:300px;"></div>
         </div>
-
-        <div class='right'>
-          <div style="width: 50%">
-            <canvas id="pie-chart" responsive="true"></canvas>
-          </div>
+              
+        <div class='right' style="height:50%; width:100%">
+          <div class="ui-icon-spinner ui-btn-icon-notext first-loader graph-spinner"></div>
+          <div id="wrap2" style="height:300px;"></div>
         </div>
       </div>
-      
-      <div class='bottom'>
-        <a id="generate-rss">
-          Generate RSS
-        </a>
-      </div>
 
+      <div class='bottom'>       
+        <a id="generate-rss">Generate RSS</a>         
+      </div>
+ 
       <div data-gadget-url="gadget_erp5_page_form.html" data-gadget-scope="last"></div>
-      
+
     </form>
   </body>
 </html>

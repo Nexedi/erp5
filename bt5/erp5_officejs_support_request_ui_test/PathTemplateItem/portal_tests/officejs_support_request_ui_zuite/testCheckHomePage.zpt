@@ -21,12 +21,17 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//canvas[@id='bar-chart-grouped']</td>
+  <td>//a[@id='generate-rss']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//canvas[@id='pie-chart']</td>
+  <td>//div[@id='wrap1']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@id='wrap2']</td>
   <td></td>
 </tr>
 <tr>
