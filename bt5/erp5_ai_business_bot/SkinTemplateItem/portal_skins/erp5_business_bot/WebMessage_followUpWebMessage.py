@@ -57,23 +57,13 @@ if assign:
 # Redirect to new object
 if assign == None:
   message = translateString(
-<<<<<<< HEAD
     "Created and associated a new ${ticket_type} for ${title}.  Here is a recommended response.", 
     mapping=dict(ticket_type = translateString(ticket_type), title = current_object.getTitle()))
-=======
-    "Created and associated a new ${ticket_type} for " + current_object.getTitle()+ ".  Here is a recommended response.", 
-    mapping=dict(ticket_type = translateString(ticket_type)))
->>>>>>> 69b14a2e22c9b7d3333c5f785b648eaea1b812f7
   return current_object.Base_redirect('WebMessage_viewCreateResponseDialog', keep_items={'portal_status_message': message})
 
 else:
   name = assign[0]
   message = translateString(
-<<<<<<< HEAD
     "Created and associated a new ${ticket_type} for ${title}.  " + name + " is recommended to handle it", 
     mapping=dict(ticket_type = translateString(ticket_type), title = current_object.getTitle()))
-=======
-    "Created and associated a new ${ticket_type} for " + current_object.getTitle() + ".  " + name + " is recommended to handle it", 
-    mapping=dict(ticket_type = translateString(ticket_type)))
->>>>>>> 69b14a2e22c9b7d3333c5f785b648eaea1b812f7
   return new_object.Base_redirect('view', keep_items={'portal_status_message': message})
