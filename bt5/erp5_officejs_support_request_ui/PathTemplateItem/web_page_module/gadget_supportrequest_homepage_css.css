@@ -1,4 +1,4 @@
-#generate-rss  {
+#generate-rss {
   padding: 8pt;
   margin-top: 30pt;
   margin-right: 12pt;
@@ -9,4 +9,12 @@
   border-style: solid;
   min-width: 8em;
   line-height: 1.5;
+}
+
+#wrap1 iframe {
+  height: 100%;
+}
+
+#wrap2 iframe {
+  height: 100%;
 }

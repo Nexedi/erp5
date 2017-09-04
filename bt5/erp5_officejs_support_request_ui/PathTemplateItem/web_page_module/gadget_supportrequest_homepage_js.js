@@ -1,4 +1,4 @@
-/*global document, window, Option, rJS, RSVP, Chart, loopEventListener*/
+/*global document, window, Option, rJS, RSVP, loopEventListener*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 (function (window, rJS, RSVP, loopEventListener) {
   "use strict";
@@ -26,44 +26,19 @@
     .allowPublicAcquisition("updateHeader", function () {
       return;
     })
-
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
-      return new RSVP.Queue()
+
+      return gadget.changeState({
+        render: true
+      })
         .push(function () {
-          return RSVP.all([
-            gadget.jio_getAttachment("support_request_module", "links"),
-            gadget.getDeclaredGadget("last")
-          ]);
-        })
-        .push(function (result_list) {
-          var i,
-            erp5_document = result_list[0],
-            view_list = erp5_document._links.action_object_view || [],
-            last_href;
-
-          if (view_list.constructor !== Array) {
-            view_list = [view_list];
-          }
-
-          for (i = 0; i < view_list.length; i += 1) {
-            if (view_list[i].name === 'view_last_support_request') {
-              last_href = view_list[i].href;
-            }
-          }
-          if (last_href === undefined) {
-            throw new Error('Cant find the list document view');
-          }
-
-          return RSVP.all([
-            result_list[1].render({
-              jio_key: "support_request_module",
-              view: last_href
-            })
-          ]);
+          return gadget.changeState({
+            field_listbox_begin_from: options.field_listbox_begin_from
+          });
         })
         .push(function () {
           return gadget.updateHeader({
@@ -71,91 +46,196 @@
           });
         });
     })
-    .declareService(function () {
-      var gadget = this;
+    .declareJob("renderGraph", function () {
+      var gadget = this,
+        option_dict = gadget.property_dict.option_dict;
       return gadget.getSetting("hateoas_url")
         .push(function (hateoas_url) {
-          return gadget.jio_getAttachment(
+          return RSVP.all([gadget.jio_getAttachment(
             'support_request_module',
             hateoas_url + 'support_request_module'
               + "/SupportRequest_getSupportRequestStatisticsAsJson"
-          );
+          ),
+            gadget.declareGadget(
+              option_dict.graph_gadget,
+              {
+                scope: "graph",
+                sandbox: "iframe",
+                element: gadget.property_dict.element.querySelector("#wrap1")
+              }
+            ),
+            gadget.declareGadget(
+              option_dict.graph_gadget,
+              {
+                scope: "graph",
+                sandbox: "iframe",
+                element: gadget.property_dict.element.querySelector("#wrap2")
+              }
+            )
+            ]);
         })
-        .push(function (result) {
-          new Chart(document.getElementById("bar-chart-grouped"), {
-            type: 'bar',
-            data: {
-              labels: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
-              datasets: [
-                {
-                  label: "Opened",
-                  backgroundColor: "#3e95cd",
-                  data: [
-                    result.le2.validated,
-                    result['2to7'].validated,
-                    result['7to30'].validated,
-                    result.gt30.validated
-                  ]
-                },
-                {
-                  label: "Submitted",
-                  backgroundColor: "#e8c3b9",
-                  data: [
-                    result.le2.submitted,
-                    result['2to7'].submitted,
-                    result['7to30'].submitted,
-                    result.gt30.submitted
-                  ]
-                },
-                {
-                  label: "Suspended",
-                  backgroundColor: "#3cba9f",
-                  data: [
-                    result.le2.suspended,
-                    result['2to7'].suspended,
-                    result['7to30'].suspended,
-                    result.gt30.suspended
-                  ]
-                },
-                {
-                  label: "Closed",
-                  backgroundColor: "#8e5ea2",
-                  data: [
-                    result.le2.invalidated,
-                    result['2to7'].invalidated,
-                    result['7to30'].invalidated,
-                    result.gt30.invalidated
-                  ]
+        .push(function (result_list) {
+          var sp_data = result_list[0], graph_gadget_1 = result_list[1], graph_gadget_2 = result_list[2];
+          gadget.property_dict.graph_widget = graph_gadget_1;
+          return RSVP.all([graph_gadget_1.render(
+            {
+              value: {
+                data: [
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.validated,
+                        sp_data['2to7'].validated,
+                        sp_data['7to30'].validated,
+                        sp_data.gt30.validated
+                      ]
+                    },
+                    colors: ['#d48265'],
+                    type: "bar",
+                    title: "Opened"
+                  },
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.submitted,
+                        sp_data['2to7'].submitted,
+                        sp_data['7to30'].submitted,
+                        sp_data.gt30.submitted
+                      ]
+                    },
+                    colors: ['#61a0a8'],
+                    type: "bar",
+                    title: "Submitted"
+                  },
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.suspended,
+                        sp_data['2to7'].suspended,
+                        sp_data['7to30'].suspended,
+                        sp_data.gt30.suspended
+                      ]
+                    },
+                    colors: ['#c23531'],
+                    type: "bar",
+                    title: "Suspended"
+                  },
+                  {
+                    value_dict: {
+                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      1: [
+                        sp_data.le2.invalidated,
+                        sp_data['2to7'].invalidated,
+                        sp_data['7to30'].invalidated,
+                        sp_data.gt30.invalidated
+                      ]
+                    },
+                    colors: ['#2f4554'],
+                    type: "bar",
+                    title: "Closed"
+                  }
+                ],
+                layout: {
+                  axis_dict : {
+                    '0': {"title": "Days"},
+                    '1': {"title": "Number", "value_type": "number"}
+                  },
+                  title: "Support Request state since last 30 days"
                 }
-              ]
-            },
-            options: {
-              responsive : true,
-              title: {
-                display: true,
-                text: 'Support Requests activities'
               }
             }
-          });
-          new Chart(document.getElementById("pie-chart"), {
-            type: 'pie',
-            data: {
-              labels: ["Opened", "Closed", "Suspended", "Submitted"],
-              datasets: [{
-                label: "All Support Requests Status",
-                backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9"],
-                data: [result.validated, result.invalidated, result.suspended, result.submitted]
-              }]
-            },
-            options: {
-              responsive : true,
-              title: {
-                display: true,
-                text: 'Support Requests state since last 30 days'
+          ),
+            sp_data,
+            graph_gadget_2
+            ]);
+        })
+        .push(function (result_list) {
+          var sp_data = result_list[1], graph_gadget = result_list[2];
+          gadget.property_dict.graph_widget = graph_gadget;
+          return graph_gadget.render({
+            value:
+              {
+                data: [
+                  {
+                    value_dict: {
+                      0: ["Opened", "Submitted", "Suspended", "Closed"],
+                      1: [sp_data.validated, sp_data.submitted, sp_data.suspended, sp_data.invalidated]
+                    },
+                    colors: ['#d48265', '#61a0a8', '#c23531', '#2f4554'],
+                    type: "pie",
+                    title: "Support Request"
+                  }
+                ],
+                layout: {
+                  axis_dict : {
+                    0: {"title": "date"},
+                    1: {"title": "value",  "value_type": "number"}
+                  },
+                  title: "Support Request activites"
+                }
               }
-            }
           });
         });
+    })
+    .onStateChange(function (modification_dict) {
+      var gadget = this,
+        queue = new RSVP.Queue();
+      if (modification_dict.hasOwnProperty("field_listbox_begin_from")) {
+        // render the erp5 form
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget("last");
+          })
+          .push(function (result_list) {
+            var erp5_form = result_list,
+              tmp;
+
+            tmp = JSON.parse(erp5_form.state.erp5_form);
+            tmp.field_listbox_begin_from = modification_dict.field_listbox_begin_from;
+            return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
+          });
+      }
+      if (modification_dict.hasOwnProperty("render")) {
+        queue
+          .push(function () {
+            return RSVP.all([
+              gadget.jio_getAttachment("support_request_module", "links"),
+              gadget.getDeclaredGadget("last")
+            ]);
+          })
+          .push(function (result_list) {
+            var i,
+              erp5_document = result_list[0],
+              view_list = erp5_document._links.action_object_view || [],
+              last_href;
+
+            if (view_list.constructor !== Array) {
+              view_list = [view_list];
+            }
+
+            for (i = 0; i < view_list.length; i += 1) {
+              if (view_list[i].name === 'view_last_support_request') {
+                last_href = view_list[i].href;
+              }
+            }
+
+            if (last_href === undefined) {
+              throw new Error('Cant find the list document view');
+            }
+            gadget.property_dict.option_dict = {graph_gadget: "unsafe/gadget_field_graph_echarts.html"};
+            return RSVP.all([
+              result_list[1].render({
+                jio_key: "support_request_module",
+                view: last_href
+              }),
+              gadget.renderGraph() //Launched as service, not blocking
+            ]);
+          });
+      }
+      return queue;
     })
     .declareService(function () {
       var gadget = this;
