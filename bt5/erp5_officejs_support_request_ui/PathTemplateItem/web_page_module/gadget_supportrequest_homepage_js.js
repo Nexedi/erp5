@@ -74,6 +74,16 @@
             )
             ]);
         })
+        .push(function (result) {
+          var bar_chart = document.getElementById("wrap1"),
+            pie_chart = document.getElementById("wrap2"),
+            loader = document.getElementsByClassName("graph-spinner");
+            loader[0].style.display = "none";
+            loader[1].style.display = "none";
+            bar_chart.style.display = "block";
+            pie_chart.style.display = "block";
+          return result;
+        })
         .push(function (result_list) {
           var sp_data = result_list[0], graph_gadget_1 = result_list[1], graph_gadget_2 = result_list[2];
           gadget.property_dict.graph_widget = graph_gadget_1;
