@@ -165,13 +165,11 @@
           var header_dict = {
             page_title: gadget.state.doc.title,
             selection_url: url_list[0],
-            previous_url: url_list[1],
-            next_url: url_list[2],
             save_action: true
           };
-          if (gadget.state.editable) {
-            header_dict.edit_properties = url_list[3].replace("n.editable=true", "").replace("p.editable=true", "");
-          } else {
+          if (!gadget.state.editable) {
+            header_dict.previous_url = url_list[1];
+            header_dict.next_url = url_list[2];
             header_dict.edit_content = url_list[3];
           }
           return gadget.updateHeader(header_dict);
