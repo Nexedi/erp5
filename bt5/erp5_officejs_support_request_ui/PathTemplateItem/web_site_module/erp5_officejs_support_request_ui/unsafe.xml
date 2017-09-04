@@ -163,11 +163,23 @@
         </item>
         <item>
             <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>unsafe</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -177,6 +189,18 @@
             <key> <string>short_title</string> </key>
             <value>
               <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -337,7 +361,7 @@
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                  <none/>
                 </value>
             </item>
             <item>
@@ -346,7 +370,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>961.50869.49076.30293</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -364,7 +388,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501748238.6</float>
+                        <float>1504539105.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -374,38 +398,6 @@
           </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="8" aka="AAAAAAAAAAg=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/web_site_module/renderjs_runner/unsafe</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>
