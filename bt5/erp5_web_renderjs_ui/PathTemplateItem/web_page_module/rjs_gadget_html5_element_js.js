@@ -6,7 +6,13 @@
   rJS(window)
     .setState({
       tag: 'div',
-      text_content: ''
+      text_content: '',
+      inner_html: '',
+      name: undefined,
+      src: undefined,
+      alt: undefined,
+      append: '',
+      prepend: ''
     })
 
     .declareMethod('render', function (options) {
@@ -15,16 +21,27 @@
           inner_html: options.inner_html || "",
           tag: options.tag || 'div',
           src: options.src,
-          alt: options.alt
+          alt: options.alt,
+          name: options.name,
+          append: options.append || '',
+          prepend: options.prepend || ''
         };
       return this.changeState(state_dict);
     })
 
     .onStateChange(function () {
       var element = this.element,
-        new_element = document.createElement(this.state.tag);
+        new_element = document.createElement(this.state.tag),
+        content = this.state.text_content;
+
       if (this.state.text_content) {
-        new_element.textContent = this.state.text_content;
+        if (this.state.prepend) {
+          content = this.state.prepend + "&nbsp;" + content;
+        }
+        if (this.state.append) {
+          content = content + "&nbsp;" + this.state.append;
+        }
+        new_element.textContent = content;
       } else if (this.state.inner_html) {
         new_element.innerHTML = this.state.inner_html;
       }
@@ -39,6 +56,19 @@
         element.removeChild(element.firstChild);
       }
       element.appendChild(new_element);
+    })
+
+    /** Because of meta-fields (controlling MatrixBox for example) we need to
+     * obtain value of readonly fields.
+     * In order to make it more developer-friendly, only named fields return their values.
+     */
+    .declareMethod("getContent", function () {
+      var data = {};
+      if (!this.state.name) {
+        return data;
+      }
+      data[this.state.name] = this.state.text_content || this.state.inner_html || "";
+      return data;
     });
 
 }(window, document, rJS));
