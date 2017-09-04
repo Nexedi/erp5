@@ -153,7 +153,7 @@
                     '0': {"title": "Days"},
                     '1': {"title": "Number", "value_type": "number"}
                   },
-                  title: "Support Request state since last 30 days"
+                  title: "Last Month Activity"
                 }
               }
             }
@@ -184,7 +184,7 @@
                     0: {"title": "date"},
                     1: {"title": "value",  "value_type": "number"}
                   },
-                  title: "Support Request activites"
+                  title: "Support Request Pipe"
                 }
               }
           });
