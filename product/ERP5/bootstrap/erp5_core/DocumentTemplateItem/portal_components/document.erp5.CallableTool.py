@@ -39,11 +39,11 @@ class CallableTool(UniqueObject, Folder):
   meta_type = 'ERP5 Callable Tool'
   portal_type = 'Callable Tool'
 
-  def _setOb(self, id, object):
+  def _setOb(self, object_id, obj):
     """
       Update portal_skins cache with the new files.
     """
-    Folder._setOb(self, id, object)
+    Folder._setOb(self, object_id, obj)
     portal_skins = getattr(self, 'portal_skins', None)
     if portal_skins is None:
       return
@@ -51,4 +51,4 @@ class CallableTool(UniqueObject, Folder):
     _updateCacheEntry = getattr(portal_skins.aq_base, '_updateCacheEntry', None)
     if _updateCacheEntry is None:
       return
-    _updateCacheEntry(self.id, id)
+    _updateCacheEntry(self.id, object_id)
