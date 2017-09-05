@@ -1346,18 +1346,9 @@ class TestBusinessPackage(ERP5TypeTestCase):
     Try to export-import-install erp5_mysql_innodb_catalog BT to BM. This
     would help to keep track of the erp5_catalog which we use.
     """
-    manager_A = self._createBusinessManager()
-    portal_templates = self.portal.portal_templates
-
-    path_item_list = [
-                      'person_module | 1 | 1',
-                     ]
-
-    manager_A.setProperty('template_path_list' ,path_item_list)
-
-    self.tic()
-
-    portal_templates.migrateBTToBM('/srv/slapgrid/slappart16/srv/runner/software/43d62734835a4a6fe6c005cf13c62653/parts/erp5/product/ERP5/bootstrap/erp5_core')
+    portal = self.portal
+    portal_templates = portal.portal_templates
+    portal_templates.migrateBTToBM('/srv/slapgrid/slappart99/srv/runner/software/4310f5d661b87ce9e2281dbf4c784ed5/parts/erp5/Products/ERP5/bootstrap/erp5_core')
 
   def _globalInstallationOfBusinessTemplate(self):
     """
