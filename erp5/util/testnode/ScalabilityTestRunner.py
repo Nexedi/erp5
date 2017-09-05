@@ -106,7 +106,7 @@ class ScalabilityTestRunner():
     self.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
       self.remaining_software_installation_dict[computer_guid] = software_path
-      self.slapos_communicator._supply("started")
+      self.slapos_communicator._supply()
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
@@ -146,16 +146,12 @@ class ScalabilityTestRunner():
     Create scalability instance
     """
     if self.authorize_request:
+      self.log("testnode, request : %s", instance_title)
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite)
-      self.log("testnode, request : %s", instance_title)
-      config = json.dumps(config)
-      request = {"_" : config}
-      request_kw = {"partition_parameter_kw": request } 
+      request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
       #self.log("request_kw: " + str(request_kw))  # kept for DEBUG 
-      self.slapos_communicator.setName(instance_title)
-      self.slapos_communicator.setRequestParameters(request_kw)
-      self.slapos_communicator._request("started")
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -211,18 +207,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     return len(self.remaining_software_installation_dict) > 0
 
   def _updateInstanceXML(self, software_configuration, instance_title,
-                      test_result, test_suite):
-    """
-    Just a proxy to SlapOSControler.updateInstanceXML.
-    """
-    config = self._generateInstanceXML(software_configuration,
-                                  test_result, test_suite)
-    config = json.dumps(config)
+                         test_result, test_suite):
     self.log("testnode, updateInstanceXML : %s", instance_title)
-    request = {"_" : config}
-    request_kw = {"partition_parameter_kw": request }
-    self.slapos_communicator.setRequestParameters(request_kw)
-    self.slapos_communicator._request("started")
+    config = self._generateInstanceXML(software_configuration,
+                                       test_result, test_suite)
+    request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
+    self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
     return {'status_code' : 0} 
 
   def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
@@ -240,7 +230,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log(error_message)
       self.log("Do you use instance state propagation in your project?")
       self.log("Instance '%s' will be stopped and test aborted." %instance_title)
-      self.slapos_communicator._request('stopped')
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
       time.sleep(60) 
       raise ValueError(error_message)
     self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
@@ -435,20 +425,20 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       # First configuration doesn't need XML configuration update.
       if count > 0:
         self.log("[DEBUG] COUNT > 0 : updating XML configuration...")
-        self.slapos_communicator._request('stopped')
+        self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
         self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
         self._updateInstanceXML(configuration, self.instance_title,
                                 node_test_suite.test_result, node_test_suite.test_suite)
         self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-        self.slapos_communicator._request('started')
+        self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
 
       '''
       # ROQUE: for now, this old hack is not needed 
       # XXX: Dirty hack used to force haproxy to restart in time with all zope informations. 
       self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-      self.slapos_communicator._request('stopped')
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
       self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-      self.slapos_communicator._request('started')
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
       ##########################################################
       '''        
 
@@ -494,7 +484,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         break
 
     # Stop current instance
-    self.slapos_communicator._request('stopped')
+    self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
     self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
 
     # Delete old instances

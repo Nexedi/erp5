@@ -24,10 +24,10 @@ SOFTWARE_STATE_DESTROYING = "SOFTWARE_STATE_DESTROYING"
 
 INSTANCE_STATE_UNKNOWN = "INSTANCE_STATE_UNKNOWN"
 INSTANCE_STATE_STARTING = "INSTANCE_STATE_STARTING"
-INSTANCE_STATE_STARTED = "INSTANCE_STATE_STARTED"
+INSTANCE_STATE_STARTED = "started"
 INSTANCE_STATE_STARTED_WITH_ERROR = "INSTANCE_STATE_STARTED_WITH_ERROR"
 INSTANCE_STATE_STOPPING = "INSTANCE_STATE_STOPPING"
-INSTANCE_STATE_STOPPED = "INSTANCE_STATE_STOPPED"
+INSTANCE_STATE_STOPPED = "stopped"
 INSTANCE_STATE_DESTROYING = "INSTANCE_STATE_DESTROYING"
 
 TESTER_STATE_INITIAL = "TESTER_STATE_INITIAL"
@@ -88,34 +88,31 @@ class SlapOSMasterCommunicator(object):
 
     self.url = url  
 
-  def setName(self, name):
-    self.name = name 
-
-  def setRequestParameters(self, request_kw):
-    if isinstance(request_kw, str) or \
-      isinstance(request_kw, unicode):
-      self.request_kw = json.loads(request_kw)
-    else:
-      self.request_kw = request_kw
-
   @retryOnNetworkFailure
-  def _supply(self, state):
+  def _supply(self):
     if self.computer_guid is None:
       self._logger ('Nothing to supply for %s.' % (self.name))
       return None
-    self._logger('Supply %s@%s: %s', self.url, self.computer_guid,
-        state)
+    self._logger('Supply %s@%s', self.url, self.computer_guid)
     return self.slap_supply.supply(self.url, self.computer_guid)
 
   @retryOnNetworkFailure
-  def _request(self, state):
+  def _request(self, state, instance_title=None, request_kw=None):
+    if instance_title is not None:
+      self.name = instance_title 
+    if request_kw is not None:
+      if isinstance(request_kw, str) or \
+        isinstance(request_kw, unicode):
+        self.request_kw = json.loads(request_kw)
+      else:
+        self.request_kw = request_kw
     self._logger('Request %s@%s: %s', self.url, self.name, state)
     self.latest_state = state
     return self.slap_order.request(
-          software_release=self.url,
-          partition_reference=self.name,
-          state=state,
-          **self.request_kw)
+            software_release=self.url,
+            partition_reference=self.name,
+            state=state,
+            **self.request_kw)
 
   @retryOnNetworkFailure
   def _hateoas_getComputer(self, reference):
