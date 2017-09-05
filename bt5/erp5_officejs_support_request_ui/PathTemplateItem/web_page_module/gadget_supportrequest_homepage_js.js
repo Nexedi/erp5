@@ -41,14 +41,14 @@
         days_7.setHours(0, 0, 0, 0);
         days_30.setHours(0, 0, 0, 0);
 
-        if (name === 'Less than 2 days') {
+        if (name === '< 2') {
           begin_date = days_2;
           cur_mid_night.setDate(cur_mid_night.getDate() + 1);
           end_date = cur_mid_night;
-        } else if (name === '2-7 days') {
+        } else if (name === '2-7') {
           begin_date = days_7;
           end_date = days_2;
-        } else if (name === '7-30 days') {
+        } else if (name === '7-30') {
           begin_date = days_30;
           end_date = days_7;
         } else {
