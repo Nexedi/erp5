@@ -7,6 +7,7 @@ def WebMessage_testModel(self):
   from Products.ZSQLCatalog.SQLCatalog import NegatedQuery
   import datetime
   import time
+  import random
 
   # instantiate arrays
   stopwords_arrays = {}
@@ -27,7 +28,7 @@ def WebMessage_testModel(self):
     query=NegatedQuery(Query(subject=None)),
   )
   for index, message in enumerate(training_messages):
-    if index%5 == 0:
+    if random.random() <= 0.2:
       test_messages.append(message)
     else:
       (language_arrays, tag_arrays) = message.WebMessage_trainOnWebMessage(language_arrays, tag_arrays, stopwords_arrays)
@@ -37,10 +38,12 @@ def WebMessage_testModel(self):
   m = {"job", "sponsorship", "academic", "contributor"}
   correct_tags = 0
   excess_tags = 0  
+  language_accuracy = 0
   type_accuracy = 0
 
   for message in test_messages: 
     suggested_subject_list = []
+
     # clean up header from contact form, if there is one
     text = message.getTextContent()
     line_array = [line for line in text.splitlines() if line.strip() != '']
@@ -79,7 +82,7 @@ def WebMessage_testModel(self):
           tag_relevance[tags[t]] = tag_relevance[tags[t]] + word_relevance
   
     # apply tags
-    average_relevance = sum(tag_relevance.values()) / float(len(tag_relevance.values()))
+    average_relevance = sum(tag_relevance.values()) / (len(tag_relevance.values()))
     for t in tag_relevance:
       if tag_relevance[t] >= average_relevance*2:
         suggested_subject_list.append(t)
@@ -93,28 +96,29 @@ def WebMessage_testModel(self):
     excess_tags += len(suggested_tags_set.difference(message_tags_set)) / len(suggested_tags_set)
 
     correct_language = True
-    for language in language_arrays.keys():
+    for language in languages:
       if language in message_tags_set.symmetric_difference(suggested_tags_set):
         correct_language = False
     if correct_language == True:
-      type_accuracy += .5
+      language_accuracy += 1
 
     if message_tags_set.intersection(sr):
       if suggested_tags_set.intersection(sr):
-        type_accuracy += .5
+        type_accuracy += 1
     elif message_tags_set.intersection(so):
       if suggested_tags_set.intersection(so):
-        type_accuracy += .5
+        type_accuracy += 1
     else:
       if not suggested_tags_set.intersection(sr) and not suggested_tags_set.intersection(so):
-        type_accuracy += .5
+        type_accuracy += 1
     
   correct_tags /= len(test_messages)
   excess_tags /= len(test_messages)
+  language_accuracy /= len(test_messages)
   type_accuracy /= len(test_messages)
   end_time = time.time()
   uptime = end_time - start_time
   human_uptime = str(datetime.timedelta(seconds=int(uptime)))
   
-  return "Model tested in " + human_uptime + " showed a ticket_type/language accuracy of " + str(type_accuracy) + \
-        " and identified " + str(correct_tags) + " of the tags correctly with " + str(excess_tags) + " excess tags."
+  return "Model tested in " + human_uptime + " showed a language accuracy of " + str(language_accuracy) + \
+        ", and a ticket_type accuracy of " + str(type_accuracy) + ", identifying " + str(correct_tags) + " of the tags correctly with " + str(excess_tags) + " excess tags."
