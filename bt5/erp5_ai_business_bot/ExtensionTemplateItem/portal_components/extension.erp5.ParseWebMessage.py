@@ -56,6 +56,7 @@ def WebMessage_parseWebMessage(self):
         word_relevance = (language_arrays[language][word])/(list(language_arrays[language].values())[0])
         language_relevance[language] = language_relevance[language] + word_relevance
   message_language = max(language_relevance, key=language_relevance.get)
+  suggested_subject_list.append(message_language)
 
   # clean up text for analysis
   import string
