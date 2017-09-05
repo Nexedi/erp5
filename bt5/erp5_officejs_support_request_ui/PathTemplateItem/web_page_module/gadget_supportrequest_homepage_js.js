@@ -140,7 +140,7 @@
                 data: [
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.validated,
                         sp_data['2to7'].validated,
@@ -154,7 +154,7 @@
                   },
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.submitted,
                         sp_data['2to7'].submitted,
@@ -168,7 +168,7 @@
                   },
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.suspended,
                         sp_data['2to7'].suspended,
