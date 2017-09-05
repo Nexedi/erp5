@@ -179,20 +179,6 @@
                     colors: ['#c23531'],
                     type: "bar",
                     title: "Suspended"
-                  },
-                  {
-                    value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
-                      1: [
-                        sp_data.le2.invalidated,
-                        sp_data['2to7'].invalidated,
-                        sp_data['7to30'].invalidated,
-                        sp_data.gt30.invalidated
-                      ]
-                    },
-                    colors: ['#2f4554'],
-                    type: "bar",
-                    title: "Closed"
                   }
                 ],
                 layout: {
