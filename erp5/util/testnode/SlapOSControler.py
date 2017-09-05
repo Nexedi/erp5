@@ -37,8 +37,6 @@ import argparse
 import json
 from slapos import client
 
-from ConfigParser import ConfigParser
-
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
 
@@ -112,19 +110,11 @@ class SlapOSControler(object):
     parser.add_argument("software_url")
     parser.add_argument("node")
     if os.path.exists(self.configuration_file_path):
-      self.log("configuration_file_path: " + str(self.configuration_file_path))
       args = parser.parse_args([self.configuration_file_path, software_url, computer_id])
-      self.log("parsed args: " + str(args))
-      #config = client.Config()
-      #config.setConfig(args, args.configuration_file)
-      self.log("Creating clientConfig...")
-      configp = ConfigParser()
-      configp.read(self.configuration_file_path)
-      config = client.ClientConfig(args, configp)
+      config = client.Config()
+      config.setConfig(args, args.configuration_file)
       try:
-        self.log("config instantiated. Calling client.init(config)...")
-        local = client.init(config, self.log)
-        self.log("local instantiated with client.init!")
+        local = client.init(config)
         local['supply'](software_url, computer_guid=computer_id, state=state)
         self.log('SlapOSControler : supply %s %s %s' %(software_url, computer_id, state))
       except:
