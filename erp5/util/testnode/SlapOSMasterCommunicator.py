@@ -76,9 +76,6 @@ class SlapOSMasterCommunicator(object):
     self.slap_supply = slap_supply
     self.hateoas_navigator = self.slap._hateoas_navigator
     self.hosting_subscription_url = None
-    
-    #self.computer_guid = computer_guid 
-    #self.name = name
 
     if url is not None and \
       url.startswith(SOFTWARE_PRODUCT_NAMESPACE):
@@ -100,18 +97,15 @@ class SlapOSMasterCommunicator(object):
       self.request_kw = json.loads(request_kw)
     else:
       self.request_kw = request_kw
-    #self._logger("request parameters set: " + str(self.request_kw))
 
   @retryOnNetworkFailure
   def _supply(self, state):
     if self.computer_guid is None:
       self._logger ('Nothing to supply for %s.' % (self.name))
       return None
-    self._logger("From SlapOSMasterCommunicator")
     self._logger('Supply %s@%s: %s', self.url, self.computer_guid,
         state)
     return self.slap_supply.supply(self.url, self.computer_guid)
-    #return self.slap_supply.supply(self.url, self.computer_guid, state)
 
   @retryOnNetworkFailure
   def _request(self, state):
@@ -323,10 +317,6 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
       return '<%s(state=%s, deadline=%s) at %x>' % (
           self.__class__.__name__, self.state, deadline, id(self))
 
-  # ROQUE: this method is a hack. This set must occur during request.
-  def forceSetState(self, state):
-    self.latest_state = state
-
   def getInfo(self):
     info = ""
     info += "Software Release URL: %s\n" % (self.url)
@@ -439,23 +429,11 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
           monitor_v6_url = information["connection_dict"].get("monitor_v6_url")
           try:
             monitor_information_dict = self.getRSSEntryFromMonitoring(monitor_v6_url)
-            #self._logger("[DEBUG] monitor information dictionary: ")
-	    #self._logger(str(monitor_information_dict))
           except Exception:
-            self._logger.exception('Unable to download promises for: %s' % (instance["title"]))
+            self._logger ('Unable to download promises for: %s' % (instance["title"]))
             self._logger (traceback.format_exc())
             monitor_information_dict = {"message": "Unable to download"}
 
-        #self._logger('Information of instance ' + instance["title"])
-        #self._logger("{")
-        #self._logger ('Instance state: %s -> %s' % (instance['title'], state))
-        #self._logger ('Instance Created at: %s -> %s' % (instance['title'], info_created_at))
-        #self._logger(str(information))
-        #self._logger("Instance news: ")
-        #self._logger(str(news))
-        #self._logger("News: " + str(news[0]["text"]))
-        #self._logger("}")
- 
         message_list.append({
           'title': instance["title"],
           'slave': is_slave,
@@ -466,20 +444,19 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
         })
 
     except slapos.slap.ServerError:
-      self._logger.exception('Got an error requesting partition for '
+      self._logger ('Got an error requesting partition for '
             'its state')
       return INSTANCE_STATE_UNKNOWN
+    except:
+      self._logger("ERROR getting instance state")
+      return INSTANCE_STATE_UNKNOWN
  
-    #self._logger("COMPLETE MESSAGE LIST: ")
-    #self._logger(str(message_list))
-
     started = 0
     stopped = 0
     self.message_history.append(message_list)
     for instance in message_list:
       if not instance['slave'] and \
         instance['state'] in (INSTANCE_STATE_UNKNOWN, INSTANCE_STATE_STARTED_WITH_ERROR):
-        self._logger("RETURNING INSTANCE STATE: " + instance['state'] + " (not slave)")
         return instance['state']
       elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STARTED:
         started = 1
@@ -487,21 +464,16 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
         stopped = 1
       
       if instance['slave'] and instance['state'] == INSTANCE_STATE_UNKNOWN:
-        self._logger("RETURNING INSTANCE STATE: UNKNOWN (slave+unknown)")
         return instance['state']
 
     if started and stopped:
-      self._logger("RETURNING INSTANCE STATE: UNKNOWN (started+stopped)")
-      self._logger("HACK - RETURNING STOPPED")
       return INSTANCE_STATE_STOPPED
       return INSTANCE_STATE_UNKNOWN
     
     if started:
-      self._logger("RETURNING INSTANCE STATE: STARTED")
       return INSTANCE_STATE_STARTED
 
     if stopped:
-      self._logger("RETURNING INSTANCE STATE: STOPPED")
       return INSTANCE_STATE_STOPPED
 
   @retryOnNetworkFailure
