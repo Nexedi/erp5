@@ -41,14 +41,14 @@
         days_7.setHours(0, 0, 0, 0);
         days_30.setHours(0, 0, 0, 0);
 
-        if (name === 'Less than 2 days') {
+        if (name === '< 2') {
           begin_date = days_2;
           cur_mid_night.setDate(cur_mid_night.getDate() + 1);
           end_date = cur_mid_night;
-        } else if (name === '2-7 days') {
+        } else if (name === '2-7') {
           begin_date = days_7;
           end_date = days_2;
-        } else if (name === '7-30 days') {
+        } else if (name === '7-30') {
           begin_date = days_30;
           end_date = days_7;
         } else {
@@ -140,7 +140,7 @@
                 data: [
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.validated,
                         sp_data['2to7'].validated,
@@ -154,7 +154,7 @@
                   },
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.submitted,
                         sp_data['2to7'].submitted,
@@ -168,7 +168,7 @@
                   },
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.suspended,
                         sp_data['2to7'].suspended,
