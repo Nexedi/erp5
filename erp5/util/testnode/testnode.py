@@ -65,7 +65,6 @@ class TestNode(object):
                max_temp_time=MAX_TEMP_TIME):
     self.testnode_log = log
     self.log = log
-    self.log("Config parameter in TestNode.init(): " + str(config))
     self.config = config or {}
     self.process_manager = ProcessManager(log)
     self.working_directory = config['working_directory']
@@ -376,7 +375,6 @@ shared = true
             if my_test_type == 'UnitTest':
               runner = UnitTestRunner(node_test_suite)
             elif my_test_type == 'ScalabilityTest':
-              log("instantiating runner for test suite")
 	      runner = ScalabilityTestRunner(self)
             else:
               log("testnode, Runner type %s not implemented.", my_test_type)
@@ -409,7 +407,7 @@ shared = true
 
 	      log("Getting configuration from test suite " + str(node_test_suite.test_suite_title))                                                 
               generated_config = self.test_suite_portal.generateConfiguration(node_test_suite.test_suite_title)
-              log("Generated configuration: " + str(generated_config))
+              #log("Generated configuration: " + str(generated_config)) # kept for debug 
               jsonData = json.loads(generated_config)
               cluster_configuration = Utils.deunicodeData(jsonData['configuration_list'][0])
               node_test_suite.edit(cluster_configuration=cluster_configuration)
