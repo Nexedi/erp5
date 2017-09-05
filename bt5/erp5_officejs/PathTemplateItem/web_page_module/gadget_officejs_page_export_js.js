@@ -99,6 +99,11 @@
       "no_installer": true,
       "sub_gadget": []
     },
+    "Wall Search": {
+      "url": "officejs_facebook_posts/",
+      "cache": "gadget_erp5_page_ojs_fb_posts.appcache",
+      "sub_gadget": []
+    },
     "connection": {
       "cache": "gadget_jabberconnection.appcache",
       "no_installer": true
