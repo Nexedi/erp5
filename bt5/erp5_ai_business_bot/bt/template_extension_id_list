@@ -1,0 +1,3 @@
+extension.erp5.ParseWebMessage
+extension.erp5.SetWebMessageModel
+extension.erp5.TrainOnWebMessage
