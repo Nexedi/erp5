@@ -19,9 +19,13 @@
   </head>
   <body>
     <form>
-      <div style="text-align:center;">
-        <input data-theme="b" data-inline="true" type="submit" data-i18n="[value]Submit New Support Request" value="Submit New Support Request" data-icon="check" />
+      <div class='ui-field-contain'>
+        <div class='bottom'>
+          <input class='first-line-buttons' data-theme="b" data-inline="true" type="submit" data-i18n="[value]Submit New Support Request" value="Submit New Support Request" data-icon="check" />
+          <a id="generate-rss">Generate RSS</a>
+        </div>
       </div>
+
       <div class='ui-field-contain'>
         <div class='left' style="height:50%; width:100%">
           <div class="ui-icon-spinner ui-btn-icon-notext first-loader graph-spinner"></div>
@@ -32,10 +36,6 @@
           <div class="ui-icon-spinner ui-btn-icon-notext first-loader graph-spinner"></div>
           <div id="wrap2" style="height:300px;"></div>
         </div>
-      </div>
-
-      <div class='bottom'>       
-        <a id="generate-rss">Generate RSS</a>         
       </div>
  
       <div data-gadget-url="gadget_erp5_page_form.html" data-gadget-scope="last"></div>
