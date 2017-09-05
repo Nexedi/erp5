@@ -121,7 +121,7 @@
                   "editable": 1 - editable,
                   "key": "description",
                   "hidden": editable,
-                  "type": "StringField"
+                  "type": "TextAreaField"
                 },
                 "my_content": {
                   "default": gadget.state.doc.text_content,
