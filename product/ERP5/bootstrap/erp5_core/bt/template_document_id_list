@@ -27,4 +27,3 @@ document.erp5.TransformPptyToPptx
 document.erp5.TransformImageToPcx
 document.erp5.TransformImageToBmp
 document.erp5.CallableTool
-document.erp5.ScriptConstraint
