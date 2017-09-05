@@ -141,7 +141,8 @@ class FormBoxEditor:
 
   def edit(self, context):
     if self.context_method_id:
-      context = getattr(context, self.context_method_id)
+      context = getattr(context, self.context_method_id)()
+
     context.edit(**self.attr_dict)
     for encapsulated_editor in self.editor_list:
       encapsulated_editor.edit(context)
