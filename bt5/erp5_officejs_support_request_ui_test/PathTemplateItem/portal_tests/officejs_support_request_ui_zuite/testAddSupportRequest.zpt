@@ -61,7 +61,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n="[value]Reply"]</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
   <td></td>
 </tr>
 <tr>
