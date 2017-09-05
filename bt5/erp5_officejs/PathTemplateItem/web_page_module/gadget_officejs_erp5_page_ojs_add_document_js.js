@@ -112,7 +112,7 @@
                   "editable": 1,
                   "key": "description",
                   "hidden": 0,
-                  "type": "StringField"
+                  "type": "TextAreaField"
                 },
                 "my_portal_type": {
                   "description": "The name of a document in ERP5",
