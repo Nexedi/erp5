@@ -233,6 +233,7 @@ body {
   color: @colorforeground;
 
   word-wrap: break-word;
+  word-break: break-word;
 }
 
 body, button, input, textarea, select {
@@ -1492,12 +1493,16 @@ div[data-gadget-scope='erp5_searchfield'] {
           display: block;
           overflow: hidden;
           width: 100%;
-          height: 4em;
           position: relative;
+          // Only 2 visible lines are visible
+          height: 4em;
+          line-height: 2em;
 
           td, th {
-            // all cells inline-block
-            display: inline-block;
+            * {
+              // Disable all block (div, p, ...)
+              display: inline;
+            }
 
             &:first-child {
               // first cell must be locked
@@ -1513,6 +1518,8 @@ div[data-gadget-scope='erp5_searchfield'] {
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+                // Reduce the gap between the first and second visible lines
+                padding-top: @margin-size;
 
                 &:after {
                   // XXX copy/pasted
@@ -1535,10 +1542,15 @@ div[data-gadget-scope='erp5_searchfield'] {
 
               ~ th, ~ td {
                 // set line height on cells after first row
+                // First column must be more visible
                 font-size: 0.8em;
+                // Cells must be next to the other and correctly aligned
+                display: inline;
 
                 a {
                   pointer-events: none;
+                  // Add contrast with the first column content
+                  color: @grey;
                 }
 
                 &:not(:last-child) a:not(:empty):after {
