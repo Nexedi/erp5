@@ -138,8 +138,8 @@
                 </table>
               </div>
               <div class="padding-10 msgtext-box"></div>
-              <div class="">
-                <legend><strong>With OPML Selection:</strong></legend>
+              <legend><strong>With OPML Selection:</strong></legend>
+              <div class="padding-lr-10">
                 <a href="#" class="ui-btn ui-corner-all ui-btn-inline opml-state"><i class="fa fa-check-square-o"></i> Enable/disable</a>
                 <a href="#" class="ui-btn ui-corner-all ui-btn-inline opml-delete"><i class="fa fa-trash"></i> Delete</a>
                 <a href="#" class="ui-btn ui-corner-all ui-btn-inline opml-test"><i class="fa fa-globe" aria-hidden="true"></i> Test URL Access</a>
@@ -147,23 +147,36 @@
                   <i class="fa fa-spinner fa-2x fa-spin"></i>
                 </span>
               </div>
-              <div class="padding-5">
-                <fieldset class="sync-interval-controlgroup" data-role="controlgroup" data-type="horizontal">
-                  <legend><strong>Auto Sync Interval:</strong></legend>
-                  <input type="radio" name="sync-data-timer" id="sync-data-5m" value="300000" checked="checked">
-                  <label for="sync-data-5m">5 min</label>
-                  <input type="radio" name="sync-data-timer" id="sync-data-10m" value="600000">
-                  <label for="sync-data-10m">10 min</label>
-                  <input type="radio" name="sync-data-timer" id="sync-data-20m" value="1200000">
-                  <label for="sync-data-20m">20 min</label>
-                  <input type="radio" name="sync-data-timer" id="sync-data-30m" value="1800000">
-                  <label for="sync-data-30m">30 min</label>
-                  <input type="radio" name="sync-data-timer" id="sync-data-1h" value="3600000">
-                  <label for="sync-data-1h">1 h</label>
-                </fieldset>
-                <p>Last sync date: <span class="last-sync"></span></p>
+              <div>
+                <legend><strong>Auto Sync Time Interval:</strong></legend>
+                <div class="padding-lr-10">
+                  <fieldset class="sync-interval-controlgroup" data-role="controlgroup" data-type="horizontal">
+                    <input type="radio" name="sync-data-timer" id="sync-data-5m" value="300000" checked="checked">
+                    <label for="sync-data-5m">5 mn</label>
+                    <input type="radio" name="sync-data-timer" id="sync-data-10m" value="600000">
+                    <label for="sync-data-10m">10 mn</label>
+                    <input type="radio" name="sync-data-timer" id="sync-data-20m" value="1200000">
+                    <label for="sync-data-20m">20 mn</label>
+                    <input type="radio" name="sync-data-timer" id="sync-data-30m" value="1800000">
+                    <label for="sync-data-30m">30 mn</label>
+                    <input type="radio" name="sync-data-timer" id="sync-data-1h" value="3600000">
+                    <label for="sync-data-1h">1 h</label>
+                  </fieldset>
+                  <p>Last sync date: <span class="last-sync"></span></p>
+                </div>
+                <legend><strong>Check Online Access Before Sync:</strong></legend>
+                <div class="padding-lr-10">
+                  <fieldset data-role="controlgroup" data-type="horizontal">
+                    <select name="sync-check-offline" id="sync-check-offline" data-role="slider" data-mini="true">
+                      <option value="off">Off</option>
+                      <option value="on">On</option>
+                    </select>
+                  </fieldset>
+                </div>
                 <h2><strong>Manual Sync:</strong></h2>
-                <button class="ui-btn ui-corner-all ui-btn-inline sync-all"><i class="fa fa-download"></i> <span>Sync Data Now</span></button>
+                <div class="padding-lr-10">
+                  <button class="ui-btn ui-corner-all ui-btn-inline sync-all"><i class="fa fa-download"></i> <span>Sync Data Now</span></button>
+                </div>
               </div>
             </div>
           </div>

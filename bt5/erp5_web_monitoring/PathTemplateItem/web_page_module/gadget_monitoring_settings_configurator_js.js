@@ -287,6 +287,7 @@
     .declareService(function () {
       var gadget = this,
         sync_checkbox_list,
+        online_select_element,
         alert_box,
         i;
 
@@ -371,6 +372,15 @@
           return setSelectSyncTime(time_interval);
         })
         .push(function () {
+          return gadget.getSetting("sync_check_offline", "true");
+        })
+        .push(function (sync_check_offline) {
+          if (sync_check_offline) {
+            $(gadget.element.querySelector("select[name='sync-check-offline']"))
+              .val('on').slider("refresh");
+          }
+        })
+        .push(function () {
           var promise_list = [];
 
           promise_list.push(loopEventListener(
@@ -419,6 +429,14 @@
             }
           ));
 
+          promise_list.push(
+            $(gadget.element.querySelector("select[name='sync-check-offline']")
+            ).bind( "change", function() {
+              var element = gadget.element.querySelector("select[name='sync-check-offline']");
+              return gadget.setSetting('sync_check_offline',
+                                       ($(element).val() === 'on') ? "true" : "false");
+            })
+          );
           promise_list.push(
             $(gadget.element.querySelector(
               "input[name='configure-newpwd']"
@@ -676,8 +694,9 @@
                   })
                     .push(undefined, function (error) {
                       var msg = "";
-                      if (error.currentTarget.responseType === "" ||
-                          error.currentTarget.responseType === "text") {
+                      if (error.currentTarget !== undefined && 
+                          (error.currentTarget.responseType === "" ||
+                          error.currentTarget.responseType === "text")) {
                         msg = error.currentTarget.responseText;
                       }
                       alert_box.removeClass('ui-content-hidden')
