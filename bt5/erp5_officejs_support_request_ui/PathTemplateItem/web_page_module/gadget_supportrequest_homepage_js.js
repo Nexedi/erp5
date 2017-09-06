@@ -1,5 +1,5 @@
 /*global document, window, Option, rJS, RSVP, loopEventListener*/
-/*jslint nomen: true, indent: 2, maxerr: 3 */
+/*jslint nomen: true, indent: 2, maxerr: 150 */
 (function (window, rJS, RSVP, loopEventListener) {
   "use strict";
 
@@ -25,6 +25,53 @@
 
     .allowPublicAcquisition("updateHeader", function () {
       return;
+    })
+    .declareMethod('getSearchCriteria', function (name, seriesName) {
+      var search_criteria, cur_mid_night = new Date(), days_2 = new Date(),
+        days_7 = new Date(), days_30 = new Date(), begin_date, end_date;
+      if (seriesName !== 'Support Request') {
+        // Situation 1: Search Support Request with date.
+        cur_mid_night.setHours(0, 0, 0, 0);
+        cur_mid_night.setDate(cur_mid_night.getDate() + 1);
+
+        days_2.setDate(cur_mid_night.getDate() - 2);
+        days_7.setDate(cur_mid_night.getDate() - 7);
+        days_30.setDate(cur_mid_night.getDate() - 30);
+        days_2.setHours(0, 0, 0, 0);
+        days_7.setHours(0, 0, 0, 0);
+        days_30.setHours(0, 0, 0, 0);
+
+        if (name === '< 2') {
+          begin_date = days_2;
+          cur_mid_night.setDate(cur_mid_night.getDate() + 1);
+          end_date = cur_mid_night;
+        } else if (name === '2-7') {
+          begin_date = days_7;
+          end_date = days_2;
+        } else if (name === '7-30') {
+          begin_date = days_30;
+          end_date = days_7;
+        } else {
+          begin_date = new Date(1970, 1, 1);
+          end_date = days_30;
+        }
+        search_criteria = '( translated_simulation_state_title: "' + seriesName + '" AND modification_date: >= ' + begin_date.toISOString().slice(0, 10) + ' AND modification_date: < ' + end_date.toISOString().slice(0, 10) + ' )';
+      } else {
+        // Situation 2: Search Support Request without date.
+        search_criteria = '( translated_simulation_state_title: "' + name + '")';
+      }
+      return search_criteria;
+    })
+    .allowPublicAcquisition("chartItemClick", function (params) {
+      var gadget = this;
+      return gadget.getDeclaredGadget("last")
+        .push(function () {
+          return gadget.getSearchCriteria(params[0][0], params[0][1])
+            .push(function (search_criteria) {
+              gadget.changeState({extended_search: search_criteria});
+            });
+        });
+      // method code
     })
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -78,10 +125,10 @@
           var bar_chart = document.getElementById("wrap1"),
             pie_chart = document.getElementById("wrap2"),
             loader = document.getElementsByClassName("graph-spinner");
-            loader[0].style.display = "none";
-            loader[1].style.display = "none";
-            bar_chart.style.display = "block";
-            pie_chart.style.display = "block";
+          loader[0].style.display = "none";
+          loader[1].style.display = "none";
+          bar_chart.style.display = "block";
+          pie_chart.style.display = "block";
           return result;
         })
         .push(function (result_list) {
@@ -93,7 +140,7 @@
                 data: [
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.validated,
                         sp_data['2to7'].validated,
@@ -107,7 +154,7 @@
                   },
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.submitted,
                         sp_data['2to7'].submitted,
@@ -121,7 +168,7 @@
                   },
                   {
                     value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
+                      0: ["< 2", "2-7", "7-30", "> 30"],
                       1: [
                         sp_data.le2.suspended,
                         sp_data['2to7'].suspended,
@@ -132,20 +179,6 @@
                     colors: ['#c23531'],
                     type: "bar",
                     title: "Suspended"
-                  },
-                  {
-                    value_dict: {
-                      0: ["Less than 2 days", "2-7 days", "7-30 days", "More than 30 days"],
-                      1: [
-                        sp_data.le2.invalidated,
-                        sp_data['2to7'].invalidated,
-                        sp_data['7to30'].invalidated,
-                        sp_data.gt30.invalidated
-                      ]
-                    },
-                    colors: ['#2f4554'],
-                    type: "bar",
-                    title: "Closed"
                   }
                 ],
                 layout: {
@@ -193,6 +226,22 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         queue = new RSVP.Queue();
+      if (modification_dict.hasOwnProperty("extended_search")) {
+        // render the erp5 form
+        queue
+          .push(function () {
+            return gadget.getDeclaredGadget("last");
+          })
+          .push(function (result_list) {
+            var erp5_form = result_list,
+              tmp;
+
+            tmp = JSON.parse(erp5_form.state.erp5_form);
+            tmp.extended_search = modification_dict.extended_search;
+
+            return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
+          });
+      }
       if (modification_dict.hasOwnProperty("field_listbox_begin_from")) {
         // render the erp5 form
         queue
