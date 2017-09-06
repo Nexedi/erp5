@@ -917,7 +917,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
-      if person is not None:
+      if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
