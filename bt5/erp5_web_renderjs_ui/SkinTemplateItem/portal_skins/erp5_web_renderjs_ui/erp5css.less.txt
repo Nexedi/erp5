@@ -1206,13 +1206,18 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
+  //Label
+  .ui-field-contain {
+    & > label {
+      color: @grey;
+    }
+  }
+
   @media @tablet, @desktop {
-    // Label
     .ui-field-contain {
       display: flex;
       & > label {
         flex: 1;
-        color: @grey;
         /* Disclaimer: It is here only for backward-compatibility! Don't rely on
                        this class because it will be removed.
                        It was used to hide the label of a FormBox. */

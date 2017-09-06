@@ -1046,13 +1046,15 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
+.gadget-content .ui-field-contain > label {
+  color: #777777;
+}
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
   .gadget-content .ui-field-contain {
     display: flex;
   }
   .gadget-content .ui-field-contain > label {
     flex: 1;
-    color: #777777;
     /* Disclaimer: It is here only for backward-compatibility! Don't rely on
                        this class because it will be removed.
                        It was used to hide the label of a FormBox. */
