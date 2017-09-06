@@ -1,6 +1,7 @@
-/*global window, rJS, RSVP, $, clearTimeout, setTimeout, console */
+/*global window, rJS, RSVP, $, clearTimeout, setTimeout, console, XMLHttpRequest, document */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, $, console, clearTimeout, setTimeout) {
+(function (window, rJS, RSVP, $, console, clearTimeout, setTimeout,
+  XMLHttpRequest, document) {
   "use strict";
 
   var gadget_klass = rJS(window);
@@ -23,6 +24,32 @@
     .declareMethod("startSync", function (options) {
       var gadget = this;
 
+      function testOnline(url) {
+        return new RSVP.Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest();
+
+          xhr.onload = function (event) {
+            var response = event.target;
+            if (response.status === 302 || response.status === 200) {
+              resolve({status: 'OK'});
+            } else {
+              reject({
+                status: 'ERROR'
+              });
+            }
+          };
+
+          xhr.onerror = function (e) {
+            reject({
+              status: 'ERROR'
+            });
+          };
+
+          xhr.open("GET", url, true);
+          xhr.send("");
+        });
+      }
+
       function formatDate(d) {
         function addZero(n) {
           return n < 10 ? "0" + n : n.toString();
@@ -32,79 +59,41 @@
           + "-" + addZero(d.getDate()) + " " + addZero(d.getHours())
           + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getSeconds());
       }
-      /*
-      function getErrorLog(error_list) {
-        // Build error msg from failed sync
-        var i,
-          tmp_url,
-          error_message = "";
 
-        for (i = 0; i < error_list.length; i += 1) {
-          if (error_list[i].storage_dict.hasOwnProperty('sub_storage')) {
-            if (error_list[i].storage_dict.sub_storage.hasOwnProperty('sub_storage')) {
-              tmp_url = error_list[i].storage_dict.sub_storage.sub_storage.url;
-            } else {
-              tmp_url = error_list[i].storage_dict.sub_storage.url;
+      function syncAllStorageWithCheck() {
+        gadget.props.offline = false;
+        return gadget.getSetting('sync_check_offline', 'true')
+          .push(function (check_offline) {
+            var parser;
+            if (check_offline === 'true') {
+              parser = document.createElement("a");
+              parser.href = document.URL;
+              return new RSVP.Queue()
+                .push(function () {
+                  return testOnline(parser.origin);
+                })
+                .push(undefined, function() {
+                  return {status: "ERROR"};
+                })
+                .push(function (online_result) {
+                  if (online_result.status === "OK") {
+                    return syncAllStorage();
+                  }
+                  gadget.props.offline = true;
+                  return $.notify(
+                    "Sync aborted, no internet access...",
+                    {
+                      position: "bottom right",
+                      autoHide: true,
+                      className: "error",
+                      autoHideDelay: 10000
+                    }
+                  );
+                });
             }
-          } else {
-            tmp_url = error_list[i].storage_dict.url;
-          }
-          error_message += "> " + error_list[i].storage_dict.hosting + " > " +
-            error_list[i].storage_dict.title + "\n";
-          error_message += "Cannot download file(s) at " + tmp_url + ".\n\n";
-        }
-        return error_message;
-      }
-
-      function updateStatus(gadget, storage_dict, status) {
-        var promise_list = [],
-          jio_gadget,
-          url,
-          i;
-
-        return getJioGadget(gadget, storage_dict)
-          .push(function (jio_declared_gadget) {
-            jio_gadget = jio_declared_gadget;
-            return jio_gadget.allDocs({include_docs: true});
-          })
-          .push(undefined, function (error) {
-            console.log(error);
-            return {
-              data: {
-                total_rows: 0
-              }
-            };
-          })
-          .push(function (jio_docs) {
-            var tmp;
-            for (i = 0; i < jio_docs.data.total_rows; i += 1) {
-              if (jio_docs.data.rows[i].id.startsWith('_replicate_')) {
-                continue;
-              }
-              tmp = jio_docs.data.rows[i].doc;
-              if (storage_dict.storage_type === "rss") {
-                if (tmp.category === "WARNING") {
-                  continue;
-                }
-                tmp.category = "WARNING";
-              } else if (storage_dict.storage_type === "webdav") {
-                if (tmp.status === "WARNING") {
-                  continue;
-                }
-                tmp.status = "WARNING";
-              }
-              promise_list.push(jio_gadget.put(
-                jio_docs.data.rows[i].id,
-                tmp
-              ));
-            }
-            return RSVP.all(promise_list);
-          })
-          .push(undefined, function (error) {
-            console.log("ERROR: update status to WARNING");
-            console.log(error);
+            return syncAllStorage();
           });
-      }*/
+      }
 
       function syncAllStorage() {
         var error_log,
@@ -169,19 +158,6 @@
                 method: 'Monitoring Sync'
               })*/
           })
-          /*.push(function () {
-            var promise_list = [],
-              i;
-            // Update all failures monitoring status to Warning
-            for (i = 0; i < gadget.props.error_list.length; i += 1) {
-              promise_list.push(updateStatus(
-                gadget,
-                gadget.props.error_list[i].storage_dict,
-                'WARNING'
-              ));
-            }
-            return RSVP.all(promise_list);
-          })*/
           .push(function () {
             gadget.props.started = false;
             return $.notify(
@@ -213,7 +189,7 @@
                 // There was a recent sync don't start a new sync before the time_interval!
                 return;
               }
-              return syncAllStorage();
+              return syncAllStorageWithCheck();
             })
             .push(undefined, function (error) {
               console.error(error);
@@ -223,7 +199,10 @@
               return gadget.getSetting('sync_data_interval');
             })
             .push(function (timer_interval) {
-              if (timer_interval === undefined) {
+              if (gadget.props.offline === true) {
+                // Offline mode detected, next check will be in 3 minutes
+                timer_interval = 180000;
+              } else if (timer_interval === undefined) {
                 timer_interval = gadget.props.default_sync_interval;
               }
               gadget.props.timer_interval = timer_interval;
@@ -248,7 +227,7 @@
           // sync is running...
           return;
         }
-        return syncAllStorage();
+        return syncAllStorageWithCheck();
       }
       // Default sync interval to 5 minutes
       gadget.props.default_sync_interval = 300000;
@@ -289,4 +268,5 @@
         });
     });
 
-}(window, rJS, RSVP, $, console, clearTimeout, setTimeout));
+}(window, rJS, RSVP, $, console, clearTimeout, setTimeout, XMLHttpRequest,
+  document));
