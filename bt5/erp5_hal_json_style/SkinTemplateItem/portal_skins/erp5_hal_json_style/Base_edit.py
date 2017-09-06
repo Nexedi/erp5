@@ -91,7 +91,10 @@ def editListBox(listbox_field, listbox):
 
 
 def editMatrixBox(matrixbox_field, matrixbox):
-  """ Function called to edit a Matrix box
+  """Go through every field in matrix and call edit on it.
+  
+  Most of the code is just a copy&paste from ERP5Form/MatrixBox:render and 
+  should be in (non-yet-existing) MatrixBoxEditor instead of here (XXX TODO).
   """
   if matrixbox is None:
     return
@@ -170,7 +173,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
         matrix_context.setCellRange(base_id=cell_base_id, *matrixbox_cell_range)
 
   for cell_index_tuple, cell_value_dict in matrixbox.items():
-    # Only update cells which still exist
+    # after constructing the cell-range we can edit all existing cells
     if not matrix_context.hasInRange(*cell_index_tuple, **kd):
       return "Cell %s does not exist" % str(cell_index_tuple)
 
@@ -204,7 +207,7 @@ MARKER = []  # placeholder for an empty value
 message = Base_translateString("Data updated.")
 
 try:
-  # extract all listbox's object form fields from the request and `edit` the object
+  # Extract all form fields from the request and call `edit` on them
   for field in form.get_fields():
     # Dispatch field either to `edit_kwargs` (in case of simple fields) or to `encapsulated_editor_list` in case of editors
     field_name = field.id if not field.has_value('alternate_name') else (field.get_value('alternate_name') or field.id)
@@ -217,6 +220,7 @@ try:
       edit_kwargs[field_name[len(field_prefix):]] = field_value if field_value != '' else None
 
     ## XXX We need to find a way not to use meta_type.
+    # Kato: can be done simply by implementing 'Editors' for fields which are here
     field_meta_type = field.meta_type
     if field_meta_type == 'ProxyField':
       field_meta_type = field.getRecursiveTemplateField().meta_type
@@ -235,6 +239,7 @@ try:
   context.edit(REQUEST=request, edit_order=edit_order, **edit_kwargs)
   for encapsulated_editor in encapsulated_editor_list:
     encapsulated_editor.edit(context)
+
 except ActivityPendingError as e:
   message = Base_translateString(str(e))
 
