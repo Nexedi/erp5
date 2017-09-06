@@ -128,6 +128,23 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         # if no document found, fallback on default page template
         document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request,
           '404.error.page')
+    # In case the url publishes a document, but there is trailing slash
+    # raise 301 redirect to the url excluding the slash
+    # This is different than Web Section.
+    # But in Web Page we need no-slash since we would render all other sources
+    # in the container Web Section, so keeping the caches
+    if hasattr(document, 'getPortalType') \
+        and document.getPortalType() in self.getPortalObject().getPortalDocumentTypeList():
+      actual_url = self.REQUEST.get("ACTUAL_URL", "").strip()
+      if actual_url and actual_url.endswith("/") \
+          and actual_url[:-1] == document.absolute_url() \
+          and self.REQUEST.get("method") == "GET":
+        query_string = self.REQUEST.get("QUERY_STRING", "")
+        query_str = "?%s" % query_string if query_string else query_string
+        self.REQUEST.RESPONSE.redirect(
+          "".join([actual_url[:-1], query_str]),
+          status=301
+        )
     return document
 
   security.declarePrivate( 'manage_beforeDelete' )
