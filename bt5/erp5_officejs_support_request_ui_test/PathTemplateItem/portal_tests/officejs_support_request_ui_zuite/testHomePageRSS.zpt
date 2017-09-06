@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title tal:content="template/title">The title</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  </head>
+  <body>
+  <table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Support Request Zuite</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@data-i18n='[value]Submit New Support Request']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//input[@id="generateRSS"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@id="generateRSS"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>5000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@id="generate-rss"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>RSS Link</td>
+  <td></td>
+</tr>
+<!--
+Firefox RSS compatibility issue:
+
+Quote from:
+https://css-tricks.com/snippets/html/view-source-of-rss-feed-in-firefox/
+
+"
+Firefox likes to assume when we click on a link to an RSS feed that you want to
+subscribe to it in some fashion. That might be true most of the time, but
+sometimes you just want to see the source of the RSS.
+"
+
+In browser, we can add "view_source:" as prefix. But in Selenium test, if a link
+didn't start with "https://", Selenium test will automatically add
+"https://{zuite_test_link}" at the beginning. That cause ERP5 report can not find
+resources. So we can't use the "view_source" in selenium tests to see plain RSS.
+
+In order to avoid Firefox open RSS in its own way. We need to set the content type
+as palin "text/plain" instead the "application/rss+xml". So we introduced 
+"Zuite_callMethodAsPlainText" to change the "content-type" and call
+"SupportRequestModule_viewLastSupportRequestListAsRss" again. Then the Firefox
+will open the RSS as plain text.
+-->
+<tr>
+  <td>open</td>
+  <td>${base_url}/Zuite_callMethodAsPlainText?method_id=SupportRequestModule_viewLastSupportRequestListAsRss</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>rss</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>channel</td>
+  <td></td>
+</tr>
+</tbody></table>
+  </body>
+</html>
