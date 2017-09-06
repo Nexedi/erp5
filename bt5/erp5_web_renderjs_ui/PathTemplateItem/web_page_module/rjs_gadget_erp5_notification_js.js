@@ -1,18 +1,29 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-/*global window, Node, rJS */
-(function (window, Node, rJS) {
+/*global window, Node, rJS, Handlebars */
+(function (window, Node, rJS, Handlebars) {
   "use strict";
 
-  rJS(window)
+  var gadget_klass = rJS(window),
+    success_button_source = gadget_klass.__template_element
+                         .getElementById("success-button-template")
+                         .innerHTML,
+    success_button_template = Handlebars.compile(success_button_source),
+
+    error_button_source = gadget_klass.__template_element
+                         .getElementById("error-button-template")
+                         .innerHTML,
+    error_button_template = Handlebars.compile(error_button_source);
+
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('notify', function (message) {
-      if (typeof message === "string") {
-        // alertify.log(message);
+  gadget_klass
+    .declareMethod('notify', function (options) {
+      if (options) {
         return this.changeState({
           visible: true,
-          message: message
+          message: options.message,
+          status: options.status
         });
       }
       return this.changeState({
@@ -40,8 +51,15 @@
       }
 
       if (modification_dict.hasOwnProperty('message')) {
-        var button = this.element.querySelector('button');
-        button.textContent = this.state.message;
+        if (this.state.status === 'success') {
+          this.element.innerHTML = success_button_template({
+            message: this.state.message
+          });
+        } else {
+          this.element.innerHTML = error_button_template({
+            message: this.state.message
+          });
+        }
       }
 
     })
@@ -53,4 +71,4 @@
       }
     }, false, false);
 
-}(window, Node, rJS));
+}(window, Node, rJS, Handlebars));

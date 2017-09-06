@@ -1414,9 +1414,14 @@ div[data-gadget-scope='notification'] button {
   text-align: left;
   width: 180pt;
   padding: 12pt;
-  background-color: #FF6600;
   color: #f8fff3;
   border-radius: 0.325em;
+}
+div[data-gadget-scope='notification'] button.success {
+  background-color: #37A419;
+}
+div[data-gadget-scope='notification'] button.error {
+  background-color: #FF6600;
 }
 /**********************************************
 * JQM
