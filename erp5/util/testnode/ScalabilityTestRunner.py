@@ -116,12 +116,12 @@ class ScalabilityTestRunner():
     """
     Generate an instance title using various parameter
     TODO : add some verification (to don't use unexisting variables)
-    ROQUE TODO: for now, the name is always the same. The instance is not being destroyed yet. 
+    ROQUE XXX TODO: for now, the name is always the same. The instance is not being destroyed yet. 
     """
     instance_title = "Scalability-"
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-    instance_title += "-2" # hack to force instance creation. Will be removed.
+    instance_title += "-2" # XXX hack to force instance creation. Will be removed.
     #instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
     #instance_title += "timestamp="+str(time.time())
     return instance_title
@@ -329,7 +329,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
         self.randomized_path)
       self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
-      # ROQUE TODO: hardcoded software url until installation bug is solved
+      # ROQUE XXX: below urls are hardcoded until we find ways to make buildout extending through unsafe https 
       self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
       self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
 
@@ -351,7 +351,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
-        # ROQUE TODO: check how this is going to be when we have more than one computer
         self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester(
 					"SlaposMasterCommunicator", 
 					self.log, 
@@ -403,28 +402,21 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
-    self.log("Creating Test Result...")
-    # ROQUE TODO: avoid to create objects until test are run 
-    """test_result_proxy = self.testnode.portal.createTestResult(
+    test_result_proxy = self.testnode.portal.createTestResult(
       node_test_suite.revision, test_list,
       self.testnode.config['test_node_title'],
       True, node_test_suite.test_suite_title,
       node_test_suite.project_title)
-    """
-    self.log("Test Result created.") 
+    self.log("Test Result created.")
     count = 0
     error_message = None
 
     self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
 
     # Each cluster configuration are tested
-    #self.log("[DEBUG] Number of configurations: " + str(len(configuration_list)))
     for configuration in configuration_list:
-      #self.log("[DEBUG] " + str(configuration))
-
       # First configuration doesn't need XML configuration update.
       if count > 0:
-        self.log("[DEBUG] COUNT > 0 : updating XML configuration...")
         self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
         self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
         self._updateInstanceXML(configuration, self.instance_title,
@@ -445,10 +437,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
       
-      # ROQUE TODO: for now, tests are not being run
+      # ROQUE XXX : for debug
       if True:
-        self.log("FORCE QUITTING BEFORE RUN THE TESTS.")
-        return {'status_code' : 1 , 'error_message' : 'FORCE QUITTING FOR DEBUG'} 
+        self.log("RETURN FOR DEBUG")
+        return {'status_code' : 0}
 
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
