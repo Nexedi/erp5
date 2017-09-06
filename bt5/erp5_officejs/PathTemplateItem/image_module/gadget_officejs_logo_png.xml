@@ -80,7 +80,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>654b376d060d3d312d97d43dc78e650d</string> </value>
+            <value> <string>60763d62938eede7168df370bec46d5e</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -98,11 +98,11 @@
         </item>
         <item>
             <key> <string>filename</string> </key>
-            <value> <string>OfficeJS_Logo.png</string> </value>
+            <value> <string>NXD-Media.Logo.png</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
-            <value> <int>84</int> </value>
+            <value> <int>200</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -136,7 +136,7 @@
         </item>
         <item>
             <key> <string>width</string> </key>
-            <value> <int>90</int> </value>
+            <value> <int>200</int> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -279,7 +279,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.40537.63113.39850</string> </value>
+                <value> <string>961.59574.17758.15342</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -297,7 +297,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503564339.61</float>
+                        <float>1504703564.03</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
