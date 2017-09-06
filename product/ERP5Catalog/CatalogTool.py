@@ -1091,12 +1091,36 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           )
         query_list.append(category_query)
       if parent_document_set is not None:
-        query_list.append(SimpleQuery(
-          parent_uid={
+        if forward:
+          if strict_membership:
+            query_list.append(SimpleQuery(
+              parent_uid={
+                document.getUid()
+                for document in parent_document_set
+              },
+            ))
+          else:
+            query_list.append(SimpleQuery(
+              path={
+                x.getPath().replace('_', r'\_').replace('%', r'\%') + '/%'
+                for x in parent_document_set
+              },
+              comparison_operator='like',
+            ))
+        else:
+          parent_uid_set = {
             document.getUid()
             for document in parent_document_set
-          },
-        ))
+          }
+          if not strict_membership:
+            for document in parent_document_set:
+              while True:
+                document = document.getParentValue()
+                uid = getattr(document, 'getUid', lambda: None)()
+                if uid is None:
+                  break
+                parent_uid_set.add(uid)
+          query_list.append(SimpleQuery(uid=parent_uid_set))
       return ComplexQuery(query_list)
 
     security.declarePublic('getCategoryParameterDict')
