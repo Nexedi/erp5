@@ -1,11 +1,10 @@
 web_page_module/Notify_min_js
-web_page_module/rjs_gadget_erp5_css
-web_page_module/gadget_erp5_graph_*
 web_page_module/gadget_monitoring_*
 web_page_module/jquery.magnific-popup.min.js
 web_page_module/jsen_json_validator_js
 web_page_module/magnific-popup.css
 web_page_module/monitoring_jio_*
+web_page_module/rjs_gadget_erp5_css
 web_page_module/rjs_gadget_erp5_js
 web_page_module/rjs_gadget_global_js
 web_page_module/rjs_gadget_monitoring_html
