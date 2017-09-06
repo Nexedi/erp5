@@ -62,7 +62,8 @@ def WebMessage_testModel(self):
           word_relevance = (language_arrays[language][word])/(list(language_arrays[language].values())[0])
           language_relevance[language] = language_relevance[language] + word_relevance
     message_language = max(language_relevance, key=language_relevance.get)
-    suggested_subject_list.append(message_language)
+    if message_language != "en":
+      suggested_subject_list.append(message_language)
 
     # clean up text for analysis
     import string
@@ -93,7 +94,8 @@ def WebMessage_testModel(self):
     suggested_tags_set = set(suggested_subject_list)
 
     correct_tags += len(suggested_tags_set.intersection(message_tags_set)) / len(message_tags_set)
-    excess_tags += len(suggested_tags_set.difference(message_tags_set)) / len(suggested_tags_set)
+    if len(suggested_tags_set) != 0:
+      excess_tags += len(suggested_tags_set.difference(message_tags_set)) / len(suggested_tags_set)
 
     correct_language = True
     for language in languages:
@@ -111,11 +113,11 @@ def WebMessage_testModel(self):
     else:
       if not suggested_tags_set.intersection(sr) and not suggested_tags_set.intersection(so):
         type_accuracy += 1
-    
-  correct_tags /= len(test_messages)
-  excess_tags /= len(test_messages)
-  language_accuracy /= len(test_messages)
-  type_accuracy /= len(test_messages)
+
+  correct_tags = float(correct_tags) / float(len(test_messages))
+  excess_tags = float(excess_tags) / float(len(test_messages))
+  language_accuracy = float(language_accuracy) / float(len(test_messages))
+  type_accuracy = float(type_accuracy) / float(len(test_messages))
   end_time = time.time()
   uptime = end_time - start_time
   human_uptime = str(datetime.timedelta(seconds=int(uptime)))
