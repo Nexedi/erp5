@@ -310,18 +310,56 @@
               "Date, Success, Error, Warning",
               new Date() + ",0,0,0"
             ],
-            data = element_dict.data || promise_data;
+            data = element_dict.data || promise_data,
+            data_list = [],
+            line_list,
+            i;
 
+          data_list.push({
+            value_dict: {"0": [], "1": []},
+            type: "scatter",
+            axis_mapping_id_dict: {"1": "1_1"},
+            title: "promises success counter"
+          });
+          data_list.push({
+            value_dict: {"0": [], "1": []},
+            type: "scatter",
+            axis_mapping_id_dict: {"1": "1_2"},
+            title: "promises error counter"
+          });
+          for (i = 1; i < data.length; i += 1) {
+            line_list = data[i].split(',');
+            data_list[0].value_dict["0"].push(line_list[0]);
+            data_list[0].value_dict["1"].push(line_list[1]);
+
+            // XXX repeating date entry
+            data_list[1].value_dict["0"].push(line_list[0]);
+            data_list[1].value_dict["1"].push(line_list[2]);
+          }
           $(".graph-full .signal").addClass("ui-content-hidden");
-          return gadget.state.graph_gadget.render(
-            data.join('\n'),
-            {
-              ylabel: '<span class="graph-label"><i class="fa fa-bar-chart"></i> Success/Failure count</span>',
-              legend: 'always',
-              labelsDivStyles: { 'textAlign': 'right' }
-            },
-            "customInteractionModel"
-          );
+          return gadget.state.graph_gadget.render({
+            value:{
+              data: data_list,
+              layout: {
+                axis_dict : {
+                  "0": {
+                    "title": "Success/Failure counter",
+                    "scale_type": "linear",
+                    "value_type": "date"
+                  },
+                  "1_1": {
+                    "title": "Promises success counter",
+                    "position": "left"
+                  },
+                  "1_2": {
+                    "title": "Promises error counter",
+                    "position": "left"
+                  }
+                },
+                title: "Success/Failure counter"
+              }
+            }
+          });
         });
           //return RSVP.all(promise_list);
     });

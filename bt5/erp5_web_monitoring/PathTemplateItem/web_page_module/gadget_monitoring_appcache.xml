@@ -105,7 +105,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Fri, 11 august 2017 15:47:33 +0000\n
+# generated on Fri, 07 sep 2017 15:47:33 +0000\n
 # XXX + fonts\n
 # images/ajax-loader.gif\n
 CACHE:\n
@@ -119,8 +119,8 @@ URI.js\n
 dygraph.js\n
 gadget_erp5.css\n
 gadget_global.js\n
-gadget_erp5_graph.html\n
-gadget_erp5_graph.js\n
+gadget_field_graph_dygraph.html\n
+gadget_field_graph_dygraph.js\n
 gadget_jio.html\n
 gadget_jio.js\n
 gadget_translate.html\n
@@ -328,7 +328,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.46782.15224.10001</string> </value>
+                <value> <string>961.61188.16000.18722</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -346,7 +346,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503935899.97</float>
+                        <float>1504800490.65</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
