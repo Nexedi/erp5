@@ -25,65 +25,42 @@
 </tr>
 <tr>
   <td>waitForTextPresent</td>
-  <td>Title 1</td>
+  <td>Actions</td>
+  <td></td>
+</tr>
+
+<!-- Go to the new content dialog -->
+<tr>
+  <td>click</td>
+  <td>//div[@data-gadget-scope='header']//a[text()='Actions' and contains(@href, '#!change')]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
   <td></td>
 </tr>
 
 <!-- Header has a save button -->
 <tr>
-  <td>assertElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>field_my_foo_category_title</td>
-  <td>QWERTY</td>
-</tr>
-<tr>
-  <td>fireEvent</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>input</td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>1000</td>
+  <td>waitForElementPresent</td>
+  <td>//a[text()='Do Nothing Action' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td>
+  <td>//a[text()='Do Nothing Action' and contains(@href, '#!change')]</td>
   <td></td>
 </tr>
 
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/submit_dialog" />
 
-<!--tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit' and contains(@class, 'ui-icon-spinner')]</td>
-  <td></td>
-</tr-->
-<tr>
-  <td>waitForTextPresent</td>
-  <td>No such document was found</td>
-  <td></td>
-</tr>
-<tr>
-  <td>verifyValue</td>
-  <td>//input[@name='field_my_foo_category_title']</td>
-  <td>QWERTY</td>
-</tr>
-
-<tr>
-  <td>assertTextPresent</td>
-  <td>Input data has errors.</td>
-  <td></td>
-</tr>
-
-<tr>
-  <td>verifyElementPresent</td>
   <td>//div[@data-gadget-scope='notification']//button[@class='error']</td>
   <td></td>
 </tr>
+
 </tbody></table>
 </body>
 </html>

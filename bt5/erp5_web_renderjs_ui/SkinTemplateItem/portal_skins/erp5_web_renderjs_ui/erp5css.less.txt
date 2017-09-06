@@ -8,6 +8,7 @@
 @txtgreen: #22CC22;
 @txtsubgrey: #575757;
 @grey: #777777;
+@backgroundgreen: #37A419;
 
 
 // Default background for pages and other controls
@@ -1634,9 +1635,14 @@ div[data-gadget-scope='notification'] {
     text-align: left;
     width: @panelwidth;
     padding: @double-margin-size;
-    background-color: @coloraccent;
     color: @colorsubheaderlink;
     border-radius: @border-radius;
+    &.success {
+      background-color: @backgroundgreen;
+    }
+    &.error {
+      background-color: @coloraccent;
+    }
   }
 }
 

@@ -165,7 +165,10 @@
                   message = JSON.parse(event.target.result).portal_status_message;
                 } catch (ignore) {
                 }
-                return form_gadget.notifySubmitted(message);
+                return form_gadget.notifySubmitted({
+                  "message": message,
+                  "status": "success"
+                });
               })
               .push(function () {
                 return form_gadget.redirect({command: 'reload'});
@@ -189,7 +192,10 @@
                       return form_gadget.translate(error_text);
                     })
                     .push(function (message) {
-                      return form_gadget.notifyChange(message + '.');
+                      return form_gadget.notifyChange({
+                        'message': message + '.',
+                        'status': 'error'
+                      });
                     });
 
                   // if server validation of form data failed (indicated by response code 400)
