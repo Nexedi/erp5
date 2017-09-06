@@ -30,8 +30,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>RSS Link</td>
+  <td>open</td>
+  <td>${base_url}/web_site_module/erp5_officejs_support_request_ui/support_request_module/SupportRequestModule_viewLastSupportRequestListAsRss</td>
   <td></td>
 </tr>
 </tbody></table>
