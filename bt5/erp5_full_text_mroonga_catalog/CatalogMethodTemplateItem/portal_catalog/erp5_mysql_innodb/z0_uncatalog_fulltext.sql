@@ -1,1 +1,0 @@
-DELETE FROM full_text WHERE <dtml-sqltest uid op=eq type=int>
