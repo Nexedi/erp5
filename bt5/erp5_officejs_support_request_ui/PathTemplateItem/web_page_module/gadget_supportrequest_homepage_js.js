@@ -70,6 +70,10 @@
             .push(function (search_criteria) {
               gadget.changeState({extended_search: search_criteria});
             });
+        })
+        .push(function () {
+          var restore = document.getElementById("restoreButton");
+          restore.removeAttribute('disabled');
         });
       // method code
     })
@@ -300,7 +304,8 @@
       var gadget = this;
       function getRSS(click_event) {
         var rss_button = gadget.element.querySelector("#generate-rss");
-        if (rss_button.href === '') {
+        console.log("Got clicked RSS");
+        if (rss_button.getAttribute("href") === '#') {
           return gadget.getSetting("hateoas_url")
             .push(function (hateoas_url) {
               return gadget.jio_getAttachment(
@@ -352,7 +357,36 @@
           });
       }
     }, false, false)
+    .onEvent('click', function (event) {
+      var gadget = this;
+
+      if (event.target.id === "restoreButton") {
+        return gadget.changeState({extended_search: null})
+          .push(function () {
+            var restore = document.getElementById("restoreButton");
+            restore.setAttribute("disabled", "disabled");
+          });
+      } else if (event.target.id === "createSR") {
+        return gadget.jio_getAttachment('support_request_module', 'links')
+        .push(function (links) {
+          var fast_create_url = links._links.view[2].href;
+          return gadget.getUrlFor({
+            command: 'display',
+            options: {
+              jio_key: "support_request_module",
+              view: fast_create_url,
+              page: 'support_request_fast_view_dialog'
+            }
+          });
+        })
+        .push(function (url) {
+          window.location.href = url;
+        });
+      }
+      console.log("In click!");
+    })
     .onEvent('submit', function () {
+      console.log("wtf!");
       var gadget = this;
       return gadget.jio_getAttachment('support_request_module', 'links')
         .push(function (links) {
