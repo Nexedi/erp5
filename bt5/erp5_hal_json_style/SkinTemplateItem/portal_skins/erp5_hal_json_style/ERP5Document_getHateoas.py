@@ -961,84 +961,52 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   elif mode == 'search':
     #################################################
     # Portal catalog search
+    #
+    # Possible call arguments example:
+    #  form_relative_url: portal_skins/erp5_web/WebSite_view/listbox
+    #  list_method: objectValues                      (Script providing listing)
+    #  default_param_json: <base64 encoded JSON>      (Additional search params)
+    #  query: <str>                                   (term for fulltext search)
+    #  select_list: ['int_index', 'id', 'title', ...] (column names to select)
+    #  limit: [15, 16]                                (begin_index, num_records)
+    #  local_roles: TODO
     #################################################
     if REQUEST.other['method'] != "GET":
       response.setStatus(405)
       return ""
   
+    # hardcoded responses for site and portal objects (which are not Documents!)
     if query == "__root__":
-      # XXX Hardcoded behaviour to get root object with jIO
       sql_list = [site_root]
-  
     elif query == "__portal__":
-      # XXX Hardcoded behaviour to get portal object with jIO
       sql_list = [portal]
-  
-  #     document = site_root
-  #     document_result = {
-  # #       '_relative_url': site_root.getRelativeUrl(),
-  #       '_links': {
-  #         'self': {
-  #           "href": default_document_uri_template % {
-  #             "root_url": site_root.absolute_url(),
-  #             "relative_url": document.getRelativeUrl(), 
-  #             "script_id": script.id
-  #           },
-  #         },
-  #       }
-  #     }
-  #     for select in select_list:
-  #       document_result[select] = document.getProperty(select, d=None)
-  #     result_dict['_embedded'] = {"contents": [document_result]}
     else:
-  #     raise NotImplementedError("Unsupported query: %s" % query)
-      
-  
-  #   # XXX
-  #   length = len('/%s/' % portal.getId())
-  #   # context.log(portal.portal_catalog(full_text=query, limit=limit, src__=1))
-  #   context.log(query)
-      catalog_kw = {}
-      if (default_param_json is not None):
-        catalog_kw = byteify(json.loads(urlsafe_b64decode(default_param_json)))
+      catalog_kw = {
+        "local_roles": local_roles,
+        "limit": limit,
+        "sort_on": ()  # default is empty tuple
+      }
+      if default_param_json is not None:
+        catalog_kw.update(byteify(json.loads(urlsafe_b64decode(default_param_json))))
+      if query:
+        catalog_kw["full_text"] = query
+      if sort_on is not None:
+        if isinstance(sort_on, list):
+          catalog_kw['sort_on'] = tuple((byteify(sort_col), byteify(sort_order))
+                                         for sort_col, sort_order in map(json.loads, sort_on))
+        else:
+          sort_col, sort_order = json.loads(sort_on)
+          catalog_kw['sort_on'] = ((byteify(sort_col), byteify(sort_order)), )
+
       if (list_method is None):
         callable_list_method = portal.portal_catalog
       else:
         callable_list_method = getattr(traversed_document, list_method)
 
-      tmp_sort_on = ()
-      if sort_on is not None:
+      sql_list = callable_list_method(**catalog_kw)
 
-        if isinstance(sort_on, list):
-          for grain in sort_on:
-            tmp_sort_on += (tuple([x for x in byteify(json.loads(grain))]),)
-        else:
-          #only one single criteria
-          tmp_sort_on = (tuple([x for x in byteify(json.loads(sort_on))]),)
+    result_list = []  # returned "content" of the search
 
-
-      if query:
-        sql_list = callable_list_method(full_text=query, limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)
-      else:
-        sql_list = callable_list_method(limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)
-
-    result_list = []
-  
-  #   if (select_list is None):
-  #     # Only include links
-  #     for sql_document in sql_list:
-  #       document = sql_document.getObject()
-  #       result_list.append({
-  #         "href": default_document_uri_template % {
-  #           "root_url": site_root.absolute_url(),
-  #           "relative_url": document.getRelativeUrl(), 
-  #           "script_id": script.id
-  #         },
-  #       })
-  #     result_dict['_links']['contents'] = result_list
-  # 
-  #   else:
-  
     # Cast to list if only one element is provided
     editable_field_dict = {}
     if select_list is None:
@@ -1066,7 +1034,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         document = sql_document
       document_uid = sql_document.uid
       document_result = {
-  #       '_relative_url': sql_document.path[length:],
         '_links': {
           'self': {
             "href": default_document_uri_template % {
@@ -1092,10 +1059,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           else:
             tmp_value = getProtectedProperty(document, select)
   
-          property_value = renderField(traversed_document, editable_field_dict[select], form,
-                                       tmp_value,
-                                       key='field_%s_%s' % (editable_field_dict[select].id,
-                                       document_uid))
+          property_value = renderField(
+            traversed_document, editable_field_dict[select], form, tmp_value,
+            key='field_%s_%s' % (editable_field_dict[select].id, document_uid))
           REQUEST.other.pop('cell', None)
         else:
           property_value = getProtectedProperty(document, select)
