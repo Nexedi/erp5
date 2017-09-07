@@ -1,8 +1,0 @@
-<type_roles>
-  <role id='Assignee'>
-   <property id='title'>Acquired Assignee</property>
-   <property id='description'>If this query is associated to a document, the Assignee of the query is the Assignee of the document it is related to.</property>
-   <property id='base_category_script'>ERP5Type_acquireSecurityFromCategory</property>
-   <multi_property id='base_category'>agent</multi_property>
-  </role>
-</type_roles>
