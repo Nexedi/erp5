@@ -592,7 +592,7 @@ class TemplateTool (BaseTool):
                 importAndReExportBusinessTemplateFromPath(template_path)
 
     security.declareProtected( 'Import/Export objects', 'migrateBTToBM')
-    def migrateBTToBM(self, template_path, REQUEST=None, **kw):
+    def migrateBTToBM(self, template_path, isReduced=False, REQUEST=None, **kw):
       """
         Migrate business template repository to Business Manager repo.
         Business Manager completely rely only on BusinessItem and to show
@@ -832,6 +832,9 @@ class TemplateTool (BaseTool):
           Used for recursive udpation of layer for dependency in a BT
         """
         dependency_list = bt.getDependencyList()
+        # XXX: Do not return template_path_list of the new BM incase there is no
+        # dependency_list, instead look for the latest updated version of
+        # new_template_path_list
         if not dependency_list:
           return template_path_list
         else:
@@ -867,38 +870,34 @@ class TemplateTool (BaseTool):
             # Check for the item list and if the BT is Business Manager,
             # if BM, then compare and update layer and if not run migration and
             # then do it again
-            if base_bt.getPortalType() == 'Business Manager':
-              # Check for item path which also exists in base_bt
-              base_path_list = base_bt.getPathList()
+            if base_bt.getPortalType() != 'Business Manager':
+              # If the base_bt is not Business Manager, run the migration on the
+              # base_bt
+              base_bt = self.migrateBTToBM(base_bt_path, isReduced=True)
 
-              copy_of_template_path_list = new_template_path_list[:]
-              # Loop through all the paths in the new_template_path_list and
-              # check for their existence in base_path_list
-              for idx, path in enumerate(new_template_path_list):
-                path_list = path.split(' | ')
-                item_path = path_list[0]
-                item_layer = path_list[2]
-                if item_path in base_path_list:
-                  # TODO: Increase the layer of the path item by +1 and save it
-                  # back at updated_template_path_list
-                  item_layer = int(item_layer) + 1
-                  updated_path = item_path + ' | 1 | ' + str(item_layer)
-                  copy_of_template_path_list[idx] = updated_path
-              new_template_path_list = copy_of_template_path_list
+            # Check for item path which also exists in base_bt
+            base_path_list = base_bt.getPathList()
 
-              if base_bt.getPortalType() != 'Business Manager':
-                # Recursively reduce the base Business Templatem no need to do
-                # this for Business Manager(s) as it had already been migrated
-                # with taking care of layer
-                reduceDependencyList(base_bt, new_template_path_list)
+            copy_of_template_path_list = new_template_path_list[:]
+            # Loop through all the paths in the new_template_path_list and
+            # check for their existence in base_path_list
+            for idx, path in enumerate(new_template_path_list):
+              path_list = path.split(' | ')
+              item_path = path_list[0]
+              item_layer = path_list[2]
+              if item_path in base_path_list:
+                # TODO: Increase the layer of the path item by +1 and save it
+                # back at updated_template_path_list
+                item_layer = int(item_layer) + 1
+                updated_path = item_path + ' | 1 | ' + str(item_layer)
+                copy_of_template_path_list[idx] = updated_path
+            new_template_path_list = copy_of_template_path_list
 
-            # If the base_bt is not Business Manager, run the migration on the
-            # base_bt
-            else:
-              # XXX: Just calling migrateBTToBM here won't do anything, we need
-              # to remove the BT from path and then update it with the migrated
-              # one
-              base_bt = self.migrateBTToBM(base_bt_path)
+            if base_bt.getPortalType() != 'Business Manager':
+              # Recursively reduce the base Business Templatem no need to do
+              # this for Business Manager(s) as it had already been migrated
+              # with taking care of layer
+              reduceDependencyList(base_bt, new_template_path_list)
 
           return new_template_path_list
 
@@ -938,6 +937,9 @@ class TemplateTool (BaseTool):
 
       if is_installed:
         import_template.uninstall()
+
+      if isReduced:
+        return migrated_bm
 
     def cleanTemplatePathList(self, path_list):
       """
