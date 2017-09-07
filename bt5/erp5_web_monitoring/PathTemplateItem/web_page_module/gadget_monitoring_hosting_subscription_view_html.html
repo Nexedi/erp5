@@ -113,9 +113,7 @@
                 {{/if}}
                 <td class="ui-text-center">
                   {{#if key}}
-                  <!--<a rel="{{../index}}" class="prop-edit" title='Edit this value'><i class="fa fa-pencil"></i></a>-->
-                  <!-- disable edit for now -->
-                  <a><span class="ui-text-desabled" title='Edit this value'><i class="fa fa-pencil"></i></span></a>
+                  <a rel="{{../index}}" class="prop-edit" title='Edit this value'><i class="fa fa-pencil"></i></a>
                   {{else}}
                   <a><span class="ui-text-desabled" title='Edit this value'><i class="fa fa-pencil"></i></span></a>
                   {{/if}}
@@ -125,7 +123,7 @@
           </table>
           {{/if}}
         {{/each}}
-        <div class="alert alert-info ui-content-hidden">Your Changes can take a few minutes to appear in this screen!</div>
+        <div class="alert alert-info ui-content-hidden">Your changes will be persistent in this screen after the next sync!</div>
       {{else}}
         <h2>No parameters.</h2>
       {{/if}}

@@ -19,10 +19,20 @@
   }
 
   function getInstanceDict(gadget, monitor_dict) {
-    var private_url = monitor_dict._links.private_url.href.replace("jio_private", "private"),
-      public_url = monitor_dict._links.public_url.href.replace("jio_public", "public"),
+    var private_url = monitor_dict._links.private_url.href
+        .replace("jio_private", "private"),
+      public_url = monitor_dict._links.public_url.href
+        .replace("jio_public", "public"),
       pass_url = "https://" + atob(gadget.state.opml.basic_login) +
-              "@" + private_url.split("//")[1];
+              "@" + private_url.split("//")[1],
+      i;
+
+      for (i = 0; i < monitor_dict.parameters.length; i += 1) {
+        if (monitor_dict.parameters[i].key === "monitor-password") {
+          // disabled edit of monitor password from here!!
+          monitor_dict.parameters[i].key = "";
+        }
+      }
 
     return {
       key: monitor_dict.reference,
@@ -103,6 +113,7 @@
             instance_list = [],
             parameter_list = [],
             status_url = '',
+            instance_dict,
             i,
             instance_content;
 
@@ -112,13 +123,15 @@
           for (i = 0; i < document_list.length; i += 1) {
             // Only one instance per opml-outline
             if (document_list[i].data.total_rows === 1) {
-              instance_list.push(
-                getInstanceDict(gadget, document_list[i].data.rows[0].value)
+              instance_dict = getInstanceDict(
+                gadget,
+                document_list[i].data.rows[0].value
               );
+              instance_list.push(instance_dict);
               if (document_list[i].data.rows[0].value.hasOwnProperty('parameters')) {
                 parameter_list.push({
                   title: document_list[i].data.rows[0].value.title,
-                  parameters: document_list[i].data.rows[0].value.parameters,
+                  parameters: instance_dict.parameters,
                   base_url: document_list[i].data.rows[0].value
                     ._links.private_url.href || '',
                   index: i
@@ -172,9 +185,8 @@
 
       function updateParameterBox(parameter_list, title) {
         var element = gadget.element.querySelector('table[title="' + title + '"]'),
-        tmp,
           i;
-    
+
         if (!element) {
           return;
         }
@@ -182,7 +194,8 @@
           if (!parameter_list[i].key) {
             continue;
           }
-          element.querySelector('.v-' + parameter_list[i].key).textContent = parameter_list[i].value;
+          element.querySelector('.v-' + parameter_list[i].key)
+            .textContent = parameter_list[i].value;
         }
       }
 
@@ -213,34 +226,22 @@
           })
           .push(function (config_gadget) {
             gadget.props.config_gadget = config_gadget;
+            return gadget.props.config_gadget.render({
+                url: gadget.state.instance_list[index].private_url +
+                  '/config',
+                basic_login: gadget.state.opml.basic_login
+            });
+          })
+          .push(function () {
             return gadget.props.config_gadget.popupEdit({
-              url: gadget.state.instance_list._links.private_url.href,
-              parameters: gadget.state.instance_list[index].parameters,
               title: gadget.state.instance_list[index].title,
-              root_title: gadget.state.instance_list[index]['hosting-title'],
-              page_options: gadget.props.options,
-              path: 'config',
-              key: 'config.tmp'
+              parameters: gadget.state.instance_list[index].parameters,
+              document_id: 'config.tmp'
             }, function (data) {
-              var update_promise = [],
-                i,
-                monitor_user = '',
-                monitor_password = '';
-    
-              // Try to save monitor credential if they are pres
-              for (i = 0; i < data.length; i += 1) {
-                if (data[i].key === 'monitor-password') {
-                  monitor_password = data[i].value;
-                }
-                if ((data[i].key || data[i].title) === 'monitor-user') {
-                  monitor_user = data[i].value;
-                }
-              }
               gadget.state.instance_list[index].parameters = data;
-              updateParameterBox(data, gadget.props.document_list[index].title);
+              updateParameterBox(data, gadget.state.instance_list[index].title);
               $(gadget.element.querySelector('.alert-info'))
                 .removeClass('ui-content-hidden');
-              return RSVP.all(update_promise);
             });
           });
       }

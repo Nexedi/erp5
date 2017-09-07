@@ -252,6 +252,7 @@
       }
       // Default sync interval to 5 minutes
       gadget.props.default_sync_interval = 300000;
+      gadget.props.has_sync_interval = false;
       return new RSVP.Queue()
         .push(function () {
           return gadget.getSetting('sync_data_interval');
@@ -260,9 +261,9 @@
           if (timer_interval === undefined) {
             // quickly sync because this is the first run!
             gadget.props.timer_interval = 10000;
-            gadget.props.has_sync_interval = false;
           } else {
             gadget.props.timer_interval = timer_interval;
+            gadget.props.has_sync_interval = true;
           }
           return gadget.getSetting('latest_sync_time');
         })

@@ -19,7 +19,7 @@
     .declareMethod('render', function (options) {
       var gadget = this,
         header = {
-          "title": 'Monitoring Promise Status'
+          "title": 'Monitoring Promises Status'
         },
         listbox_configuration = {
           search_page: 'status_list',
@@ -50,7 +50,7 @@
           }],
           filter_column: {select: "category", "title": "Status"},
           query: {
-            "limit": [0, 600],
+            "limit": [0, 400],
             select_list: ['source', 'channel_item', 'channel', 'category',
               'date', 'comments', 'link', 'lastBuildDate', 'parent_id'],
             query: '(portal_type:"promise") AND (active:true)',
@@ -95,8 +95,8 @@
     .declareAcquiredMethod("getSetting", "getSetting")
     .declareAcquiredMethod("setSetting", "setSetting")
     .declareAcquiredMethod("redirect", "redirect")
-    .declareAcquiredMethod("renderApplication", "renderApplication")
     .declareAcquiredMethod("updateHeader", "updateHeader")
+    .declareAcquiredMethod("renderApplication", "renderApplication")
     .declareService(function () {
       var gadget = this,
         current_sync_date;

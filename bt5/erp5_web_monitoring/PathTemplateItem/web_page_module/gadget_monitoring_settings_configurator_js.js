@@ -30,7 +30,7 @@
       + ":" + addZero(d.getMinutes()) + ":" + addZero(d.getSeconds());
   }
 
-  function checkCredential(gadget, url, title, hash, opml_hash) {
+  function checkCredential(gadget, url, title, hash) {
     var ouput;
     // Verify if login and password are correct for this URL
     if (url === undefined) {
@@ -38,18 +38,6 @@
     }
     return testUrl(url, hash)
       .then(function(result) {
-        /*if (result.status === 'OK') {
-          return result;
-        } else {
-          result.title = title;
-          return testUrl(url, opml_hash)
-            .push(function (sub_result) {
-              if (sub_result.status !== 'OK') {
-                return result;
-              }
-              return sub_result;
-            });
-        }*/
         return result;
       }, function(error) {
         var ko_msg = {
@@ -57,15 +45,6 @@
             msg: error.msg + ' (' + url + ')',
             title: title
           };
-        /*if (opml_hash) {
-          return testUrl(url, opml_hash)
-            .push(function (result) {
-              if (result.status === 'OK') {
-                return {status: 'OK'};
-              }
-              return ko_msg;
-            });
-        }*/
         return ko_msg;
       });
   }
@@ -90,20 +69,23 @@
   function loadOPMLConfiguration(gadget) {
     return gadget.jio_allDocs({
       query: 'portal_type:"opml"',
-      select_list: ['title', 'url', 'active'],
+      select_list: ['title', 'url', 'active', 'basic_login'],
       sort_on: [["title", "ascending"]]
     })
       .push(function (result) {
         var i,
           opml_list = [],
+          cred_list,
           content;
         for (i = 0; i < result.data.total_rows; i += 1) {
+          cred_list = atob(result.data.rows[i].value.basic_login).split(":");
           opml_list.push({
             key: result.data.rows[i].value.title + "#" +
               result.data.rows[i].value.url,
             href: "#page=settings_configurator&url=" +
               result.data.rows[i].value.url +
-              '&tab=add',
+              '&tab=add&password=' + cred_list[1] +
+              '&username=' + cred_list[0],
             link: result.data.rows[i].value.url,
             title: result.data.rows[i].value.title || '',
             status: (result.data.rows[i].value.active) ? "Enabled" : "Disabled"
@@ -112,7 +94,7 @@
         content = opml_url_template({opml_list: opml_list});
         gadget.element.querySelector(".opml-tablelinks > tbody")
           .innerHTML = content;
-        return;
+        return gadget.changeState({"opml_list": opml_list});
       });
   }
 
@@ -146,13 +128,64 @@
           if (credential_hash !== undefined) {
             xhr.setRequestHeader('Authorization', 'Basic ' + credential_hash);
           }
-          //try {
           xhr.send("");
-          //} catch (e) {
-          //  reject({status: 'ERROR', msg: e});
-          //}
         });
       });
+  }
+
+  function changeMonitorPassword(gadget, base_url, title, basic_login,
+      password) {
+    var url = base_url,
+      jio_gadget,
+      jio_options;
+
+    url += (url.endsWith('/') ? '':'/') + 'config/';
+    gadget.props.gindex += 1;
+    return gadget.declareGadget("gadget_monitoring_jio.html",
+        {
+          element: gadget.element,
+          scope: 'jio_' + gadget.props.gindex + "_gadget",
+          sandbox: "public"
+        }
+      ).push(function(new_gadget) {
+        jio_gadget = new_gadget;
+        jio_gadget.createJio({
+          type: "query",
+          sub_storage: {
+            type: "drivetojiomapping",
+            sub_storage: {
+              type: "dav",
+              url: url,
+              basic_login: basic_login
+            }
+          }
+        });
+        return jio_gadget.get('config');
+      })
+      .push(function (doc) {
+        var i;
+        if (doc) {
+          for (i  = 0; i < doc.length; i += 1) {
+            if (doc[i].key === 'monitor-password') {
+              doc[i].value = password;
+              return jio_gadget.put('config.tmp', doc);
+            }
+          }
+        }
+        return new Error("Cannot get document 'config.json' at : " % url);
+      })
+      .push(function () {
+        return {status: 'OK'};
+      }, function (error) {
+        console.log(error);
+        return {
+          status: 'ERROR',
+          code: error.target.status,
+          url: base_url,
+          title: title
+        };
+      });
+    
   }
 
   gadget_klass
@@ -163,12 +196,14 @@
       deferred: "",
       sync_gadget: "",
       selected: "",
-      jio_gadget: ""
+      jio_gadget: "",
+      opml_list: ""
     })
     /////////////////////////////
     // ready
     /////////////////////////////
     .ready(function (gadget) {
+      gadget.props = {gindex: 0};
       return new RSVP.Queue()
         .push(function () {
           return gadget.changeState({deferred: RSVP.defer()});
@@ -203,23 +238,23 @@
         panel_action: false*/
       })
       .push(function () {
-        if (options.url !== undefined && options.url !== '') {
-          gadget.element.querySelector("input[name='url']")
-            .value = options.url;
-        }
-        if (options.username !== undefined && options.username !== '' &&
-            options.password !== undefined && options.password !== '') {
-          //gadget.props.username = options.username;
-          //gadget.props.password = options.password;
-          gadget.element.querySelector("input[name='username']")
-            .value = options.username;
-          gadget.element.querySelector("input[name='password']")
-            .value = options.password;
-        }
-        //return gadget.getSetting('monitor_url_description');
         return loadOPMLConfiguration(gadget);
       })
       .push(function () {
+        var i;
+        if (options.url !== undefined && options.url !== '') {
+          gadget.element.querySelector("input[name='url']")
+            .value = options.url;
+          if (options.username !== undefined && options.username !== '' &&
+              options.password !== undefined && options.password !== '') {
+            //gadget.props.username = options.username;
+            //gadget.props.password = options.password;
+            gadget.element.querySelector("input[name='username']")
+              .value = options.username;
+            gadget.element.querySelector("input[name='password']")
+              .value = options.password;
+          }
+        }
         return gadget.getSetting('latest_sync_time');
       })
       .push(function (latest_sync_time) {
@@ -303,6 +338,22 @@
         return key_list;
       }
 
+      function setFormValue(data) {
+        if (data === undefined) {
+          data = {};
+        }
+        gadget.element
+          .querySelector("input[name='username']").value = data.username || "";
+        gadget.element
+          .querySelector("input[name='password']").value = data.password || "";
+        gadget.element
+          .querySelector("input[name='new_password']").value = data.new_password || "";
+        gadget.element
+          .querySelector("input[name='new_password_confirm']").value = data.new_password_confirm || "";
+        gadget.element
+          .querySelector("input[name='url']").value = data.url || "";
+      }
+
       return new RSVP.Queue()
         .push(function () {
           return gadget.state.deferred.promise;
@@ -337,7 +388,7 @@
                   return gadget.state.sync_gadget.startSync({now: true});
                 })
                 .push(function () {
-                  gadget.element.querySelector('.sync-all')
+                  gadget.element.querySelector('.sync-all span')
                     .textContent = title;
                   gadget.element.querySelector('.sync-all')
                     .disabled = false;
@@ -530,7 +581,7 @@
                   gadget.element.querySelector('.msgtext-box')
                     .innerHTML = notify_msg_template({
                       status: "error",
-                      text: "ERROR while removing OPML(s)"
+                      text: "ERROR while updating OPML(s)"
                     });
                   return [];
                 })
@@ -594,29 +645,17 @@
                 button_submit.textContent = submit_text;
               }
 
-              function clearForm() {
-                gadget.element
-                  .querySelector("input[name='username']").value = "";
-                gadget.element
-                  .querySelector("input[name='password']").value = "";
-                gadget.element
-                  .querySelector("input[name='new_password']").value = "";
-                gadget.element
-                  .querySelector("input[name='new_password_confirm']").value = "";
-                gadget.element
-                  .querySelector("input[name='url']").value = "";
-              }
-
-              function pushNewOPML(opml_url, username, password) {
+              function pushNewOPML(opml_url, username, password, new_password) {
                 var opml_dict = {
-                  type: "opml",
-                  portal_type: "opml",
-                  url: opml_url,
-                  basic_login: btoa(username + ':' + password),
-                  active: true
-                };
+                    type: "opml",
+                    portal_type: "opml",
+                    url: opml_url,
+                    basic_login: btoa(username + ':' + password),
+                    active: true
+                  },
+                  update_password_list = [];
 
-                function validateOPML(basic_login) {
+                function validateOPML() {
                   // read the opml to get the content and title
                   //delete gadget.state.jio_storage;
                   button_submit.textContent = "Reading OPML content...";
@@ -652,13 +691,18 @@
                       if (opml_result.data.total_rows > 0) {
                         opml_dict.title = opml_result.data.rows[0].value.title;
                         for (i = 1; i < opml_result.data.total_rows; i += 1) {
-                          check_list.push(checkCredential(
-                            gadget,
-                            opml_result.data.rows[i].value.url,
-                            opml_result.data.rows[i].value.title,
-                            opml_dict.basic_login,
-                            basic_login
-                          ));
+                          if (opml_result.data.rows[i].value.url !== undefined) {
+                            check_list.push(checkCredential(
+                              gadget,
+                              opml_result.data.rows[i].value.url,
+                              opml_result.data.rows[i].value.title,
+                              opml_dict.basic_login
+                            ));
+                            update_password_list.push({
+                              base_url: opml_result.data.rows[i].value.url,
+                              title: opml_result.data.rows[i].value.title
+                            });
+                          }
                         }
                         button_submit.textContent = "Validating password(s)...";
                         return RSVP.all(check_list);
@@ -681,6 +725,50 @@
                         return false;
                       }
                       return status_list[0];
+                    })
+                    .push(function (previous_status) {
+                      var i,
+                        update_promise_list = [];
+                      if (new_password === "") {
+                        return previous_status;
+                      }
+                      if (!previous_status) {
+                        return false;
+                      }
+                      button_submit.textContent = "Changing password(s)...";
+                      for (i = 0; i < update_password_list.length; i += 1) {
+                        update_promise_list.push(changeMonitorPassword(
+                          gadget,
+                          update_password_list[i].base_url,
+                          update_password_list[i].title,
+                          opml_dict.basic_login,
+                          new_password
+                        ));
+                      }
+                      return new RSVP.Queue()
+                        .push(function () {
+                          return RSVP.all(update_promise_list);
+                        })
+                        .push(function(result_list) {
+                          var i,
+                            error_msg = "";
+                          for (i = 0; i < result_list.length; i += 1) {
+                            if (result_list[i].status === 'ERROR') {
+                              error_msg += 'ERROR ' + result_list[i].code +
+                                '. [' + result_list[i].title + '] Failed to ' +
+                                'change password, please try again\n';
+                            }
+                          }
+                          if (error_msg !== "") {
+                            alert_box.removeClass('ui-content-hidden')
+                              .text(error_msg);
+                            return false;
+                          } else {
+                            opml_dict.basic_login =
+                              btoa(username + ':' + new_password);
+                            return true;
+                          }
+                        });
                     });
                 }
 
@@ -693,7 +781,7 @@
                   })
                   .push(function (doc) {
                     current_opml = doc;
-                    return validateOPML(doc.basic_login);
+                    return validateOPML();
                   })
                   .push(function (status) {
                     if (status) {
@@ -728,7 +816,8 @@
                       );
                     return false;
                   }
-                  return pushNewOPML(opml_url, username, password);
+                  return pushNewOPML(opml_url, username, password,
+                                     new_password);
                 });
             }
           ));
