@@ -5,6 +5,8 @@ def WebMessage_trainOnWebMessage(self, language_arrays, tag_arrays, stopwords_ar
 
   # clean up header from contact form, if there is one
   text = self.getTextContent()
+  if text is None:
+    return (language_arrays, tag_arrays)
   line_array = [line for line in text.splitlines() if line.strip() != '']
   if line_array[0][:6] == "  Name":
     line_array = line_array[4:]

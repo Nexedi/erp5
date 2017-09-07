@@ -27,11 +27,8 @@ def WebMessage_setModel(self):
     portal_type="Web Message",
     query=NegatedQuery(Query(subject=None)),
   )
-<<<<<<< HEAD
   if not training_messages:
     return "No Web Messages to train on"
-=======
->>>>>>> 2e83d650106eb861a0c38350ab16aa6d13caea36
   for message in training_messages:
     (language_arrays, tag_arrays) = message.WebMessage_trainOnWebMessage(language_arrays, tag_arrays, stopwords_arrays)
   end_time = time.time()

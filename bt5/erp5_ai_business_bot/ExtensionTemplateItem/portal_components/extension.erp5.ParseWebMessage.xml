@@ -37,6 +37,18 @@
             </value>
         </item>
         <item>
+            <key> <string>text_content_error_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>text_content_warning_message</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>version</string> </key>
             <value> <string>erp5</string> </value>
         </item>
@@ -98,10 +110,6 @@
             <item>
                 <key> <string>action</string> </key>
                 <value> <string>validate</string> </value>
-            </item>
-            <item>
-                <key> <string>error_message</string> </key>
-                <value> <string></string> </value>
             </item>
             <item>
                 <key> <string>validation_state</string> </key>

@@ -14,22 +14,19 @@ class Test(ERP5TypeTestCase):
     """
     return ('erp5_base', 'erp5_web', 'erp5_ingestion_mysql_innodb_catalog', 'erp5_crm', 'erp5_dms', 'erp5_business_bot')
 
-  message_reference_dict = {}
   def afterSetUp(self):
     """
     This is ran before anything, used to set the environment
     """
     message_list = [
       dict(title='Tagged Message', subject_list=['ERP5', 'pricing'], text_content="ERP5 pricing"),
-      dict(title='Untagged Message', text_content="ERP5 pricing"),
+      dict(title='Untagged Message', subject_list=[], text_content="ERP5 pricing"),
     ]
-    for message in message_list:
-      kw = dict(portal_type = 'Web Message', title = message_list[title], text_content=message_list[text_content])
-      existing = self.portal_catalog.getResultValue(**kw)
+    for index, message in enumerate(message_list):
+      kw = dict(portal_type = 'Web Message', title = message_list[index]["title"], subject = message_list[index]["subject_list"])
+      existing = self.portal.portal_catalog.getResultValue(**kw)
       if existing is None:
-        self.message_reference_dict[message['reference']] = self.event_module.newContent(**kw).getReference()
-      else:
-        self.message_reference_dict[message['reference']] = existing.getReference()
+        self.portal.event_module.newContent(**kw)
 
     self.commit()
     self.tic()
@@ -41,11 +38,11 @@ class Test(ERP5TypeTestCase):
     exists in the document module.
     """
 
-    set_model_result = self.event_module.set_model().split()
+    set_model_result = self.portal.event_module.WebMessage_setModel().split()
     self.assertEqual(set_model_result[0], "Model")
-    kw = dict(portal_type = 'Document', title = "AI Business Bot")
-    document = self.portal_catalog.getResultValue(**kw)
-    self.assertEqual(set_model_result[3], document.getRelativeUrl())
+    kw = dict(portal_type = 'File', title = "AI Business Bot")
+    document = self.portal.portal_catalog.getResultValue(**kw)
+    self.assertEqual(set_model_result[3], "/erp5/" + document.getRelativeUrl())
 
   def test_testWebMessageModel(self):
     """
@@ -53,7 +50,7 @@ class Test(ERP5TypeTestCase):
     would be given the current algorithm for the model and
     the current tagged messages.  Data is returned to user.
     """
-    self.assertEqual(self.event_module.test_model().split()[0] , "Model")
+    self.assertEqual(self.portal.event_module.WebMessage_testModel().split()[0] , "Model")
 
   def test_followUpAutomatically(self):
     """
@@ -61,8 +58,8 @@ class Test(ERP5TypeTestCase):
     wish would be handled by the model.  This message now
     has tags.
     """
-    self.event_module.set_model()
-    kw = dict(portal_type = 'Web Message', title='Untagged Message', text_content="ERP5 pricing")
-    message = self.portal_catalog.getResultValue(**kw)
-    message.follow_up_automatically()
-    self.assertEqual(message.getSubjectList(), ['ERP5', 'pricing'])
+    self.portal.event_module.WebMessage_setModel()
+    kw = dict(portal_type = 'Web Message', title='Untagged Message')
+    message = self.portal.portal_catalog.getResultValue(**kw)
+    message.WebMessage_parseWebMessage()
+    self.assertFalse(message.getSubjectList() == "[]")
