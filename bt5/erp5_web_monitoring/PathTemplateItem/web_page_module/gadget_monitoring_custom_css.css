@@ -83,6 +83,9 @@ html.ui-mobile .ui-grid-container.ui-responsive > ul > li, html.ui-mobile .ui-gr
 .ui-text{
   padding: 0 10px;
 }
+.ui-text-pre {
+  white-space: pre-wrap;
+}
 .ui-text-left {text-align: left;}
 .ui-text-right {text-align: right;}
 .ui-text-center {

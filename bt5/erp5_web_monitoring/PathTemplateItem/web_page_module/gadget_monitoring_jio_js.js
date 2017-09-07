@@ -16,6 +16,8 @@
       } else {
         this.props.jio_storage = jIO.createJIO({
           type: "replicatedopml",
+          remote_storage_unreachable_status: "WARNING",
+          remote_opml_check_time_interval: 86400000,
           local_sub_storage: {
             type: "query",
             sub_storage: {
