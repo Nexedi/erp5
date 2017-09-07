@@ -234,7 +234,6 @@ body {
   color: @colorforeground;
 
   word-wrap: break-word;
-  word-break: break-word;
 }
 
 body, button, input, textarea, select {
@@ -1552,6 +1551,7 @@ div[data-gadget-scope='erp5_searchfield'] {
                 font-size: 0.8em;
                 // Cells must be next to the other and correctly aligned
                 display: inline;
+                word-break: break-word;
 
                 a {
                   pointer-events: none;
