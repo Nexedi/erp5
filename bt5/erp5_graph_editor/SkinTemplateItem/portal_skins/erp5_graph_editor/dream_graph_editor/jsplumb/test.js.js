@@ -164,7 +164,7 @@
             var jsplumb_gadget;
             stop();
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 return jsplumb_gadget.render(sample_data_graph);
@@ -201,7 +201,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_empty_graph);
@@ -229,7 +229,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_graph);
@@ -280,7 +280,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_graph);
@@ -312,7 +312,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_graph_not_connected);
@@ -359,7 +359,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_graph);
@@ -407,7 +407,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_graph);
@@ -480,7 +480,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_empty_graph);
@@ -546,7 +546,7 @@
                 });
             }
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 jsplumb_gadget.render(sample_data_empty_graph);
@@ -556,7 +556,7 @@
             var jsplumb_gadget;
             stop();
             g.declareGadget("./index.html", {
-                element: document.querySelector("#qunit-fixture")
+                element: document.querySelector("#test-element")
             }).then(function(new_gadget) {
                 jsplumb_gadget = new_gadget;
                 return jsplumb_gadget.render(sample_data_graph_no_node_coordinate);
