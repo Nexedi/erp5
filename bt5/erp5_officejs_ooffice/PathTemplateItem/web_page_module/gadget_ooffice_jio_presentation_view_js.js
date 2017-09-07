@@ -24,7 +24,8 @@
         jio_key: options.jio_key,
         doc: options.doc,
         editable: options.editable ? 1 : 0,
-        content_editable: options.doc.content_type.indexOf("application/x-asc") === 0
+        content_editable: options.doc.content_type === undefined ||
+            options.doc.content_type.indexOf("application/x-asc") === 0
       });
     })
 
