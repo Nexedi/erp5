@@ -164,7 +164,6 @@ body {
   display: block;
   color: #1F1F1F;
   word-wrap: break-word;
-  word-break: break-word;
 }
 body,
 button,
@@ -1337,6 +1336,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
   .document_table table tbody tr th:first-child ~ td {
     font-size: 0.8em;
     display: inline;
+    word-break: break-word;
   }
   .document_table table tbody tr td:first-child ~ th a,
   .document_table table tbody tr th:first-child ~ th a,
