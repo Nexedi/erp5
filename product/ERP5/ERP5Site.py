@@ -237,11 +237,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   last_id = 0
   icon = 'portal.gif'
   # Default value, prevents error during upgrade
-  isIndexable = ConstantGetter('isIndexable', value=True)
   # There can remain a lot a activities to be processed once all BT5 are
   # installed, and scalability tests want a reliable way to know when the site
   # is ready to be tortured.
   isPortalBeingCreated = ConstantGetter('isPortalBeingCreated', value=False)
+  isIndexingRequired = ConstantGetter('isIndexingRequired', value=True)
 
   _properties = (
       { 'id':'title',
@@ -1885,7 +1885,7 @@ class ERP5Generator(PortalGenerator):
     portal = self.klass(id=id)
     # Make sure reindex will not be called until business templates
     # will be installed
-    setattr(portal, 'isIndexable', ConstantGetter('isIndexable', value=False))
+    setattr(portal, 'isIndexingRequired', ConstantGetter('isIndexingRequired', value=False))
 
     # This is only used to refine log level.
     # Has no functional use, and should never have any:
