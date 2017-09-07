@@ -262,7 +262,10 @@
             message = JSON.parse(responseText).portal_status_message;
           } catch (ignore) {
           }
-          list.push(form_gadget.notifySubmitted(message));
+          list.push(form_gadget.notifySubmitted({
+            "message": message,
+            "status": "success"
+          }));
 
           if (redirect_to_parent) {
             list.push(form_gadget.redirect({command: 'history_previous'}));
@@ -312,7 +315,10 @@
                 return form_gadget.translate(error_text);
               })
               .push(function (message) {
-                return form_gadget.notifyChange(message + '.');
+                return form_gadget.notifyChange({
+                  "message": message + '.',
+                  "status": "error"
+                });
               });
             // if server validation of form data failed (indicated by response code 400)
             // we parse out field errors and display them to the user

@@ -66,6 +66,12 @@
   <td></td>
 </tr>
 
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='notification']//button[@class='success']</td>
+  <td></td>
+</tr>
+
 </tbody></table>
 </body>
 </html>

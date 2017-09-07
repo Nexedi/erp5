@@ -40,7 +40,7 @@ else:
   person = portal.portal_membership.getAuthenticatedMember().getUserValue()
   url_parameter = "n.me"
   pattern = '{[&|?]%s}' % url_parameter
-  if (person is None):
+  if (person is None or not portal.portal_membership.checkPermission('View', person)):
     came_from = re.sub(pattern, '', came_from)
   else:
     prefix = "&" if "&%s" % url_parameter in came_from else "?"

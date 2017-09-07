@@ -164,7 +164,6 @@ body {
   display: block;
   color: #1F1F1F;
   word-wrap: break-word;
-  word-break: break-word;
 }
 body,
 button,
@@ -1337,6 +1336,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
   .document_table table tbody tr th:first-child ~ td {
     font-size: 0.8em;
     display: inline;
+    word-break: break-word;
   }
   .document_table table tbody tr td:first-child ~ th a,
   .document_table table tbody tr th:first-child ~ th a,
@@ -1414,9 +1414,14 @@ div[data-gadget-scope='notification'] button {
   text-align: left;
   width: 180pt;
   padding: 12pt;
-  background-color: #FF6600;
   color: #f8fff3;
   border-radius: 0.325em;
+}
+div[data-gadget-scope='notification'] button.success {
+  background-color: #37A419;
+}
+div[data-gadget-scope='notification'] button.error {
+  background-color: #FF6600;
 }
 /**********************************************
 * JQM

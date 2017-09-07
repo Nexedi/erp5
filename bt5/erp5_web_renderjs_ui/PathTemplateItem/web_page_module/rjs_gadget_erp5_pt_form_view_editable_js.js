@@ -137,27 +137,27 @@
         })
         .push(function (validity) {
           if (validity) {
-            return erp5_form.getContent()
-              // try to send the form data over the network to jIO storage
+            return form_gadget.notifySubmitting()
+              .push(function () {
+                // try to send the form data over the network to jIO storage
+                return erp5_form.getContent();
+              })
               .push(function (data) {
 
                 data[form_id.key] = form_id['default'];
 
-                return RSVP.all([
-                  form_gadget.notifySubmitting(),
-                  form_gadget.jio_putAttachment(
-                    form_gadget.state.jio_key,
-                    action.href,
-                    data
-                  )
-                ]);
+                return form_gadget.jio_putAttachment(
+                  form_gadget.state.jio_key,
+                  action.href,
+                  data
+                );
               })
               // handle response from the server
-              .push(function (result_list) {
-                if (result_list[1].target.responseType === "blob") {
-                  return jIO.util.readBlobAsText(result_list[1].target.response);
+              .push(function (result) {
+                if (result.target.responseType === "blob") {
+                  return jIO.util.readBlobAsText(result.target.response);
                 }
-                return {target: {result: result_list[1].target.response}};
+                return {target: {result: result.target.response}};
               })
               .push(function (event) {
                 var message;
@@ -165,7 +165,10 @@
                   message = JSON.parse(event.target.result).portal_status_message;
                 } catch (ignore) {
                 }
-                return form_gadget.notifySubmitted(message);
+                return form_gadget.notifySubmitted({
+                  "message": message,
+                  "status": "success"
+                });
               })
               .push(function () {
                 return form_gadget.redirect({command: 'reload'});
@@ -189,7 +192,10 @@
                       return form_gadget.translate(error_text);
                     })
                     .push(function (message) {
-                      return form_gadget.notifyChange(message + '.');
+                      return form_gadget.notifyChange({
+                        'message': message + '.',
+                        'status': 'error'
+                      });
                     });
 
                   // if server validation of form data failed (indicated by response code 400)

@@ -24,7 +24,7 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_text?ignore_layout:int=1&editable_mode:int=1</td>
+  <td>${base_url}/web_site_module/ooffice_spreadsheet?ignore_layout:int=1&editable_mode:int=1</td>
   <td></td>
 </tr>
 <tr>
@@ -157,7 +157,7 @@
 <!-- Stop Generic -->
 <tr>
   <td>waitForElementPresent</td>
-  <td>identifier=id_main</td>
+  <td>identifier=ws-canvas</td>
   <td></td>
 </tr>
 <tr>

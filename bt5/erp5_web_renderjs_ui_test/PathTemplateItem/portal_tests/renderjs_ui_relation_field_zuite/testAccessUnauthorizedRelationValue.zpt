@@ -1,0 +1,106 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test RenderJS UI</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test RenderJS UI</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />
+
+<!-- Clean Up -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/foo_module/ListBoxZuite_reset</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Reset Successfully.</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>open</td>
+  <td>${base_url}/Foo_createHasUnauthorizedFoo</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Done</td>
+  <td></td>
+</tr>
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/wait_for_activities" />
+
+
+<!-- Initialize -->
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/renderjs_runner/#/foo_module</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[contains(text(), 'hasAccessUnauthorized')]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>click</td>
+  <td>//a[contains(text(), 'hasAccessUnauthorized')]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n="Editable"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n="Editable"]</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n="Save"]</td>
+  <td></td>
+</tr>
+
+
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/go_to_foo_relation_field_view" />
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n="Save"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//label[@for="field_my_successor_title"]</td>
+  <td></td>
+</tr>
+
+
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@data-gadget-scope="field_my_successor_title"]//input</td>
+  <td></td>
+</tr>
+
+
+
+
+</tbody></table>
+</body>
+</html>
