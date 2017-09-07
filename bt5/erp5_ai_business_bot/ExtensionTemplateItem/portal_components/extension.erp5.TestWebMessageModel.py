@@ -27,8 +27,11 @@ def WebMessage_testModel(self):
     portal_type="Web Message",
     query=NegatedQuery(Query(subject=None)),
   )
+<<<<<<< HEAD
   if not training_messages:
     return "No Web Messages found to train on"
+=======
+>>>>>>> 2e83d650106eb861a0c38350ab16aa6d13caea36
   for index, message in enumerate(training_messages):
     if random.random() <= 0.2:
       test_messages.append(message)
@@ -116,11 +119,18 @@ def WebMessage_testModel(self):
       if not suggested_tags_set.intersection(sr) and not suggested_tags_set.intersection(so):
         type_accuracy += 1
 
+<<<<<<< HEAD
   if not len(test_messages) == 0:
     correct_tags = float(correct_tags) / float(len(test_messages))
     excess_tags = float(excess_tags) / float(len(test_messages))
     language_accuracy = float(language_accuracy) / float(len(test_messages))
     type_accuracy = float(type_accuracy) / float(len(test_messages))
+=======
+  correct_tags = float(correct_tags) / float(len(test_messages))
+  excess_tags = float(excess_tags) / float(len(test_messages))
+  language_accuracy = float(language_accuracy) / float(len(test_messages))
+  type_accuracy = float(type_accuracy) / float(len(test_messages))
+>>>>>>> 2e83d650106eb861a0c38350ab16aa6d13caea36
   end_time = time.time()
   uptime = end_time - start_time
   human_uptime = str(datetime.timedelta(seconds=int(uptime)))

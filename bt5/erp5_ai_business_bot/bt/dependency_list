@@ -1,5 +1,9 @@
 erp5_base
 erp5_web
 erp5_dms
+<<<<<<< HEAD
 erp5_crm
 erp5_ingestion_mysql_innodb_catalog
+=======
+erp5_crm
+>>>>>>> 2e83d650106eb861a0c38350ab16aa6d13caea36

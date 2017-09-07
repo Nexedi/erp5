@@ -40,8 +40,11 @@ def WebMessage_parseWebMessage(self):
             reference='ai_business_bot',
             title="AI Business Bot")
   erp5_file = portal.portal_catalog.getResultValue(**kw)
+<<<<<<< HEAD
   if not erp5_file:
     return "No model found to be applied to this Web Message.  Run Set Web Message Model in Event Module first."
+=======
+>>>>>>> 2e83d650106eb861a0c38350ab16aa6d13caea36
   model_as_string = erp5_file.getData()
   model = pickle.loads(model_as_string)
   language_arrays = model[0]
