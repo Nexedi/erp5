@@ -1026,7 +1026,21 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if listbox_form.has_field("%s_%s" % (listbox_field_id, tmp), include_disabled=1):
             editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, tmp), include_disabled=1)
   
-    for sql_document in sql_list:
+    # handle the case when list-scripts are ignoring `limit` - paginate for them
+    if limit is not None and isinstance(limit, (tuple, list)):
+      start, num_items = map(int, limit)
+      if len(sql_list) <= num_items:
+        # the limit was most likely taken into account thus we don't need to slice
+        start, num_items = 0, len(sql_list)
+    else:
+      start, num_items = 0, len(sql_list)
+
+    for document_index, sql_document in enumerate(sql_list):
+      if document_index < start:
+        continue
+      if document_index >= start + num_items:
+        break
+
       try:
         document = sql_document.getObject()
       except AttributeError:
