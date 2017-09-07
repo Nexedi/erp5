@@ -44,6 +44,7 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg', )
 HTTP_OK = 200
+MOVED_PERMANENTLY = 301
 MOVED_TEMPORARILY = 302
 
 
@@ -250,12 +251,12 @@ class TestERP5Web(ERP5TypeTestCase):
     # Web Site as context
     website = self.setupWebSite()
     response = self.publish(website.absolute_url_path()[:-1])
-    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
     response = self.publish(
       "%s?ignore_layout:int=1" % website.absolute_url_path()[:-1])
     self.assertEqual("%s?ignore_layout:int=1" % website.absolute_url(),
       response.headers.get("location"))
-    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
     response = self.publish(
       "%s/getTitle?ignore_layout:int=1" % website.absolute_url_path())
     self.assertEqual(HTTP_OK, response.status)
@@ -273,7 +274,7 @@ class TestERP5Web(ERP5TypeTestCase):
       "%s?ignore_layout:int=1" % websection.absolute_url_path()[:-1])
     self.assertEqual("%s?ignore_layout:int=1" % websection.absolute_url(),
       response.headers.get("location"))
-    self.assertEqual(MOVED_TEMPORARILY, response.status)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
     response = self.publish(
       "%s/getTitle?ignore_layout:int=1" % websection.absolute_url_path())
     self.assertEqual(HTTP_OK, response.status)
@@ -282,6 +283,51 @@ class TestERP5Web(ERP5TypeTestCase):
       "%s/getTitle" % websection.absolute_url_path())
     self.assertEqual(HTTP_OK, response.status)
     self.assertEqual("1", response.body)
+
+  def test_Document_remove_trailing_slash_from_url(self):
+    '''
+      When we publish a document using its reference and a trailing slash
+      we raise 301 redirect to the url excluding the slash
+
+      This is different than Web Section.
+      But in Web Page we need no-slash since we would render all other sources
+      in the container Web Section, so keeping the caches
+    '''
+    web_site = self.setupWebSite()
+    web_section = self.setupWebSection()
+
+    web_page_reference = 'foo_web_page'
+    web_page = self.web_page_module.newContent(
+      portal_type='Web Page',
+      reference=web_page_reference,
+      text_content='<b>OK</b>'
+    )
+    web_page.publish()
+    self.tic()
+
+    # Web Site as context
+    url_without_slash = web_site.absolute_url_path() + web_page_reference
+    url_with_slash = url_without_slash + '/'
+    response = self.publish(url_without_slash)
+    self.assertEqual(HTTP_OK, response.status)
+    response = self.publish(url_with_slash)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    self.assertEqual(
+      web_site.absolute_url() + web_page_reference,
+      response.headers.get("location")
+    )
+
+    # Web Section as context
+    url_without_slash = web_section.absolute_url_path() + web_page_reference
+    url_with_slash = url_without_slash + '/'
+    response = self.publish(url_without_slash)
+    self.assertEqual(HTTP_OK, response.status)
+    response = self.publish(url_with_slash)
+    self.assertEqual(MOVED_PERMANENTLY, response.status)
+    self.assertEqual(
+      web_section.absolute_url() + web_page_reference,
+      response.headers.get("location")
+    )
 
   def test_01_WebSiteRecatalog(self):
     """
