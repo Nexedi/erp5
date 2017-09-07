@@ -47,6 +47,10 @@
                         "right"
                       ],
                       "type": "string"
+                    },
+                    "zoom_range": {
+                      "description": "Initially zoom in on a section of the graph axis. Value is of the form [earliest, latest]",
+                      "type": "array"
                     }
                   },
                   "type": "object",
@@ -106,7 +110,7 @@
         }
       },
       "additionalProperties": false
-    },
+    }
   },
   "type": "object"
 }

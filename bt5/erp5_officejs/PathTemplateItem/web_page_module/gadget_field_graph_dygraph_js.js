@@ -12,7 +12,7 @@
     var graph_data_and_parameter = {},
         layout,
         data,
-        x_label, y_label,
+        x_label, y_label, x_zoom, y_zoom,
         label_list = [],
         trace_value_dict,
         dygraph_data = [],
@@ -35,12 +35,20 @@
     data = configuration_dict.data || [];
     axis_dict = layout.axis_dict || {};
     x_label = (axis_dict[0] || {}).title;
+    x_zoom = (axis_dict[0] || {}).zoom_range;
     y_label = (axis_dict[1] || {}).title;
+    y_zoom = (axis_dict[1] || {}).zoom_range;
     if (x_label !== undefined) {
       graph_data_and_parameter.xlabel = x_label;
     }
+    if (x_zoom !== undefined) {
+      graph_data_and_parameter.dateWindow = x_zoom;
+    }
     if (y_label !== undefined) {
       graph_data_and_parameter.ylabel = y_label;
+    }
+    if (y_zoom !== undefined) {
+      graph_data_and_parameter.valueRange = y_zoom;
     }
     label_list.push(x_label);
 
@@ -71,6 +79,8 @@
       if (type === "scatter") {
         serie.drawPoints = true;
         serie.strokeWidth = 0;
+      } else if (type === "surface") {
+        serie.fillGraph = true;
       }
       console.log("serie", serie);
       graph_data_and_parameter.series[trace.title || ''] = serie;
