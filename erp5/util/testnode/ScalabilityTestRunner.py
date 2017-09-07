@@ -45,6 +45,7 @@ from Updater import Updater
 from erp5.util import taskdistribution
 # for dummy slapos answer
 import signal
+import slapos.slap
 
 # max time to instance changing state: 2 hour
 MAX_INSTANCE_TIME = 60*60*2
@@ -52,6 +53,8 @@ MAX_INSTANCE_TIME = 60*60*2
 MAX_CREATION_INSTANCE_TIME = 60*10
 # max time for a test: 1 hour
 MAX_TEST_CASE_TIME = 60*60
+# max time to prepare SlapOS for testsuite (software installation, instances requests, etc.)
+MAX_PREPARE_TEST_SUITE = 3600*10*1.0 # 10 hours 
 
 class ScalabilityTestRunner():
   def __init__(self, testnode):
@@ -103,8 +106,7 @@ class ScalabilityTestRunner():
     self.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
       self.remaining_software_installation_dict[computer_guid] = software_path
-      self.slapos_controler.supply(software_path, computer_guid)
-      # Here make a request via slapos controler ?
+      self.slapos_communicator._supply()
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
@@ -114,12 +116,14 @@ class ScalabilityTestRunner():
     """
     Generate an instance title using various parameter
     TODO : add some verification (to don't use unexisting variables)
+    ROQUE XXX TODO: for now, the name is always the same. The instance is not being destroyed yet. 
     """
     instance_title = "Scalability-"
     instance_title += "("+test_suite_title+")-"
     instance_title += str(self.involved_nodes_computer_guid).replace("'","")
-    instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
-    instance_title += "timestamp="+str(time.time())
+    instance_title += "-2" # XXX hack to force instance creation. Will be removed.
+    #instance_title += "-"+str(datetime.datetime.now().isoformat())+"-"
+    #instance_title += "timestamp="+str(time.time())
     return instance_title
 
   def _generateInstanceXML(self, software_configuration,
@@ -127,8 +131,7 @@ class ScalabilityTestRunner():
     """
     Generate a complete scalability instance XML configuration
     """
-    config_cluster = software_configuration.copy()
-    config = {'cluster':config_cluster}
+    config = software_configuration.copy()
     config.update({'scalability-launcher-computer-guid':self.launcher_nodes_computer_guid[0]})
     config.update({'scalability-launcher-title':'MyTestNodeTitle'})
     config.update({'test-result-path':test_result.test_result_path})
@@ -143,13 +146,11 @@ class ScalabilityTestRunner():
     Create scalability instance
     """
     if self.authorize_request:
-      config = self._generateInstanceXML(software_configuration,
-                                    test_result, test_suite)
       self.log("testnode, request : %s", instance_title)
-      config = json.dumps(config)
-      self.slapos_controler.request(instance_title, software_path,
-                             "test", {"_" : config},
-                             self.launcher_nodes_computer_guid[0])
+      config = self._generateInstanceXML(software_configuration,
+                                         test_result, test_suite)
+      request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -190,9 +191,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     Return true if the specified software on the specified node is installed.
     This method should communicates with SlapOS Master.
     """
-    # TODO : implement -> communication with SlapOS master
-    # this simulate a SlapOS answer
-    return self.simulateSlapOSAnswer()
+    self.log("Current software state: " + str(self.slapos_communicator._getSoftwareState()))
+    return self.slapos_communicator._getSoftwareState() == SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
   
   def remainSoftwareToInstall(self):
     """
@@ -206,36 +206,30 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     return len(self.remaining_software_installation_dict) > 0
 
   def _updateInstanceXML(self, software_configuration, instance_title,
-                      test_result, test_suite):
-    """
-    Just a proxy to SlapOSControler.updateInstanceXML.
-    """
-    config = self._generateInstanceXML(software_configuration,
-                                  test_result, test_suite)
-    config = json.dumps(config)
+                         test_result, test_suite):
     self.log("testnode, updateInstanceXML : %s", instance_title)
-    self.slapos_controler.updateInstanceXML(instance_title, {"_" : config})
+    config = self._generateInstanceXML(software_configuration,
+                                       test_result, test_suite)
+    request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
+    self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
     return {'status_code' : 0} 
 
   def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
     """
     Wait for 'max_time' an instance specific state
     """
-    self.log("Wait for instance state: %s" %state)
+    self.log("Waiting for instance state: %s" %state)
     start_time = time.time()
-    while (not self.slapos_communicator.isHostingSubscriptionReady(instance_title, state)
-         and (max_time > (time.time()-start_time))):
+    while (not self.slapos_communicator._getInstanceState() == state
+           and (max_time > (time.time()-start_time))):
       self.log("Instance(s) not in %s state yet." % state)
       time.sleep(15)
     if (time.time()-start_time) > max_time:
       error_message = "Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
       self.log(error_message)
       self.log("Do you use instance state propagation in your project?")
-      self.log("Instance '%s' will be stopped and test avorted." %instance_title)
-      # What if we wanted to stop ?
-      self.slapos_controler.stopInstance(instance_title)
-      # XXX: _waitInstance call here ? recursive call ?
-      # XXX: sleep 60 seconds.
+      self.log("Instance '%s' will be stopped and test aborted." %instance_title)
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
       time.sleep(60) 
       raise ValueError(error_message)
     self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
@@ -244,10 +238,11 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Wait for 'max_time' the instance creation
     """
-    self.log("Wait for instance creation")
+    self.log("Waiting for instance creation...")
     start_time = time.time()
-    while ( not self.slapos_communicator.isRegisteredHostingSubscription(instance_title) \
-         and (max_time > (time.time()-start_time)) ):
+    while (not self.slapos_communicator.isInstanceRequested(instance_title) \
+           and (max_time > (time.time()-start_time)) ):
+      self.log("Instance not ready yet. Sleeping 5 sec.")
       time.sleep(5)
     if (time.time()-start_time) > max_time:
       raise ValueError("Instance '%s' not found after %s seconds" %(instance_title, max_time))
@@ -257,37 +252,52 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     Install testsuite softwares
     """
-    self.log('prepareSlapOSForTestSuite')
-    # Define how many time this method can take
-    max_time = 3600*10*1.0 # 10 hours
+    self.log('Preparing SlapOS for Test Suite...')
+    max_time = MAX_PREPARE_TEST_SUITE 
     interval_time = 60
     start_time = time.time()
-    # Create a communicator with slapos
-    self.log("creating SlapOs Master communicator...")
-    self.slapos_communicator = SlapOSMasterCommunicator.SlapOSMasterCommunicator(
-                                  self.cert_path,
-                                  self.key_path,
-                                  self.log,
-                                  self.slapos_api_rest_url)
+
+    # Initialize communication with slapos 
+    slap = slapos.slap.slap()
+    retry = 0
+    while True:
+      # wait until _hateoas_navigator is loaded.
+      if retry > 100:
+         break
+      slap.initializeConnection(self.slapos_url, 
+                                self.key_path, 
+                                self.cert_path, 
+                                timeout=120, 
+                                slapgrid_rest_uri=self.slapos_api_rest_url)
+      if getattr(slap, '_hateoas_navigator', None) is None:
+         retry += 1
+         self.log("Fail to load _hateoas_navigator waiting a bit and retry.")
+         time.sleep(30)
+      else:
+         break
+
+    if getattr(slap, '_hateoas_navigator', None) is None:
+      raise ValueError("Fail to load _hateoas_navigator")
+
+    hateoas = getattr(slap, '_hateoas_navigator', None)
+    supply = slap.registerSupply()
+    order = slap.registerOpenOrder()
+
     # Only master testnode must order software installation
     if self.testnode.test_suite_portal.isMasterTestnode(
             self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
       test_configuration = Utils.deunicodeData(
           json.loads(self.testnode.test_suite_portal.generateConfiguration(
-                      node_test_suite.test_suite_title)
-                    )
-        )
+                     node_test_suite.test_suite_title)))
       self.involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       self.launchable = test_configuration['launchable']
       self.error_message = test_configuration['error_message']
       self.randomized_path = test_configuration['randomized_path']
-      # Avoid the test if it is not launchable
       if not self.launchable:
         self.log("Test suite %s is not actually launchable with \
   the current cluster configuration." %(node_test_suite.test_suite_title,))
         self.log("ERP5 Master indicates : %s" %(self.error_message,))
-        # error : wich code to return ?
         return {'status_code' : 1}
 
       involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
@@ -318,6 +328,9 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
         self.randomized_path)
       self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
+      # ROQUE XXX: below urls are hardcoded until we find ways to make buildout extending through unsafe https 
+      self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
+      self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
 
       # Write the reachable address in the software.cfg file,
       # by replacing <obfuscated_url> occurences by the current reachable address.
@@ -337,17 +350,25 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
 
       # Ask for SR installation
       for computer_guid in self.involved_nodes_computer_guid:
+        self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester(
+					"SlaposMasterCommunicator", 
+					self.log, 
+					slap, 
+					order, 
+					supply, 
+					self.reachable_profile, 
+					computer_guid=computer_guid)
         self._prepareSlapOS(self.reachable_profile, computer_guid) 
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
       # TODO : remove the line below wich simulate an answer from slapos master
       self._prepareDummySlapOSAnswer()
       # Waiting until all softwares are installed
-      while ( self.remainSoftwareToInstall() 
-         and (max_time > (time.time()-start_time))):
+      while (self.remainSoftwareToInstall() 
+             and (max_time > (time.time()-start_time))):
         self.log("Master testnode is waiting\
  for the end of all software installation (for %ss) PID=%s.",
-          str(int(time.time()-start_time)), str(os.getpid()))
+                 str(int(time.time()-start_time)), str(os.getpid()))
         time.sleep(interval_time)
       # TODO : remove the line below wich simulate an answer from slapos master
       self._comeBackFromDummySlapOS()
@@ -355,20 +376,24 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         # All softwares are not installed, however maxtime is elapsed, that's a failure.
         return {'status_code' : 1}
       self.authorize_request = True
-      self.log("Softwares installed")
+      self.log("Softwares installed.")
       # Launch instance
       self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       try:
-        self._createInstance(self.reachable_profile, configuration_list[0],
-                              self.instance_title, node_test_suite.test_result, node_test_suite.test_suite)
+        self._createInstance(self.reachable_profile, 
+			     configuration_list[0],
+                             self.instance_title, 
+		       	     node_test_suite.test_result, 
+			     node_test_suite.test_suite)
         self.log("Scalability instance requested.")
       except:
         self.log("Unable to launch instance")
         raise ValueError("Unable to launch instance")
-      self.log("Waiting for instance creation..")
       self._waitInstanceCreation(self.instance_title)
+
       return {'status_code' : 0}
     return {'status_code' : 1}
+
 
   def runTestSuite(self, node_test_suite, portal_url):
     if not self.launchable:
@@ -376,47 +401,51 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       return {'status_code' : 1} # Unable to continue due to not realizable configuration
     configuration_list = node_test_suite.configuration_list
     test_list = range(0, len(configuration_list))
-    # create test_result
     test_result_proxy = self.testnode.portal.createTestResult(
       node_test_suite.revision, test_list,
       self.testnode.config['test_node_title'],
       True, node_test_suite.test_suite_title,
       node_test_suite.project_title)
-  
+    self.log("Test Result created.")
     count = 0
     error_message = None
 
+    self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+
     # Each cluster configuration are tested
     for configuration in configuration_list:
-
       # First configuration doesn't need XML configuration update.
       if count > 0:
-        # Stop instance
-        self.slapos_controler.stopInstance(self.instance_title)
-        self._waitInstance(self.instance_title, 'stopped')
-        # Update instance XML configuration 
+        self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+        self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
         self._updateInstanceXML(configuration, self.instance_title,
-                      node_test_suite.test_result, node_test_suite.test_suite)
-        self._waitInstance(self.instance_title, 'started')
-        # Start instance
-        self.slapos_controler.startInstance(self.instance_title)
-        
-      # XXX: Dirty hack used to force haproxy to restart in time
-      # with all zope informations.
-      self._waitInstance(self.instance_title, 'started')
-      self.slapos_controler.stopInstance(self.instance_title)
-      self._waitInstance(self.instance_title, 'stopped')
-      self.slapos_controler.startInstance(self.instance_title)
+                                node_test_suite.test_result, node_test_suite.test_suite)
+        self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+        self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+
+      '''
+      # ROQUE: for now, this old hack is not needed 
+      # XXX: Dirty hack used to force haproxy to restart in time with all zope informations. 
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
       ##########################################################
-        
-      self._waitInstance(self.instance_title, 'started')
+      '''        
+
+      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
       
+      # ROQUE XXX : for debug
+      if True:
+        self.log("RETURN FOR DEBUG")
+        return {'status_code' : 0}
+
       # Start only the current test
       exclude_list=[x for x in test_list if x!=test_list[count]]
       count += 1
       test_result_line_proxy = test_result_proxy.start(exclude_list)
 
-      # 
       if test_result_line_proxy == None :
         error_message = "Test case already tested."
         break
@@ -446,8 +475,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         break
 
     # Stop current instance
-    self.slapos_controler.stopInstance(self.instance_title)
-    self._waitInstance(self.instance_title, 'stopped')
+    self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+    self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
 
     # Delete old instances
     self._cleanUpOldInstance()

@@ -375,7 +375,7 @@ shared = true
             if my_test_type == 'UnitTest':
               runner = UnitTestRunner(node_test_suite)
             elif my_test_type == 'ScalabilityTest':
-              runner = ScalabilityTestRunner(node_test_suite)
+	      runner = ScalabilityTestRunner(self)
             else:
               log("testnode, Runner type %s not implemented.", my_test_type)
               raise NotImplementedError
@@ -404,9 +404,11 @@ shared = true
               node_test_suite.edit(test_result=test_result)
               # get cluster configuration for this test suite, this is needed to
               # know slapos parameters to user for creating instances
-              node_test_suite.edit(cluster_configuration=Utils.deunicodeData(
-                json.loads(self.test_suite_portal.generateConfiguration(
-                   node_test_suite.test_suite_title))['configuration_list'][0]))
+	      log("Getting configuration from test suite " + str(node_test_suite.test_suite_title))        
+              generated_config = self.test_suite_portal.generateConfiguration(node_test_suite.test_suite_title)
+              jsonData = json.loads(generated_config)
+              cluster_configuration = Utils.deunicodeData(jsonData['configuration_list'][0])
+              node_test_suite.edit(cluster_configuration=cluster_configuration)
               # Now prepare the installation of SlapOS and create instance
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
               # Give some time so computer partitions may start
