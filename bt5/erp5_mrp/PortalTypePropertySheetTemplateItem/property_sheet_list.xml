@@ -2,6 +2,9 @@
  <portal_type id="Manufacturing Execution">
   <item>DeliveryCausalityStateConstraint</item>
  </portal_type>
+ <portal_type id="Manufacturing Order Line">
+  <item>ProductionOrderLine</item>
+ </portal_type>
  <portal_type id="Production Order Line">
   <item>ProductionOrderLine</item>
  </portal_type>

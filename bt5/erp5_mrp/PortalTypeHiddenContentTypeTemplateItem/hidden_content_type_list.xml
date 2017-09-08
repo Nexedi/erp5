@@ -2,6 +2,10 @@
  <portal_type id="Manufacturing Execution Line">
   <item>Manufacturing Execution Cell</item>
  </portal_type>
+ <portal_type id="Manufacturing Order Line">
+  <item>Delivery Cell</item>
+  <item>Production Order Cell</item>
+ </portal_type>
  <portal_type id="Production Order Line">
   <item>Delivery Cell</item>
   <item>Production Order Cell</item>

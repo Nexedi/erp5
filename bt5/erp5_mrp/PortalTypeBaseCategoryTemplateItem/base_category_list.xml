@@ -2,6 +2,12 @@
  <portal_type id="Manufacturing Execution Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Manufacturing Order Line">
+  <item>specialise</item>
+ </portal_type>
+ <portal_type id="Manufacturing Order Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Production Order Line">
   <item>specialise</item>
  </portal_type>
