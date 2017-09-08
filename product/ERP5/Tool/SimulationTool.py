@@ -278,7 +278,7 @@ class SimulationTool(BaseTool):
       if strict_simulation_state:
         if isinstance(simulation_state, string_or_list)\
                 and simulation_state:
-           simulation_query = Query(
+           simulation_query = SimpleQuery(
                    **{'stock.simulation_state': simulation_state})
       else:
         # first, we evaluate simulation_state
