@@ -82,7 +82,7 @@
       return gadget.changeState({
         render: true
       })
-        .push(function () {
+        .push(function (options) {
           return gadget.changeState({
             field_listbox_begin_from: options.field_listbox_begin_from
           });
