@@ -62,7 +62,8 @@
 
   rJS(window)
     .setState({
-      title: ""
+      title: "",
+      editable: true // dialogs are always in editable mode
     })
     /////////////////////////////////////////////////////////////////
     // acquisition
@@ -101,16 +102,15 @@
     })
 
     .declareMethod('render', function (options) {
-      var state_dict = {
+      // copy out wanted items from options and pass it to `changeState`
+      return this.changeState({
         jio_key: options.jio_key,
         view: options.view,
-        editable: options.editable,
+        // ignore options.editable because dialog is always editable
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
         erp5_form: options.erp5_form || {}
-      };
-
-      return this.changeState(state_dict);
+      });
     })
 
     .onStateChange(function () {
@@ -168,7 +168,7 @@
         .push(function (erp5_form) {
           var form_options = form_gadget.state.erp5_form;
 
-          // <span class="ui-icon ui-icon-custom ui-icon-random">&nbsp;</span>
+          // pass own form options to the embedded form
           form_options.erp5_document = form_gadget.state.erp5_document;
           form_options.form_definition = form_gadget.state.form_definition;
           form_options.view = form_gadget.state.view;
