@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Base Type" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_icon</string> </key>
+            <value> <string>document.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>A Manufacturing Order allows for entering manufacturing order information, actors involved in an order, payment conditions, ordered products or services, quantity, price, etc. It also allows to choose supply chain defining the production process and. It follows a standard production order workflow which represents the maturity of an order from prospect to confirmation. Once an order is confirmed, it can not be modified.</string> </value>
+        </item>
+        <item>
+            <key> <string>factory</string> </key>
+            <value> <string>addXMLObject</string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>order</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Manufacturing Order</string> </value>
+        </item>
+        <item>
+            <key> <string>init_script</string> </key>
+            <value> <string>ProductionOrder_init</string> </value>
+        </item>
+        <item>
+            <key> <string>permission</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Base Type</string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Order</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

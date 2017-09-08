@@ -8,6 +8,15 @@
  <portal_type id="Manufacturing Execution Module">
   <item>Manufacturing Execution</item>
  </portal_type>
+ <portal_type id="Manufacturing Order">
+  <item>Manufacturing Order Line</item>
+ </portal_type>
+ <portal_type id="Manufacturing Order Line">
+  <item>Manufacturing Order Cell</item>
+ </portal_type>
+ <portal_type id="Manufacturing Order Module">
+  <item>Manufacturing Order</item>
+ </portal_type>
  <portal_type id="Production Order">
   <item>Payment Condition</item>
   <item>Production Order Line</item>
