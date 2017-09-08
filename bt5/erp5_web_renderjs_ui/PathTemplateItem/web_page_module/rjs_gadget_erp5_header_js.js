@@ -285,7 +285,8 @@
         // find the right right icon
         if (gadget.state.modified) {
           default_right_icon = "warning";
-        } else if (gadget.state.error || !gadget.state.loaded || !gadget.state.submitted) {
+        }
+        if (gadget.state.error || !gadget.state.loaded || !gadget.state.submitted) {
           default_right_icon = "ui-disabled";
         }
         // render the right right thing
