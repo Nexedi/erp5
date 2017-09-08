@@ -7,6 +7,22 @@ Manufacturing Execution Module | view
 Manufacturing Execution | packing_list_print
 Manufacturing Execution | view
 Manufacturing Execution | view_stock
+Manufacturing Order Cell | view
+Manufacturing Order Line | jump_to_transformation
+Manufacturing Order Line | price_view
+Manufacturing Order Line | quantity_view
+Manufacturing Order Line | view
+Manufacturing Order Module | manufacturing_order_module_planning
+Manufacturing Order Module | view
+Manufacturing Order | jump_to_related_internal_packing_list
+Manufacturing Order | jump_to_related_manufacturing_execution
+Manufacturing Order | order_print
+Manufacturing Order | production_order_material_consumption
+Manufacturing Order | production_order_operation_consumption
+Manufacturing Order | production_order_planning
+Manufacturing Order | profile_view
+Manufacturing Order | view
+Manufacturing Order | view_stock
 Production Order Cell | view
 Production Order Line | jump_to_transformation
 Production Order Line | price_view

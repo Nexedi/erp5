@@ -1,4 +1,6 @@
 Manufacturing Execution Line | Manufacturing Execution Cell
+Manufacturing Order Line | Delivery Cell
+Manufacturing Order Line | Production Order Cell
 Production Order Line | Delivery Cell
 Production Order Line | Production Order Cell
 Production Packing List Line | Delivery Cell
