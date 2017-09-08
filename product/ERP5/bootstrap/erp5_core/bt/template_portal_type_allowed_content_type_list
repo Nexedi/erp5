@@ -12,6 +12,8 @@ Cache Factory | Cache Bag
 Cache Factory | Distributed Ram Cache
 Cache Factory | Ram Cache
 Cache Tool | Cache Factory
+Callable Tool | PyData Script
+Callable Tool | Python Script
 Category Tool | Base Category
 Category | Category
 Component Tool | Document Component

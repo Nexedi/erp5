@@ -1,1 +1,0 @@
-select <dtml-if uid_only>uid<dtml-else>*</dtml-if> from catalog where <dtml-sqltest path op=eq type="string">
