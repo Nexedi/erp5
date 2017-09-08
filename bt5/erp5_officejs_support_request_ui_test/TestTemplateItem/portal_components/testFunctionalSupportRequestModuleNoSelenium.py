@@ -32,7 +32,9 @@ from DateTime import DateTime
 
 from xml.dom.minidom import parseString
 
-
+# When use Firefox to open the RSS page. When Firefox open the RSS link.
+# The test does not report error but stopped at that page. And prevent other test to run.
+# So I switched to no selenium mode, this test was inspired from product/ERP5/tests/testRSS.py
 
 def getNodeContent(node):
   return node.childNodes[0].nodeValue
