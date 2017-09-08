@@ -520,8 +520,7 @@ class BusinessManager(Folder):
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
-    path_list = list(set([path_item.getBusinessPath() for path_item
-                 in self.objectValues()]))
+    path_list = self.getPathList()
 
     reduced_path_item_list = []
 
@@ -536,14 +535,14 @@ class BusinessManager(Folder):
     # Create an extra dict for values on path which are repeated in the path list
     seen_path_dict = {path: [] for path in seen_path_list}
 
-    for path_item in self.objectValues():
-      if path_item.getProperty('item_path') in seen_path_list:
+    for item in self.objectValues():
+      if item.getProperty('item_path') in seen_path_list:
         # In case the path is repeated keep the path_item in a separate dict
         # for further arithmetic
-        seen_path_dict[path_item.getProperty('item_path')].append(path_item)
+        seen_path_dict[item.getProperty('item_path')].append(item)
       else:
         # If the path is unique, add them in the list of reduced Business Item
-        reduced_path_item_list.append(path_item)
+        reduced_path_item_list.append(item)
 
     # Reduce the values and get the merged result out of it
     for path, path_item_list in seen_path_dict.items():
@@ -564,6 +563,9 @@ class BusinessManager(Folder):
         path_item_list_subtract = [item for item
                                    in prioritized_path_item
                                    if item.getProperty('item_sign') < 0]
+
+        # XXX: TODO: Look at the correct merge
+        raise ValueErrror('Recheck how this is gonna work')
 
         combined_added_path_item = reduce(lambda x, y: x+y, path_item_list_add)
         combined_subtracted_path_item = reduce(lambda x, y: x+y, path_item_list_subtract)
@@ -590,7 +592,11 @@ class BusinessManager(Folder):
       else:
         reduced_path_item_list.append(prioritized_path_item[0])
 
-    self._path_item_list = reduced_path_item_list
+    for item in reduced_path_item_list:
+      item.isIndexable = ConstantGetter('isIndexable', value=False)
+      new_id = self.generateNewId()
+      self._setObject(new_id, aq_base(item),
+                                        suppress_events=True)
 
   def _simplifyValueIntersection(self, added_value, subtracted_value):
     """
