@@ -29,7 +29,7 @@
 """Unit Tests for Inventory API.
 
 TODO: test variation
-      test selection_domain, selection_report
+      test selection_report
 """
 
 import os
@@ -172,6 +172,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'product_line/anotherlevel',
               'use/use1/use11',
               'use/use1/use12',
+              'site/site1',
+              'site/site2',
               'function/function1',
               'function/function1/function2',
               'ledger/accounting',
@@ -1443,6 +1445,24 @@ class TestInventoryList(InventoryAPITestCase):
     checkInventory(line=3, type='Future', source=1, quantity=-9)
     checkInventory(line=3, type='Future', destination=1, quantity=9)
 
+  def test_node_selection_domain(self):
+    self.node.setSite('site1')
+    self.other_node.setSite('site2')
+
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=2, destination_value=self.node)
+    self._makeMovement(quantity=3, destination_value=self.other_node)
+
+    site1_mvt_history_list = getInventoryList(
+        selection_domain={'site': ('portal_categories', 'site/site1')})
+    self.assertEqual(1, len(site1_mvt_history_list))
+    self.assertEqual(2, site1_mvt_history_list[0].total_quantity)
+
+    site2_mvt_history_list = getInventoryList(
+        selection_domain={'site': ('portal_categories', 'site/site2')})
+    self.assertEqual(1, len(site2_mvt_history_list))
+    self.assertEqual(3, site2_mvt_history_list[0].total_quantity)
+
   def test_inventory_asset_price(self):
     # examples from http://accountinginfo.com/study/inventory/inventory-120.htm
     movement_list = [
@@ -2470,6 +2490,24 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEqual(3, mvt_history_list[1].running_total_quantity)
     self.assertEqual(7, mvt_history_list[1].total_price)
     self.assertEqual(12, mvt_history_list[1].running_total_price)
+
+  def test_node_selection_domain(self):
+    self.node.setSite('site1')
+    self.other_node.setSite('site2')
+
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=2, destination_value=self.node)
+    self._makeMovement(quantity=3, destination_value=self.other_node)
+
+    site1_mvt_history_list = getMovementHistoryList(
+        selection_domain={'site': ('portal_categories', 'site/site1')})
+    self.assertEqual(1, len(site1_mvt_history_list))
+    self.assertEqual(2, site1_mvt_history_list[0].total_quantity)
+
+    site2_mvt_history_list = getMovementHistoryList(
+        selection_domain={'site': ('portal_categories', 'site/site2')})
+    self.assertEqual(1, len(site2_mvt_history_list))
+    self.assertEqual(3, site2_mvt_history_list[0].total_quantity)
 
 
 class TestNextNegativeInventoryDate(InventoryAPITestCase):
