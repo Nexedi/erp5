@@ -75,6 +75,11 @@
       "no_installer": true,
       "sub_gadget": ["connection"]
     },
+    "Monitoring App": {
+      "url": "monitoring_render_js/",
+      "cache" : "gadget_monitoring.appcache",
+      "sub_gadget": []
+    },
     "App Store": {
       "url": "officejsoldv1/",
       "cache": "officejs_store.appcache",
