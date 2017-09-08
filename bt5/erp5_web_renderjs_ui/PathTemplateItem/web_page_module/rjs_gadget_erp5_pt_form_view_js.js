@@ -77,8 +77,9 @@
           form_options.form_definition = gadget.state.form_definition;
           form_options.view = gadget.state.view;
           form_options.jio_key = gadget.state.jio_key;
-          form_options.editable = 0;
-
+          form_options.editable = 0; // because for editable=1 there is a special
+                                     // page template 'pt_form_editable'. Once it is
+                                     // is removed, this 0 should turn into gadget.state.editable
           return erp5_form.render(form_options);
         })
 

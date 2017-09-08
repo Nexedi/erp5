@@ -69,6 +69,11 @@
       }
       data[this.state.name] = this.state.text_content || this.state.inner_html || "";
       return data;
+    })
+
+    /** Readonly fields are always valid */
+    .declareMethod("checkValidity", function () {
+      return true;
     });
 
 }(window, document, rJS));
