@@ -1,4 +1,6 @@
 Manufacturing Execution Module | business_application
+Manufacturing Order Line | specialise
+Manufacturing Order Module | business_application
 Production Order Line | specialise
 Production Order Module | business_application
 Production Packing List Module | business_application

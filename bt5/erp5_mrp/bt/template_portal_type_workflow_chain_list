@@ -9,6 +9,19 @@ Manufacturing Execution | delivery_causality_workflow
 Manufacturing Execution | delivery_simulation_interaction_workflow
 Manufacturing Execution | edit_workflow
 Manufacturing Execution | production_packing_list_workflow
+Manufacturing Order Cell | delivery_movement_causality_interaction_workflow
+Manufacturing Order Cell | delivery_movement_simulation_interaction_workflow
+Manufacturing Order Cell | edit_workflow
+Manufacturing Order Line | delivery_movement_causality_interaction_workflow
+Manufacturing Order Line | delivery_movement_simulation_interaction_workflow
+Manufacturing Order Line | edit_workflow
+Manufacturing Order Line | production_matrix_workflow
+Manufacturing Order Line | production_order_interaction_workflow
+Manufacturing Order | delivery_causality_interaction_workflow
+Manufacturing Order | delivery_causality_workflow
+Manufacturing Order | delivery_simulation_interaction_workflow
+Manufacturing Order | edit_workflow
+Manufacturing Order | production_order_workflow
 Production Order Cell | delivery_movement_causality_interaction_workflow
 Production Order Cell | delivery_movement_simulation_interaction_workflow
 Production Order Cell | edit_workflow

@@ -1,2 +1,2 @@
-Production Order Line | ProductionOrderLine
-Production Packing List | DeliveryCausalityStateConstraint
+Manufacturing Order Line | ProductionOrderLine
+Production Order Line | ProductionOrderLineProduction Packing List | DeliveryCausalityStateConstraint
