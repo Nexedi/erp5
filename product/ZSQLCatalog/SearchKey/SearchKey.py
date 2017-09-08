@@ -95,9 +95,11 @@ class SearchKey(object):
 
   def buildSQLExpression(self, operator, value, column_map, only_group_columns,
                          group):
-    column_name = self.getColumn()
-    rendered_column = column_map.asSQLColumn(column_name, group=group)
-    return operator.asSQLExpression(rendered_column, value, only_group_columns)
+    return operator.asSQLExpression(
+      column_map.asSQLColumn(self.getColumn(), group=group),
+      value,
+      only_group_columns,
+    )
 
   def _renderValueAsSearchText(self, value, operator):
     """
