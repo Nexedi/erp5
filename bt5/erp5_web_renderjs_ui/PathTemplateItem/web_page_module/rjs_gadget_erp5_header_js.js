@@ -67,9 +67,13 @@
       modified: false,
       submitted: true,
       error: false,
-      title_text: '',
-      title_icon: undefined,
-      title_url: undefined
+      // links compose from "text", "icon", "url" and optionally "class"
+      // buttons compose from "title", "icon", "name"
+      main_link: {},
+      left_button: {},
+      // right button and right link are exclusive!
+      right_button: {},
+      right_link: {}
     })
     /////////////////////////////////////////////////////////////////
     // ready
@@ -130,73 +134,73 @@
         modified: true
       });
     })
-/*
-    .declareMethod('notifyUpdate', function () {
-      return this.render(this.stats.options);
-    })
-*/
     .declareMethod('render', function (options) {
-      var state = {
-        error: false,
-        title_text: '',
-        title_icon: undefined,
-        title_url: undefined,
-        left_button_title: undefined,
-        left_button_icon: undefined,
-        left_button_name: undefined,
-        right_link_title: undefined,
-        right_link_icon: undefined,
-        right_link_url: undefined,
-        right_link_class: undefined,
-        right_button_title: undefined,
-        right_button_icon: undefined,
-        right_button_name: undefined
-      },
+      var gadget = this,
+        state = {
+          "error": options.error || false
+        },
         klass,
         sub_header_list = [],
         i;
 
-      // Main title
       if (options.hasOwnProperty("page_title")) {
-        state.title_text = options.page_title;
+        // if a new page title is specified then we are displaying different
+        // view so we force-reload all menu buttons
+        state.main_link = {};
+        state.right_link = {};
+        state.right_button = {};
+        state.left_button = {};
       }
-      if (options.hasOwnProperty("page_icon")) {
-        state.title_icon = options.page_icon;
-      }
-      for (i = 0; i < possible_main_link_list.length; i += 1) {
-        if (options.hasOwnProperty(possible_main_link_list[i][0])) {
-          state.title_icon = possible_main_link_list[i][2];
-          state.title_url = options[possible_main_link_list[i][0]];
+
+      // Main title
+      if (options.hasOwnProperty("page_title") || options.hasOwnProperty("page_icon")) {
+        state.main_link = {
+          "title": options.page_title || gadget.state.main_link.title,
+          "icon": options.page_icon || gadget.state.main_link.icon,
+          "url": ''
+        };
+        for (i = 0; i < possible_main_link_list.length; i += 1) {
+          if (options.hasOwnProperty(possible_main_link_list[i][0])) {
+            state.main_link.icon = possible_main_link_list[i][2];
+            state.main_link.url = options[possible_main_link_list[i][0]];
+          }
         }
       }
 
       // Left button
       for (i = 0; i < possible_left_button_list.length; i += 1) {
         if (options.hasOwnProperty(possible_left_button_list[i][0])) {
-          state.left_button_title = possible_left_button_list[i][1];
-          state.left_button_icon = possible_left_button_list[i][2];
-          state.left_button_name = possible_left_button_list[i][3];
+          state.left_button = {
+            "title": possible_left_button_list[i][1],
+            "icon": possible_left_button_list[i][2],
+            "name": possible_left_button_list[i][3]
+          };
         }
       }
 
       // Handle right link
       for (i = 0; i < possible_right_link_list.length; i += 1) {
         if (options.hasOwnProperty(possible_right_link_list[i][0])) {
-          klass = "";
+          state.right_link = {
+            "title": possible_right_link_list[i][1],
+            "icon": possible_right_link_list[i][2],
+            "url": options[possible_right_link_list[i][0]],
+            "class": ""
+          };
           if (!options[possible_right_link_list[i][0]]) {
-            klass = "ui-disabled";
+            state.right_link["class"] = "ui-disabled";
           }
-          state.right_link_title = possible_right_link_list[i][1];
-          state.right_link_icon = possible_right_link_list[i][2];
-          state.right_link_url = options[possible_right_link_list[i][0]];
-          state.right_link_class = klass;
+          state.right_button = {}; // because right link and button are exclusive
         }
       }
       for (i = 0; i < possible_right_button_list.length; i += 1) {
         if (options.hasOwnProperty(possible_right_button_list[i][0])) {
-          state.right_button_title = possible_right_button_list[i][1];
-          state.right_button_icon = possible_right_button_list[i][2];
-          state.right_button_name = possible_right_button_list[i][3];
+          state.right_button = {
+            "title": possible_right_button_list[i][1],
+            "icon": possible_right_button_list[i][2],
+            "name": possible_right_button_list[i][3]
+          };
+          state.right_link = {}; // because right link and button are exclusive
         }
       }
 
@@ -208,10 +212,10 @@
             klass = "ui-disabled";
           }
           sub_header_list.push({
-            title: possible_sub_header_list[i][1],
-            icon: possible_sub_header_list[i][2],
-            url: options[possible_sub_header_list[i][0]],
-            class: klass
+            "title": possible_sub_header_list[i][1],
+            "icon": possible_sub_header_list[i][2],
+            "url": options[possible_sub_header_list[i][0]],
+            "class": klass
           });
         }
       }
@@ -222,19 +226,16 @@
 
     .onStateChange(function (modification_dict) {
       var gadget = this,
-        right_link,
-        right_button,
         default_title_icon = "",
         default_right_icon = "",
-        title_link,
+        main_link,
         promise_list = [];
-      // Main title
+
+      // insert "title" HTML text promise into promise_list[0]
       if (modification_dict.hasOwnProperty('error') ||
           modification_dict.hasOwnProperty('loaded') ||
           modification_dict.hasOwnProperty('submitted') ||
-          modification_dict.hasOwnProperty('title_text') ||
-          modification_dict.hasOwnProperty('title_icon') ||
-          modification_dict.hasOwnProperty('title_url')) {
+          modification_dict.hasOwnProperty('main_link')) {
         if (gadget.state.error) {
           default_title_icon = "exclamation";
         } else if (!gadget.state.loaded) {
@@ -243,74 +244,59 @@
           default_title_icon = "spinner";
         }
         // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now
-        document.title = gadget.state.title_text;
-        title_link = {
-          title: gadget.state.title_text,
-          icon: default_title_icon || gadget.state.title_icon,
-          url: gadget.state.title_url
+        document.title = gadget.state.main_link.title;
+        // Update icon in case an action in process (keep the original in state.title_icon)
+        main_link = {
+          "title": gadget.state.main_link.title,
+          "icon": default_title_icon || gadget.state.main_link.icon,
+          "url": gadget.state.main_link.url
         };
-        if (title_link.url === undefined) {
-          promise_list.push(gadget.translateHtml(header_title_template(title_link)));
+
+        if (main_link.url) {
+          promise_list.push(gadget.translateHtml(header_title_link_template(main_link)));
         } else {
-          promise_list.push(gadget.translateHtml(header_title_link_template(title_link)));
+          promise_list.push(gadget.translateHtml(header_title_template(main_link)));
         }
       } else {
         promise_list.push(null);
       }
 
-      // Left button
-      if (modification_dict.hasOwnProperty('left_button_title') ||
-          modification_dict.hasOwnProperty('left_button_icon') ||
-          modification_dict.hasOwnProperty('left_button_name')) {
-        if (gadget.state.left_button_title === undefined) {
+      // insert "left button" HTML text promise into promise_list[1]
+      if (modification_dict.hasOwnProperty('left_button')) {
+        if (gadget.state.left_button.title === undefined) {
           promise_list.push("");
         } else {
-          promise_list.push(gadget.translateHtml(header_button_template({
-            title: gadget.state.left_button_title,
-            icon: gadget.state.left_button_icon,
-            name: gadget.state.left_button_name
-          })));
+          promise_list.push(
+            gadget.translateHtml(
+              header_button_template(gadget.state.left_button)
+            )
+          );
         }
       } else {
         promise_list.push(null);
       }
 
-      // Handle right link
+      // insert "left link" HTML text promise into promise_list[2]
       if (modification_dict.hasOwnProperty('loaded') ||
           modification_dict.hasOwnProperty('submitted') ||
           modification_dict.hasOwnProperty('modified') ||
-          modification_dict.hasOwnProperty('right_link_title') ||
-          modification_dict.hasOwnProperty('right_link_icon') ||
-          modification_dict.hasOwnProperty('right_link_url') ||
-          modification_dict.hasOwnProperty('right_link_class') ||
-          modification_dict.hasOwnProperty('right_button_title') ||
-          modification_dict.hasOwnProperty('right_button_icon')) {
+          modification_dict.hasOwnProperty('right_link') ||
+          modification_dict.hasOwnProperty('right_button')) {
+        // find the right right icon
         if (gadget.state.modified) {
           default_right_icon = "warning";
+        } else if (gadget.state.error || !gadget.state.loaded || !gadget.state.submitted) {
+          default_right_icon = "ui-disabled";
         }
-        if (gadget.state.right_link_title !== undefined) {
-          right_link = {
-            title: gadget.state.right_link_title,
-            icon: gadget.state.right_link_icon,
-            url: gadget.state.right_link_url,
-            class: gadget.state.right_link_class
-          };
-        }
-        if (gadget.state.right_button_title !== undefined) {
-          right_button = {
-            title: gadget.state.right_button_title,
-            icon: default_right_icon || gadget.state.right_button_icon,
-            name: gadget.state.right_button_name
-          };
-          if (gadget.state.error || !gadget.state.loaded || !gadget.state.submitted) {
-            right_button.class = "ui-disabled";
-          }
-        }
-
-        if (right_button !== undefined) {
-          promise_list.push(gadget.translateHtml(header_button_template(right_button)));
-        } else if (right_link !== undefined) {
-          promise_list.push(gadget.translateHtml(header_link_template(right_link)));
+        // render the right right thing
+        if (gadget.state.right_button.title) {
+          promise_list.push(gadget.translateHtml(header_button_template({
+            "title": gadget.state.right_button.title,
+            "icon": default_right_icon || gadget.state.right_button.icon,
+            "name": gadget.state.right_button.name
+          })));
+        } else if (gadget.state.right_link.title) {
+          promise_list.push(gadget.translateHtml(header_link_template(gadget.state.right_link)));
         } else {
           promise_list.push("");
         }
