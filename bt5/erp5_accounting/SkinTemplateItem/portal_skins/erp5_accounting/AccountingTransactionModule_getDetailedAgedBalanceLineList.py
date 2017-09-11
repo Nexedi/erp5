@@ -109,7 +109,14 @@ for brain in portal.portal_simulation.getMovementHistoryList(
         break
     else:
       line[last_period_id] = total_price
- 
+
   line_list.append(line)
 
-return line_list
+return sorted(
+  line_list,
+  key=lambda x:(x['mirror_section_title'],
+                x['mirror_section_uid'], # in case we have two mirror section with same title
+                                         # we need lines from same section to be grouped together
+                                         # for summary report.
+                x.get('date'),
+                x.get('explanation_title'),))

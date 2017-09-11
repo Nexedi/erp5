@@ -5007,6 +5007,59 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                              total_price=500,
                              period_1=500)
 
+  def test_simple_aged_debtor_report_sort_order(self):
+    """Check the sort order of aged balance report.
+
+    Lines must be sorted by third party, then by date.
+    """
+    zzz_supplier = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+        title='ZZZ Supplier'
+    )
+    purchase2 = self._makeOne(
+        portal_type='Purchase Invoice Transaction',
+        title='Purchase invoice 0',
+        destination_reference='0',
+        source_reference='no',
+        description="This invoice should be last, because lines in aged balance "
+                    "are sorted by supplier names.",
+        reference='ref0',
+        simulation_state='delivered',
+        source_section_value=zzz_supplier,
+        start_date=DateTime(2013, 6, 28),
+        lines=(dict(destination_value=self.portal.account_module.goods_purchase,
+                    destination_debit=300.0),
+               dict(destination_value=self.portal.account_module.payable,
+                    destination_credit=300.0)))
+    self.createAgedBalanceDataSet()
+
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2013, 8, 1)
+    request_form['section_category_strict'] = False
+    request_form['detailed'] = False
+    request_form['section_category'] = 'group/demo_group'
+    request_form['account_type'] = 'account_type/liability/payable'
+    request_form['period_list'] = (1, 2, 3)
+    request_form['simulation_state'] = ['delivered']
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountingTransactionModule_viewAgedBalanceReport')
+    self.assertEqual(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEqual(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0],
+                             mirror_section_title='Supplier',
+                             total_price=500,
+                             period_1=500)
+    self.checkLineProperties(data_line_list[1],
+                             mirror_section_title='ZZZ Supplier',
+                             total_price=300,
+                             period_3=300)
+
 
 class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
 
