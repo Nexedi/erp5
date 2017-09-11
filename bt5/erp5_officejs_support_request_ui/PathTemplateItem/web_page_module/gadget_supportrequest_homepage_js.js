@@ -190,7 +190,7 @@
                     '0': {"title": "Days"},
                     '1': {"title": "Number", "value_type": "number"}
                   },
-                  title: "Last Month Activity"
+                  title: "Support Request Pipe"
                 }
               }
             }
@@ -221,7 +221,7 @@
                     0: {"title": "date"},
                     1: {"title": "value",  "value_type": "number"}
                   },
-                  title: "Support Request Pipe"
+                  title: "Last Month Activity"
                 }
               }
           });
