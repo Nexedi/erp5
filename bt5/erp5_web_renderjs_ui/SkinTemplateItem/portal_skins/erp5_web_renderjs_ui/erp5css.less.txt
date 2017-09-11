@@ -8,6 +8,7 @@
 @txtgreen: #22CC22;
 @txtsubgrey: #575757;
 @grey: #777777;
+@backgroundgreen: #37A419;
 
 
 // Default background for pages and other controls
@@ -1116,6 +1117,12 @@ div[data-gadget-scope='header'] .ui-header {
       width: 100%;
     }
   }
+  /* Disclaimer: It is here only for backward-compatibility! Don't rely on
+                 this class because it will be removed.
+                 It was used to force horizontal rendering of fields inside FormBox. */
+  .horizontal_align_form_box .ui-field-contain > div {
+    display: block-inline;
+  }
 
   .ui-content-header-plain {
     font-size: 150%;
@@ -1199,13 +1206,24 @@ div[data-gadget-scope='header'] .ui-header {
     }
   }
 
+  //Label
+  .ui-field-contain {
+    & > label {
+      color: @grey;
+    }
+  }
+
   @media @tablet, @desktop {
-    // Label
     .ui-field-contain {
       display: flex;
       & > label {
         flex: 1;
-        color: @grey;
+        /* Disclaimer: It is here only for backward-compatibility! Don't rely on
+                       this class because it will be removed.
+                       It was used to hide the label of a FormBox. */
+        &.invisible {
+          display: none;
+        }
       }
       & > label + div {
         flex: 3;
@@ -1235,19 +1253,19 @@ div[data-gadget-scope='header'] .ui-header {
   }
 */
 
-  /* form validation (assuming label>span is used) */
-  form label {
+  form .ui-field-contain {
+    // relative for displaying popups with errors
     position: relative;
 
-    span span {
+    & > span {
       animation: fadein @transition-timing;
 
       @media @desktop, @tablet {
         background-color: @coloraccent;
         color: @colorsubheaderlink;
-        left: 110%;
+        left: 25%;
         position: absolute;
-        bottom: 130%;
+        bottom: 110%;
         white-space: pre;
         padding: @margin-size;
         border-radius: @border-radius;
@@ -1273,6 +1291,21 @@ div[data-gadget-scope='header'] .ui-header {
   }
 }
 
+/**********************************************
+* Gadget: HTML5 input field
+**********************************************/
+.gadget-content .ui-field-contain {
+  .ui-input-has-appendinx,
+  .ui-input-has-prependinx {
+    display: flex;
+    i {
+      display: block;
+      padding: 3pt;
+      color: #777777;
+      font-weight: 400;
+    }
+  }
+}
 /**********************************************
 * Gadget: relation field
 **********************************************/
@@ -1465,12 +1498,16 @@ div[data-gadget-scope='erp5_searchfield'] {
           display: block;
           overflow: hidden;
           width: 100%;
-          height: 4em;
           position: relative;
+          // Only 2 visible lines are visible
+          height: 4em;
+          line-height: 2em;
 
           td, th {
-            // all cells inline-block
-            display: inline-block;
+            * {
+              // Disable all block (div, p, ...)
+              display: inline;
+            }
 
             &:first-child {
               // first cell must be locked
@@ -1486,6 +1523,8 @@ div[data-gadget-scope='erp5_searchfield'] {
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
+                // Reduce the gap between the first and second visible lines
+                padding-top: @margin-size;
 
                 &:after {
                   // XXX copy/pasted
@@ -1508,10 +1547,16 @@ div[data-gadget-scope='erp5_searchfield'] {
 
               ~ th, ~ td {
                 // set line height on cells after first row
+                // First column must be more visible
                 font-size: 0.8em;
+                // Cells must be next to the other and correctly aligned
+                display: inline;
+                word-break: break-word;
 
                 a {
                   pointer-events: none;
+                  // Add contrast with the first column content
+                  color: @grey;
                 }
 
                 &:not(:last-child) a:not(:empty):after {
@@ -1590,9 +1635,14 @@ div[data-gadget-scope='notification'] {
     text-align: left;
     width: @panelwidth;
     padding: @double-margin-size;
-    background-color: @coloraccent;
     color: @colorsubheaderlink;
     border-radius: @border-radius;
+    &.success {
+      background-color: @backgroundgreen;
+    }
+    &.error {
+      background-color: @coloraccent;
+    }
   }
 }
 

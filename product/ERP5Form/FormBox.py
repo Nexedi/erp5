@@ -120,12 +120,18 @@ class FormBoxWidget(Widget.Widget):
     return ''
 
 class FormBoxEditor:
-  """
-  A class holding all values required to update the object
-  """
-  def __init__(self, field_id, result):
-    self.field_id = field_id
-    self.result = result
+  """An editor returned from FormBox validation able to `edit` document."""
+
+  def __init__(self, result, context_method_id=None):
+    """Initialize with all necessary information for editing a document.
+
+    :result: tuple of attributes, editors intended as parameters for edit function
+    :context_method_id: editor needs to operate on the correct context (Document)
+                        but it cannot hold reference because then weird failures
+                        appear; thus we keep name of the context-obtaining method
+    """
+    self.attr_dict, self.editor_list = result
+    self.context_method_id = context_method_id
 
   def view(self):
     return self.__dict__
@@ -134,8 +140,11 @@ class FormBoxEditor:
     pass
 
   def edit(self, context):
-    context.edit(**self.result[0])
-    for encapsulated_editor in self.result[1]:
+    if self.context_method_id:
+      context = getattr(context, self.context_method_id)()
+
+    context.edit(**self.attr_dict)
+    for encapsulated_editor in self.editor_list:
       encapsulated_editor.edit(context)
 
   def as_dict(self):
@@ -144,8 +153,8 @@ class FormBoxEditor:
     XXX This API is probably not stable and may change, as some editors are used to
     edit multiple objects.
     """
-    result_dict = self.result[0]
-    for encapsulated_editor in self.result[1]:
+    result_dict = self.attr_dict.copy()  # avoid modifying own attribute
+    for encapsulated_editor in self.editor_list:
       if hasattr(encapsulated_editor, 'as_dict'):
         result_dict.update(
             encapsulated_editor.as_dict())
@@ -181,7 +190,7 @@ class FormBoxValidator(Validator.Validator):
     # XXX Hardcode script name
     result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
     if result_type == 'edit':
-      return FormBoxEditor(field.id, result)
+      return FormBoxEditor(result, context_method_id)
     elif result_type == 'form':
       formbox_field_errors = REQUEST.get('field_errors', [])
       current_field_errors.extend(formbox_field_errors)

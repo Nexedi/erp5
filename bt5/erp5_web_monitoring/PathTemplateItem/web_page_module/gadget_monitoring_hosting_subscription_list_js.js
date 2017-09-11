@@ -1,6 +1,6 @@
-/*global window, rJS, Handlebars, Rusha */
+/*global window, rJS, Handlebars */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, Handlebars, Rusha) {
+(function (window, rJS, Handlebars) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -8,65 +8,80 @@
 
     hosting_widget_template = Handlebars.compile(
       templater.getElementById("template-hostings-list").innerHTML
-    ),
-    rusha = new Rusha();
+    );
 
-  function generateHash(str) {
-    return rusha.digestFromString(str);
-  }
-
-
-  function getHostingStatus(gadget, id) {
+  function getHostingData(gadget) {
+    // optimized way to fetch hosting subscription list
+    var hosting_dict = {},
+      instance_dict = {};
     return gadget.jio_allDocs({
-        query: '(portal_type:"opml-outline") AND (parent_id:"' + id + '")'
-    })
-      .push(function (ouline_list) {
-        var j,
-          promise_list = [];
-        for (j = 0; j < ouline_list.data.total_rows; j += 1) {
-          // fetch all instance info to build hosting status
-          promise_list.push(
-            gadget.jio_allDocs({
-              select_list: ["status", "date"],
-              query: '(portal_type:"global") AND (parent_id:"' +
-                ouline_list.data.rows[j].id + '")'
-            })
-          );
+          select_list: ["basic_login", "url", "title"],
+          query: '(portal_type:"opml") AND (active:true)',
+          sort_on: [["title", "descending"]]
+        })
+      .push(function (result) {
+        var i;
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          hosting_dict[result.data.rows[i].id] = {
+            url: result.data.rows[i].value.url,
+              basic_login: result.data.rows[i].value.basic_login,
+              status: "WARNING",
+              date: 'Not Synchronized',
+              title: result.data.rows[i].value.title,
+              amount: 0
+          };
         }
-        return RSVP.all(promise_list);
+        return gadget.jio_allDocs({
+          query: '(portal_type:"opml-outline")',
+          select_list: [
+            "parent_url"
+          ]
+        });
       })
-      .push(function (result_list) {
-        var i,
-          j,
-          status = "OK",
-          warning = "",
-          date = 'Not Synchronized';
-
-        for (i = 0; i < result_list.length; i += 1) {
-          for (j = 0; j < result_list[i].data.total_rows; j += 1) {
-            if (warning !== "" &&
-                result_list[i].data.rows[j].value.status === "WARNING") {
-              warning = "WARNING";
-            }
-            if (status !== "ERROR" && status !== "WARNING" &&
-                result_list[i].data.rows[j].value.status === "ERROR") {
-              // continue and only change the status if we found Warning === state inconsistent
-              status = result_list[i].data.rows[j].value.status;
-              date = result_list[i].data.rows[j].value.date;
-            } else {
-              date = result_list[i].data.rows[j].value.date;
-            }
+      .push(function (result) {
+        var i;
+        for (i = 0; i <result.data.total_rows; i += 1) {
+          if (hosting_dict.hasOwnProperty(result.data.rows[i].value.parent_url)) {
+            instance_dict[result.data.rows[i].id] = {
+              parent_id: result.data.rows[i].value.parent_url
+            };
           }
         }
-        if (date === 'Not Synchronized') {
-          status = "WARNING";
+        return gadget.jio_allDocs({
+          query: '(portal_type:"global")',
+          select_list: [
+            "status",
+            "parent_id",
+            "date"
+          ]
+        });
+      })
+      .push(function (result) {
+        var i;
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          if (instance_dict.hasOwnProperty(result.data.rows[i].value.parent_id)) {
+            instance_dict[result.data.rows[i].value.parent_id].date =
+              result.data.rows[i].value.date;
+            instance_dict[result.data.rows[i].value.parent_id].status =
+              result.data.rows[i].value.status;
+          }
         }
-        return {
-          id: id,
-          status: warning || status,
-          amount: result_list.length,
-          date: date
-        };
+      })
+      .push(function () {
+        //build hosting subscription data
+        var key,
+          item;
+        for (key in instance_dict) {
+          if (instance_dict.hasOwnProperty(key)) {
+            item = hosting_dict[instance_dict[key].parent_id];
+            item.amount += 1;
+            if (item.status !== "ERROR") {
+              item.status = instance_dict[key].status;
+            }
+            item.date = instance_dict[key].date;
+          }
+        }
+        return gadget.changeState({opml_dict: hosting_dict});
       });
   }
 
@@ -92,42 +107,7 @@
           title: 'Monitoring Hosting Subscriptions'
         })
         .push(function () {
-          return gadget.jio_allDocs({
-            select_list: ["basic_login", "url", "title"],
-            query: '(portal_type:"opml") AND (active:true)',
-            sort_on: [["title", "descending"]]
-          });
-        })
-        .push(function (opml_result) {
-          var i,
-            opml_dict = {},
-            promise_list = [],
-            id;
-          for (i = 0; i < opml_result.data.total_rows; i += 1) {
-            id = generateHash(opml_result.data.rows[i].value.url);
-            opml_dict[id] = {
-              url: opml_result.data.rows[i].value.url,
-              basic_login: opml_result.data.rows[i].value.basic_login,
-              status: "WARNING",
-              date: 'Not Synchronized',
-              title: opml_result.data.rows[i].value.title,
-              amount: 0
-            };
-            promise_list.push(getHostingStatus(gadget, id));
-          }
-          return new RSVP.Queue()
-            .push(function () {
-              return RSVP.all(promise_list);
-            })
-            .push(function (status_list) {
-              var i;
-              for (i = 0; i < status_list.length; i += 1) {
-                opml_dict[status_list[i].id].status = status_list[i].status;
-                opml_dict[status_list[i].id].date = status_list[i].date;
-                opml_dict[status_list[i].id].amount = status_list[i].amount;
-              }
-              return gadget.changeState({opml_dict: opml_dict});
-            });
+          return getHostingData(gadget);
         })
         .push(function () {
           var content,
@@ -203,4 +183,4 @@
 
     });
 
-}(window, rJS, Handlebars, Rusha));
+}(window, rJS, Handlebars));

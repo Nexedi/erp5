@@ -1,5 +1,6 @@
 test.erp5.testFunctionalRJSCore
 test.erp5.testFunctionalRJSCheckBoxField
+test.erp5.testFunctionalRJSLinesField
 test.erp5.testFunctionalRJSListField
 test.erp5.testFunctionalRJSMultiCheckBoxField
 test.erp5.testFunctionalRJSMultiListField
@@ -10,7 +11,9 @@ test.erp5.testFunctionalRJSPageTemplate
 test.erp5.testFunctionalRJSPage
 test.erp5.testFunctionalRJSRouter
 test.erp5.testFunctionalRJSListbox
+test.erp5.testFunctionalRJSFormbox
 test.erp5.testFunctionalRJSLogout
 test.erp5.testFunctionalRJSTranslation
 test.erp5.testFunctionalRJSLogoutTranslation
 test.erp5.testFunctionalRJSNotification
+test.erp5.testFunctionalRJSMatrixbox

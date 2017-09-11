@@ -54,6 +54,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             'erp5_base',
             'erp5_pdm',
             'erp5_trade',
+            'erp5_item',
             'erp5_accounting',
             'erp5_banking_core',
             'erp5_banking_inventory',

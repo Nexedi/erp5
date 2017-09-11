@@ -59,15 +59,13 @@
               filename = id.substring(last_index);
             }
           }
-          if (!id.includes("http")) {
-            if (path.charAt(0) !== '/') {
-              path = '/' + path;
-            }
-            if (!context._id_dict.hasOwnProperty(path)) {
-              context._id_dict[path] = {};
-            }
-            context._id_dict[path][filename] = {};
+          if (path.charAt(0) !== '/') {
+            path = '/' + path;
           }
+          if (!context._id_dict.hasOwnProperty(path)) {
+            context._id_dict[path] = {};
+          }
+          context._id_dict[path][filename] = {};
         }
       });
   };

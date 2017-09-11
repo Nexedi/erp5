@@ -1,22 +1,86 @@
 /*global window, document, rJS, RSVP */
 /*jslint indent: 2, maxerr: 3 */
+/**
+ * Label gadget takes care of displaying validation errors and label.
+ *
+ * Every form field is wrapped in that widget which has some consequences:
+ *
+ * -  CSS classes sharing: label copy CSS classes of embedded field for itself
+ *    because CSS selectors are not good in selectin up the DOM tree
+ *    -  class "invisible" despite its name is supposed to hide only label
+ *    -  class "horizontal_align_form_box" will prevent any label to show as well
+ *
+ */
 (function (window, document, rJS, RSVP) {
   "use strict";
 
   var SCOPE = 'field';
 
+  function getFieldTypeGadgetUrl(field_type) {
+    var field_url = 'gadget_erp5_field_readonly.html';
+    if (field_type === 'ListField') {
+      field_url = 'gadget_erp5_field_list.html';
+    } else if ((field_type === 'ParallelListField') ||
+               (field_type === 'MultiListField')) {
+      field_url = 'gadget_erp5_field_multilist.html';
+    } else if (field_type === 'CheckBoxField') {
+      field_url = 'gadget_erp5_field_checkbox.html';
+    } else if (field_type === 'MultiCheckBoxField') {
+      field_url = 'gadget_erp5_field_multicheckbox.html';
+    } else if (field_type === 'StringField') {
+      field_url = 'gadget_erp5_field_string.html';
+    } else if (field_type === 'LinesField') {
+      field_url = 'gadget_erp5_field_lines.html';
+    } else if (field_type === 'PasswordField') {
+      field_url = 'gadget_erp5_field_password.html';
+    } else if (field_type === 'RelationStringField') {
+      field_url = 'gadget_erp5_field_relationstring.html';
+    } else if (field_type === 'MultiRelationStringField') {
+      field_url = 'gadget_erp5_field_multirelationstring.html';
+    } else if (field_type === 'TextAreaField') {
+      field_url = 'gadget_erp5_field_textarea.html';
+    } else if (field_type === 'DateTimeField') {
+      field_url = 'gadget_erp5_field_datetime.html';
+    } else if (field_type === 'FloatField') {
+      field_url = 'gadget_erp5_field_float.html';
+    } else if (field_type === 'FileField') {
+      field_url = 'gadget_erp5_field_file.html';
+    } else if (field_type === 'IntegerField') {
+      field_url = 'gadget_erp5_field_integer.html';
+    } else if (field_type === 'ListBox') {
+      field_url = 'gadget_erp5_field_listbox.html';
+    } else if (field_type === 'EditorField') {
+      field_url = 'gadget_erp5_field_editor.html';
+      // field_url = 'gadget_codemirror.html';
+      // sandbox = 'iframe';
+    } else if (field_type === 'GadgetField') {
+      field_url = 'gadget_erp5_field_gadget.html';
+    } else if (field_type === 'RadioField') {
+      field_url = 'gadget_erp5_field_radio.html';
+    } else if (field_type === 'ImageField') {
+      field_url = 'gadget_erp5_field_image.html';
+    } else if (field_type === 'EmailField') {
+      field_url = 'gadget_erp5_field_email.html';
+    } else if (field_type === 'FormBox') {
+      field_url = 'gadget_erp5_field_formbox.html';
+    } else if (field_type === 'MatrixBox') {
+      field_url = 'gadget_erp5_field_matrixbox.html';
+    }
+    return field_url;
+  }
+
   rJS(window)
     .setState({
       label_text: '',
       error_text: '',
-      label: true
+      label: true,  // the label element is already present in the HTML template
+      css_class: ''
     })
+
     .ready(function () {
       return this.changeState({
-        label_element: this.element.querySelector('label'),
-        label_text_element: this.element.querySelector('label').firstChild,
-        error_element: this.element.querySelector('span'),
-        container_element: this.element.querySelector('div')
+        container_element: this.element.querySelector('div'),  // matches the closest div
+        label_element: this.element.querySelector('label')
       });
     })
 
@@ -24,12 +88,18 @@
       var state_dict = {
         label_text: options.field_json.title || '',
         label: options.label,
-        field_url: options.field_url,
+        field_url: getFieldTypeGadgetUrl(options.field_type),
         error_text: options.field_json.error_text || '',
         options: options,
         scope: options.field_json.key,
-        hidden: options.field_json.hidden
+        hidden: options.field_json.hidden,
+        css_class: options.field_json.css_class
       };
+      // RenderJS would overwrite default value with empty variables :-(
+      // So we have to mitigate this behaviour
+      if (state_dict.label === undefined) {
+        state_dict.label = true;
+      }
       return this.changeState(state_dict);
     })
 
@@ -44,16 +114,25 @@
       }
 
       if (modification_dict.hasOwnProperty('label_text')) {
-        this.state.label_text_element.textContent = this.state.label_text;
+        this.state.label_element.textContent = this.state.label_text;
       }
       this.state.label_element.setAttribute('for', gadget.state.scope);
 
+      if (modification_dict.hasOwnProperty('css_class') && this.state.css_class) {
+        this.state.label_element.classList.add(this.state.css_class);
+      }
+
       if (modification_dict.hasOwnProperty('error_text')) {
-        this.state.error_element.textContent = "";
+        // first remove old errors
+        span = this.state.container_element.querySelector('span');
+        if (span) {
+          this.state.container_element.removeChild(span);
+        }
+        // display new error if present
         if (this.state.error_text) {
           span = document.createElement('span');
           span.textContent = this.state.error_text;
-          this.state.error_element.appendChild(span);
+          this.state.container_element.appendChild(span);
         }
       }
 

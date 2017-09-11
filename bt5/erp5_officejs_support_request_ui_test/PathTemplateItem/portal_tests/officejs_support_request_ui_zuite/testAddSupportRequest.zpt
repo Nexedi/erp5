@@ -40,6 +40,11 @@
   <td>RobotMaking</td>
 </tr>
 <tr>
+  <td>waitForTextPresent</td>
+  <td>FeatureRequire</td>
+  <td></td>
+</tr>
+<tr>
   <td>select</td>
   <td>field_your_resource</td>
   <td>FeatureRequire</td>
@@ -56,7 +61,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//input[@data-i18n="[value]Reply"]</td>
+  <td>//input[@data-i18n="[value]Post Comment"]</td>
   <td></td>
 </tr>
 <tr>

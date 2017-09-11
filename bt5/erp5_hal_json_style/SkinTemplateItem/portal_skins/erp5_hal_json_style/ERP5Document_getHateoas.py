@@ -7,6 +7,7 @@ import datetime
 import time
 from email.Utils import formatdate
 import re
+from zExceptions import Unauthorized
 
 if REQUEST is None:
   REQUEST = context.REQUEST
@@ -93,106 +94,94 @@ def getFieldDefault(traversed_document, field, key, value=None):
     result = "%s" % result
   return result
 
-def renderField(traversed_document, field, form_relative_url, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None):
+
+def renderField(traversed_document, field, form, value=None, meta_type=None, key=None, key_prefix=None, selection_params=None):
+  """Extract important field's attributes into `result` dictionary."""
+
   if meta_type is None:
     meta_type = field.meta_type
   if key is None:
     key = field.generate_field_key(key_prefix=key_prefix)
 
+  result = {
+    "type": meta_type,
+    "title": Base_translateString(field.get_value("title")),
+    "key": key,
+    "css_class": field.get_value("css_class"),
+    "editable": field.get_value("editable"),
+    "hidden": field.get_value("hidden"),
+    "description": field.get_value("description"),
+  }
+
+  if "Field" in meta_type:
+    # fields have default value and can be required (unlike boxes)
+    result.update({
+      "required": field.get_value("required") if field.has_value("required") else None,
+      "default": getFieldDefault(traversed_document, field, result["key"], value),
+    })
+
   if meta_type == "ProxyField":
-    result = renderField(traversed_document, field, form_relative_url, value, meta_type=field.getRecursiveTemplateField().meta_type, key=key, key_prefix=key_prefix, selection_params=selection_params)
-  elif meta_type == "ListField":
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-      "required": field.get_value("required"),
+    return renderField(traversed_document, field, form, value,
+                       meta_type=field.getRecursiveTemplateField().meta_type,
+                       key=key, key_prefix=key_prefix,
+                       selection_params=selection_params)
+
+  if meta_type in ("ListField", "RadioField", "ParallelListField", "MultiListField"):
+    result.update({
       # XXX Message can not be converted to json as is
       "items": field.get_value("items"),
-      "first_item": field.get_value("first_item"),
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
-  elif meta_type == "RadioField":
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-      "required": field.get_value("required"),
-      "items": field.get_value("items"),
-      "select_first_item": field.get_value("first_item"),
-      "orientation": field.get_value("orientation"),
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
-  elif meta_type in ("ParallelListField", "MultiListField"):
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-      "required": field.get_value("required"),
-      # XXX Message can not be converted to json as is
-      "items": field.get_value("items")
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
-    result["sub_select_key"] = traversed_document.Field_getSubFieldKeyDict(field, 'default:list', key=result["key"])
-    result["sub_input_key"] = "default_" + traversed_document.Field_getSubFieldKeyDict(field, 'default:list:int', key=result["key"])
-  elif meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
-                     "LinesField", "ImageField", "FileField", "IntegerField",
-                     "PasswordField", "EditorField"):
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-      "required": field.get_value("required"),
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
+    })
+    if meta_type == "ListField":
+      result.update({
+        "first_item": field.get_value("first_item"),
+      })
+
+    if meta_type == "RadioField":
+      result.update({
+        "select_first_item": field.get_value("first_item"),
+        "orientation": field.get_value("orientation"),
+      })
+    if meta_type in ("ParallelListField", "MultiListField"):
+      result.update({
+        "sub_select_key": traversed_document.Field_getSubFieldKeyDict(field, 'default:list', key=result["key"]),
+        "sub_input_key": "default_" + traversed_document.Field_getSubFieldKeyDict(field, 'default:list:int', key=result["key"])
+      })
+    return result
+
+  if meta_type in ("StringField", "FloatField", "EmailField", "TextAreaField",
+                   "LinesField", "ImageField", "FileField", "IntegerField",
+                   "PasswordField", "EditorField"):
     if meta_type == "FloatField":
-      result["precision"] = field.get_value("precision")
+      result.update({
+        "precision": field.get_value("precision"),
+        "input_style": field.get_value("input_style"),
+      })
     if meta_type == "ImageField":
-      options = {}
-      options['display'] = field.get_value('image_display')
-      options['format'] = field.get_value('image_format')
-      options['quality'] = field.get_value('image_quality')
-      pre_converted_only = field.get_value('image_pre_converted_only')
-      if pre_converted_only:
-        options['pre_converted_only'] = pre_converted_only
-      parameters = '&'.join(['%s=%s' % (k, v) for k, v in options.items() \
-                            if v])
+      options = {
+        'display': field.get_value('image_display'),
+        'format': field.get_value('image_format'),
+        'quality': field.get_value('image_quality'),
+        'pre_converted_only': field.get_value('image_pre_converted_only')
+      }
+
+      if not options['pre_converted_only']:
+        del options['pre_converted_only']
+
+      parameters = '&'.join(('%s=%s' % (k, v) for k, v in options.items()
+                             if v))
       if parameters:
         result["default"] = '%s?%s' % (result["default"], parameters)
+    return result
 
-  elif meta_type == "DateTimeField":
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-      "required": field.get_value("required"),
+  if meta_type == "DateTimeField":
+    result.update({
       "date_only": field.get_value("date_only"),
       "ampm_time_style": field.get_value("ampm_time_style"),
       "timezone_style": field.get_value("timezone_style"),
       "allow_empty_time": field.get_value('allow_empty_time'),
       "hide_day": field.get_value('hide_day'),
       "hidden_day_is_last_day": field.get_value('hidden_day_is_last_day'),
-    }
+    })
     date_value = getFieldDefault(traversed_document, field, result["key"], value)
     if not date_value and field.get_value('default_now'):
       date_value = DateTime()
@@ -204,8 +193,9 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
     result["default"] = date_value
     for subkey in ("year", "month", "day", "hour", "minute", "ampm", "timezone"):
       result["subfield_%s_key" % subkey] = traversed_document.Field_getSubFieldKeyDict(field, subkey, key=result["key"])
+    return result
 
-  elif meta_type in ("RelationStringField", "MultiRelationStringField"):
+  if meta_type in ("RelationStringField", "MultiRelationStringField"):
     portal_type_list = field.get_value('portal_type')
     translated_portal_type = []
     jump_reference_list = []
@@ -220,10 +210,16 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 
       accessor_name = 'get%sValueList' % \
         ''.join([part.capitalize() for part in base_category.split('_')])
-      jump_reference_list = getattr(traversed_document, accessor_name)(
-        portal_type=[x[0] for x in field.get_value('portal_type')],
-        filter=kw
-      ) or []
+      try:
+        jump_reference_list = getattr(traversed_document, accessor_name)(
+          portal_type=[x[0] for x in field.get_value('portal_type')],
+          filter=kw
+        ) or []
+      except Unauthorized:
+        jump_reference_list = []
+        result.update({
+          "editable": False 
+        })
     query = url_template_dict["jio_search_template"] % {
       "query": make_query({"query": sql_catalog.buildQuery(
         {"portal_type": portal_type_list}
@@ -239,35 +235,35 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       listbox_ids = [('Base_viewRelatedObjectListBase/listbox','default')]
     listbox = {}
 
-    for grain in listbox_ids:
-      tmp = grain[0].split('/')
-      form = getattr(context, tmp[0])
-      for listbox_field in form.get_fields():
-        if listbox_field.getId() == tmp[1]:
-          #get original definition
-          result = renderField(context, listbox_field, getFormRelativeUrl(form))
-          #overwrite, like Base_getRelatedObjectParameter does
-          if result["portal_type"] == []:
-            result["portal_type"] = field.get_value('portal_type')
-          result["query"] = url_template_dict["jio_search_template"] % {
-            "query": make_query({"query": sql_catalog.buildQuery(
-              dict(portal_type = [x[-1] for x in result["portal_type"]],
-                **result["default_params"]), ignore_unknown_columns=True
-           ).asSearchTextExpression(sql_catalog)})
-          }
-          result.pop("list_method_template", None)
-          result["list_method"] = "portal_catalog"
-          result["title"] = Base_translateString(title)
-          #set default listbox's column list to relation's column list
-          if tmp[0] == 'Base_viewRelatedObjectListBase' and len(column_list) > 0:
-            result["column_list"] = []
-            for tmp_column in column_list:
-              result["column_list"].append((tmp_column[0], Base_translateString(tmp_column[1])))
-          listbox[Base_translateString(grain[1])] = result
-          break
+    for (listbox_path, listbox_name) in listbox_ids:
+      (listbox_form_name, listbox_field_name) = listbox_path.split('/', 2)
+      form = getattr(context, listbox_form_name)
+      # find listbox field
+      listbox_form_field = filter(lambda f: f.getId() == listbox_field_name, form.get_fields())[0]
+      # get original definition
+      subfield = renderField(context, listbox_form_field, form)
+      # overwrite, like Base_getRelatedObjectParameter does
+      if subfield["portal_type"] == []:
+        subfield["portal_type"] = field.get_value('portal_type')
+      subfield["query"] = url_template_dict["jio_search_template"] % {
+        "query": make_query({"query": sql_catalog.buildQuery(
+          dict(portal_type = [x[-1] for x in subfield["portal_type"]],
+            **subfield["default_params"]), ignore_unknown_columns=True
+       ).asSearchTextExpression(sql_catalog)})
+      }
+      # Kato: why?
+      if "list_method_template" in subfield:
+        del subfield["list_method_template"]
+      subfield["list_method"] = "portal_catalog"
+      subfield["title"] = Base_translateString(title)
+      #set default listbox's column list to relation's column list
+      if listbox_form_name == 'Base_viewRelatedObjectListBase' and len(column_list) > 0:
+        subfield["column_list"] = []
+        for tmp_column in column_list:
+          subfield["column_list"].append((tmp_column[0], Base_translateString(tmp_column[1])))
+      listbox[Base_translateString(listbox_name)] = subfield
 
-
-    result = {
+    result.update({
       "url": relative_url,
       "translated_portal_types": translated_portal_type,
       "portal_types": portal_type_list,
@@ -275,73 +271,33 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
       "catalog_index": field.get_value('catalog_index'),
       "allow_jump": field.get_value('allow_jump'),
       "allow_creation": field.get_value('allow_creation'),
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(title),
-      "required": field.get_value("required"),
       "proxy_listbox_ids_len": len(proxy_listbox_ids),
-      "listbox": listbox
-    }
-    tmp = getFieldDefault(traversed_document, field, result["key"], value)
-    if isinstance(tmp, list):
-      result["default"] = tmp
-    else:
-      result["default"] = [tmp]
+      "listbox": listbox,
+    })
 
-    result["relation_field_id"] = traversed_document.Field_getSubFieldKeyDict(
-      field,
-      "relation",
-      key=result["key"]
-    )
-    result["relation_item_key"] = traversed_document.Field_getSubFieldKeyDict(
-      field,
-      "item", key=result["key"]
-    )
-    result["relation_item_relative_url"] = [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list]
+    if not isinstance(result["default"], list):
+      result["default"] = [result["default"], ]
 
-  elif meta_type == "CheckBoxField":
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
-  elif meta_type == "MultiCheckBoxField":
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
-      "required": field.get_value("required"),
-      # XXX Message can not be converted to json as is
-      "items": field.get_value("items"),
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
-  elif meta_type == "GadgetField":
-    result = {
-      "type": meta_type,
-      "key": key,
-      "editable": field.get_value("editable"),
-      "css_class": field.get_value("css_class"),
-      "hidden": field.get_value("hidden"),
-      "description": field.get_value("description"),
-      "title": Base_translateString(field.get_value("title")),
+    result.update({
+      "relation_field_id": traversed_document.Field_getSubFieldKeyDict(field, "relation", key=result["key"]),
+      "relation_item_key": traversed_document.Field_getSubFieldKeyDict(field, "item", key=result["key"]),
+      "relation_item_relative_url": [jump_reference.getRelativeUrl() for jump_reference in jump_reference_list]
+    })
+    return result
+
+  if meta_type in ("CheckBoxField", "MultiCheckBoxField"):
+    if meta_type == "MultiCheckBoxField":
+      result["items"] = field.get_value("items"),
+    return result
+
+  if meta_type == "GadgetField":
+    result.update({
       "url": field.get_value("gadget_url"),
-      "sandbox": field.get_value("js_sandbox"),
-    }
-    result["default"] = getFieldDefault(traversed_document, field, result["key"], value)
-  elif meta_type == "ListBox":
+      "sandbox": field.get_value("js_sandbox")
+    })
+    return result
+
+  if meta_type == "ListBox":
     """Display list of objects with optional search/sort capabilities on columns from catalog."""
     _translate = Base_translateString
 
@@ -385,7 +341,7 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
         "root_url": site_root.absolute_url(),
         "script_id": script.id,
         "relative_url": traversed_document.getRelativeUrl().replace("/", "%2F"),
-        "form_relative_url": "%s/%s" % (form_relative_url, field.id),
+        "form_relative_url": "%s/%s" % (getFormRelativeUrl(form), field.id),
         "list_method": list_method_name,
         "default_param_json": urlsafe_b64encode(json.dumps(list_method_query_dict))
       }
@@ -424,38 +380,69 @@ def renderField(traversed_document, field, form_relative_url, value=None, meta_t
 #         line["_relative_url"] = document.getRelativeUrl()
 #       line_list.append(line)
 
-    result = {
-      "type": meta_type,
-      "editable": field.get_value("editable"),
+    result.update({
       "column_list": column_list,
       "search_column_list": search_column_list,
       "sort" :field.get_value('sort'),
       "sort_column_list": sort_column_list,
       "editable_column_list": editable_column_list,
       "show_anchor": field.get_value("anchor"),
-      "title": Base_translateString(field.get_value("title")),
-      "key": key,
       "portal_type": portal_types,
       "lines": lines,
       "default_params": default_params,
       "list_method": list_method_name,
-    }
+      "query": url_template_dict["jio_search_template"] % {
+        "query": make_query({
+          "query": sql_catalog.buildQuery(
+            list_method_query_dict,
+            ignore_unknown_columns=True).asSearchTextExpression(sql_catalog)})}
+    })
     if (list_method_custom is not None):
       result["list_method_template"] = list_method_custom
+    return result
 
-    result["query"] = url_template_dict["jio_search_template"] % {
-        "query": make_query({"query": sql_catalog.buildQuery(
-          list_method_query_dict, ignore_unknown_columns=True
-        ).asSearchTextExpression(sql_catalog)})
-      }
-  else:
-    # XXX Not implemented
-    result = {
-      "type": meta_type,
-      "_debug": "Unsupported field type",
-      "title": Base_translateString(field.get_value("title")),
-      "key": key,
+  if meta_type == "FormBox":
+    embedded_document = {
+      '_links': {},
+      '_actions': {},
     }
+
+    # FormBox might have own context if 'context_method_id' is defined
+    formbox_context = traversed_document
+    if field.get_value('context_method_id'):
+      # harness acquisition and call the method right away
+      formbox_context = getattr(traversed_document, field.get_value('context_method_id'))()
+      embedded_document['_debug'] = "Different context"
+
+    embeded_form = getattr(formbox_context, field.get_value('formbox_target_id'))
+    # renderForm mutates `embedded_document` therefor no return/assignment
+    renderForm(formbox_context, embeded_form, embedded_document, key_prefix=key)
+    # fix editability which is hard-coded to 0 in `renderForm` implementation
+    embedded_document['form_id']['editable'] = field.get_value("editable")
+
+    # update result with rendered sub-form
+    result['_embedded'] = {
+      '_view': embedded_document
+    }
+    return result
+
+  if meta_type == "MatrixBox":
+    # data are generated by python code for MatrixBox.py
+    # template_fields are better rendered here because they can be part of "hidden"
+    #                 group which is not rendered in form by default. Including
+    #                 those fields directly here saves a lot of headache later
+    template_field_names = ["{}_{}".format(field.id, editable_attribute)
+      for editable_attribute, _ in field.get_value('editable_attributes')]
+    result.update({
+      'data': field.render(key=key, value=value, REQUEST=REQUEST, render_format='list'),
+      'template_field_dict': {template_field: renderField(traversed_document, getattr(form, template_field), form)
+        for template_field in template_field_names
+        if template_field in form},
+    })
+    return result
+
+  # All other fields are not implemented and we'll return only basic info about them
+  result["_debug"] = "Unknown field type " + meta_type
   return result
 
 
@@ -509,30 +496,22 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     'name': form.id
   }
 
+  # Go through all groups ("left", "bottom", "hidden" etc.) and add fields from
+  # them into form.
   for group in form.Form_getGroupTitleAndId():
-
-    if group['gid'].find('hidden') < 0:
-#       field_list = []
-      for field in form.get_fields_in_group(group['goid']):
-#         field_list.append((field.id, renderRawField(field)))
-        if field.get_value("enabled"):
-          try:
-            response_dict[field.id] = renderField(traversed_document, field, form_relative_url, key_prefix=key_prefix, selection_params=selection_params)
-            if field_errors.has_key(field.id):
-              response_dict[field.id]["error_text"] = field_errors[field.id].error_text
-          except AttributeError:
-            # Do not crash if field configuration is wrong.
-            pass
-
-  #       for field_group in field.form.get_groups():
-  #         traversed_document.log("Field group: " + field_group)
-  #         traversed_document.log(field_group)
-  #         for field_property in field.form.get_fields_in_group(field_group):
-  # #           traversed_document.log("Field attribute: " + field_property.id)
-  # #           field.get_value(field_property.id)
-  #           traversed_document.log(field_property)
-
-#       group_list.append((group['gid'], field_list))
+    # Skipping hidden group could be problematic but see MatrixBox Field above
+    if 'hidden' in group['gid']:
+      continue
+    for field in form.get_fields_in_group(group['goid']):
+      if not field.get_value("enabled"):
+        continue
+      try:
+        response_dict[field.id] = renderField(traversed_document, field, form, key_prefix=key_prefix, selection_params=selection_params)
+        if field_errors.has_key(field.id):
+          response_dict[field.id]["error_text"] = field_errors[field.id].error_text
+      except AttributeError:
+        # Do not crash if field configuration is wrong.
+        pass
 
   response_dict["form_id"] = {
     "type": "StringField",
@@ -545,11 +524,6 @@ def renderForm(traversed_document, form, response_dict, key_prefix=None, selecti
     "title": "form_id",
     "required": 1,
   }
-
-#   response_dict["group_list"] = group_list
-# rendered_response_dict["_embedded"] = {
-#   "form": raw_response_dict
-# }
 
   if (form.pt == 'report_view'):
     report_item_list = []
@@ -654,6 +628,7 @@ if relative_url:
     return ""
 else:
   temp_traversed_document = context
+
 temp_is_site_root = (temp_traversed_document.getPath() == site_root.getPath())
 temp_is_portal = (temp_traversed_document.getPath() == portal.getPath())
 
@@ -942,7 +917,7 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   
       # Handle also other kind of users: instance, computer, master
       person = portal.portal_membership.getAuthenticatedMember().getUserValue()
-      if person is not None:
+      if person is not None and portal.portal_membership.checkPermission('View', person):
         result_dict['_links']['me'] = {
           "href": default_document_uri_template % {
             "root_url": site_root.absolute_url(),
@@ -986,84 +961,52 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
   elif mode == 'search':
     #################################################
     # Portal catalog search
+    #
+    # Possible call arguments example:
+    #  form_relative_url: portal_skins/erp5_web/WebSite_view/listbox
+    #  list_method: objectValues                      (Script providing listing)
+    #  default_param_json: <base64 encoded JSON>      (Additional search params)
+    #  query: <str>                                   (term for fulltext search)
+    #  select_list: ['int_index', 'id', 'title', ...] (column names to select)
+    #  limit: [15, 16]                                (begin_index, num_records)
+    #  local_roles: TODO
     #################################################
     if REQUEST.other['method'] != "GET":
       response.setStatus(405)
       return ""
   
+    # hardcoded responses for site and portal objects (which are not Documents!)
     if query == "__root__":
-      # XXX Hardcoded behaviour to get root object with jIO
       sql_list = [site_root]
-  
     elif query == "__portal__":
-      # XXX Hardcoded behaviour to get portal object with jIO
       sql_list = [portal]
-  
-  #     document = site_root
-  #     document_result = {
-  # #       '_relative_url': site_root.getRelativeUrl(),
-  #       '_links': {
-  #         'self': {
-  #           "href": default_document_uri_template % {
-  #             "root_url": site_root.absolute_url(),
-  #             "relative_url": document.getRelativeUrl(), 
-  #             "script_id": script.id
-  #           },
-  #         },
-  #       }
-  #     }
-  #     for select in select_list:
-  #       document_result[select] = document.getProperty(select, d=None)
-  #     result_dict['_embedded'] = {"contents": [document_result]}
     else:
-  #     raise NotImplementedError("Unsupported query: %s" % query)
-      
-  
-  #   # XXX
-  #   length = len('/%s/' % portal.getId())
-  #   # context.log(portal.portal_catalog(full_text=query, limit=limit, src__=1))
-  #   context.log(query)
-      catalog_kw = {}
-      if (default_param_json is not None):
-        catalog_kw = byteify(json.loads(urlsafe_b64decode(default_param_json)))
+      catalog_kw = {
+        "local_roles": local_roles,
+        "limit": limit,
+        "sort_on": ()  # default is empty tuple
+      }
+      if default_param_json is not None:
+        catalog_kw.update(byteify(json.loads(urlsafe_b64decode(default_param_json))))
+      if query:
+        catalog_kw["full_text"] = query
+      if sort_on is not None:
+        if isinstance(sort_on, list):
+          catalog_kw['sort_on'] = tuple((byteify(sort_col), byteify(sort_order))
+                                         for sort_col, sort_order in map(json.loads, sort_on))
+        else:
+          sort_col, sort_order = json.loads(sort_on)
+          catalog_kw['sort_on'] = ((byteify(sort_col), byteify(sort_order)), )
+
       if (list_method is None):
         callable_list_method = portal.portal_catalog
       else:
         callable_list_method = getattr(traversed_document, list_method)
 
-      tmp_sort_on = ()
-      if sort_on is not None:
+      sql_list = callable_list_method(**catalog_kw)
 
-        if isinstance(sort_on, list):
-          for grain in sort_on:
-            tmp_sort_on += (tuple([x for x in byteify(json.loads(grain))]),)
-        else:
-          #only one single criteria
-          tmp_sort_on = (tuple([x for x in byteify(json.loads(sort_on))]),)
+    result_list = []  # returned "content" of the search
 
-
-      if query:
-        sql_list = callable_list_method(full_text=query, limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)
-      else:
-        sql_list = callable_list_method(limit=limit, sort_on=tmp_sort_on, local_roles=local_roles, **catalog_kw)
-
-    result_list = []
-  
-  #   if (select_list is None):
-  #     # Only include links
-  #     for sql_document in sql_list:
-  #       document = sql_document.getObject()
-  #       result_list.append({
-  #         "href": default_document_uri_template % {
-  #           "root_url": site_root.absolute_url(),
-  #           "relative_url": document.getRelativeUrl(), 
-  #           "script_id": script.id
-  #         },
-  #       })
-  #     result_dict['_links']['contents'] = result_list
-  # 
-  #   else:
-  
     # Cast to list if only one element is provided
     editable_field_dict = {}
     if select_list is None:
@@ -1083,7 +1026,21 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           if listbox_form.has_field("%s_%s" % (listbox_field_id, tmp), include_disabled=1):
             editable_field_dict[select] = listbox_form.get_field("%s_%s" % (listbox_field_id, tmp), include_disabled=1)
   
-    for sql_document in sql_list:
+    # handle the case when list-scripts are ignoring `limit` - paginate for them
+    if limit is not None and isinstance(limit, (tuple, list)):
+      start, num_items = map(int, limit)
+      if len(sql_list) <= num_items:
+        # the limit was most likely taken into account thus we don't need to slice
+        start, num_items = 0, len(sql_list)
+    else:
+      start, num_items = 0, len(sql_list)
+
+    for document_index, sql_document in enumerate(sql_list):
+      if document_index < start:
+        continue
+      if document_index >= start + num_items:
+        break
+
       try:
         document = sql_document.getObject()
       except AttributeError:
@@ -1091,7 +1048,6 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
         document = sql_document
       document_uid = sql_document.uid
       document_result = {
-  #       '_relative_url': sql_document.path[length:],
         '_links': {
           'self': {
             "href": default_document_uri_template % {
@@ -1117,10 +1073,9 @@ def calculateHateoas(is_portal=None, is_site_root=None, traversed_document=None,
           else:
             tmp_value = getProtectedProperty(document, select)
   
-          property_value = renderField(traversed_document, editable_field_dict[select], form_relative_url,
-                                       tmp_value,
-                                       key='field_%s_%s' % (editable_field_dict[select].id,
-                                       document_uid))
+          property_value = renderField(
+            traversed_document, editable_field_dict[select], form, tmp_value,
+            key='field_%s_%s' % (editable_field_dict[select].id, document_uid))
           REQUEST.other.pop('cell', None)
         else:
           property_value = getProtectedProperty(document, select)

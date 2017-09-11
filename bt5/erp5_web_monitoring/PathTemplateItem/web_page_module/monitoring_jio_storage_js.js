@@ -17,6 +17,7 @@
    * {
    *  "type": "replicatedopml",
    *  "remote_storage_unreachable_status": "WARNING",
+   *  "remote_opml_check_time_interval": 86400000,
    *  local_sub_storage: {
    *    type: "query",
    *      sub_storage: {
@@ -28,8 +29,8 @@
    * 
    */
 
-  var rusha = new Rusha();
-    //SIGNATURE_PREFIX_NAME = "__signature__";
+  var rusha = new Rusha(),
+    OPML_ATTACHMENT_NAME = "__opml__";
 
   function generateHash(str) {
     return rusha.digestFromString(str);
@@ -65,6 +66,12 @@
     this._remote_parser_storage_type = spec.remote_parser_storage_type;
     if (this._remote_parser_storage_type === undefined) {
       this._remote_parser_storage_type = "parser";
+    }
+    this._remote_opml_check_time_interval =
+      spec.remote_opml_check_time_interval;
+    if (this._remote_opml_check_time_interval === undefined) {
+      // one day in miliseconds
+      this._remote_opml_check_time_interval = 86400000;
     }
   }
 
@@ -216,7 +223,7 @@
                     JSON.stringify(storage_spec));
   }
 
-  function getSignatureDocument(context, attachment_id, name) {
+  function getDocumentAsAttachment(context, attachment_id, name) {
     return context._local_sub_storage.getAttachment(attachment_id, name)
       .push(undefined, function (error) {
         if ((error instanceof jIO.util.jIOError) &&
@@ -246,8 +253,14 @@
           return context._local_sub_storage.get(id);
         })
         .push(function (doc) {
-          doc.status = next_status;
-          return context._local_sub_storage.put(id, doc);
+          if (doc.portal_type === "promise") {
+            doc.category = next_status;
+            return context._local_sub_storage.put(id, doc);
+          }
+          if (doc.status !== undefined) {
+            doc.status = next_status;
+            return context._local_sub_storage.put(id, doc);
+          }
         });
     }
 
@@ -255,10 +268,14 @@
       if (signature_dict.hasOwnProperty(key)) {
         if (signature_dict[key].status !== next_status) {
           updateStatus(key);
+          signature_dict[key].status = next_status;
         }
       }
     }
-    return update_status_queue;
+    return update_status_queue
+      .push(function () {
+        return signature_dict;
+      });
   }
 
   function loadSubStorage(context, storage_spec, parent_id, type) {
@@ -288,12 +305,8 @@
         if (result === undefined) {
           if (context._remote_storage_unreachable_status !== undefined) {
             // update status of local documents
-            // to set unreachable state
-            return getSignatureDocument(
-              context,
-              parent_id,
-              url
-            )
+            // and set unreachable status
+            return getDocumentAsAttachment(context, parent_id, url)
               .push(function (signature_document) {
                 return updateSubStorageStatus(
                   context,
@@ -301,14 +314,14 @@
                   context._remote_storage_unreachable_status
                 );
               })
-              .push(function () {
-                return {};
+              .push(function (signature_dict) {
+                return signature_dict;
               });
           }
           return {};
         }
         result_dict.result = result;
-        return getSignatureDocument(
+        return getDocumentAsAttachment(
           context,
           parent_id,
           url
@@ -324,35 +337,60 @@
     var opml_storage,
       opml_document_list = [],
       delete_key_list = [],
-      signature_document_list = [],
+      attachment_document_list = [],
       opml_result_list,
+      current_signature_dict = {},
+      fetch_remote_opml = false,
       id;
 
     id = generateHash(opml_url);
     opml_storage = createStorage(context, opml_spec, id);
-    return opml_storage.allDocs({include_docs: true})
-      .push(undefined, function (error) {
-        if ((error instanceof jIO.util.jIOError) &&
-            (error.status_code === 404)) {
-          return {data: {total_rows: 0}};
+    return getDocumentAsAttachment(context, opml_url, OPML_ATTACHMENT_NAME)
+      .push(function (opml_doc) {
+        var current_time = new Date().getTime();
+        if (opml_doc.expire_time !== undefined) {
+          fetch_remote_opml = (opml_doc.expire_time - current_time) < 0;
+        } else {
+          fetch_remote_opml = true;
         }
-        //throw error;
-        // throw will cancel all remaning tasks
-        console.error(error);
-        return {data: {total_rows: 0}};
-      })
-      .push(function (opml_result) {
-        opml_result_list = opml_result;
-        if (opml_result.data.total_rows > 0) {
-          return getSignatureDocument(
-            context,
-            id,
-            opml_url
-          );
+        if (fetch_remote_opml) {
+          return opml_storage.allDocs({include_docs: true})
+            .push(undefined, function (error) {
+              if ((error instanceof jIO.util.jIOError) &&
+                  (error.status_code === 404)) {
+                return {data: {total_rows: 0}};
+              }
+              //throw error;
+              console.error(error);
+              return {data: {total_rows: 0}};
+            })
+            .push(function (opml_result) {
+              opml_result_list = opml_result;
+              if (opml_result.data.total_rows > 0) {
+                attachment_document_list.push({
+                  id: opml_url,
+                  name: OPML_ATTACHMENT_NAME,
+                  doc: {
+                    expire_time: new Date().getTime() +
+                      context._remote_opml_check_time_interval,
+                    data: opml_result
+                  }
+                });
+                return getDocumentAsAttachment(
+                  context,
+                  id,
+                  opml_url
+                );
+              }
+              return {};
+            })
+            .push(function (signature_dict) {
+              current_signature_dict = signature_dict;
+            });
         }
-        return {};
+        opml_result_list = opml_doc.data;
       })
-      .push(function (current_signature_dict) {
+      .push(function () {
         var i,
           item,
           signature,
@@ -362,7 +400,7 @@
           result_list = [],
           header_dict = {};
 
-        if (opml_result_list.data.total_rows > 0) {
+        if (opml_result_list.data.total_rows > 0 && fetch_remote_opml) {
           header_dict = {
             dateCreated: opml_result_list.data.rows[0].doc.dateCreated,
             dateModified: opml_result_list.data.rows[0].doc.dateModified,
@@ -374,12 +412,6 @@
           item = opml_result_list.data.rows[i];
           if (item.doc.xmlUrl !== undefined) {
             id_hash = generateHash(id + item.id);
-            signature = generateHash(JSON.stringify(item.doc));
-
-            // Append this document signature to the list
-            doc_signature_dict[id_hash] = {
-              signature: signature
-            };
             result_list.push(loadSubStorage(
               context,
               {
@@ -407,37 +439,46 @@
               ));
             }
 
-            if (current_signature_dict.hasOwnProperty(id_hash)) {
-              if (current_signature_dict[id_hash].signature === signature) {
-                // remote document was not modified, delete and skip add
+            if (fetch_remote_opml) {
+              // Append this document signature to the list
+              signature = generateHash(JSON.stringify(item.doc));
+              doc_signature_dict[id_hash] = {
+                signature: signature
+              };
+              if (current_signature_dict.hasOwnProperty(id_hash)) {
+                if (current_signature_dict[id_hash].signature === signature) {
+                  // remote document was not modified, delete and skip add
+                  delete current_signature_dict[id_hash];
+                  skip_add = true;
+                }
                 delete current_signature_dict[id_hash];
-                skip_add = true;
               }
-              delete current_signature_dict[id_hash];
-            }
-            Object.assign(item.doc, {
-              portal_type: "opml-outline",
-              parent_id: id,
-              parent_url: opml_url,
-              reference: id_hash,
-              active: true
-            });
-            Object.assign(item.doc, header_dict);
-            if (!skip_add) {
-              opml_document_list.push({
-                id: id_hash,
-                doc: item.doc
+              Object.assign(item.doc, {
+                portal_type: "opml-outline",
+                parent_id: id,
+                parent_url: opml_url,
+                reference: id_hash,
+                active: true
               });
+              Object.assign(item.doc, header_dict);
+              if (!skip_add) {
+                opml_document_list.push({
+                  id: id_hash,
+                  doc: item.doc
+                });
+              }
             }
           }
         }
-        signature_document_list.push({
-          id: opml_url,
-          name: opml_url,
-          doc: doc_signature_dict
-        });
-        delete_key_list.push.apply(delete_key_list,
-                                   Object.keys(current_signature_dict));
+        if (fetch_remote_opml && Object.keys(doc_signature_dict).length > 0) {
+          attachment_document_list.push({
+            id: opml_url,
+            name: opml_url,
+            doc: doc_signature_dict
+          });
+          delete_key_list.push.apply(delete_key_list,
+                                     Object.keys(current_signature_dict));
+        }
         return RSVP.all(result_list);
       })
       .push(function (result_list) {
@@ -493,47 +534,57 @@
         for (i = 0; i < result_list.length; i += 1) {
           extra_dict = undefined;
           start = 0;
-          if (result_list[i].type === "promise" &&
-              result_list[i].result.data.total_rows > 0) {
-            // the first element of rss is the header
-            extra_dict = {
-              lastBuildDate: result_list[i].result.data.rows[0].doc
-                .lastBuildDate,
-              channel: result_list[i].result.data.rows[0].doc.description,
-              channel_item: result_list[i].result.data.rows[0].doc.title
-            };
-            applyItemToTree(
-              result_list[i].result.data.rows[0],
-              result_list[i],
-              "rss"
+          if (result_list[i].result.data.total_rows > 0) {
+            if (result_list[i].type === "promise") {
+              // the first element of rss is the header
+              extra_dict = {
+                lastBuildDate: result_list[i].result.data.rows[0].doc
+                  .lastBuildDate,
+                channel: result_list[i].result.data.rows[0].doc.description,
+                channel_item: result_list[i].result.data.rows[0].doc.title
+              };
+              applyItemToTree(
+                result_list[i].result.data.rows[0],
+                result_list[i],
+                "rss"
+              );
+              start = 1;
+            }
+            for (j = start; j < result_list[i].result.data.total_rows; j += 1) {
+              applyItemToTree(
+                result_list[i].result.data.rows[j],
+                result_list[i],
+                undefined,
+                extra_dict
+              );
+            }
+            attachment_document_list.push({
+              id: result_list[i].parent_id,
+              name: result_list[i].url,
+              doc: item_signature_dict
+            });
+            item_signature_dict = {};
+            delete_key_list.push.apply(
+              delete_key_list,
+              Object.keys(result_list[i].current_signature)
             );
-            start = 1;
+          } else if (Object.keys(result_list[i].current_signature).length > 0) {
+            // if the remote data is empty and current_signature is not empty,
+            // push to storage in case the status was changed
+            // this help for speed optimisation
+            attachment_document_list.push({
+              id: result_list[i].parent_id,
+              name: result_list[i].url,
+              doc: result_list[i].current_signature
+            });
           }
-          for (j = start; j < result_list[i].result.data.total_rows; j += 1) {
-            applyItemToTree(
-              result_list[i].result.data.rows[j],
-              result_list[i],
-              undefined,
-              extra_dict
-            );
-          }
-          signature_document_list.push({
-            id: result_list[i].parent_id,
-            name: result_list[i].url,
-            doc: item_signature_dict
-          });
-          item_signature_dict = {};
-          delete_key_list.push.apply(
-            delete_key_list,
-            Object.keys(result_list[i].current_signature)
-          );
         }
-        return [opml_document_list, delete_key_list, signature_document_list];
+        return [opml_document_list, delete_key_list, attachment_document_list];
       });
   }
 
   function pushDocumentToStorage(context, document_list, delete_key_list,
-      signature_document_list) {
+      attachment_document_list) {
     var document_queue = new RSVP.Queue(),
       i;
 
@@ -579,7 +630,7 @@
         var j,
           signature_queue = new RSVP.Queue();
 
-        function pushSignature(id, name, element) {
+        function pushAttachment(id, name, element) {
           signature_queue
             .push(function () {
               return context._local_sub_storage.putAttachment(
@@ -592,11 +643,11 @@
               console.error(error);
             });
         }
-        for (j = 0; j < signature_document_list.length; j += 1) {
-          pushSignature(
-            signature_document_list[j].id,
-            signature_document_list[j].name,
-            signature_document_list[j].doc
+        for (j = 0; j < attachment_document_list.length; j += 1) {
+          pushAttachment(
+            attachment_document_list[j].id,
+            attachment_document_list[j].name,
+            attachment_document_list[j].doc
           );
         }
       });

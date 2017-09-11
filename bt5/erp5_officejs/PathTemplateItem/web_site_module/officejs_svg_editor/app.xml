@@ -381,15 +381,27 @@
         </item>
         <item>
             <key> <string>empty_criterion_valid</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>app</string> </value>
         </item>
         <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewRenderJSPreference</string> </value>
+        </item>
+        <item>
+            <key> <string>membership_criterion_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -406,8 +418,20 @@
             <value> <string>RJS</string> </value>
         </item>
         <item>
+            <key> <string>string_index</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>SVG Editor Development</string> </value>
+            <value> <string>SVG Editor App</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -570,7 +594,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.16277.24517.44253</string> </value>
+                <value> <string>961.56844.32215.35908</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -588,7 +612,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502116126.17</float>
+                        <float>1504539670.55</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

@@ -918,6 +918,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 .gadget-content {
   padding: 24pt;
   padding-top: 66pt;
+  /* Disclaimer: It is here only for backward-compatibility! Don't rely on
+                 this class because it will be removed.
+                 It was used to force horizontal rendering of fields inside FormBox. */
   /*
   @media @smartphone {
     .ui-field-contain {
@@ -929,7 +932,6 @@ div[data-gadget-scope='header'] .ui-header ul {
     }
   }
 */
-  /* form validation (assuming label>span is used) */
 }
 .gadget-content div[data-gadget-scope='m'] {
   animation: fadein 0.2s ease-out;
@@ -973,6 +975,9 @@ div[data-gadget-scope='header'] .ui-header ul {
 }
 .gadget-content .ui-field-contain div {
   width: 100%;
+}
+.gadget-content .horizontal_align_form_box .ui-field-contain > div {
+  display: block-inline;
 }
 .gadget-content .ui-content-header-plain {
   font-size: 150%;
@@ -1040,13 +1045,21 @@ div[data-gadget-scope='header'] .ui-header ul {
     padding-left: 24pt;
   }
 }
+.gadget-content .ui-field-contain > label {
+  color: #777777;
+}
 @media only screen and (min-width: 45em) and (max-width: 85em), not screen and (max-width: 85em) {
   .gadget-content .ui-field-contain {
     display: flex;
   }
   .gadget-content .ui-field-contain > label {
     flex: 1;
-    color: #777777;
+    /* Disclaimer: It is here only for backward-compatibility! Don't rely on
+                       this class because it will be removed.
+                       It was used to hide the label of a FormBox. */
+  }
+  .gadget-content .ui-field-contain > label.invisible {
+    display: none;
   }
   .gadget-content .ui-field-contain > label + div {
     flex: 3;
@@ -1057,26 +1070,26 @@ div[data-gadget-scope='header'] .ui-header ul {
     flex: 7;
   }
 }
-.gadget-content form label {
+.gadget-content form .ui-field-contain {
   position: relative;
 }
-.gadget-content form label span span {
+.gadget-content form .ui-field-contain > span {
   animation: fadein 0.2s ease-out;
 }
 @media not screen and (max-width: 85em), only screen and (min-width: 45em) and (max-width: 85em) {
-  .gadget-content form label span span {
+  .gadget-content form .ui-field-contain > span {
     background-color: #FF6600;
     color: #f8fff3;
-    left: 110%;
+    left: 25%;
     position: absolute;
-    bottom: 130%;
+    bottom: 110%;
     white-space: pre;
     padding: 6pt;
     border-radius: 0.325em;
     width: auto;
     z-index: 1001;
   }
-  .gadget-content form label span span:before {
+  .gadget-content form .ui-field-contain > span:before {
     position: absolute;
     top: 100%;
     left: 2em;
@@ -1088,10 +1101,24 @@ div[data-gadget-scope='header'] .ui-header ul {
   }
 }
 @media not screen and (min-width: 45em) {
-  .gadget-content form label span span {
+  .gadget-content form .ui-field-contain > span {
     margin-left: 6pt;
     color: #FF6600;
   }
+}
+/**********************************************
+* Gadget: HTML5 input field
+**********************************************/
+.gadget-content .ui-field-contain .ui-input-has-appendinx,
+.gadget-content .ui-field-contain .ui-input-has-prependinx {
+  display: flex;
+}
+.gadget-content .ui-field-contain .ui-input-has-appendinx i,
+.gadget-content .ui-field-contain .ui-input-has-prependinx i {
+  display: block;
+  padding: 3pt;
+  color: #777777;
+  font-weight: 400;
 }
 /**********************************************
 * Gadget: relation field
@@ -1264,12 +1291,13 @@ div[data-gadget-scope='erp5_searchfield'] button {
     display: block;
     overflow: hidden;
     width: 100%;
-    height: 4em;
     position: relative;
+    height: 4em;
+    line-height: 2em;
   }
-  .document_table table tbody tr td,
-  .document_table table tbody tr th {
-    display: inline-block;
+  .document_table table tbody tr td *,
+  .document_table table tbody tr th * {
+    display: inline;
   }
   .document_table table tbody tr td:first-child,
   .document_table table tbody tr th:first-child {
@@ -1285,6 +1313,7 @@ div[data-gadget-scope='erp5_searchfield'] button {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    padding-top: 6pt;
   }
   .document_table table tbody tr td:first-child a:after,
   .document_table table tbody tr th:first-child a:after {
@@ -1306,12 +1335,15 @@ div[data-gadget-scope='erp5_searchfield'] button {
   .document_table table tbody tr td:first-child ~ td,
   .document_table table tbody tr th:first-child ~ td {
     font-size: 0.8em;
+    display: inline;
+    word-break: break-word;
   }
   .document_table table tbody tr td:first-child ~ th a,
   .document_table table tbody tr th:first-child ~ th a,
   .document_table table tbody tr td:first-child ~ td a,
   .document_table table tbody tr th:first-child ~ td a {
     pointer-events: none;
+    color: #777777;
   }
   .document_table table tbody tr td:first-child ~ th:not(:last-child) a:not(:empty):after,
   .document_table table tbody tr th:first-child ~ th:not(:last-child) a:not(:empty):after,
@@ -1382,9 +1414,14 @@ div[data-gadget-scope='notification'] button {
   text-align: left;
   width: 180pt;
   padding: 12pt;
-  background-color: #FF6600;
   color: #f8fff3;
   border-radius: 0.325em;
+}
+div[data-gadget-scope='notification'] button.success {
+  background-color: #37A419;
+}
+div[data-gadget-scope='notification'] button.error {
+  background-color: #FF6600;
 }
 /**********************************************
 * JQM

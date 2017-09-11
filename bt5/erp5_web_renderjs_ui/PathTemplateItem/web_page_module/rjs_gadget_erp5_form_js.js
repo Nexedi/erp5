@@ -1,137 +1,101 @@
 /*jslint nomen: true, indent: 2, maxerr: 3 */
 /*global window, document, rJS, RSVP*/
+
+/** Form is one of a complicated gadget!
+ *
+ * Editability - the form overrides editability of its fields. Editability is
+ *               hard-coded changed either in Page Templates or soft-coded
+ *               changed in FormBox gadget which renders form as a subgadget
+**/
+
 (function (window, document, rJS, RSVP) {
   "use strict";
 
+  /**
+   * Physically append rendered field to DOM.
+   *
+   * Wraps every field in label gadget.
+   * @argument field: array<tuple<str, object>> where first item is name, second meta info of the field
+   *           (obsolete to specify the meta information which is returned by JSON style since it is duplicate of information in document instance)
+   */
+  function addField(field, rendered_document, form_definition, form_gadget, group_name, modification_dict) {
+    var field_name = field[0],
+      field_element,
+      suboptions;
 
-  function getFieldTypeGadgetUrl(type) {
-    var field_url = 'gadget_erp5_field_readonly.html';
-    if (type === 'ListField') {
-      field_url = 'gadget_erp5_field_list.html';
-    } else if ((type === 'ParallelListField') ||
-               (type === 'MultiListField')) {
-      field_url = 'gadget_erp5_field_multilist.html';
-    } else if (type === 'CheckBoxField') {
-      field_url = 'gadget_erp5_field_checkbox.html';
-    } else if (type === 'MultiCheckBoxField') {
-      field_url = 'gadget_erp5_field_multicheckbox.html';
-    } else if (type === 'StringField') {
-      field_url = 'gadget_erp5_field_string.html';
-    } else if (type === 'PasswordField') {
-      field_url = 'gadget_erp5_field_password.html';
-    } else if (type === 'RelationStringField') {
-      field_url = 'gadget_erp5_field_relationstring.html';
-    } else if (type === 'MultiRelationStringField') {
-      field_url = 'gadget_erp5_field_multirelationstring.html';
-    } else if (type === 'TextAreaField') {
-      field_url = 'gadget_erp5_field_textarea.html';
-    } else if (type === 'DateTimeField') {
-      field_url = 'gadget_erp5_field_datetime.html';
-    } else if (type === 'FloatField') {
-      field_url = 'gadget_erp5_field_float.html';
-    } else if (type === 'FileField') {
-      field_url = 'gadget_erp5_field_file.html';
-    } else if (type === 'IntegerField') {
-      field_url = 'gadget_erp5_field_integer.html';
-    } else if (type === 'ListBox') {
-      field_url = 'gadget_erp5_field_listbox.html';
-    } else if (type === 'EditorField') {
-      field_url = 'gadget_erp5_field_editor.html';
-      // field_url = 'gadget_codemirror.html';
-      // sandbox = 'iframe';
-    } else if (type === 'GadgetField') {
-      field_url = 'gadget_erp5_field_gadget.html';
-    } else if (type === 'RadioField') {
-      field_url = 'gadget_erp5_field_radio.html';
-    } else if (type === 'ImageField') {
-      field_url = 'gadget_erp5_field_image.html';
-    } else if (type === 'EmailField') {
-      field_url = 'gadget_erp5_field_email.html';
+    if (!rendered_document.hasOwnProperty(field_name)) {
+      return;
     }
-    return field_url;
-  }
 
+    suboptions = {
+      hide_enabled: form_definition.hide_enabled, // listbox specific
+      extended_search: form_definition.extended_search, // searchfield specific
+      field_type: rendered_document[field_name].type,
+      label: ((group_name !== "bottom") && (rendered_document[field_name].title.length > 0)), // no label for bottom group and field without title
+      field_json: rendered_document[field_name] // pass
+    };
 
-  function addField(field, rendered_form, form_definition, form_gadget, group, modification_dict) {
-    if (rendered_form.hasOwnProperty(field[0])) {
-      // Field is enabled in this context
-      var sandbox = "public",
-        field_element = document.createElement("div"),
-        renderered_field = rendered_form[field[0]],
-        // suboptions = options[renderered_field.key] || suboption_dict;
-        suboptions = {};
+    // XXX: what is the purpose of this?
+    suboptions.field_json.view = form_gadget.state.view;
 
-      // XXX Hardcoded for searchfield - remove later!
-      if (form_definition.extended_search) {
-        suboptions.extended_search = form_definition.extended_search;
-      }
-      // XXX Hardcoded for listbox's hide functionality
-      suboptions.hide_enabled = form_definition.hide_enabled;
-
-      suboptions.field_url = getFieldTypeGadgetUrl(renderered_field.type);
-      suboptions.label = false;
-      suboptions.field_json = renderered_field;
-      suboptions.field_json.view = form_gadget.state.view;
-
-      if (group[0] !== "bottom") {
-        suboptions.label = true;
-      }
-
-      return new RSVP.Queue()
-        .push(function () {
-          if (modification_dict.hasOwnProperty('hash')) {
-            return form_gadget.declareGadget('gadget_erp5_label_field.html', {
-              scope: renderered_field.key,
-              element: field_element,
-              sandbox: sandbox
-            });
-          }
-          return form_gadget.getDeclaredGadget(renderered_field.key);
-        })
-        .push(function (label_gadget) {
-          if (modification_dict.hasOwnProperty('hash')) {
-
-            // XXX Hardcoded to get one listbox gadget
-            //pt form list gadget will get this listbox's info
-            //then pass to search field gadget
-            if (suboptions.field_url === "gadget_erp5_field_listbox.html") {
-              form_gadget.props.listbox_gadget = label_gadget;
-            }
-            form_gadget.props.gadget_list.push(label_gadget);
-          }
-          return label_gadget.render(suboptions);
-        })
-        .push(function () {
-          return field_element;
-          // return fieldset_element;
-          // fieldset_element.appendChild(field_element);
-        });
+    // if the whole form is non-editable than every field has to be non-editable
+    if (form_gadget.state.editable === 0) {
+      suboptions.field_json.editable = 0;
     }
-  }
 
-
-  function addGroup(group, rendered_form, form_definition, form_gadget, modification_dict) {
-    // XXX: > Romain: fieldset will be needed later for menus
-    var fieldset_element = document.createElement("div"),
-      promise_field_list = [],
-      j;
-
-    fieldset_element.setAttribute("class", group[0]);
-
-    for (j = 0; j < group[1].length; j += 1) {
-      promise_field_list.push(addField(group[1][j], rendered_form, form_definition, form_gadget, group, modification_dict));
-    }
+    field_element = document.createElement("div");
     return new RSVP.Queue()
       .push(function () {
-        return RSVP.all(promise_field_list);
+        var rendered_field_name = rendered_document[field_name].key;
+        if (modification_dict.hasOwnProperty('hash')) {
+          return form_gadget.declareGadget('gadget_erp5_label_field.html', {
+            scope: rendered_field_name, // ugly! Should be just `field_name` but too many tests depend on it
+            element: field_element,
+            sandbox: "public"
+          });
+        }
+        return form_gadget.getDeclaredGadget(rendered_field_name);
+      })
+      .push(function (label_gadget) {
+        if (modification_dict.hasOwnProperty('hash')) {
+
+          // XXX Hardcoded to get one listbox gadget
+          //pt form list gadget will get this listbox's info
+          //then pass to search field gadget
+          if (suboptions.field_type === 'ListBox') {
+            form_gadget.props.listbox_gadget = label_gadget;
+          }
+
+          // gadget_list hold references to all created gadgets
+          form_gadget.props.gadget_list.push(label_gadget);
+        }
+        return label_gadget.render(suboptions);
+      })
+      .push(function () {
+        return field_element;
+      });
+  }
+
+
+  function addGroup(group, rendered_document, form_definition, form_gadget, modification_dict) {
+    // XXX: > Romain: fieldset will be needed later for menus
+    var fieldset_element = document.createElement("div"),
+      group_name = group[0],
+      field_list = group[1];
+
+    fieldset_element.setAttribute("class", group_name);
+
+    return new RSVP.Queue()
+      .push(function () {
+        return RSVP.all(field_list.map(function (field) {
+          return addField(field, rendered_document, form_definition, form_gadget, group_name, modification_dict);
+        }));
       })
       .push(function (result_list) {
-        var i;
-        for (i = 0; i < result_list.length; i += 1) {
-          if (result_list[i]) {
-            fieldset_element.appendChild(result_list[i]);
-          }
-        }
+        // append all rendered fields into DOM
+        result_list.forEach(function (result) {
+          if (result) {fieldset_element.appendChild(result); }
+        });
         return fieldset_element;
       });
   }
@@ -139,12 +103,25 @@
 
   rJS(window)
     .ready(function (g) {
-      g.props = {};
+      g.props = {
+        gadget_list: []  // holds references to all subgadgets to be able to grab their content on submit
+      };
     })
 
-    .allowPublicAcquisition("getFieldTypeGadgetUrl", function (param_list) {
-      return getFieldTypeGadgetUrl(param_list[0]);
+    .setState({
+      // erp5 document is an instance of a document referenced by jio_key
+      erp5_document: undefined,
+      jio_key: undefined,
+      // form definition holds positioning of fields
+      form_definition: undefined,
+      view: undefined,  // Kato: still have no idea what that means
+      // hash is used to spot changes in positioning of fields
+      hash: undefined,
+      // attributes of the form - no magic there
+      title: undefined,
+      editable: undefined
     })
+
     .allowPublicAcquisition("getFormContent", function (param_list) {
       return this.getContent(param_list[0]);
     })
@@ -155,19 +132,24 @@
 
     .declareMethod('render', function (options) {
       var group_list = options.form_definition.group_list,
-        rendered_form = options.erp5_document._embedded._view,
+        rendered_document = options.erp5_document._embedded._view,
+        hash = "",
+        group_name,
+        group_field_list,
         i,
-        j,
-        hash = "";
+        j;
 
-      // Check the list of field to render
-      // If the list is different, DOM content will be dropped
-      // and recreated
+      // Contruct a hash of <placement>+<field names> to snapshot rendering.
+      // The `hash` will make it to the `onStateChange` only if it has changed.
+      // If so, DOM content will be dropped and recreated
       for (i = 0; i < group_list.length; i += 1) {
-        hash += group_list[i][0];
-        for (j = 0; j < group_list[i][1].length; j += 1) {
-          if (rendered_form.hasOwnProperty(group_list[i][1][j][0])) {
-            hash += group_list[i][1][j][0];
+        group_name = group_list[i][0];
+        group_field_list = group_list[i][1];
+        hash += group_name;
+
+        for (j = 0; j < group_field_list.length; j += 1) {
+          if (rendered_document.hasOwnProperty(group_field_list[j][0])) {
+            hash += group_field_list[j][0];
           }
         }
       }
@@ -175,15 +157,18 @@
       return this.changeState({
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
+        jio_key: options.jio_key,
         hash: hash,
-        view: options.view
+        view: options.view,
+        editable: options.editable,
+        title: options.title
       });
     })
 
     .onStateChange(function (modification_dict) {
       var erp5_document = this.state.erp5_document,
         form_definition = this.state.form_definition,
-        rendered_form = erp5_document._embedded._view,
+        rendered_document = erp5_document._embedded._view,
         group_list = form_definition.group_list,
         form_gadget = this;
 
@@ -193,12 +178,9 @@
 
       return new RSVP.Queue()
         .push(function () {
-          var group_promise_list = [],
-            j;
-          for (j = 0; j < group_list.length; j += 1) {
-            group_promise_list.push(addGroup(group_list[j], rendered_form, form_definition, form_gadget, modification_dict));
-          }
-          return RSVP.all(group_promise_list);
+          return RSVP.all(group_list.map(function (group) {
+            return addGroup(group, rendered_document, form_definition, form_gadget, modification_dict);
+          }));
         })
         .push(function (result_list) {
           if (modification_dict.hasOwnProperty('hash')) {

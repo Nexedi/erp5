@@ -1,6 +1,6 @@
-/*global window, rJS */
+/*global window, rJS, Math */
 /*jslint indent: 2, maxerr: 3 */
-(function (window, rJS) {
+(function (window, rJS, Math) {
   "use strict";
 
   rJS(window)
@@ -13,6 +13,7 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         value = field_json.value || field_json.default || "",
+        percents = (field_json.input_style || "").endsWith("%"),
         state_dict = {
           editable: field_json.editable,
           required: field_json.required,
@@ -21,14 +22,34 @@
           precision: field_json.precision,
           hidden: field_json.hidden
         };
+
+      // if value is 0.0 we assign empty instead - so we fix it here
+      if (field_json.value !== undefined && field_json.value !== '') {
+        value = field_json.value;
+      } else if (field_json.default !== undefined && field_json.default !== '') {
+        value = field_json.default;
+      }
+      value = window.parseFloat(value); // at this step we finished joggling with value
+
       if (field_json.precision) {
-        state_dict.step = 1 / Math.pow(10, field_json.precision);
-        value = parseFloat(value || "0").toFixed(field_json.precision);
+        state_dict.step = Math.pow(10, -field_json.precision);
+        value = value.toFixed(field_json.precision);
       } else {
-        state_dict.step = 0.00000001;
+        // XXX did previous default step value make sense? 0.00000001
+        state_dict.step = 1.0;
+      }
+      if (percents) {
+        // ERP5 always devides the value by 10 if it is set to pe percentages
+        // thus we have to mitigate that in javascript here
+        value *= 100.0;
+        state_dict.append = "%";
       }
       state_dict.value = value;
-      state_dict.text_content = value;
+      if (window.isNaN(value)) {
+        state_dict.text_content = "";
+      } else {
+        state_dict.text_content = value.toString();
+      }
       return this.changeState(state_dict);
     })
 
@@ -82,4 +103,4 @@
       return true;
     });
 
-}(window, rJS));
+}(window, rJS, Math));

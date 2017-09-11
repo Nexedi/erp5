@@ -643,7 +643,7 @@ class TestKM(TestKMMixIn):
                                    title='KM Impl')
     assigned_members_subsection = self.websection.newContent(portal_type = 'Web Section')
     assigned_members_subsection.edit(membership_criterion_base_category = ['follow_up'],
-                                     membership_criterion_category = ['follow_up/%s'%project.getId()])
+                                     membership_criterion_category = ['follow_up/%s'%project.getRelativeUrl()])
     self.tic()
     km_assigned_member_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
                                           self.web_section_knowledge_pad,
@@ -660,7 +660,7 @@ class TestKM(TestKMMixIn):
     person = portal.person_module.newContent(portal_type = 'Person',
                                              title = 'John Doe 1.234',
                                              reference = 'person_12345')
-    assignment =  person.newContent(portal_type = 'Assignment')
+    assignment =  person.newContent(portal_type = 'Assignment', destination_project_value=project)
     self.tic()
     self.changeSkin('KM')
     self.assertTrue(person.getTitle() in

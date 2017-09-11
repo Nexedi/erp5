@@ -68,6 +68,7 @@ Skinnable.SkinnableObjectManager.initializeCache = CMFCoreSkinnableSkinnableObje
 def skinResolve(self, selection, name):
   try:
     portal_skins = aq_base(self.portal_skins)
+    portal_callables = aq_base(self.portal_callables)
   except AttributeError:
     raise AttributeError, name
   try:

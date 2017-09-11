@@ -5,6 +5,9 @@ Bar | view
 Bar | view_datetime_field
 Foo Bar Module | view
 Foo Line | view
+Foo Line | view_contentlist
+Foo Line | view_dynamic_matrixbox
+Foo Line | view_matrixbox
 Foo Module | do_nothing_report_jio
 Foo Module | list
 Foo Module | list_ui
@@ -25,6 +28,7 @@ Foo | view_crash_on_save
 Foo | view_duration_field
 Foo | view_formbox
 Foo | view_formbox_dialog
+Foo | view_formbox_fooline
 Foo | view_listbox
 Foo | view_multiple_listbox
 Foo | view_planning

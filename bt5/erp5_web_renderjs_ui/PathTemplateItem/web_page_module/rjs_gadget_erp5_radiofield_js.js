@@ -60,7 +60,7 @@
 
       //the first item will always be selected if no initial default value is supplied.
       if (state_dict.value === "" && state_dict.select_first_item) {
-        state_dict.value = state_dict.items[0][1];
+        state_dict.value = state_dict.item_list[0][1];
       }
 
       return this.changeState(state_dict);

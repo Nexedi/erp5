@@ -119,9 +119,8 @@ class RelatedKey(SearchKey):
     self._buildRelatedKey(related_key_definition)
     if isinstance(search_value, Query):
       search_value.setGroup(self.getColumn())
-    join_condition = search_value
     return RelatedQuery(search_key=self,
-                        join_condition=join_condition)
+                        join_condition=search_value)
 
   def registerColumnMap(self, column_map, table_alias_list=None):
     related_column = self.getColumn()
@@ -162,9 +161,6 @@ class RelatedKey(SearchKey):
     # Resolve (and register) related key column in related key group with its last table.
     column_map.registerColumn(self.real_column, group=group)
     column_map.resolveColumn(self.real_column, table_name, group=group)
-    # Always register catalog, since it is always the "base" table of
-    # RelatedKeys.
-    column_map.registerCatalog()
     return group
 
   def stitchJoinDefinition(self, table_alias_list, join_query_list, column_map):

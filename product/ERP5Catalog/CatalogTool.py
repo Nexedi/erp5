@@ -32,7 +32,7 @@ from collections import defaultdict
 from math import ceil
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, SimpleQuery
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.User import system as system_user
@@ -637,39 +637,27 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             sql_catalog_id=sql_catalog_id,
             local_roles=local_roles,
           )
-
-      role_query = None
-      security_uid_query = None
-      if role_column_dict:
-        query_list = []
-        for key, value in role_column_dict.items():
-          new_query = Query(**{key : value})
-          query_list.append(new_query)
-        role_query = ComplexQuery(logical_operator='OR', *query_list)
+      query_list = []
+      append = query_list.append
+      for key, value in role_column_dict.iteritems():
+        append(SimpleQuery(**{key : value}))
       if security_uid_dict:
-        catalog_security_uid_groups_columns_dict = \
-            self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
-
-        query_list = []
-        for local_roles_group_id, security_uid_list in\
-                 security_uid_dict.iteritems():
+        catalog_security_uid_groups_columns_dict = self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
+        for local_roles_group_id, security_uid_list in security_uid_dict.iteritems():
           assert security_uid_list
-          query_list.append(Query(**{
-            catalog_security_uid_groups_columns_dict[local_roles_group_id]:
-                  security_uid_list,
-            'operator': 'IN'}))
-
-        security_uid_query = ComplexQuery(*query_list, logical_operator='OR')
-
-      if role_query:
-        if security_uid_query:
-          # merge
-          query = ComplexQuery(security_uid_query, role_query, logical_operator='OR')
-        else:
-          query = role_query
-      elif security_uid_query:
-        query = security_uid_query
-
+          append(SimpleQuery(
+            **{catalog_security_uid_groups_columns_dict[local_roles_group_id]: security_uid_list}
+          ))
+      if query_list:
+        query = ComplexQuery(query_list, logical_operator='OR')
+        if local_role_column_dict:
+          query = ComplexQuery(
+            [
+              SimpleQuery(**{key : value})
+              for key, value in local_role_column_dict.items()
+            ] + [query],
+            logical_operator='AND',
+          )
       else:
         # XXX A false query has to be generated.
         # As it is not possible to use SQLKey for now, pass impossible value
@@ -677,16 +665,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # column range)
         # Do not pass security_uid_list as empty in order to prevent useless
         # overhead
-        query = Query(uid=-1)
-
-      if local_role_column_dict:
-        query_list = []
-        for key, value in local_role_column_dict.items():
-          new_query = Query(**{key : value})
-          query_list.append(new_query)
-        local_role_query = ComplexQuery(logical_operator='AND', *query_list)
-        query = ComplexQuery(query, local_role_query, logical_operator='AND')
-
+        query = SimpleQuery(uid=-1)
       return query
 
     # searchResults has inherited security assertions.
@@ -1056,14 +1035,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         )
       return related_key_list
 
-    security.declarePublic('getCategoryParameterDict')
-    def getCategoryParameterDict(self, category_list, category_table='category', strict_membership=True, forward=True, onMissing=lambda category: True):
+    security.declarePublic('getCategoryValueDictParameterDict')
+    def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True):
       """
-      From a list of categories, produce a catalog keyword argument dictionary
-      testing (strict or not, forward or reverse relation) membership to these
-      categories.
+      From a mapping from base category ids to lists of documents, produce a
+      catalog keyword argument dictionary testing (strict or not, forward or
+      reverse relation) membership to these documents with their respective
+      base categories.
 
-      category_list (list of category relative urls with their base categories)
+      base_category_dict (dict with base category ids as keys and document lists
+      as values)
+        Note: mutated by this method.
       category_table ('category' or 'predicate_category')
         Controls the table to use for membership lookup.
       strict_membership (bool)
@@ -1072,12 +1054,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       forward (bool)
         Whether document being looked up bears the relation (true) or is its
         target (false).
-      onMissing (callable)
-        Called for each category which does not exist.
-        Receives faulty relative url as "category" argument.
-        False return value skips the entry.
-        True return value causes a None placeholder to be inserted.
-        Raised exceptions will propagate.
 
       Return a dictionnary whose keys are catalog parameter names and values
       are sets of uids.
@@ -1091,25 +1067,48 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         flag_list.append('strict')
       prefix = ('_'.join(flag_list) + '__') if flag_list else ''
       suffix = ('' if forward else '__related') + '__uid'
-      base_category_dict = {}
-      portal_categories = self.getPortalObject().portal_categories
-      getBaseCategoryId = portal_categories.getBaseCategoryId
-      getCategoryUid = portal_categories.getCategoryUid
-      for relative_url in category_list:
-        category_uid = getCategoryUid(relative_url)
-        if category_uid is not None or onMissing(category=relative_url):
-          base_category_dict.setdefault(
-            getBaseCategoryId(relative_url),
-            set(),
-          ).add(category_uid)
       parent_uid_set = base_category_dict.pop('parent', None)
+      base_category_uid_dict = {
+        base_category_id: {document.getUid() for document in document_set}
+        for base_category_id, document_set in base_category_dict.iteritems()
+      }
       result = {
         prefix + x + suffix: y
-        for x, y in base_category_dict.iteritems()
+        for x, y in base_category_uid_dict.iteritems()
       }
       if parent_uid_set is not None:
         result['parent_uid'] = parent_uid_set
       return result
+
+    security.declarePublic('getCategoryParameterDict')
+    def getCategoryParameterDict(self, category_list, onMissing=lambda category: True, **kw):
+      """
+      From a list of categories, produce a catalog keyword argument dictionary
+      testing (strict or not, forward or reverse relation) membership to these
+      categories.
+
+      category_list (list of category relative urls with their base categories)
+      onMissing (callable)
+        Called for each category which does not exist.
+        Receives faulty relative url as "category" argument.
+        False return value skips the entry.
+        True return value causes a None placeholder to be inserted.
+        Raised exceptions will propagate.
+
+      Other arguments & return value: see getCategoryValueDictParameterDict.
+      """
+      base_category_dict = defaultdict(set)
+      portal_categories = self.getPortalObject().portal_categories
+      getBaseCategoryId = portal_categories.getBaseCategoryId
+      getCategoryValue = portal_categories.getCategoryValue
+      for relative_url in category_list:
+        category_uid = getCategoryValue(relative_url)
+        if category_uid is not None or onMissing(category=relative_url):
+          base_category_dict[getBaseCategoryId(relative_url)].add(category_uid)
+      return self.getCategoryValueDictParameterDict(
+        base_category_dict,
+        **kw
+      )
 
     def _aq_dynamic(self, name):
       """
@@ -1243,5 +1242,44 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             db.query(r)
       return src
 
+    security.declarePublic('getDocumentValueList')
+    def getDocumentValueList(self, sql_catalog_id=None,
+                             search_context=None, language=None,
+                             strict_language=True, all_languages=None,
+                             all_versions=None, now=None, **kw):
+      """
+        Return the list of documents which belong to the
+        current section. The API is designed to
+        support additional parameters so that it is possible
+        to group documents by reference, version, language, etc.
+        or to implement filtering of documents.
+
+        This method must be implemented through a
+        catalog method script :
+          SQLCatalog_getDocumentValueList
+
+        Here is the list of arguments :
+          * search_context
+          * language
+          * strict_language
+          * all_languages
+          * all_versions
+          * now
+
+        If you specify search_context, its predicate will be
+        respected,
+        i.e. web_section.WebSection_getDocumentValueList is
+        equivalent to
+        portal_catalog.getDocumentValueList(search_context=web_section)
+      """
+      catalog = self.getSQLCatalog(sql_catalog_id)
+      return catalog.SQLCatalog_getDocumentValueList(
+          search_context=search_context,
+          language=language,
+          strict_language=strict_language,
+          all_languages=all_languages,
+          all_versions=all_versions,
+          now=now,
+          **kw)
 
 InitializeClass(CatalogTool)

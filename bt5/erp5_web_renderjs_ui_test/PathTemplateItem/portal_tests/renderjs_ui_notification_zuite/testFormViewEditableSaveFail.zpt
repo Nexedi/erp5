@@ -79,6 +79,11 @@
   <td></td>
 </tr>
 
+<tr>
+  <td>verifyElementPresent</td>
+  <td>//div[@data-gadget-scope='notification']//button[@class='error']</td>
+  <td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
