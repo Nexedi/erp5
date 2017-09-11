@@ -296,9 +296,11 @@ def synchronizeDynamicModules(context, force=False):
     the classes since the last reset on this node.
   * with force=True, forcefully reset the classes on the current node
     and send out an invalidation to other nodes
+
+    XXX:  force=True doesn't reset or migrate as migration still is dependent
+          on `_bootstrapped` which already do have portal_id
   """
   portal = context.getPortalObject()
-
   global last_sync
   if force:
     # hard invalidation to force sync between nodes
