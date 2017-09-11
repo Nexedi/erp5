@@ -2173,6 +2173,10 @@ class TemplateTool (BaseTool):
                                   temp_object=True,
                                   )
 
+      # Reduce both old and new Installation State
+      old_installation_state.reduceBusinessManager()
+      new_installation_state.reduceBusinessManager()
+
       # Get path list for old and new states
       old_state_path_list = old_installation_state.getPathList()
       new_state_path_list = new_installation_state.getPathList()
@@ -2189,6 +2193,10 @@ class TemplateTool (BaseTool):
         old_item = old_installation_state.getBusinessItemByPath(path)
         old_item.setProperty('item_sign', '-1')
         to_install_path_item_list.append(old_item)
+
+      # Reduce old_installation_state again as changes as new sub-objects maybe
+      # added to the old_installation_state
+      old_installation_state.reduceBusinessManager()
 
       # XXX: At this point, we expect all the Business Manager objects as 'reduced',
       # thus all the BusinessItem sub-objects should have single value
