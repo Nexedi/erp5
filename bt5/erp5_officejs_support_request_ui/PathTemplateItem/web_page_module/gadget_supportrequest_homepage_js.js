@@ -16,6 +16,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("translateHtml", "translateHtml")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("updateHeader", "updateHeader")
@@ -80,15 +81,18 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function (options) {
+    .declareMethod("render", function () {
       var gadget = this;
 
       return gadget.changeState({
         render: true
       })
         .push(function () {
+          return gadget.getUrlParameter('field_listbox_begin_from');
+        })
+        .push(function (field_listbox_begin_from) {
           return gadget.changeState({
-            field_listbox_begin_from: options.field_listbox_begin_from
+            field_listbox_begin_from: field_listbox_begin_from
           });
         })
         .push(function () {
