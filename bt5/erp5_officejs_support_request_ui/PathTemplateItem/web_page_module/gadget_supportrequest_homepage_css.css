@@ -1,11 +1,26 @@
 #generate-rss {
-  padding: 8pt;
-  margin-top: 30pt;
+  padding: 5.5pt;
+  margin-right: 12pt;
+  background-color: #FF6600;
+  border-color: #FF6600;
+  color: #FFFFFF;
+  border-radius: 0.325em;
+  border-width: 0.5px;
+  border-style: solid;
+  min-width: 6em;
+  line-height: 1.5;
+  display: none;
+  text-align: center;
+  width: fit-content;
+}
+
+.restore-button {
+  padding: 6pt;
   margin-right: 12pt;
   background-color: #FF6600;
   color: #FFFFFF;
   border-radius: 0.325em;
-  border-width: 1px;
+  border-width: 0.5px;
   border-style: solid;
   min-width: 8em;
   line-height: 1.5;
@@ -26,6 +41,15 @@
 }
 
 .gadget-content .ui-field-contain .bottom .first-line-buttons {
+  -webkit-appearance: none;
   margin-top: 0;
   margin-bottom: 20px;
+}
+
+button:disabled{
+  background-color:#FFC9A4;
+}
+
+input[type="submit"] {
+  -webkit-appearance: none;
 }
