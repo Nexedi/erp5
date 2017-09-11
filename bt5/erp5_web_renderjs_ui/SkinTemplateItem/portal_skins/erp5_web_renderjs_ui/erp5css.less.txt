@@ -1117,8 +1117,8 @@ div[data-gadget-scope='header'] .ui-header {
       width: 100%;
     }
   }
-  /* Disclaimer: It is here only for backward-compatibility! Don't rely on
-                 this class because it will be removed.
+  /* Disclaimer: Class .horizontal_align_form_box is here only for backward-compatibility!
+                 Don't rely on this class because it will be removed.
                  It was used to force horizontal rendering of fields inside FormBox. */
   .horizontal_align_form_box .ui-field-contain > div {
     display: block-inline;
@@ -1127,7 +1127,19 @@ div[data-gadget-scope='header'] .ui-header {
   .ui-content-header-plain {
     font-size: 150%;
   }
-
+  .worklist-empty {
+    max-width: 442px; /* original size of the embedded image */
+    width: 100%; /* smaller screens than 442px will show full-width box */
+    margin: auto; /* center with known width */
+    text-align: center;
+    h2 {
+      font-size: 300%; /* copy behaviour of previously used .first-loader */
+      margin-bottom: 0.5em;
+    }
+    img {
+      width: 100%; /* height will be computed automatically and proportionally */
+    }
+  }
   ul.document-listview {
     &:not(:last-of-type) {
       margin-bottom: @double-margin-size;
@@ -1218,8 +1230,8 @@ div[data-gadget-scope='header'] .ui-header {
       display: flex;
       & > label {
         flex: 1;
-        /* Disclaimer: It is here only for backward-compatibility! Don't rely on
-                       this class because it will be removed.
+        /* Disclaimer: Class .invisible is here only for backward-compatibility!
+                       Don't rely on this class because it will be removed.
                        It was used to hide the label of a FormBox. */
         &.invisible {
           display: none;
