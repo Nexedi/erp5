@@ -1,15 +1,17 @@
 CACHE MANIFEST
-# generated on Thu, 07 Feb 2017 15:00:00 GMT
+# generated on Mon, 11 Sep 2017 10:00:00 GMT
 CACHE:
 favicon.ico
 renderjs.js
 rsvp.js
 codemirror/lib/codemirror.js
 codemirror/lib/codemirror.css
-codemirror/addon/cm_edit/matchbrackets.js
-codemirror/addon/cm_edit/trailingspace.js
+codemirror/addon/edit/matchbrackets.js
+codemirror/addon/edit/trailingspace.js
 codemirror/addon/dialog/dialog.css
 codemirror/addon/dialog/dialog.js
+codemirror/addon/display/fullscreen.css
+codemirror/addon/display/fullscreen.js
 codemirror/addon/search/searchcursor.js
 codemirror/addon/search/search.js
 codemirror/addon/search/jump-to-line.js

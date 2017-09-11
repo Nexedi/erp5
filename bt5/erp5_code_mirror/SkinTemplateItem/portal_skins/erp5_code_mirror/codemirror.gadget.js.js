@@ -9,6 +9,7 @@
         this.element.querySelector('textarea'),
         {
           // mode: mode,
+          fullScreen: true,
           lineNumbers: true,
           styleActiveLine: true,
           showTrailingSpace: true,
@@ -33,12 +34,12 @@
             "Shift-Tab": "indentLess"
             // "Ctrl-S": function(cm){saveDocument(cm, $.Event('click'))}
           },
-          foldGutter: true,
+          foldGutter: false,
           lineWrapping: true,
           gutters: ["CodeMirror-lint-markers",
                     "CodeMirror-linenumbers",
                     "CodeMirror-foldgutter"],
-          lint: false
+          lint: true
         }
       );
       window.editor = this.editor;
