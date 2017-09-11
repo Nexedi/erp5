@@ -1611,6 +1611,64 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertTrue(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=700, credit_price=200)
 
+  def testAccountStatementFromDateDetailedSummaryZeroTransaction(self):
+    # Edge case regression #20170911-1AD62FB
+    t0 = self._makeOne(
+        portal_type='Accounting Transaction',
+        title='Transaction 0',
+        reference='ref0',
+        source_reference='0',
+        simulation_state='planned',
+        destination_section_value=self.organisation_module.client_1,
+        start_date=DateTime(2006, 1, 31),
+        lines=(dict(source_value=self.portal.account_module.receivable,
+                    id='receivable_line',
+                    source_debit=0),
+               dict(source_value=self.portal.account_module.payable,
+                    source_credit=0)))
+    self.assertFalse(t0.receivable_line.hasGroupingReference())
+    self._createAccountStatementGroupedAtFromDateDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.receivable.getRelativeUrl()
+    request_form['from_date'] = DateTime(2006, 2, 26)
+    request_form['at_date'] = DateTime(2006, 6, 1)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered', 'planned']
+    request_form['detailed_from_date_summary'] = 1
+    request_form['hide_analytic'] = False
+    request_form['export'] = False
+
+    report_section_list = self.getReportSectionList(
+        self.portal.accounting_module,
+        'AccountModule_viewAccountStatementReport')
+    self.assertEqual(4, len(report_section_list))
+    report_section_list = [r for r in report_section_list if r.form_id]
+    self.assertEqual(2, len(report_section_list))
+
+    # the first section contains explanation of non grouped lines before the
+    # period
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # We have lines for transaction 0 and 1 which are not grouped
+    self.assertEqual(2, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             Movement_getSpecificReference='0',
+                             date=DateTime(2006, 1, 31),
+                             Movement_getExplanationTitleAndAnalytics='Transaction 0\nref0',
+                             debit_price=0,
+                             credit_price=0,)
+    self.checkLineProperties(data_line_list[1],
+                             Movement_getSpecificReference='1',
+                             date=DateTime(2006, 2, 1),
+                             Movement_getExplanationTitleAndAnalytics='Transaction 1\nref1',
+                             debit_price=100,
+                             credit_price=0,)
+    self.assertTrue(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=100, credit_price=0)
 
   def testAccountStatementPeriodDateForExpenseAccounts(self):
     # Account statement for expense or income account will not show
