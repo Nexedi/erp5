@@ -67,9 +67,9 @@ for brain in portal.portal_simulation.getMovementHistoryList(**inventory_query):
   credit = max(-brain.total_quantity, 0)
   total_credit += credit
 
-  debit_price = max(brain.total_price, 0)
+  debit_price = max((brain.total_price or 0), 0)
   total_debit_price += debit_price
-  credit_price = max(-brain.total_price, 0)
+  credit_price = max(-(brain.total_price or 0), 0)
   total_credit_price += credit_price
 
   line = Object(uid='new_000',
