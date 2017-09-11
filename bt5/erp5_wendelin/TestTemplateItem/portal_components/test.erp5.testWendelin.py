@@ -52,16 +52,6 @@ class Test(ERP5TypeTestCase):
   def getTitle(self):
     return "Wendelin Test"
 
-  def test_0_import(self): 		 
-    """ 		 
-    Test we can import certain libraries but still failure to do so should be a  		 
-    a test step failure rather than global test failure. 		 
-    """ 		 
-    import scipy as _	 
-    import sklearn as _
-    import pandas as _
-    import matplotlib as _
-
   def test_01_IngestionFromFluentd(self):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
