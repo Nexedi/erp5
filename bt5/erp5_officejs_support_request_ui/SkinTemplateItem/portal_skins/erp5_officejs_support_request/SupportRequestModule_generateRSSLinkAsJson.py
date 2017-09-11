@@ -4,7 +4,7 @@ import json
 absolute_url = context.absolute_url()
 href = "SupportRequestModule_viewLastSupportRequestListAsRss"
 portal = context.getPortalObject()
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue()
+person = portal.portal_membership.getAuthenticatedMember().getUserValue()
 
 if person is None:
   raise Unauthorized("You must logged in first!")
