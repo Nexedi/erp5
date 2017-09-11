@@ -77,13 +77,12 @@
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_chunk=None, data_stream=None</string> </value>
+            <value> <string>data_chunk=None, data_stream=None, bucket_reference=None, out_data_stream=None</string> </value>
         </item>
         <item>
             <key> <string>comment</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>This script is used with default simple Wendelin model defined in erp5_wendelin_data.\n
+For other models it will need adjustments.</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
