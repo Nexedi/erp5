@@ -1952,17 +1952,22 @@ class ERP5Generator(PortalGenerator):
     return p
 
   @classmethod
-  def bootstrap_bm(cls, portal, bm_name, path_list):
+  def bootstrap_bm(cls, context, bm_name, path_list):
     """
     Bootstrap Business Item from the paths needed
     """
     bm_path = getBootstrapBusinessTemplateUrl(bm_name)
-    template_tool = portal.portal_templates
-    manager = template_tool.newContent(portal_type='Business Manager')
-    manager.importFile(bm_path + '/' + bm_name + '.zexp')
-    for path in path_list:
-      item = manager.getBusinessItemByPath(path)
-      item.install(manager)
+    portal = context.getPortalObject()
+    try:
+      # If template_tool doesn't exist, do nothing
+      template_tool = portal.portal_templates
+      manager = template_tool.newContent(portal_type='Business Manager')
+      manager.importFile(bm_path + '/' + bm_name + '.zexp')
+      for path in path_list:
+        item = manager.getBusinessItemByPath(path)
+        item.install(manager)
+    except AttributeError:
+      pass
 
   @classmethod
   def bootstrap(cls, context, bt_name, item_name, content_id_list):
@@ -2332,6 +2337,12 @@ class ERP5Generator(PortalGenerator):
 
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)
+
+    # Explicitly run bootstrap for portal_types and portal_property_sheets
+    # before installing bootstrap Business Template/Manager becuase it needs to
+    # be there for bootstrap portal_types and property_sheets to be used.
+    p.portal_types._bootstrap()
+    p.portal_property_sheets._bootstrap()
 
     if not update:
       self.setupWorkflow(p)
