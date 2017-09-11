@@ -1,6 +1,6 @@
-/*global document, window, Option, rJS, RSVP, loopEventListener*/
-/*jslint nomen: true, indent: 2, maxerr: 150 */
-(function (window, rJS, RSVP, loopEventListener) {
+/*global document, window, Option, rJS, RSVP*/
+/*jslint nomen: true, indent: 2, maxerr: 3 */
+(function (window, rJS, RSVP) {
   "use strict";
 
   rJS(window)
@@ -70,6 +70,10 @@
             .push(function (search_criteria) {
               gadget.changeState({extended_search: search_criteria});
             });
+        })
+        .push(function () {
+          var restore = document.getElementById("restoreButton");
+          restore.removeAttribute('disabled');
         });
       // method code
     })
@@ -296,36 +300,6 @@
       }
       return queue;
     })
-    .declareService(function () {
-      var gadget = this;
-      function getRSS(click_event) {
-        var rss_button = gadget.element.querySelector("#generate-rss");
-        if (rss_button.href === '') {
-          return gadget.getSetting("hateoas_url")
-            .push(function (hateoas_url) {
-              return gadget.jio_getAttachment(
-                'support_request_module',
-                hateoas_url + 'support_request_module'
-                  + "/SupportRequestModule_generateRSSLinkAsJson"
-              )
-                .push(function (result) {
-                  rss_button.href = result.restricted_access_url;
-                  rss_button.innerHTML = "RSS Link";
-                  rss_button.target = "_blank";
-                });
-            });
-        }
-        click_event.returnValue = true;
-      }
-
-      // Listen to form submit
-      return loopEventListener(
-        gadget.element.querySelector("#generate-rss"),
-        'click',
-        false,
-        getRSS
-      );
-    })
     .onEvent('change', function (evt) {
       if (evt.target.id === "field_your_project") {
         var gadget = this;
@@ -352,6 +326,53 @@
           });
       }
     }, false, false)
+    .onEvent('click', function (event) {
+      var gadget = this, rss_link = gadget.element.querySelector("#generate-rss"),
+        generate_button = gadget.element.querySelector("#generateRSS");
+
+      if (event.target.id === "restoreButton") {
+        return gadget.changeState({extended_search: null})
+          .push(function () {
+            var restore = document.getElementById("restoreButton");
+            restore.setAttribute("disabled", "disabled");
+          });
+      }
+
+      if (event.target.id === "generateRSS") {
+        if (rss_link.getAttribute("href") === '#') {
+          return gadget.getSetting("hateoas_url")
+            .push(function (hateoas_url) {
+              return gadget.jio_getAttachment(
+                'support_request_module',
+                hateoas_url + 'support_request_module'
+                  + "/SupportRequestModule_generateRSSLinkAsJson"
+              )
+                .push(function (result) {
+                  rss_link.href = result.restricted_access_url;
+                  rss_link.style.display = "inline-block";
+                  generate_button.style.display = "none";
+                });
+            });
+        }
+      } else if (event.target.id === "createSR") {
+        return gadget.jio_getAttachment('support_request_module', 'links')
+          .push(function (links) {
+            var fast_create_url = links._links.view[2].href;
+            return gadget.getUrlFor({
+              command: 'display',
+              options: {
+                jio_key: "support_request_module",
+                view: fast_create_url,
+                page: 'support_request_fast_view_dialog'
+              }
+            });
+          })
+          .push(function (url) {
+            window.location.href = url;
+          });
+      }
+      event.returnValue = true;
+    })
     .onEvent('submit', function () {
       var gadget = this;
       return gadget.jio_getAttachment('support_request_module', 'links')
@@ -371,4 +392,4 @@
         });
     });
 
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS, RSVP));
