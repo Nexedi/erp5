@@ -592,6 +592,18 @@ class BusinessManager(Folder):
       else:
         reduced_path_item_list.append(prioritized_path_item[0])
 
+    id_list = [l for l in self.objectIds()]
+    for l in id_list:
+      try:
+        self._delObject(l)
+      except Exception:
+        # XXX: REMOVE/RECHEK BEFORE MERGE
+        # The reason for doing this horrible workaround is to delete object
+        # for 'portal_memcached/persistent_memcached_plugin' as it is not getting
+        # deleted in 1st attempt with failure :
+        # AttributeError: 'NoneType' object has no attribute 'getUid'
+        self._delObject(l)
+
     for item in reduced_path_item_list:
       item.isIndexable = ConstantGetter('isIndexable', value=False)
       new_id = self.generateNewId()
