@@ -2342,7 +2342,8 @@ class TemplateTool (BaseTool):
         attr_set = {'_dav_writelocks', '_filepath', '_owner', '_related_index',
                     'last_id', 'uid', '_mt_index', '_count', '_tree',
                     '__ac_local_roles__', '__ac_local_roles_group_id_dict__',
-                    'workflow_history',}
+                    'workflow_history', 'subject_set_uid_dict', 'security_uid_dict',
+                    'filter_dict'}
 
         attr_set.update(('isIndexable',))
 
