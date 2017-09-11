@@ -6,7 +6,7 @@
 
 :param silent: int (0|1) means that the edit action is not invoked by a form
                submit but rather by an internal code thus the return value
-               contains as much usefull info as possible
+               contains as much useful info as possible
 
   TODO: split the generic form validation logic
   from the context update logic
@@ -101,7 +101,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
   portal_type = matrixbox_field.get_value('cell_portal_type')
   getter_method = matrixbox_field.get_value('getter_method')
   if getter_method not in (None, ''):
-    matrix_context = getattr(context,getter_method)()
+    matrix_context = getattr(context, getter_method)()
   else:
     matrix_context = context
 
@@ -147,7 +147,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
     tab_ids = map(lambda x: x[0], tabs)
     extra_dimension_category_list_list = [[category for category, label in dimension_list] for dimension_list in extra_dimension_list_list]
 
-    # There are 3 cases
+    # There are 4 cases
     # Case 1: we do 1 dimensional matrix
     # Case 2: we do 2 dimensional matrix
     # Case 3: we do 2 dimensional matrix + tabs
@@ -225,7 +225,7 @@ try:
     # Kato: following fields should implement 'Editors' so we can delete those lines
     if(field_meta_type == 'ListBox'):
       editListBox(field, request.get(field.id))
-    if(field_meta_type == 'MatrixBox'):
+    elif(field_meta_type == 'MatrixBox'):
       editMatrixBox(field, request.get(field.id))
 
   # Return parsed values 

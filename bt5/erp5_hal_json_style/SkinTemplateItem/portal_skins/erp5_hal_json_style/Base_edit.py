@@ -149,7 +149,7 @@ def editMatrixBox(matrixbox_field, matrixbox):
     tab_ids = map(lambda x: x[0], tabs)
     extra_dimension_category_list_list = [[category for category, label in dimension_list] for dimension_list in extra_dimension_list_list]
 
-    # There are 3 cases
+    # There are 4 cases
     # Case 1: we do 1 dimensional matrix
     # Case 2: we do 2 dimensional matrix
     # Case 3: we do 2 dimensional matrix + tabs
@@ -227,7 +227,7 @@ try:
 
     if(field_meta_type == 'ListBox'):
       editListBox(field, request.get(field.id))
-    if(field_meta_type == 'MatrixBox'):
+    elif(field_meta_type == 'MatrixBox'):
       editMatrixBox(field, request.get(field.id))
 
   # Return parsed values 
