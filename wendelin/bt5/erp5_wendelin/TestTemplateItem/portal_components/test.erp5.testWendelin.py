@@ -89,14 +89,17 @@ class Test(ERP5TypeTestCase):
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
 
-    return
-    """    
     # try sample transformation
+    data_array = portal.data_array_module.newContent(
+                          portal_type = 'Data Array', 
+                          reference = reference)
+    data_array.validate()
+    self.tic()
+    
     data_stream.DataStream_transform(\
         chunk_length = 10450, \
         transform_script_id = 'DataStream_copyCSVToDataArray',
         data_array_reference = reference)
-
     self.tic()
 
     # test that extracted array contains same values as input CSV
@@ -104,12 +107,15 @@ class Test(ERP5TypeTestCase):
     self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
     
-    # test ingesting with bad reference and raise of NotFound
-    request.set('reference', reference + 'not_existing')
-    self.assertRaises(NotFound, ingestion_policy.ingest)
-    """
-
+    # clean up
+    data_array.invalidate()
+    data_stream.setData('')
+    self.tic()
     
+    # test ingesting with bad reference and raise of NotFound
+    #request.set('reference', reference + 'not_existing')
+    #self.assertRaises(NotFound, ingestion_policy.ingest)
+
     
   def test_01_1_IngestionTail(self):
     """
