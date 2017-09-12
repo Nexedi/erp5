@@ -4,26 +4,18 @@
   "use strict";
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
     .declareMethod('render', function (options) {
-      this.props.key = options.key || "";
-      this.props.element.querySelector('input').value = options.value || "";
-      this.props.element.querySelector('input').title = options.key;
+      this.element.querySelector('input').value = options.value || "";
+      this.element.querySelector('input').title = options.key;
+      this.element.querySelector('input').setAttribute('data-name',
+                                                       options.key || "");
     })
 
     .declareMethod('getContent', function () {
-      var input = this.props.element.querySelector('input'),
+      var input = this.element.querySelector('input'),
         form_gadget = this,
         result = {};
-      result[form_gadget.props.key] = input.value;
+      result[input.getAttribute('data-name')] = input.value;
       return result;
     });
 
