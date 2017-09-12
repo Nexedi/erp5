@@ -1210,7 +1210,7 @@ class TemplateTool (BaseTool):
         bp_dict_6 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
           'dependency_list': ['erp5_core (>= 1.0rc12)',
-                              'erp5_full_text_catalog'
+                              'erp5_full_text_catalog',
                               'erp5_core_proxy_field_legacy',],
           'description': '',
           'force_install': 0,
