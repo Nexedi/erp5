@@ -131,8 +131,15 @@ class Test(ERP5TypeTestCase):
     # make sure real_data tail is also a full line
     real_data += '\n'
 
-    _, _, data_stream, data_array = self.stepSetupIngestion(reference)
+    data_stream = portal.data_stream_module.newContent(
+                    portal_type = 'Data Stream',
+                    reference = reference)
+    data_stream.validate()
     data_stream.appendData(real_data)
+    data_array = portal.data_array_module.newContent(
+                          portal_type = 'Data Array', 
+                          reference = reference)
+    data_array.validate()
     self.tic()
     
     self.assertEqual(None, data_array.getArray())
@@ -154,6 +161,7 @@ context.activate().DataStream_readChunkListAndTransform( \
       portal.portal_skins.custom, 
       script_id, 
       *script_content_list)
+    self.tic()
     
     number_string_list = []
     for my_list in list(chunks(range(10001, 200001), 10)):
@@ -168,6 +176,7 @@ context.activate().DataStream_readChunkListAndTransform( \
     
     # test that extracted array contains same values as input CSV
     zarray = data_array.getArray()
+    self.assertNotEqual(None, data_array.getArray())
     expected_numpy_array = np.arange(10001, 200001)
     self.assertEqual(np.average(zarray), np.average(expected_numpy_array))
     self.assertTrue(np.array_equal(zarray, expected_numpy_array))
@@ -213,10 +222,15 @@ context.activate().DataStream_readChunkListAndTransform( \
     number_string_list = [row]*20
     real_data = '\n'.join(number_string_list)
 
-    portal.log( real_data)
-    
-    _, _, data_stream, _ = self.stepSetupIngestion(reference)
+    data_stream = portal.data_stream_module.newContent(
+                    portal_type = 'Data Stream',
+                    reference = reference)
     data_stream.appendData(real_data)
+    data_stream.validate()
+    data_array = portal.data_array_module.newContent(
+                          portal_type = 'Data Array', 
+                          reference = reference)
+    data_array.validate()
     self.tic()
     
     data_stream.DataStream_transform(\
