@@ -83,17 +83,50 @@
     /////////////////////////////////////////////////////////////////
     .declareMethod("render", function () {
       var gadget = this;
-
+      console.log("In main")
       return gadget.changeState({
         render: true
       })
-        .push(function () {
-          return gadget.getUrlParameter('field_listbox_begin_from');
-        })
-        .push(function (field_listbox_begin_from) {
-          return gadget.changeState({
-            field_listbox_begin_from: field_listbox_begin_from
-          });
+        .push(function (result) {
+          // Situation 1: Just click the "Previous" or "Next" link below a
+          // listbox. It will call the current gaget render function. If without
+          // call "changeState" with proper parameter, the listbox onStateChange
+          // function not been called. In order to navigate to the proper page.
+          // We need to call "changeState" manually.
+          
+          // Situation 2: Refreash the whole page, ie "F5". First, the "render"
+          // in this gadget get called. Then call the "render" in the listbox.
+          // Which the later one will handle the "field_listbox_begin_from"
+          // parameter. After the render was finished. Then control back to here
+          // again. If we still call the "changeState" with
+          // "field_listbox_begin_from" again. This will cause the listbox
+          // always on "loading" state.
+          
+          // In order to avoid this issue. We can use the return value by former
+          // function, that is the "result".
+          
+          // In situation 1, the "result" is "[undefined, undefined]". This is
+          // because in "onStateChange" function, if the "render" is "true",
+          // which means render all the page. It will return two promises.
+          
+          // If just click the "Previous" or "Next" link below the listbox,
+          // The "result" is "undefined". Because no state got changed.
+
+          // So use this feature to check whether the page is fully refreshed.
+          // If so, let the "listbox.render" to handle the
+          // "field_listbox_begin_from" parameter.
+          if (result === undefined) {
+            return gadget.getUrlParameter('field_listbox_begin_from')
+              .push(function (field_listbox_begin_from) {
+                console.log("Call listbox onStateChange");
+                return gadget.getDeclaredGadget("last")
+                .push(function (list_box) {
+                  return list_box.changeState({
+                    field_listbox_begin_from: field_listbox_begin_from
+                  });
+                });
+            })
+          }
         })
         .push(function () {
           return gadget.updateHeader({
@@ -232,9 +265,11 @@
         });
     })
     .onStateChange(function (modification_dict) {
+      console.log("In onStateChange");
       var gadget = this,
         queue = new RSVP.Queue();
       if (modification_dict.hasOwnProperty("extended_search")) {
+        console.log("In extended search");
         // render the erp5 form
         queue
           .push(function () {
@@ -250,22 +285,26 @@
             return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
           });
       }
+      /*
       if (modification_dict.hasOwnProperty("field_listbox_begin_from")) {
+        console.log("In field listbox begin from");
         // render the erp5 form
         queue
           .push(function () {
             return gadget.getDeclaredGadget("last");
           })
-          .push(function (result_list) {
-            var erp5_form = result_list,
+          .push(function (result) {
+            var erp5_form = result,
               tmp;
-
+          
             tmp = JSON.parse(erp5_form.state.erp5_form);
             tmp.field_listbox_begin_from = modification_dict.field_listbox_begin_from;
             return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
           });
       }
+      */
       if (modification_dict.hasOwnProperty("render")) {
+        console.log("In render");
         queue
           .push(function () {
             return RSVP.all([
