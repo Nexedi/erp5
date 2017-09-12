@@ -88,12 +88,13 @@
         render: true
       })
         .push(function () {
-          return gadget.getUrlParameter('field_listbox_begin_from');
-        })
-        .push(function (field_listbox_begin_from) {
-          return gadget.changeState({
-            field_listbox_begin_from: field_listbox_begin_from
-          });
+          return gadget.getDeclaredGadget("last")
+            .push(function (listbox) {
+              return listbox.render({
+                jio_key: gadget.property_dict.option_dict.listbox_jio_key,
+                view: gadget.property_dict.option_dict.listbox_gadget
+              });
+            });
         })
         .push(function () {
           return gadget.updateHeader({
@@ -250,21 +251,6 @@
             return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
           });
       }
-      if (modification_dict.hasOwnProperty("field_listbox_begin_from")) {
-        // render the erp5 form
-        queue
-          .push(function () {
-            return gadget.getDeclaredGadget("last");
-          })
-          .push(function (result_list) {
-            var erp5_form = result_list,
-              tmp;
-
-            tmp = JSON.parse(erp5_form.state.erp5_form);
-            tmp.field_listbox_begin_from = modification_dict.field_listbox_begin_from;
-            return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
-          });
-      }
       if (modification_dict.hasOwnProperty("render")) {
         queue
           .push(function () {
@@ -292,12 +278,13 @@
             if (last_href === undefined) {
               throw new Error('Cant find the list document view');
             }
-            gadget.property_dict.option_dict = {graph_gadget: "unsafe/gadget_field_graph_echarts.html"};
+            gadget.property_dict.option_dict = {
+              graph_gadget: "unsafe/gadget_field_graph_echarts.html",
+              listbox_gadget: last_href,
+              listbox_jio_key: "support_request_module"
+            };
+
             return RSVP.all([
-              result_list[1].render({
-                jio_key: "support_request_module",
-                view: last_href
-              }),
               gadget.renderGraph() //Launched as service, not blocking
             ]);
           });
