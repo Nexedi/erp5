@@ -63,13 +63,26 @@
                 }
               );
             });
+        } else if (gadget.state.editable &&
+            (modification_dict.editor === 'fck_editor')) {
+          queue
+            .push(function () {
+              return gadget.declareGadget(
+                "https://texteditor.app.officejs.com/dd9f1bdfb9/officejs_ckeditor_gadget/app/",
+                {
+                  scope: 'editor',
+                  sandbox: 'iframe',
+                  element: div
+                }
+              );
+            });
         } else {
           element.appendChild(document.createElement('pre'));
         }
       }
 
       if (gadget.state.editable &&
-          (gadget.state.editor === 'codemirror')) {
+          ((gadget.state.editor === 'codemirror') || (gadget.state.editor === 'fck_editor'))) {
         queue
           .push(function () {
             return gadget.getDeclaredGadget('editor');
@@ -87,7 +100,7 @@
       var argument_list = arguments,
         context = this;
       if (this.state.editable &&
-          (this.state.editor === 'codemirror')) {
+          ((this.state.editor === 'codemirror') || (this.state.editor === 'fck_editor'))) {
         return this.getDeclaredGadget('editor')
           .push(function (editor_gadget) {
             return editor_gadget.getContent.apply(editor_gadget, argument_list);
