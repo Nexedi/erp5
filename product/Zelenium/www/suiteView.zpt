@@ -26,35 +26,30 @@ to work-around a bug in IE on Win2K whereby the HTA application doesn't function
 
         <title>Selenium Functional Test Runner</title>
         <link rel="stylesheet" type="text/css" href="selenium.css" tal:attributes="href string:${URL}/selenium.css"/>
-        <script type="text/javascript" src="scripts/narcissus-defs.js" tal:attributes="src string:${URL}/scripts/narcissus-defs.js"></script>
-        <script type="text/javascript" src="scripts/narcissus-parse.js" tal:attributes="src string:${URL}/scripts/narcissus-parse.js"></script>
-        <script type="text/javascript" src="scripts/narcissus-exec.js" tal:attributes="src string:${URL}/scripts/narcissus-exec.js"></script>
+
+        <script type="text/javascript" src="scripts/xmlextras.js" tal:attributes="src string:${URL}/scripts/xmlextras.js"></script>
         <script language="JavaScript" type="text/javascript" src="lib/prototype.js" tal:attributes="src string:${URL}/lib/prototype.js"></script>
+        <script language="JavaScript" type="text/javascript" src="lib/sizzle.js" tal:attributes="src string:${URL}/lib/sizzle.js"></script>
+        <script language="JavaScript" type="text/javascript" src="lib/snapsie.js" tal:attributes="src string:${URL}/lib/snapsie.js"></script>
+        <script language="JavaScript" type="text/javascript" src="scripts/atoms.js" tal:attributes="src string:${URL}/scripts/atoms.js"></script>
+        <script language="JavaScript" type="text/javascript" src="scripts/htmlutils.js" tal:attributes="src string:${URL}/scripts/htmlutils.js"></script>
+        <script language="JavaScript" type="text/javascript" src="scripts/ui-element.js" tal:attributes="src string:${URL}/scripts/ui-element.js"></script>
         <script language="JavaScript" type="text/javascript" src="lib/scriptaculous/scriptaculous.js" tal:attributes="src string:${URL}/lib/scriptaculous/scriptaculous.js"></script>
-        <script language="JavaScript" type="text/javascript" src="lib/cssQuery/cssQuery-p.js" tal:attributes="src string:${URL}/lib/cssQuery/cssQuery-p.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-browserdetect.js" tal:attributes="src string:${URL}/scripts/selenium-browserdetect.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-browserbot.js" tal:attributes="src string:${URL}/scripts/selenium-browserbot.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/find_matching_child.js" tal:attributes="src string:${URL}/scripts/find_matching_child.js"></script>
-        <script language="JavaScript" type="text/javascript" src="scripts/htmlutils.js" tal:attributes="src string:${URL}/scripts/htmlutils.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-api.js" tal:attributes="src string:${URL}/scripts/selenium-api.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-commandhandlers.js" tal:attributes="src string:${URL}/scripts/selenium-commandhandlers.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-executionloop.js" tal:attributes="src string:${URL}/scripts/selenium-executionloop.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-testrunner.js" tal:attributes="src string:${URL}/scripts/selenium-testrunner.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-logging.js" tal:attributes="src string:${URL}/scripts/selenium-logging.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/selenium-version.js" tal:attributes="src string:${URL}/scripts/selenium-version.js"></script>
-        <script language="JavaScript" type="text/javascript" src="xpath/misc.js" tal:attributes="src string:${URL}/xpath/misc.js"></script>
+        <script language="JavaScript" type="text/javascript" src="xpath/util.js" tal:attributes="src string:${URL}/xpath/util.js"></script>
+        <script language="JavaScript" type="text/javascript" src="xpath/xmltoken.js" tal:attributes="src string:${URL}/xpath/xmltoken.js"></script>
         <script language="JavaScript" type="text/javascript" src="xpath/dom.js" tal:attributes="src string:${URL}/xpath/dom.js"></script>
         <script language="JavaScript" type="text/javascript" src="xpath/xpath.js" tal:attributes="src string:${URL}/xpath/xpath.js"></script>
+        <script language="JavaScript" type="text/javascript" src="xpath/javascript-xpath-0.1.11.js" tal:attributes="src string:${URL}/xpath/javascript-xpath-0.1.11.js"></script>
         <script language="JavaScript" type="text/javascript" src="scripts/user-extensions.js" tal:attributes="src string:${URL}/scripts/user-extensions.js"></script>
-        <script language="JavaScript" type="text/javascript">
-            function openDomViewer() {
-                var autFrame = document.getElementById('myiframe');
-                var autFrameDocument = new SeleniumFrame(autFrame).getDocument();
-                this.rootDocument = autFrameDocument;
-                var domViewer = window.open(getDocumentBase(document) + 'domviewer/domviewer.html');
-                return false;
-            }
-        </script>
 </head>
 
 <body onLoad="onSeleniumLoad();">
@@ -69,14 +64,15 @@ to work-around a bug in IE on Win2K whereby the HTA application doesn't function
     tal:attributes="src string:${URL}/test_prompt_html" application="yes"></iframe>
 </td>
 <td width="50%" height="30%">
-    <iframe name="testFrame" id="testFrame" application="yes"></iframe>
+    <iframe name="testFrame" id="testFrame" application="yes" src="Blank.html"
+    tal:attributes="src string:${URL}/Blank.html"></iframe>
 </td>
 
 <td width="25%">
     <table class="layout">
         <tr class="selenium">
             <th width="25%" height="1" class="header">
-                <h1><a href="http://selenium.thoughtworks.com" title="The Selenium Project">Selenium</a> TestRunner
+                <h1><a href="http://seleniumhq.org" title="The Selenium Project">Selenium</a> TestRunner
                 </h1>
             </th>
         </tr>
@@ -87,16 +83,16 @@ to work-around a bug in IE on Win2K whereby the HTA application doesn't function
 
                     <div id="imageButtonPanel">
                         <button type="button" id="runSuite" onClick="htmlTestRunner.startTestSuite();"
-                                title="Run All tests">
+                                title="Run All tests [a]" accesskey="a">
                         </button>
                         <button type="button" id="runSeleniumTest" onClick="htmlTestRunner.runSingleTest();"
-                                title="Run the Selected test">
+                                title="Run the Selected test [r]" accesskey="r">
                         </button>
                         <button type="button" id="pauseTest" disabled="disabled"
-                                title="Pause/Continue" class="cssPauseTest">
+                                title="Pause/Continue [p]" accesskey="p" class="cssPauseTest">
                         </button>
                         <button type="button" id="stepTest" disabled="disabled"
-                                title="Step">
+                                title="Step [s]" accesskey="s">
                         </button>
                     </div>
 
@@ -146,9 +142,6 @@ to work-around a bug in IE on Win2K whereby the HTA application doesn't function
                 <fieldset>
                     <legend>Tools</legend>
 
-                    <button type="button" id="domViewer1" onClick="openDomViewer();">
-                        View DOM
-                    </button>
                     <button type="button" onClick="LOG.show();">
                         Show Log
                     </button>
@@ -165,7 +158,7 @@ to work-around a bug in IE on Win2K whereby the HTA application doesn't function
 
 <tr>
     <td colspan="3" height="70%">
-        <iframe name="myiframe" id="myiframe" src="TestRunner-splash.html" tal:attributes="src string:${URL}/TestRunner-splash.html"></iframe>
+        <iframe name="selenium_myiframe" id="selenium_myiframe" src="TestRunner-splash.html" tal:attributes="src string:${URL}/TestRunner-splash.html"></iframe>
     </td>
 </tr>
 
