@@ -796,7 +796,6 @@ class TemplateTool (BaseTool):
         else:
           catalog_path = 'portal_catalog/erp5_mysql_innodb'
           removable_sub_object_path.append(catalog_path)
-        template_path_list.append(catalog_path)
         removable_property[catalog_path] = properties_removed
         for prop in properties_removed:
             property_path_list.append('%s#%s' % (catalog_path, prop))
