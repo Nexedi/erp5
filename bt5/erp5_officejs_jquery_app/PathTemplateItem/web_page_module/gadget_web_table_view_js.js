@@ -46,7 +46,7 @@
             doc = gadget.state.doc;
             doc.text_content = content.text_content;
           }
-          doc.modification_date = (new Date()).toISOString();
+          doc.modification_date = new Date().toUTCString().replace('GMT', '+0000');
           return gadget.jio_put(gadget.state.jio_key, doc);
         })
         .push(function () {

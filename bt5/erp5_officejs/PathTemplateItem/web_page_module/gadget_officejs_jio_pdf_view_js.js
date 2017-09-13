@@ -49,7 +49,7 @@
                 return gadget.jio_putAttachment(gadget.state.doc.jio_key, "data", blob);
               });
           }
-          doc.modification_date = (new Date()).toISOString();
+          doc.modification_date = new Date().toUTCString().replace('GMT', '+0000');
         })
         .push(function () {
           return gadget.jio_put(gadget.state.jio_key, doc);
