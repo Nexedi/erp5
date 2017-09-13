@@ -1179,6 +1179,7 @@ if (typeof document.contains !== 'function') {
     }
     this.__service_list.push(function () {
       var queue_loop = new RSVP.Queue(),
+        context = this,
         wait = function () {
           queue_loop
             .push(function () {
@@ -1189,7 +1190,7 @@ if (typeof document.contains !== 'function') {
               return promiseAnimationFrame();
             })
             .push(function () {
-              return callback.apply(this, []);
+              return callback.apply(context, []);
             })
             .push(function () {
               wait();
