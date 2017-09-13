@@ -143,15 +143,6 @@
         sub_header_list = [],
         i;
 
-      if (options.hasOwnProperty("page_title")) {
-        // if a new page title is specified then we are displaying different
-        // view so we force-reload all menu buttons
-        state.main_link = {};
-        state.right_link = {};
-        state.right_button = {};
-        state.left_button = {};
-      }
-
       // Main title
       if (options.hasOwnProperty("page_title") || options.hasOwnProperty("page_icon")) {
         state.main_link = {
@@ -165,6 +156,11 @@
             state.main_link.url = options[possible_main_link_list[i][0]];
           }
         }
+        // if a new page title|icon is specified then we clear all menu buttons
+        // because the view changed completely
+        state.right_link = {};
+        state.right_button = {};
+        state.left_button = {};
       }
 
       // Left button
