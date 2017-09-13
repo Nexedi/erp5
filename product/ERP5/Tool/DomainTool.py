@@ -183,24 +183,29 @@ class DomainTool(BaseTool):
             # BBB: ValueError would seem more appropriate here, but original code
             # was raising TypeError - and this is explicitely tested for.
             raise TypeError('Unknown category: %r' % (category, ))
-          for join_category_list, join_list, predicate_has_no_condition_value in (
+          def onInnerJoin(column_name):
+            inner_join_list.append(column_name)
             # Base category is part of preferred predicate categories, predicates
             # which ignore it are indexed with category_uid=0.
-            (inner_join_category_list, inner_join_list, 0),
+            return SimpleQuery(**{column_name: 0})
+          query_list.append(portal_catalog.getCategoryParameterDict(
+            inner_join_category_list,
+            category_table='predicate_category',
+            onMissing=onMissing,
+            onJoin=onInnerJoin,
+          ))
+          def onLeftJoin(column_name):
+            left_join_list.append(column_name)
             # Base category is not part of preferred predicate categories,
             # predicates which ignore it get no predicate_category row inserted
             # for it, so an SQL NULL appears, translating to None.
-            (left_join_category_list, left_join_list, None),
-          ):
-            category_parameter_kw = portal_catalog.getCategoryParameterDict(
-              join_category_list,
-              category_table='predicate_category',
-              onMissing=onMissing,
-            )
-            for relation, uid_set in category_parameter_kw.iteritems():
-              join_list.append(relation)
-              uid_set.add(predicate_has_no_condition_value)
-            kw.update(category_parameter_kw)
+            return SimpleQuery(**{column_name: None})
+          query_list.append(portal_catalog.getCategoryParameterDict(
+            left_join_category_list,
+            category_table='predicate_category',
+            onMissing=onMissing,
+            onJoin=onLeftJoin,
+          ))
         else:
           # No category to match against, so predicates expecting any relation
           # would not apply, so we can exclude these.

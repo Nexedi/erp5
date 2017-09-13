@@ -79,6 +79,7 @@ DYNAMIC_RELATED_KEY_FLAG_LIST = (
   ('strict', DYNAMIC_RELATED_KEY_FLAG_STRICT),
   ('predicate', DYNAMIC_RELATED_KEY_FLAG_PREDICATE),
 )
+EMPTY_SET = ()
 
 class IndexableObjectWrapper(object):
     __security_parameter_cache = None
@@ -1036,12 +1037,11 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       return related_key_list
 
     security.declarePublic('getCategoryValueDictParameterDict')
-    def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True):
+    def getCategoryValueDictParameterDict(self, base_category_dict, category_table='category', strict_membership=True, forward=True, onJoin=lambda x: None):
       """
       From a mapping from base category ids to lists of documents, produce a
-      catalog keyword argument dictionary testing (strict or not, forward or
-      reverse relation) membership to these documents with their respective
-      base categories.
+      query tree testing (strict or not, forward or reverse relation)
+      membership to these documents with their respective base categories.
 
       base_category_dict (dict with base category ids as keys and document sets
       as values)
@@ -1054,9 +1054,17 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       forward (bool)
         Whether document being looked up bears the relation (true) or is its
         target (false).
+      onJoin(column_name) -> None or query
+        Called for each generated query which imply a join. Specifically, this
+        will not be called for "parent" relation, as it does not involve a
+        join.
+        Receives pseudo-column name of the relation as argument.
+        If return value is not None, it must be a query tree, OR-ed with
+        existing conditions for given pseudo-column.
+        This last form should very rarely be needed (ex: when joining with
+        predicate_category table as it contains non-standard uid values).
 
-      Return a dictionnary whose keys are catalog parameter names and values
-      are sets of uids.
+      Return a query tree.
       """
       flag_list = []
       if category_table == 'predicate_category':
@@ -1067,23 +1075,36 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         flag_list.append('strict')
       prefix = ('_'.join(flag_list) + '__') if flag_list else ''
       suffix = ('' if forward else '__related') + '__uid'
-      parent_uid_set = base_category_dict.pop('parent', None)
-      result = {
-        prefix + base_category_id + suffix: {
-          document.getUid() for document in document_set
-        }
-        for base_category_id, document_set in base_category_dict.iteritems()
-      }
-      if parent_uid_set is not None:
-        result['parent_uid'] = parent_uid_set
-      return result
+      parent_document_set = base_category_dict.pop('parent', None)
+      query_list = []
+      for base_category_id, document_set in base_category_dict.iteritems():
+        column = prefix + base_category_id + suffix
+        category_query = SimpleQuery(**{
+          column: {document.getUid() for document in document_set},
+        })
+        extra_query = onJoin(column)
+        if extra_query is not None:
+          category_query = ComplexQuery(
+            category_query,
+            extra_query,
+            logical_operator='OR',
+          )
+        query_list.append(category_query)
+      if parent_document_set is not None:
+        query_list.append(SimpleQuery(
+          parent_uid={
+            document.getUid()
+            for document in parent_document_set
+          },
+        ))
+      return ComplexQuery(query_list)
 
     security.declarePublic('getCategoryParameterDict')
     def getCategoryParameterDict(self, category_list, onMissing=lambda category: True, **kw):
       """
-      From a list of categories, produce a catalog keyword argument dictionary
-      testing (strict or not, forward or reverse relation) membership to these
-      categories.
+      From a list of categories, produce a query tree testing (strict or not,
+      forward or reverse relation) membership to these documents with their
+      respective base categories.
 
       category_list (list of category relative urls with their base categories)
       onMissing (callable)
