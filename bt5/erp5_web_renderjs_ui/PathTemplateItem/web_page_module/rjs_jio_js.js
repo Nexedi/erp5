@@ -6312,8 +6312,8 @@ return new Parser;
    * @param  {String} [way="ascending"] 'ascending' or 'descending'
    * @return {Function} The sort function
    */
-  function sortFunction(key, way) {
-    var result;
+  function sortFunction(key, way, key_schema) {
+    var result, cast_to;
     if (way === 'descending') {
       result = 1;
     } else if (way === 'ascending') {
@@ -6321,6 +6321,29 @@ return new Parser;
     } else {
       throw new TypeError("Query.sortFunction(): " +
                           "Argument 2 must be 'ascending' or 'descending'");
+    }
+    if (key_schema !== undefined &&
+        key_schema.key_set !== undefined &&
+        key_schema.key_set[key] !== undefined &&
+        key_schema.key_set[key].cast_to !== undefined) {
+      if (typeof key_schema.key_set[key].cast_to === "string") {
+        cast_to = key_schema.cast_lookup[key_schema.key_set[key].cast_to];
+      } else {
+        cast_to = key_schema.key_set[key].cast_to;
+      }
+      return function (a, b) {
+        var f_a = cast_to(a[key]), f_b = cast_to(b[key]);
+        if (typeof f_b.cmp === 'function') {
+          return result * f_b.cmp(f_a);
+        }
+        if (f_a > f_b) {
+          return -result;
+        }
+        if (f_a < f_b) {
+          return result;
+        }
+        return 0;
+      };
     }
     return function (a, b) {
       // this comparison is 5 times faster than json comparison
@@ -6353,7 +6376,7 @@ return new Parser;
    * @param  {Array} list The item list to sort
    * @return {Array} The filtered list
    */
-  function sortOn(sort_on_option, list) {
+  function sortOn(sort_on_option, list, key_schema) {
     var sort_index;
     if (!Array.isArray(sort_on_option)) {
       throw new TypeError("jioquery.sortOn(): " +
@@ -6363,7 +6386,8 @@ return new Parser;
          sort_index -= 1) {
       list.sort(sortFunction(
         sort_on_option[sort_index][0],
-        sort_on_option[sort_index][1]
+        sort_on_option[sort_index][1],
+        key_schema
       ));
     }
     return list;
@@ -6424,6 +6448,36 @@ return new Parser;
       }
     }
     return list;
+  }
+
+  function setupKeySchema(context, schema) {
+    var property;
+    // Init key_schema if needed
+    if (context._key_schema === undefined) {
+      context._key_schema = {};
+    }
+    if (context._key_schema.set_key === undefined) {
+      context._key_schema.key_set = {};
+    }
+    if (context._key_schema.cast_lookup === undefined) {
+      context._key_schema.cast_lookup = {};
+    }
+    function dateType(str) {
+      return window.jiodate.JIODate(new Date(str).toISOString());
+    }
+    for (property in schema) {
+      if (schema.hasOwnProperty(property)) {
+        if (schema[property].type === 'string') {
+          if (schema[property].format === 'date-time') {
+            context._key_schema.key_set[property] = {
+              read_from: property,
+              cast_to: 'dateType'
+            };
+            context._key_schema.cast_lookup.dateType = dateType;
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -6499,6 +6553,9 @@ return new Parser;
     }
     var context = this,
       i;
+    if (option.schema) {
+      setupKeySchema(context, option.schema);
+    }
     for (i = item_list.length - 1; i >= 0; i -= 1) {
       if (!context.match(item_list[i])) {
         item_list.splice(i, 1);
@@ -6506,7 +6563,7 @@ return new Parser;
     }
 
     if (option.sort_on) {
-      sortOn(option.sort_on, item_list);
+      sortOn(option.sort_on, item_list, this._key_schema);
     }
 
     if (option.limit) {
@@ -7914,7 +7971,8 @@ return new Parser;
              context.hasCapacity("select")) &&
             ((options.include_docs === undefined) ||
              context.hasCapacity("include")) &&
-            ((options.limit === undefined) || context.hasCapacity("limit"))) {
+            ((options.limit === undefined) || context.hasCapacity("limit")) &&
+            (options.schema === undefined || context.hasCapacity("schema"))) {
           return context.buildQuery(options);
         }
       })
@@ -8224,7 +8282,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -11896,7 +11954,7 @@ return new Parser;
 }(jIO, UriTemplate, FormData, RSVP, URI, Blob,
   SimpleQuery, ComplexQuery));
 ;/*jslint nomen: true*/
-/*global RSVP*/
+/*global RSVP, jIO*/
 (function (jIO, RSVP) {
   "use strict";
 
@@ -11905,7 +11963,9 @@ return new Parser;
    *
    * @class QueryStorage
    * @constructor
+   * 
    */
+
   function QueryStorage(spec) {
     this._sub_storage = jIO.createJIO(spec.sub_storage);
     this._key_schema = spec.key_schema;
@@ -11944,7 +12004,8 @@ return new Parser;
     var this_storage_capacity_list = ["limit",
                                       "sort",
                                       "select",
-                                      "query"];
+                                      "query",
+                                      "schema"];
 
     if (this_storage_capacity_list.indexOf(name) !== -1) {
       return true;
@@ -11954,6 +12015,7 @@ return new Parser;
     }
     return false;
   };
+
   QueryStorage.prototype.buildQuery = function (options) {
     var substorage = this._sub_storage,
       context = this,
@@ -11972,11 +12034,14 @@ return new Parser;
             ((options.select_list === undefined) ||
              (substorage.hasCapacity("select"))) &&
             ((options.limit === undefined) ||
-             (substorage.hasCapacity("limit")))) {
+             (substorage.hasCapacity("limit"))) &&
+            ((options.schema === undefined) ||
+             (substorage.hasCapacity("schema")))) {
           sub_options.query = options.query;
           sub_options.sort_on = options.sort_on;
           sub_options.select_list = options.select_list;
           sub_options.limit = options.limit;
+          sub_options.schema = options.schema;
         }
       } catch (error) {
         if ((error instanceof jIO.util.jIOError) &&
@@ -12366,10 +12431,9 @@ return new Parser;
 
 }(jIO, RSVP, Blob));
 ;/*jslint nomen: true*/
-/*global Blob, atob, btoa, RSVP*/
-(function (jIO, Blob, atob, btoa, RSVP) {
+/*global Blob, RSVP, unescape, escape*/
+(function (jIO, Blob, RSVP, unescape, escape) {
   "use strict";
-
   /**
    * The jIO DocumentStorage extension
    *
@@ -12385,7 +12449,13 @@ return new Parser;
   var DOCUMENT_EXTENSION = ".json",
     DOCUMENT_REGEXP = new RegExp("^jio_document/([\\w=]+)" +
                                  DOCUMENT_EXTENSION + "$"),
-    ATTACHMENT_REGEXP = new RegExp("^jio_attachment/([\\w=]+)/([\\w=]+)$");
+    ATTACHMENT_REGEXP = new RegExp("^jio_attachment/([\\w=]+)/([\\w=]+)$"),
+    btoa = function (str) {
+      return window.btoa(unescape(encodeURIComponent(str)));
+    },
+    atob = function (str) {
+      return decodeURIComponent(escape(window.atob(str)));
+    };
 
   function getSubAttachmentIdFromParam(id, name) {
     if (name === undefined) {
@@ -12592,7 +12662,7 @@ return new Parser;
 
   jIO.addStorage('document', DocumentStorage);
 
-}(jIO, Blob, atob, btoa, RSVP));
+}(jIO, Blob, RSVP, unescape, escape));
 ;/*
  * Copyright 2013, Nexedi SA
  * Released under the LGPL license.
