@@ -1372,11 +1372,14 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       portal_catalog = context.getPortalObject().portal_catalog
       def search(category_list, portal_type, strict_membership):
-        catalog_kw = portal_catalog.getCategoryParameterDict(
-          category_list=category_list,
-          strict_membership=strict_membership,
-        )
-        inner_join_list = catalog_kw.keys()
+        inner_join_list = []
+        catalog_kw = {
+          'query': portal_catalog.getCategoryParameterDict(
+            category_list=category_list,
+            strict_membership=strict_membership,
+            onJoin=inner_join_list.append,
+          ),
+        }
         if portal_type is not None:
           catalog_kw['portal_type'] = portal_type
         return portal_catalog.unrestrictedSearchResults(
