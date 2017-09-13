@@ -121,6 +121,7 @@ font-awesome/font-awesome-webfont.svg\n
 gadget_erp5_nojqm.css\n
 jio_mappingstorage.js\n
 jio_fixstorage.js\n
+jio_saferepairstorage.js\n
 gadget_erp5_global.js\n
 URI.js\n
 dygraph.js\n
@@ -358,7 +359,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.40807.30284.14097</string> </value>
+                <value> <string>961.59292.36287.51694</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -376,7 +377,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1503579323.73</float>
+                        <float>1505292021.88</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
