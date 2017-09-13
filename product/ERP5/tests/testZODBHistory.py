@@ -122,6 +122,29 @@ class TestZODBHistory(ERP5TypeTestCase):
     # should be: create(1) + edit(60) = 61
     self.assertEqual(len(history_list), 61)
 
+  def test_testZODBHistorySecurity(self):
+    """
+     Make sure ZODB History is not available when user does not have "View History" permission.
+    """
+    self.loginByUserName('tatuya')
+    document = self.addOrganisation('document')
+
+    # by default, users have a link to view ZODB history in history tab
+    self.assertIn(
+        'your_zodb_history',
+        [field.getId() for field in document.Base_viewHistory.get_fields()])
+
+    # when user does not have "View History" permission, the link is not displayed
+    document.manage_permission('View History', [], 0)
+    self.assertNotIn(
+        'your_zodb_history',
+        [field.getId() for field in document.Base_viewHistory.get_fields()])
+
+    # accessing the form directly is not allowed either
+    from zExceptions import Unauthorized
+    self.assertRaises(Unauthorized, document.Base_viewZODBHistory)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestZODBHistory))
