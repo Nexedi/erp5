@@ -1,3 +1,4 @@
+from Products.ERP5Type.Message import translateString
 portal = context.getPortalObject()
 selection_name = 'data_protection_request_erase_data_selection'
 property_id_list = portal.portal_selections.getSelectionCheckedUidsFor(selection_name)
@@ -9,7 +10,7 @@ clean_up_done = False
 # First: Purge workflow history comments
 if flush_worklfow_history_comment:
   document_to_cleanup.Base_purgeWorkflowHistoryCommentList()
-  edit_message = portal.Base_translateString('Workflow comments deleted by data protection manager')
+  edit_message = translateString('Workflow comments deleted by data protection manager')
   portal.portal_workflow.doActionFor(document_to_cleanup, 'edit_action', comment=edit_message)
   clean_up_done = True
 
@@ -18,7 +19,7 @@ if property_id_list:
   edit_kw = {}
   [edit_kw.update({property_id: None}) for property_id in property_id_list]
 
-  edit_message = portal.Base_translateString('Properties deleted by data protection manager: ${items}',
+  edit_message = translateString('Properties deleted by data protection manager: ${items}',
                                              mapping={'items': ', '.join(property_id_list)})
   portal.portal_workflow.doActionFor(document_to_cleanup, 'edit_action', comment=edit_message)
 
