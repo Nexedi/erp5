@@ -4,29 +4,19 @@
   "use strict";
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
     .declareMethod('render', function (options) {
       var gadget = this;
-      gadget.props.key = options.key || "";
-      gadget.props.element.querySelector('input').value = options.value;
-      gadget.props.element.querySelector('input').title = options.key;
+      gadget.element.querySelector('input').key = options.key || "";
+      gadget.element.querySelector('input').value = options.value;
+      gadget.element.querySelector('input').title = options.key;
     })
 
     .declareMethod('getContent', function () {
-      var input = this.props.element.querySelector('input'),
+      var input = this.element.querySelector('input'),
         form_gadget = this,
         result = {};
       if (input.value) {
-        result[form_gadget.props.key] = "data:text/plain;base64,"
-                                                 + btoa(input.value);
+        result[input.key] = "data:text/plain;base64," + btoa(input.value);
       }
       return result;
     });
