@@ -765,7 +765,6 @@ class BusinessItem(XMLObject):
     path = self.getProperty('item_path')
     path_list = path.split('/')
     container_path = path_list[:-1]
-
     object_id = path_list[-1]
     try:
       container = self.unrestrictedResolveValue(portal, container_path)
@@ -782,6 +781,17 @@ class BusinessItem(XMLObject):
       # install object
       obj = self.objectValues()[0]
       obj = obj._getCopy(container)
+
+      # Update the type_provider_list if needed
+      # XXX: Find a way to fiter and do this check only for tool, so that we
+      # don't lose on perfomance in checking this everytime
+      if interfaces.ITypeProvider.providedBy(obj):
+        type_container_id = obj.id
+        types_tool = portal.portal_types
+        if type_container_id not in types_tool.type_provider_list:
+          types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
+                                          (type_container_id,)
+
       # Before making `obj` a sub-object of `container`, we should the acquired
       # roles on obj
       obj.isIndexable = ConstantGetter('isIndexable', value=False)
