@@ -332,10 +332,9 @@ class BusinessManager(Folder):
     self.title = imported_manager.title
     for obj in imported_manager.objectValues():
       delattr(obj, '__ac_local_roles__')
-      new_id = self.generateNewId()
       # XXX: Donot merge this, needed just for migrated erp5_core
       try:
-        self._setObject(new_id, aq_base(obj))
+        self._setObject(obj.id, aq_base(obj))
       except Exception:
         pass
       obj.isIndexable = ConstantGetter('isIndexable', value=False)
