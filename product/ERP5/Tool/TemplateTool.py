@@ -1221,6 +1221,19 @@ class TemplateTool (BaseTool):
           'title': 'erp5_base',
           'version': '5.4.7'}
 
+        bp_dict_7 ={
+          'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
+          'dependency_list': [],
+          'description': '',
+          'force_install': 0,
+          'id': 'erp5_full_text_mroonga_catalog',
+          'license': 'GPL',
+          'revision': '',
+          'test_dependency_list': [],
+          'provision_list': ['erp5_full_text_catalog'],
+          'title': 'erp5_full_text_mroonga_catalog',
+          'version': '5.4.7'}
+
         if repository.endswith('/bt5'):
           property_dict_list.append(bp_dict_1)
           property_dict_list.append(bp_dict_2)
@@ -1228,6 +1241,7 @@ class TemplateTool (BaseTool):
           property_dict_list.append(bp_dict_4)
           property_dict_list.append(bp_dict_5)
           property_dict_list.append(bp_dict_6)
+          property_dict_list.append(bp_dict_7)
 
         bm_dict_1 ={
           'copyright_list': ['Copyright (c) 2001-2017 Nexedi SA'],
