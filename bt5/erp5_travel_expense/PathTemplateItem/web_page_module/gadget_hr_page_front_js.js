@@ -131,7 +131,7 @@
                 title: 'State'
               }],
               query: {
-                query: '(simulation_state:"draft" OR sync_flag:"0") AND portal_type: ("Expense Record", "Travel Request Record", "Leave Report Record", "Leave Request Record") ',
+                query: '(simulation_state:"draft" OR sync_flag:"0") AND (portal_type: "Expense Record" OR portal_type:"Travel Request Record" OR portal_type:"Leave Report Record" OR portal_type:"Leave Request Record") ',
                 select_list: ['comment', 'portal_type', 'state'],
                 sort_on: [["modification_date", "descending"]]
               }
