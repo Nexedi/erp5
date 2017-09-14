@@ -2380,7 +2380,8 @@ class ERP5Generator(PortalGenerator):
           bt.install(**kw)
 
       bt_list = []
-      for bt in (p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style'):
+      for bt in (p.erp5_catalog_storage, 'erp5_jquery', 'erp5_xhtml_style',
+                'erp5_business_package'):
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
         bt_list.append(bt)
