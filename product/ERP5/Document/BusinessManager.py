@@ -755,13 +755,22 @@ class BusinessItem(XMLObject):
             relative_url_list + [object_id], id_list[1:]))
     return path_list
 
-  def install(self, context):
+  def install(self, context, *args):
     """
     Set the value to the defined path.
     """
     # In case the path denotes property, we create separate object for
     # ObjectTemplateItem and handle the installation there.
-    portal = context.getPortalObject()
+    try:
+      portal = context.getPortalObject()
+    except AttributeError:
+      # This is a possibility during bootstrap where the context is not an
+      # erp5 object but a dynamic class
+      if args:
+        portal = args[0]
+      else:
+        raise AttributeError('No portal object found')
+
     path = self.getProperty('item_path')
     path_list = path.split('/')
     container_path = path_list[:-1]
@@ -1009,8 +1018,18 @@ class BusinessPropertyItem(XMLObject):
     self.setProperty('item_property_type', property_type)
     self.setProperty('item_property_value', property_value)
 
-  def install(self, context):
-    portal = context.getPortalObject()
+  def install(self, context, *args):
+    # Get portal object
+    try:
+      portal = context.getPortalObject()
+    except AttributeError:
+      # This is a possibility during bootstrap where the context is not an
+      # erp5 object but a dynamic class
+      if args:
+        portal = args[0]
+      else:
+        raise AttributeError('No portal object found')
+
     path = self.getProperty('item_path')
     relative_url, property_id = path.split('#')
     obj = portal.unrestrictedTraverse(relative_url)
