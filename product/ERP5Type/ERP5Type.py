@@ -371,6 +371,9 @@ class ERP5TypeInformation(XMLObject,
       portal = self.getPortalObject()
       pw = portal.portal_workflow
       cbt = pw._chains_by_type
+      # Create empty chains dict if it is empty
+      if cbt is None:
+        cbt = {}
       id = self.getId()
 
       # If the type_workflow_list is empty, delete the key from workflow chains
