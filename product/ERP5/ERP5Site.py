@@ -1961,11 +1961,22 @@ class ERP5Generator(PortalGenerator):
     try:
       # If template_tool doesn't exist, do nothing
       template_tool = portal.portal_templates
-      manager = template_tool.newContent(portal_type='Business Manager')
-      manager.importFile(bm_path + '/' + bm_name + '.zexp')
+      pt = portal.portal_types
+      # Create dynamic_class for Business Manager if it doesn't exist in
+      # portal_types
+      if pt.getTypeInfo('Business Manager') is None:
+        import erp5
+        BusinessManager = getattr(erp5.portal_type, 'Business Manager')
+        BusinessManager.loadClass()
+        manager = BusinessManager(id='bootstrap_bm')
+        connection = pt._p_jar
+      else:
+        manager = template_tool.newContent(portal_type='Business Manager')
+        connection = None
+      manager.importFile(bm_path + '/' + bm_name + '.zexp', connection)
       for path in path_list:
         item = manager.getBusinessItemByPath(path)
-        item.install(manager)
+        item.install(manager, portal)
     except AttributeError:
       pass
 
