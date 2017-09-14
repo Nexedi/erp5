@@ -321,11 +321,12 @@ class BusinessManager(Folder):
       f.close()
 
   security.declareProtected(Permissions.ManagePortal, 'importFile')
-  def importFile(self, path):
+  def importFile(self, path, connection=None):
     """
       Import Business Manager object and all attribute to current BM itself
     """
-    connection = self.aq_parent._p_jar
+    if not connection:
+      connection = self.aq_parent._p_jar
     file = open(path, 'rb')
     imported_manager = connection.importFile(file)
     self.title = imported_manager.title
