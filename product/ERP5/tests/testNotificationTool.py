@@ -485,6 +485,29 @@ Yes, I will go."""
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepCheckNotificationWithoutPermissionOnRecipient(self, sequence=None):
+    """
+    Check that notification is send by user who cannot see recipient
+    """
+    self.logout()
+    self.portal.portal_notifications.sendMessage(
+        recipient=sequence['user_a_id'], subject='Subject', message='Message')
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+
+  def test_permission_on_recipient_not_needed(self):
+    """Notification Tool can be used to send Messages even when user does not
+    have permission on sender or recipent documents.
+    """
+    sequence_list = SequenceList()
+    sequence_string = '\
+        AddUserA \
+        Tic \
+        CheckNotificationWithoutPermissionOnRecipient \
+        '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 class TestNotificationToolWithCRM(TestNotificationTool):
   """Make sure that notification tool works with crm"""

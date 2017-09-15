@@ -288,7 +288,7 @@ class NotificationTool(BaseTool):
     searchUsers = self.acl_users.searchUsers
     def getUserValueByUserId(user_id):
       user, = searchUsers(id=user_id, exact_match=True)
-      return portal.restrictedTraverse(user['path'])
+      return portal.unrestrictedTraverse(user['path'])
 
     if notifier_list is None:
       # XXX TODO: Use priority_level. Need to implement default notifier query system.
