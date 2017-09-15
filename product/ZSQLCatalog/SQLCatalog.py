@@ -72,11 +72,6 @@ try:
 except ImportError:
   withCMF = 0
 
-try:
-  import psyco
-except ImportError:
-  psyco = None
-
 @contextmanager
 def noReadOnlyTransactionCache():
   yield
@@ -1367,22 +1362,14 @@ class Catalog(Folder,
 
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
-    """This is the real method to catalog objects.
-
-    XXX: For now newUid is used to allocated UIDs. Is this good?
-    Is it better to INSERT then SELECT?"""
+    """This is the real method to catalog objects."""
     LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_list))
-    #LOG('catalogObjectList', 0, 'called with %r' % (object_list,))
-
     if idxs not in (None, []):
       LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
-
     if not self.getPortalObject().isIndexable():
       return
 
-    # Reminder about optimization: It might be possible to issue just one
-    # query to get enought results to check uid & path consistency.
     path_uid_dict = {}
     uid_path_dict = {}
 
@@ -1411,7 +1398,6 @@ class Catalog(Folder,
         uid = aq_base(object).uid
       except AttributeError:
         uid = None
-      # Generate unique uid for object having 0 or None as uid
       if uid is None or uid == 0:
         try:
           object.uid = self.newUid()
@@ -1435,7 +1421,6 @@ class Catalog(Folder,
           if index < 0:
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
-            # We want to make sure that uid becomes long if it is an int
             error_message = 'uid of %r changed from %r (property) to %r '\
 	                    '(catalog, by path) !!! This can be fatal' % (object, uid, index)
             if not self.sql_catalog_raise_error_on_uid_check:
@@ -1443,16 +1428,11 @@ class Catalog(Folder,
             else:
               raise ValueError(error_message)
         else:
-          # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
-          # This can be very dangerous with relations stored in a category table (CMFCategory)
-          # This is why we recommend completely reindexing subobjects after any change of id
           if uid in uid_path_dict:
             catalog_path = uid_path_dict.get(uid)
           else:
             catalog_path = self.getPathForUid(uid)
-          #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
           if catalog_path == "reserved":
-            # Reserved line in catalog table
             with global_reserved_uid_lock:
               uid_buffer = self.getUIDBuffer()
               if uid_buffer is not None:
@@ -1490,11 +1470,6 @@ class Catalog(Folder,
             # can be due to path length
             if len(path) > MAX_PATH_LEN:
               LOG('SQLCatalog', ERROR, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
-
-            LOG('SQLCatalog', ERROR,
-                'uid of %r changed from %r to %r as old one is assigned'
-                ' to %s in catalog !!! This can be fatal.' % (
-                object, uid, object.uid, catalog_path))
 
             error_message = 'uid of %r is %r and ' \
                             'is already assigned to %s in catalog !!! This can be fatal.' \
@@ -1584,34 +1559,30 @@ class Catalog(Folder,
 
         if not catalogged_object_list:
           continue
-
-        #LOG('catalogObjectList', 0, 'method_name = %s' % (method_name,))
         method = self._getCatalogMethod(method_name)
-        kw = {x: LazyIndexationParameterList(catalogged_object_list,
-                                             x, argument_cache)
-          for x in self._getCatalogMethodArgumentList(method)}
-
-        # Alter/Create row
+        kw = {
+          x: LazyIndexationParameterList(
+            catalogged_object_list,
+            x,
+            argument_cache,
+          )
+          for x in self._getCatalogMethodArgumentList(method)
+        }
         try:
-          #start_time = DateTime()
-          #LOG('catalogObjectList', DEBUG, 'kw = %r, method_name = %r' % (kw, method_name))
           method(**kw)
-          #end_time = DateTime()
-          #if method_name not in profile_dict:
-          #  profile_dict[method_name] = end_time.timeTime() - start_time.timeTime()
-          #else:
-          #  profile_dict[method_name] += end_time.timeTime() - start_time.timeTime()
-          #LOG('catalogObjectList', 0, '%s: %f seconds' % (method_name, profile_dict[method_name]))
-
         except ConflictError:
           raise
         except:
-          LOG('SQLCatalog', WARNING, 'could not catalog objects %s with method %s' % (object_list, method_name),
-              error=sys.exc_info())
+          LOG(
+            'SQLCatalog._catalogObjectList',
+            ERROR,
+            'could not catalog objects %s with method %s' % (
+              object_list,
+              method_name,
+            ),
+            error=sys.exc_info(),
+          )
           raise
-
-  if psyco is not None:
-    psyco.bind(_catalogObjectList)
 
   def _getCatalogMethodArgumentList(self, method):
     if method.meta_type in ("Z SQL Method", "LDIF Method"):
