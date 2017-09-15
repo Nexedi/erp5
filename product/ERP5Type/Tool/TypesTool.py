@@ -132,7 +132,6 @@ class TypesTool(TypeProvider):
       'portal_types/Business Property Item'
     ))
     ERP5Generator.bootstrap_bm(self, 'erp5_core', (
-      'portal_types/Business Template',
       'portal_types/Standard Property',
       'portal_types/Acquired Property',
       # the following ones are required to upgrade an existing site

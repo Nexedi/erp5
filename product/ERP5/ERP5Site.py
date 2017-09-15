@@ -2216,19 +2216,15 @@ class ERP5Generator(PortalGenerator):
     """
     Set up workflows for business templates
     """
-    workflow_list = ['business_template_building_workflow',
-                     'business_template_installation_workflow']
     manager_workflow_list = ['business_manager_building_workflow',
                              'business_manager_installation_workflow']
     tool = p.portal_workflow
-    tool.manage_delObjects(filter(tool.hasObject, workflow_list))
-    self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
+    tool.manage_delObjects(filter(tool.hasObject, manager_workflow_list))
     self.bootstrap_bm(tool, 'erp5_business_package', (
       'portal_workflow/business_manager_building_workflow',
       'portal_workflow/business_manager_installation_workflow',
       'portal_types/Business Manager#type_workflow_list',
       ))
-    tool.setChainForPortalTypes(('Business Template',), workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
