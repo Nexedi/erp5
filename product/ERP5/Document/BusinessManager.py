@@ -264,6 +264,28 @@ class BusinessManager(Folder):
         item.setProperty('item_property_value', '')
         item.setProperty('item_property_type', '')
 
+  security.declareProtected(Permissions.ManagePortal, 'preinstall')
+  def preinstall(self, check_dependencies=1, **kw):
+    """
+    Preinstall for Business Manager comapres the installation state and returns
+    the changes in a manner which can keep up compatibilty with the view we use
+    in Business Template installation.
+
+    This function calls `portal_templates.updateInstallationState` to get the
+    change_list.
+
+    We don't care of check_dependencies here as this all would be taken care by
+    `udpateInstallationState` iteself.
+    """
+    change_list = self.aq_parent.compareInstallationState([self])
+    modified_object_list = {}
+    for path in change_list:
+      type_name = 'Business Item'
+      if '#' in path[0]:
+        type_name = 'Business Property Item'
+        modified_object_list[path[0]] = [path[1], type_name]
+    return modified_object_list
+
   security.declareProtected(Permissions.ManagePortal, 'clean')
   clean = _clean
 
@@ -499,9 +521,6 @@ class BusinessManager(Folder):
     A reduced Business Manager BT is said to be flattened if and only if:
     flatten(BT) = BT
     """
-    pass
-
-  def preinstall(self, check_dependencies=1, **kw):
     pass
 
   def reduceBusinessManager(self):
