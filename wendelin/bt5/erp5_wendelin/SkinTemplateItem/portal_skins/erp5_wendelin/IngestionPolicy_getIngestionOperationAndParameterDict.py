@@ -69,7 +69,7 @@ def init_input_line(input_line, operation_line):
       
     for data_sink_type in data_sink_type_list:
       # This should be more generic
-      if data_sink_type != "Progress Indicator":
+      if data_sink_type not in ("Progress Indicator", "Data Ingestion Batch"):
         data_sink = portal.getDefaultModule(data_sink_type).newContent(
           portal_type = data_sink_type,
           reference = "%s-%s" %(data_ingestion_reference, resource_reference))
