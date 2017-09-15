@@ -159,7 +159,9 @@ else:
 data_operation = operation_line.getResourceValue()
 parameter_dict = {
    input_line.getReference(): \
-     {v.getPortalType(): v for v in input_line.getAggregateValueList()},
-  'bucket_reference': movement_dict.get('bucket_reference', None)}
+     {v.getPortalType(): v for v in input_line.getAggregateValueList()}}
+bucket_reference = movement_dict.get('bucket_reference', None)
+if bucket_reference is not None:
+  parameter_dict['bucket_reference'] = bucket_reference
 
 return data_operation, parameter_dict
