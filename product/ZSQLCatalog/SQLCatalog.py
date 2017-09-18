@@ -960,8 +960,7 @@ class Catalog(Folder,
     """
     Clears the catalog by calling a list of methods
     """
-    methods = self.sql_clear_catalog
-    for method_name in methods:
+    for method_name in self.sql_clear_catalog:
       method = getattr(self, method_name)
       try:
         method()
@@ -971,7 +970,6 @@ class Catalog(Folder,
         LOG('SQLCatalog', WARNING,
             'could not clear catalog with %s' % method_name, error=sys.exc_info())
         raise
-
     # Reserved uids have been removed.
     self._clearReserved()
 
