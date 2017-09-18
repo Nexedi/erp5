@@ -439,7 +439,7 @@ class TemplateTool (BaseTool):
           # In case none of the above paths do have template_format_version
           format_version = 1
         # XXX: Download only needed in case the file is in directory
-        bt = self._download_local(os.path.normpath(name), id, format_version)
+        bt = self._download_local(os.path.expanduser(os.path.normpath(name)), id, format_version)
 
       bt.build(no_action=True)
       return bt
