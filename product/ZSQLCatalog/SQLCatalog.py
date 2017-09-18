@@ -1312,108 +1312,69 @@ class Catalog(Folder,
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
     """This is the real method to catalog objects."""
-    LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_list))
     if idxs not in (None, []):
       LOG('ZSLQCatalog.SQLCatalog:catalogObjectList', WARNING,
           'idxs is ignored in this function and is only provided to be compatible with CMFCatalogAware.reindexObject.')
     if not self.getPortalObject().isIndexable():
       return
 
-    path_uid_dict = {}
-    uid_path_dict = {}
-
-    if check_uid:
-      path_list = []
-      path_list_append = path_list.append
-      uid_list = []
-      uid_list_append = uid_list.append
-      for object in object_list:
-        path = object.getPath()
-        if path is not None:
-          path_list_append(path)
-        uid = object.uid
-        if uid is not None:
-          uid_list_append(uid)
-      path_uid_dict = self.getUidDictForPathList(path_list=path_list)
-      uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
-
-    # This dict will store uids and objects which are verified below.
-    # The purpose is to prevent multiple objects from having the same
-    # uid inside object_list.
-    assigned_uid_dict = {}
-
+    object_path_dict = {}
+    uid_list = []
+    uid_list_append = uid_list.append
     for object in object_list:
+      if object in object_path_dict:
+        continue
+      path = object.getPath()
+      if len(path) > MAX_PATH_LEN:
+        raise  ValueError('path too long (%i): %r' % (len(path), path))
+      object_path_dict[object] = path
       try:
         uid = aq_base(object).uid
       except AttributeError:
         uid = None
       if uid is None or uid == 0:
-        try:
-          object.uid = self.newUid()
-        except ConflictError:
-          raise
-        except:
-          raise RuntimeError, 'could not set missing uid for %r' % (object,)
-      elif check_uid:
-        if uid in assigned_uid_dict:
-            error_message = 'uid of %r is %r and ' \
-                  'is already assigned to %s in catalog !!! This can be fatal.' % \
-                  (object, uid, assigned_uid_dict[uid])
-            if not self.sql_catalog_raise_error_on_uid_check:
-                LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
-            else:
-                raise ValueError(error_message)
-
-        path = object.getPath()
-        index = path_uid_dict.get(path)
-        if index is not None:
-          if index < 0:
-            raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
-          if uid != index or isinstance(uid, int):
-            error_message = 'uid of %r changed from %r (property) to %r '\
-	                    '(catalog, by path) !!! This can be fatal' % (object, uid, index)
-            if not self.sql_catalog_raise_error_on_uid_check:
-              LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
-            else:
-              raise ValueError(error_message)
-        else:
-          if uid in uid_path_dict:
-            catalog_path = uid_path_dict.get(uid)
-          else:
-            catalog_path = self.getPathForUid(uid)
-          if catalog_path == 'deleted':
-            # Two possible cases:
-            # - Reindexed object's path changed (ie, it or at least one of its
-            #   parents was renamed) but unindexObject was not called yet.
-            #   Reindexing is harmelss: unindexObject and then an
-            #   immediateReindexObject will be called.
-            # - Reindexed object was deleted by a concurrent transaction, which
-            #   committed after we got our ZODB snapshot of this object.
-            #   Reindexing is harmless: unindexObject will be called, and
-            #   cannot be executed in parallel thanks to activity's
-            #   serialisation_tag (so we cannot end up with a fantom object in
-            #   catalog).
-            # So we index object.
-            # We could also not index it to save the time needed to index, but
-            # this would slow down all regular case to slightly improve an
-            # exceptional case.
-            pass
-          elif catalog_path is not None:
-            # An uid conflict happened... Why?
-            # can be due to path length
-            if len(path) > MAX_PATH_LEN:
-              LOG('SQLCatalog', ERROR, 'path of object %r is too long for catalog. You should use a shorter path.' %(object,))
-
-            error_message = 'uid of %r is %r and ' \
-                            'is already assigned to %s in catalog !!! This can be fatal.' \
-                            % (object, uid, catalog_path)
-            if not self.sql_catalog_raise_error_on_uid_check:
-                LOG('SQLCatalog', ERROR, error_message)
-            else:
-                raise ValueError(error_message)
-            uid = object.uid
-
-        assigned_uid_dict[uid] = object
+        object.uid = uid = self.newUid()
+      uid_list_append(uid)
+    LOG('SQLCatalog', TRACE, 'catalogging %d objects' % len(object_path_dict))
+    if check_uid:
+      path_uid_dict = self.getUidDictForPathList(path_list=object_path_dict.values())
+      uid_path_dict = self.getPathDictForUidList(uid_list=uid_list)
+      for object, path in object_path_dict.iteritems():
+        uid = object.uid
+        if path_uid_dict.setdefault(path, uid) != uid:
+          error_message = 'path %r has uids %r (catalog) and %r (being indexed) ! This can break relations' % (
+            path,
+            path_uid_dict[path],
+            uid,
+          )
+          if self.sql_catalog_raise_error_on_uid_check:
+            raise ValueError(error_message)
+          LOG("SQLCatalog._catalogObjectList", ERROR, error_message)
+        catalog_path = uid_path_dict.setdefault(uid, path)
+        if catalog_path != path and catalog_path != 'deleted':
+          # Two possible cases if catalog_path == 'deleted':
+          # - Reindexed object's path changed (ie, it or at least one of its
+          #   parents was renamed) but unindexObject was not called yet.
+          #   Reindexing is harmelss: unindexObject and then an
+          #   immediateReindexObject will be called.
+          # - Reindexed object was deleted by a concurrent transaction, which
+          #   committed after we got our ZODB snapshot of this object.
+          #   Reindexing is harmless: unindexObject will be called, and
+          #   cannot be executed in parallel thanks to activity's
+          #   serialisation_tag (so we cannot end up with a fantom object in
+          #   catalog).
+          # So we index object.
+          # We could also not index it to save the time needed to index, but
+          # this would slow down all regular case to slightly improve an
+          # exceptional case.
+          error_message = 'uid %r is shared between %r (catalog) and %r (being indexed) ! This can break relations' % (
+            uid,
+            uid_path_dict[uid],
+            path,
+          )
+          if self.sql_catalog_raise_error_on_uid_check:
+            raise ValueError(error_message)
+          LOG('SQLCatalog._catalogObjectList', ERROR, error_message)
 
     if method_id_list is None:
       method_id_list = self.getSqlCatalogObjectListList()
@@ -1449,7 +1410,7 @@ class Catalog(Folder,
         except KeyError:
           pass
         if expression is None:
-          catalogged_object_list = object_list
+          catalogged_object_list = object_path_dict.keys()
         else:
           text = expression.text
           catalogged_object_list = catalogged_object_list_cache.get(text)
@@ -1463,7 +1424,7 @@ class Catalog(Folder,
                             % (method_name, text), DeprecationWarning)
             expression_cache_key_list = filter.get('expression_cache_key', ())
             expression_result_cache = {}
-            for object in object_list:
+            for object in object_path_dict:
               if expression_cache_key_list:
                 # Expressions are slow to evaluate because they are executed
                 # in restricted environment. So we try to save results of
