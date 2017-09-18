@@ -127,59 +127,18 @@ class DateTimeField(ZMIField):
   widget = Widget.DateTimeWidgetInstance
   validator = Validator.DateTimeValidatorInstance
 
-  def __init__(self, id, **kw):
-    # icky but necessary...
-    apply(ZMIField.__init__, (self, id), kw)
-
-    input_style = self.get_value('input_style')
+  def _get_sub_form(self, field=None):
+    if field is None:
+      field = self
+    input_style = field.get_value('input_style')
     if input_style == 'text':
-      self.sub_form = create_datetime_text_sub_form()
+      return create_datetime_text_sub_form(self)
     elif input_style == 'list':
-      self.sub_form = create_datetime_list_sub_form()
+      return create_datetime_list_sub_form(self)
     elif input_style == 'number':
-      self.sub_form = create_datetime_number_sub_form()
+      return create_datetime_number_sub_form(self)
     else:
       assert 0, "Unknown input_style '%s'" % input_style
-
-  def on_value_input_style_changed(self, value):
-    if value == 'text':
-      self.sub_form = create_datetime_text_sub_form()
-    elif value == 'list':
-      self.sub_form = create_datetime_list_sub_form()
-      year_field = self.sub_form.get_field('year', include_disabled=1)
-      year_field.overrides['items'] = BoundMethod(self,
-                                                  '_override_year_items')
-    elif value == 'number':
-      self.sub_form = create_datetime_number_sub_form()
-    else:
-      assert 0, "Unknown input_style."
-    self.on_value_css_class_changed(self.values['css_class'])
-
-  def on_value_timezone_style_changed(self, value):
-    if value:
-      input_style = self.get_value('input_style')
-      self.on_value_input_style_changed(input_style)
-
-  def on_value_css_class_changed(self, value):
-    for field in self.sub_form.get_fields():
-      field.values['css_class'] = value
-      field._p_changed = 1
-
-  def _override_year_items(self):
-    """The method gets called to get the right amount of years.
-    """
-    start_datetime = self.get_value('start_datetime')
-    end_datetime = self.get_value('end_datetime')
-    current_year = DateTime().year()
-    if start_datetime:
-      first_year = start_datetime.year()
-    else:
-      first_year = current_year
-    if end_datetime:
-      last_year = end_datetime.year() + 1
-    else:
-      last_year = first_year + 11
-    return create_items(first_year, last_year, digits=4)
 
   def _get_user_input_value(self, key, REQUEST):
     """
@@ -188,12 +147,14 @@ class DateTimeField(ZMIField):
     if REQUEST.form['subfield_%s_%s' % (key, 'year')]:
       return None
 
-def create_datetime_text_sub_form():
+def create_datetime_text_sub_form(field):
   sub_form = BasicForm()
+  css_class = field.get_value('css_class')
 
   year = IntegerField('year',
                       title="Year",
                       required=0,
+                      css_class=css_class,
                       display_width=4,
                       display_maxwidth=4,
                       max_length=4)
@@ -201,6 +162,7 @@ def create_datetime_text_sub_form():
   month = IntegerField('month',
                         title="Month",
                         required=0,
+                        css_class=css_class,
                         display_width=2,
                         display_maxwidth=2,
                         max_length=2)
@@ -208,6 +170,7 @@ def create_datetime_text_sub_form():
   day = IntegerField('day',
                       title="Day",
                       required=0,
+                      css_class=css_class,
                       display_width=2,
                       display_maxwidth=2,
                       max_length=2)
@@ -217,6 +180,7 @@ def create_datetime_text_sub_form():
   hour = IntegerField('hour',
                       title="Hour",
                       required=0,
+                      css_class=css_class,
                       display_width=2,
                       display_maxwidth=2,
                       max_length=2)
@@ -224,6 +188,7 @@ def create_datetime_text_sub_form():
   minute = IntegerField('minute',
                         title="Minute",
                         required=0,
+                        css_class=css_class,
                         display_width=2,
                         display_maxwidth=2,
                         max_length=2)
@@ -231,32 +196,48 @@ def create_datetime_text_sub_form():
   ampm = StringField('ampm',
                       title="am/pm",
                       required=0,
+                      css_class=css_class,
                       display_width=2,
                       display_maxwidth=2,
                       max_length=2)
   timezone = ListField('timezone',
                         title = "Timezone",
                         required = 0,
+                        css_class=css_class,
                         default = 'GMT',
                         items = Widget.gmt_timezones,
                         size = 1)
   sub_form.add_fields([hour, minute, ampm, timezone], "time")
   return sub_form
 
-def create_datetime_list_sub_form():
+def create_datetime_list_sub_form(field):
   """ Patch Products.Formulator.StandardFields so we can add timezone subfield """
   sub_form = BasicForm()
+  css_class = field.get_value('css_class')
+  start_datetime = field.get_value('start_datetime')
+  end_datetime = field.get_value('end_datetime')
+  current_year = DateTime().year()
+  if start_datetime:
+    first_year = start_datetime.year()
+  else:
+    first_year = current_year
+  if end_datetime:
+    last_year = end_datetime.year() + 1
+  else:
+    last_year = first_year + 11
 
   year = ListField('year',
                     title="Year",
                     required=0,
+                    css_class=css_class,
                     default="",
-                    items=create_items(2000, 2010, digits=4),
+                    items=create_items(first_year, last_year, digits=4),
                     size=1)
 
   month = ListField('month',
                     title="Month",
                     required=0,
+                    css_class=css_class,
                     default="",
                     items=create_items(1, 13, digits=2),
                     size=1)
@@ -264,6 +245,7 @@ def create_datetime_list_sub_form():
   day = ListField('day',
                   title="Day",
                   required=0,
+                  css_class=css_class,
                   default="",
                   items=create_items(1, 32, digits=2),
                   size=1)
@@ -274,6 +256,7 @@ def create_datetime_list_sub_form():
   hour = IntegerField('hour',
                       title="Hour",
                       required=0,
+                      css_class=css_class,
                       display_width=2,
                       display_maxwidth=2,
                       max_length=2)
@@ -281,6 +264,7 @@ def create_datetime_list_sub_form():
   minute = IntegerField('minute',
                         title="Minute",
                         required=0,
+                        css_class=css_class,
                         display_width=2,
                         display_maxwidth=2,
                         max_length=2)
@@ -288,6 +272,7 @@ def create_datetime_list_sub_form():
   ampm = ListField('ampm',
                     title="am/pm",
                     required=0,
+                    css_class=css_class,
                     default="am",
                     items=[("am","am"),
                           ("pm","pm")],
@@ -295,6 +280,7 @@ def create_datetime_list_sub_form():
   timezone = ListField('timezone',
                         title = "Timezone",
                         required = 0,
+                        css_class=css_class,
                         default = 'GMT',
                         items = Widget.gmt_timezones,
                         size = 1)
@@ -303,14 +289,26 @@ def create_datetime_list_sub_form():
   sub_form.add_fields([hour, minute, ampm, timezone], "time")
   return sub_form
 
-def create_datetime_number_sub_form():
+def create_datetime_number_sub_form(field):
   sub_form = BasicForm()
+  css_class = field.get_value('css_class')
+  start_datetime = field.get_value('start_datetime')
+  end_datetime = field.get_value('end_datetime')
+  if start_datetime:
+    first_year = start_datetime.year()
+  else:
+    first_year = 0
+  if end_datetime:
+    last_year = end_datetime.year()
+  else:
+    last_year = 9999
 
   year = IntegerField('year',
                       title="Year",
                       required=0,
                       input_type='number',
-                      extra='min="0" max="9999"',
+                      css_class=css_class,
+                      extra='min="%s" max="%s"' % (first_year, last_year),
                       display_width=4,
                       display_maxwidth=4,
                       max_length=4)
@@ -319,6 +317,7 @@ def create_datetime_number_sub_form():
                         title="Month",
                         required=0,
                         input_type='number',
+                        css_class=css_class,
                         extra='min="1" max="12"',
                         display_width=2,
                         display_maxwidth=2,
@@ -327,6 +326,7 @@ def create_datetime_number_sub_form():
   day = IntegerField('day',
                       title="Day",
                       required=0,
+                      css_class=css_class,
                       input_type='number',
                       extra='min="1" max="31"',
                       display_width=2,
@@ -338,6 +338,7 @@ def create_datetime_number_sub_form():
   hour = IntegerField('hour',
                       title="Hour",
                       required=0,
+                      css_class=css_class,
                       input_type='number',
                       extra='min="0" max="23"',
                       display_width=2,
@@ -347,6 +348,7 @@ def create_datetime_number_sub_form():
   minute = IntegerField('minute',
                         title="Minute",
                         required=0,
+                        css_class=css_class,
                         input_type='number',
                         extra='min="0" max="59"',
                         display_width=2,
@@ -356,12 +358,14 @@ def create_datetime_number_sub_form():
   ampm = StringField('ampm',
                       title="am/pm",
                       required=0,
+                      css_class=css_class,
                       display_width=2,
                       display_maxwidth=2,
                       max_length=2)
   timezone = ListField('timezone',
                         title = "Timezone",
                         required = 0,
+                        css_class=css_class,
                         default = 'GMT',
                         items = Widget.gmt_timezones,
                         size = 1)

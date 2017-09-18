@@ -91,11 +91,6 @@ def XMLToForm(s, form, override_encoding=None):
                 else:
                     field.values[name] = encode(value.text, encoding)
 
-            # special hack for the DateTimeField
-            if field.meta_type=='DateTimeField':
-                field.on_value_input_style_changed(
-                    field.get_value('input_style'))
-
             # set tales
             tales = entry.first.tales
             for name in tales.getElementNames():

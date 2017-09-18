@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest, re
+from DateTime import DateTime
 import Zope2
 
 # XXX this does not work for zope2.x if x < 3
@@ -120,14 +121,10 @@ class FormTestCase(unittest.TestCase):
         self.form.manage_addProduct['Formulator']\
                  .manage_addField('date_time','Test Field','DateTimeField')
         field = self.form.date_time
-        sub_form = field.sub_form
-        if sub_form.has_field('timezone'):
-          del sub_form.fields['timezone']
-        #now timezone is not presented
-        self.assertFalse(self.form.date_time.sub_form.has_field('timezone'))
+        field._edit({'timezone_style': 0})
+        self.assertFalse('<select size="1" name="subfield_field_date_time_timezone" >' in field.render())
         field._edit({'timezone_style': 1})
-        #test if timezone's presented
-        self.assertTrue(self.form.date_time.sub_form.has_field('timezone'))
+        self.assertTrue('<select size="1" name="subfield_field_date_time_timezone" >' in field.render())
 
 
     def test_datetime_css_class_rendering(self):
@@ -175,6 +172,22 @@ class FormTestCase(unittest.TestCase):
         field._edit({'css_class':''})
         css_matches = css_matcher.findall(field.render())
         self.assertEqual(0, len(css_matches))
+
+
+    def test_datetime_number_style(self):
+        # test that a bug is fixed, which causing the css_class value
+        # not to be rendered
+        self.form.manage_addProduct['Formulator']\
+                 .manage_addField('date_time','Test Field','DateTimeField')
+        field = self.form.date_time
+        field._edit({'input_style': 'number'})
+        self.assertTrue('<input name="subfield_field_date_time_year" value="" maxlength="4" type="number" size="4" min="0" max="9999" />' in field.render())
+        field._edit({'start_datetime': DateTime('1900/01/01'), 'end_datetime': None})
+        self.assertTrue('<input name="subfield_field_date_time_year" value="" maxlength="4" type="number" size="4" min="1900" max="9999" />' in field.render())
+        field._edit({'start_datetime': None, 'end_datetime': DateTime('2099/12/31')})
+        self.assertTrue('<input name="subfield_field_date_time_year" value="" maxlength="4" type="number" size="4" min="0" max="2099" />' in field.render())
+        field._edit({'start_datetime': DateTime('1900/01/01'), 'end_datetime': DateTime('2099/12/31')})
+        self.assertTrue('<input name="subfield_field_date_time_year" value="" maxlength="4" type="number" size="4" min="1900" max="2099" />' in field.render())
 
 
 def test_suite():

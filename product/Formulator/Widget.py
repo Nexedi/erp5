@@ -1455,10 +1455,6 @@ class DateTimeWidget(Widget):
   def render(self, field, key, value, REQUEST, render_prefix=None):
     use_ampm = field.get_value('ampm_time_style')
     use_timezone = field.get_value('timezone_style')
-    # FIXME: backwards compatibility hack:
-    if not hasattr(field, 'sub_form'):
-      from StandardFields import create_datetime_text_sub_form
-      field.sub_form = create_datetime_text_sub_form()
 
     # Is it still usefull to test the None value,
     # as DateTimeField should be considerer as the other field

@@ -403,7 +403,7 @@ class Field:
       a form. Works like render() but for sub field.
           Added key parameter for ERP5 in order to be compatible with listbox/matrixbox
       """
-      return self.sub_form.get_field(id)._render_helper(
+      return self._get_sub_form().get_field(id)._render_helper(
           self.generate_subfield_key(id, key=key), value, REQUEST, render_prefix)
 
     security.declareProtected('View', 'render_sub_field_from_request')
@@ -411,7 +411,7 @@ class Field:
         """Convenience method; render the field widget from REQUEST
         (unvalidated data), or default if no raw data is found.
         """
-        return self.sub_form.get_field(id)._render_helper(
+        return self._get_sub_form().get_field(id)._render_helper(
             self.generate_subfield_key(id), None, REQUEST)
 
     security.declarePrivate('_validate_helper')
@@ -441,7 +441,7 @@ class Field:
     def validate_sub_field(self, id, REQUEST, key=None):
       """Validates a subfield (as part of field validation).
       """
-      return self.sub_form.get_field(id)._validate_helper(
+      return self._get_sub_form().get_field(id)._validate_helper(
       self.generate_subfield_key(id, validation=1, key=key), REQUEST)
 
     def PrincipiaSearchSource(self):
