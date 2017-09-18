@@ -2012,8 +2012,11 @@ class TemplateTool (BaseTool):
       if update_catalog is CATALOG_UPDATABLE and install_kw != {}:
         update_catalog = imported_bt5.isCatalogUpdatable()
 
-      imported_bt5.install(object_to_update=install_kw,
-                           update_catalog=update_catalog)
+      if imported_bt5.getPortalType() == 'Business Manager':
+        self.updateInstallationState([imported_bt5])
+      else:
+        imported_bt5.install(object_to_update=install_kw,
+                             update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
