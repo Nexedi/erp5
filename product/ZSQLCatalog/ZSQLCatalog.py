@@ -372,12 +372,6 @@ class ZCatalog(Folder, Persistent, Implicit):
     """
     if self.getDefaultSqlCatalogId() == source_sql_catalog_id:
       self._setDefaultSqlCatalogId(destination_sql_catalog_id)
-      id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
-      if id_tool is None:
-        # Insert the latest generated uid.
-        # This must be done just before swaping the catalogs in case there were
-        # generated uids since destination catalog was created.
-        self[destination_sql_catalog_id].insertMaxUid()
 
     LOG('_exchangeDatabases skin_selection_dict:',0,skin_selection_dict)
     if skin_selection_dict is not None:
