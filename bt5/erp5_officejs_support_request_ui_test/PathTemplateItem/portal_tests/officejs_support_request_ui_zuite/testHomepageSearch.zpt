@@ -49,6 +49,11 @@
   <td>//div[@role='main']//input[@name='search']</td>
   <td></td>
 </tr>
+<tr>
+  <td>assertValue</td>
+  <td>//div[@role='main']//input[@name='search']</td>
+  <td>( portal_type: "Support Request")</td>
+</tr>
 </tbody></table>
   </body>
 </html>
