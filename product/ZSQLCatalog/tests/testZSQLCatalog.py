@@ -61,7 +61,7 @@ class TestSQLCatalog(unittest.TestCase):
     # test that our method actually gets called while looking records up by
     # uid by raising our own exception
     self._catalog.sql_getitem_by_uid = 'z_dummy_lookup_method'
-    def z_dummy_lookup_method(uid):
+    def z_dummy_lookup_method(uid_list):
       raise MyError('foo')
     self._catalog.z_dummy_lookup_method = z_dummy_lookup_method
     self.assertRaises(MyError, self._catalog.getRecordForUid, 1)

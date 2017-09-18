@@ -14,9 +14,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>path\r\n
-path_list\r\n
-uid_only</string> </value>
+            <value> <string>path_list</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>

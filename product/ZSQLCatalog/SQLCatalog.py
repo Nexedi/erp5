@@ -886,11 +886,11 @@ class Catalog(Folder,
     # It could also have a performance impact for traversals to objects in
     # the acquisition context on Zope 2.12 even when it didn't raise a weird
     # error.
-    method = self._getOb(self.getSqlGetitemByUid())
-    search_result = method(uid = uid)
-    if len(search_result) > 0:
-      return search_result[0]
-    raise KeyError, uid
+    search_result = self._getOb(self.getSqlGetitemByUid())(uid_list=[uid])
+    if search_result:
+      result, = search_result
+      return result
+    raise KeyError(uid)
 
   security.declarePrivate('editSchema')
   def editSchema(self, names_list):
@@ -1369,7 +1369,7 @@ class Catalog(Folder,
           # exceptional case.
           error_message = 'uid %r is shared between %r (catalog) and %r (being indexed) ! This can break relations' % (
             uid,
-            uid_path_dict[uid],
+            catalog_path,
             path,
           )
           if self.sql_catalog_raise_error_on_uid_check:
@@ -1600,28 +1600,28 @@ class Catalog(Folder,
   security.declarePrivate('getUidDictForPathList')
   def getUidDictForPathList(self, path_list):
     """ Looks up into catalog table to convert path into uid """
-    return  {
+    return {
       x.path: x.uid
       for x in self._getOb(
         self.getSqlGetitemByPath()
       )(
-        path=None,
+        path=None, # BBB
         path_list=path_list,
-        uid_only=False,
+        uid_only=False, # BBB
       )
     }
 
   security.declarePrivate('getPathDictForUidList')
   def getPathDictForUidList(self, uid_list):
     """ Looks up into catalog table to convert uid into path """
-    return  {
+    return {
       x.uid: x.path
       for x in self._getOb(
         self.getSqlGetitemByUid()
       )(
-        uid=None,
+        uid=None, # BBB
         uid_list=uid_list,
-        path_only=False,
+        path_only=False, # BBB
       )
     }
 
