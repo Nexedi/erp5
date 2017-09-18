@@ -263,7 +263,7 @@
                             </item>
                             <item>
                                 <key> <string>_vary</string> </key>
-                                <value> <string>Cookie, Authorization</string> </value>
+                                <value> <string>Cookie, Authorization, Origin</string> </value>
                             </item>
                           </dictionary>
                         </state>
