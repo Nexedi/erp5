@@ -252,9 +252,9 @@
             page: "search"
           };
           if (data.search) {
-            options.extended_search = '(' + data.search + ' AND portal_type:  "Support Request")';
+            options.extended_search = '(' + data.search + ' AND portal_type: "Support Request")';
           } else {
-            options.extended_search = '( portal_type:  "Support Request")';
+            options.extended_search = '( portal_type: "Support Request")';
           }
           // Remove focus from the search field
           document.activeElement.blur();
