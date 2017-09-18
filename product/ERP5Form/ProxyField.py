@@ -493,10 +493,10 @@ class ProxyField(ZMIField):
       field = template_field
     return template_field
 
-  def _aq_dynamic(self, name):
-    if name == 'sub_form':
-      return self.getTemplateField().sub_form
-    return None
+  def _get_sub_form(self, field=None):
+    if field is None:
+      field = self
+    return self.getTemplateField()._get_sub_form(field=field)
 
   security.declareProtected('Access contents information',
                             'is_delegated')

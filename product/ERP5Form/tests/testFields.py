@@ -764,13 +764,30 @@ class TestProxyField(ERP5TypeTestCase):
                                 'my_date', 'Date', 'ProxyField')
     proxy_field.manage_edit_xmlrpc(dict(form_id='Base_viewProxyFieldLibrary',
                                         field_id='my_date',))
-    self.assertTrue(hasattr(proxy_field, 'sub_form'))
-    self.assertTrue(aq_base(proxy_field.sub_form) is
-                      aq_base(original_field.sub_form))
+    self.assertTrue(hasattr(proxy_field, '_get_sub_form'))
+    self.assertEqual(proxy_field._get_sub_form().render(),
+                     original_field._get_sub_form().render())
+
     # we can render
     proxy_field.render()
     # and validate
     self.container.Base_view.validate_all_to_request(self.portal.REQUEST)
+
+    # change style in the original field
+    original_field.manage_edit_xmlrpc(dict(input_style='number'))
+    self.assertTrue('type="number"' in original_field.render())
+    self.assertTrue('type="number"' in proxy_field.render())
+
+    # override style in the proxy field
+    original_field.manage_edit_xmlrpc(dict(input_style='text'))
+    proxy_field._surcharged_edit({'input_style': 'number'}, ['input_style'])
+    self.assertTrue('type="text"' in original_field.render())
+    self.assertTrue('type="number"' in proxy_field.render())
+
+    # unproxify the proxy field
+    self.container.Base_view.unProxifyField({'my_date': 'on'})
+    unproxified_field = self.container.Base_view.my_date
+    self.assertTrue('type="number"' in unproxified_field.render())
 
   def test_manage_edit_surcharged_xmlrpc(self):
     # manage_edit_surcharged_xmlrpc is a method to edit proxyfields
@@ -942,7 +959,7 @@ class TestFieldValueCache(ERP5TypeTestCase):
     addField(DateTimeField('datetime_field'))
     form.datetime_field._p_oid = makeDummyOid()
     form.datetime_field._edit(dict(input_style='list'))
-    for i in form.datetime_field.sub_form.fields.values():
+    for i in form.datetime_field._get_sub_form().fields.values():
       i._p_oid = makeDummyOid()
 
   def test_method_field(self):
@@ -987,41 +1004,6 @@ class TestFieldValueCache(ERP5TypeTestCase):
     self.root.form.proxy_field_tales.get_value('title')
     self.assertEqual(True, cache_size == self._getCacheSize('ProxyField.get_value'))
 
-  def test_datetime_field(self):
-    field_value_cache.clear()
-
-    # make sure that boundmethod must not be cached.
-    year_field = self.root.form.datetime_field.sub_form.get_field('year', include_disabled=1)
-    self.assertEqual(True, type(year_field.overrides['items']) is BoundMethod)
-
-    cache_size = len(field_value_cache)
-    year_field.get_value('items')
-
-    # See Formulator/StandardFields.py(line:174)
-    # there are two get_value, start_datetime and end_datetime
-    cache_size += 2
-
-    # make sure that boundmethod is not cached(cache size does not change)
-    self.assertEqual(True, ('Form.get_value',
-                            self.root.form.datetime_field._p_oid,
-                            self.root.form.datetime_field._p_oid,
-                            'start_datetime'
-                            ) in field_value_cache)
-    self.assertEqual(True, ('Form.get_value',
-                            self.root.form.datetime_field._p_oid,
-                            self.root.form.datetime_field._p_oid,
-                            'end_datetime'
-                            ) in field_value_cache)
-    self.assertEqual(False, ('Form.get_value',
-                            year_field._p_oid,
-                            year_field._p_oid,
-                            'items'
-                            ) in field_value_cache)
-    self.assertEqual(cache_size, len(field_value_cache))
-
-    year_field.get_value('size')
-    year_field.get_value('default')
-    self.assertEqual(cache_size+2, len(field_value_cache))
 
 def makeDummyOid():
   import time, random
