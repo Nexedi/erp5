@@ -402,6 +402,9 @@ class TemplateTool (BaseTool):
       urltype, name = splittype(url)
       # Create a zexp path which would be used for Business Manager files
       zexp_path = name + '/' + name.split('/')[-1] + '.zexp'
+      # Better to expand path as we now use ~software_release for the software
+      # folder
+      zexp_path = os.path.expanduser(zexp_path)
 
       if WIN and urltype and '\\' in name:
         urltype = None
