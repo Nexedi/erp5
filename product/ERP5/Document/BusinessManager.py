@@ -205,6 +205,11 @@ class BusinessManager(Folder):
   def getShortRevision(self):
     return None
 
+  def getVersion(self):
+    # Override the getter because currently we don't migrate the version, and
+    # this is used to find missing dependency list
+    return '5.4.7'
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBuildingState')
   def getBuildingState(self, default=None, id_only=1):
