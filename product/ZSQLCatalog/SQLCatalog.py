@@ -379,18 +379,8 @@ class Catalog(Folder,
       'mode'    : 'w' },
 
     # Z SQL Methods
-    { 'id'      : 'sql_catalog_produce_reserved',
-      'description' : 'A method to produce new uid values in advance',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
     { 'id'      : 'sql_catalog_clear_reserved',
       'description' : 'A method to clear reserved uid values',
-      'type'    : 'selection',
-      'select_variable' : 'getCatalogMethodIds',
-      'mode'    : 'w' },
-    { 'id'      : 'sql_catalog_reserve_uid',
-      'description' : 'A method to reserve a uid value',
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
@@ -587,10 +577,8 @@ class Catalog(Folder,
 
   )
 
-  sql_catalog_produce_reserved = ''
   sql_catalog_delete_uid = ''
   sql_catalog_clear_reserved = ''
-  sql_catalog_reserve_uid = ''
   sql_catalog_object_list = ()
   sql_uncatalog_object = ()
   sql_clear_catalog = ()
@@ -754,7 +742,6 @@ class Catalog(Folder,
         if not security_uid:
           getTransactionalVariable().pop('getSecurityUidDictAndRoleColumnDict',
                                          None)
-          id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
           # We must keep compatibility with existing sites
           security_uid = getattr(self, 'security_uid_index', None)
           if security_uid is None:
@@ -762,16 +749,13 @@ class Catalog(Folder,
           # At some point, it was a Length
           elif isinstance(security_uid, Length):
             security_uid = security_uid()
-        # If the id_tool is there, it is better to use it, it allows
-        # to create many new security uids by the same time
-        # because with this tool we are sure that we will have 2 different
-        # uids if two instances are doing this code in the same time
-        security_uid += 1
-        if id_tool is not None:
-          security_uid = int(id_tool.generateNewId(id_generator='uid',
-              id_group='security_uid_index', default=security_uid))
-        else:
-          self.security_uid_index = security_uid
+        security_uid = int(
+          self.getPortalObject().portal_ids.generateNewId(
+            id_generator='uid',
+            id_group='security_uid_index',
+            default=security_uid,
+          ),
+        )
 
         self.security_uid_dict[key] = security_uid
         local_roles_group_id_to_security_uid_mapping[local_roles_group_id]\
@@ -864,32 +848,9 @@ class Catalog(Folder,
         raise
     # Reserved uids have been removed.
     self._clearReserved()
-
-    id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
-    if id_tool is None:
-      # Add a dummy item so that SQLCatalog will not use existing uids again.
-      self.insertMaxUid()
-
     self._clearSecurityCache()
     self._clearSubjectCache()
     self._clearCaches()
-
-  def getSqlCatalogReservedUid(self):
-    return self.sql_catalog_reserve_uid
-
-  security.declarePrivate('insertMaxUid')
-  def insertMaxUid(self):
-    """
-      Add a dummy item so that SQLCatalog will not use existing uids again.
-    """
-    if self._max_uid is not None and self._max_uid() != 0:
-      method_id = self.getSqlCatalogReservedUid()
-      method = self._getOb(method_id)
-      self._max_uid.change(1)
-      method(uid = [self._max_uid()])
-
-  def getSqlCatalogClearReserved(self):
-    return self.sql_catalog_clear_reserved
 
   def _clearReserved(self):
     """
@@ -1103,9 +1064,6 @@ class Catalog(Folder,
       uid_buffer_dict[thread_key] = UidBuffer()
     return uid_buffer_dict[thread_key]
 
-  def getSqlCatalogProduceReserved(self):
-    return self.sql_catalog_produce_reserved
-
   # the cataloging API
   security.declarePrivate('produceUid')
   def produceUid(self):
@@ -1120,29 +1078,20 @@ class Catalog(Folder,
     uid_buffer = self.getUIDBuffer(force_new_buffer=force_new_buffer)
     global_clear_reserved_time = self._last_clear_reserved_time
     if len(uid_buffer) == 0:
-      id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
-      if id_tool is not None:
-        if self._max_uid is None:
-          self._max_uid = Length(1)
-        uid_list = id_tool.generateNewIdList(id_generator='uid', id_group='catalog_uid',
-                     id_count=UID_BUFFER_SIZE, default=self._max_uid())
-        # TODO: if this method is kept and former uid allocation code is
-        # discarded, self._max_uid duplicates work done by portal_ids: it
-        # already keeps track of the highest allocated number for all id
-        # generator groups.
-      else:
-        method_id = self.getSqlCatalogProduceReserved()
-        method = self._getOb(method_id)
-        # Generate an instance id randomly. Note that there is a small possibility that this
-        # would conflict with others.
-        random_factor_list = [time.time(), os.getpid(), os.times()]
-        try:
-          random_factor_list.append(os.getloadavg())
-        except (OSError, AttributeError): # AttributeError is required under cygwin
-          pass
-        instance_id = md5(str(random_factor_list)).hexdigest()
-        uid_list = [x.uid for x in method(count = UID_BUFFER_SIZE, instance_id = instance_id) if x.uid != 0]
-      uid_buffer.extend(uid_list)
+      if self._max_uid is None:
+        self._max_uid = Length(1)
+      # TODO: if this method is kept and former uid allocation code is
+      # discarded, self._max_uid duplicates work done by portal_ids: it
+      # already keeps track of the highest allocated number for all id
+      # generator groups.
+      uid_buffer.extend(
+        self.getPortalObject().portal_ids.generateNewIdList(
+          id_generator='uid',
+          id_group='catalog_uid',
+          id_count=UID_BUFFER_SIZE,
+          default=self._max_uid(),
+        ),
+      )
 
   security.declarePrivate('isIndexable')
   def isIndexable(self):
@@ -1432,23 +1381,7 @@ class Catalog(Folder,
             catalog_path = uid_path_dict.get(uid)
           else:
             catalog_path = self.getPathForUid(uid)
-          if catalog_path == "reserved":
-            with global_reserved_uid_lock:
-              uid_buffer = self.getUIDBuffer()
-              if uid_buffer is not None:
-                # This is the case where:
-                #   1. The object got an uid.
-                #   2. The catalog was cleared.
-                #   3. The catalog produced the same reserved uid.
-                #   4. The object was reindexed.
-                # In this case, the uid is not reserved any longer, but
-                # SQLCatalog believes that it is still reserved. So it is
-                # necessary to remove the uid from the list explicitly.
-                try:
-                  uid_buffer.remove(uid)
-                except ValueError:
-                  pass
-          elif catalog_path == 'deleted':
+          if catalog_path == 'deleted':
             # Two possible cases:
             # - Reindexed object's path changed (ie, it or at least one of its
             #   parents was renamed) but unindexObject was not called yet.
