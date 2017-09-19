@@ -1,13 +1,25 @@
-/*global window, rJS, RSVP, jIO */
+/*global window, document, rJS, RSVP, jIO */
 /*jslint indent: 2, maxerr: 3, maxlen: 80 */
-(function (window, rJS, RSVP, jIO) {
+(function (window, document, rJS, RSVP, jIO) {
   "use strict";
+
+  /** Missing value can have different values based on type.
+   *
+   * In general `undefined` and `null` are considered missing values
+   * Float is missing when `NaN`
+   */
+  function is_missing(value) {
+    if (value === undefined || value === null) {return true; }
+    if (typeof value === "number") {return window.isNaN(value); }
+    return false;
+  }
 
   rJS(window)
     .setState({
       editable: false,
       value: undefined,
       checked: undefined,
+      hidden: false,
       title: '',
       name: '',
       type: 'text',
@@ -19,22 +31,22 @@
     })
 
     .declareMethod('render', function (options) {
-      var state_dict = {
-          value: options.value || "",
-          checked: options.checked,
-          editable: options.editable,
-          required: options.required,
-          name: options.name,
-          type: options.type || 'text',
-          title: options.title,
-          focus: options.focus,
-          step: options.step,
-          hidden: options.hidden,
-          trim: options.trim || false,
-          append: options.append,
-          prepend: options.prepend
-        };
-      return this.changeState(state_dict);
+      return this.changeState({
+        // display nothing for missing values
+        value: is_missing(options.value) ? "" : options.value,
+        checked: options.checked,
+        editable: options.editable,
+        required: options.required,
+        name: options.name,
+        type: options.type || 'text',
+        title: options.title,
+        focus: options.focus,
+        step: options.step,
+        hidden: options.hidden,
+        trim: options.trim || false,
+        append: options.append,
+        prepend: options.prepend
+      });
     })
 
     .onStateChange(function (modification_dict) {
@@ -88,7 +100,7 @@
         textarea.autofocus = false;
         textarea.blur();
       }
-      
+
       if (modification_dict.append) {
         this.element.classList.add('ui-input-has-appendinx');
         tmp = document.createElement('i');
@@ -96,7 +108,7 @@
         this.element.appendChild(tmp);
         tmp = undefined;
       }
-      
+
       if (modification_dict.prepend) {
         this.element.classList.add('ui-input-has-prependinx');
         tmp = document.createElement('i');
@@ -199,4 +211,4 @@
       return this.notifyInvalid(evt.target.validationMessage);
     }, true, false);
 
-}(window, rJS, RSVP, jIO));
+}(window, document, rJS, RSVP, jIO));
