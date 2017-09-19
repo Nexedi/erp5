@@ -3,6 +3,19 @@
 (function (window, rJS) {
   "use strict";
 
+  function asBool(obj) {
+    if (typeof obj === "boolean") {
+      return obj;
+    }
+    if (typeof obj === "string") {
+      return obj.toLowerCase() === "true" || obj === "1";
+    }
+    if (typeof obj === "number") {
+      return obj !== 0;
+    }
+    return Boolean(obj);
+  }
+
   rJS(window)
     .setState({
       type: 'checkbox',
@@ -12,7 +25,7 @@
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         state_dict = {
-          checked: field_json.value || field_json.default,
+          checked: asBool(field_json.value || field_json.default),
           editable: field_json.editable,
           name: field_json.key,
           title: field_json.title,
