@@ -31,7 +31,7 @@
 import warnings
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.ColumnMap import ColumnMap
-from zLOG import LOG
+from zLOG import LOG, WARNING
 from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implements
@@ -130,7 +130,7 @@ class EntireQuery(object):
         try:
           append(column_map.asSQLColumn(column))
         except KeyError:
-          LOG('EntireQuery', 100, 'Group-by column %r could not be mapped, but is passed through. This use is strongly discouraged.' % (column, ))
+          LOG('EntireQuery', WARNING, 'Group-by column %r could not be mapped, but is passed through. This use is strongly discouraged.' % (column, ))
           append(column)
       self.group_by_list = new_column_list
       # Build a dictionnary from select_dict aliasing their mapped representations
@@ -147,7 +147,7 @@ class EntireQuery(object):
         try:
           rendered = column_map.asSQLColumn(column)
         except KeyError:
-          LOG('EntireQuery', 100, 'Select column %r could not be mapped, but is passed through. This use is strongly discouraged.' % (column, ))
+          LOG('EntireQuery', WARNING, 'Select column %r could not be mapped, but is passed through. This use is strongly discouraged.' % (column, ))
           rendered = column
         select_dict[alias] = rendered
       # Replace given order_by_list entries by their mapped representations.
@@ -156,13 +156,13 @@ class EntireQuery(object):
       for order_by in self.order_by_list:
         column = order_by[0]
         if column in self.order_by_override_set:
-          LOG('EntireQuery', 100, 'Order-by column %r is forcibly accepted. This use is strongly discouraged.' % (column, ))
+          LOG('EntireQuery', WARNING, 'Order-by column %r is forcibly accepted. This use is strongly discouraged.' % (column, ))
           rendered = column
         else:
           try:
             rendered = column_map.asSQLColumn(column)
           except KeyError:
-            LOG('SQLCatalog', 100, 'Order by %r ignored: it could not be mapped to a known column.' % (order_by, ))
+            LOG('EntireQuery', WARNING, 'Order by %r ignored: it could not be mapped to a known column.' % (order_by, ))
             rendered = None
         if rendered is not None:
           append((rendered, ) + tuple(order_by[1:]) + (
