@@ -17,60 +17,41 @@
   }
 
   rJS(window)
-    .ready(function (g) {
-      g.props = {};
-    })
-    .ready(function (g) {
-      return g.getElement().push(function (element) {
-        g.props.element = element;
-      });
-    })
-    .declareService(function () {
+    .onLoop(function () {
       var form_gadget = this,
-        html_content,
-        basedir = location.pathname.split('/').slice(0, -1).join('/') + '/',
-        queue = new RSVP.Queue();
-      function getDataExamine() {
-        queue
-          .push(function () {
-            return jIO.util.ajax(
-              {
-                "type": "POST",
-                "url":  basedir + 'ActivityTool_getSqlStatisticList',
-                "xhrFields": {
-                  withCredentials: true
-                }
+        basedir = location.pathname.split('/').slice(0, -1).join('/') + '/';
+      return new RSVP.Queue()
+        .push(function () {
+          return jIO.util.ajax(
+            {
+              "type": "POST",
+              "url":  basedir + 'ActivityTool_getSqlStatisticList',
+              "xhrFields": {
+                withCredentials: true
               }
-            );
-          })
-          .push(function (evt) {
-            var data = JSON.parse(evt.target.response);
-            html_content = get_data_template(
-              {
-                time: new Date().toTimeString(),
-                messageList1: putMessageType(data, 'dict', 'SQLDict'),
-                messageList2: putMessageType(data, 'queue', 'SQLQueue'),
-                messagePri1 : putMessageType(data, 'dict', 'SQLDict2'),
-                messagePri2 : putMessageType(data, 'queue', 'SQLQueue2')
-              }
-            );
+            }
+          );
+        })
+        .push(function (evt) {
+          var data = JSON.parse(evt.target.response);
+          form_gadget.element.querySelector(".activity_watcher_gadget")
+                             .innerHTML = get_data_template(
+            {
+              time: new Date().toTimeString(),
+              messageList1: putMessageType(data, 'dict', 'SQLDict'),
+              messageList2: putMessageType(data, 'queue', 'SQLQueue'),
+              messagePri1 : putMessageType(data, 'dict', 'SQLDict2'),
+              messagePri2 : putMessageType(data, 'queue', 'SQLQueue2')
+            }
+          );
 
-            form_gadget.props.element.querySelector(".activity_watcher_gadget")
-                            .innerHTML = html_content;
-          }, function (error) {
-            //Exception is raised if network is lost for some reasons,
-            //in this case, try patiently until network is back.
-            console.log("Unable to fetch activities from ERP5", error);
-          })
-          .push(function () {
-            return RSVP.delay(1000);
-          })
-          .push(function () {
-            return getDataExamine();
-          });
-      }
-      return queue.push(function () {
-        return getDataExamine();
-      });
-    });
+        }, function (error) {
+          //Exception is raised if network is lost for some reasons,
+          //in this case, try patiently until network is back.
+          console.warn("Unable to fetch activities from ERP5", error);
+          form_gadget.element.querySelector(".activity_watcher_gadget")
+                     .textContent = "Unable to fetch activities from ERP5";
+        });
+
+    }, 1000);
 }(rJS, jIO, Handlebars, RSVP, window));
