@@ -1109,6 +1109,48 @@ class BusinessPropertyItem(XMLObject):
   def getBusinessItemPropertyValue(self):
     return self.getProperty('item_property_value')
 
+class BusinesTemplatePatchItem(XMLObject):
+  """
+  Business Item for saving patch and diff. This will help us to create a diff or
+  patch between the old value and current value.
+
+  item_sign -- +1 or -1
+  item_path -- extended OFS path (equivalent to deepdiff path)
+    ex. a/b/c#x/y/z:int/w
+  item_layer -- layer
+  old -- old value
+  new -- new value
+  dependency_list -- a list of bt5 identifiers useful to rebuild the BusinesTemplatePatchItem instance
+  preserved_list -- a list of bt5 identifiers useful to rebuild the BusinesTemplatePatchItem instance
+  """
+
+  add_permission = Permissions.AddPortalContent
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  portal_type = 'Business Patch item'
+  meta_type = 'Business Patch Item'
+  icon = None
+  isIndexable = False
+  isProperty = False
+
+  def __init__(self, item_path, item_sign, item_layer,
+                old, new, dependency_list, preserved_list=None):
+    pass
+
+  def getOldValue(self):
+    """
+    Returns old value from the old BM
+    """
+    pass
+
+  def getNewValue(self):
+    """
+    Returns new value from the new BM
+    """
+    pass
+
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
   # XXX: Getting parameter from request instead of dialog is bad
