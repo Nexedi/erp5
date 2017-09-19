@@ -85,7 +85,7 @@ class ScalabilityTestRunner():
     self.log("SlapOS Master hateoas url is: %s" %self.slapos_api_rest_url)
     
     self.key_path, self.cert_path, config_path = self.slapos_controler.createSlaposConfigurationFileAccount(
-                                        key, certificate, self.slapos_url, self.testnode.config, self.slapos_api_rest_url)
+                                        key, certificate, self.slapos_url, self.testnode.config)
     self.slapos_communicator = None
     # Dict containing used to store which SR is not yet correctly installed.
     # looks like: {'comp_id1':'SR_urlA', 'comp_id2':'SR_urlA',..}
@@ -150,7 +150,6 @@ class ScalabilityTestRunner():
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-      #self.log("request_kw: " + str(request_kw))  # kept for DEBUG 
       self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
@@ -235,13 +234,13 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       raise ValueError(error_message)
     self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
 
-  def _waitInstanceCreation(self, instance_title, hateoas,  max_time=MAX_CREATION_INSTANCE_TIME):
+  def _waitInstanceCreation(self, instance_title, max_time=MAX_CREATION_INSTANCE_TIME):
     """
     Wait for 'max_time' the instance creation
     """
     self.log("Waiting for instance creation...")
     start_time = time.time()
-    while (not instance_title in hateoas.getHostingSubscriptionDict() \
+    while (not self.slapos_communicator.isInstanceRequested(instance_title) \
            and (max_time > (time.time()-start_time)) ):
       self.log("Instance not ready yet. Sleeping 5 sec.")
       time.sleep(5)
@@ -390,7 +389,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       except:
         self.log("Unable to launch instance")
         raise ValueError("Unable to launch instance")
-      self._waitInstanceCreation(self.instance_title, hateoas)
+      self._waitInstanceCreation(self.instance_title)
 
       return {'status_code' : 0}
     return {'status_code' : 1}

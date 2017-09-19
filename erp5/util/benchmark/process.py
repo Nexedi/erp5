@@ -79,6 +79,7 @@ class BenchmarkProcess(multiprocessing.Process):
   def runBenchmarkSuiteList(self, result):
     for target_idx, target in enumerate(self._argument_namespace.benchmark_suite_list):
       self._logger.debug("EXECUTE: %s" % target)
+      print "[PROCESS] EXECUTE: %s" % target
       result.enterSuite(target.__name__)
       with_error = False
 
@@ -115,7 +116,9 @@ class BenchmarkProcess(multiprocessing.Process):
         # Clear the Browser history (which keeps (request, response))
         # otherwise it will consume a lot of memory after some time. Also it
         # does make sense to keep it as suites are independent of each other
-        self._browser.mech_browser.clear_history()
+        #self._browser.mech_browser.clear_history()
+        self._browser._history.clear()
+        print "Browser memory cleaned"
 
       result.exitSuite(with_error)
 
@@ -127,6 +130,7 @@ class BenchmarkProcess(multiprocessing.Process):
     result.iterationFinished()
 
   def run(self):
+    print "[PROCESS] run method"
     result_instance = self._result_klass(self._argument_namespace,
                                          self._nb_users,
                                          self._user_index,
@@ -147,10 +151,13 @@ class BenchmarkProcess(multiprocessing.Process):
 
       socket.socket = _patched_socket
 
+    
+    print "[PROCESS] (signal.SIGTERM, self.stopGracefully)"
     # Ensure the data are flushed before exiting, handled by Result class 
     # __exit__ block
     signal.signal(signal.SIGTERM, self.stopGracefully)
  
+    print "[PROCESS] Ignore KeyboardInterrupt"
     # Ignore KeyboardInterrupt as it is handled by the parent process
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 

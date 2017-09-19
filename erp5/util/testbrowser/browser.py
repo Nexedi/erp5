@@ -9,7 +9,7 @@
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
+# consequences resulting from its eventual inadequacies and bugsc
 # End users who are looking for a ready-to-use solution with commercial
 # garantees and support are strongly adviced to contract a Free Software
 # Service Company
@@ -36,7 +36,7 @@ import urllib
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
-from zope.testbrowser.browser import onlyOne, fix_exception_name
+from zope.testbrowser.browser import onlyOne #, fix_exception_name
 
 def measurementMetaClass(prefix):
   """
@@ -234,7 +234,7 @@ class Browser(ExtendedTestBrowser):
         try:
           response = self.mech_browser.open_novisit(url_or_path, data)
         except Exception, e:
-          fix_exception_name(e)
+          #fix_exception_name(e)
           raise
       except mechanize.HTTPError, e:
         if e.code >= 200 and e.code <= 299:
@@ -313,21 +313,22 @@ class Browser(ExtendedTestBrowser):
     @todo: Patch zope.testbrowser to allow the class to be given
            rather than duplicating the code
     """
+    print "MAINFORM PROPERTY ASKED"
     # If the page has not changed, no need to re-create a class, so
     # just return the main_form instance
     if self._main_form and self._counter == self._main_form._browser_counter:
+      print "return last MAINFORM"
       return self._main_form
-
     main_form = None
-    for form in self.mech_browser.forms():
-      if form.attrs.get('id') == 'main_form':
-        main_form = form
-
+    #for form in self.mech_browser.forms():
+    #  if form.attrs.get('id') == 'main_form':
+    #    main_form = form
+    main_form = self.getForm(id='main_form')._form
     if not main_form:
       raise LookupError("Could not get 'main_form'")
-
-    self.mech_browser.form = form
-    self._main_form = ContextMainForm(self, form)
+    #self.mech_browser.form = form
+    self._main_form = ContextMainForm(self, main_form)
+    print "return new ContextMainForm"
     return self._main_form
 
   def getLink(self, text=None, url=None, id=None, index=0,
@@ -682,6 +683,8 @@ class MainForm(Form):
                         class attribute name, if class_attribute
                         parameter is given.
     """
+    print "SUBMIT METHOD"
+    print "Submitting (name='%s', label='%s', class='%s')" % (name, label, class_attribute)
     self._logger.debug(
       "Submitting (name='%s', label='%s', class='%s')" % (name, label,
                                                           class_attribute))
@@ -700,13 +703,33 @@ class MainForm(Form):
                             class_attribute)
 
     if label is None and name is None:
+      #self._form.submit(label=label, name=name, *args, **kwargs)
       super(MainForm, self).submit(label=label, name=name, *args, **kwargs)
     else:
       if index is None:
         index = 0
-
       super(MainForm, self).submit(label=label, name=name, index=index,
                                    *args, **kwargs)
+       
+        
+    print "Browser.url"
+    print str(self.browser.url)
+    print "Browser.title"
+    print str(self.browser.title)
+    #print "Browser.contents"
+    #print str(self.browser.contents)
+    print "Browser.headers"
+    print str(self.browser.headers)
+    print "Browser.cookies"
+    print str(self.browser.cookies)
+    print "len(browser.cookies)"
+    print len(self.browser.cookies)
+    print "Browser.cookies.url"
+    print str(self.browser.cookies.url)
+    print "Browser..cookies.keys()"
+    print str(self.browser.cookies.keys())
+    
+    
 
   def submitSelect(self, select_name, submit_name, label=None, value=None,
                    select_index=None, control_index=None):
@@ -747,8 +770,15 @@ class MainForm(Form):
     @raise LookupError: The select, option or submit control could not
                         be found
     """
+    print "SUBMIT SELECT ASKED"
+    print "select_name: %s " % select_name
+    print "submit_name: %s " % submit_name
+    print "label: %s " % label
+    print "value: %s " % value
+    #form = self.mainForm._form
+    #form = self._form
+    #select_control = form.getControl(name=select_name, index=select_index)
     select_control = self.getControl(name=select_name, index=select_index)
-
     # zope.testbrowser checks for a whole word but it is also useful
     # to match the end of the option control value string because in
     # ERP5, the value could be URL (such as 'http://foo:81/erp5/logout')
@@ -760,13 +790,15 @@ class MainForm(Form):
         if item.endswith(value):
           value = item
           break
-
+    print "select_id='%s', label='%s', value='%s'" % \
+                                 (select_name, label, value)
     self._logger.debug("select_id='%s', label='%s', value='%s'" % \
                                  (select_name, label, value))
-
+    control = select_control.getControl(label=label, value=value,
+                              index=control_index)
     select_control.getControl(label=label, value=value,
                               index=control_index).selected = True
-
+    print "CONTROL %s FOUND AND SELECTED" % (control.value)   
     self.submit(name=submit_name)
 
   def submitLogin(self):
@@ -783,13 +815,18 @@ class MainForm(Form):
     @todo: Use information sent back as headers rather than looking
            into the page content?
     """
+    print "SUBMIT LOGIN ASKED"
+
     check_logged_in_xpath = '//div[@id="logged_in_as"]/*'
     if self.etree.xpath(check_logged_in_xpath):
+      print "LOGIN: Already logged in"
       self._logger.debug("Already logged in")
       # TODO: Perhaps zope.testbrowser should be patched instead?
       self.browser.timer.start_time = self.browser.timer.end_time = 0
       return
 
+    print "Logging in: username='%s', password='%s'" % \
+                         (self.browser._username, self.browser._password)
     self._logger.debug("Logging in: username='%s', password='%s'" % \
                          (self.browser._username, self.browser._password))
 
@@ -797,6 +834,7 @@ class MainForm(Form):
       form.getControl(name='__ac_name').value = self.browser._username
       form.getControl(name='__ac_password').value = self.browser._password
       form.submit()
+      print "LOGGED IN "
 
     try:
       login(self)
@@ -809,6 +847,15 @@ class MainForm(Form):
                          (self.browser._erp5_base_url,
                           self.browser._username,
                           self.browser._password))
+    
+    print "SETTING COOKIES AFTER LOGIN"
+    import Cookie
+    cookie = Cookie.SimpleCookie()
+    cookie.load(self.browser.headers['set-cookie'])
+    ac_value = cookie['__ac'].value
+    self.browser.cookies["__ac"] = ac_value
+    print "BROWSER COOKIES:"
+    print self.browser.cookies
 
   def submitSelectFavourite(self, label=None, value=None, **kw):
     """
@@ -949,6 +996,9 @@ class ContextMainForm(MainForm):
     """
     Create a new object.
     """
+    print "SUBMIT NEW ASKED"
+    #self._form.submit(name='Folder_create:method')
+    #self.mainForm._form.submit(name='Folder_create:method')
     self.submit(name='Folder_create:method')
 
   def submitClone(self):
@@ -1187,7 +1237,8 @@ class ContextMainForm(MainForm):
     # control), then get the item from its value
     if isinstance(control, ListControl):
       control = control.getControl(value=input_element.get('value'))
-
+    print "CONTROL TYPE: "
+    print str(type(control))
     return control
 
 from zope.testbrowser.browser import SubmitControl

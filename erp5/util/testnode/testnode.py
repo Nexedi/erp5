@@ -404,14 +404,11 @@ shared = true
               node_test_suite.edit(test_result=test_result)
               # get cluster configuration for this test suite, this is needed to
               # know slapos parameters to user for creating instances
-
-	      log("Getting configuration from test suite " + str(node_test_suite.test_suite_title))                                                 
+	      log("Getting configuration from test suite " + str(node_test_suite.test_suite_title))        
               generated_config = self.test_suite_portal.generateConfiguration(node_test_suite.test_suite_title)
-              #log("Generated configuration: " + str(generated_config)) # kept for debug 
               jsonData = json.loads(generated_config)
               cluster_configuration = Utils.deunicodeData(jsonData['configuration_list'][0])
               node_test_suite.edit(cluster_configuration=cluster_configuration)
-
               # Now prepare the installation of SlapOS and create instance
               status_dict = runner.prepareSlapOSForTestSuite(node_test_suite)
               # Give some time so computer partitions may start

@@ -82,7 +82,8 @@ def fillRelatedObjects(browser, result, name, maximum=1, actionName="", TMIN_SLE
     for i in range(0, iteration):
       line_number = random.randint(1,num_line) + 2
       # Check the box corresponding to line_number if not already checked
-      if browser.mainForm.getListboxControl(line_number=line_number, column_number=1).selected == False:
+      #if browser.mainForm.getListboxControl(line_number=line_number, column_number=1).selected == False:
+      if browser.mainForm.getListboxControl(line_number=line_number, column_number=1).value == False:
         browser.mainForm.getListboxControl(line_number=line_number, column_number=1).click()
   result('Submit '+actionName+' Relations',
       browser.mainForm.submit(name='Base_callDialogMethod:method',

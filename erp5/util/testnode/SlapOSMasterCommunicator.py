@@ -114,6 +114,10 @@ class SlapOSMasterCommunicator(object):
             state=state,
             **self.request_kw)
 
+  def isInstanceRequested(self, instance_title):
+    hateoas = getattr(self.slap, '_hateoas_navigator', None)
+    return instance_title in hateoas.getHostingSubscriptionDict()
+
   @retryOnNetworkFailure
   def _hateoas_getComputer(self, reference):
 
@@ -513,4 +517,3 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
       self.deadline = now + delay
       stepfunc(self)
     return self.deadline
-

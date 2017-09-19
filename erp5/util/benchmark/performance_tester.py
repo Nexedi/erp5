@@ -45,8 +45,10 @@ class PerformanceTester(object):
     if not namespace:
       self._argument_namespace = self._parse_arguments(argparse.ArgumentParser(
           description='Run ERP5 benchmarking suites.'))
+      #print "INIT method. Arguments: " + str(self._argument_namespace)
     else:
       self._argument_namespace = namespace
+      #print "INIT method. Arguments: " + str(self._argument_namespace)
 
   @staticmethod
   def _add_parser_arguments(parser):
@@ -166,15 +168,14 @@ class PerformanceTester(object):
     namespace.user_tuple = ArgumentType.objectFromModule(namespace.user_info_filename,
                                                          object_name='user_tuple',
                                                          searchable_path_list=users_file_path_list)
-
+    print "USER TUPLE: " + str(namespace.user_tuple)
     namespace.benchmark_suite_list = namespace.benchmark_suite_list[0].split(" ")
-
     object_benchmark_suite_list = []
+
     for benchmark_suite in namespace.benchmark_suite_list:
       object_benchmark_suite_list.append(ArgumentType.objectFromModule(benchmark_suite,
                                                                        callable_object=True,
                                                                        searchable_path_list=namespace.benchmark_path_list))
-
     if namespace.repeat > 0:
       namespace.max_error_number = \
           min(len(namespace.benchmark_suite_list) * namespace.repeat,
@@ -238,6 +239,7 @@ class PerformanceTester(object):
     result_class = self.getResultClass()
 
     for user_index in range(nb_users):
+      print "[PERFORMANCE TESTER] Creating benchmark process for user: " + str(user_index)
       process = BenchmarkProcess(exit_msg_queue, result_class,
                                  self._argument_namespace, nb_users,
                                  user_index,
@@ -289,9 +291,10 @@ class PerformanceTester(object):
     return (error_message_set, exit_status)
 
   def run(self):
+    print "[PERFORMANCE TESTER] run method"
     error_message_set, exit_status = set(), 0
     self.preRun()
-
+  
     if isinstance(self._argument_namespace.users, tuple):
       min_user_number, max_user_number = self._argument_namespace.users
       repeat_counter = 0

@@ -124,12 +124,16 @@ def getCreatedDocumentNumberFromERP5(erp5_url, log):
 
 # XXX: This import is required, just to populate sys.modules['test_suite'].
 # Even if it's not used in this file. Yuck.
-import product.ERP5Type.tests.ERP5TypeTestSuite
-
+# ROQUE: can't find this module. If I add an egg 'product', it also fails
+#import product.ERP5Type.tests.ERP5TypeTestSuite
+# XXX: dirty hack until product is property imported
+import sys
+sys.path.append('/opt/slapgrid/7031c818b335cf4caf0052ae845689d0/parts/erp5/product/ERP5Type/tests/')
+import ERP5TypeTestSuite
 
 from subprocess import call
 
-LOG_FILE_PREFIX = "performance_tester_erp5"
+LOG_FILE_PREFIX = "scalability_tester_erp5"
 # Duration of a test case
 TEST_CASE_DURATION = 60
 # Maximum limit of documents to create during a test case
@@ -145,6 +149,14 @@ def doNothing(**kwargs):
   pass
 
 def makeSuite(test_suite=None, log=doNothing, **kwargs):
+  ### ROQUE hardcoded test suite for debug
+  import imp
+  module = imp.load_source('tests', '/opt/slapgrid/7031c818b335cf4caf0052ae845689d0/parts/erp5/tests/__init__.py')
+  suite = module.ERP5_scalability(max_instance_count=1, **kwargs)
+  return suite
+  
+  
+  
   # BBB tests (plural form) is only checked for backward compatibility
   for k in sys.modules.keys():
     if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
@@ -153,6 +165,9 @@ def makeSuite(test_suite=None, log=doNothing, **kwargs):
   while True:
     module_name, class_name = ('%s.%s' % (singular_succeed and 'test' or 'tests',
                                           test_suite)).rsplit('.', 1)
+    print "module name and class name:"
+    print module_name
+    print class_name
     try:
       suite_class = getattr(__import__(module_name, None, None, [class_name]),
                             class_name)
@@ -164,7 +179,6 @@ def makeSuite(test_suite=None, log=doNothing, **kwargs):
       break
   suite = suite_class(max_instance_count=1, **kwargs)
   return suite
-
 
 class ScalabilityLauncher(object):
   def __init__(self):
@@ -187,9 +201,16 @@ class ScalabilityLauncher(object):
     logger.addHandler(file_handler)
     self.log = logger.info
 
+
+    # ROQUE testing if this proxy works
+    proxy = taskdistribution.ServerProxy(
+                  self.__argumentNamespace.test_suite_master_url,
+                  allow_none=True
+              ).portal_task_distribution
+
     # Proxy to with erp5 master test_result
     self.test_result = taskdistribution.TestResultProxy(
-                        self.__argumentNamespace.test_suite_master_url,
+                        proxy, #self.__argumentNamespace.test_suite_master_url,
                         1.0, DummyLogger(self.log),
                         self.__argumentNamespace.test_result_path,
                         self.__argumentNamespace.node_title,
@@ -265,7 +286,10 @@ class ScalabilityLauncher(object):
     Return a ScalabilityTest with current running test case informations,
     or None if no test_case ready
     """
-    data = self.test_result.getRunningTestCase()
+    # ROQUE hardcoded due to error: test_result is not referencing master test_result module
+    #data = self.test_result.getRunningTestCase()  # this runs in master
+    data = json.dumps({"relative_path": "test_result_module/9667/2",
+             "title": "0", "count" : 1, })
     if not data:
       return None
     decoded_data = Utils.deunicodeData(json.loads(data))
@@ -285,7 +309,8 @@ class ScalabilityLauncher(object):
     # Get suite informations
     suite = makeSuite(self.__argumentNamespace.test_suite, self.log)
     test_suite_list = suite.getTestList()
-
+    test_suite_list = ['createPerson']
+    
     # Main loop
     while True:
 
@@ -297,6 +322,7 @@ class ScalabilityLauncher(object):
       self.log("Test Case %s going to be run." %(current_test.title))
 
       # Prepare configuration
+      ### ROQUE hardcoded test suite for debug
       current_test_number = int(current_test.title)
       test_duration = suite.getTestDuration(current_test_number)
       benchmarks_path = os.path.join(self.__argumentNamespace.erp5_location, suite.getTestPath())
@@ -304,8 +330,8 @@ class ScalabilityLauncher(object):
       user_file_path = os.path.split(user_file_full_path)[0]
       user_file = os.path.split(user_file_full_path)[1]
       tester_path = self.__argumentNamespace.runner_path
-      user_number = suite.getUserNumber(current_test_number)
-      repetition = suite.getTestRepetition(current_test_number)
+      user_number = 1 #suite.getUserNumber(current_test_number)
+      repetition = 1 #suite.getTestRepetition(current_test_number)
 
       self.log("user_number: %s" %str(user_number))
       self.log("test_duration: %s seconds" %str(test_duration))
@@ -319,9 +345,10 @@ class ScalabilityLauncher(object):
 
         # Get the number of documents present before running the test.
         waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-        previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-        self.log("previous_document_number: %d" %previous_document_number)
-
+        # ROQUE hardcoded. Don't know what is this method. /erp5/count_docs_scalability ????
+        #previous_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+        #self.log("previous_document_number: %d" %previous_document_number)
+        self.log("previous_document_number:---")
         # Generate commands to run
         command_list = []
         user_index = 0
@@ -333,21 +360,22 @@ class ScalabilityLauncher(object):
                '--benchmark-path-list', benchmarks_path,
                '--users-file-path', user_file_path,
                '--users-file', user_file,
-               '--filename-prefix', "%s_%s_repetition%d" %(LOG_FILE_PREFIX, current_test.title, i),
+               #'--filename-prefix', "%s_%s_repetition%d" %(LOG_FILE_PREFIX, current_test.title, i),
                '--report-directory', self.__argumentNamespace.log_path,
-               '--repeat', "%s" %str(MAX_DOCUMENTS),
+               '--repeat', "%s" %str(1), #(MAX_DOCUMENTS),
                '--max-errors', str(1000000),
-               '--user-index', str(user_index),
+               #'--user-index', str(user_index),
           ])
           user_index += user_number/len(test_suite_list)
 
         # Launch commands
         tester_process_list = []
         for command in command_list:
-          self.log("command: %s" %str(command))
+          self.log("command: %s" %str(command)) 
           tester_process_list.append(subprocess.Popen(command))
 
         # Sleep
+        #test_duration = 5
         time.sleep(test_duration)
 
         # Stop
@@ -358,15 +386,17 @@ class ScalabilityLauncher(object):
         # Count created documents
         # Wait for 0 pending activities before counting
         waitFor0PendingActivities(self.__argumentNamespace.erp5_url, self.log)
-        current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
-        created_document_number = current_document_number - previous_document_number
-        self.log("previous_document_number: %d" %previous_document_number)
-        self.log("current_document_number: %d" %current_document_number)
-        self.log("created_document_number: %d" %created_document_number)
-        document_number.append(created_document_number)
+        # ROQUE hardcoded. Dont know what is this method. /erp5/count_docs_scalability ????
+        #current_document_number = getCreatedDocumentNumberFromERP5(self.__argumentNamespace.erp5_url, self.log)
+        #created_document_number = current_document_number - previous_document_number
+        #self.log("previous_document_number: %d" %previous_document_number)
+        #self.log("current_document_number: %d" %current_document_number)
+        #self.log("created_document_number: %d" %created_document_number)
+        self.log("commented lines of document number 'count_docs_scalability'")
+        #document_number.append(created_document_number)
         # Move csv/logs
-        self.moveLogs(current_test.title)
-
+        #self.moveLogs(current_test.title)
+        
       self.log("Test Case %s is finish" %(current_test.title))
 
       # Get the maximum as choice
@@ -399,10 +429,13 @@ class ScalabilityLauncher(object):
                   '_'.join(test_suite_list)
                 )
       self.log("Results: %s" %results)
-      test_result_line_test.stop(stdout=results,
-                      test_count=len(test_suite_list),
-                      duration=test_duration)
+      #test_result_line_test.stop(stdout=results,
+      #                test_count=len(test_suite_list),
+      #                duration=test_duration)
+      # ROQUE commented because it tries to do "_logger.warning" and self.log is already a function
       self.log("Test Case Stopped")
+      print "SLEEPING FOR 100 (in while TRUE)"
+      time.sleep(100)
 
     #
     error_message_set = None
