@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,12 +70,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_action.html</string> </value>
+            <value> <string>gadget_erp5_page_export.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_actionpage_html</string> </value>
+            <value> <string>rjs_gadget_erp5_page_export_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -103,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Action</string> </value>
+            <value> <string>Gadget ERP5 Export JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -167,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -189,8 +185,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411734064.61</float>
-                        <string>GMT</string>
+                        <float>1489072592.51</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -234,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.2453.12386.29235</string> </value>
+                <value> <string>962.12722.61765.38263</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505211775.45</float>
+                        <float>1505825403.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -279,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -309,8 +305,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1411734015.66</float>
-                        <string>GMT</string>
+                        <float>1489072580.14</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

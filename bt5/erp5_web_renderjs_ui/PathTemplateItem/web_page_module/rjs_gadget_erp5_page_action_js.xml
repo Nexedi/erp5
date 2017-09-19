@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_export.js</string> </value>
+            <value> <string>gadget_erp5_page_action.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +81,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_exportpage_js</string> </value>
+            <value> <string>rjs_gadget_erp5_page_action_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +99,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Export JS</string> </value>
+            <value> <string>Gadget ERP5 Action JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +163,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -185,8 +185,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1489072592.51</float>
-                        <string>UTC</string>
+                        <float>1411734193.12</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.12722.31387.26146</string> </value>
+                <value> <string>962.12721.47120.37905</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505824496.49</float>
+                        <float>1505825343.56</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,7 +275,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>romain</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,8 +305,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1489072580.14</float>
-                        <string>UTC</string>
+                        <float>1411734095.88</float>
+                        <string>GMT</string>
                       </tuple>
                     </state>
                   </object>
