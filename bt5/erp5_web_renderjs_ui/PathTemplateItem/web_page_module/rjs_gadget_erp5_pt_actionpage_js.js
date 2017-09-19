@@ -12,6 +12,54 @@
                          .getElementById("table-template")
                          .innerHTML);
 
+  /** Render translated HTML of title + links
+   *
+   * @param {string} title - H3 title of the section with the links
+   * @param {string} icon - alias used in font-awesome iconset
+   * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
+   */
+  function renderLinkList(gadget, title, icon, erp5_link_list, editable) {
+    return new RSVP.Queue()
+      .push(function () {
+        // obtain RJS links from ERP5 links
+        return RSVP.all(
+          erp5_link_list.map(function (erp5_link) {
+            return gadget.getUrlFor({
+              "command": 'change',
+              "options": {
+                "view": erp5_link.href,
+                "page": undefined,
+                "editable": editable
+              }
+            });
+          })
+        );
+      })
+      .push(function (url_list) {
+        // prepare links for template (replace @href for RJS link)
+        return gadget.translateHtml(
+          table_template({
+            "definition_i18n": title,
+            "definition_title": title,
+            "definition_icon": icon,
+            "document_list": erp5_link_list.map(function (erp5_link, index) {
+              return {
+                "title": erp5_link.title,
+                "i18n": erp5_link.title,
+                "link": url_list[index]
+              };
+            })
+          })
+        );
+      });
+  }
+
+  function asArray(obj) {
+    if (!obj) {return []; }
+    if (Array.isArray(obj)) {return obj; }
+    return [obj];
+  }
+
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -27,97 +75,32 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         erp5_document,
-        result_list,
         view_list,
         action_list;
 
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
-          var i, i_len,
-            promise_list = [
-              gadget.getUrlFor({command: 'change', options: {page: undefined}})
-            ];
           erp5_document = result;
-          view_list = erp5_document._links.action_workflow || [];
-          action_list = erp5_document._links.action_object_action_jio || [];
-          if (view_list.constructor !== Array) {
-            view_list = [view_list];
-          }
-          if (action_list.constructor !== Array) {
-            action_list = [action_list];
-          }
-          for (i = 0; i < view_list.length; i += 1) {
-            promise_list.push(
-              gadget.getUrlFor({
-                command: 'change',
-                options: {
-                  view: view_list[i].href,
-                  page: undefined
-                }
-              })
-            );
-          }
-          if (erp5_document._links.action_object_clone_action) {
-            action_list.push(erp5_document._links.action_object_clone_action);
-          }
-          for (i = 0, i_len = action_list.length; i < i_len; i += 1) {
-            promise_list.push(
-              gadget.getUrlFor({
-                command: 'change',
-                options: {
-                  view: action_list[i].href,
-                  page: undefined,
-                  editable: true
-                }
-              })
-            );
-          }
-          return RSVP.all(promise_list);
-        })
-        .push(function (all_result) {
-          var i,
-            tab_list = [],
-            action_tab_list = [];
+          view_list = asArray(erp5_document._links.action_workflow);
+          action_list = asArray(erp5_document._links.action_object_action_jio)
+                        .concat(asArray(erp5_document._links.action_object_clone_action));
 
-          result_list = all_result;
-
-          for (i = 0; i < view_list.length; i += 1) {
-            tab_list.push({
-              title: view_list[i].title,
-              link: all_result[i + 1],
-              i18n: view_list[i].title
-            });
-          }
-          for (i = 0; i < action_list.length; i += 1) {
-            action_tab_list.push({
-              title: action_list[i].title,
-              link: all_result[i + 1 + view_list.length],
-              i18n: action_list[i].title
-            });
-          }
           return RSVP.all([
-            gadget.translateHtml(
-              table_template({
-                definition_title: "Workflow Transitions",
-                definition_icon: "random",
-                documentlist: tab_list,
-                definition_i18n: "Workflow-Transitions"
-              }) + table_template({
-                definition_i18n: "Actions",
-                definition_title: "Actions",
-                definition_icon: "gear",
-                documentlist: action_tab_list
-              })
-            ),
-            calculatePageTitle(gadget, erp5_document)
+            renderLinkList(gadget, "Actions", "gear", view_list, options.editable),
+            renderLinkList(gadget, "Workflow Transitions", "random", action_list, true)
           ]);
         })
-        .push(function (last_result_list) {
-          gadget.element.innerHTML = last_result_list[0];
-
+        .push(function (translated_html_link_list) {
+          gadget.element.innerHTML = translated_html_link_list.join("\n");
+          return RSVP.all([
+            calculatePageTitle(gadget, erp5_document),
+            gadget.getUrlFor({command: 'change', options: {page: undefined}})
+          ]);
+        })
+        .push(function (result_list) {
           return gadget.updateHeader({
-            back_url: result_list[0],
-            page_title: last_result_list[1]
+            page_title: result_list[0],
+            back_url: result_list[1]
           });
         });
     });
