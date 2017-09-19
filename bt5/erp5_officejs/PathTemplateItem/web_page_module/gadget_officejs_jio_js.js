@@ -66,11 +66,15 @@
     .declareAcquiredMethod('getUrlFor', 'getUrlFor')
 
     .declareMethod('createJio', function (jio_options) {
-      var gadget = this;
+      var gadget = this, redirect = false;
       if (jio_options === undefined) {
         return;
       }
-      this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
+      try {
+        this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
+      } catch (error) {
+        this.state_parameter_dict.jio_storage = undefined;
+      }
       return this.getSetting("jio_storage_name")
         .push(function (jio_storage_name) {
           gadget.state_parameter_dict.jio_storage_name = jio_storage_name;
