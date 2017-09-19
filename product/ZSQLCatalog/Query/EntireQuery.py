@@ -28,6 +28,8 @@
 #
 ##############################################################################
 
+import functools
+import re
 import warnings
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.ColumnMap import ColumnMap
@@ -36,6 +38,41 @@ from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.TableDefinition import LegacyTableDefinition
+
+# SQL identifier
+# ZSQLCatalog only allows unquote-safe identifiers as table and column names,
+# even though it may internally quote them.
+# Also, this is a subset of what is accepted as SQL99 identifier: we restrict
+# ourselves to ASCII.
+UNQUOTED_SQL99_IDENTIFIER = '[0-9a-z$_]+'
+COLUMN = '(' + UNQUOTED_SQL99_IDENTIFIER + r'\.)?' + UNQUOTED_SQL99_IDENTIFIER
+def _check(value, match):
+  if value is not None and match(value) is None:
+    raise ValueError(repr(value))
+  return value
+checkIdentifier = functools.partial(
+  _check,
+  match=re.compile('^' + UNQUOTED_SQL99_IDENTIFIER + '$', re.I).match,
+)
+checkColumn = functools.partial(
+  _check,
+  match=re.compile('^' + COLUMN + '$', re.I).match,
+)
+# Are selectable:
+# - "<identifier>([DISTINCT ]{<column>,*})" (ex: "COUNT(DISTINCT foo.reference)")
+# - "<column>" (ex: "foo.reference" or "reference")
+# - "''", a dirty hack to block acquisition on brain of values which should
+#   not be available (see stat methods in ListBox)
+checkSelectable = functools.partial(
+  _check,
+  match=re.compile(
+    '^(' + UNQUOTED_SQL99_IDENTIFIER + r'\((DISTINCT )?(' + COLUMN + r'|\*)\)|' + COLUMN + "|'')$",
+    re.I,
+  ).match,
+)
+del _check
+del COLUMN
+del UNQUOTED_SQL99_IDENTIFIER
 
 def defaultDict(value):
   if value is None:
@@ -53,6 +90,7 @@ class EntireQuery(object):
   implements(IEntireQuery)
 
   column_map = None
+  limit = None
 
   def __init__(self, query,
                order_by_list=(),
@@ -66,16 +104,46 @@ class EntireQuery(object):
                extra_column_list=(),
                implicit_join=False):
     self.query = query
-    self.order_by_list = list(order_by_list)
-    self.group_by_list = list(group_by_list)
-    self.select_dict = defaultDict(select_dict)
+    self.order_by_list = my_order_by_list = []
+    for order_by in order_by_list:
+      assert isinstance(order_by, (tuple, list))
+      column, direction, cast = (tuple(order_by) + (None, None))[:3]
+      my_order_by_list.append((
+        checkColumn(column),
+        checkIdentifier(direction),
+        checkIdentifier(cast) if cast else None,
+      ))
+    self.group_by_list = [checkColumn(x) for x in group_by_list]
+    self.select_dict = {
+      checkIdentifier(alias): checkSelectable(column)
+      for alias, column in defaultDict(select_dict).iteritems()
+    }
+    # No need to sanitize, it's compared against columns and not included in SQL
     self.left_join_list = left_join_list
+    # No need to sanitize, it's compared against columns and not included in SQL
     self.inner_join_list = inner_join_list
-    self.limit = limit
-    self.catalog_table_name = catalog_table_name
-    self.catalog_table_alias = catalog_table_alias
-    self.extra_column_list = list(extra_column_list)
-    self.implicit_join = implicit_join
+    if limit:
+      if not isinstance(limit, (list, tuple)):
+        limit = (limit, )
+      self.limit = [int(x) for x in limit]
+    self.catalog_table_name = checkIdentifier(catalog_table_name)
+    self.catalog_table_alias = checkIdentifier(catalog_table_alias) # XXX: check as quoted identifier ?
+    self.extra_column_list = my_extra_column_list = []
+    for extra_column in extra_column_list:
+      table, column = extra_column.replace('`', '').split('.')
+      if table != self.catalog_table_name:
+        raise ValueError('Extra columns must be catalog columns. %r does not follow this rule (catalog=%r, extra_column_list=%r)' % (extra_column, self.catalog_table_name, extra_column_list))
+      my_extra_column_list.append(
+        '`%s`.`%s`' % (
+          # table == self.catalog_table_name, and self.catalog_table_name
+          # is already checked.
+          table,
+          # Note: this is really and identifier and not a column as we
+          # stripped table name
+          checkIdentifier(column),
+        ),
+      )
+    self.implicit_join = bool(implicit_join)
 
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
@@ -98,9 +166,6 @@ class EntireQuery(object):
         self.catalog_table_alias,
       )
       for extra_column in self.extra_column_list:
-        table, column = extra_column.replace('`', '').split('.')
-        if table != self.catalog_table_name:
-          raise ValueError, 'Extra columns must be catalog columns. %r does not follow this rule (catalog=%r, extra_column_list=%r)' % (extra_column, self.catalog_table_name, self.extra_column_list)
         column_map.registerColumn(extra_column)
       for column in self.group_by_list:
         column_map.registerColumn(column)
@@ -111,8 +176,6 @@ class EntireQuery(object):
           column_map.ignoreColumn(alias)
         column_map.registerColumn(column)
       for order_by in self.order_by_list:
-        assert isinstance(order_by, (tuple, list))
-        assert len(order_by)
         column_map.registerColumn(order_by[0])
       self.query.registerColumnMap(sql_catalog, column_map)
       column_map.build(sql_catalog)
@@ -154,8 +217,7 @@ class EntireQuery(object):
           LOG('EntireQuery', WARNING, 'Order by %r ignored: it could not be mapped to a known column.' % (order_by, ))
           rendered = None
         if rendered is not None:
-          append((rendered, ) + tuple(order_by[1:]) + (
-            None, ) * (3 - len(order_by)))
+          append((rendered, ) + tuple(order_by[1:]))
       self.order_by_list = new_order_by_list
       # generate SQLExpression from query
       sql_expression_list = [self.query.asSQLExpression(sql_catalog,

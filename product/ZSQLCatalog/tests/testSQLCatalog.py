@@ -694,25 +694,6 @@ class TestSQLCatalog(ERP5TypeTestCase):
     select_dict = sql_expression.getSelectDict()
     self.assertTrue('ambiguous_mapping' in select_dict, select_dict)
     self.assertTrue('bar' in select_dict['ambiguous_mapping'], select_dict['ambiguous_mapping'])
-    # Dotted alias: table name must get stripped. This is required to have an
-    # upgrade path from old ZSQLCatalog versions where pre-mapped columns were
-    # used in their select_expression. This must only happen in the
-    # "{column: None}" form, as otherwise it's the user explicitely asking for
-    # such alias (which is not strictly invalid).
-    sql_expression = self.asSQLExpression({'select_dict': {
-      'foo.default': None,
-      'foo.keyword': 'foo.keyword',
-    }}, query_table='foo')
-    select_dict = sql_expression.getSelectDict()
-    self.assertTrue('default' in select_dict, select_dict)
-    self.assertFalse('foo.default' in select_dict, select_dict)
-    self.assertTrue('foo.keyword' in select_dict, select_dict)
-    # Variant: same operation, but this time stripping generates an ambiguity.
-    # That must be detected and cause a mapping exception.
-    self.assertRaises(ValueError, self.asSQLExpression, {'select_dict': {
-        'foo.ambiguous_mapping': None,
-        'bar.ambiguous_mapping': None,
-      }}, query_table='foo')
 
   def test_hasColumn(self):
     self.assertTrue(self._catalog.hasColumn('uid'))
