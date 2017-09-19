@@ -117,7 +117,8 @@
                 sandbox: field_element.getAttribute("data-gadget-sandbox"),
                 editable: (field_element.getAttribute("data-gadget-editable") !== null),
                 key: field_element.getAttribute("data-gadget-editable"),
-                value: field_element.getAttribute("data-gadget-value")
+                value: field_element.getAttribute("data-gadget-value"),
+                extra: field_element.getAttribute("data-gadget-renderjs-extra")
               });
               promise_list.push(gadget.getDeclaredGadget(field_scope));
             }
@@ -131,13 +132,23 @@
             sub_element,
             sub_value,
             sub_key,
+            render_kw,
             promise_list = [];
           for (i = 0; i < field_list.length; i += 1) {
             if (result_list[i].render !== undefined) {
               sub_value = field_list[i].value;
               sub_key = field_list[i].key;
+              try {
+                render_kw = JSON.parse(field_list[i].extra);
+              } catch (e) {
+                console.log(e); /* same remark as below (when render() fails) */
+                render_kw = {};
+              }
+              render_kw.key = sub_key;
+              render_kw.value = sub_value;
+              render_kw.editable = field_list[i].editable;
               promise_list.push(
-                result_list[i].render({key: sub_key, value: sub_value, editable: field_list[i].editable})
+                result_list[i].render(render_kw)
                   .push(undefined, displayFieldError)
                     /* XXX Highlight the gadget element with a small colored
                      *       error message. Clicking on the element could unroll

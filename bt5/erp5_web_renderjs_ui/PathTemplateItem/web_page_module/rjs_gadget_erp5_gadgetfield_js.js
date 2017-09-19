@@ -9,6 +9,7 @@
       return this.changeState({
         key: options.field_json.key,
         value: options.field_json.default,
+        renderjs_extra: options.field_json.renderjs_extra,
         editable: options.field_json.editable,
         url: options.field_json.url,
         sandbox: options.field_json.sandbox || undefined,
@@ -55,12 +56,17 @@
       var gadget = this;
       return gadget.getDeclaredGadget(gadget.state.key)
         .push(function (result) {
-          return result.render({
-            key: gadget.state.key,
-            value: gadget.state.value,
-            editable: gadget.state.editable,
-            hidden: gadget.state.hidden
-          });
+          var render_kw;
+          try {
+            render_kw = JSON.parse(gadget.state.renderjs_extra);
+          } catch (e) {
+            render_kw = {};
+          }
+          render_kw.key = gadget.state.key;
+          render_kw.value = gadget.state.value;
+          render_kw.editable = gadget.state.editable;
+          render_kw.hidden = gadget.state.hidden;
+          return result.render(render_kw);
         });
     })
 

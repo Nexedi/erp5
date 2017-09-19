@@ -4,15 +4,23 @@ from Products.Formulator.DummyField import fields
 from Products.Formulator import Validator
 from zLOG import LOG, ERROR
 from cStringIO import StringIO
+from json import dumps
 
 class GadgetWidget(Widget.Widget):
   """
   A widget that displays a renderjs gadget
   """
   property_names = Widget.Widget.property_names + \
-       ['gadget_url', 'js_sandbox', 'extra']
+       ['gadget_url', 'js_sandbox', 'extra', 'renderjs_extra']
 
   default = Widget.TextWidget.default
+
+  renderjs_extra = fields.ListTextAreaField('renderjs_extra',
+                          title="RenderJS extra",
+                                 description=(
+        "More parameters passed to the renderJS's render method."),
+                                 default=[],
+                                 required=0)
 
   gadget_url = fields.StringField('gadget_url',
                          title='Gadget Url',
@@ -35,6 +43,7 @@ class GadgetWidget(Widget.Widget):
       'data-gadget-sandbox': field.get_value('js_sandbox'),
       'data-gadget-url': field.get_value('gadget_url'),
       'data-gadget-value': value,
+      'data-gadget-renderjs-extra': dumps(dict(field.get_value('renderjs_extra')))
     }
     if key is not None:
       kw['data-gadget-editable'] = key
@@ -69,8 +78,8 @@ class GadgetFieldValidator(Validator.Validator):
 
     validator_field_id = fields.StringField(
       'validator_field_id',
-      title='Field ID',
-      description= "Field used to validate REQUEST form data.",
+      title='Validator Field ID',
+      description= "ID of the validator field.",
       default="",
       display_width=40,
       required=0

@@ -295,6 +295,11 @@ def renderField(traversed_document, field, form, value=None, meta_type=None, key
       "url": field.get_value("gadget_url"),
       "sandbox": field.get_value("js_sandbox")
     })
+    try:
+      result["renderjs_extra"] = json.dumps(dict(field.get_value("renderjs_extra")))
+    except KeyError:
+      # Ensure compatibility if the products are not yet up to date
+      result["renderjs_extra"] = json.dumps({})
     return result
 
   if meta_type == "ListBox":
