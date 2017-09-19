@@ -971,35 +971,35 @@ class TemplateTool (BaseTool):
       return a2
 
     security.declareProtected( 'Import/Export objects', 'migrateBTListToBM')
-    def migrateBTListToBM(self, repository_list, REQUEST=None, **kw):
+    def migrateBTToBMRequest(self, bt_title_list, REQUEST=None, **kw):
       """
       Run migration for BT5 one by one in a given repository. This will be done
       via activities.
       """
-      repository_list = filter(bool, repository_list)
-
       if REQUEST is None:
         REQUEST = getattr(self, 'REQUEST', None)
 
-      if len(repository_list) == 0 and REQUEST:
+      if len(bt_title_list) == 0 and REQUEST:
         ret_url = self.absolute_url()
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
-                                  % (ret_url, 'No repository was defined'))
+                                  % (ret_url, 'No BT title was given'))
 
-      for repository in repository_list:
-        repository = repository.rstrip('\n')
-        repository = repository.rstrip('\r')
-        for business_template_id in os.listdir(repository):
-          template_path = os.path.join(repository, business_template_id)
+      repository_list = self.getRepositoryList()
+      for title in bt_title_list:
+        title = title.rstrip('\n')
+        title = title.rstrip('\r')
+        for repository in repository_list:
+          if title in os.listdir(repository):
+            template_path = os.path.join(repository, title)
+          else:
+            continue
           if os.path.isfile(template_path):
-            LOG(business_template_id,0,'is file, so it is skipped')
+            LOG(title, 0, 'is file, so it is skipped')
           else:
             if not os.path.exists((os.path.join(template_path, 'bt'))):
-              LOG(business_template_id,0,'has no bt sub-folder, so it is skipped')
+              LOG(title, 0, 'has no bt sub-folder, so it is skipped')
             else:
               self.migrateBTToBM(template_path)
-              #self.activate(activity='SQLQueue').\
-              #  migrateBTToBP(template_path)
 
     security.declareProtected(Permissions.ManagePortal, 'getFilteredDiff')
     def getFilteredDiff(self, diff):
