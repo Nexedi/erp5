@@ -12,6 +12,54 @@
                          .getElementById("table-template")
                          .innerHTML);
 
+  /** Render translated HTML of title + links
+   *
+   * @param {string} title - H3 title of the section with the links
+   * @param {string} icon - alias used in font-awesome iconset
+   * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
+   */
+  function renderLinkList(gadget, title, icon, erp5_link_list, editable) {
+    return new RSVP.Queue()
+      .push(function () {
+        // obtain RJS links from ERP5 links
+        return RSVP.all(
+          erp5_link_list.map(function (erp5_link) {
+            return gadget.getUrlFor({
+              "command": 'change',
+              "options": {
+                "view": erp5_link.href,
+                "page": undefined,
+                "editable": editable
+              }
+            });
+          })
+        );
+      })
+      .push(function (url_list) {
+        // prepare links for template (replace @href for RJS link)
+        return gadget.translateHtml(
+          table_template({
+            "definition_i18n": title,
+            "definition_title": title,
+            "definition_icon": icon,
+            "document_list": erp5_link_list.map(function (erp5_link, index) {
+              return {
+                "title": erp5_link.title,
+                "i18n": erp5_link.title,
+                "link": url_list[index]
+              };
+            })
+          })
+        );
+      });
+  }
+
+  function asArray(obj) {
+    if (!obj) {return []; }
+    if (Array.isArray(obj)) {return obj; }
+    return [obj];
+  }
+
   gadget_klass
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -27,69 +75,28 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         erp5_document,
-        result_list,
         report_list;
 
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
-          var i, i_len,
-            promise_list = [
-              gadget.getUrlFor({command: 'change', options: {page: undefined}})
-            ];
           erp5_document = result;
-          report_list = erp5_document._links.action_object_report_jio || [];
-          if (report_list.constructor !== Array) {
-            report_list = [report_list];
-          }
-          for (i = 0; i < report_list.length; i += 1) {
-            promise_list.push(
-              gadget.getUrlFor({
-                command: 'change',
-                options: {
-                  view: report_list[i].href,
-                  page: undefined,
-                  editable: options.editable
-                }
-              })
-            );
-          }
-          return RSVP.all(promise_list);
-        })
-        .push(function (all_result) {
-          var i,
-            tab_list = [],
-            report_tab_list = [],
-            html = "";
-
-          result_list = all_result;
-
-          for (i = 0; i < report_list.length; i += 1) {
-            report_tab_list.push({
-              title: report_list[i].title,
-              link: all_result[i + 1],
-              i18n: report_list[i].title
-            });
-          }
-          if (i) {
-            html += table_template({
-              definition_i18n: "Report",
-              definition_title: "Report",
-              definition_icon: "gear",
-              documentlist: report_tab_list
-            });
-          }
+          report_list = asArray(erp5_document._links.action_object_report_jio);
 
           return RSVP.all([
-            gadget.translateHtml(html),
-            calculatePageTitle(gadget, erp5_document)
+            renderLinkList(gadget, "Reports", "bar-chart-o", report_list, true)
           ]);
         })
-        .push(function (last_result_list) {
-          gadget.element.innerHTML = last_result_list[0];
-
+        .push(function (translated_html_link_list) {
+          gadget.element.innerHTML = translated_html_link_list.join("\n");
+          return RSVP.all([
+            calculatePageTitle(gadget, erp5_document),
+            gadget.getUrlFor({command: 'change', options: {page: undefined}})
+          ]);
+        })
+        .push(function (result_list) {
           return gadget.updateHeader({
-            back_url: result_list[0],
-            page_title: last_result_list[1]
+            page_title: result_list[0],
+            back_url: result_list[1]
           });
         });
     });
