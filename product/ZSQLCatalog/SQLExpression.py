@@ -270,7 +270,7 @@ class SQLExpression(object):
     for (column, direction, cast) in self.getOrderByList():
       expression = conflictSafeGet(order_by_dict, column, str(column))
       expression = self._reversed_select_dict.get(expression, expression)
-      if cast not in (None, ''):
+      if cast is not None:
         expression = 'CAST(%s AS %s)' % (expression, cast)
       if direction is not None:
         expression = '%s %s' % (expression, direction)
