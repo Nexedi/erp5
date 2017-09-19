@@ -6,59 +6,10 @@
   /* Make sure that returned object is an Array instance. */
   function ensureArray(obj) {
     if (!obj) {return []; }
-    if (!Array.isArray(obj)) {return [obj]; }
-    return obj;
+    if (Array.isArray(obj)) {return obj; }
+    return [obj];
   }
 
-  function extractParamListFromContentDisposition(text) {
-    // text = " ATTACHMENT; FILENAME = MyFile "
-    // Returns -> [" ATTACHMENT", " FILENAME = MyFile "]
-    return text.split(";");
-  }
-
-  function parseContentDispositionParam(text) {
-    // text = " ATTACHMENT"
-    // Returns -> {name:"attachment", value:null}
-    // text = " FILENAME = MyFile "
-    // Returns -> {name:"filename", value:"MyFile"}
-    var i, l = text.length;
-    for (i = 0; i < l; i += 1) {
-      if (text[i] === "=") {
-        return {name: text.slice(0, i).trim().toLowerCase(), value: text.slice(i + 1).trim()};
-      }
-    }
-    return {name: text.trim().toLowerCase(), value: null};
-  }
-
-  function parseEachContentDispositionParamToDict(paramList) {
-    // paramList = [" ATTACHMENT", " FILENAME = MyFile "]
-    // Returns -> {attachment: null, filename: "MyFile"}
-    var i, l = paramList.length, r = {}, p = null;
-    for (i = 0; i < l; i += 1) {
-      p = parseContentDispositionParam(paramList[i]);
-      r[p.name] = p.value;
-    }
-    return r;
-  }
-
-  function parseContentDisposition(text) {
-    // text = " ATTACHMENT; FILENAME = MyFile "
-    // Returns -> {attachment:null, filename:"MyFile"}
-    return parseEachContentDispositionParamToDict(extractParamListFromContentDisposition(text));
-  }
-
-  function extractFilenameFromContentDisposition(text) {
-    // text = " ATTACHMENT; FILENAME = \"MyFile \" "
-    // Returns -> "MyFile "
-    var o = parseContentDisposition(text);
-    if (typeof o.filename === "string") {
-      if (o.filename[0] === "\"" && o.filename[o.filename.length - 1] === "\"") {
-        return o.filename.slice(1, -1);
-      }
-      return o.filename;
-    }
-    return null;
-  }
 
   rJS(window)
     .setState({
@@ -76,8 +27,7 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .declareAcquiredMethod("displayFormulatorValidationError",
-                           "displayFormulatorValidationError")
+    .declareAcquiredMethod("forcePageChange", "displayFormulatorValidationError")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -193,13 +143,33 @@
         });
     })
 
-    .declareJob("deferRevokeObjectUrlWithLink", function (object_url, a_tag) {
+    /** The only way how to force download from javascript (working everywhere)
+     * is unfortunately constructing <a> and clicking on it
+     */
+    .declareJob("forceDownload", function (attachment) {
+      var attachment_data = attachment.target.response,
+        filename = /(?:^|;)\s*filename\s*=\s*"?([^";]+)/i.exec(
+          attachment.target.getResponseHeader("Content-Disposition") || ""
+        ),
+        a_tag = document.createElement("a");
+
+      if (attachment.target.responseType !== "blob") {
+        attachment_data = new Blob(
+          [attachment.target.response],
+          {type: attachment.target.getResponseHeader("Content-Type")});
+      }
+      a_tag.style = "display: none";
+      a_tag.href = URL.createObjectURL(attachment_data);
+      a_tag.download = filename ? filename[1].trim() : "untitled";
+      document.body.appendChild(a_tag);
+      a_tag.click();
+
       return new RSVP.Queue()
         .push(function () {
           return RSVP.delay(10);
         })
         .push(function () {
-          URL.revokeObjectURL(object_url);
+          URL.revokeObjectURL(a_tag.href);
           document.body.removeChild(a_tag);
         });
     })
@@ -238,64 +208,85 @@
             action.href,
             data
           );
-
         })
-        .push(function (evt) {
-          if (evt.target.responseType === "blob") {
-            return RSVP.all([
-              evt,
-              jIO.util.readBlobAsText(evt.target.response)
-            ]);
-          }
-          return [evt, {target: {result: evt.target.response}}];
-        })
-        .push(function (result_list) {
-          var evt = result_list[0],
-            responseText = result_list[1].target.result,
-            location = evt.target.getResponseHeader("X-Location"),
-            jio_key,
-            list = [],
-            a,
-            object_url,
-            message;
-          try {
-            message = JSON.parse(responseText).portal_status_message;
-          } catch (ignore) {
-          }
-          list.push(form_gadget.notifySubmitted({
-            "message": message,
-            "status": "success"
-          }));
+        .push(function (attachment) {
 
-          if (redirect_to_parent) {
-            list.push(form_gadget.redirect({command: 'history_previous'}));
-          } else {
-            if (location === undefined || location === null) {
-              // Download the data
-              if (evt.target.responseType === "blob") {
-                message = evt.target.response;
-              } else {
-                message = new Blob([evt.target.response], {type: evt.target.getResponseHeader("Content-Type")});
-              }
-              object_url = URL.createObjectURL(message);
-              a = document.createElement("a");
-              a.style = "display: none";
-              a.href = object_url;
-              a.download = extractFilenameFromContentDisposition(evt.target.getResponseHeader("Content-Disposition")) || "untitled";
-              document.body.appendChild(a);
-              a.click();
-              form_gadget.deferRevokeObjectUrlWithLink(object_url, a);
-            } else {
-              jio_key = new URI(location).segment(2);
-              if (form_gadget.state.jio_key === jio_key) {
-                // Do not update navigation history if dialog redirect to the same document
-                list.push(form_gadget.redirect({command: 'change', options: {jio_key: jio_key, view: "view", page: undefined, editable: form_gadget.state.editable}}));
-              } else {
-                list.push(form_gadget.redirect({command: 'push_history', options: {jio_key: jio_key, editable: form_gadget.state.editable}}));
-              }
-            }
+          if (attachment.target.response.type === "application/json") {
+            // successful form save returns simple redirect and answer as JSON
+            // validation errors are handled in failure branch on bottom
+            return new RSVP.Queue()
+              .push(function () {
+                return jIO.util.readBlobAsText(attachment.target.response);
+              })
+              .push(function (response_text) {
+                var response = JSON.parse(response_text.target.result);
+
+                return form_gadget.notifySubmitted({
+                  "message": response.portal_status_message,
+                  "status": "success"
+                });
+              })
+              .push(function () {
+                // here we figure out where to go after form submit - indicated
+                // by X-Location HTTP header placed by Base_redirect script
+                var jio_key = new URI(
+                  attachment.target.getResponseHeader("X-Location")).segment(2);
+                if (redirect_to_parent) {
+                  return form_gadget.redirect({command: 'history_previous'});
+                }
+                if (form_gadget.state.jio_key === jio_key) {
+                  // don't update navigation history when not really redirecting
+                  return form_gadget.redirect({
+                    command: 'change',
+                    options: {
+                      "jio_key": jio_key,
+                      "view": "view",
+                      "page": undefined,
+                      "editable": form_gadget.state.editable
+                    }
+                  });
+                }
+                // forced document change thus we update history
+                return form_gadget.redirect({
+                  command: 'push_history',
+                  options: {
+                    "jio_key": jio_key,
+                    "editable": form_gadget.state.editable
+                  }
+                });
+              });
           }
-          return RSVP.all(list);
+
+          if (attachment.target.response.type === "application/hal+json") {
+            // we have received a view definition thus we need to redirect
+            // this will happen only in report/export when "Format" is unspecified
+            return new RSVP.Queue()
+              .push(function () {
+                return form_gadget.notifySubmitted({
+                  "message": "Data received.",
+                  "status": "success"
+                });
+              })
+              .push(function () {
+                return jIO.util.readBlobAsText(attachment.target.response);
+              })
+              .push(function (response_text) {
+                return form_gadget.forcePageChange(JSON.parse(response_text.target.result));
+              });
+          }
+
+          // any other attachment type we force to download because it is most
+          // likely product of export/report (thus PDF, ODT ...)
+          return new RSVP.Queue()
+            .push(function () {
+              return form_gadget.notifySubmitted({
+                "message": "Data received.",
+                "status": "success"
+              });
+            })
+            .push(function () {
+              return form_gadget.forceDownload(attachment);
+            });
         })
         .push(undefined, function (error) {
           if (error.target !== undefined) {
@@ -333,7 +324,7 @@
                   return {target: {result: error.target.response}};
                 })
                 .push(function (event) {
-                  return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
+                  return form_gadget.forcePageChange(JSON.parse(event.target.result));
                 });
             }
             return promise;
