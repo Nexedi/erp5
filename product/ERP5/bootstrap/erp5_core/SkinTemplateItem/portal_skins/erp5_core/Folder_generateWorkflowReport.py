@@ -27,15 +27,14 @@ for portal_type in context.allowedContentTypes():
         state_count_dict[state_id] = 0
       add(state_var)
 column_list = ['portal_type'] + list(state_variable_set)
-COUNT = 'count(*)'
 search_folder_kw = {}
 if use_selection:
   selection_kw = portal.portal_selections.getSelectionParamsFor(selection_name).copy()
   selection_kw.pop('limit', None)
   search_folder_kw['query'] = portal.portal_catalog.getSQLCatalog().buildQuery(selection_kw)
-for line in context.searchFolder(group_by=column_list, select_list=[COUNT] + column_list, **search_folder_kw):
+for line in context.searchFolder(group_by=column_list, select_dict={'count': 'count(*)'} + column_list, **search_folder_kw):
   portal_type = line.portal_type
-  count = getattr(line, COUNT)
+  count = line.count
   for state_variable in state_variable_set:
     workflow = type_state_variable_workflow_dict.get((line.portal_type, state_variable))
     state = getattr(line, state_variable)
