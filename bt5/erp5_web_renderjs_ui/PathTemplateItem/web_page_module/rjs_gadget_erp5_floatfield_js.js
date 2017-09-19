@@ -5,49 +5,51 @@
 
   rJS(window)
     .setState({
-      tag: 'p',
-      step: 1,
-      type: "number"
+      type: "number",
+      // `step` is used for browser-level validation thus a mandatory value
+      // HTML5 default is 1.0 which is not feasible most of the time thus we
+      // default to over-sufficiently small value
+      step: 0.00000001,
+      required: false,
+      editable: true,
+      hidden: false,
+      name: undefined,
+      title: undefined,
+      value: undefined,
+      text_content: undefined,
+      // `append` is a string to display next to the field (%, currency...)
+      append: undefined
     })
 
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
-        value = field_json.value || field_json.default || "",
-        percents = (field_json.input_style || "").endsWith("%"),
+        percentage = (field_json.input_style || "").endsWith("%"),
         state_dict = {
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
           title: field_json.title,
-          precision: field_json.precision,
-          hidden: field_json.hidden
+          precision: window.parseFloat(field_json.precision),
+          hidden: field_json.hidden,
+          // erp5 always put value into "default"
+          value: window.parseFloat(field_json.default)
         };
 
-      // if value is 0.0 we assign empty instead - so we fix it here
-      if (field_json.value !== undefined && field_json.value !== '') {
-        value = field_json.value;
-      } else if (field_json.default !== undefined && field_json.default !== '') {
-        value = field_json.default;
+      if (!window.isNaN(state_dict.precision)) {
+        state_dict.step = Math.pow(10, -state_dict.precision);
+        state_dict.value = state_dict.value.toFixed(state_dict.precision);
       }
-      value = window.parseFloat(value); // at this step we finished joggling with value
-
-      if (field_json.precision) {
-        state_dict.step = Math.pow(10, -field_json.precision);
-        value = value.toFixed(field_json.precision);
-      } else {
-        state_dict.step = 0.00000001;
-      }
-      if (percents) {
-        // ERP5 always devides the value by 10 if it is set to pe percentages
+      if (percentage) {
+        // ERP5 always devides the value by 100 if it is set to pe percentages
         // thus we have to mitigate that in javascript here
-        value *= 100.0;
+        state_dict.value *= 100.0;
         state_dict.append = "%";
       }
-      state_dict.value = value;
-      if (window.isNaN(value)) {
-        state_dict.text_content = "";
+
+      if (window.isNaN(state_dict.value)) {
+        state_dict.text_content = "";  // show empty value insted of ugly "NaN"
       } else {
-        state_dict.text_content = value.toString();
+        state_dict.text_content = state_dict.value.toString();
       }
       return this.changeState(state_dict);
     })
