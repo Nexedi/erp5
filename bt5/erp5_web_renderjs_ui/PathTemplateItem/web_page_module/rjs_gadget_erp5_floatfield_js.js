@@ -35,8 +35,7 @@
         state_dict.step = Math.pow(10, -field_json.precision);
         value = value.toFixed(field_json.precision);
       } else {
-        // XXX did previous default step value make sense? 0.00000001
-        state_dict.step = 1.0;
+        state_dict.step = 0.00000001;
       }
       if (percents) {
         // ERP5 always devides the value by 10 if it is set to pe percentages
