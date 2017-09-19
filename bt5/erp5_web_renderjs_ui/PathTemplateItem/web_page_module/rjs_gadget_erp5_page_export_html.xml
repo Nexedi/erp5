@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>rjs_gadget_erp5_pt_exportpage_html</string> </value>
+            <value> <string>rjs_gadget_erp5_page_export_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -234,7 +234,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.5523.58984.43537</string> </value>
+                <value> <string>962.2810.61354.60074</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -252,7 +252,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505229776.11</float>
+                        <float>1505825417.57</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
