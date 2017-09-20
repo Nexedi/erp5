@@ -105,7 +105,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Gadget ERP5 Matrixbox Field HTML</string> </value>
+            <value> <string>Gadget ERP5 Matrixbox Field JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -236,7 +236,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.46727.895.52189</string> </value>
+                <value> <string>962.13951.51856.38229</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +254,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504008626.15</float>
+                        <float>1505898245.04</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
