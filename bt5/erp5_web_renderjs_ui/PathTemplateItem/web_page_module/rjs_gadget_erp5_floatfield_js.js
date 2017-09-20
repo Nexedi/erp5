@@ -4,37 +4,30 @@
   "use strict";
 
   rJS(window)
-    .setState({
-      type: "number",
-      // `step` is used for browser-level validation thus a mandatory value
-      // HTML5 default is 1.0 which is not feasible most of the time thus we
-      // default to over-sufficiently small value
-      step: 0.00000001,
-      required: false,
-      editable: true,
-      hidden: false,
-      name: undefined,
-      title: undefined,
-      value: undefined,
-      text_content: undefined,
-      // `append` is a string to display next to the field (%, currency...)
-      append: undefined
-    })
-
     .declareMethod('render', function (options) {
       var field_json = options.field_json || {},
         percentage = (field_json.input_style || "").endsWith("%"),
         state_dict = {
+          type: "number",
           editable: field_json.editable,
           required: field_json.required,
+          hidden: field_json.hidden,
           name: field_json.key,
           title: field_json.title,
           precision: window.parseFloat(field_json.precision),
-          hidden: field_json.hidden,
-          // erp5 always put value into "default"
-          value: window.parseFloat(field_json.default)
+          // erp5 always put value into "default" (never "value")
+          value: window.parseFloat(field_json.default),
+          text_content: '',
+          // `step` is used for browser-level validation thus a mandatory value
+          // HTML5 default is 1.0 which is not feasible most of the time thus we
+          // default to over-sufficiently small value
+          step: 0.00000001,
+          // `append` is a string to display next to the field ("%", "EUR"...)
+          append: ''
         };
-
+      if (!window.isNaN(state_dict.value)) {
+        state_dict.text_content = state_dict.value.toString();
+      }
       if (!window.isNaN(state_dict.precision)) {
         state_dict.step = Math.pow(10, -state_dict.precision);
         state_dict.value = state_dict.value.toFixed(state_dict.precision);
@@ -46,11 +39,6 @@
         state_dict.append = "%";
       }
 
-      if (window.isNaN(state_dict.value)) {
-        state_dict.text_content = "";  // show empty value insted of ugly "NaN"
-      } else {
-        state_dict.text_content = state_dict.value.toString();
-      }
       return this.changeState(state_dict);
     })
 
