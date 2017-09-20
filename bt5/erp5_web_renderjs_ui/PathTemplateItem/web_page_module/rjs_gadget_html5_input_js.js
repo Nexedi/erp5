@@ -15,20 +15,6 @@
   }
 
   rJS(window)
-    .setState({
-      editable: false,
-      value: undefined,
-      checked: undefined,
-      hidden: false,
-      title: '',
-      name: '',
-      type: 'text',
-      required: false, // mandatory field
-      trim: false, // trim content for spaces
-      focus: undefined, // has focus by default
-      prepend: undefined, // text to prepend infront the field
-      append: undefined // text to apend after the field
-    })
 
     .declareMethod('render', function (options) {
       return this.changeState({
@@ -44,8 +30,8 @@
         step: options.step,
         hidden: options.hidden,
         trim: options.trim || false,
-        append: options.append,
-        prepend: options.prepend
+        append: options.append, // text to apend after the field
+        prepend: options.prepend // text to prepend infront the field
       });
     })
 
