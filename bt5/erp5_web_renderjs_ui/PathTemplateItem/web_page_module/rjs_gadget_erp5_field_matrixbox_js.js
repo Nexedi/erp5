@@ -208,7 +208,7 @@
 
                   // we copy (unknown) structure of template_field and carefully
                   // add known attributes from `column`
-                  field_json.value = column.value;
+                  field_json.default = column.value;
                   field_json.key = "field_" + column.key;
                   field_json.hidden = gadget.state.hidden || template_field.hidden; // any hidden will hide the element
                   field_json.editable = gadget.state.editable && template_field.editable; // any non-editable will disable editation 
