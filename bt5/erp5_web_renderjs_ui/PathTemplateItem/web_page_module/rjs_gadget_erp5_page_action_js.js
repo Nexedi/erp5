@@ -87,7 +87,7 @@
 
           return RSVP.all([
             renderLinkList(gadget, "Actions", "gear", view_list, options.editable),
-            renderLinkList(gadget, "Workflow Transitions", "random", action_list, true)
+            renderLinkList(gadget, "Workflow-Transitions", "random", action_list, true)
           ]);
         })
         .push(function (translated_html_link_list) {
