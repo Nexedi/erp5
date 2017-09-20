@@ -18,6 +18,7 @@
                 <string>editable</string>
                 <string>editable_columns</string>
                 <string>global_search_column</string>
+                <string>hide_rows_on_no_search_criterion</string>
                 <string>lines</string>
                 <string>list_method</string>
                 <string>portal_types</string>
@@ -308,6 +309,10 @@
                 <item>
                     <key> <string>global_search_column</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
