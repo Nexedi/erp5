@@ -155,6 +155,12 @@ def manage_addBusinessPropertyItem(self, item_path='', item_sign=1, item_layer=0
 
   return c
 
+# New BusinessPatchItem addition function
+def manage_addBusinessPatchItem(self, item_path='', item_sign=1, item_layer=0, *args, **kw):
+  # Create BusinessPatchItem object container
+  c = BusinessPatchItem(item_path, item_sign, item_layer)
+
+  return c
 
 class BusinessManager(Folder):
 
@@ -164,7 +170,9 @@ class BusinessManager(Folder):
   meta_type = 'ERP5 Business Manager'
   portal_type = 'Business Manager'
   add_permission = Permissions.AddPortalContent
-  allowed_types = ('Business Item', 'Business Property Item',)
+  allowed_types = ('Business Item',
+                   'Business Property Item',
+                   'Business Patch item',)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -1109,7 +1117,8 @@ class BusinessPropertyItem(XMLObject):
   def getBusinessItemPropertyValue(self):
     return self.getProperty('item_property_value')
 
-class BusinesTemplatePatchItem(XMLObject):
+class BusinesPatchItem(XMLObject):
+
   """
   Business Item for saving patch and diff. This will help us to create a diff or
   patch between the old value and current value.
@@ -1120,8 +1129,14 @@ class BusinesTemplatePatchItem(XMLObject):
   item_layer -- layer
   old -- old value
   new -- new value
-  dependency_list -- a list of bt5 identifiers useful to rebuild the BusinesTemplatePatchItem instance
-  preserved_list -- a list of bt5 identifiers useful to rebuild the BusinesTemplatePatchItem instance
+  dependency_list -- a list of bt5 identifiers useful to rebuild the
+                    BusinesTemplatePatchItem instance
+  preserved_list -- a list of bt5 identifiers useful to rebuild the
+                    BusinesTemplatePatchItem instance
+                    (XXX: We don't use `preserved_list` for now)
+
+  Business Patch Item can be both PathItem or PropertyItem, but both of them are
+  quite distinguishable, so we prefer not to use them as base class for it.
   """
 
   add_permission = Permissions.AddPortalContent
@@ -1129,15 +1144,24 @@ class BusinesTemplatePatchItem(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  portal_type = 'Business Patch item'
+  portal_type = 'Business Patch Item'
   meta_type = 'Business Patch Item'
   icon = None
   isIndexable = False
   isProperty = False
+  constructors = (manage_addBusinessPatchItem,)
 
-  def __init__(self, item_path, item_sign, item_layer,
-                old, new, dependency_list, preserved_list=None):
-    pass
+  def build(self, context, **kw):
+    """
+    Build should update the old and new value
+    """
+    path = self.getProperty('item_path')
+
+    old_value = self.getOldValue()
+    new_value = self.getNewValue(build=True)
+
+    self.setProperty('old_value', old_value)
+    self.setProperty('new_value', new_value)
 
   def getOldValue(self):
     """
@@ -1145,9 +1169,10 @@ class BusinesTemplatePatchItem(XMLObject):
     """
     pass
 
-  def getNewValue(self):
+  def getNewValue(self, build=False):
     """
     Returns new value from the new BM
+    If build=True, then rebuild the concerned path_item or property_item
     """
     pass
 
