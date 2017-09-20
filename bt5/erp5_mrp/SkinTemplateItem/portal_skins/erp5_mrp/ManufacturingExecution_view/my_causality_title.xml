@@ -87,6 +87,10 @@
                           <string>Manufacturing Order</string>
                           <string>Manufacturing Order</string>
                         </tuple>
+                        <tuple>
+                          <string>Production Order</string>
+                          <string>Production Order</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
