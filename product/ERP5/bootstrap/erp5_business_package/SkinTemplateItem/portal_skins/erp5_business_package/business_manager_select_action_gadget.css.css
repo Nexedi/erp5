@@ -1,0 +1,57 @@
+html {
+  height: 100%;
+  width: 100%;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+
+  background-color: #f5f5f5;
+
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-family: monospace;
+}
+
+li {
+  display: block;
+}
+
+/* First checkbox to browse the tree */
+li > input:first-child {
+  display: none;
+}
+
+/* Leaf */
+li > label:first-child:before {
+  content: '.';
+  opacity: 0;
+}
+
+/* by default, do not display the subtree */
+li > input:first-child ~ ul {
+  display: none;
+}
+li > input:first-child + label:before {
+  content: '+';
+}
+
+/* if checked, display the subtree */
+li > input:first-child:checked ~ ul {
+  display: block;
+}
+li > input:first-child:checked + label:before {
+  content: '-';
+}
