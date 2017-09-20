@@ -45,9 +45,16 @@
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_action.html']</td>
   <td></td>
 </tr>
+<!-- Test that BOTH sections "Actions" and "Workflow-Transitions" are present
+     even though Workflow is empty in this case -->
 <tr>
   <td>assertTextPresent</td>
   <td>Actions</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Workflow-Transitions</td>
   <td></td>
 </tr>
 
