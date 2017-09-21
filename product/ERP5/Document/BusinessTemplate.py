@@ -4302,15 +4302,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     """
     if self._is_already_migrated(self._objects.keys()):
       ObjectTemplateItem.install(self, context, **kw)
-      # Reset component on the fly, because it is possible that those
-      # components are required in the middle of the transaction. For example:
-      # - A method in a component is called while installing.
-      # - A document component is used in a different business template,
-      #   and those business templates are installed in a single transaction
-      #   by upgrader.
-      # This reset is called at most 3 times in one business template
-      # installation. (for Document, Test, Extension)
-      self.portal_components.reset(force=True)
+      self.portal_components.reset(force=True,
+                                   reset_portal_type_at_transaction_boundary=True)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
 
