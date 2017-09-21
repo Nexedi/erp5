@@ -68,8 +68,13 @@ elif at_date is not None:
     'query': at_date,
   }
 
-select_params = {"select_list" : ['source_section_title', 'destination_section_title',
-  'delivery.start_date']}
+select_params = {
+  "select_dict": {
+    'source_section_title': None,
+    'destination_section_title': None,
+    'start_date': 'delivery.start_date',
+  },
+}
 
 # sort_on_list = [ ('delivery.destination_section_uid', 'ASC'), ('delivery.start_date','ASC')]
 
