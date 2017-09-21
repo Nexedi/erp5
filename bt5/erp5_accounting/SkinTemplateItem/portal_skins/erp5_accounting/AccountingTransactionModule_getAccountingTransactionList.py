@@ -98,7 +98,7 @@ select_dict['total_credit'] = None
 # Without this, ColumnMapper would choose to use accounting_transaction.reference, because a lot of
 # columns from that table are used. But it does not realise there is no portal_type column *and*
 # a (portal_type, reference) index exists on catalog.
-select_dict['catalog.reference'] = None
+select_dict['reference'] = 'catalog.reference'
 select_dict['specific_reference'] = None
 select_dict['project_uid'] = None
 select_dict['payment_uid'] = None
