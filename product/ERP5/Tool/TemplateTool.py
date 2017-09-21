@@ -1347,7 +1347,7 @@ class TemplateTool (BaseTool):
           property_dict_list.append(bm_dict_4)
           property_dict_list.append(bm_dict_5)
           property_dict_list.append(bm_dict_6)
-          property_dict_list.append(bm_dict_7)
+          #property_dict_list.append(bm_dict_7)
 
         self.repository_dict[repository] = tuple(property_dict_list)
 
