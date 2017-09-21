@@ -65,12 +65,22 @@
     })
     .allowPublicAcquisition("chartItemClick", function (params) {
       var gadget = this;
+
       return gadget.getDeclaredGadget("last")
-        .push(function () {
-          return gadget.getSearchCriteria(params[0][0], params[0][1])
-            .push(function (search_criteria) {
-              gadget.changeState({extended_search: search_criteria});
-            });
+        .push(function (listbox) {
+          return RSVP.all([
+            listbox,
+            gadget.getSearchCriteria(params[0][0], params[0][1])
+            ]);
+        })
+        .push(function (result_list) {
+          return gadget.redirect({command: 'change', options: {extended_search: result_list[1]}});
+        })
+        .push(undefined, function (error) {
+          if (error instanceof RSVP.CancellationError) {
+            return;
+          }
+          throw error;
         })
         .push(function () {
           var restore = document.getElementById("restoreButton");
@@ -81,7 +91,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function () {
+    .declareMethod("render", function (options) {
       var gadget = this;
 
       return gadget.changeState({
@@ -235,28 +245,14 @@
     .onStateChange(function (modification_dict) {
       var gadget = this,
         queue = new RSVP.Queue();
-      if (modification_dict.hasOwnProperty("extended_search")) {
-        // render the erp5 form
-        queue
-          .push(function () {
-            return gadget.getDeclaredGadget("last");
-          })
-          .push(function (result_list) {
-            var erp5_form = result_list,
-              tmp;
 
-            tmp = JSON.parse(erp5_form.state.erp5_form);
-            tmp.extended_search = modification_dict.extended_search;
-
-            return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
-          });
-      }
-      if (modification_dict.hasOwnProperty("render")) {
         queue
           .push(function () {
             return RSVP.all([
               gadget.jio_getAttachment("support_request_module", "links"),
-              gadget.getDeclaredGadget("last")
+              gadget.getDeclaredGadget("last"),
+              gadget.getDeclaredGadget("worklist"),
+              gadget.getUrlParameter('field_listbox_begin_from')
             ]);
           })
           .push(function (result_list) {
@@ -281,14 +277,15 @@
             gadget.property_dict.option_dict = {
               graph_gadget: "unsafe/gadget_field_graph_echarts.html",
               listbox_gadget: last_href,
-              listbox_jio_key: "support_request_module"
+              listbox_jio_key: "support_request_module",
+              field_listbox_begin_from: result_list[3]
             };
 
             return RSVP.all([
+              result_list[2].render(),
               gadget.renderGraph() //Launched as service, not blocking
             ]);
           });
-      }
       return queue;
     })
     .onEvent('change', function (evt) {
@@ -322,11 +319,22 @@
         generate_button = gadget.element.querySelector("#generateRSS");
 
       if (event.target.id === "restoreButton") {
-        return gadget.changeState({extended_search: null})
-          .push(function () {
-            var restore = document.getElementById("restoreButton");
-            restore.setAttribute("disabled", "disabled");
-          });
+        var restore = document.getElementById("restoreButton");
+        restore.setAttribute("disabled", "disabled");
+
+          return gadget.getDeclaredGadget("last")
+            .push(function (listbox) {
+              return listbox.render({
+                jio_key: gadget.property_dict.option_dict.listbox_jio_key,
+                view: gadget.property_dict.option_dict.listbox_gadget,
+                extended_search: null
+              });
+            });
+
+        // return gadget.changeState({extended_search: null});
+          // .push(function () {
+
+          // });
       }
 
       if (event.target.id === "generateRSS") {
