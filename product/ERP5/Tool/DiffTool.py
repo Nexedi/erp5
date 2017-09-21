@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -36,8 +37,8 @@ class DiffTool(BaseTool):
   A portal tool that provides all kinds of utilities to
   compare objetcs.
   """
-  title = 'Diff Tool'
   id = 'portal_diff'
+  title = 'Diff Tool'
   meta_type = 'ERP5 Diff Tool'
   portal_type = 'Portal Diff Tool'
   allowed_types = ()
