@@ -68,6 +68,13 @@
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
     })
+    /**
+     * Render obtain ERP5 Document and assigned Form Definition.
+     * 
+     * Arguments:
+     * `erp5_document` or parameters to obtain one: `jio_key`, `view`
+     * `editable`
+     */
     .declareMethod("render", function (options) {
       var gadget = this,
         promise_queue = new RSVP.Queue(),
@@ -82,6 +89,7 @@
         // if we get erp5 document during rendering then no need to fetch it
         new_state.erp5_document = options.erp5_document;
         // remove reference to erp5_document from options (and new_state.options)
+        // otherwise we get infinite loop
         delete options.erp5_document;
       } else {
         promise_queue
@@ -136,12 +144,10 @@
         gadget = this,
         options = this.state.options,
         page_template_gadget,
-        // clean_dom === false only in case of displaying errors
-        clean_dom = modification_dict.hasOwnProperty('url'),
         erp5_document = JSON.parse(gadget.state.erp5_document),
         erp5_form = JSON.parse(gadget.state.erp5_form);
 
-      if (clean_dom) {
+      if (modification_dict.hasOwnProperty('url')) {
         queue = gadget.declareGadget(gadget.state.url, {scope: "fg"});
       } else {
         queue = gadget.getDeclaredGadget("fg");
@@ -164,7 +170,7 @@
           return page_template_gadget.render(sub_options);
         })
         .push(function () {
-          if (clean_dom) {
+          if (modification_dict.hasOwnProperty('url')) {
             return page_template_gadget.getElement()
               .push(function (fragment) {
                 var element = gadget.element;
@@ -189,12 +195,20 @@
         });
     })
     .allowPublicAcquisition("displayFormulatorValidationError", function (param_list) {
-      var erp5_document = JSON.parse(this.state.erp5_document);
+      var erp5_document = JSON.parse(this.state.erp5_document),
+        options = this.state.options;
       erp5_document._embedded._view = param_list[0];
-      // Force refresh
-      erp5_document._now = Date.now();
-
-      return this.changeState({erp5_document: JSON.stringify(erp5_document)});
-    });
+      erp5_document._now = Date.now();  // force refresh
+      // We choose render instead of changeState because the new form can use
+      // different page_template (reports are setup in form_dialog but rendered
+      // in report_view).
+      // Validation provides document updated for error texts but uses the same
+      // form thus the same view thus the same url - no DOM modifications
+      //
+      // We modify inplace state.options because in render we remove this
+      // exceeding document.
+      options.erp5_document = erp5_document;
+      return this.render(options);
+    })
 
 }(window, rJS, URI, RSVP));
