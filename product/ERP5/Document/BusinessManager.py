@@ -1151,6 +1151,38 @@ class BusinesPatchItem(XMLObject):
   isProperty = False
   constructors = (manage_addBusinessPatchItem,)
 
+  def _edit(self, **kw):
+    """
+    Override _edit to create Business Item and BusinessPropertyItem for old and
+    new value
+    """
+    super(BusinessPatchItem, self)._edit(**kw)
+
+    item_path = kw.get('item_path', None)
+    dependency_list = kw.get('dependency_list', [])
+
+    if item_path:
+      # Check if there is already a Business Item or Business Property Item
+      # existing with this path
+      # XXX: Add some attribute to restrict installation of these item(s),
+      # they should add as hidden item(s)
+      new_item = self.getBusinessItemByPath(item_path+'_new')
+      old_item = self.getBusinessItemByPath(item_path+'_old')
+      # If there is already new or old value, remove it
+      if new_item:
+        self.manage_delObjects([new_item.getId()])
+      if old_item:
+        self.manage_delObjects([old_item.getId()])
+
+      # Use item_path to determine if we need to create Business Item or
+      # Business Property Item for storing old and new values
+      if '#' in item_path:
+        self.newContent(portal_type='Business Property Item',
+                        item_path=item_path)
+      else:
+        self.newContent(portal_type='Business Item',
+                        item_path=item_path)
+
   def build(self, context, **kw):
     """
     Build should update the old and new value
