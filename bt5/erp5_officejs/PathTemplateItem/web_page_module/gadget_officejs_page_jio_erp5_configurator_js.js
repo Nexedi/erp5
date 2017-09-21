@@ -88,6 +88,11 @@
             }
           }
         };
+        configuration = {
+          type: 'dateupdater',
+          sub_storage: configuration,
+          property_list: ['modification_date']
+        };
         return gadget.setSetting('jio_storage_description', configuration);
       })
       .push(function () {

@@ -46,7 +46,6 @@
             doc = gadget.state.doc;
             doc.text_content = content.text_content;
           }
-          doc.modification_date = (new Date()).toISOString();
           return gadget.jio_put(gadget.state.jio_key, doc);
         })
         .push(function () {

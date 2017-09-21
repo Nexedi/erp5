@@ -52,7 +52,6 @@
                 return gadget.jio_putAttachment(gadget.state.jio_key, "data", blob);
               });
           }
-          doc.modification_date = (new Date()).toISOString();
         })
         .push(function () {
           return gadget.jio_put(gadget.state.jio_key, doc);
