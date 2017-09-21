@@ -1117,7 +1117,7 @@ class BusinessPropertyItem(XMLObject):
   def getBusinessItemPropertyValue(self):
     return self.getProperty('item_property_value')
 
-class BusinesPatchItem(XMLObject):
+class BusinessPatchItem(XMLObject):
 
   """
   Business Item for saving patch and diff. This will help us to create a diff or
@@ -1138,14 +1138,14 @@ class BusinesPatchItem(XMLObject):
   Business Patch Item can be both PathItem or PropertyItem, but both of them are
   quite distinguishable, so we prefer not to use them as base class for it.
   """
+  # CMF Type definition
+  portal_type = 'Business Patch Item'
+  meta_type = 'Business Patch Item'
 
-  add_permission = Permissions.AddPortalContent
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  portal_type = 'Business Patch Item'
-  meta_type = 'Business Patch Item'
   icon = None
   isIndexable = False
   isProperty = False
