@@ -435,28 +435,32 @@ class ColumnMap(object):
           LOG('ColumnMap', INFO, '  %r as %r' % (table_name, table_alias))
 
   def asSQLColumn(self, raw_column, group=DEFAULT_GROUP_ID):
-    if self.catalog_table_name is None or raw_column in self.column_ignore_set or \
-       '.' in raw_column or '*' in raw_column:
+    if self.catalog_table_name is None or '.' in raw_column or '*' in raw_column:
       if raw_column.endswith('__score__'):
-        result = raw_column.replace('.', '_')
-      else:
-        result = raw_column
+        return raw_column.replace('.', '_')
+      return raw_column
+    if raw_column.endswith('__score__'):
+      raw_column = raw_column[:-9]
+      column_suffix = '__score__'
     else:
-      if raw_column.endswith('__score__'):
-        raw_column = raw_column[:-9]
-        column_suffix = '__score__'
-      else:
-        column_suffix = ''
-      function, column = self.raw_column_dict.get(raw_column, (None, raw_column))
-      if group is DEFAULT_GROUP_ID:
-        group, column = self.related_key_dict.get(column, (group, raw_column))
-      alias = self.table_alias_dict[(group, self.column_map[(group, column)])]
+      column_suffix = ''
+    function, column = self.raw_column_dict.get(raw_column, (None, raw_column))
+    if group is DEFAULT_GROUP_ID:
+      group, column = self.related_key_dict.get(column, (group, raw_column))
+    try:
+      table_name = self.column_map[(group, column)]
+    except KeyError:
+      if raw_column not in self.column_ignore_set:
+        raise
+      result = raw_column
+    else:
+      table_alias = self.table_alias_dict[(group, table_name)]
       if column_suffix:
-        result = '%s_%s%s' % (alias, column, column_suffix)
+        result = '%s_%s%s' % (table_alias, column, column_suffix)
       else:
-        result = '`%s`.`%s`' % (alias, column)
-      if function is not None:
-        result = '%s(%s)' % (function, result)
+        result = '`%s`.`%s`' % (table_alias, column)
+    if function is not None:
+      result = '%s(%s)' % (function, result)
     return result
 
   def getCatalogTableAlias(self, group=DEFAULT_GROUP_ID):
