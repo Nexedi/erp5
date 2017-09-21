@@ -2018,6 +2018,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_simulation', 'Simulation Tool')
     addERP5Tool(p, 'portal_deliveries', 'Delivery Tool')
     addERP5Tool(p, 'portal_orders', 'Order Tool')
+    addERP5Tool(p, 'portal_diff', 'Diff Tool')
 
   def setupTemplateTool(self, p, **kw):
     """
