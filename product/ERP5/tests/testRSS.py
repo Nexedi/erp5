@@ -163,7 +163,7 @@ class TestRSS(ERP5TypeTestCase):
                       ('Base_getRSSAuthor','author'),
                       ('link','link'),
                       ('absolute_url', 'guid')],
-             sort=[('creation_date | descending')],
+             sort=[('creation_date', 'descending')],
              list_action='list',
              search=1,
              select=1,

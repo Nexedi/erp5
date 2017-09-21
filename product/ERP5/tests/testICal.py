@@ -241,7 +241,7 @@ class TestICal(ERP5TypeTestCase):
                         ('creation_date', 'Creation date'),
                         ('description','Description'),
                         ('Base_getICalComponent',  'Component')],
-               sort=[('creation_date | descending')],
+               sort=[('creation_date', 'descending')],
                list_action='list',
                list_method='searchFolder',
                count_method='countFolder',
