@@ -12,10 +12,6 @@
 
 
   rJS(window)
-    .setState({
-      title: "",
-      editable: true // dialogs are always in editable mode
-    })
     /////////////////////////////////////////////////////////////////
     // acquisition
     /////////////////////////////////////////////////////////////////
@@ -59,7 +55,8 @@
         // ignore options.editable because dialog is always editable
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
-        erp5_form: options.erp5_form || {}
+        erp5_form: options.erp5_form || {},
+        // ignore global editable state (be always editable)
       });
     })
 
@@ -123,7 +120,7 @@
           form_options.form_definition = form_gadget.state.form_definition;
           form_options.view = form_gadget.state.view;
           form_options.jio_key = form_gadget.state.jio_key;
-          form_options.editable = form_gadget.state.editable;
+          form_options.editable = true; // dialog is always editable
 
           return erp5_form.render(form_options);
         })
@@ -241,8 +238,8 @@
                     options: {
                       "jio_key": jio_key,
                       "view": "view",
-                      "page": undefined,
-                      "editable": form_gadget.state.editable
+                      "page": undefined
+                      // do not mingle with editable because it isn't necessary
                     }
                   });
                 }
@@ -250,8 +247,8 @@
                 return form_gadget.redirect({
                   command: 'push_history',
                   options: {
-                    "jio_key": jio_key,
-                    "editable": form_gadget.state.editable
+                    "jio_key": jio_key
+                    // do not mingle with editable because it isn't necessary
                   }
                 });
               });
@@ -263,7 +260,7 @@
             return new RSVP.Queue()
               .push(function () {
                 return form_gadget.notifySubmitted({
-                  "message": "Data received.",
+                  "message": "Data received",
                   "status": "success"
                 });
               })
@@ -280,7 +277,7 @@
           return new RSVP.Queue()
             .push(function () {
               return form_gadget.notifySubmitted({
-                "message": "Data received.",
+                "message": "Data received",
                 "status": "success"
               });
             })
