@@ -35,7 +35,7 @@ from Products.ERP5Type import Permissions
 class DiffTool(BaseTool):
   """
   A portal tool that provides all kinds of utilities to
-  compare objetcs.
+  compare objects.
   """
   id = 'portal_diff'
   title = 'Diff Tool'
@@ -48,11 +48,144 @@ class DiffTool(BaseTool):
 
   def diffPortalObject(self, old, new, path=None, patch_format="deepdiff"):
     """
-      Returns a PortalPatch instance with the appropriate formate
+      Returns a PortalPatch instance with the appropriate format
       original -- original object
       new -- new object
       path -- optional path to specify which property to diff
       patch_format -- optional format (rfc6902 or deepdiff)
+    """
+    return PortalPatch(old, new, patch_format)
+
+
+class PortalPatch:
+  """
+    Provides an abstraction to a patch that
+    depends on the patch format.
+
+    In the case of deepdiff, the abstraction can
+    lead to a commutative merge system.
+
+    In the case of rfc6902, the abstraction can not
+    lead to a commutative merge system but may be
+    useful to some UI applications.
+  """
+
+  def __init__(self, old, new, patch_format="deepdiff"):
+    """
+    Intialises the class from a deepdiff or
+    a rfc6902 patch. deepdiff is the default.
+    """
+    pass
+
+  def getPortalPatchOperationList(self):
+    """
+    List all PortalPatchOperation instances in the PortalPatch
+    """
+    pass
+
+  def patchPortalObject(self, object):
+    """
+    Apply patch to an object by applying
+    one by one each PortalPatchItem
+    """
+    pass
+
+  def asJSONPatch(self):
+    """
+    Returns a Json patch in line with rfc6902
+    """
+    pass
+
+  def asDeepDiffPatch(self):
+    """
+    Returns a Json patch with deep diff extensions
+    """
+    pass
+
+  def asStrippedHTML(self):
+    """
+    Returns an HTML representation of the whole patch
+    that can be embedded
+    """
+    pass
+
+  def asHTML(self):
+    """
+    Returns an HTML representation of the whole patch
+    that can be displayed in a standalone way
+    """
+    pass
+
+class PortalPatchOperation:
+  """
+    Provides an abstraction to a patch operation that
+    depends on the patch format.
+
+    In the case of deepdiff, each operation defines
+    actually a desired state in a declarative way.
+
+    In the case of rfc6902, each operation is defined
+    in an imperative manner.
+  """
+
+  def patchPortalObject(object, unified_diff_selection=None):
+    """
+      Apply patch to an object
+
+      unified_diff_selection -- a selection of lines in the unified diff
+                                that will be applied
+    """
+    pass
+
+  def getOperation(self):
+    """
+      Returns one of "replace", "add" or "remove"
+
+      (hopefully, this can also be used for deepdiff format)
+      set_item_added, values_changed, etc.
+    """
+    pass
+
+  def getPath(self):
+    """
+      Returns a path representing the value that is changed
+      (hopefully, this can also be used for deepdiff format)
+    """
+    pass
+
+  def getOldValue(self):
+    """
+      Returns the old value
+    """
+    pass
+
+  def getNewValue(self):
+    """
+      Returns the new value
+    """
+    pass
+
+  def getUnifiedDiff(self):
+    """
+      Returns a unified diff of the value changed
+      (this is useful for a text value) or None if
+      there is no such change.
+
+      (see String difference 2 in deepdiff)
+    """
+    pass
+
+  def asStrippedHTML(self):
+    """
+      Returns an HTML representation of the change
+      that can be embedded
+    """
+    pass
+
+  def asHTML(self):
+    """
+      Returns an HTML representation that can be displayed
+      in a standalone way
     """
     pass
 
