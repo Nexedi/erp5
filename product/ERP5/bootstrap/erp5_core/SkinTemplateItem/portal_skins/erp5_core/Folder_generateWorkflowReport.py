@@ -32,7 +32,9 @@ if use_selection:
   selection_kw = portal.portal_selections.getSelectionParamsFor(selection_name).copy()
   selection_kw.pop('limit', None)
   search_folder_kw['query'] = portal.portal_catalog.getSQLCatalog().buildQuery(selection_kw)
-for line in context.searchFolder(group_by=column_list, select_dict={'count': 'count(*)'} + column_list, **search_folder_kw):
+select_dict = dict.fromkeys(column_list)
+select_dict['count'] = 'count(*)'
+for line in context.searchFolder(group_by=column_list, select_dict=select_dict, **search_folder_kw):
   portal_type = line.portal_type
   count = line.count
   for state_variable in state_variable_set:
