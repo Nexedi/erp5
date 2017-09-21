@@ -64,6 +64,7 @@ class PropertySheetTool(BaseTool):
     from Products.ERP5.ERP5Site import ERP5Generator
     ERP5Generator.bootstrap_bm(self, bt_name, (
       'portal_property_sheets/BaseType',
+      'portal_property_sheets/BusinessTemplate',
       'portal_property_sheets/Folder',
       'portal_property_sheets/SimpleItem',
       'portal_property_sheets/Version',
