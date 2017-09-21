@@ -23,7 +23,7 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("notifyChange", "notifyChange")
-    .declareAcquiredMethod("forcePageChange", "displayFormulatorValidationError")
+    .declareAcquiredMethod("displayFormulatorValidationError", "displayFormulatorValidationError")
 
     /////////////////////////////////////////////////////////////////
     // Proxy methods to the child gadget
@@ -268,7 +268,7 @@
                 return jIO.util.readBlobAsText(attachment.target.response);
               })
               .push(function (response_text) {
-                return form_gadget.forcePageChange(JSON.parse(response_text.target.result));
+                return form_gadget.displayFormulatorValidationError(JSON.parse(response_text.target.result));
               });
           }
 
@@ -321,7 +321,7 @@
                   return {target: {result: error.target.response}};
                 })
                 .push(function (event) {
-                  return form_gadget.forcePageChange(JSON.parse(event.target.result));
+                  return form_gadget.displayFormulatorValidationError(JSON.parse(event.target.result));
                 });
             }
             return promise;
