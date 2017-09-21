@@ -1,0 +1,105 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<!-- Editable form remains editable even after
+
+-  unsuccessful save
+-  sucessful save
+-  issued action
+-->
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Form View Editable Save Action</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Test Default Module View</td></tr>
+</thead><tbody>
+<tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
+<tr><td>store</td>
+    <td>${base_url}/web_site_module/renderjs_runner</td>
+    <td>renderjs_url</td></tr>
+<tr><td>open</td>
+    <td>${renderjs_url}/#/foo_module/1?editable=true</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+
+<!-- Unsuccessful save does not mingle with editability -->
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name='field_my_foo_category_title']</td><td></td></tr>
+<tr><td>type</td>
+    <td>//input[@name='field_my_foo_category_title']</td>
+    <td>QWERTY</td></tr>
+<tr><td>fireEvent</td>
+    <td>//input[@name='field_my_foo_category_title']</td>
+    <td>input</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>waitForTextPresent</td>
+    <td>Input data has errors.</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+
+<!-- Successful save does not mingle with editability -->
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name='field_my_foo_category_title']</td><td></td></tr>
+<tr><td>type</td>
+    <td>//input[@name='field_my_foo_category_title']</td>
+    <td></td></tr>
+<tr><td>fireEvent</td>
+    <td>//input[@name='field_my_foo_category_title']</td>
+    <td>input</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//input[@name='field_my_title']</td><td></td></tr>
+<tr><td>type</td>
+    <td>field_my_title</td>
+    <td>QWERTY</td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-scope='header']//button[text()='Save' and @type='submit']</td><td></td></tr>
+<tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
+<tr><td>waitForTextPresent</td>
+    <td>Data updated.</td><td></td></tr>
+
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+
+<!-- Passing through action does not mingle with editability -->
+<tr><td>waitForElementPresent</td>
+    <td>//a[text()='Actions']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[text()='Actions']</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//a[@data-i18n='Dummy Workflow Action']</td><td></td></tr>
+<tr><td>click</td>
+    <td>//a[@data-i18n='Dummy Workflow Action']</td><td></td></tr>
+<!-- Wait for gadget to be loaded -->
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td><td></td></tr>
+<!-- Textarea must be editable -->
+<tr><td>type</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//textarea</td>
+    <td>QWERTY</td></tr>
+<tr><td>click</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_dialog.html']//input[@type='submit']</td><td></td></tr>
+<tr><td>waitForTextPresent</td>
+    <td>Status changed.</td><td></td></tr>
+<tr><td>waitForElementPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td><td></td></tr>
+<tr><td>verifyElementNotPresent</td>
+    <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td><td></td></tr>
+
+</tbody></table>
+</body>
+</html>

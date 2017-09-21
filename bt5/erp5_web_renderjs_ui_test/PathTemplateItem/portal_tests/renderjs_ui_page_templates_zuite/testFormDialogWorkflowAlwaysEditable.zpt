@@ -4,7 +4,8 @@
 <!-- Workflow action always shows editable form dialog.
 
 -  access a document in NONeditable mode
--  any workflow action must be editable
+-  any workflow action must(form dialog) be editable
+-  document must remain in previous (NONeditable) mode
 -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Test Form View Editable Save Action</title>
@@ -23,6 +24,16 @@
 <tr>
   <td>open</td>
   <td>${renderjs_url}/#/foo_module/1</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 <tr>
@@ -65,6 +76,16 @@
 <tr>
   <td>waitForTextPresent</td>
   <td>Status changed.</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view.html']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyElementNotPresent</td>
+  <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_pt_form_view_editable.html']</td>
   <td></td>
 </tr>
 </tbody></table>
