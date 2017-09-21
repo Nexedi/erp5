@@ -262,9 +262,12 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply.validate()
     supply_line = self._makeSupplyLine(supply)
 
-    kw = {}
-    kw['predicate.uid'] = supply_line.getUid()
-    kw['select_list'] = ['predicate.start_date_range_min']
+    kw = {
+      'predicate.uid': supply_line.getUid(),
+      'select_dict': {
+        'start_date_range_min': 'predicate.start_date_range_min',
+      },
+    }
 
     # check supply line in predicate table
     result = self.catalog_tool(**kw)

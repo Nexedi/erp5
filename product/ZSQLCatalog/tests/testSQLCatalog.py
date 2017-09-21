@@ -700,18 +700,18 @@ class TestSQLCatalog(ERP5TypeTestCase):
     # "{column: None}" form, as otherwise it's the user explicitely asking for
     # such alias (which is not strictly invalid).
     sql_expression = self.asSQLExpression({'select_dict': {
-      'foo.default': None,
-      'foo.keyword': 'foo.keyword',
+      'foo_default': None,
+      'foo_keyword': 'foo.keyword',
     }}, query_table='foo')
     select_dict = sql_expression.getSelectDict()
     self.assertTrue('default' in select_dict, select_dict)
-    self.assertFalse('foo.default' in select_dict, select_dict)
-    self.assertTrue('foo.keyword' in select_dict, select_dict)
+    self.assertFalse('foo_default' in select_dict, select_dict)
+    self.assertTrue('foo_keyword' in select_dict, select_dict)
     # Variant: same operation, but this time stripping generates an ambiguity.
     # That must be detected and cause a mapping exception.
     self.assertRaises(ValueError, self.asSQLExpression, {'select_dict': {
-        'foo.ambiguous_mapping': None,
-        'bar.ambiguous_mapping': None,
+        'foo_ambiguous_mapping': None,
+        'bar_ambiguous_mapping': None,
       }}, query_table='foo')
 
   def test_hasColumn(self):
