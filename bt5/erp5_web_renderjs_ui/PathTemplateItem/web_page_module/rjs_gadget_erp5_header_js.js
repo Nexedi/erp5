@@ -62,6 +62,7 @@
     ];
 
   gadget_klass
+    /* Init state is important because `render` is not necesarily called first*/
     .setState({
       loaded: false,
       modified: false,
@@ -75,6 +76,7 @@
       right_button: {},
       right_link: {}
     })
+
     /////////////////////////////////////////////////////////////////
     // ready
     /////////////////////////////////////////////////////////////////
@@ -135,19 +137,25 @@
       });
     })
     .declareMethod('render', function (options) {
-      var gadget = this,
+      var sub_header_list = [],
         state = {
-          "error": options.error || false
+          // render does not touch "loaded", "modified" or "submitted"
+          "error": options.error || false,
+          // set empty templates for all buttons to force-reset them because
+          // render expects complete state (complete definition of all buttons)
+          "main_link": {},
+          "right_link": {},
+          "right_button": {},
+          "left_button": {}
         },
         klass,
-        sub_header_list = [],
         i;
 
       // Main title
       if (options.hasOwnProperty("page_title") || options.hasOwnProperty("page_icon")) {
         state.main_link = {
-          "title": options.page_title || gadget.state.main_link.title,
-          "icon": options.page_icon || gadget.state.main_link.icon,
+          "title": options.page_title,
+          "icon": options.page_icon,
           "url": ''
         };
         for (i = 0; i < possible_main_link_list.length; i += 1) {
@@ -156,11 +164,6 @@
             state.main_link.url = options[possible_main_link_list[i][0]];
           }
         }
-        // if a new page title|icon is specified then we clear all menu buttons
-        // because the view changed completely
-        state.right_link = {};
-        state.right_button = {};
-        state.left_button = {};
       }
 
       // Left button
@@ -240,7 +243,7 @@
           default_title_icon = "spinner";
         }
         // Updating globally the page title. Does not follow RenderJS philosophy, but, it is enough for now
-        document.title = gadget.state.main_link.title;
+        document.title = gadget.state.main_link.title || "";
         // Update icon in case an action in process (keep the original in state.title_icon)
         main_link = {
           "title": gadget.state.main_link.title,
