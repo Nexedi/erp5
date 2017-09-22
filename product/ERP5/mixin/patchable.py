@@ -29,7 +29,7 @@
 
 
 import zope.interface
-from Products.ERP5Type.interfaces.patchable import IPatchable
+from Products.ERP5.interfaces.patchable import IPatchable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass

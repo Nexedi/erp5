@@ -29,7 +29,7 @@
 
 
 import zope.interface
-from Products.ERP5Type.interfaces.json_representable import IJSONRepresentable
+from Products.ERP5.interfaces.json_representable import IJSONRepresentable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
