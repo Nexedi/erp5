@@ -104,7 +104,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getBusinessPathSign()</string> </value>
+            <value> <string>python: here.getProperty(\'item_sign\')</string> </value>
         </item>
       </dictionary>
     </pickle>
