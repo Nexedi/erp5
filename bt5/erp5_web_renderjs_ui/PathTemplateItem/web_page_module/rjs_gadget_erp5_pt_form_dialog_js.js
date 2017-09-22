@@ -55,7 +55,7 @@
         // ignore options.editable because dialog is always editable
         erp5_document: options.erp5_document,
         form_definition: options.form_definition,
-        erp5_form: options.erp5_form || {},
+        erp5_form: options.erp5_form || {}
         // ignore global editable state (be always editable)
       });
     })
@@ -153,7 +153,8 @@
       if (attachment.target.responseType !== "blob") {
         attachment_data = new Blob(
           [attachment.target.response],
-          {type: attachment.target.getResponseHeader("Content-Type")});
+          {type: attachment.target.getResponseHeader("Content-Type")}
+        );
       }
       a_tag.style = "display: none";
       a_tag.href = URL.createObjectURL(attachment_data);
@@ -227,7 +228,9 @@
                 // here we figure out where to go after form submit - indicated
                 // by X-Location HTTP header placed by Base_redirect script
                 var jio_key = new URI(
-                  attachment.target.getResponseHeader("X-Location")).segment(2);
+                  attachment.target.getResponseHeader("X-Location")
+                ).segment(2);
+
                 if (redirect_to_parent) {
                   return form_gadget.redirect({command: 'history_previous'});
                 }
@@ -269,6 +272,35 @@
               })
               .push(function (response_text) {
                 return form_gadget.displayFormulatorValidationError(JSON.parse(response_text.target.result));
+              });
+          }
+          // response status > 200 (e.g. 202 "Accepted" or 204 "No Content")
+          // mean sucessful execution of an action but does not carry any data
+          // XMLHttpRequest automatically inserts Content-Type="text/xml" thus
+          // we cannot test based on that
+          if (attachment.target.response.size === 0 &&
+              attachment.target.status > 200 &&
+              attachment.target.status < 400) {
+            return new RSVP.Queue()
+              .push(function () {
+                return form_gadget.notifySubmitted({
+                  "message": "Action succeeded",
+                  "status": "success"
+                });
+              })
+              .push(function () {
+                if (redirect_to_parent) {
+                  return form_gadget.redirect({command: 'history_previous'});
+                }
+                return form_gadget.redirect({
+                  command: 'change',
+                  options: {
+                    "jio_key": form_gadget.state.jio_key,
+                    "view": "view",
+                    "page": undefined
+                    // do not mingle with editable because it isn't necessary
+                  }
+                });
               });
           }
 
