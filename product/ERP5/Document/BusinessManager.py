@@ -1150,50 +1150,78 @@ class BusinessPatchItem(XMLObject):
   isIndexable = False
   isProperty = False
   constructors = (manage_addBusinessPatchItem,)
+  allowed_types = ('Business Item', 'Business Property Item',)
 
   def _edit(self, **kw):
     """
     Override _edit to create Business Item and BusinessPropertyItem for old and
     new value
     """
-    super(BusinessPatchItem, self)._edit(**kw)
-
-    item_path = kw.get('item_path', None)
     dependency_list = kw.get('dependency_list', [])
 
-    if item_path:
-      # Check if there is already a Business Item or Business Property Item
-      # existing with this path
-      # XXX: Add some attribute to restrict installation of these item(s),
-      # they should add as hidden item(s)
-      new_item = self.getBusinessItemByPath(item_path+'_new')
-      old_item = self.getBusinessItemByPath(item_path+'_old')
-      # If there is already new or old value, remove it
-      if new_item:
-        self.manage_delObjects([new_item.getId()])
-      if old_item:
-        self.manage_delObjects([old_item.getId()])
+    # Raise error if no dependency_list, this way we ensure there are no useless
+    # patch_item objects
+    if not dependency_list:
+      raise ValueError('Please add dependency to the Business Patch Item')
 
-      # Use item_path to determine if we need to create Business Item or
-      # Business Property Item for storing old and new values
-      if '#' in item_path:
-        self.newContent(portal_type='Business Property Item',
-                        item_path=item_path)
-      else:
-        self.newContent(portal_type='Business Item',
-                        item_path=item_path)
+    super(BusinessPatchItem, self)._edit(**kw)
 
   def build(self, context, **kw):
     """
     Build should update the old and new value
     """
-    path = self.getProperty('item_path')
+    portal = self.getPortalObject()
+    portal_templates = portal.portal_templates
 
-    old_value = self.getOldValue()
-    new_value = self.getNewValue(build=True)
+    item_path = self.getProperty('item_path')
+    item_layer = self.getProperty('item_layer')
+    item_sign = self.getProperty('item_sign')
 
-    self.setProperty('old_value', old_value)
-    self.setProperty('new_value', new_value)
+    # Get the dependency Business Manager
+    dependency_list = self.getProperty('dependency_list')
+    if dependency_list:
+      dependency_title = dependency_list[0]
+      dependency_bm = portal_templates.getInstalledBusinessTemplate(dependency_title)
+      if not dependency_bm:
+        raise ValueError('Missing Installed Business Manager for dependecy_list \
+                          which is required to build')
+
+    # Use item_path to determine if we need to create Business Item or
+    # Business Property Item for storing old and new values
+    if '#' in item_path:
+      # Create new_prop_item and build it from ZODB
+      new_prop_item = self.newContent(portal_type='Business Property Item',
+                                      item_path=item_path,
+                                      item_layer=item_layer,
+                                      item_sign=item_sign,
+                                      id='new_property_item')
+      new_prop_item.build(self)
+
+      # ID to be used for old item copied from dependency_list
+      updated_id = 'old_property_item'
+
+    else:
+      # Create new_item and build it from ZODB
+      new_item = self.newContent(portal_type='Business Item',
+                                item_path=item_path,
+                                item_layer=item_layer,
+                                item_sign=item_sign,
+                                id='new_path_item')
+      new_item.build(self)
+
+      # ID to be used for old item copied from dependency_list
+      updated_id = 'old_path_item'
+
+    # Copy old item/property item from the item at similar path in dependency_bm
+    dependency_item = dependency_bm.getBusinessItemByPath(item_path)
+    cp_data = dependency_bm.manage_copyObjects([dependency_bm.getId()])
+    new_id = self.manage_pasteObjects(cp_data)[0]['new_id']
+    self.manage_renameObject(id=new_id, new_id=updated_id)
+
+    # Get the copied object and update the properties
+    old_item = self._getOb(updated_id)
+    old_item.setProperty('item_layer', item_layer)
+    old_item.setProperty('item_sign', item_sign)
 
   def getOldValue(self):
     """
