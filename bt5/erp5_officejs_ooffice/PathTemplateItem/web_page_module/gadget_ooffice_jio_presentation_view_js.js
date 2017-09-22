@@ -10,7 +10,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
@@ -40,21 +40,13 @@
         })
         .push(function (content) {
           if (!gadget.state.editable) {
-            doc = content;
-            content.portal_type = gadget.state.doc.portal_type;
-            content.parent_relative_url = gadget.state.doc.parent_relative_url;
-          } else {
-            doc = gadget.state.doc;
-            doc.content_type = "application/x-asc-presentation";
-            return gadget.jio_putAttachment(
-              gadget.state.jio_key,
-              "data",
-              jIO.util.dataURItoBlob(content.text_content)
-            );
+            return gadget.updateDocument(content);
           }
-        })
-        .push(function () {
-          return gadget.jio_put(gadget.state.jio_key, doc);
+          return gadget.jio_putAttachment(
+            gadget.state.jio_key,
+            "data",
+            jIO.util.dataURItoBlob(content.text_content)
+          );
         })
         .push(function () {
           return RSVP.all([

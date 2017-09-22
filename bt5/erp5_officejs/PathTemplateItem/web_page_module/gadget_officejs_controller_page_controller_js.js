@@ -9,6 +9,7 @@
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("jio_get", "jio_get")
+    .declareAcquiredMethod("jio_put", "jio_put")
     .declareAcquiredMethod("redirect", "redirect")
 
     /////////////////////////////////////////////////////////////////
@@ -17,6 +18,21 @@
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
     })
+
+    .allowPublicAcquisition('updateDocument', function (content) {
+      var gadget = this;
+      return gadget.jio_get(gadget.state.jio_key)
+        .push(function (doc) {
+          var property;
+          for (property in content) {
+            if (content.hasOwnProperty(property)) {
+              doc[property] = content[property];
+            }
+          }
+          return gadget.jio_put(gadget.state.jio_key, doc);
+        });
+    })
+
     .declareMethod('triggerSubmit', function () {
       return this.getDeclaredGadget('fg')
         .push(function (g) {
