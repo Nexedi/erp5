@@ -169,6 +169,22 @@ class TemplateTool (BaseTool):
       return last_bt
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getInstalledBusinessManager')
+    def getInstalledBusinessManager(self, title, strict=False, **kw):
+      """Returns an installed version of business manager of given title.
+
+      Returns None if business manager is not installed or has been uninstalled.
+      """
+      last_bm = None
+      for bm in self.objectValues(portal_type='Business Manager'):
+        if bm.getTitle() == title:
+          state =  bm.getInstallationState()
+          if state == 'installed':
+            return bm
+
+      return last_bm
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstalledBusinessTemplatesList')
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
