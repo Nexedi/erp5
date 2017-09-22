@@ -725,12 +725,12 @@ class BusinessItem(XMLObject):
 
     # We should remove the extra properties of object so that there
     # shouldn't be redundancy of the proeprties
-    removable_property_list = kw.get('removable_property_list')
+    removable_property_list = kw.get('removable_property_list', [])
 
     # We should also add extra parameter to remove sub-objects by removing
     # `_tree` for any erp5 object. This way we can have control over adding
     # sub-objects as new Business Item objects
-    remove_sub_objects = kw.get('remove_sub_objects')
+    remove_sub_objects = kw.get('remove_sub_objects', False)
     if remove_sub_objects:
       removable_property_list.append('_tree')
     keep_workflow_history = False
