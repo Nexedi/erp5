@@ -62,7 +62,7 @@ getSubVariationText</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_catalog_stock_list</string> </value>
+            <value> <string>z_catalog_stock_list_without_delete_for_inventory_virtual_movement</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
