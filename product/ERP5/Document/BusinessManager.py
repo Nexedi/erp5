@@ -1194,11 +1194,8 @@ class BusinessPatchItem(XMLObject):
                                       item_path=item_path,
                                       item_layer=item_layer,
                                       item_sign=item_sign,
-                                      id='new_property_item')
+                                      id='new_item')
       new_prop_item.build(self)
-
-      # ID to be used for old item copied from dependency_list
-      updated_id = 'old_property_item'
 
     else:
       # Create new_item and build it from ZODB
@@ -1206,12 +1203,10 @@ class BusinessPatchItem(XMLObject):
                                 item_path=item_path,
                                 item_layer=item_layer,
                                 item_sign=item_sign,
-                                id='new_path_item')
+                                id='new_item')
       new_item.build(self)
 
-      # ID to be used for old item copied from dependency_list
-      updated_id = 'old_path_item'
-
+    updated_id = 'old_item'
     # Copy old item/property item from the item at similar path in dependency_bm
     dependency_item = dependency_bm.getBusinessItemByPath(item_path)
     cp_data = dependency_bm.manage_copyObjects([dependency_bm.getId()])
