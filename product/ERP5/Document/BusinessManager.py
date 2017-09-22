@@ -1220,16 +1220,23 @@ class BusinessPatchItem(XMLObject):
 
   def getOldValue(self):
     """
-    Returns old value from the old BM
+    Returns old value for the BusinessPatchItem
     """
-    pass
+    old_item = self._getOb('old_item')[0]
+    if old_item.getPortalType() == 'Business Item':
+      return old_item.objectValues()
+    else:
+      return old_item.getProperty('item_property_value')
 
   def getNewValue(self, build=False):
     """
-    Returns new value from the new BM
-    If build=True, then rebuild the concerned path_item or property_item
+    Returns new value for the given BusinessPatchItem
     """
-    pass
+    old_item = self._getOb('new_item')
+    if old_item.getPortalType() == 'Business Item':
+      return old_item.objectValues()[0]
+    else:
+      return old_item.getProperty('item_property_value')
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
