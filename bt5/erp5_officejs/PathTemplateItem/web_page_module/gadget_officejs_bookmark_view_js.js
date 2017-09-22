@@ -15,7 +15,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("translateHtml", "translateHtml")
@@ -40,22 +40,10 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
-          var doc;
-          if (!gadget.state.editable) {
-            doc = content;
-            content.portal_type = gadget.state.doc.portal_type;
-            content.parent_relative_url = gadget.state.doc.parent_relative_url;
-            content.text_content = gadget.state.doc.text_content;
-          } else {
-            doc = gadget.state.doc;
-            doc.text_content = content.text_content;
-          }
-          return gadget.jio_put(gadget.state.jio_key, doc);
+          return gadget.updateDocument(content);
         })
         .push(function () {
-          return RSVP.all([
-            gadget.notifySubmitted('Data Updated')
-          ]);
+          return gadget.notifySubmitted('Data Updated');
         });
     })
 
