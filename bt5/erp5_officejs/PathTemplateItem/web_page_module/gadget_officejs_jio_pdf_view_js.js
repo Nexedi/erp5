@@ -10,7 +10,7 @@
     .declareAcquiredMethod("updateHeader", "updateHeader")
     .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
-    .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("updateDocument", "updateDocument")
     .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
     .declareAcquiredMethod("notifySubmitted", 'notifySubmitted')
     .declareAcquiredMethod("jio_putAttachment", "jio_putAttachment")
@@ -39,19 +39,12 @@
         })
         .push(function (content) {
           if (!gadget.state.editable) {
-            doc = content;
-            content.portal_type = gadget.state.doc.portal_type;
-            content.parent_relative_url = gadget.state.doc.parent_relative_url;
-          } else {
-            doc = gadget.state.doc;
-            return jIO.util.dataURItoBlob(content)
-              .push(function (blob) {
-                return gadget.jio_putAttachment(gadget.state.doc.jio_key, "data", blob);
-              });
+            return gadget.updateDocument(content);
           }
-        })
-        .push(function () {
-          return gadget.jio_put(gadget.state.jio_key, doc);
+          return jIO.util.dataURItoBlob(content)
+            .push(function (blob) {
+              return gadget.jio_putAttachment(gadget.state.doc.jio_key, "data", blob);
+            });
         })
         .push(function () {
           return gadget.notifySubmitted('Data Updated');
