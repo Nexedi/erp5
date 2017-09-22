@@ -1181,7 +1181,7 @@ class BusinessPatchItem(XMLObject):
     dependency_list = self.getProperty('dependency_list')
     if dependency_list:
       dependency_title = dependency_list[0]
-      dependency_bm = portal_templates.getInstalledBusinessTemplate(dependency_title)
+      dependency_bm = portal_templates.getInstalledBusinessManager(dependency_title)
       if not dependency_bm:
         raise ValueError('Missing Installed Business Manager for dependecy_list \
                           which is required to build')
@@ -1209,7 +1209,7 @@ class BusinessPatchItem(XMLObject):
     updated_id = 'old_item'
     # Copy old item/property item from the item at similar path in dependency_bm
     dependency_item = dependency_bm.getBusinessItemByPath(item_path)
-    cp_data = dependency_bm.manage_copyObjects([dependency_bm.getId()])
+    cp_data = dependency_bm.manage_copyObjects([dependency_item.getId()])
     new_id = self.manage_pasteObjects(cp_data)[0]['new_id']
     self.manage_renameObject(id=new_id, new_id=updated_id)
 
