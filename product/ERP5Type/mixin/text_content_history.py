@@ -54,7 +54,7 @@ class TextContentHistoryMixin:
     previous_text_content = None
     result = []
     for history_dict in history_dict_list:
-      text_content = historicalRevision(self, history_dict['tid']).getTextContent()
+      text_content = historicalRevision(self, history_dict['tid'])._baseGetTextContent()
       if text_content and text_content != previous_text_content:
         history_dict['time'] = history_dict['time']
         history_dict['user_name'] = history_dict['user_name'].strip()
@@ -78,6 +78,6 @@ class TextContentHistoryMixin:
     serial = apply(pack, ('>HHHH',) + tuple(map(int, key.split('.'))))
     rev = historicalRevision(self, serial)
 
-    return rev.getTextContent()
+    return rev._baseGetTextContent()
 
 InitializeClass(TextContentHistoryMixin)
