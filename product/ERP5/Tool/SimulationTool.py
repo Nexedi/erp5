@@ -46,7 +46,7 @@ from Products.ERP5 import DeliverySolver
 from Products.ERP5 import TargetSolver
 from Products.PythonScripts.Utility import allow_class
 
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery, SQLQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery, SimpleQuery
 
 from Shared.DC.ZRDB.Results import Results
 from Products.ERP5Type.Utils import mergeZRDBResults
@@ -464,15 +464,8 @@ class SimulationTool(BaseTool):
             if simulation_query is not None:
               query_list.append(simulation_query)
             return ComplexQuery(
-              SQLQuery("%(query_table)s.node_uid <> %(query_table)s.mirror_node_uid "
-              "OR %(query_table)s.section_uid <> %(query_table)s.mirror_section_uid "
-              "OR %(query_table)s.mirror_node_uid IS NULL "
-              "OR %(query_table)s.mirror_section_uid IS NULL "
-              "OR %(query_table)s.payment_uid IS NOT NULL" % {
-                'query_table': table,
-              }),
+              query_list,
               logical_operator='AND',
-              *query_list
             )
           return simulation_query
         simulation_query = getSimulationQuery(
