@@ -8,11 +8,11 @@ SET @running_total_quantity := <dtml-var initial_running_total_quantity>,
     @running_total_price := <dtml-var initial_running_total_price>;
 <dtml-var sql_delimiter>
 
-SELECT 
+SELECT
   q1.*,
-  @running_total_quantity := q1.total_quantity + 
+  @running_total_quantity := q1.total_quantity +
             @running_total_quantity AS running_total_quantity,
-  @running_total_price := IFNULL(q1.total_price, 0) + 
+  @running_total_price := IFNULL(q1.total_price, 0) +
             @running_total_price AS running_total_price
 FROM (
 SELECT
