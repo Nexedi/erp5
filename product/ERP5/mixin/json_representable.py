@@ -27,10 +27,13 @@
 #
 ##############################################################################
 
-
+import json
+import xmldict
 import zope.interface
-from Products.ERP5.interfaces.json_representable import IJSONRepresentable
+from OFS import XMLExportImport
+from StringIO import StringIO
 from AccessControl import ClassSecurityInfo
+from Products.ERP5.interfaces.json_representable import IJSONRepresentable
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 
@@ -46,11 +49,26 @@ class JSONRepresentableMixin:
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'asJSON')
-  def asJSON():
-    pass
+  def asJSON(self):
+    """
+    Generate a JSON representable content for ERP5 object
+
+    Currently we use `asXML` to first convert the object to its XML
+    respresentation and then use xmltodict to convert it to dict and JSON
+    format finally
+    """
+    # Use OFS exportXML to first export to xml
+    f = StringIO()
+    XMLExportImport.exportXML(self._p_jar, self._p_oid, f)
+
+    # Get the value of exported XML
+    xml_value = f.getvalue()
+
+    # Convert the XML to json representation
+    return json.dumps(xmldict.xml_to_dict(xml_value))
 
   security.declareProtected(Permissions.AccessContentsInformation, 'fromJSON')
-  def fromJSON():
+  def fromJSON(self):
     pass
 
 InitializeClass(JSONRepresentableMixin)
