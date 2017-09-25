@@ -32,12 +32,16 @@ from Products.ERP5Type import Permissions
 
 
 class TextContentHistoryMixin:
+  """Mixin that provides access to history of edit of the text content property.
+
+  To be used with erp5_code_mirror
+  """
   security = ClassSecurityInfo()
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getTextContentHistoryRevisionDictList')
   def getTextContentHistoryRevisionDictList(self, limit=100):
-    """TODO
+    """Returns the history of edition as a list of dictionnaries.
     """
     history_dict_list = self._p_jar.db().history(self._p_oid, size=limit)
     if history_dict_list is None:
@@ -66,7 +70,7 @@ class TextContentHistoryMixin:
   security.declareProtected(Permissions.ModifyPortalContent,
                             'getTextContentHistory')
   def getTextContentHistory(self, key):
-    """TODO
+    """Returns the text content of a previous version of the document.
     """
     from struct import pack
     from OFS.History import historicalRevision
