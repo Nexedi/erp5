@@ -2148,7 +2148,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                  credit_price=0,)
 
     self.assertTrue(line_list[-1].isStatLine())
-    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=0,)
+    self.checkLineProperties(line_list[-1], debit_price=100, credit_price=100)
 
 
   def testAccountStatementMultipleSection(self):
