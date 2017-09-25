@@ -6684,7 +6684,7 @@ return new Parser;
     }
     return new RegExp("^" + stringEscapeRegexpCharacters(string)
       .replace(regexp_percent, '[\\s\\S]*')
-      .replace(regexp_underscore, '.') + "$");
+      .replace(regexp_underscore, '.') + "$", "i");
   }
 
   /**
@@ -8224,7 +8224,7 @@ return new Parser;
         var ceilHeapSize = function (v) {
             // The asm.js spec says:
             // The heap object's byteLength must be either
-            // 2^n for n in [12, 24) or 2^24 * n for n â‰¥ 1.
+            // 2^n for n in [12, 24) or 2^24 * n for n ≥ 1.
             // Also, byteLengths smaller than 2^16 are deprecated.
             var p;
             // If v is smaller than 2^16, the smallest possible solution
@@ -12366,10 +12366,9 @@ return new Parser;
 
 }(jIO, RSVP, Blob));
 ;/*jslint nomen: true*/
-/*global Blob, atob, btoa, RSVP*/
-(function (jIO, Blob, atob, btoa, RSVP) {
+/*global Blob, RSVP, unescape, escape*/
+(function (jIO, Blob, RSVP, unescape, escape) {
   "use strict";
-
   /**
    * The jIO DocumentStorage extension
    *
@@ -12385,7 +12384,13 @@ return new Parser;
   var DOCUMENT_EXTENSION = ".json",
     DOCUMENT_REGEXP = new RegExp("^jio_document/([\\w=]+)" +
                                  DOCUMENT_EXTENSION + "$"),
-    ATTACHMENT_REGEXP = new RegExp("^jio_attachment/([\\w=]+)/([\\w=]+)$");
+    ATTACHMENT_REGEXP = new RegExp("^jio_attachment/([\\w=]+)/([\\w=]+)$"),
+    btoa = function (str) {
+      return window.btoa(unescape(encodeURIComponent(str)));
+    },
+    atob = function (str) {
+      return decodeURIComponent(escape(window.atob(str)));
+    };
 
   function getSubAttachmentIdFromParam(id, name) {
     if (name === undefined) {
@@ -12592,7 +12597,7 @@ return new Parser;
 
   jIO.addStorage('document', DocumentStorage);
 
-}(jIO, Blob, atob, btoa, RSVP));
+}(jIO, Blob, RSVP, unescape, escape));
 ;/*
  * Copyright 2013, Nexedi SA
  * Released under the LGPL license.
@@ -13089,7 +13094,9 @@ return new Parser;
               end_index -= 1;
             }
             function resolver(result) {
-              result_list.push(result);
+              if (result.blob !== undefined) {
+                result_list.push(result);
+              }
               resolve(result_list);
             }
             function getPart(i) {
@@ -13789,3 +13796,117 @@ return new Parser;
   jIO.addStorage('websql', WebSQLStorage);
 
 }(jIO, RSVP, Blob, openDatabase));
+;/*jslint nomen: true */
+/*global RSVP, UriTemplate*/
+(function (jIO, RSVP, UriTemplate) {
+  "use strict";
+
+  var GET_POST_URL = "https://graph.facebook.com/v2.9/{+post_id}" +
+      "?fields={+fields}&access_token={+access_token}",
+    get_post_template = UriTemplate.parse(GET_POST_URL),
+    GET_FEED_URL = "https://graph.facebook.com/v2.9/{+user_id}/feed" +
+        "?fields={+fields}&limit={+limit}&since={+since}&access_token=" +
+        "{+access_token}",
+    get_feed_template = UriTemplate.parse(GET_FEED_URL);
+
+  function FBStorage(spec) {
+    if (typeof spec.access_token !== 'string' || !spec.access_token) {
+      throw new TypeError("Access Token must be a string " +
+                          "which contains more than one character.");
+    }
+    if (typeof spec.user_id !== 'string' || !spec.user_id) {
+      throw new TypeError("User ID must be a string " +
+                          "which contains more than one character.");
+    }
+    this._access_token = spec.access_token;
+    this._user_id = spec.user_id;
+    this._default_field_list = spec.default_field_list || [];
+    this._default_limit = spec.default_limit || 500;
+  }
+
+  FBStorage.prototype.get = function (id) {
+    var that = this;
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.ajax({
+          type: "GET",
+          url: get_post_template.expand({post_id: id,
+            fields: that._default_field_list, access_token: that._access_token})
+        });
+      })
+      .push(function (result) {
+        return JSON.parse(result.target.responseText);
+      });
+  };
+
+  function paginateResult(url, result, select_list) {
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.ajax({
+          type: "GET",
+          url: url
+        });
+      })
+      .push(function (response) {
+        return JSON.parse(response.target.responseText);
+      },
+        function (err) {
+          throw new jIO.util.jIOError("Getting feed failed " + err.toString(),
+            err.target.status);
+        })
+      .push(function (response) {
+        if (response.data.length === 0) {
+          return result;
+        }
+        var i, j, obj = {};
+        for (i = 0; i < response.data.length; i += 1) {
+          obj.id = response.data[i].id;
+          obj.value = {};
+          for (j = 0; j < select_list.length; j += 1) {
+            obj.value[select_list[j]] = response.data[i][select_list[j]];
+          }
+          result.push(obj);
+          obj = {};
+        }
+        return paginateResult(response.paging.next, result, select_list);
+      });
+  }
+
+  FBStorage.prototype.buildQuery = function (query) {
+    var that = this, fields = [], limit = this._default_limit,
+      template_argument = {
+        user_id: this._user_id,
+        limit: limit,
+        access_token: this._access_token
+      };
+    if (query.include_docs) {
+      fields = fields.concat(that._default_field_list);
+    }
+    if (query.select_list) {
+      fields = fields.concat(query.select_list);
+    }
+    if (query.limit) {
+      limit = query.limit[1];
+    }
+    template_argument.fields = fields;
+    template_argument.limit = limit;
+    return paginateResult(get_feed_template.expand(template_argument), [],
+      fields)
+      .push(function (result) {
+        if (!query.limit) {
+          return result;
+        }
+        return result.slice(query.limit[0], query.limit[1]);
+      });
+  };
+
+  FBStorage.prototype.hasCapacity = function (name) {
+    var this_storage_capacity_list = ["list", "select", "include", "limit"];
+    if (this_storage_capacity_list.indexOf(name) !== -1) {
+      return true;
+    }
+  };
+
+  jIO.addStorage('facebook', FBStorage);
+
+}(jIO, RSVP, UriTemplate));
