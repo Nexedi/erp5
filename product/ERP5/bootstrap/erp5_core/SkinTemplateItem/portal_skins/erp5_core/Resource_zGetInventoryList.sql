@@ -63,7 +63,7 @@ FROM
   <dtml-var from_expression>
 <dtml-else>
   catalog
-<dtml-in prefix="table" expr="from_table_list"> 
+<dtml-in prefix="table" expr="from_table_list">
   <dtml-if expr="table_key not in ('catalog', stock_table_id)">
   , <dtml-var table_item> AS <dtml-var table_key>
   </dtml-if>
@@ -71,7 +71,7 @@ FROM
 , <dtml-var stock_table_id>
 </dtml-if>
 <dtml-if quantity_unit_uid> <dtml-comment>XXX quantity unit conversion will not work when using implict_join=False</dtml-comment>
-  LEFT JOIN quantity_unit_conversion ON 
+  LEFT JOIN quantity_unit_conversion ON
     (quantity_unit_conversion.resource_uid = <dtml-var stock_table_id>.resource_uid
     AND quantity_unit_conversion.quantity_unit_uid = <dtml-sqlvar quantity_unit_uid type=int>)
 </dtml-if>
