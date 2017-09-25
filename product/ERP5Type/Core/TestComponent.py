@@ -28,13 +28,14 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.component import ComponentMixin
+from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
 import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
-class TestComponent(ComponentMixin):
+class TestComponent(ComponentMixin, TextContentHistoryMixin):
   """
   ZODB Component for Live Tests only (previously defined in the bt5 and
   installed in INSTANCE_HOME/tests) as other kind of Tests should be
