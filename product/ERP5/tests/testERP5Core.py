@@ -653,6 +653,38 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(response.getStatus(), 401)
     self.assertNotIn("Also, the following error occurred", str(response))
 
+  def test_Base_constructUrlFor(self):
+    portal_url = self.portal.absolute_url()
+    self.assertEqual(self.portal.Base_constructUrlFor(), '%s/' % portal_url)
+    module_id = 'test_module'
+    module = self.portal.newContent(portal_type='Folder', id=module_id)
+    module_url = module.absolute_url()
+    self.assertEqual(
+      module.Base_constructUrlFor(),
+      '%s/%s/' % (portal_url, module_id)
+    )
+    self.assertEqual(
+      module.Base_constructUrlFor(form_id='view'),
+      '%s/%s' % (module_url, 'view')
+    )
+    file_reference = 'test_file_reference'
+    self.portal.test_module.newContent(
+      portal_type='File',
+      reference=file_reference
+    )
+    self.assertEqual(
+      module.Base_constructUrlFor(document_reference=file_reference),
+      '%s/%s' % (module_url, file_reference)
+    )
+    parameter_dict = {'ingore_layout': 1, 'came_from': 'foo/bar'}
+    self.assertIn(
+      module.Base_constructUrlFor(parameter_dict=parameter_dict),
+      (
+        '%s/%s/?came_from=foo/bar&ingore_layout:int=1' % (portal_url, module_id),
+        '%s/%s/?ingore_layout:int=1&came_from=foo/bar' % (portal_url, module_id),
+      )
+    )
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Core))
