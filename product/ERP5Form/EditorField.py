@@ -71,7 +71,6 @@ class EditorWidget(Widget.TextAreaWidget):
                                    size=1,
                                    items=[('Standard Text Area', 'text_area'),
                                           ('FCK Editor', 'fck_editor'),
-                                          ('Bespin Editor', 'bespin'),
                                           ('Xinha Editor', 'xinha'),
                                           ('SVG Editor', 'svg_editor'),
                                           ('Spreadsheet Editor', 'spreadsheet_editor'),
@@ -84,19 +83,7 @@ class EditorWidget(Widget.TextAreaWidget):
     """
     here = REQUEST['here']
     text_editor = field.get_value('text_editor')
-    if text_editor == 'bespin':
-      # XXX The usage of bespin editor depends of erp5_bespin bt5
-      # installed and still experimental. If erp5_bespin is not installed, it
-      # render standard an standard editor field.
-      bespin_support = getattr(here, 'bespin_support',None)
-      if bespin_support is not None:
-        return bespin_support.pt_render(
-           extra_context= {
-                          'field'      : field,
-                          'inputvalue' : value,
-                          'inputname'  : key
-                        })
-    elif text_editor == "xinha":
+    if text_editor == "xinha":
       xinha_support = getattr(here, 'xinha_support', None)
       if xinha_support is not None:
         return xinha_support.pt_render(
