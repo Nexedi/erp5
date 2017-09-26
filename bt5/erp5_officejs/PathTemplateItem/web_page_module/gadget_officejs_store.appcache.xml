@@ -119,6 +119,7 @@ appstore/image_editor_app_logo.svg\n
 appstore/media_player_app_logo.jpg\n
 appstore/web_table_app_logo.svg\n
 appstore/forum_app_logo.png\n
+appstore/wallsearch_icon.svg\n
 appstore/app/contact_manager/icon_contacts.png\n
 appstore/app/contact_manager/icon_taskmanager.png\n
 appstore/app/contact_manager/icon_text_editor.png\n
@@ -366,7 +367,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.12732.43789.50261</string> </value>
+                <value> <string>962.12683.57878.4676</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -384,7 +385,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498047437.23</float>
+                        <float>1506431682.21</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

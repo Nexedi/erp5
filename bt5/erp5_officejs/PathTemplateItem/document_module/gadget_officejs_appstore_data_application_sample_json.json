@@ -208,5 +208,19 @@
     "application_category":"Projects",
     "application_title_i18n":"application.custom.trade.title",
     "application_description_i18n":"application.custom.trade.description"
+  },
+{
+    "int_index": "1",
+    "application_image_type": "image",
+    "application_image_url": "wallsearch_icon.svg",
+    "application_toc_accept": true,
+    "application_published":"05/09/2017",
+    "application_submitted":"05/09/2017",
+    "application_description":"Search Facebook posts",
+    "application_url":"https://wallsearch.app.officejs.com",
+    "application_title":"WallSearch",
+    "application_category":"Documents",
+    "application_title_i18n":"application.custom.wallsearch.title",
+    "application_description_i18n":"application.custom.wallsearch.description"
   }
 ]
