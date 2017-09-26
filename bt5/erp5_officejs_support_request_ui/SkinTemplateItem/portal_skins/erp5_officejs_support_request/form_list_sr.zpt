@@ -1,0 +1,16 @@
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"
+           xmlns:metal="http://xml.zope.org/namespaces/metal"
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+<!--
+  The "form_list_sr.apt" is exactly same as "form_list.apt".
+  The differences between these two page tempalte is the "form_list_sr"
+  removed the search field in its html definition. Use the customized
+  "form_list" because we want the listbox gadget has same appearance like
+  "form_view" but keep the argument pass mechanism of "form_list".
+-->
+  <tal:block metal:use-macro="here/list_main/macros/master">
+    <tal:block metal:fill-slot="main">
+      <tal:block metal:use-macro="here/form_render/macros/master" />
+    </tal:block>
+  </tal:block>
+</tal:block>

@@ -53,3 +53,8 @@ button:disabled{
 input[type="submit"] {
   -webkit-appearance: none;
 }
+
+.worklist-title {
+  color: #777777;
+  margin-top: 10px;
+}

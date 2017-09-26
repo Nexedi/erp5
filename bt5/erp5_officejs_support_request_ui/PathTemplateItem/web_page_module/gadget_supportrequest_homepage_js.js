@@ -65,12 +65,16 @@
     })
     .allowPublicAcquisition("chartItemClick", function (params) {
       var gadget = this;
-      return gadget.getDeclaredGadget("last")
-        .push(function () {
-          return gadget.getSearchCriteria(params[0][0], params[0][1])
-            .push(function (search_criteria) {
-              gadget.changeState({extended_search: search_criteria});
-            });
+
+      return gadget.getSearchCriteria(params[0][0], params[0][1])
+        .push(function (result) {
+          return gadget.redirect({command: 'change', options: {extended_search: result}});
+        })
+        .push(undefined, function (error) {
+          if (error instanceof RSVP.CancellationError) {
+            return;
+          }
+          throw error;
         })
         .push(function () {
           var restore = document.getElementById("restoreButton");
@@ -232,63 +236,49 @@
           });
         });
     })
-    .onStateChange(function (modification_dict) {
+    .onStateChange(function () {
       var gadget = this,
         queue = new RSVP.Queue();
-      if (modification_dict.hasOwnProperty("extended_search")) {
-        // render the erp5 form
-        queue
-          .push(function () {
-            return gadget.getDeclaredGadget("last");
-          })
-          .push(function (result_list) {
-            var erp5_form = result_list,
-              tmp;
 
-            tmp = JSON.parse(erp5_form.state.erp5_form);
-            tmp.extended_search = modification_dict.extended_search;
+      queue
+        .push(function () {
+          return RSVP.all([
+            gadget.jio_getAttachment("support_request_module", "links"),
+            gadget.getDeclaredGadget("worklist"),
+            gadget.getUrlParameter('field_listbox_begin_from')
+          ]);
+        })
+        .push(function (result_list) {
+          var i,
+            erp5_document = result_list[0],
+            view_list = erp5_document._links.action_object_view || [],
+            last_href;
 
-            return erp5_form.changeState({erp5_form: JSON.stringify(tmp)});
-          });
-      }
-      if (modification_dict.hasOwnProperty("render")) {
-        queue
-          .push(function () {
-            return RSVP.all([
-              gadget.jio_getAttachment("support_request_module", "links"),
-              gadget.getDeclaredGadget("last")
-            ]);
-          })
-          .push(function (result_list) {
-            var i,
-              erp5_document = result_list[0],
-              view_list = erp5_document._links.action_object_view || [],
-              last_href;
+          if (view_list.constructor !== Array) {
+            view_list = [view_list];
+          }
 
-            if (view_list.constructor !== Array) {
-              view_list = [view_list];
+          for (i = 0; i < view_list.length; i += 1) {
+            if (view_list[i].name === 'view_last_support_request') {
+              last_href = view_list[i].href;
             }
+          }
 
-            for (i = 0; i < view_list.length; i += 1) {
-              if (view_list[i].name === 'view_last_support_request') {
-                last_href = view_list[i].href;
-              }
-            }
+          if (last_href === undefined) {
+            throw new Error('Cant find the list document view');
+          }
+          gadget.property_dict.option_dict = {
+            graph_gadget: "unsafe/gadget_field_graph_echarts.html",
+            listbox_gadget: last_href,
+            listbox_jio_key: "support_request_module",
+            field_listbox_begin_from: result_list[2]
+          };
 
-            if (last_href === undefined) {
-              throw new Error('Cant find the list document view');
-            }
-            gadget.property_dict.option_dict = {
-              graph_gadget: "unsafe/gadget_field_graph_echarts.html",
-              listbox_gadget: last_href,
-              listbox_jio_key: "support_request_module"
-            };
-
-            return RSVP.all([
-              gadget.renderGraph() //Launched as service, not blocking
-            ]);
-          });
-      }
+          return RSVP.all([
+            result_list[1].render(),
+            gadget.renderGraph() //Launched as service, not blocking
+          ]);
+        });
       return queue;
     })
     .onEvent('change', function (evt) {
@@ -319,13 +309,19 @@
     }, false, false)
     .onEvent('click', function (event) {
       var gadget = this, rss_link = gadget.element.querySelector("#generate-rss"),
-        generate_button = gadget.element.querySelector("#generateRSS");
+        generate_button = gadget.element.querySelector("#generateRSS"),
+        restore = document.getElementById("restoreButton");
 
       if (event.target.id === "restoreButton") {
-        return gadget.changeState({extended_search: null})
-          .push(function () {
-            var restore = document.getElementById("restoreButton");
-            restore.setAttribute("disabled", "disabled");
+        restore.setAttribute("disabled", "disabled");
+
+        return gadget.getDeclaredGadget("last")
+          .push(function (listbox) {
+            return listbox.render({
+              jio_key: gadget.property_dict.option_dict.listbox_jio_key,
+              view: gadget.property_dict.option_dict.listbox_gadget,
+              extended_search: null
+            });
           });
       }
 
