@@ -70,6 +70,11 @@
       if (jio_options === undefined) {
         return;
       }
+      jio_options = {
+        type: 'dateupdater',
+        sub_storage: jio_options,
+        property_list: ['modification_date']
+      };
       try {
         this.state_parameter_dict.jio_storage = jIO.createJIO(jio_options);
       } catch (error) {
