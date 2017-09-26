@@ -93,6 +93,9 @@ def getTaxLineList(order):
   tax_line_list = [line for line in
        order.contentValues(portal_type=order.getPortalTaxMovementTypeList())
        if line.getTotalPrice()]
+  for line in order.Base_getSpecialisedAggregatedAmountList():
+    if line.getTradePhase() == "trade/tax":
+      tax_line_list.append(line)
   tax_line_list.sort(key=lambda line:line.getTitle())
   return tax_line_list
 
