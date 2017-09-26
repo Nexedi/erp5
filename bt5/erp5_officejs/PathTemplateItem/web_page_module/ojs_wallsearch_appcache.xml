@@ -195,6 +195,7 @@ gadget_erp5_sort_editor.html\n
 gadget_erp5_sort_editor.js\n
 gadget_erp5_search_editor.js\n
 gadget_erp5_search_editor.html\n
+jio_cachealldocsstorage.js\n
 GADGET:\n
 NETWORK:\n
 *</string> </value>
@@ -338,7 +339,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.22792.45469.36454</string> </value>
+                <value> <string>962.22836.49964.34133</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -356,7 +357,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506429379.04</float>
+                        <float>1506432667.98</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
