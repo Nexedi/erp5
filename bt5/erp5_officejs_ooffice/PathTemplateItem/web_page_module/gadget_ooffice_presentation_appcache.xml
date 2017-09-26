@@ -206,7 +206,7 @@ gadget_ooffice_presentation_router.html\n
 gadget_officejs_jio_presentation_view.html\n
 gadget_officejs_jio_presentation_view.js\n
 GADGET:\n
-ooffice_presentation_gadget/\n
+ooffice_onlyoffice_gadget/\n
 officejs_setting_gadget/\n
 NETWORK:\n
 *</string> </value>
@@ -350,7 +350,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.62559.15643.59750</string> </value>
+                <value> <string>962.11897.44034.37649</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +368,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504882731.36</float>
+                        <float>1505934130.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
