@@ -177,6 +177,10 @@
       "monitor_js": {
         "title": "Monitor",
         "description": "Cloud Monitoring Tool"
+      },
+      "wallsearch": {
+        "title": "WallSearch",
+        "description": "Search your Facebook posts"
       }
     },
     "field_list": {
