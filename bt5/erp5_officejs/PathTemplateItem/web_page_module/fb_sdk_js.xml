@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Page" module="erp5.portal_type"/>
+      <global name="Web Script" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -71,11 +68,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <value> <string>text/javascript</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_facebook_configurator.html</string> </value>
+            <value> <string>fb_sdk.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -85,27 +82,21 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_facebook_configurator_html</string> </value>
+            <value> <string>fb_sdk_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Page</string> </value>
+            <value> <string>Web Script</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>ojs Facebook Configurator html</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -165,7 +156,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -191,7 +182,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501512582.99</float>
+                        <float>1506433557.45</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -200,7 +191,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -236,7 +227,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.22780.25314.60910</string> </value>
+                <value> <string>962.22873.19718.16810</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +245,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506433606.65</float>
+                        <float>1506433546.46</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -313,7 +304,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501512463.56</float>
+                        <float>1506433463.14</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

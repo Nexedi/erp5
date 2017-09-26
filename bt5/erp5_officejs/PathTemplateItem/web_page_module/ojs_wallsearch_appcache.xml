@@ -197,6 +197,7 @@ gadget_erp5_search_editor.js\n
 gadget_erp5_search_editor.html\n
 jio_cachealldocsstorage.js\n
 wallsearch_privacy_policy.html\n
+fb_sdk.js\n
 GADGET:\n
 NETWORK:\n
 *</string> </value>
@@ -340,7 +341,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.22859.8786.43861</string> </value>
+                <value> <string>962.22868.65392.39372</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -358,7 +359,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506433259.82</float>
+                        <float>1506433645.19</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
