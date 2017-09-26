@@ -15,4 +15,7 @@ REQUEST.RESPONSE.expireCookie('__ac', path='/')
 if getattr(portal.portal_skins, "erp5_oauth_google_login", None):
   REQUEST.RESPONSE.expireCookie('__ac_google_hash', path='/')
 
+if getattr(portal.portal_skins, "erp5_oauth_facebook_login", None):
+  REQUEST.RESPONSE.expireCookie('__ac_facebook_hash', path='/')
+
 return REQUEST.RESPONSE.redirect(REQUEST.URL1 + '/logged_out')
