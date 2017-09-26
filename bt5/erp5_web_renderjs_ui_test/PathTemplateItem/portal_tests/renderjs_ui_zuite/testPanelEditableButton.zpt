@@ -35,7 +35,7 @@
 <tal:block metal:use-macro="here/Zuite_CommonTemplateForRenderjsUi/macros/wait_for_content_loaded" />
 
 <tr>
-  <td>verifyElementPresent</td>
+  <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='field_my_title']//input</td>
   <td></td>
 </tr>
