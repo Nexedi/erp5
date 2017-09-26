@@ -1,0 +1,8 @@
+document_module/onlyoffice_sdkjs_build_configs_*
+image_module/onlyoffice_sdkjs_common_*
+image_module/onlyoffice_sdkjs_slide_*
+web_page_module/erp5_officejs_onlyoffice_sdkjs_appcache
+web_page_module/onlyoffice_sdkjs_cell_*
+web_page_module/onlyoffice_sdkjs_common_*
+web_page_module/onlyoffice_sdkjs_slide_*
+web_page_module/onlyoffice_sdkjs_word_*

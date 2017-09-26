@@ -211,6 +211,7 @@ onlyoffice/apps/common/main/lib/view/Header.js\n
 onlyoffice/apps/common/main/lib/view/History.js\n
 onlyoffice/apps/common/main/lib/view/ImageFromUrlDialog.js\n
 onlyoffice/apps/common/main/lib/view/InsertTableDialog.js\n
+onlyoffice/apps/common/main/lib/view/LanguageDialog.js\n
 onlyoffice/apps/common/main/lib/view/OpenDialog.js\n
 onlyoffice/apps/common/main/lib/view/Plugins.js\n
 onlyoffice/apps/common/main/lib/view/RenameDialog.js\n
@@ -249,6 +250,7 @@ onlyoffice/apps/documenteditor/main/app/template/TextArtSettings.template\n
 onlyoffice/apps/documenteditor/main/app/template/Toolbar.template\n
 onlyoffice/apps/documenteditor/main/app/template/Viewport.template\n
 onlyoffice/apps/documenteditor/main/app/view/ChartSettings.js\n
+onlyoffice/apps/documenteditor/main/app/view/CustomColumnsDialog.js\n
 onlyoffice/apps/documenteditor/main/app/view/DocumentHolder.js\n
 onlyoffice/apps/documenteditor/main/app/view/DropcapSettingsAdvanced.js\n
 onlyoffice/apps/documenteditor/main/app/view/FileMenu.js\n
@@ -284,10 +286,15 @@ onlyoffice/apps/documenteditor/main/locale/es.json\n
 onlyoffice/apps/documenteditor/main/locale/fr.json\n
 onlyoffice/apps/documenteditor/main/locale/it.json\n
 onlyoffice/apps/documenteditor/main/locale/ja.json\n
+onlyoffice/apps/documenteditor/main/locale/nl.json\n
+onlyoffice/apps/documenteditor/main/locale/pl.json\n
 onlyoffice/apps/documenteditor/main/locale/pt.json\n
 onlyoffice/apps/documenteditor/main/locale/ru.json\n
+onlyoffice/apps/documenteditor/main/locale/sk.json\n
 onlyoffice/apps/documenteditor/main/locale/sl.json\n
 onlyoffice/apps/documenteditor/main/locale/tr.json\n
+onlyoffice/apps/documenteditor/main/locale/uk.json\n
+onlyoffice/apps/documenteditor/main/locale/zh.json\n
 onlyoffice/apps/presentationeditor/main/app/collection/EquationGroups.js\n
 onlyoffice/apps/presentationeditor/main/app/collection/ShapeGroups.js\n
 onlyoffice/apps/presentationeditor/main/app/collection/SlideLayouts.js\n
@@ -351,10 +358,15 @@ onlyoffice/apps/presentationeditor/main/locale/es.json\n
 onlyoffice/apps/presentationeditor/main/locale/fr.json\n
 onlyoffice/apps/presentationeditor/main/locale/it.json\n
 onlyoffice/apps/presentationeditor/main/locale/ja.json\n
+onlyoffice/apps/presentationeditor/main/locale/nl.json\n
+onlyoffice/apps/presentationeditor/main/locale/pl.json\n
 onlyoffice/apps/presentationeditor/main/locale/pt.json\n
 onlyoffice/apps/presentationeditor/main/locale/ru.json\n
+onlyoffice/apps/presentationeditor/main/locale/sk.json\n
 onlyoffice/apps/presentationeditor/main/locale/sl.json\n
 onlyoffice/apps/presentationeditor/main/locale/tr.json\n
+onlyoffice/apps/presentationeditor/main/locale/uk.json\n
+onlyoffice/apps/presentationeditor/main/locale/zh.json\n
 onlyoffice/apps/sdk_async_loader.js\n
 onlyoffice/apps/spreadsheeteditor/main/app/collection/EquationGroups.js\n
 onlyoffice/apps/spreadsheeteditor/main/app/collection/FormulaGroups.js\n
@@ -434,10 +446,15 @@ onlyoffice/apps/spreadsheeteditor/main/locale/fr.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/it.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/ja.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/lv.json\n
+onlyoffice/apps/spreadsheeteditor/main/locale/nl.json\n
+onlyoffice/apps/spreadsheeteditor/main/locale/pl.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/pt.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/ru.json\n
+onlyoffice/apps/spreadsheeteditor/main/locale/sk.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/sl.json\n
 onlyoffice/apps/spreadsheeteditor/main/locale/tr.json\n
+onlyoffice/apps/spreadsheeteditor/main/locale/uk.json\n
+onlyoffice/apps/spreadsheeteditor/main/locale/zh.json\n
 onlyoffice/apps/spreadsheeteditor/main/resources/formula-lang/de.json\n
 onlyoffice/apps/spreadsheeteditor/main/resources/formula-lang/en.json\n
 onlyoffice/apps/spreadsheeteditor/main/resources/formula-lang/en_desc.json\n
@@ -451,6 +468,8 @@ onlyoffice/apps/common/main/resources/img/controls/Scroll_center.png\n
 onlyoffice/apps/common/main/resources/img/controls/Scroll_center@2x.png\n
 onlyoffice/apps/common/main/resources/img/controls/common-controls.png\n
 onlyoffice/apps/common/main/resources/img/controls/common-controls@2x.png\n
+onlyoffice/apps/common/main/resources/img/controls/flags.png\n
+onlyoffice/apps/common/main/resources/img/controls/flags@2x.png\n
 onlyoffice/apps/common/main/resources/img/header/header-logo.png\n
 onlyoffice/apps/common/main/resources/img/header/header-logo@2x.png\n
 onlyoffice/apps/common/main/resources/img/hsbcolorpicker/hsb-colorpicker.png\n
@@ -493,16 +512,14 @@ onlyoffice/apps/documenteditor/main/resources/img/toolbar-menu@2x.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/AutoColor.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/NoFill.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/NoFill@2x.png\n
-onlyoffice/apps/documenteditor/main/resources/img/toolbar/bullets.png\n
-onlyoffice/apps/documenteditor/main/resources/img/toolbar/bullets@2x.png\n
+onlyoffice/apps/documenteditor/main/resources/img/toolbar/bullets-and-numbering.png\n
+onlyoffice/apps/documenteditor/main/resources/img/toolbar/bullets-and-numbering@2x.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/charttypes.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/charttypes@2x.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/colontitules.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/colontitules@2x.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/math.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/math@2x.png\n
-onlyoffice/apps/documenteditor/main/resources/img/toolbar/multilevels-numbering.png\n
-onlyoffice/apps/documenteditor/main/resources/img/toolbar/multilevels-numbering@2x.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/nocolor.png\n
 onlyoffice/apps/documenteditor/main/resources/img/toolbar/text_styles.png\n
 onlyoffice/apps/presentationeditor/main/resources/css/app.css\n
@@ -532,14 +549,12 @@ onlyoffice/apps/presentationeditor/main/resources/img/toolbar-menu@2x.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/AutoColor.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/NoFill.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/NoFill@2x.png\n
-onlyoffice/apps/presentationeditor/main/resources/img/toolbar/bullets.png\n
-onlyoffice/apps/presentationeditor/main/resources/img/toolbar/bullets@2x.png\n
+onlyoffice/apps/presentationeditor/main/resources/img/toolbar/bullets-and-numbering.png\n
+onlyoffice/apps/presentationeditor/main/resources/img/toolbar/bullets-and-numbering@2x.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/charttypes.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/charttypes@2x.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/math.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/math@2x.png\n
-onlyoffice/apps/presentationeditor/main/resources/img/toolbar/numbering.png\n
-onlyoffice/apps/presentationeditor/main/resources/img/toolbar/numbering@2x.png\n
 onlyoffice/apps/presentationeditor/main/resources/img/toolbar/themes.png\n
 onlyoffice/apps/spreadsheeteditor/main/resources/css/app.css\n
 onlyoffice/apps/spreadsheeteditor/main/resources/img/charttypes.png\n
@@ -563,6 +578,10 @@ onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar-menu.png\n
 onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar-menu@2x.png\n
 onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar/BorderSize.png\n
 onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar/BorderSize@2x.png\n
+onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar/bullets-and-numbering.png\n
+onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar/bullets-and-numbering@2x.png\n
+onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar/math.png\n
+onlyoffice/apps/spreadsheeteditor/main/resources/img/toolbar/math@2x.png\n
 onlyoffice/vendor/backbone/backbone.js\n
 onlyoffice/vendor/bootstrap/dist/js/bootstrap.js\n
 onlyoffice/vendor/jquery/jquery.js\n
@@ -577,6 +596,9 @@ onlyoffice/vendor/underscore/underscore.js\n
 onlyoffice/vendor/xmla4js/Xmla.js\n
 onlyoffice/vendor/xregexp/xregexp-all-min.js\n
 #autogenerated for: erp5_officejs_onlyoffice_sdkjs\n
+onlyoffice/sdkjs/build/configs/webexcel.json\n
+onlyoffice/sdkjs/build/configs/webpowerpoint.json\n
+onlyoffice/sdkjs/build/configs/webword.json\n
 onlyoffice/sdkjs/cell/Local/api.js\n
 onlyoffice/sdkjs/cell/Local/api_jio.js\n
 onlyoffice/sdkjs/cell/Private/comments.js\n
@@ -613,6 +635,7 @@ onlyoffice/sdkjs/cell/model/FormulaObjects/statisticalFunctions.js\n
 onlyoffice/sdkjs/cell/model/FormulaObjects/textanddataFunctions.js\n
 onlyoffice/sdkjs/cell/model/FormulaObjects/xlfnFunctions.js\n
 onlyoffice/sdkjs/cell/model/History.js\n
+onlyoffice/sdkjs/cell/model/PivotTables.js\n
 onlyoffice/sdkjs/cell/model/Serialize.js\n
 onlyoffice/sdkjs/cell/model/UndoRedo.js\n
 onlyoffice/sdkjs/cell/model/Workbook.js\n
@@ -639,7 +662,6 @@ onlyoffice/sdkjs/cell/view/WorkbookView.js\n
 onlyoffice/sdkjs/cell/view/WorksheetView.js\n
 onlyoffice/sdkjs/cell/view/mobileTouch.js\n
 onlyoffice/sdkjs/common/AdvancedOptions.js\n
-onlyoffice/sdkjs/common/Build/Externs.js\n
 onlyoffice/sdkjs/common/Charts/3DTransformation.js\n
 onlyoffice/sdkjs/common/Charts/ChartsDrawer.js\n
 onlyoffice/sdkjs/common/Charts/DrawingArea.js\n
@@ -655,6 +677,7 @@ onlyoffice/sdkjs/common/Drawings/DrawingsChanges.js\n
 onlyoffice/sdkjs/common/Drawings/Externals.js\n
 onlyoffice/sdkjs/common/Drawings/Format/ChartFormat.js\n
 onlyoffice/sdkjs/common/Drawings/Format/ChartSpace.js\n
+onlyoffice/sdkjs/common/Drawings/Format/CnxShape.js\n
 onlyoffice/sdkjs/common/Drawings/Format/CreateGeometry.js\n
 onlyoffice/sdkjs/common/Drawings/Format/DrawingContent.js\n
 onlyoffice/sdkjs/common/Drawings/Format/Format.js\n
@@ -673,6 +696,7 @@ onlyoffice/sdkjs/common/Drawings/Metafile.js\n
 onlyoffice/sdkjs/common/Drawings/States.js\n
 onlyoffice/sdkjs/common/Drawings/TextDrawer.js\n
 onlyoffice/sdkjs/common/Drawings/TrackObjects/AdjustmentTracks.js\n
+onlyoffice/sdkjs/common/Drawings/TrackObjects/ConnectorTrack.js\n
 onlyoffice/sdkjs/common/Drawings/TrackObjects/MoveTracks.js\n
 onlyoffice/sdkjs/common/Drawings/TrackObjects/NewShapeTracks.js\n
 onlyoffice/sdkjs/common/Drawings/TrackObjects/PolyLine.js\n
@@ -735,12 +759,18 @@ onlyoffice/sdkjs/common/commonDefines.js\n
 onlyoffice/sdkjs/common/docscoapi.js\n
 onlyoffice/sdkjs/common/docscoapicommon.js\n
 onlyoffice/sdkjs/common/downloaderfiles.js\n
+onlyoffice/sdkjs/common/easysax.js\n
 onlyoffice/sdkjs/common/editorscommon.js\n
+onlyoffice/sdkjs/common/externs/global.js\n
+onlyoffice/sdkjs/common/externs/jquery-3.2.js\n
+onlyoffice/sdkjs/common/externs/jszip-utils.js\n
+onlyoffice/sdkjs/common/externs/jszip.min.js\n
+onlyoffice/sdkjs/common/externs/sockjs.js\n
+onlyoffice/sdkjs/common/externs/xregexp-3.0.0.js\n
+onlyoffice/sdkjs/common/openxml.js\n
 onlyoffice/sdkjs/common/pluginBase.js\n
 onlyoffice/sdkjs/common/plugins.js\n
 onlyoffice/sdkjs/common/scroll.js\n
-onlyoffice/sdkjs/common/spellCheckLanguage.js\n
-onlyoffice/sdkjs/common/spellCheckLanguagesAll.js\n
 onlyoffice/sdkjs/common/spellcheckapi.js\n
 onlyoffice/sdkjs/common/text_input.js\n
 onlyoffice/sdkjs/common/wordcopypaste.js\n
@@ -756,6 +786,8 @@ onlyoffice/sdkjs/slide/Editor/Format/Comments.js\n
 onlyoffice/sdkjs/slide/Editor/Format/GroupPrototype.js\n
 onlyoffice/sdkjs/slide/Editor/Format/ImagePrototype.js\n
 onlyoffice/sdkjs/slide/Editor/Format/Layout.js\n
+onlyoffice/sdkjs/slide/Editor/Format/Notes.js\n
+onlyoffice/sdkjs/slide/Editor/Format/NotesMaster.js\n
 onlyoffice/sdkjs/slide/Editor/Format/Presentation.js\n
 onlyoffice/sdkjs/slide/Editor/Format/ShapePrototype.js\n
 onlyoffice/sdkjs/slide/Editor/Format/Slide.js\n
@@ -834,6 +866,7 @@ onlyoffice/sdkjs/word/Editor/DocumentChanges.js\n
 onlyoffice/sdkjs/word/Editor/DocumentContent.js\n
 onlyoffice/sdkjs/word/Editor/DocumentContentBase.js\n
 onlyoffice/sdkjs/word/Editor/DocumentContentChanges.js\n
+onlyoffice/sdkjs/word/Editor/DocumentContentElementBase.js\n
 onlyoffice/sdkjs/word/Editor/DocumentControllerBase.js\n
 onlyoffice/sdkjs/word/Editor/DrawingsController.js\n
 onlyoffice/sdkjs/word/Editor/Field.js\n
@@ -870,6 +903,7 @@ onlyoffice/sdkjs/word/Editor/ParagraphChanges.js\n
 onlyoffice/sdkjs/word/Editor/ParagraphContent.js\n
 onlyoffice/sdkjs/word/Editor/ParagraphContentBase.js\n
 onlyoffice/sdkjs/word/Editor/Paragraph_Recalculate.js\n
+onlyoffice/sdkjs/word/Editor/RevisionsChange.js\n
 onlyoffice/sdkjs/word/Editor/Run.js\n
 onlyoffice/sdkjs/word/Editor/RunChanges.js\n
 onlyoffice/sdkjs/word/Editor/Search.js\n
@@ -877,6 +911,10 @@ onlyoffice/sdkjs/word/Editor/Sections.js\n
 onlyoffice/sdkjs/word/Editor/SectionsChanges.js\n
 onlyoffice/sdkjs/word/Editor/Serialize2.js\n
 onlyoffice/sdkjs/word/Editor/Spelling.js\n
+onlyoffice/sdkjs/word/Editor/StructuredDocumentTags/BlockLevel.js\n
+onlyoffice/sdkjs/word/Editor/StructuredDocumentTags/InlineLevel.js\n
+onlyoffice/sdkjs/word/Editor/StructuredDocumentTags/SdtPr.js\n
+onlyoffice/sdkjs/word/Editor/StructuredDocumentTags/SdtPrChanges.js\n
 onlyoffice/sdkjs/word/Editor/Styles.js\n
 onlyoffice/sdkjs/word/Editor/StylesChanges.js\n
 onlyoffice/sdkjs/word/Editor/Table.js\n
@@ -1234,7 +1272,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.14472.50447.34218</string> </value>
+                <value> <string>962.33278.14205.54272</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -1252,7 +1290,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505948404.98</float>
+                        <float>1507369110.59</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
