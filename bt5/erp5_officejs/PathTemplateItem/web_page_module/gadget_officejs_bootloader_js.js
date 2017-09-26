@@ -51,7 +51,9 @@ var repair = false;
         state = {},
         element_list =
           gadget.element.querySelectorAll('[data-install-configuration]');
-      window.Bootloader = gadget;
+      if (window.Bootloader === undefined) {
+        window.Bootloader = gadget;
+      }
 
       for (i = 0; i < element_list.length; i += 1) {
         state[element_list[i].getAttribute('data-install-configuration')] =
