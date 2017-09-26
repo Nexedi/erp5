@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Manifest" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -64,14 +61,6 @@
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>contributor/person_module/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
@@ -79,11 +68,11 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/plain</string> </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_erp5_page_ojs_wallsearch.appcache</string> </value>
+            <value> <string>wallsearch_privacy_policy.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +82,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ojs_wallsearch_appcache</string> </value>
+            <value> <string>wallsearch_privacy_policy_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,112 +90,10 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Manifest</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>text_content</string> </key>
-            <value> <string>CACHE MANIFEST\n
-# generated on Fri, 09 Jun 2016 11:45:33 +0000\n
-# XXX + fonts\n
-# images/ajax-loader.gif\n
-CACHE:\n
-font-awesome/font-awesome.css\n
-font-awesome/font-awesome-webfont.eot\n
-font-awesome/font-awesome-webfont.woff\n
-font-awesome/font-awesome-webfont.woff2\n
-font-awesome/font-awesome-webfont.ttf\n
-font-awesome/font-awesome-webfont.svg\n
-gadget_erp5_nojqm.css\n
-gadget_erp5_global.js\n
-URI.js\n
-handlebars.js\n
-jiodev.js\n
-renderjs.js\n
-rsvp.js\n
-gadget_global.js\n
-erp5_launcher_nojqm.js\n
-gadget_officejs_router.js\n
-gadget_erp5_router.html\n
-gadget_erp5_router.js\n
-gadget_officejs_liberator.html\n
-gadget_officejs_liberator.js\n
-gadget_jio.html\n
-gadget_jio.js\n
-gadget_translate.html\n
-gadget_translate.js\n
-gadget_translation.html\n
-gadget_translation.js\n
-gadget_translation_data.js\n
-gadget_erp5_editor_panel.html\n
-gadget_erp5_editor_panel.js\n
-gadget_erp5_header.html\n
-gadget_erp5_header.js\n
-gadget_ojs_jio.html\n
-gadget_ojs_jio.js\n
-gadget_erp5_page_ojs_controller.html\n
-gadget_erp5_page_ojs_controller.js\n
-gadget_erp5_page_ojs_add_document.html\n
-gadget_erp5_page_ojs_add_document.js\n
-gadget_erp5_page_ojs_sync.html\n
-gadget_erp5_page_ojs_sync.js\n
-gadget_html5_input.html\n
-gadget_html5_input.js\n
-gadget_erp5_field_multicheckbox.html\n
-gadget_erp5_field_multicheckbox.js\n
-gadget_erp5_searchfield.html\n
-gadget_erp5_searchfield.js\n
-gadget_erp5_pt_form_list.html\n
-gadget_erp5_pt_form_list.js\n
-gadget_erp5_form.html\n
-gadget_erp5_form.js\n
-gadget_erp5_label_field.html\n
-gadget_erp5_label_field.js\n
-gadget_erp5_field_listbox.html\n
-gadget_erp5_field_listbox.js\n
-gadget_erp5_field_datetime.html\n
-gadget_erp5_field_datetime.js\n
-gadget_html5_element.html\n
-gadget_html5_element.js\n
-gadget_erp5_notification.html\n
-gadget_erp5_notification.js\n
-gadget_erp5_field_string.html\n
-gadget_erp5_field_string.js\n
-gadget_erp5_field_editor.html\n
-gadget_erp5_field_editor.js\n
-gadget_erp5_field_gadget.html\n
-gadget_erp5_field_gadget.js\n
-\n
-gadget_erp5_page_ojs_wallsearch_router.html\n
-gadget_erp5_page_ojs_facebook_configurator.html\n
-gadget_erp5_page_ojs_facebook_configurator.js\n
-gadget_erp5_page_ojs_wallsearch_document_list.html\n
-gadget_erp5_page_ojs_wallsearch_document_list.js\n
-gadget_erp5_page_ojs_wallsearch_panel.html\n
-gadget_erp5_page_ojs_wallsearch_panel.js\n
-gadget_erp5_page_ojs_wallsearch_jio.html\n
-gadget_ojs_wallsearch_jio.js\n
-gadget_erp5_sort_editor.html\n
-gadget_erp5_sort_editor.js\n
-gadget_erp5_search_editor.js\n
-gadget_erp5_search_editor.html\n
-jio_cachealldocsstorage.js\n
-wallsearch_privacy_policy.html\n
-GADGET:\n
-NETWORK:\n
-*</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string>WallSearch Gadget OfficeJS AppCache</string> </value>
-        </item>
-        <item>
-            <key> <string>url_string</string> </key>
             <value>
               <none/>
             </value>
@@ -269,7 +156,7 @@ NETWORK:\n
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -295,7 +182,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501855835.36</float>
+                        <float>1506433161.24</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -304,7 +191,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -340,7 +227,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.22859.8786.43861</string> </value>
+                <value> <string>962.22867.284.52838</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -358,7 +245,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506433259.82</float>
+                        <float>1506433153.71</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -381,7 +268,9 @@ NETWORK:\n
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>detect_converted_file</string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -397,7 +286,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>converted</string> </value>
+                <value> <string>empty</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -415,7 +304,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1501855672.4</float>
+                        <float>1506433097.32</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
