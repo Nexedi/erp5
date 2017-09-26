@@ -226,12 +226,40 @@ class ERP5ExternalOauth2ExtractionPlugin:
       creds['remote_address'] = request.get('REMOTE_ADDR', '')
     return creds
 
+def getFacebookUserEntry(token):
+  if facebook is None:
+    LOG('ERP5FacebookExtractionPlugin', INFO,
+        'No facebook module, install facebook-sdk package. '
+          'Authentication disabled.')
+    return None
+  timeout = socket.getdefaulttimeout()
+  try:
+    # require really fast interaction
+    socket.setdefaulttimeout(5)
+    facebook_entry = facebook.GraphAPI(token).get_object("me")
+  finally:
+    socket.setdefaulttimeout(timeout)
+
+  user_entry = {}
+  if facebook_entry is not None:
+    # sanitise value
+    for k in ('name', 'id'):
+      try:
+        if k == 'id':
+          user_entry['reference'] = facebook_entry[k].encode('utf-8')
+        else:
+          user_entry[k] = facebook_entry[k].encode('utf-8')
+      except KeyError:
+        raise ValueError(facebook_entry)
+  return user_entry
+
 class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
   """
   Plugin to authenicate as machines.
   """
 
   meta_type = "ERP5 Facebook Extraction Plugin"
+  login_portal_type = "Facebook Login"
   cookie_name = "__ac_facebook_hash"
   cache_factory_name = "facebook_server_auth_token_cache_factory"
 
@@ -239,33 +267,7 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
     return cache_value
 
   def getUserEntry(self, token):
-    if facebook is None:
-      LOG('ERP5FacebookExtractionPlugin', INFO,
-          'No facebook module, install facebook-sdk package. '
-            'Authentication disabled.')
-      return None
-    timeout = socket.getdefaulttimeout()
-    try:
-      # require really fast interaction
-      socket.setdefaulttimeout(5)
-      facebook_entry = facebook.GraphAPI(token).get_object("me")
-    except Exception:
-      facebook_entry = None
-    finally:
-      socket.setdefaulttimeout(timeout)
-
-    user_entry = {}
-    if facebook_entry is not None:
-      # sanitise value
-      try:
-        for k in ('first_name', 'last_name', 'id', 'email'):
-          if k == 'id':
-            user_entry['reference'] = facebook_entry[k].encode('utf-8')
-          else:
-            user_entry[k] = facebook_entry[k].encode('utf-8')
-      except KeyError:
-        user_entry = None
-    return user_entry
+    return getFacebookUserDict(token)
 
 class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
   """
