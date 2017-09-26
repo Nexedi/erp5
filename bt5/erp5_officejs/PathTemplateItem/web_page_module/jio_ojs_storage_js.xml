@@ -74,7 +74,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>jio_mappingstorage.js</string> </value>
+            <value> <string>jio_ojs_storage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -84,7 +84,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jio_mappingstorage_js</string> </value>
+            <value> <string>jio_ojs_storage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -102,7 +102,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>jio_mappingstorage.js</string> </value>
+            <value> <string>OfficeJS Jio Storages</string> </value>
         </item>
         <item>
             <key> <string>url_string</string> </key>
@@ -239,7 +239,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.25496.14411.56081</string> </value>
+                <value> <string>962.22543.61847.50858</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -257,7 +257,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1502900157.25</float>
+                        <float>1506413805.02</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
