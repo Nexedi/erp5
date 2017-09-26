@@ -43,10 +43,14 @@
           remote_sub_storage: {
             type: "query",
             sub_storage: {
-              type: "facebook",
-              access_token: access_token,
-              user_id: user_id,
-              default_field_list: ['id', 'message', 'created_time', 'link', 'story']
+              type: "cachealldocs",
+              default_field_list: ['id', 'message', 'created_time', 'link', 'story'],
+              sub_storage: {
+                type: "facebook",
+                access_token: access_token,
+                user_id: user_id,
+                default_field_list: ['id', 'message', 'created_time', 'link', 'story']
+              }
             }
           }
         };
