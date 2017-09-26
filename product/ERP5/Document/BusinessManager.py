@@ -1218,6 +1218,9 @@ class BusinessPatchItem(XMLObject):
     old_item.setProperty('item_layer', item_layer)
     old_item.setProperty('item_sign', item_sign)
 
+    # Commit the transaction
+    transaction.commit()
+
   def getOldValue(self):
     """
     Returns old value for the BusinessPatchItem
