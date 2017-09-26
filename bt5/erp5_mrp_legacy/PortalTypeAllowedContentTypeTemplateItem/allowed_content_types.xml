@@ -1,0 +1,11 @@
+<allowed_content_type_list>
+ <portal_type id="Production Report">
+  <item>Production Report Line</item>
+ </portal_type>
+ <portal_type id="Production Report Line">
+  <item>Production Report Cell</item>
+ </portal_type>
+ <portal_type id="Production Report Module">
+  <item>Production Report</item>
+ </portal_type>
+</allowed_content_type_list>
