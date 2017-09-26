@@ -50,6 +50,7 @@ from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Accessor import Base as BaseAccessor
+from Products.ERP5Type.mixin.json_representable import JSONRepresentableMixin
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
@@ -539,7 +540,8 @@ HBTREE_HANDLER = 2
 
 InitializeClass(FolderMixIn)
 
-class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
+class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn,
+             JSONRepresentableMixin,):
   """
   A Folder is a subclass of Base but not of XMLObject.
   Folders are not considered as documents and are therefore
