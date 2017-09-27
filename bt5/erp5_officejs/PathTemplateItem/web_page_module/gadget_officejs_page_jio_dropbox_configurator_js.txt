@@ -18,7 +18,7 @@
           type: "replicate",
           query: {
             query: 'portal_type:"' + setting[0] + '" ',
-            limit: [0, 100],
+            limit: [0, 200],
             sort_on: [["modification_date", "descending"]]
           },
           use_remote_post: false,
@@ -34,6 +34,8 @@
           check_remote_modification: true,
           check_remote_creation: true,
           check_remote_deletion: true,
+          parallel_operation_attachment_amount: 50,
+          parallel_operation_amount: 50,
           signature_sub_storage: {
             type: "query",
             sub_storage: {
