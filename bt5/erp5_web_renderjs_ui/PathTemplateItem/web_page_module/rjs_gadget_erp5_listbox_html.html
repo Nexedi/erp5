@@ -49,27 +49,27 @@
           <tr>
            {{#if ../show_anchor}}
              <th>
-               <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}" </a>
+               <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"></a>
              </th>
            {{/if}}
            {{#each tr_value}}
-              <th>
+              <td>
                 {{#if type}}
                   {{#if editable}}
-                    <div class="editable_div" column="{{column}}" line="{{line}}"></div>
+                    <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                   {{else}}
                     <a href="{{href}}" class="ui-link">
-                      <div class="editable_div" column="{{column}}" line="{{line}}"></div>
+                      <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                     </a>
                   {{/if}}
                 {{else}}
-                  <a href="{{href}}" class="ui-link" >{{text}}</a>
+                  <a href="{{href}}" class="ui-link">{{text}}</a>
                 {{/if}}
-              </th>
+              </td>
            {{/each}}
            {{#if line_icon}}
              <th>
-               <a href ="{{jump}}" class="ui-body-inherit ui-btn-icon-right ui-link ui-btn ui-corner-all ui-icon-mail-forward"></a>
+               <a href="{{jump}}" class="ui-body-inherit ui-btn-icon-right ui-link ui-btn ui-corner-all ui-icon-mail-forward"></a>
             </th>
            {{/if}}
          </tr>
@@ -86,26 +86,26 @@
            <tr>
              {{#if ../show_anchor}}
                 <th>
-                  <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}" </a>
+                  <a class="ui-link ui-btn ui-corner-all ui-icon-carat-r ui-btn-icon-notext" href="{{jump}}"> </a>
                 </th>
              {{/if}}
-             <th>
+             <td>
                <input value="{{value}}" type="checkbox" checked="true" class="hide_element">
-              </th>
+             </td>
            {{#each tr_value}}
-              <th>
+              <td>
                 {{#if type}}
                   {{#if editable}}
-                    <div class="editable_div" column="{{column}}" line="{{line}}"></div>
+                    <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                   {{else}}
                     <a href="{{href}}" class="ui-link">
-                      <div class="editable_div" column="{{column}}" line="{{line}}"></div>
+                      <div class="editable_div" data-column="{{column}}" data-line="{{line}}"></div>
                     </a>
                   {{/if}}
                 {{else}}
-                  <a href="{{href}}" class="ui-link" >{{text}}</a>
+                  <a href="{{href}}" class="ui-link">{{text}}</a>
                 {{/if}}
-              </th>
+              </td>
            {{/each}}
            {{#if line_icon}}
              <th>
