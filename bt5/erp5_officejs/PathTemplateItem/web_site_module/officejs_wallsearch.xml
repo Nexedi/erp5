@@ -403,7 +403,7 @@
         </item>
         <item>
             <key> <string>configuration_cache_file</string> </key>
-            <value> <string>gadget_erp5_page_ojs_fb_posts.appcache</string> </value>
+            <value> <string>gadget_erp5_page_ojs_wallsearch.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
@@ -718,7 +718,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.21185.23938.48571</string> </value>
+                <value> <string>962.22900.59018.39884</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -736,7 +736,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1506434218.68</float>
+                        <float>1506513068.77</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
