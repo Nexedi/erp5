@@ -273,6 +273,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>configuration_manifest_url</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -344,6 +354,10 @@
         <item>
             <key> <string>configuration_jio_gadget_url</string> </key>
             <value> <string>gadget_erp5_jio.html</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_manifest_url</string> </key>
+            <value> <string>gadget_supportrequest.appcache</string> </value>
         </item>
         <item>
             <key> <string>configuration_panel_gadget_url</string> </key>
@@ -592,7 +606,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.4249.15119.58982</string> </value>
+                <value> <string>962.24251.9601.61269</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -610,7 +624,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505400912.24</float>
+                        <float>1506518906.34</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
