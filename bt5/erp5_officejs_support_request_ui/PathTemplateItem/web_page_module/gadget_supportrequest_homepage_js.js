@@ -153,12 +153,11 @@
                 data: [
                   {
                     value_dict: {
-                      0: ["< 2", "2-7", "7-30", "> 30"],
+                      0: ["< 2", "2-7", "7-30"],
                       1: [
                         sp_data.le2.validated,
                         sp_data['2to7'].validated,
-                        sp_data['7to30'].validated,
-                        sp_data.gt30.validated
+                        sp_data['7to30'].validated
                       ]
                     },
                     colors: ['#d48265'],
@@ -167,12 +166,11 @@
                   },
                   {
                     value_dict: {
-                      0: ["< 2", "2-7", "7-30", "> 30"],
+                      0: ["< 2", "2-7", "7-30"],
                       1: [
                         sp_data.le2.submitted,
                         sp_data['2to7'].submitted,
-                        sp_data['7to30'].submitted,
-                        sp_data.gt30.submitted
+                        sp_data['7to30'].submitted
                       ]
                     },
                     colors: ['#61a0a8'],
@@ -181,12 +179,11 @@
                   },
                   {
                     value_dict: {
-                      0: ["< 2", "2-7", "7-30", "> 30"],
+                      0: ["< 2", "2-7", "7-30"],
                       1: [
                         sp_data.le2.suspended,
                         sp_data['2to7'].suspended,
-                        sp_data['7to30'].suspended,
-                        sp_data.gt30.suspended
+                        sp_data['7to30'].suspended
                       ]
                     },
                     colors: ['#c23531'],
