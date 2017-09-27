@@ -82,7 +82,6 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'erp5_sql_browser',
         'erp5_dhtmlx_scheduler',
         'erp5_svg_editor',
-        'erp5_xinha_editor',
         )
 
   def changeSkin(self, skin_name):
@@ -237,7 +236,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
       for script_path, script in skins_tool.ZopeFind(
                 skins_tool, obj_metatypes=['File'], search_sub=1):
         is_required_check_path = True
-        ignore_bts = ['erp5_jquery','erp5_fckeditor','erp5_xinha_editor', 'erp5_svg_editor', 'erp5_jquery_ui']
+        ignore_bts = ['erp5_jquery','erp5_fckeditor', 'erp5_svg_editor', 'erp5_jquery_ui']
         if script_path.endswith('.html'):
           for ignore_bt_name in ignore_bts:
             if  script_path.startswith(ignore_bt_name):
@@ -458,7 +457,6 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_jquery_plugin_sheet',
       'erp5_jquery_plugin_mbmenu',
       'erp5_jquery_plugin_wdcalendar',
-      'erp5_xinha_editor',
       'erp5_svg_editor',
       'erp5_jquery_sheet_editor',
       'erp5_graph_editor',

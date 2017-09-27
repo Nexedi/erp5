@@ -71,7 +71,6 @@ class EditorWidget(Widget.TextAreaWidget):
                                    size=1,
                                    items=[('Standard Text Area', 'text_area'),
                                           ('FCK Editor', 'fck_editor'),
-                                          ('Xinha Editor', 'xinha'),
                                           ('SVG Editor', 'svg_editor'),
                                           ('Spreadsheet Editor', 'spreadsheet_editor'),
                                           ('Ace Editor', 'ace'),
@@ -83,16 +82,7 @@ class EditorWidget(Widget.TextAreaWidget):
     """
     here = REQUEST['here']
     text_editor = field.get_value('text_editor')
-    if text_editor == "xinha":
-      xinha_support = getattr(here, 'xinha_support', None)
-      if xinha_support is not None:
-        return xinha_support.pt_render(
-           extra_context= {
-                          'field'       : field,
-                          'field_value' : value,
-                          'field_name'  : key
-                        })
-    elif text_editor == "svg_editor":
+    if text_editor == "svg_editor":
       svg_editor_support = getattr(here, 'svg_editor_support', None)
       if svg_editor_support is not None:
         return svg_editor_support.pt_render()
