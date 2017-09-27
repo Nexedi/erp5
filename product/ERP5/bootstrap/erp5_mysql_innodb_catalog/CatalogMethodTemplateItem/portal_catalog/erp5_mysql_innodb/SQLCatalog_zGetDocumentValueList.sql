@@ -3,7 +3,7 @@
   dummy="None if asQuery is None else kw.update({'websection_query': asQuery()})"
   query="
     buildSQLQuery(
-      query=getSecurityQuery(sql_catalog_id=getId(),
+      security_query=getSecurityQuery(sql_catalog_id=getId(),
       local_roles=kw.pop('local_roles', None)),
       **kw
     )
