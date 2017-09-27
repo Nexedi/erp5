@@ -850,7 +850,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
         skins_tool = self.portal_skins
         folder_id = self.aq_parent.id
-        for skin_folder_id in self.getSimilarSkinFolderIdList():
+        # for skin_folder_id in self.getSimilarSkinFolderIdList():
+        for skin_folder_id in self.getPortalObject().portal_skins.objectIds():
           iterate(getattr(skins_tool, skin_folder_id))
         iterate(skins_tool.erp5_core)
         return form_list
@@ -1017,11 +1018,10 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       form_id = self.id
       proxy_dict = {}
       for document in self.objectValues():
-        if document.meta_type == 'ProxyField':
-          short_path = "%s.%s" % (form_id, document.id)
-          proxy_dict[short_path] = {'proxy': document,
-                                    'short_path': short_path,
-                                    'related_proxy_list': []}
+        short_path = "%s.%s" % (form_id, document.id)
+        proxy_dict[short_path] = {'proxy': document,
+                                  'short_path': short_path,
+                                  'related_proxy_list': []}
       def iterate(document):
         for i in document.objectValues():
           if i.meta_type == 'ERP5 Form':
@@ -1040,7 +1040,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
       skins_tool = self.portal_skins
       proxy_dict_list = []
       if len(proxy_dict):
-        for skin_folder_id in self.getSimilarSkinFolderIdList():
+        # for skin_folder_id in self.getSimilarSkinFolderIdList():
+        for skin_folder_id in self.getPortalObject().portal_skins.objectIds():
           iterate(getattr(skins_tool, skin_folder_id))
         proxy_dict_list = proxy_dict.values()
         proxy_dict_list.sort(key=lambda x: x['short_path'])
