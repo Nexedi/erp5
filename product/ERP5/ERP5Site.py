@@ -1971,6 +1971,14 @@ class ERP5Generator(PortalGenerator):
         load(os.path.join(root, file + '.xml'),
              verify=False, set_owner=False, suppress_events=True)
 
+  @staticmethod
+  def bootstrap_allow_type(types_tool, portal_type):
+    from xml.etree.cElementTree import parse
+    bt_path = getBootstrapBusinessTemplateUrl('erp5_core')
+    types_tool[portal_type].allowed_content_types = [x.text for x in parse(
+      os.path.join(bt_path, 'PortalTypeAllowedContentTypeTemplateItem', 'allowed_content_types.xml')
+      ).iterfind("portal_type[@id='%s']/*" % portal_type)]
+
   def setupLastTools(self, p, **kw):
     """
     Set up finals tools
