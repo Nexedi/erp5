@@ -5,10 +5,30 @@
  <portal_type id="Image Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Web Illustration">
+  <item>follow_up</item>
+  <item>function</item>
+  <item>group</item>
+  <item>predecessor</item>
+  <item>publication_section</item>
+  <item>similar</item>
+  <item>site</item>
+  <item>successor</item>
+ </portal_type>
  <portal_type id="Web Page">
   <item>follow_up</item>
   <item>function</item>
   <item>group</item>
   <item>site</item>
+ </portal_type>
+ <portal_type id="Web Table">
+  <item>follow_up</item>
+  <item>function</item>
+  <item>group</item>
+  <item>predecessor</item>
+  <item>publication_section</item>
+  <item>similar</item>
+  <item>site</item>
+  <item>successor</item>
  </portal_type>
 </base_category_list>
