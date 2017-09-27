@@ -32,6 +32,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl import ModuleSecurityInfo
+from zExceptions import Unauthorized
 from Products.ERP5 import _dtmldir
 
 from mimetypes import guess_type
@@ -237,7 +238,8 @@ class NotificationTool(BaseTool):
                   check_consistency=False,
                   message_text_format='text/plain',
                   event_keyword_argument_dict=None,
-                  portal_type_list=None):
+                  portal_type_list=None,
+                  REQUEST=None):
     """
       This method provides a common API to send messages to erp5 users
       from object actions of workflow scripts.
@@ -284,6 +286,8 @@ class NotificationTool(BaseTool):
 
     TODO: support default notification email
     """
+    if REQUEST is not None:
+      raise Unauthorized()
     portal = self.getPortalObject()
     searchUsers = self.acl_users.searchUsers
     def getUserValueByUserId(user_id):
