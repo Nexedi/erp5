@@ -60,8 +60,8 @@
         });
     }
     for (i = 0; i < element_list.length; i += 1) {
-      column = element_list[i].getAttribute("column");
-      line = element_list[i].getAttribute("line");
+      column = element_list[i].getAttribute("data-column");
+      line = element_list[i].getAttribute("data-line");
       if (gadget.props.listbox_uid_dict.key === undefined) {
         gadget.props.listbox_uid_dict.key = gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].key;
         gadget.props.listbox_uid_dict.value = [gadget.state.allDocs_result.data.rows[line].value["listbox_uid:list"].value];
