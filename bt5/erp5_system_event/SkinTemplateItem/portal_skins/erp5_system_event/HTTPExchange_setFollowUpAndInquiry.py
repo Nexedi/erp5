@@ -16,7 +16,7 @@ To use HTTP Exchange framework:
    document, recieving the HTTP Exchange as argument.
 
 """
-assert context.hasFollowUp(), context.getFollowUp()
+assert not context.hasFollowUp(), context.getFollowUp()
 
 http_exchange_resource = context.getPortalObject().portal_categories.http_exchange_resource
 resource = context.getResourceValue()
