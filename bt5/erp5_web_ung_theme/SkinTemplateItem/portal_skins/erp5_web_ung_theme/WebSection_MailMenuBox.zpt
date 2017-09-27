@@ -1,8 +1,0 @@
-<div class="mail-navigation">
-  <span class="mail-action">Mail</span>
-</div>
-<div class="separator"></div>
-  <button title="Compose Mail" name="" type="submit" id="compose-mail" i18n:translate="" i18n:domain="ui">Compose Mail</button>
-<div class="gadget-column">
-  <div class="file-quick-search"></div>
-</div>

@@ -462,11 +462,7 @@ class TestXHTML(TestXHTMLMixin):
       'erp5_svg_editor',
       'erp5_jquery_sheet_editor',
       'erp5_graph_editor',
-      'erp5_web_ung_core',
-      'erp5_web_ung_theme',
-      'erp5_web_ung_role',
       'erp5_ui_test',
-      'erp5_web_ung_ui_test',
       'erp5_l10n_fr', # install at least one localization business template
                       # because some language switching widgets are only
                       # present if there is more than one available language.

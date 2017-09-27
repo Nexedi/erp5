@@ -70,7 +70,7 @@ class TestTemplateTool(ERP5TypeTestCase):
   def beforeTearDown(self):
     self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
-           'erp5_workflow', 'erp5_configurator', 'erp5_configurator_ung',
+           'erp5_workflow', 'erp5_configurator',
            'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard"]
     for bt_name in mark_replaced_bt_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
@@ -621,7 +621,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     """
     # erp5_configurator_{ung,standard} depends on erp5_configurator which in
     # turn depends on erp5_workflow
-    bt5_name_list = ['erp5_configurator_ung', 'erp5_configurator_standard']
+    bt5_name_list = ['erp5_configurator_standard']
     template_tool = self.portal.portal_templates
     for repos in template_tool.getRepositoryList():
       if "bootstrap" not in repos:
