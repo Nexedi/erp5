@@ -423,16 +423,6 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
         self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
 
-      '''
-      # ROQUE: for now, this old hack is not needed 
-      # XXX: Dirty hack used to force haproxy to restart in time with all zope informations. 
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-      ##########################################################
-      '''        
-
       self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
       
