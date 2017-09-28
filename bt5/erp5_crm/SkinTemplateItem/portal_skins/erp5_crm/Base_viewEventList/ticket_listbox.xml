@@ -119,7 +119,7 @@
                           <string>End Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
+                          <string>Ticket_getWorkflowStateTranslatedTitle</string>
                           <string>State</string>
                         </tuple>
                       </list>
