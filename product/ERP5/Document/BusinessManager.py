@@ -1177,6 +1177,11 @@ class BusinessPatchItem(XMLObject):
     item_layer = self.getProperty('item_layer')
     item_sign = self.getProperty('item_sign')
 
+    # Remove old objects if it exists
+    old_id_list = [l for l in self.objectIds()]
+    if old_id_list:
+      self.manage_delObjects(ids=old_id_list)
+
     # Get the dependency Business Manager
     dependency_list = self.getProperty('dependency_list')
     if dependency_list:
@@ -1240,6 +1245,25 @@ class BusinessPatchItem(XMLObject):
       return old_item.objectValues()[0]
     else:
       return old_item.getProperty('item_property_value')
+
+  def getDiff(self):
+    """
+    Use diff tool to find the diff between two values
+
+    XXX: For now we display the json format of the patched diff
+    """
+    portal = self.getPortalObject()
+    diff_tool = portal.portal_diff
+    patch_format = 'deepdiff'
+    patch = diff_tool.diffPortalObject(old=self._getOb('old_item'),
+                                       new=self._getOb('new_item'),
+                                       patch_format=patch_format
+                                       )
+    if patch_format == 'deepdiff':
+      return patch.asDeepDiffPatch().json
+    else:
+      # For json-patch object
+      return patch.asJSONPatch().to_string()
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
