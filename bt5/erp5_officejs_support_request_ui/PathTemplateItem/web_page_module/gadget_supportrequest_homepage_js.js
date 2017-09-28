@@ -68,7 +68,8 @@
 
       return gadget.getSearchCriteria(params[0][0], params[0][1])
         .push(function (result) {
-          return gadget.redirect({command: 'change', options: {extended_search: result}});
+          return gadget.redirect({command: 'change', options: {extended_search: result,
+            field_listbox_begin_from: undefined}});
         })
         .push(undefined, function (error) {
           if (error instanceof RSVP.CancellationError) {
@@ -233,6 +234,16 @@
           });
         });
     })
+    .declareJob("renderRestoreButton", function () {
+      var gadget = this,
+        restore = document.getElementById('restoreButton');
+      return gadget.getUrlParameter('extended_search')
+        .push(function (result) {
+          if (result !== undefined) {
+            restore.removeAttribute("disabled");
+          }
+        });
+    })
     .onStateChange(function () {
       var gadget = this,
         queue = new RSVP.Queue();
@@ -264,6 +275,7 @@
           if (last_href === undefined) {
             throw new Error('Cant find the list document view');
           }
+
           gadget.property_dict.option_dict = {
             graph_gadget: "unsafe/gadget_field_graph_echarts.html",
             listbox_gadget: last_href,
@@ -273,6 +285,7 @@
 
           return RSVP.all([
             result_list[1].render(),
+            gadget.renderRestoreButton(),
             gadget.renderGraph() //Launched as service, not blocking
           ]);
         });
@@ -312,14 +325,8 @@
       if (event.target.id === "restoreButton") {
         restore.setAttribute("disabled", "disabled");
 
-        return gadget.getDeclaredGadget("last")
-          .push(function (listbox) {
-            return listbox.render({
-              jio_key: gadget.property_dict.option_dict.listbox_jio_key,
-              view: gadget.property_dict.option_dict.listbox_gadget,
-              extended_search: null
-            });
-          });
+        return gadget.redirect({command: 'change', options: {extended_search: undefined,
+          field_listbox_begin_from: undefined}});
       }
 
       if (event.target.id === "generateRSS") {
