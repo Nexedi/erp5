@@ -361,14 +361,14 @@
 
 <tr>
   <td>waitForElementPresent</td>
-  <td>//tbody/tr[1]/th/a</td>
+  <td>//tbody/tr[1]/td/a</td>
   <td></td>
 </tr>
 
 
 <tr>
   <td>click</td>
-  <td>//tbody/tr[1]/th/a</td>
+  <td>//tbody/tr[1]/td/a</td>
   <td></td>
 </tr>
 
