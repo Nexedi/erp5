@@ -175,9 +175,9 @@
 
       this.listenToClickEventOnTheChart(chart);
       // XXX 
-      window.onresize = function () {
+      window.addEventListener("resize", function () {
         chart.resize();
-      };
+      }, {passive: true});
 
       gadget.property_dict.chart = chart;
     })
