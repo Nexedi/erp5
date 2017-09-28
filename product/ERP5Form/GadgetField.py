@@ -5,6 +5,7 @@ from Products.Formulator import Validator
 from zLOG import LOG, ERROR
 from cStringIO import StringIO
 from json import dumps
+from Acquisition import aq_base
 
 class GadgetWidget(Widget.Widget):
   """
@@ -67,6 +68,7 @@ class GadgetFieldValidator(Validator.Validator):
 
     property_names = Validator.Validator.property_names + [
       'data_url',
+      'validator_form_id',
       'validator_field_id'
     ]
 
@@ -75,6 +77,15 @@ class GadgetFieldValidator(Validator.Validator):
                                 description=(
                                   "Checked if gadget return data url."),
                                 default=0)
+
+    validator_form_id = fields.StringField(
+      'validator_form_id',
+      title='Validator Form ID',
+      description= "ID of the validator field's form. Default is the current form",
+      default="",
+      display_width=40,
+      required=0
+    )
 
     validator_field_id = fields.StringField(
       'validator_field_id',
@@ -93,12 +104,27 @@ class GadgetFieldValidator(Validator.Validator):
       """Get an external validator field located in the same form.
       """
       field_id = field.id
+      validator_form_id = field.get_value('validator_form_id')
       validator_field_id = field.get_value('validator_field_id')
-      if validator_field_id:
-        if field.aq_parent.has_field(validator_field_id,
-                                     include_disabled=1):
-          return field.aq_parent.get_field(validator_field_id,
-                                           include_disabled=1)
+
+      validator_form = field.aq_parent
+      if (validator_form_id):
+        if '/' in validator_form_id:
+          portal = field.getPortalObject()
+          portal_skins = portal.portal_skins
+          # If a / is in the form_id, it means that skin_folder is explicitly
+          # defined. If so, prevent acquisition to get the form.
+          aq_validator_form = aq_base(portal_skins).unrestrictedTraverse(validator_form_id, None)
+          if aq_validator_form is not None:
+            validator_form = portal_skins.unrestrictedTraverse(validator_form_id)
+        else:
+          validator_form = getattr(validator_form, validator_form_id, None)
+
+      if (validator_form is not None) and validator_field_id:
+        if validator_form.has_field(validator_field_id,
+                                    include_disabled=1):
+          return validator_form.get_field(validator_field_id,
+                                          include_disabled=1)
       return None
 
     def validate(self, field, key, REQUEST):
