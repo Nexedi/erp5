@@ -51,8 +51,13 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']</td>
+  <td>//textarea[@id='field_my_description']</td>
   <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@id='field_my_description']</td>
+  <td>Post test</td>
 </tr>
 <tr>
   <td>click</td>
