@@ -2348,7 +2348,7 @@ class Catalog(Folder,
         if sort_order is not None and len(item) == 1:
           item.append(sort_order)
         if len(item) > 1:
-          if item[1] in ('descending', 'reverse', 'DESC'):
+          if item[1] in ('descending', 'reverse', 'desc', 'DESC'):
             item[1] = 'DESC'
           else:
             item[1] = 'ASC'
