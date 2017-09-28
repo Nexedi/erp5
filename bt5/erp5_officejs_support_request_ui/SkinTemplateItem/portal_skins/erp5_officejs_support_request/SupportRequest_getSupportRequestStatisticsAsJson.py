@@ -14,15 +14,15 @@ date_30_midnight = DateTime(str(date_30.year()) + "-" + str(date_30.month()) + "
 
 support_request_list = portal.portal_catalog(
   portal_type="Support Request",
-  modification_date={'query':date_30_midnight,'range':'nlt'}
+  select_list=['simulation_state', 'modification_date']
 )
 
 count_by_state = {}
-count_by_date = {"le2": {}, "2to7": {}, "7to30": {}}
+count_by_date = {"le2": {}, "2to7": {}, "7to30": {}, "gt30": {}}
 
 for sr in support_request_list:
-  sr_date = sr.getModificationDate()
-  sr_state = sr.getSimulationState()
+  sr_date = sr.getProperty("modification_date")
+  sr_state = sr.getProperty("simulation_state")
 
   if sr_state not in count_by_state:
     count_by_state[sr_state] = 0
@@ -35,8 +35,13 @@ for sr in support_request_list:
     count_by_date["le2"][sr_state] = count_by_date["le2"][sr_state] + 1
   elif sr_date >= date_7_midnight:
     count_by_date["2to7"][sr_state] = count_by_date["2to7"][sr_state] + 1
-  else:
+  elif sr_date >= date_30_midnight:
     count_by_date["7to30"][sr_state] = count_by_date["7to30"][sr_state] + 1
+  else:
+    count_by_date["gt30"][sr_state] = count_by_date["gt30"][sr_state] + 1
+   
+  if sr_date < date_30_midnight:
+    continue
 
   count_by_state[sr_state] = count_by_state[sr_state] + 1
 
