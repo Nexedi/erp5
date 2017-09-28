@@ -1,13 +1,9 @@
 <dtml-let
   asQuery="getattr(search_context, 'asQuery', None)"
   dummy="None if asQuery is None else kw.update({'websection_query': asQuery()})"
-  query="
-    buildSQLQuery(
-      security_query=getSecurityQuery(sql_catalog_id=getId(),
-      local_roles=kw.pop('local_roles', None)),
-      **kw
-    )
-  "
+  security_query="getSecurityQuery(sql_catalog_id=getId(), local_roles=kw.pop('local_roles', None))"
+  dummy2="None if security_query is None else kw.update({'security_query': security_query})"
+  query="buildSQLQuery(**kw)"
   optimizer_switch_key_list="getOptimizerSwitchKeyList()"
 >
   <dtml-comment>
