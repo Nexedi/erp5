@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, echarts */
+/*global window, rJS, RSVP, echarts, loopEventListener */
 /*jslint nomen: true, indent: 2 */
-(function (window, rJS, RSVP, echarts) {
+(function (window, rJS, RSVP, echarts, loopEventListener) {
   "use strict";
 
   /////////////////////////////////////////////////////////////////
@@ -174,12 +174,14 @@
       chart.setOption(graph_data_and_parameter);
 
       this.listenToClickEventOnTheChart(chart);
-      // XXX 
-      window.addEventListener("resize", function () {
-        chart.resize();
-      }, {passive: true});
 
       gadget.property_dict.chart = chart;
+    })
+    .declareService(function () {
+      var gadget = this;
+      return loopEventListener(window, "resize", {passive: true}, function () {
+        gadget.property_dict.chart.resize();
+      }, false);
     })
     .declareJob('listenToClickEventOnTheChart', function (chart) {
       var gadget = this,
@@ -191,4 +193,4 @@
       });
       return defer.promise;
     });
-}(window, rJS, RSVP, echarts));
+}(window, rJS, RSVP, echarts, loopEventListener));

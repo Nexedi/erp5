@@ -112,9 +112,10 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# v1.0.0\n
+# v1.1.0\n
 CACHE:\n
 gadget_field_graph_echarts.html/echarts-all.js\n
+gadget_field_graph_echarts.html/gadget_global.js\n
 gadget_field_graph_echarts.html/renderjs.js\n
 gadget_field_graph_echarts.html/rsvp.js\n
 gadget_field_graph_echarts.html/unsafe/gadget_field_graph_echarts.js\n
