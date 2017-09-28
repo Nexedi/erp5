@@ -27,6 +27,9 @@
 #
 ##############################################################################
 
+import jsonpatch
+from deepdiff import DeepDiff
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -75,7 +78,9 @@ class PortalPatch:
     Intialises the class from a deepdiff or
     a rfc6902 patch. deepdiff is the default.
     """
-    pass
+    self.old_value = old
+    self.new_value = new
+    self.patch_format = patch_format
 
   def getPortalPatchOperationList(self):
     """
@@ -94,13 +99,20 @@ class PortalPatch:
     """
     Returns a Json patch in line with rfc6902
     """
-    pass
+    # Get the dict version of the old and new values
+    src = self.old_value._asDict()
+    dst = self.new_value._asDict()
+    patch = jsonpatch.make_patch(src, dst)
+    return patch
 
   def asDeepDiffPatch(self):
     """
     Returns a Json patch with deep diff extensions
     """
-    pass
+    src = self.old_value._asDict()
+    dst = self.new_value._asDict()
+    ddiff = DeepDiff(src, dst, ignore_order=True, verbose_level=0)
+    return ddiff
 
   def asStrippedHTML(self):
     """
