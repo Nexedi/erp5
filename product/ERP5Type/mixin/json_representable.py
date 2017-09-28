@@ -57,14 +57,27 @@ class JSONRepresentableMixin:
     respresentation and then use xmltodict to convert it to dict and JSON
     format finally
     """
+    dict_value = self._asDict()
+    # Convert the XML to json representation
+    return json.dumps(dict_value)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'asDict')
+  def _asDict(self):
+    """
+    Gets the dict representation of the object
+    """
     # Use OFS exportXML to first export to xml
     f = StringIO()
     XMLExportImport.exportXML(self._p_jar, self._p_oid, f)
 
     # Get the value of exported XML
     xml_value = f.getvalue()
+    return xmltodict.parse(xml_value)
 
-    # Convert the XML to json representation
-    return json.dumps(xmltodict.parse(xml_value))
+  def fromJSON(self):
+    """
+    Updates an object, based on a JSON representation
+    """
+    pass
 
 InitializeClass(JSONRepresentableMixin)
