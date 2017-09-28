@@ -609,10 +609,6 @@ develop = false
 "launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
       return (grade == 'master')
-    def patch_isHostingSubscriptionReady(self, *args, **kw):
-      return True
-    def patch_isRegisteredHostingSubscription(self, *args, **kw):
-      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -681,8 +677,6 @@ develop = false
       original_getSlaposHateoasUrl = TaskDistributor.getSlaposHateoasUrl
       original_isMasterTestnode = TaskDistributor.isMasterTestnode
       original_updateInstanceXML = RunnerClass._updateInstanceXML
-      original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
-      original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
       original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
@@ -690,8 +684,6 @@ develop = false
       TaskDistributor.getSlaposHateoasUrl = patch_getSlaposHateoasUrl
       TaskDistributor.isMasterTestnode = patch_isMasterTestnode
       RunnerClass._updateInstanceXML = doNothing
-      SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
-      SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = doNothing
     original_generateConfiguration = TaskDistributor.generateConfiguration
     TaskDistributor.generateConfiguration = patch_generateConfiguration
@@ -724,8 +716,6 @@ develop = false
       TaskDistributor.getSlaposHateoasUrl = original_getSlaposHateoasUrl
       TaskDistributor.isMasterTestnode = original_isMasterTestnode
       RunnerClass._updateInstanceXML = original_updateInstanceXML
-      SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
-      SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
@@ -793,10 +783,6 @@ develop = false
 "launchable": False, "randomized_path" : "azertyuiop"})
     def patch_isMasterTestnode(self, *args, **kw):
       return grade == 'master'
-    def patch_isHostingSubscriptionReady(self, *args, **kw):
-      return True
-    def patch_isRegisteredHostingSubscription(self, *args, **kw):
-      return True
     test_self = self
     test_result_path_root = os.path.join(test_self._temp_dir,'test/results')
     os.makedirs(test_result_path_root)
@@ -853,8 +839,6 @@ develop = false
       original_supply = SlapOSControler.supply
       original_request = SlapOSControler.request
       original_updateInstanceXML = RunnerClass._updateInstanceXML
-      original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
-      original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
       original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
       TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
       TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
@@ -864,8 +848,6 @@ develop = false
       SlapOSControler.supply = doNothing
       SlapOSControler.request = doNothing
       RunnerClass._updateInstanceXML = doNothing
-      SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
-      SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = doNothing
     original_generateConfiguration = TaskDistributor.generateConfiguration
     original_startTestSuite = TaskDistributor.startTestSuite
@@ -904,8 +886,6 @@ develop = false
       SlapOSControler.supply =original_supply
       SlapOSControler.request = original_request
       SlapOSControler.updateInstanceXML = original_updateInstanceXML
-      SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
-      SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
@@ -1066,10 +1046,6 @@ develop = false
       return "http://Foo"
     def patch_getTestType(self, *args, **kw):
       return "ScalabilityTest"
-    def patch_isHostingSubscriptionReady(self, *args, **kw):
-      return True
-    def patch_isRegisteredHostingSubscription(self, *args, **kw):
-      return True
     def patch_runTestSuite(self, *args, **kw):
       return {'status_code':0}
     test_self = self
@@ -1095,11 +1071,8 @@ develop = false
     original_supply = SlapOSControler.supply
     original_request = SlapOSControler.request
     original_updateInstanceXML = SlapOSControler.updateInstanceXML
-    original_isHostingSubscriptionReady = SlapOSMasterCommunicator.isHostingSubscriptionReady
-    original_isRegisteredHostingSubscription = SlapOSMasterCommunicator.isRegisteredHostingSubscription
     original_SlapOSMasterCommunicator__init__ = SlapOSMasterCommunicator.__init__
 
-    #
     time.sleep = doNothing
     TaskDistributor.getSlaposAccountKey = patch_getSlaposAccountKey
     TaskDistributor.getSlaposAccountCertificate = patch_getSlaposAccountCertificate
@@ -1116,8 +1089,6 @@ develop = false
     SlapOSControler.supply = doNothing
     SlapOSControler.request = doNothing
     SlapOSControler.updateInstanceXML = doNothing
-    SlapOSMasterCommunicator.isHostingSubscriptionReady = patch_isHostingSubscriptionReady
-    SlapOSMasterCommunicator.isRegisteredHostingSubscription = patch_isRegisteredHostingSubscription
     SlapOSMasterCommunicator.__init__ = doNothing
     # Run
     test_node = self.getTestNode()
@@ -1138,7 +1109,5 @@ develop = false
     SlapOSControler.supply = original_supply
     SlapOSControler.request = original_request
     SlapOSControler.updateInstanceXML = original_updateInstanceXML
-    SlapOSMasterCommunicator.isHostingSubscriptionReady = original_isHostingSubscriptionReady
-    SlapOSMasterCommunicator.isRegisteredHostingSubscription = original_isRegisteredHostingSubscription
     SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     time.sleep =original_sleep
