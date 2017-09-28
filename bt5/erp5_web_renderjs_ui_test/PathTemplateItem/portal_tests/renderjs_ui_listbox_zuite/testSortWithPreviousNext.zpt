@@ -92,7 +92,7 @@
 
 <tr>
   <td>verifyText</td>
-  <td>//tbody/tr[1]/th[2]/a</td>
+  <td>//tbody/tr[1]/td[2]/a</td>
   <td>Title 0</td>
 </tr>
 

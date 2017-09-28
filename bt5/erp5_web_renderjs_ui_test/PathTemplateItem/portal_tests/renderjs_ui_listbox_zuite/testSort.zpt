@@ -116,19 +116,19 @@
 
 <tr>
   <td>verifyText</td>
-  <td>//tbody/tr[1]/th[2]/a</td>
+  <td>//tbody/tr[1]/td[2]/a</td>
   <td>Title 0</td>
 </tr>
 
 <tr>
   <td>verifyText</td>
-  <td>//tbody/tr[2]/th[2]/a</td>
+  <td>//tbody/tr[2]/td[2]/a</td>
   <td>Title 1</td>
 </tr>
 
 <tr>
   <td>verifyText</td>
-  <td>//tbody/tr[3]/th[2]/a</td>
+  <td>//tbody/tr[3]/td[2]/a</td>
   <td>Title 2</td>
 </tr>
 
