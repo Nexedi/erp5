@@ -170,7 +170,7 @@ if block_id == 'S21.G00.20':
     # Establishment pays for itself
     rubric_value_dict['S21.G00.20.003'] = ''.join(bank_account.getBicCode().split(' '))
     rubric_value_dict['S21.G00.20.004'] = ''.join(bank_account.getIban().split(' '))
-    rubric_value_dict['S21.G00.20.005'] = amount
+    rubric_value_dict['S21.G00.20.005'] = formatFloat(amount)
     rubric_value_dict['S21.G00.20.010'] = payment_mode.getCodification()
     if payment_source_trade is not None and payment_source_trade != payment_source_section:
       # Establishment pays also for another one
