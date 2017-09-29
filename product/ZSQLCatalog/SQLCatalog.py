@@ -961,7 +961,7 @@ class Catalog(Folder,
     Clears the catalog by calling a list of methods
     """
     for method_name in self.sql_clear_catalog:
-      method = getattr(self, method_name)
+      method = self._getOb(method_name)
       try:
         method()
       except ConflictError:
@@ -989,7 +989,7 @@ class Catalog(Folder,
     """
     if self._max_uid is not None and self._max_uid() != 0:
       method_id = self.sql_catalog_reserve_uid
-      method = getattr(self, method_id)
+      method = self._getOb(method_id)
       self._max_uid.change(1)
       method(uid = [self._max_uid()])
 
@@ -998,7 +998,7 @@ class Catalog(Folder,
     Clears reserved uids
     """
     method_id = self.sql_catalog_clear_reserved
-    method = getattr(self, method_id)
+    method = self._getOb(method_id)
     try:
       method()
     except ConflictError:
@@ -1024,7 +1024,7 @@ class Catalog(Folder,
     # It could also have a performance impact for traversals to objects in
     # the acquisition context on Zope 2.12 even when it didn't raise a weird
     # error.
-    method = getattr(self,  self.sql_getitem_by_uid)
+    method = self._getOb(self.sql_getitem_by_uid)
     search_result = method(uid = uid)
     if len(search_result) > 0:
       return search_result[0]
@@ -1217,7 +1217,7 @@ class Catalog(Folder,
         # generator groups.
       else:
         method_id = self.sql_catalog_produce_reserved
-        method = getattr(self, method_id)
+        method = self._getOb(method_id)
         # Generate an instance id randomly. Note that there is a small possibility that this
         # would conflict with others.
         random_factor_list = [time.time(), os.getpid(), os.times()]
@@ -1724,7 +1724,7 @@ class Catalog(Folder,
       LOG('ZSQLCatalog.beforeUncatalogObject',0,'The sql_catalog_delete_uid'\
                                                 + ' method is not defined')
       return self.uncatalogObject(path=path,uid=uid)
-    method = getattr(self, method_name)
+    method = self._getOb(method_name)
     method(uid = uid)
 
   security.declarePrivate('uncatalogObject')
@@ -1752,7 +1752,7 @@ class Catalog(Folder,
     for method_name in methods:
       # Do not put try/except here, it is required to raise error
       # if uncatalog does not work.
-      method = getattr(self, method_name)
+      method = self._getOb(method_name)
       method(uid = uid)
 
   security.declarePrivate('catalogTranslationList')
@@ -1768,7 +1768,7 @@ class Catalog(Folder,
     """Delete translations.
     """
     method_name = self.sql_delete_translation_list
-    method = getattr(self, method_name)
+    method = self._getOb(method_name)
     try:
       method()
     except ConflictError:
@@ -1779,13 +1779,13 @@ class Catalog(Folder,
   security.declarePrivate('uniqueValuesFor')
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
-    method = getattr(self, self.sql_unique_values)
+    method = self._getOb(self.sql_unique_values)
     return method(column=name)
 
   security.declarePrivate('getPaths')
   def getPaths(self):
     """ Returns all object paths stored inside catalog """
-    method = getattr(self, self.sql_catalog_paths)
+    method = self._getOb(self.sql_catalog_paths)
     return method()
 
   security.declarePrivate('getUidForPath')
@@ -1798,9 +1798,8 @@ class Catalog(Folder,
     """ Looks up into catalog table to convert path into uid """
     return  {
       x.path: x.uid
-      for x in getattr(
-        self,
-        self.sql_getitem_by_path,
+      for x in self._getOb(
+        self.sql_getitem_by_path
       )(
         path=None,
         path_list=path_list,
@@ -1813,9 +1812,8 @@ class Catalog(Folder,
     """ Looks up into catalog table to convert uid into path """
     return  {
       x.uid: x.path
-      for x in getattr(
-        self,
-        self.sql_getitem_by_uid,
+      for x in self._getOb(
+        self.sql_getitem_by_uid
       )(
         uid=None,
         uid_list=uid_list,
@@ -2582,7 +2580,7 @@ class Catalog(Folder,
 
   security.declarePrivate('getSearchResultsMethod')
   def getSearchResultsMethod(self):
-    return getattr(self, self.sql_search_results)
+    return self._getOb(self.sql_search_results)
 
   security.declarePrivate('searchResults')
   def searchResults(self, REQUEST=None, **kw):
@@ -2602,7 +2600,7 @@ class Catalog(Folder,
 
   security.declarePrivate('getCountResultsMethod')
   def getCountResultsMethod(self):
-    return getattr(self, self.sql_count_results)
+    return self._getOb(self.sql_count_results)
 
   security.declarePrivate('countResults')
   def countResults(self, REQUEST=None, **kw):
@@ -2624,7 +2622,7 @@ class Catalog(Folder,
     """
       Record the path of an object being catalogged or uncatalogged.
     """
-    method = getattr(self, self.sql_record_object_list)
+    method = self._getOb(self.sql_record_object_list)
     method(path_list=path_list, catalog=catalog)
 
   security.declarePrivate('deleteRecordedObjectList')
@@ -2632,7 +2630,7 @@ class Catalog(Folder,
     """
       Delete all objects which contain any path.
     """
-    method = getattr(self, self.sql_delete_recorded_object_list)
+    method = self._getOb(self.sql_delete_recorded_object_list)
     method(uid_list=uid_list)
 
   security.declarePrivate('readRecordedObjectList')
@@ -2640,7 +2638,7 @@ class Catalog(Folder,
     """
       Read objects. Note that this might not return all objects since ZMySQLDA limits the max rows.
     """
-    method = getattr(self, self.sql_read_recorded_object_list)
+    method = self._getOb(self.sql_read_recorded_object_list)
     return method(catalog=catalog)
 
   # Filtering
