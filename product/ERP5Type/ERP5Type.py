@@ -427,6 +427,12 @@ class ERP5TypeInformation(XMLObject,
       if kw:
         ob._edit(force_update=1, **kw)
 
+      if compute_local_role:
+        # Update local roles because they may have to be updated according
+        # to the properties set to object by init script and _edit.
+        # Do not reindex object because it's already done by manage_afterAdd
+        self.updateLocalRolesOnDocument(ob, reindex=False)
+
       return ob
 
     def _getPropertyHolder(self):
