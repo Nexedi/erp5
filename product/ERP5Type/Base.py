@@ -3221,6 +3221,15 @@ class Base( CopyContainer,
   security.declarePublic('isEditableMode')
   isEditableMode = isEditableWebMode # for backwards compatability
 
+  security.declarePublic('fixLocalRolesOnSecurityGroups')
+  def fixLocalRolesOnSecurityGroups(self):
+    # This method must not have docstrings to avoid publishing.
+    # Update local roles based on Portal Type Role Definitions and
+    # "ERP5 Role Definition" objects contained inside self.
+    # Since this method only fixes local roles based on definitions,
+    # anyone should be able to call it. This will reduce the
+    # utilisation of proxy role of python script.
+    return self.updateLocalRolesOnSecurityGroups()
 
   security.declareProtected(Permissions.ChangeLocalRoles,
                             'updateLocalRolesOnSecurityGroups')
