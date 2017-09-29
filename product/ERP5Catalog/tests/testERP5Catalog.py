@@ -349,14 +349,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     catalog = portal_catalog.getSQLCatalog()
     self.assertTrue(catalog is not None)
-
+    from Products.ZSQLCatalog.SQLCatalog import global_reserved_uid_lock
     # Clear out the uid buffer.
     #from Products.ZSQLCatalog.SQLCatalog import uid_buffer_dict, get_ident
     #uid_buffer_key = get_ident()
     #if uid_buffer_key in uid_buffer_dict:
     #  del uid_buffer_dict[uid_buffer_key]
     def getUIDBuffer(*args, **kw):
-      with catalog.__class__._reserved_uid_lock:
+      with global_reserved_uid_lock:
         return catalog.getUIDBuffer(*args, **kw)
 
     getUIDBuffer(force_new_buffer=True)

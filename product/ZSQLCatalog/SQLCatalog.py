@@ -155,6 +155,9 @@ manage_addSQLCatalogForm = DTMLFile('dtml/addSQLCatalog',globals())
 #  global_uid_buffer_dict[catalog_path][thread_id] = UidBuffer
 global_uid_buffer_dict = {}
 
+# This is used for exclusive access to the list of reserved uids.
+global_reserved_uid_lock = allocate_lock()
+
 def manage_addSQLCatalog(self, id, title,
              vocab_id='create_default_catalog_', # vocab_id is a strange name - not abbreviation
              REQUEST=None):
@@ -636,8 +639,7 @@ class Catalog(Folder,
   # These are class variable on memory, so shared only by threads in the same Zope instance.
   # This is set to the time when reserved uids are cleared in this Zope instance.
   _local_clear_reserved_time = None
-  # This is used for exclusive access to the list of reserved uids.
-  _reserved_uid_lock = allocate_lock()
+
   # This is an instance id which specifies who owns which reserved uids.
   _instance_id = getattr(getConfiguration(), 'instance_id', None)
 
@@ -1204,7 +1206,7 @@ class Catalog(Folder,
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
     klass = self.__class__
-    assert klass._reserved_uid_lock.locked()
+    assert global_reserved_uid_lock.locked()
     assert getattr(self, 'aq_base', None) is not None
     instance_key = self.getPhysicalPath()
     if instance_key not in global_uid_buffer_dict:
@@ -1225,7 +1227,7 @@ class Catalog(Folder,
       Produces reserved uids in advance
     """
     klass = self.__class__
-    assert klass._reserved_uid_lock.locked()
+    assert global_reserved_uid_lock.locked()
     # This checks if the list of local reserved uids was cleared after clearReserved
     # had been called.
     force_new_buffer = (klass._local_clear_reserved_time != self._last_clear_reserved_time)
@@ -1317,8 +1319,7 @@ class Catalog(Folder,
       return None
 
     klass = self.__class__
-    try:
-      klass._reserved_uid_lock.acquire()
+    with global_reserved_uid_lock:
       self.produceUid()
       uid_buffer = self.getUIDBuffer()
       if len(uid_buffer) > 0:
@@ -1330,8 +1331,6 @@ class Catalog(Folder,
         return long(uid)
       else:
         raise CatalogError("Could not retrieve new uid")
-    finally:
-      klass._reserved_uid_lock.release()
 
   security.declareProtected(manage_zcatalog_entries, 'manage_catalogObject')
   def manage_catalogObject(self, REQUEST, RESPONSE, URL1, urls=None):
@@ -1564,9 +1563,7 @@ class Catalog(Folder,
           #LOG('catalogObject', 0, 'uid = %r, catalog_path = %r' % (uid, catalog_path))
           if catalog_path == "reserved":
             # Reserved line in catalog table
-            lock = self.__class__._reserved_uid_lock
-            try:
-              lock.acquire()
+            with global_reserved_uid_lock:
               uid_buffer = self.getUIDBuffer()
               if uid_buffer is not None:
                 # This is the case where:
@@ -1581,8 +1578,6 @@ class Catalog(Folder,
                   uid_buffer.remove(uid)
                 except ValueError:
                   pass
-            finally:
-              lock.release()
           elif catalog_path == 'deleted':
             # Two possible cases:
             # - Reindexed object's path changed (ie, it or at least one of its
