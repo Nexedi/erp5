@@ -22,6 +22,7 @@
       var gadget = this;
       param_list[0].select_list.push('story');
       param_list[0].select_list.push('link');
+      param_list[0].select_list.push('description');
       return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
           var i, date, message, link, len = result.data.total_rows;
@@ -53,6 +54,9 @@
               message = '';
             } else {
               message = result.data.rows[i].value.message;
+            }
+            if (result.data.rows[i].value.description) {
+              message = result.data.rows[i].value.description + ' ' + message;
             }
             if (result.data.rows[i].value.story) {
               message += ' ' + result.data.rows[i].value.story;
