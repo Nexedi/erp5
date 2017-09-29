@@ -12,6 +12,8 @@
     .declareAcquiredMethod("jio_getAttachment", "jio_getAttachment")
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("getSetting", "getSetting")
+    .declareAcquiredMethod("notifyChange", "notifyChange")
+
     .allowPublicAcquisition("redirect", function (param_list) {
       var gadget = this;
       return gadget.redirect({command: 'change', options: {
@@ -23,6 +25,12 @@
         jio_key: param_list[0].options.jio_key
       }
         });
+    })
+    .allowPublicAcquisition("notifyChange", function (param_list) {
+      if (param_list[0]) {
+        return this.notifyChange("Please provide a description for this support request.");
+      }
+      return this.notifyChange(param_list[0]);
     })
     .declareMethod('render', function (options) {
       var gadget = this,
