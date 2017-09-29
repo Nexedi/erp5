@@ -44,12 +44,12 @@
             type: "query",
             sub_storage: {
               type: "cachealldocs",
-              default_field_list: ['id', 'message', 'created_time', 'link', 'story'],
+              default_field_list: ['id', 'message', 'created_time', 'link', 'story', 'description'],
               sub_storage: {
                 type: "facebook",
                 access_token: access_token,
                 user_id: user_id,
-                default_field_list: ['id', 'message', 'created_time', 'link', 'story']
+                default_field_list: ['id', 'message', 'created_time', 'link', 'story', 'description']
               }
             }
           }
