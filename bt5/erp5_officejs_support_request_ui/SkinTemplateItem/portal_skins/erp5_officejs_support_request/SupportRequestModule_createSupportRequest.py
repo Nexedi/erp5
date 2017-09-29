@@ -34,6 +34,7 @@ support_request.edit(
 
 
 support_request.submit()
+support_request.immediateReindexObject()
 
 # create an HTML Post
 if description or file is not None:
@@ -60,8 +61,6 @@ if description or file is not None:
     document.publish()
   post.publish()
   post.immediateReindexObject()
-
-support_request.immediateReindexObject()
 
 return support_request.Base_redirect('officejs_support_request_view',
   keep_items={
