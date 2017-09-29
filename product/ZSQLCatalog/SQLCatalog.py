@@ -956,11 +956,14 @@ class Catalog(Folder,
     self.subject_set_uid_dict[subject_list] = subject_set_uid
     return (subject_set_uid, subject_list)
 
+  def getSqlClearCatalogList(self):
+    return self.sql_clear_catalog
+
   def _clear(self):
     """
     Clears the catalog by calling a list of methods
     """
-    for method_name in self.sql_clear_catalog:
+    for method_name in self.getSqlClearCatalogList():
       method = self._getOb(method_name)
       try:
         method()
@@ -982,22 +985,28 @@ class Catalog(Folder,
     self._clearSubjectCache()
     self._clearCaches()
 
+  def getSqlCatalogReservedUid(self):
+    return self.sql_catalog_reserve_uid
+
   security.declarePrivate('insertMaxUid')
   def insertMaxUid(self):
     """
       Add a dummy item so that SQLCatalog will not use existing uids again.
     """
     if self._max_uid is not None and self._max_uid() != 0:
-      method_id = self.sql_catalog_reserve_uid
+      method_id = self.getSqlCatalogReservedUid()
       method = self._getOb(method_id)
       self._max_uid.change(1)
       method(uid = [self._max_uid()])
+
+  def getSqlCatalogClearReserved(self):
+    return self.sql_catalog_clear_reserved
 
   def _clearReserved(self):
     """
     Clears reserved uids
     """
-    method_id = self.sql_catalog_clear_reserved
+    method_id = self.getSqlCatalogClearReserved()
     method = self._getOb(method_id)
     try:
       method()
@@ -1009,6 +1018,9 @@ class Catalog(Folder,
               method_id, error=sys.exc_info())
       raise
     self._last_clear_reserved_time += 1
+
+  def getSqlGetitemByUid(self):
+    return self.sql_getitem_by_uid
 
   security.declarePrivate('getRecordForUid')
   def getRecordForUid(self, uid):
@@ -1024,7 +1036,7 @@ class Catalog(Folder,
     # It could also have a performance impact for traversals to objects in
     # the acquisition context on Zope 2.12 even when it didn't raise a weird
     # error.
-    method = self._getOb(self.sql_getitem_by_uid)
+    method = self._getOb(self.getSqlGetitemByUid())
     search_result = method(uid = uid)
     if len(search_result) > 0:
       return search_result[0]
@@ -1050,23 +1062,35 @@ class Catalog(Folder,
     self.schema = schema
     self.names = names
 
+  def getSqlSearchTablesList(self):
+    return list(self.sql_search_tables)
+
   security.declarePrivate('getCatalogSearchTableIds')
   def getCatalogSearchTableIds(self):
     """Return selected tables of catalog which are used in JOIN.
        catalaog is always first
     """
-    search_tables = list(self.sql_search_tables) or ['catalog']
+    search_tables = self.getSqlSearchTablesList() or ['catalog']
     if search_tables[0] != 'catalog':
       search_tables = ['catalog'] + [x for x in search_tables if x != 'catalog']
       # XXX: cast to tuple to avoid a mutable persistent property ?
       self.sql_search_tables = search_tables
     return search_tables
 
+  def getSqlSearchResultKeysList(self):
+    return self.sql_search_result_keys
+
   security.declarePublic('getCatalogSearchResultKeys')
   def getCatalogSearchResultKeys(self):
     """Return search result keys.
     """
-    return self.sql_search_result_keys
+    return self.getSqlSearchResultKeysList()
+
+  def getSqlCatalogMultiSchema(self):
+    return self.sql_catalog_multi_schema
+
+  def getSqlCatalogSchema(self):
+    return self.sql_catalog_schema
 
   @transactional_cache_decorator('SQLCatalog._getCatalogSchema')
   def _getCatalogSchema(self):
@@ -1078,7 +1102,7 @@ class Catalog(Folder,
               "than sql_catalog_multi_schema. It makes many SQL queries "
               "instead of one",
               DeprecationWarning)
-      method_name = self.sql_catalog_schema
+      method_name = self.getSqlCatalogSchema()
       try:
         method = getattr(self, method_name)
       except AttributeError:
@@ -1191,6 +1215,9 @@ class Catalog(Folder,
       uid_buffer_dict[thread_key] = UidBuffer()
     return uid_buffer_dict[thread_key]
 
+  def getSqlCatalogProduceReserved(self):
+    return self.sql_catalog_produce_reserved
+
   # the cataloging API
   security.declarePrivate('produceUid')
   def produceUid(self):
@@ -1216,7 +1243,7 @@ class Catalog(Folder,
         # already keeps track of the highest allocated number for all id
         # generator groups.
       else:
-        method_id = self.sql_catalog_produce_reserved
+        method_id = self.getSqlCatalogProduceReserved()
         method = self._getOb(method_id)
         # Generate an instance id randomly. Note that there is a small possibility that this
         # would conflict with others.
@@ -1446,6 +1473,9 @@ class Catalog(Folder,
                               check_uid=check_uid,
                               idxs=idxs)
 
+  def getSqlCatalogObjectListList(self):
+    return self.sql_catalog_object_list
+
   def _catalogObjectList(self, object_list, method_id_list=None,
                          disable_cache=0, check_uid=1, idxs=None):
     """This is the real method to catalog objects.
@@ -1488,7 +1518,10 @@ class Catalog(Folder,
     assigned_uid_dict = {}
 
     for object in object_list:
-      uid = getattr(aq_base(object), 'uid', None)
+      try:
+        uid = aq_base(object).uid
+      except AttributeError:
+        uid = None
       # Generate unique uid for object having 0 or None as uid
       if uid is None or uid == 0:
         try:
@@ -1590,7 +1623,7 @@ class Catalog(Folder,
         assigned_uid_dict[uid] = object
 
     if method_id_list is None:
-      method_id_list = self.sql_catalog_object_list
+      method_id_list = self.getSqlCatalogObjectListList()
     econtext = getEngine().getContext()
     if disable_cache:
       argument_cache = DummyDict()
@@ -1706,6 +1739,9 @@ class Catalog(Folder,
   def _getCatalogMethod(self, method_name):
     return getattr(self, method_name)
 
+  def getSqlCatalogDeleteUid(self):
+     return self.sql_catalog_delete_uid
+
   security.declarePrivate('beforeUncatalogObject')
   def beforeUncatalogObject(self, path=None,uid=None):
     """
@@ -1716,7 +1752,7 @@ class Catalog(Folder,
 
     if uid is None and path is not None:
       uid = self.getUidForPath(path)
-    method_name = self.sql_catalog_delete_uid
+    method_name = self.getSqlCatalogDeleteUid()
     if uid is None:
       return None
     if method_name in (None,''):
@@ -1726,6 +1762,9 @@ class Catalog(Folder,
       return self.uncatalogObject(path=path,uid=uid)
     method = self._getOb(method_name)
     method(uid = uid)
+
+  def getSqlUncatalogObjectList(self):
+    return self.sql_uncatalog_object
 
   security.declarePrivate('uncatalogObject')
   def uncatalogObject(self, path=None, uid=None):
@@ -1746,28 +1785,34 @@ class Catalog(Folder,
 
     if uid is None and path is not None:
       uid = self.getUidForPath(path)
-    methods = self.sql_uncatalog_object
+    method_id_list = self.getSqlUncatalogObjectList()
     if uid is None:
       return None
-    for method_name in methods:
+    for method_name in method_id_list:
       # Do not put try/except here, it is required to raise error
       # if uncatalog does not work.
       method = self._getOb(method_name)
       method(uid = uid)
 
+  def getSqlCatalogTranslationList(self):
+    return self.sql_catalog_translation_list
+
   security.declarePrivate('catalogTranslationList')
   def catalogTranslationList(self, object_list):
     """Catalog translations.
     """
-    method_name = self.sql_catalog_translation_list
+    method_name = self.getSqlCatalogTranslationList()
     return self.catalogObjectList(object_list, method_id_list = (method_name,),
                                   check_uid=0)
+
+  def getSqlDeleteTranslationList(self):
+    return self.sql_delete_translation_list
 
   security.declarePrivate('deleteTranslationList')
   def deleteTranslationList(self):
     """Delete translations.
     """
-    method_name = self.sql_delete_translation_list
+    method_name = self.getSqlDeleteTranslationList()
     method = self._getOb(method_name)
     try:
       method()
@@ -1776,17 +1821,26 @@ class Catalog(Folder,
     except:
       LOG('SQLCatalog', WARNING, 'could not delete translations', error=sys.exc_info())
 
+  def getSqlUniqueValues(self):
+    return self.sql_unique_values
+
   security.declarePrivate('uniqueValuesFor')
   def uniqueValuesFor(self, name):
     """ return unique values for FieldIndex name """
-    method = self._getOb(self.sql_unique_values)
+    method = self._getOb(self.getSqlUniqueValues())
     return method(column=name)
+
+  def getSqlCatalogPaths(self):
+    return self.sql_catalog_paths
 
   security.declarePrivate('getPaths')
   def getPaths(self):
     """ Returns all object paths stored inside catalog """
-    method = self._getOb(self.sql_catalog_paths)
+    method = self._getOb(self.getSqlCatalogPaths())
     return method()
+
+  def getSqlGetitemByPath(self):
+    return self.sql_getitem_by_path
 
   security.declarePrivate('getUidForPath')
   def getUidForPath(self, path):
@@ -1799,7 +1853,7 @@ class Catalog(Folder,
     return  {
       x.path: x.uid
       for x in self._getOb(
-        self.sql_getitem_by_path
+        self.getSqlGetitemByPath()
       )(
         path=None,
         path_list=path_list,
@@ -1813,7 +1867,7 @@ class Catalog(Folder,
     return  {
       x.uid: x.path
       for x in self._getOb(
-        self.sql_getitem_by_uid
+        self.getSqlGetitemByUid()
       )(
         uid=None,
         uid_list=uid_list,
@@ -2005,10 +2059,22 @@ class Catalog(Folder,
       related_key_definition_cache[key] = result
     return result
 
+  def getSqlCatalogKeywordSearchKeysList(self):
+    return self.sql_catalog_keyword_search_keys
+
+  def getSqlCatalogFullTextSearchKeysList(self):
+    return self.sql_catalog_full_text_search_keys
+
+  def getSqlCatalogDatetimeSearchKeysList(self):
+    return self.sql_catalog_datetime_search_keys
+
+  def getSqlCatalogScriptableKeysList(self):
+    return self.sql_catalog_scriptable_keys
+
   @transactional_cache_decorator('SQLCatalog._getgetScriptableKeyDict')
   def _getgetScriptableKeyDict(self):
     result = {}
-    for scriptable_key_definition in self.sql_catalog_scriptable_keys:
+    for scriptable_key_definition in self.getSqlCatalogScriptableKeysList():
       split_scriptable_key_definition = scriptable_key_definition.split('|')
       if len(split_scriptable_key_definition) != 2:
         LOG('SQLCatalog', WARNING, 'Malformed scriptable key definition: %r. Ignored.' % (scriptable_key_definition, ))
@@ -2495,13 +2561,16 @@ class Catalog(Folder,
     kw['order_by_list'] = order_by_list or []
     return kw
 
+  def getSqlCatalogSearchKeysList(self):
+    return self.sql_catalog_search_keys
+
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
   def _getSearchKeyDict(self):
     result = {}
     search_key_column_dict = {
-      'KeywordKey': self.sql_catalog_keyword_search_keys,
-      'FullTextKey': self.sql_catalog_full_text_search_keys,
-      'DateTimeKey': self.sql_catalog_datetime_search_keys,
+      'KeywordKey': self.getSqlCatalogKeywordSearchKeysList(),
+      'FullTextKey': self.getSqlCatalogFullTextSearchKeysList(),
+      'DateTimeKey': self.getSqlCatalogDatetimeSearchKeysList(),
     }
     for key, column_list in search_key_column_dict.iteritems():
       for column in column_list:
@@ -2509,7 +2578,7 @@ class Catalog(Folder,
           LOG('SQLCatalog', WARNING, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
         else:
           result[column] = key
-    for line in self.sql_catalog_search_keys:
+    for line in self.getSqlCatalogSearchKeysList():
       try:
         column, key = [x.strip() for x in line.split('|', 2)]
         result[column] = key
@@ -2578,9 +2647,12 @@ class Catalog(Folder,
       limit_expression=query['limit_expression'],
     )
 
+  def getSqlSearchResults(self):
+    return self.sql_search_results
+
   security.declarePrivate('getSearchResultsMethod')
   def getSearchResultsMethod(self):
-    return self._getOb(self.sql_search_results)
+    return self._getOb(self.getSqlSearchResults())
 
   security.declarePrivate('searchResults')
   def searchResults(self, REQUEST=None, **kw):
@@ -2598,9 +2670,12 @@ class Catalog(Folder,
 
   __call__ = searchResults
 
+  def getSqlCountResults(self):
+    return self.sql_count_results
+
   security.declarePrivate('getCountResultsMethod')
   def getCountResultsMethod(self):
-    return self._getOb(self.sql_count_results)
+    return self._getOb(self.getSqlCountResults())
 
   security.declarePrivate('countResults')
   def countResults(self, REQUEST=None, **kw):
@@ -2617,28 +2692,37 @@ class Catalog(Folder,
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)
 
+  def getSqlRecordObjectList(self):
+    return self.sql_record_object_list
+
   security.declarePrivate('recordObjectList')
   def recordObjectList(self, path_list, catalog=1):
     """
       Record the path of an object being catalogged or uncatalogged.
     """
-    method = self._getOb(self.sql_record_object_list)
+    method = self._getOb(self.getSqlRecordObjectList())
     method(path_list=path_list, catalog=catalog)
+
+  def getSqlDeleteRecordedObjectList(self):
+    return self.sql_delete_recorded_object_list
 
   security.declarePrivate('deleteRecordedObjectList')
   def deleteRecordedObjectList(self, uid_list=()):
     """
       Delete all objects which contain any path.
     """
-    method = self._getOb(self.sql_delete_recorded_object_list)
+    method = self._getOb(self.getSqlDeleteRecordedObjectList())
     method(uid_list=uid_list)
+
+  def getSqlReadRecordedObjectList(self):
+    return self.sql_read_recorded_object_list
 
   security.declarePrivate('readRecordedObjectList')
   def readRecordedObjectList(self, catalog=1):
     """
       Read objects. Note that this might not return all objects since ZMySQLDA limits the max rows.
     """
-    method = self._getOb(self.sql_read_recorded_object_list)
+    method = self._getOb(self.getSqlReadRecordedObjectList())
     return method(catalog=catalog)
 
   # Filtering
@@ -2826,6 +2910,34 @@ class Catalog(Folder,
         if ('deferred' in method.connection_id) == deferred:
           return method.connection_id
 
+  def getSqlCatalogObjectList(self):
+    try:
+      method_id_list = self.sql_catalog_object
+    except AttributeError:
+      method_id_list = ()
+    return method_id_list
+
+  def getSqlUncatalogObjectList(self):
+    try:
+      method_id_list = self.sql_uncatalog_object
+    except AttributeError:
+      method_id_list = ()
+    return method_id_list
+
+  def getSqlUpdateObjectList(self):
+    try:
+      method_id_list = self.sql_update_object
+    except AttributeError:
+      method_id_list = ()
+    return method_id_list
+
+  def getSqlCatalogObjectListList(self):
+    try:
+      method_id_list = self.sql_catalog_object_list
+    except AttributeError:
+      method_id_list = ()
+    return method_id_list
+
   security.declarePrivate('getFilterableMethodList')
   def getFilterableMethodList(self):
     """
@@ -2833,11 +2945,11 @@ class Catalog(Folder,
     """
     method_dict = {}
     if withCMF:
-      methods = getattr(self,'sql_catalog_object',()) + \
-                getattr(self,'sql_uncatalog_object',()) + \
-                getattr(self,'sql_update_object',()) + \
-                getattr(self,'sql_catalog_object_list',())
-      for method_id in methods:
+      method_id_list =  self.getSqlCatalogObjectList() +\
+                        self.getSqlUncatalogObjectList() +\
+                        self.getSqlUpdateObjectList() +\
+                        self.getSqlCatalogObjectListList()
+      for method_id in method_id_list:
         method_dict[method_id] = 1
     method_list = map(lambda method_id: getattr(self, method_id, None), method_dict.keys())
     return filter(lambda method: method is not None, method_list)
