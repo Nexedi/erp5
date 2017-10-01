@@ -103,6 +103,8 @@ class TestGoogleLogin(ERP5TypeTestCase):
     """
     This is ran before anything, used to set the environment
     """
+    self.login()
+    self.portal.TemplateTool_checkGoogleExtractionPluginExistenceConsistency(fixit=True)
     # Patch extension to avoid external connection
     GoogleLoginUtility.getUserId = getUserId
     GoogleLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
@@ -145,6 +147,7 @@ class TestGoogleLogin(ERP5TypeTestCase):
                                                       secret_key=SECRET_KEY)
       connector.validate()
     self.tic()
+    self.logout()
 
   def test_redirect(self):
     """
@@ -213,6 +216,18 @@ return credential_request
     google_hash = self.portal.REQUEST.RESPONSE.cookies.get("__ac_google_hash")["value"]
     self.assertEqual("b01533abb684a658dc71c81da4e67546", google_hash)
     self.assertEqual(self.portal.absolute_url(), response)
+    cache_dict = self.portal.Base_getBearerToken(google_hash, "google_server_auth_token_cache_factory")
+    self.assertEqual(CLIENT_ID, cache_dict["client_id"])
+    self.assertEqual(ACCESS_TOKEN, cache_dict["access_token"])
+    self.assertEqual({'reference': getUserId(None)},
+      self.portal.Base_getBearerToken(ACCESS_TOKEN, "google_server_auth_token_cache_factory")
+    )
+    self.portal.REQUEST["__ac_google_hash"] = google_hash
+    erp5_google_extractor = self.portal.acl_users.erp5_google_extraction
+    self.assertEqual({'external_login': getUserId(None),
+      'login_portal_type': 'Google Login',
+      'remote_host': '',
+      'remote_address': ''}, erp5_google_extractor.extractCredentials(self.portal.REQUEST))
     self.tic()
     self.login()
     credential_request = self.portal.portal_catalog(portal_type="Credential Request",
