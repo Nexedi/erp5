@@ -287,7 +287,7 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
          cache_value["client_secret"], refresh_token,
          cache_value["token_expiry"], cache_value["token_uri"],
          cache_value["user_agent"])
-       credential.refresh(httplib2.Http())
+       credential.refresh(httplib2.Http(timeout=5))
        cache_value = json.loads(credential.to_json())
        cache_value["response_timestamp"] = time.time()
        self.setToken(key, cache_value)
