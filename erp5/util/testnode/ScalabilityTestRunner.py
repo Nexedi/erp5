@@ -68,7 +68,6 @@ class ScalabilityTestRunner():
     # Create the slapos account configuration file and dir
     key = self.testnode.test_suite_portal.getSlaposAccountKey()
     certificate = self.testnode.test_suite_portal.getSlaposAccountCertificate()
-
     # Get Slapos Master Url
     self.slapos_url = ''
     try:
@@ -106,7 +105,7 @@ class ScalabilityTestRunner():
     self.log("testnode, supply : %s %s", software_path, computer_guid)
     if self.authorize_supply :
       self.remaining_software_installation_dict[computer_guid] = software_path
-      self.slapos_communicator._supply()
+      self.slapos_communicator.supply(software_path, computer_guid)
       return {'status_code' : 0}                                          
     else:
       raise ValueError("Too late to supply now. ('self.authorize_supply' is False)")
@@ -150,7 +149,7 @@ class ScalabilityTestRunner():
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
+      self.slapos_communicator.requestStart(instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -193,7 +192,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     """
     self.log("Current software state: " + str(self.slapos_communicator._getSoftwareState()))
     return self.slapos_communicator._getSoftwareState() == SlapOSMasterCommunicator.SOFTWARE_STATE_INSTALLED
-  
+
   def remainSoftwareToInstall(self):
     """
     Return True if it remains softwares to install, otherwise return False
@@ -211,28 +210,8 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     config = self._generateInstanceXML(software_configuration,
                                        test_result, test_suite)
     request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-    self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED, instance_title, request_kw)
+    self.slapos_communicator.requestStart(instance_title, request_kw)
     return {'status_code' : 0} 
-
-  def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
-    """
-    Wait for 'max_time' an instance specific state
-    """
-    self.log("Waiting for instance state: %s" %state)
-    start_time = time.time()
-    while (not self.slapos_communicator._getInstanceState() == state
-           and (max_time > (time.time()-start_time))):
-      self.log("Instance(s) not in %s state yet." % state)
-      time.sleep(15)
-    if (time.time()-start_time) > max_time:
-      error_message = "Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
-      self.log(error_message)
-      self.log("Do you use instance state propagation in your project?")
-      self.log("Instance '%s' will be stopped and test aborted." %instance_title)
-      self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-      time.sleep(60) 
-      raise ValueError(error_message)
-    self.log("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
 
   def _waitInstanceCreation(self, instance_title, max_time=MAX_CREATION_INSTANCE_TIME):
     """
@@ -248,16 +227,10 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       raise ValueError("Instance '%s' not found after %s seconds" %(instance_title, max_time))
     self.log("Instance found on slapOSMaster")
 
-  def prepareSlapOSForTestSuite(self, node_test_suite):
+  def _initializeSlapOSConnection(self):
     """
-    Install testsuite softwares
+    Initialize communication with slapos 
     """
-    self.log('Preparing SlapOS for Test Suite...')
-    max_time = MAX_PREPARE_TEST_SUITE 
-    interval_time = 60
-    start_time = time.time()
-
-    # Initialize communication with slapos 
     slap = slapos.slap.slap()
     retry = 0
     while True:
@@ -279,13 +252,65 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     if getattr(slap, '_hateoas_navigator', None) is None:
       raise ValueError("Fail to load _hateoas_navigator")
 
-    hateoas = getattr(slap, '_hateoas_navigator', None)
     supply = slap.registerSupply()
     order = slap.registerOpenOrder()
+    return slap, supply, order
+
+  def createSoftwareReachableProfilePath(self, node_test_suite):
+    # Create an obfuscated link to the testsuite directory
+    path_to_suite = os.path.join(
+                    self.testnode.config['working_directory'],
+                    node_test_suite.reference)
+    self.obfuscated_link_path = os.path.join(
+                    self.testnode.config['software_directory'],
+                    self.randomized_path)
+    if ( not os.path.lexists(self.obfuscated_link_path) and
+         not os.path.exists(self.obfuscated_link_path) ) :
+      try :
+        os.symlink(path_to_suite, self.obfuscated_link_path)
+        self.log("testnode, Symbolic link (%s->%s) created."
+                 %(self.obfuscated_link_path, path_to_suite))
+      except :
+        self.log("testnode, Unable to create symbolic link to the testsuite.")
+        raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
+    self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
+
+    # Construct the ipv6 obfuscated url of the software profile reachable from outside
+    self.reachable_address = os.path.join(
+      "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
+      self.randomized_path)
+    self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
+    # ROQUE XXX: below urls are hardcoded until we find ways to make buildout extending through unsafe https 
+    self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
+    self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
+    # Write the reachable address in the software.cfg file,
+    # by replacing <obfuscated_url> occurences by the current reachable address.
+    software_file = open(node_test_suite.custom_profile_path, "r")
+    file_content = software_file.readlines()
+    new_file_content = []
+    for line in file_content:
+      new_file_content.append(line.replace('<obfuscated_url>', self.reachable_address))
+    software_file.close()
+    os.remove(node_test_suite.custom_profile_path)
+    software_file = open(node_test_suite.custom_profile_path, "w")
+    for line in new_file_content:
+      software_file.write(line)
+    software_file.close()
+
+  def prepareSlapOSForTestSuite(self, node_test_suite):
+    """
+    Install testsuite softwares
+    """
+    self.log('Preparing SlapOS for Test Suite...')
+    max_time = MAX_PREPARE_TEST_SUITE
+    interval_time = 60
+    start_time = time.time()
+
+    # Initialize communication with slapos
+    slap, supply, order = self._initializeSlapOSConnection()
 
     # Only master testnode must order software installation
-    if self.testnode.test_suite_portal.isMasterTestnode(
-            self.testnode.config['test_node_title']):
+    if self.testnode.test_suite_portal.isMasterTestnode(self.testnode.config['test_node_title']):
       # Get from ERP5 Master the configuration of the cluster for the test
       test_configuration = Utils.deunicodeData(
           json.loads(self.testnode.test_suite_portal.generateConfiguration(
@@ -300,64 +325,26 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         self.log("ERP5 Master indicates : %s" %(self.error_message,))
         return {'status_code' : 1}
 
-      involved_nodes_computer_guid = test_configuration['involved_nodes_computer_guid']
       configuration_list = test_configuration['configuration_list']
       node_test_suite.edit(configuration_list=configuration_list)
       self.launcher_nodes_computer_guid = test_configuration['launcher_nodes_computer_guid']
+      self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       
-      # Create an obfuscated link to the testsuite directory
-      path_to_suite = os.path.join(
-                      self.testnode.config['working_directory'],
-                      node_test_suite.reference)
-      self.obfuscated_link_path = os.path.join(
-                      self.testnode.config['software_directory'],
-                      self.randomized_path)
-      if ( not os.path.lexists(self.obfuscated_link_path) and
-           not os.path.exists(self.obfuscated_link_path) ) :
-        try :
-          os.symlink(path_to_suite, self.obfuscated_link_path)
-          self.log("testnode, Symbolic link (%s->%s) created."
-                   %(self.obfuscated_link_path, path_to_suite))
-        except :
-          self.log("testnode, Unable to create symbolic link to the testsuite.")
-          raise ValueError("testnode, Unable to create symbolic link to the testsuite.")
-      self.log("Sym link : %s %s" %(path_to_suite, self.obfuscated_link_path))
-      
-      # Construct the ipv6 obfuscated url of the software profile reachable from outside
-      self.reachable_address = os.path.join(
-        "https://","["+self.testnode.config['httpd_ip']+"]"+":"+self.testnode.config['httpd_software_access_port'],
-        self.randomized_path)
-      self.reachable_profile = os.path.join(self.reachable_address, "software.cfg")
-      # ROQUE XXX: below urls are hardcoded until we find ways to make buildout extending through unsafe https 
-      self.reachable_address = "https://lab.nexedi.com/rporchetto/telecom/tree/master"
-      self.reachable_profile = "https://lab.nexedi.com/rporchetto/telecom/raw/master/software_release/software.cfg"
+      self.createSoftwareReachableProfilePath(node_test_suite)
+      self.log("Software reachable profile path is : %s " %(self.reachable_profile))
 
-      # Write the reachable address in the software.cfg file,
-      # by replacing <obfuscated_url> occurences by the current reachable address.
-      software_file = open(node_test_suite.custom_profile_path, "r")
-      file_content = software_file.readlines()
-      new_file_content = []
-      for line in file_content:
-        new_file_content.append(line.replace('<obfuscated_url>', self.reachable_address))
-      software_file.close()
-      os.remove(node_test_suite.custom_profile_path)
-      software_file = open(node_test_suite.custom_profile_path, "w")
-      for line in new_file_content:
-        software_file.write(line)
-      software_file.close()
-      self.log("Software reachable profile path is : %s "
-                              %(self.reachable_profile,))
-
-      # Ask for SR installation
-      for computer_guid in self.involved_nodes_computer_guid:
-        self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester(
-					"SlaposMasterCommunicator", 
+      # Initialize SlapOS Master Communicator
+      self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester(
+					self.instance_title,
 					self.log, 
 					slap, 
 					order, 
 					supply, 
 					self.reachable_profile, 
-					computer_guid=computer_guid)
+					computer_guid=self.launcher_nodes_computer_guid[0])
+
+      # Ask for SR installation
+      for computer_guid in self.involved_nodes_computer_guid:
         self._prepareSlapOS(self.reachable_profile, computer_guid) 
       # From the line below we would not supply any more softwares
       self.authorize_supply = False
@@ -378,13 +365,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.authorize_request = True
       self.log("Softwares installed.")
       # Launch instance
-      self.instance_title = self._generateInstanceTitle(node_test_suite.test_suite_title)
       try:
         self._createInstance(self.reachable_profile, 
-			     configuration_list[0],
-                             self.instance_title, 
-		       	     node_test_suite.test_result, 
-			     node_test_suite.test_suite)
+                             configuration_list[0],
+                             self.instance_title,
+                             node_test_suite.test_result,
+                             node_test_suite.test_suite)
         self.log("Scalability instance requested.")
       except:
         self.log("Unable to launch instance")
@@ -410,20 +396,20 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     count = 0
     error_message = None
 
-    self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+    self.slapos_communicator.waitInstanceStarted(self.instance_title)
 
     # Each cluster configuration are tested
     for configuration in configuration_list:
       # First configuration doesn't need XML configuration update.
       if count > 0:
-        self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-        self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+        self.slapos_communicator.requestStop()
+        self.slapos_communicator.waitInstanceStopped(self.instance_title)
         self._updateInstanceXML(configuration, self.instance_title,
                                 node_test_suite.test_result, node_test_suite.test_suite)
-        self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
-        self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+        self.slapos_communicator.waitInstanceStarted(self.instance_title)
+        self.slapos_communicator.requestStart()
 
-      self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STARTED)
+      self.slapos_communicator.waitInstanceStarted(self.instance_title)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
       
       # ROQUE XXX : for debug
@@ -465,11 +451,12 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         break
 
     # Stop current instance
-    self.slapos_communicator._request(SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
-    self._waitInstance(self.instance_title, SlapOSMasterCommunicator.INSTANCE_STATE_STOPPED)
+    self.slapos_communicator.requestStop()
+    self.slapos_communicator.waitInstanceStopped(self.instance_title)
 
     # Delete old instances
-    self._cleanUpOldInstance()
+    # ROQUE: for now, the instance is not removed.
+    #self._cleanUpOldInstance()
 
     # If error appears then that's a test failure.    
     if error_message:
