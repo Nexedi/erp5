@@ -13,9 +13,10 @@ from slapos.slap.slap import ConnectionError
 from requests.exceptions import HTTPError
 from erp5.util.taskdistribution import SAFE_RPC_EXCEPTION_LIST
 
+# max time to instance changing state: 2 hour
+MAX_INSTANCE_TIME = 60*60*2
 
 SOFTWARE_PRODUCT_NAMESPACE = "product."
-
 
 SOFTWARE_STATE_UNKNOWN = "SOFTWARE_STATE_UNKNOWN"
 SOFTWARE_STATE_INSTALLING = "SOFTWARE_STATE_INSTALLING"
@@ -28,7 +29,7 @@ INSTANCE_STATE_STARTED = "started"
 INSTANCE_STATE_STARTED_WITH_ERROR = "INSTANCE_STATE_STARTED_WITH_ERROR"
 INSTANCE_STATE_STOPPING = "INSTANCE_STATE_STOPPING"
 INSTANCE_STATE_STOPPED = "stopped"
-INSTANCE_STATE_DESTROYING = "INSTANCE_STATE_DESTROYING"
+INSTANCE_STATE_DESTROYED = "destroyed"
 
 TESTER_STATE_INITIAL = "TESTER_STATE_INITIAL"
 TESTER_STATE_NOTHING = "TESTER_STATE_NOTHING"
@@ -66,7 +67,7 @@ def retryOnNetworkFailure(func):
 
 
 class SlapOSMasterCommunicator(object):
-
+  latest_state = None
 
   def __init__(self, slap, slap_supply, slap_order, url, logger ):
 
@@ -91,7 +92,7 @@ class SlapOSMasterCommunicator(object):
   @retryOnNetworkFailure
   def _supply(self):
     if self.computer_guid is None:
-      self._logger ('Nothing to supply for %s.' % (self.name))
+      self._logger('Nothing to supply for %s.' % (self.name))
       return None
     self._logger('Supply %s@%s', self.url, self.computer_guid)
     return self.slap_supply.supply(self.url, self.computer_guid)
@@ -231,12 +232,139 @@ class SlapOSMasterCommunicator(object):
        result['_links']['action_object_slap'], 'getHateoasInformation')
 
     result = self.hateoas_navigator.GET(object_link)
-    return json.loads(result) 
+    return json.loads(result)
+
+  def _getSoftwareState(self):
+    if self.computer_guid is None:
+      return SOFTWARE_STATE_INSTALLED
+
+    message = self.getSoftwareInstallationNews()
+    if message.startswith("#error no data found"):
+      return SOFTWARE_STATE_UNKNOWN
+
+    if message.startswith('#access software release'):
+      return SOFTWARE_STATE_INSTALLED
+
+    if message.startswith('#error'):
+      return SOFTWARE_STATE_INSTALLING
+
+    return SOFTWARE_STATE_UNKNOWN
+
+  @retryOnNetworkFailure
+  def _getInstanceState(self):
+    latest_state = self.latest_state
+    self._logger('latest_state = %r', latest_state)
+
+    if latest_state is None:
+      return INSTANCE_STATE_UNKNOWN
+
+    message_list = []
+    try:
+      for instance in self.getInstanceUrlList():
+        news = self.getNewsFromInstance(instance["href"])
+        information = self.getInformationFromInstance(instance["href"])
+        state = INSTANCE_STATE_UNKNOWN
+        monitor_information_dict = {}
+
+        info_created_at = "-1"
+        is_slave = information['slave']
+        if is_slave:
+          if (information["connection_dict"]) > 0:
+            state =  INSTANCE_STATE_STARTED
+        else:
+          # not slave
+          instance_state = news[0]
+          if instance_state.get('created_at', '-1') != "-1":
+            # the following does NOT take TZ into account
+            created_at = datetime.datetime.strptime(instance_state['created_at'], 
+              '%a, %d %b %Y %H:%M:%S %Z')
+            gmt_now = datetime.datetime(*time.gmtime()[:6])
+
+            info_created_at = '%s (%d)' % (
+               instance_state['created_at'], (gmt_now - created_at).seconds)
+
+            if instance_state['text'].startswith('#access'):
+              state =  INSTANCE_STATE_STARTED
+
+            if instance_state['text'].startswith('#access Instance correctly stopped'):
+              state =  INSTANCE_STATE_STOPPED
+
+            if instance_state['text'].startswith('#error'):
+              state = INSTANCE_STATE_STARTED_WITH_ERROR
+
+        if state == INSTANCE_STATE_STARTED_WITH_ERROR:
+          # search for monitor url
+          monitor_v6_url = information["connection_dict"].get("monitor_v6_url")
+          try:
+            monitor_information_dict = self.getRSSEntryFromMonitoring(monitor_v6_url)
+          except Exception:
+            self._logger('Unable to download promises for: %s' % (instance["title"]))
+            self._logger(traceback.format_exc())
+            monitor_information_dict = {"message": "Unable to download"}
+
+        message_list.append({
+          'title': instance["title"],
+          'slave': is_slave,
+          'news': news[0],
+          'information': information,
+          'monitor': monitor_information_dict,
+          'state': state
+        })
+
+    except slapos.slap.ServerError:
+      self._logger('Got an error requesting partition for '
+            'its state')
+      return INSTANCE_STATE_UNKNOWN
+    except:
+      self._logger("ERROR getting instance state")
+      return INSTANCE_STATE_UNKNOWN
+
+    started = 0
+    stopped = 0
+    self.message_history.append(message_list)
+    for instance in message_list:
+      if not instance['slave'] and \
+        instance['state'] in (INSTANCE_STATE_UNKNOWN, INSTANCE_STATE_STARTED_WITH_ERROR):
+        return instance['state']
+      elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STARTED:
+        started = 1
+      elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STOPPED:
+        stopped = 1
+
+      if instance['slave'] and instance['state'] == INSTANCE_STATE_UNKNOWN:
+        return instance['state']
+
+    if started and stopped:
+      return INSTANCE_STATE_STOPPED
+      return INSTANCE_STATE_UNKNOWN
+
+    if started:
+      return INSTANCE_STATE_STARTED
+
+    if stopped:
+      return INSTANCE_STATE_STOPPED
+
+  @retryOnNetworkFailure
+  def _waitInstance(self, instance_title, state, max_time=MAX_INSTANCE_TIME):
+    """
+    Wait for 'max_time' an instance specific state
+    """
+    self._logger("Waiting for instance state: %s" %state)
+    start_time = time.time()
+    while (not self._getInstanceState() == state
+           and (max_time > (time.time()-start_time))):
+      self._logger("Instance(s) not in %s state yet." % state)
+      self._logger("Current state: %s" % self._getInstanceState())
+      time.sleep(15)
+    if (time.time()-start_time) > max_time:
+      error_message = "Instance '%s' not '%s' after %s seconds" %(instance_title, state, str(time.time()-start_time))
+      return {'error_message' : error_message}
+    self._logger("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
+    return {'error_message' : None}
 
 
 class SoftwareReleaseTester(SlapOSMasterCommunicator):
   deadline = None
-  latest_state = None
 
   def __init__(self,
               name,
@@ -288,27 +416,67 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
         None,
       ),
       TESTER_STATE_SOFTWARE_INSTALLED: (
-        lambda t: t._request("started"),
+        lambda t: t._request(INSTANCE_STATE_STARTED),
         int(instance_timeout),
         TESTER_STATE_INSTANCE_STARTED,
         None,
         INSTANCE_STATE_STARTED,
       ),
       TESTER_STATE_INSTANCE_STARTED: (
-        lambda t: t._request("destroyed"),
+        lambda t: t._request(INSTANCE_STATE_DESTROYED),
         int(1200),
         TESTER_STATE_INSTANCE_UNINSTALLED,
         None,
         INSTANCE_STATE_STOPPED,
       ),
       TESTER_STATE_INSTANCE_UNINSTALLED: (
-        lambda t: t._supply("destroyed"),
+        lambda t: t._supply(INSTANCE_STATE_DESTROYED),
         int(1200),
         None,
         None,
         None,
       ),
      }
+
+  def supply(self, software_path=None, computer_guid=None):
+    if software_path is not None:
+      self.url = software_path
+    if computer_guid is not None:
+      self.computer_guid = computer_guid
+    self._supply()
+
+  def requestStart(self, instance_title=None, request_kw=None):
+    self._request(INSTANCE_STATE_STARTED, instance_title, request_kw)
+
+  def requestStop(self, instance_title=None, request_kw=None):
+    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw)
+
+  def requestDestroy(self, instance_title=None, request_kw=None):
+    self._request(INSTANCE_STATE_DESTROYED, instance_title, request_kw)
+
+  def waitInstanceStarted(self, instance_title):
+    error_message = self._waitInstance(instance_title, INSTANCE_STATE_STARTED)["error_message"]
+    if error_message is not None:
+      self._logger(error_message)
+      self._logger("Do you use instance state propagation in your project?")
+      self._logger("Instance '%s' will be stopped and test aborted." %instance_title)
+      self.requestStop()
+      time.sleep(60)
+      raise ValueError(error_message)
+
+  def waitInstanceStopped(self, instance_title):
+    error_message = self._waitInstance(instance_title, INSTANCE_STATE_STOPPED)["error_message"]
+    if error_message is not None:
+      self._logger(error_message)
+      self._logger("Do you use instance state propagation in your project?")
+      raise ValueError(error_message)
+
+  def waitInstanceDestroyed(self, instance_title):
+    error_message = self._waitInstance(instance_title, INSTANCE_STATE_DESTROYED)["error_message"]
+    if error_message is not None:
+      self._logger(error_message)
+      self._logger("Do you use instance state propagation in your project?")
+      raise ValueError(error_message)
 
   def __repr__(self):
       deadline = self.deadline
@@ -352,22 +520,6 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
  
     return summary + message
 
-  def _getSoftwareState(self):
-    if self.computer_guid is None:
-      return SOFTWARE_STATE_INSTALLED
-
-    message = self.getSoftwareInstallationNews()
-    if message.startswith("#error no data found"):
-      return SOFTWARE_STATE_UNKNOWN
-
-    if message.startswith('#access software release'):
-      return SOFTWARE_STATE_INSTALLED
-
-    if message.startswith('#error'):
-      return SOFTWARE_STATE_INSTALLING
-
-    return SOFTWARE_STATE_UNKNOWN 
-
   @retryOnNetworkFailure
   def getRSSEntryFromMonitoring(self, base_url):
     if base_url is None:
@@ -384,109 +536,15 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
     return {}
 
   @retryOnNetworkFailure
-  def _getInstanceState(self):
-    latest_state = self.latest_state
-    self._logger('latest_state = %r', latest_state)
-
-    if latest_state is None:
-      return INSTANCE_STATE_UNKNOWN
-
-    message_list = [] 
-    try:
-      for instance in self.getInstanceUrlList():
-        news = self.getNewsFromInstance(instance["href"])
-        information = self.getInformationFromInstance(instance["href"])
-        state = INSTANCE_STATE_UNKNOWN
-        monitor_information_dict = {}
-
-        info_created_at = "-1"
-        is_slave = information['slave']
-        if is_slave:
-          if (information["connection_dict"]) > 0:
-            state =  INSTANCE_STATE_STARTED
-        else:
-          # not slave
-          instance_state = news[0]
-          if instance_state.get('created_at', '-1') != "-1":
-            # the following does NOT take TZ into account
-            created_at = datetime.datetime.strptime(instance_state['created_at'], 
-              '%a, %d %b %Y %H:%M:%S %Z')
-            gmt_now = datetime.datetime(*time.gmtime()[:6])
-
-            info_created_at = '%s (%d)' % (
-               instance_state['created_at'], (gmt_now - created_at).seconds)
-
-            if instance_state['text'].startswith('#access'):
-              state =  INSTANCE_STATE_STARTED
-
-            if instance_state['text'].startswith('#access Instance correctly stopped'):
-              state =  INSTANCE_STATE_STOPPED
-
-            if instance_state['text'].startswith('#error'):
-              state = INSTANCE_STATE_STARTED_WITH_ERROR
-
-        if state == INSTANCE_STATE_STARTED_WITH_ERROR:
-          # search for monitor url
-          monitor_v6_url = information["connection_dict"].get("monitor_v6_url")
-          try:
-            monitor_information_dict = self.getRSSEntryFromMonitoring(monitor_v6_url)
-          except Exception:
-            self._logger ('Unable to download promises for: %s' % (instance["title"]))
-            self._logger (traceback.format_exc())
-            monitor_information_dict = {"message": "Unable to download"}
-
-        message_list.append({
-          'title': instance["title"],
-          'slave': is_slave,
-          'news': news[0],
-          'information': information,
-          'monitor': monitor_information_dict,
-          'state': state
-        })
-
-    except slapos.slap.ServerError:
-      self._logger ('Got an error requesting partition for '
-            'its state')
-      return INSTANCE_STATE_UNKNOWN
-    except:
-      self._logger("ERROR getting instance state")
-      return INSTANCE_STATE_UNKNOWN
- 
-    started = 0
-    stopped = 0
-    self.message_history.append(message_list)
-    for instance in message_list:
-      if not instance['slave'] and \
-        instance['state'] in (INSTANCE_STATE_UNKNOWN, INSTANCE_STATE_STARTED_WITH_ERROR):
-        return instance['state']
-      elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STARTED:
-        started = 1
-      elif not instance['slave'] and instance['state'] == INSTANCE_STATE_STOPPED:
-        stopped = 1
-      
-      if instance['slave'] and instance['state'] == INSTANCE_STATE_UNKNOWN:
-        return instance['state']
-
-    if started and stopped:
-      return INSTANCE_STATE_STOPPED
-      return INSTANCE_STATE_UNKNOWN
-    
-    if started:
-      return INSTANCE_STATE_STARTED
-
-    if stopped:
-      return INSTANCE_STATE_STOPPED
-
-  @retryOnNetworkFailure
   def teardown(self):
     """
     Interrupt a running test sequence, putting it in idle state.
     """
-    self._logger ('Invoking TearDown for %s@%s' % (self.url, self.name))
+    self._logger('Invoking TearDown for %s@%s' % (self.url, self.name))
     if self.request_kw is not None:
-       self._request('destroyed')
+       self._request(INSTANCE_STATE_DESTROYED)
     if self.computer_guid is not None:
-      self._supply('destroyed')
+      self._supply(INSTANCE_STATE_DESTROYED)
     self.state = TESTER_STATE_INSTANCE_UNINSTALLED
 
   def tic(self, now):
@@ -494,7 +552,7 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
     Check for missed deadlines (-> test failure), conditions for moving to
     next state, and actually moving to next state (executing its payload).
     """
-    self._logger ('[DEBUG] TIC')
+    self._logger('[DEBUG] TIC')
     deadline = self.deadline
 
     if deadline < now and deadline is not None:
@@ -508,7 +566,7 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
           instance_state is None or
           instance_state == self._getInstanceState()):
 
-      self._logger ('[DEBUG] Going to state %s (%r)', next_state, instance_state)
+      self._logger('[DEBUG] Going to state %s (%r)', next_state, instance_state)
       if next_state is None:
         return None
 
@@ -517,4 +575,3 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
       self.deadline = now + delay
       stepfunc(self)
     return self.deadline
-
