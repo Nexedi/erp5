@@ -115,7 +115,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
   def beforeTearDown(self):
     # restore default_catalog
-    self.portal.portal_catalog.default_sql_catalog_id = 'erp5_mysql_innodb'
+    self.portal.portal_catalog._setDefaultSqlCatalogId('erp5_mysql_innodb')
     self.portal.portal_catalog.hot_reindexing_state = None
     # clear Modules
     for module in [ self.getPersonModule(),
