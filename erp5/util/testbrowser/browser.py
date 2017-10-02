@@ -9,7 +9,7 @@
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugsc
+# consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
 # garantees and support are strongly adviced to contract a Free Software
 # Service Company
@@ -36,7 +36,7 @@ import urllib
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
-from zope.testbrowser.browser import onlyOne 
+from zope.testbrowser.browser import onlyOne
 
 def measurementMetaClass(prefix):
   """
@@ -698,7 +698,6 @@ class MainForm(Form):
         index = 0
       super(MainForm, self).submit(label=label, name=name, index=index,
                                    *args, **kwargs)
-       
 
   def submitSelect(self, select_name, submit_name, label=None, value=None,
                    select_index=None, control_index=None):
