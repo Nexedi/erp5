@@ -80,7 +80,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -93,6 +95,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_title</string>
                         <string>my_reference</string>
                       </list>
                     </value>
