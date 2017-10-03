@@ -2753,11 +2753,11 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         if new_object != old_object:
           modified_object_list[path] = 'Modified', self.getTemplateTypeName()
       else: # new object
-        modified_object_list.update[path] = 'New', self.getTemplateTypeName()
+        modified_object_list[path] = 'New', self.getTemplateTypeName()
     # get removed object
     for path in installed_item._objects:
       if path not in self._objects:
-        modified_object_list.update[path] = 'Removed', self.getTemplateTypeName()
+        modified_object_list[path] = 'Removed', self.getTemplateTypeName()
     return modified_object_list
 
   def _importFile(self, file_name, file):
