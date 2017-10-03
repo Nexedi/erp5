@@ -41,6 +41,10 @@
  <portal_type id="Property Type Validity Constraint">
   <item>ConstraintType</item>
  </portal_type>
+ <portal_type id="SQL Method">
+  <item>CatalogFilter</item>
+  <item>SQLMethod</item>
+ </portal_type>
  <portal_type id="Script Constraint">
   <item>ConstraintType</item>
   <item>Predicate</item>

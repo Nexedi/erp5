@@ -1,2 +1,4 @@
 ScriptConstraint
 ConstraintType
+SQLMethod
+CatalogFilter
