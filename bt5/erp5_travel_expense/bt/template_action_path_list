@@ -15,6 +15,7 @@ Leave Request | records
 Localisation Record | jio_view
 Localisation Record | view
 Person | jio_view
+Purchase Invoice Transaction | jump_to_related_expense_validation_request_list
 Record Module | view
 Service | jio_view
 Travel Request Module | view
