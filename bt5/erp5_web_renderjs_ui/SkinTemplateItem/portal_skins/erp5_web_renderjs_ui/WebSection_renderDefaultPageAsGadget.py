@@ -15,16 +15,17 @@ default_language = web_section.getLayoutProperty("default_available_language", d
 website_url_set = {}
 
 #simplify code of Base_doLanguage, can't ues Base_doLanguage directly
-root_website_url = web_section.getOriginalDocument().absolute_url()
+root_website_url = web_section.getOriginalDocument().constructUrlFor()
 website_url_pattern = r'^%s(?:%s)*(/|$)' % (
   re.escape(root_website_url),
   '|'.join('/' + re.escape(x) for x in available_language_set))
 
 for language in available_language_set:
+  web_section_url = web_section.constructUrlFor()
   if language == default_language:
-    website_url_set[language] = re.sub(website_url_pattern, r'%s/\1' % root_website_url, web_section.absolute_url())
+    website_url_set[language] = re.sub(website_url_pattern, r'%s/\1' % root_website_url, web_section_url)
   else:
-    website_url_set[language]=  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section.absolute_url())
+    website_url_set[language]=  re.sub(website_url_pattern, r'%s/%s/\1' % (root_website_url, language), web_section_url)
 
 view_as_web_method = default_web_page.getTypeBasedMethod(
   "viewAsWeb",

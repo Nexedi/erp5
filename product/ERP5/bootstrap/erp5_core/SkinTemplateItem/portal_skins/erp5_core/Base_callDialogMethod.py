@@ -192,13 +192,11 @@ if dialog_method != update_method and clean_kw.get('deferred_style', 0):
     request.set('deferred_style_dialog_method', dialog_method)
     dialog_method = 'Base_activateSimpleView'
 
-url_params_string = make_query(clean_kw)
-
 # XXX: We always redirect in report mode to make sure portal_skin
 # parameter is taken into account by SkinTool.
 # If url is too long, we do not redirect to avoid crash.
 # XXX: 2000 is an arbitrary value resulted from trial and error.
-if (not(can_redirect) or len(url_params_string) > 2000):
+if (not(can_redirect) or len(make_query(clean_kw)) > 2000):
   if dialog_method != update_method:
     # When we are not executing the update action, we have to change the skin
     # manually,
@@ -226,22 +224,11 @@ if (not(can_redirect) or len(url_params_string) > 2000):
   request.set('URL', '%s/%s' % (context.absolute_url(), dialog_method))
   return dialog_form(**kw)
 
-if error_message != '':
-  redirect_url = '%s/%s?%s' % ( context.absolute_url()
-                              , dialog_method
-                              , 'portal_status_message=%s' % error_message
-                              )
-elif url_params_string != '':
-  redirect_url = '%s/%s?%s' % ( context.absolute_url()
-                              , dialog_method
-                              , url_params_string
-                              )
-
-else:
-  redirect_url = '%s/%s' % ( context.absolute_url()
-                            , dialog_method
-                            )
-
+redirect_url = context.constructUrlFor(
+    form_id=dialog_method,
+    parameter_dict={'portal_status_message': error_message} if error_message != '' \
+      else clean_kw
+  )
 return request.RESPONSE.redirect(redirect_url)
 
 # vim: syntax=python
