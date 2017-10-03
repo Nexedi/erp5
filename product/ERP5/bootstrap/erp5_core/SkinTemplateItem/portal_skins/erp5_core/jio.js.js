@@ -10297,27 +10297,18 @@ return new Parser;
  * JIO Dropbox Storage. Type = "dropbox".
  * Dropbox "database" storage.
  */
-/*global Blob, jIO, RSVP, UriTemplate*/
+/*global Blob, jIO, RSVP*/
 /*jslint nomen: true*/
 
-(function (jIO, RSVP, Blob, UriTemplate) {
+(function (jIO, RSVP, Blob, JSON) {
   "use strict";
-  var UPLOAD_URL = "https://content.dropboxapi.com/1/files_put/" +
-      "{+root}{+id}{+name}{?access_token}",
-    upload_template = UriTemplate.parse(UPLOAD_URL),
-    CREATE_DIR_URL = "https://api.dropboxapi.com/1/fileops/create_folder" +
-      "{?access_token,root,path}",
-    create_dir_template = UriTemplate.parse(CREATE_DIR_URL),
-    REMOVE_URL = "https://api.dropboxapi.com/1/fileops/delete/" +
-      "{?access_token,root,path}",
-    remote_template = UriTemplate.parse(REMOVE_URL),
-    GET_URL = "https://content.dropboxapi.com/1/files" +
-      "{/root,id}{+name}{?access_token}",
-    get_template = UriTemplate.parse(GET_URL),
-    //LIST_URL = 'https://api.dropboxapi.com/1/metadata/sandbox/';
-    METADATA_URL = "https://api.dropboxapi.com/1/metadata" +
-      "{/root}{+id}{?access_token}",
-    metadata_template = UriTemplate.parse(METADATA_URL);
+  var GET_URL = "https://content.dropboxapi.com/2/files/download",
+    UPLOAD_URL = "https://content.dropboxapi.com/2/files/upload",
+    REMOVE_URL = "https://api.dropboxapi.com/2/files/delete_v2",
+    CREATE_DIR_URL = "https://api.dropboxapi.com/2/files/create_folder_v2",
+    METADATA_URL = "https://api.dropboxapi.com/2/files/get_metadata",
+    LIST_FOLDER_URL = "https://api.dropboxapi.com/2/files/list_folder",
+    LIST_MORE_URL = "https://api.dropboxapi.com/2/files/list_folder/continue";
 
   function restrictDocumentId(id) {
     if (id.indexOf("/") !== 0) {
@@ -10328,7 +10319,7 @@ return new Parser;
       throw new jIO.util.jIOError("id " + id + " is forbidden (no end /)",
                                   400);
     }
-    return id;
+    return id.slice(0, -1);
   }
 
   function restrictAttachmentId(id) {
@@ -10336,6 +10327,66 @@ return new Parser;
       throw new jIO.util.jIOError("attachment " + id + " is forbidden",
                                   400);
     }
+  }
+
+  function recursiveAllAttachments(result, token, id, cursor) {
+    var data,
+      url;
+    if (cursor === undefined) {
+      data = {
+        "path": id,
+        "recursive": false,
+        "include_media_info": false,
+        "include_deleted": false,
+        "include_has_explicit_shared_members": false,
+        "include_mounted_folders": true
+      };
+      url = LIST_FOLDER_URL;
+    } else {
+      data = {"cursor": cursor};
+      url = LIST_MORE_URL;
+    }
+    return new RSVP.Queue()
+      .push(function () {
+        return jIO.util.ajax({
+          type: "POST",
+          url: url,
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+          },
+          data: JSON.stringify(data)
+        });
+      })
+      .push(function (evt) {
+        var obj = JSON.parse(evt.target.response || evt.target.responseText),
+          i;
+        for (i = 0; i < obj.entries.length; i += 1) {
+          if (obj.entries[i][".tag"] === "file") {
+            result[obj.entries[i].name] = {};
+          }
+        }
+        if (obj.has_more) {
+          return recursiveAllAttachments(result, token, id, obj.cursor);
+        }
+        return result;
+      }, function (error) {
+        if (error.target !== undefined && error.target.status === 409) {
+          var err_content = JSON.parse(error.target.response ||
+                                       error.target.responseText);
+          if ((err_content.error['.tag'] === 'path') &&
+              (err_content.error.path['.tag'] === 'not_folder')) {
+            throw new jIO.util.jIOError("Not a directory: " + id + "/",
+                                        404);
+          }
+          if ((err_content.error['.tag'] === 'path') &&
+              (err_content.error.path['.tag'] === 'not_found')) {
+            throw new jIO.util.jIOError("Cannot find document: " + id + "/",
+                                        404);
+          }
+        }
+        throw error;
+      });
   }
 
   /**
@@ -10349,12 +10400,7 @@ return new Parser;
       throw new TypeError("Access Token' must be a string " +
                           "which contains more than one character.");
     }
-    if (typeof spec.root !== 'string' || !spec.root ||
-        (spec.root !== "dropbox" && spec.root !== "sandbox")) {
-      throw new TypeError("root must be 'dropbox' or 'sandbox'");
-    }
     this._access_token = spec.access_token;
-    this._root = spec.root;
   }
 
   DropboxStorage.prototype.put = function (id, param) {
@@ -10369,18 +10415,24 @@ return new Parser;
       .push(function () {
         return jIO.util.ajax({
           type: "POST",
-          url: create_dir_template.expand({
-            access_token: that._access_token,
-            root: that._root,
-            path: id
-          })
+          url: CREATE_DIR_URL,
+          headers: {
+            "Authorization": "Bearer " + that._access_token,
+            "Content-Type": "application/json"
+          },
+          data: JSON.stringify({"path": id, "autorename": false})
         });
       })
       .push(undefined, function (err) {
         if ((err.target !== undefined) &&
-            (err.target.status === 405)) {
-          // Directory already exists, no need to fail
-          return;
+            (err.target.status === 409)) {
+          var err_content = JSON.parse(err.target.response ||
+                                       err.target.responseText);
+          if ((err_content.error['.tag'] === 'path') &&
+              (err_content.error.path['.tag'] === 'conflict')) {
+            // Directory already exists, no need to fail
+            return;
+          }
         }
         throw err;
       });
@@ -10390,11 +10442,12 @@ return new Parser;
     id = restrictDocumentId(id);
     return jIO.util.ajax({
       type: "POST",
-      url: remote_template.expand({
-        access_token: this._access_token,
-        root: this._root,
-        path: id
-      })
+      url: REMOVE_URL,
+      headers: {
+        "Authorization": "Bearer " + this._access_token,
+        "Content-Type": "application/json"
+      },
+      data: JSON.stringify({"path": id})
     });
   };
 
@@ -10409,64 +10462,39 @@ return new Parser;
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
-          type: "GET",
-          url: metadata_template.expand({
-            access_token: that._access_token,
-            root: that._root,
-            id: id
-          })
+          type: "POST",
+          url: METADATA_URL,
+          headers: {
+            "Authorization": "Bearer " + that._access_token,
+            "Content-Type": "application/json"
+          },
+          data: JSON.stringify({"path": id})
         });
       })
       .push(function (evt) {
         var obj = JSON.parse(evt.target.response ||
                              evt.target.responseText);
-        if (obj.is_dir) {
+        if (obj[".tag"] === "folder") {
           return {};
         }
-        throw new jIO.util.jIOError("Not a directory: " + id, 404);
+        throw new jIO.util.jIOError("Not a directory: " + id + "/", 404);
       }, function (error) {
-        if (error.target !== undefined && error.target.status === 404) {
-          throw new jIO.util.jIOError("Cannot find document: " + id, 404);
+        if (error.target !== undefined && error.target.status === 409) {
+          var err_content = JSON.parse(error.target.response ||
+                                       error.target.responseText);
+          if ((err_content.error['.tag'] === 'path') &&
+              (err_content.error.path['.tag'] === 'not_found')) {
+            throw new jIO.util.jIOError("Cannot find document: " + id + "/",
+                                        404);
+          }
         }
         throw error;
       });
   };
 
   DropboxStorage.prototype.allAttachments = function (id) {
-
-    var that = this;
     id = restrictDocumentId(id);
-
-    return new RSVP.Queue()
-      .push(function () {
-        return jIO.util.ajax({
-          type: "GET",
-          url: metadata_template.expand({
-            access_token: that._access_token,
-            root: that._root,
-            id: id
-          })
-        });
-      })
-      .push(function (evt) {
-        var obj = JSON.parse(evt.target.response || evt.target.responseText),
-          i,
-          result = {};
-        if (!obj.is_dir) {
-          throw new jIO.util.jIOError("Not a directory: " + id, 404);
-        }
-        for (i = 0; i < obj.contents.length; i += 1) {
-          if (!obj.contents[i].is_dir) {
-            result[obj.contents[i].path.split("/").pop()] = {};
-          }
-        }
-        return result;
-      }, function (error) {
-        if (error.target !== undefined && error.target.status === 404) {
-          throw new jIO.util.jIOError("Cannot find document: " + id, 404);
-        }
-        throw error;
-      });
+    return recursiveAllAttachments({}, this._access_token, id);
   };
 
   //currently, putAttachment will fail with files larger than 150MB,
@@ -10481,20 +10509,24 @@ return new Parser;
     restrictAttachmentId(name);
 
     return jIO.util.ajax({
-      type: "PUT",
-      url: upload_template.expand({
-        root: this._root,
-        id: id,
-        name: name,
-        access_token: this._access_token
-      }),
-      dataType: blob.type,
+      type: "POST",
+      url: UPLOAD_URL,
+      headers: {
+        "Authorization": "Bearer " + this._access_token,
+        "Content-Type": "application/octet-stream",
+        "Dropbox-API-Arg": JSON.stringify({
+          "path": id + "/" + name,
+          "mode": "overwrite",
+          "autorename": false,
+          "mute": false
+        })
+      },
       data: blob
     });
   };
 
   DropboxStorage.prototype.getAttachment = function (id, name) {
-    var that = this;
+    var context = this;
 
     id = restrictDocumentId(id);
     restrictAttachmentId(name);
@@ -10502,26 +10534,48 @@ return new Parser;
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
-          type: "GET",
+          url: GET_URL,
+          type: "POST",
           dataType: "blob",
-          url: get_template.expand({
-            root: that._root,
-            id: id,
-            name: name,
-            access_token: that._access_token
-          })
+          headers: {
+            "Authorization": "Bearer " + context._access_token,
+            "Dropbox-API-Arg": JSON.stringify({"path": id + "/" + name})
+          }
         });
       })
       .push(function (evt) {
+        if (evt.target.response instanceof Blob) {
+          return evt.target.response;
+        }
         return new Blob(
-          [evt.target.response || evt.target.responseText],
+          [evt.target.responseText],
           {"type": evt.target.getResponseHeader('Content-Type') ||
             "application/octet-stream"}
         );
       }, function (error) {
-        if (error.target !== undefined && error.target.status === 404) {
-          throw new jIO.util.jIOError("Cannot find attachment: " +
-                                      id + ", " + name, 404);
+        if (error.target !== undefined && error.target.status === 409) {
+          if (!(error.target.response instanceof Blob)) {
+            var err_content = JSON.parse(error.target.responseText);
+            if ((err_content.error['.tag'] === 'path') &&
+                (err_content.error.path['.tag'] === 'not_found')) {
+              throw new jIO.util.jIOError("Cannot find attachment: " +
+                                          id + "/, " + name, 404);
+            }
+            throw error;
+          }
+          return new RSVP.Queue()
+            .push(function () {
+              return jIO.util.readBlobAsText(error.target.response);
+            })
+            .push(function (evt) {
+              var err_content = JSON.parse(evt.target.result);
+              if ((err_content.error['.tag'] === 'path') &&
+                  (err_content.error.path['.tag'] === 'not_found')) {
+                throw new jIO.util.jIOError("Cannot find attachment: " +
+                                            id + "/, " + name, 404);
+              }
+              throw error;
+            });
         }
         throw error;
       });
@@ -10538,16 +10592,22 @@ return new Parser;
       .push(function () {
         return jIO.util.ajax({
           type: "POST",
-          url: remote_template.expand({
-            access_token: that._access_token,
-            root: that._root,
-            path: id + name
-          })
+          url: REMOVE_URL,
+          headers: {
+            "Authorization": "Bearer " + that._access_token,
+            "Content-Type": "application/json"
+          },
+          data: JSON.stringify({"path": id + "/" + name})
         });
       }).push(undefined, function (error) {
-        if (error.target !== undefined && error.target.status === 404) {
-          throw new jIO.util.jIOError("Cannot find attachment: " +
-                                      id + ", " + name, 404);
+        if (error.target !== undefined && error.target.status === 409) {
+          var err_content = JSON.parse(error.target.response ||
+                                       error.target.responseText);
+          if ((err_content.error['.tag'] === 'path_lookup') &&
+              (err_content.error.path_lookup['.tag'] === 'not_found')) {
+            throw new jIO.util.jIOError("Cannot find attachment: " +
+                                        id + "/, " + name, 404);
+          }
         }
         throw error;
       });
@@ -10555,7 +10615,7 @@ return new Parser;
 
   jIO.addStorage('dropbox', DropboxStorage);
 
-}(jIO, RSVP, Blob, UriTemplate));
+}(jIO, RSVP, Blob, JSON));
 ;/*
  * Copyright 2013, Nexedi SA
  * Released under the LGPL license.
