@@ -41,6 +41,9 @@
  <portal_type id="Property Type Validity Constraint">
   <item>ConstraintType</item>
  </portal_type>
+ <portal_type id="Python Script">
+  <item>CatalogFilter</item>
+ </portal_type>
  <portal_type id="SQL Method">
   <item>CatalogFilter</item>
   <item>SQLMethod</item>
