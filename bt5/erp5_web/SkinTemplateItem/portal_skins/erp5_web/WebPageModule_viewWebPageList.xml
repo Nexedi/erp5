@@ -72,6 +72,7 @@
                       <list>
                         <string>listbox_effective_date</string>
                         <string>listbox_subject</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
