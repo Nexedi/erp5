@@ -154,7 +154,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@id='id-toolbar-btn-pageorient']</td>
+  <td>//button[@id='id-toolbar-btn-align-center']</td>
   <td></td>
 </tr>
 <tr>
