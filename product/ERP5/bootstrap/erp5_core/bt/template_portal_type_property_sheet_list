@@ -12,6 +12,7 @@ Document Component | SortIndex
 Extension Component | SortIndex
 Property Existence Constraint | ConstraintType
 Property Type Validity Constraint | ConstraintType
+Python Script | CatalogFilter
 SQL Method | CatalogFilter
 SQL Method | SQLMethod
 Script Constraint | ConstraintType
