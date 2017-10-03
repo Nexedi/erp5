@@ -74,10 +74,16 @@ class JSONRepresentableMixin:
     xml_value = f.getvalue()
     return xmltodict.parse(xml_value)
 
-  def fromJSON(self):
+  def fromJSON(self, val):
     """
     Updates an object, based on a JSON representation
     """
-    pass
+    dict_value = json.loads(val)
+
+    # Convert the dict_value to XML representation
+    xml_value = xmltodict.unparse(dict_value)
+
+    f = StringIO(xml_value)
+    return XMLExportImport.importXML(self._p_jar, f)
 
 InitializeClass(JSONRepresentableMixin)
