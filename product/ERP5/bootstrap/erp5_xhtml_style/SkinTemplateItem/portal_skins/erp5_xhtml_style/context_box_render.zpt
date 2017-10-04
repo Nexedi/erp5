@@ -101,12 +101,12 @@
       <span class="first"
             tal:define="search_actions actions/object_search | nothing;
             exchange_actions actions/object_exchange | nothing;
-            exchange_jio_actions actions/object_exchange_jio | nothing;
+            exchange_jio_actions actions/object_jio_exchange | nothing;
             report_actions actions/object_report | nothing;
-            report_jio_actions actions/object_report_jio | nothing;
+            report_jio_actions actions/object_jio_report | nothing;
             button_actions actions/object_button | nothing;
             fast_input_actions actions/object_fast_input | nothing;
-            fast_input_jio_actions actions/object_fast_input_jio | nothing;
+            fast_input_jio_actions actions/object_jio_fast_input | nothing;
             sort_actions actions/object_sort | nothing;
             ui_actions actions/object_ui | nothing;
             print_actions actions/object_print | nothing;

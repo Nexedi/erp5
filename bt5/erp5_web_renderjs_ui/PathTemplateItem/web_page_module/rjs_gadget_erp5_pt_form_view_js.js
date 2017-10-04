@@ -92,9 +92,9 @@
             gadget.getUrlFor({command: 'selection_previous'}),
             gadget.getUrlFor({command: 'selection_next'}),
             gadget.getUrlFor({command: 'change', options: {page: "tab"}}),
-            gadget.state.erp5_document._links.action_object_report_jio ?
-                gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
-                "",
+            gadget.state.erp5_document._links.action_object_jio_report ?
+              gadget.getUrlFor({command: 'change', options: {page: "export"}}) :
+              "",
             calculatePageTitle(gadget, gadget.state.erp5_document)
           ]);
         })

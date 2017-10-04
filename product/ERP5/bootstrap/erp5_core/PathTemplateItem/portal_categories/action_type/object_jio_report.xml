@@ -57,11 +57,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_report_jio</string>
-                <string>action_type/object_report_jio</string>
-                <string>action_type/object_report_jio</string>
-                <string>action_type/object_report_jio</string>
-                <string>action_type/object_report_jio</string>
+                <string>action_type/object_jio_report</string>
+                <string>action_type/object_jio_report</string>
               </tuple>
             </value>
         </item>
@@ -73,7 +70,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>object_report_jio</string> </value>
+            <value> <string>object_jio_report</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -81,7 +78,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>object_report_jio</string> </value>
+            <value> <string>object_jio_report</string> </value>
         </item>
       </dictionary>
     </pickle>

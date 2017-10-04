@@ -75,19 +75,19 @@
     .declareMethod("render", function (options) {
       var gadget = this,
         erp5_document,
-        view_list,
+        transition_list,
         action_list;
 
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
           erp5_document = result;
-          view_list = asArray(erp5_document._links.action_workflow);
-          action_list = asArray(erp5_document._links.action_object_action_jio)
+          transition_list = asArray(erp5_document._links.action_workflow);
+          action_list = asArray(erp5_document._links.action_object_jio_action)
                         .concat(asArray(erp5_document._links.action_object_clone_action));
 
           return RSVP.all([
-            renderLinkList(gadget, "Actions", "gear", view_list, options.editable),
-            renderLinkList(gadget, "Workflow-Transitions", "random", action_list, true)
+            renderLinkList(gadget, "Actions", "gear", action_list, options.editable),
+            renderLinkList(gadget, "Workflow-Transitions", "random", transition_list, true)
           ]);
         })
         .push(function (translated_html_link_list) {
