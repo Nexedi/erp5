@@ -38,6 +38,7 @@ class ERP5TestNode(TestCase):
     self.log_file = os.path.join(self.log_directory,'test.log')
     self.remote_repository0 = os.path.join(self._temp_dir, 'rep0')
     self.remote_repository1 = os.path.join(self._temp_dir, 'rep1')
+    self.remote_repository_periodic = 'periodic-prefix://%Y/%m/%d'
     self.remote_repository2 = os.path.join(self._temp_dir, 'rep2')
     self.remote_repository_broken = os.path.join(self._temp_dir, 'broken')
     self.system_temp_folder = os.path.join(self._temp_dir,'tmp')
@@ -106,7 +107,9 @@ class ERP5TestNode(TestCase):
              'branch': 'master'},
             {'url': self.remote_repository1,
              'buildout_section_id': 'rep1',
-             'branch': 'master'}]}]
+             'branch': 'master'},
+            {'url': self.remote_repository_periodic,
+             'buildout_section_id': 'periodic'}]}]
     if add_third_repository:
       # add a third repository
       # insert in position zero since we already had bug when the profile_path
@@ -144,36 +147,41 @@ class ERP5TestNode(TestCase):
 
   def generateTestRepositoryList(self, add_third_repository=False):
     commit_dict = {}
-    repository_list = [self.remote_repository0, self.remote_repository1]
+    repository_list = [self.remote_repository0, self.remote_repository1,
+                       self.remote_repository_periodic]
     if add_third_repository:
       repository_list.append(self.remote_repository2)
     for i, repository_path in enumerate(repository_list):
-      call = self.getCaller(cwd=repository_path)
-      call("git init".split())
-      git_config = open(os.path.join(repository_path, '.git', 'config'), 'a')
-      git_config.write("""
+      if repository_path.startswith('periodic-prefix'):
+        commit_dict['rep%i' % i] = [[time.strftime('%Y/%m/%d'), 'first_commit']]
+        continue
+      else:
+        call = self.getCaller(cwd=repository_path)
+        call("git init".split())
+        git_config = open(os.path.join(repository_path, '.git', 'config'), 'a')
+        git_config.write("""
 [user]
   name = a b
   email = a@b.c
 """)
-      git_config.close()
-      call("touch first_file".split())
-      call("git add first_file".split())
-      call("git commit -v -m first_commit".split())
-      my_file = open(os.path.join(repository_path, 'first_file'), 'w')
-      my_file.write("initial_content%i" % i)
-      my_file.close()
-      call("git commit -av -m next_commit".split())
-      output = call(['git', 'log', '--format=%H %s'])
-      output = output.strip()
-      output_line_list = output.split("\n")
-      self.assertEquals(2, len(output_line_list))
-      expected_commit_subject_list = ["next_commit", "first_commit"]
-      commit_subject_list = [x.split()[1] for x in output_line_list]
-      self.assertEquals(expected_commit_subject_list, commit_subject_list)
-      commit_dict['rep%i' % i] = [x.split() for x in output_line_list]
-      if repository_path == self.remote_repository2:
-        output = call('git checkout master -b foo'.split())
+        git_config.close()
+        call("touch first_file".split())
+        call("git add first_file".split())
+        call("git commit -v -m first_commit".split())
+        my_file = open(os.path.join(repository_path, 'first_file'), 'w')
+        my_file.write("initial_content%i" % i)
+        my_file.close()
+        call("git commit -av -m next_commit".split())
+        output = call(['git', 'log', '--format=%H %s'])
+        output = output.strip()
+        output_line_list = output.split("\n")
+        self.assertEquals(2, len(output_line_list))
+        expected_commit_subject_list = ["next_commit", "first_commit"]
+        commit_subject_list = [x.split()[1] for x in output_line_list]
+        self.assertEquals(expected_commit_subject_list, commit_subject_list)
+        commit_dict['rep%i' % i] = [x.split() for x in output_line_list]
+        if repository_path == self.remote_repository2:
+          output = call('git checkout master -b foo'.split())
     # commit_dict looks like
     # {'rep1': [['6669613db7239c0b7f6e1fdb82af6f583dcb3a94', 'next_commit'],
     #           ['4f1d14de1b04b4f878a442ee859791fa337bcf85', 'first_commit']],
@@ -214,12 +222,13 @@ class ERP5TestNode(TestCase):
     test_node = self.getTestNode()
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
     repository_path_list = []
     for vcs_repository in node_test_suite.vcs_repository_list:
       repository_path_list.append(vcs_repository['repository_path'])
     expected_list = ["%s/rep0" % node_test_suite.working_directory,
-                     "%s/rep1" % node_test_suite.working_directory]
+                     "%s/rep1" % node_test_suite.working_directory,
+                     "%s/periodic" % node_test_suite.working_directory,]
     self.assertEquals(expected_list, repository_path_list)
 
   def test_04_constructProfile(self, my_test_type='UnitTest'):
@@ -232,7 +241,8 @@ class ERP5TestNode(TestCase):
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
     node_test_suite.revision_list = (('rep1', (1234, 'azerty')),
-                                     ('rep2', (3456, 'qwerty')))
+                                     ('rep2', (3456, 'qwerty')),
+                                     ('periodic', (1, 'prdct')))
     test_node.constructProfile(node_test_suite,my_test_type)
     self.assertEquals("%s/software.cfg" % (node_test_suite.working_directory,),
                       node_test_suite.custom_profile_path)
@@ -241,6 +251,13 @@ class ERP5TestNode(TestCase):
       expected_profile = """
 [buildout]
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
+
+[periodic]
+repository = %(temp_dir)s/testnode/foo/periodic
+branch = master
+revision =
+develop = false
+shared = true
 
 [rep1]
 repository = %(temp_dir)s/testnode/foo/rep1
@@ -259,9 +276,17 @@ shared = true
     else:
       revision1 = "azerty"
       revision2 = "qwerty"
+      revision_periodic = "prdct"
       expected_profile = """
 [buildout]
 extends = %(temp_dir)s/testnode/foo/rep0/software.cfg
+
+[periodic]
+repository = <obfuscated_url>/periodic/periodic.git
+revision = %(revision_periodic)s
+ignore-ssl-certificate = true
+develop = false
+shared = true
 
 [rep1]
 repository = <obfuscated_url>/rep1/rep1.git
@@ -276,7 +301,8 @@ revision = %(revision2)s
 ignore-ssl-certificate = true
 develop = false
 shared = true
-""" % {'temp_dir': self._temp_dir, 'revision1': revision1, 'revision2': revision2}
+""" % {'temp_dir': self._temp_dir, 'revision1': revision1,
+       'revision2': revision2, 'revision_periodic': revision_periodic}
     self.assertEquals(expected_profile, profile.read())
     profile.close()
 
@@ -293,9 +319,10 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(2, len(rev_list))
+    self.assertEquals(3, len(rev_list))
     self.assertEquals(rev_list[0], 'rep0=2-%s' % commit_dict['rep0'][0][0])
     self.assertEquals(rev_list[1], 'rep1=2-%s' % commit_dict['rep1'][0][0])
+    self.assertEquals(rev_list[2], 'periodic=1-%s' % commit_dict['rep2'][0][0])
     my_file = open(os.path.join(self.remote_repository1, 'first_file'), 'w')
     my_file.write("next_content")
     my_file.close()
@@ -304,7 +331,8 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     self.assertTrue(rev_list[0].startswith('rep0=2-'))
     self.assertTrue(rev_list[1].startswith('rep1=3-'))
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertTrue(rev_list[2].startswith('periodic=1-'))
+    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
     for vcs_repository in node_test_suite.vcs_repository_list:
       self.assertTrue(os.path.exists(vcs_repository['repository_path']))
 
@@ -318,8 +346,8 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite, add_third_repository=True)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(3, len(rev_list))
-    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
+    self.assertEquals(4, len(rev_list))
+    self.assertEquals(4, len(node_test_suite.vcs_repository_list))
     rep2_clone_path = [x['repository_path'] for x in \
                        node_test_suite.vcs_repository_list \
                        if x['repository_path'].endswith("rep2")][0]
@@ -354,8 +382,8 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(2, len(rev_list))
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEquals(3, len(rev_list))
+    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
     # patch deleteRepository to make sure it will be called once for the wrong
     # repos, and not for the repos which has not changed
     deleted_repository_path_list = []
@@ -393,8 +421,8 @@ shared = true
     node_test_suite = test_node.getNodeTestSuite('foo')
     self.updateNodeTestSuiteData(node_test_suite)
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEquals(2, len(rev_list))
-    self.assertEquals(2, len(node_test_suite.vcs_repository_list))
+    self.assertEquals(3, len(rev_list))
+    self.assertEquals(3, len(node_test_suite.vcs_repository_list))
     rep0_clone_path = [x['repository_path'] for x in \
                    node_test_suite.vcs_repository_list \
                    if x['repository_path'].endswith("rep0")][0]
@@ -403,8 +431,8 @@ shared = true
     my_file.close()
     # make sure code still works
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
-    self.assertEqual(2, len(rev_list))
-    self.assertEqual(2, len(node_test_suite.vcs_repository_list))
+    self.assertEqual(3, len(rev_list))
+    self.assertEqual(3, len(node_test_suite.vcs_repository_list))
     # and check local change was resetted
     my_file = open(os.path.join(rep0_clone_path, 'first_file'), 'r')
     self.assertEqual("initial_content0", my_file.read())
@@ -438,14 +466,24 @@ shared = true
       for vcs_repository in node_test_suite.vcs_repository_list:
         call = self.getCaller(cwd=vcs_repository['repository_path'])
         if count:
-          info_list.append(
-            call("git rev-list --topo-order --count HEAD".split()).strip())
+          if os.path.isdir(os.path.join(vcs_repository['repository_path'],
+            '.periodic-prefix')):
+            info_list.append('1')
+          else:
+            info_list.append(
+              call("git rev-list --topo-order --count HEAD".split()).strip())
         if hash:
-          info_list.append(
-            call("git log -n1 --format=%H".split()).strip())
+          if os.path.isdir(os.path.join(vcs_repository['repository_path'],
+            '.periodic-prefix')):
+            info_list.append(open(os.path.join(vcs_repository['repository_path'],
+            'revision.txt')).read())
+          else:
+            info_list.append(
+              call("git log -n1 --format=%H".split()).strip())
       return info_list
-    self.assertEquals(['2', '2'], getRepInfo(count=1))
-    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0]],
+    self.assertEquals(['2', '2', '1'], getRepInfo(count=1))
+    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][0][0],
+                       commit_dict['rep2'][0][0]],
                       getRepInfo(hash=1))
     class TestResult(object):
       revision = NodeTestSuite.revision
@@ -455,8 +493,9 @@ shared = true
     test_result.revision_list = (('rep0', (2, commit_dict['rep0'][0][0])),
                                  ('rep1', (1, commit_dict['rep1'][1][0])))
     test_node.checkRevision(test_result, node_test_suite)
-    self.assertEquals(['2', '1'], getRepInfo(count=1))
-    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0]],
+    self.assertEquals(['2', '1', '1'], getRepInfo(count=1))
+    self.assertEquals([commit_dict['rep0'][0][0],commit_dict['rep1'][1][0],
+                       commit_dict['rep2'][0][0]],
                       getRepInfo(hash=1))
 
   def test_07_checkExistingTestSuite(self):
