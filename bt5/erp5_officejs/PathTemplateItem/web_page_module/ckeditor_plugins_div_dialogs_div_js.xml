@@ -205,7 +205,9 @@
             </item>
             <item>
                 <key> <string>comment</string> </key>
-                <value> <string></string> </value>
+                <value>
+                  <none/>
+                </value>
             </item>
             <item>
                 <key> <string>error_message</string> </key>
@@ -213,7 +215,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>962.35623.65505.53504</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -231,7 +233,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1491220123.13</float>
+                        <float>1507124880.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

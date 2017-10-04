@@ -1,18 +1,18 @@
-&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
-&lt;!--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
 Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.html or http://ckeditor.com/license
---&gt;
-&lt;html&gt;
-&lt;head&gt;
-	&lt;title&gt;&lt;/title&gt;
-	&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;
-	&lt;script type=&quot;text/javascript&quot;&gt;
+-->
+<html>
+<head>
+	<title></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script type="text/javascript">
 
 function gup( name )
 {
 	name = name.replace( /[\[]/, '\\\[' ).replace( /[\]]/, '\\\]' ) ;
-	var regexS = '[\\?&amp;]' + name + '=([^&amp;#]*)' ;
+	var regexS = '[\\?&]' + name + '=([^&#]*)' ;
 	var regex = new RegExp( regexS ) ;
 	var results = regex.exec( window.location.href ) ;
 
@@ -46,10 +46,10 @@ function OnMessage (event) {
 
 function listenPostMessage() {
     if (window.addEventListener) { // all browsers except IE before version 9
-            window.addEventListener (&quot;message&quot;, OnMessage, false);
+            window.addEventListener ("message", OnMessage, false);
     }else {
             if (window.attachEvent) { // IE before version 9
-                        window.attachEvent(&quot;onmessage&quot;, OnMessage);
+                        window.attachEvent("onmessage", OnMessage);
                 }
         }
 }
@@ -60,7 +60,7 @@ function onLoad()
 	listenPostMessage();
 }
 
-&lt;/script&gt;
-&lt;/head&gt;
-&lt;body onload=&quot;onLoad()&quot;&gt;&lt;p&gt;&lt;/p&gt;&lt;/body&gt;
-&lt;/html&gt;
+</script>
+</head>
+<body onload="onLoad()"><p></p></body>
+</html>
