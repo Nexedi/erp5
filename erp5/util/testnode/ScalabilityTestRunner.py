@@ -149,7 +149,7 @@ class ScalabilityTestRunner():
       config = self._generateInstanceXML(software_configuration,
                                          test_result, test_suite)
       request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-      self.slapos_communicator.requestStart(instance_title, request_kw)
+      self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
       self.authorize_request = False
       return {'status_code' : 0}                                          
     else:
@@ -210,7 +210,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     config = self._generateInstanceXML(software_configuration,
                                        test_result, test_suite)
     request_kw = {"partition_parameter_kw": {"_" : json.dumps(config)} }
-    self.slapos_communicator.requestStart(instance_title, request_kw)
+    self.slapos_communicator.requestInstanceStart(instance_title, request_kw)
     return {'status_code' : 0} 
 
   def _waitInstanceCreation(self, instance_title, max_time=MAX_CREATION_INSTANCE_TIME):
@@ -334,7 +334,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
       self.log("Software reachable profile path is : %s " %(self.reachable_profile))
 
       # Initialize SlapOS Master Communicator
-      self.slapos_communicator = SlapOSMasterCommunicator.SoftwareReleaseTester(
+      self.slapos_communicator = SlapOSMasterCommunicator.SlapOSTester(
 					self.instance_title,
 					self.log, 
 					slap, 
@@ -402,16 +402,16 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
     for configuration in configuration_list:
       # First configuration doesn't need XML configuration update.
       if count > 0:
-        self.slapos_communicator.requestStop()
+        self.slapos_communicator.requestInstanceStop()
         self.slapos_communicator.waitInstanceStopped(self.instance_title)
         self._updateInstanceXML(configuration, self.instance_title,
                                 node_test_suite.test_result, node_test_suite.test_suite)
         self.slapos_communicator.waitInstanceStarted(self.instance_title)
-        self.slapos_communicator.requestStart()
+        self.slapos_communicator.requestInstanceStart()
 
       self.slapos_communicator.waitInstanceStarted(self.instance_title)
       self.log("[DEBUG] INSTANCE CORRECTLY STARTED")
-      
+
       # ROQUE XXX : for debug
       if True:
         self.log("RETURN FOR DEBUG")
@@ -451,7 +451,7 @@ late a SlapOS (positive) answer." %(str(os.getpid()),str(os.getpid()),))
         break
 
     # Stop current instance
-    self.slapos_communicator.requestStop()
+    self.slapos_communicator.requestInstanceStop()
     self.slapos_communicator.waitInstanceStopped(self.instance_title)
 
     # Delete old instances
