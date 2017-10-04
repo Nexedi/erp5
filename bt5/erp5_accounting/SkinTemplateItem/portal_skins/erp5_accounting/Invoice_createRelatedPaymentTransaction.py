@@ -11,7 +11,12 @@ if date is None:
   date = DateTime()
 portal = context.getPortalObject()
 is_source = context.AccountingTransaction_isSourceView()
+
+transaction_portal_type = 'Payment Transaction'
 line_portal_type = 'Accounting Transaction Line'
+if context.getPortalType() == 'Internal Invoice Transaction':
+  transaction_portal_type = 'Internal Invoice Transaction'
+  line_portal_type = 'Internal Invoice Transaction Line'
 
 # update selection params, because it'll be used in the selection dialog.
 portal.portal_selections.setSelectionParamsFor(
@@ -36,7 +41,7 @@ if sum(total_payable_price_details.values()) == 0:
   return None
 
 related_payment = portal.accounting_module.newContent(
-  portal_type="Payment Transaction",
+  portal_type=transaction_portal_type,
   title=str(Base_translateString("Payment of ${invoice_title}",
           mapping=dict(invoice_title=unicode((context.getReference() or
                                               context.getTitle() or ''),

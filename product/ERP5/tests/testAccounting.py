@@ -5782,6 +5782,47 @@ class TestInternalInvoiceTransaction(AccountingTestCase):
         internal_invoice, 'stop_action')
     self.assertEqual('stopped', internal_invoice.getSimulationState())
 
+  def test_internal_invoice_create_related_payment(self):
+    # 'Create Related Payment' is available on internal invoice transaction
+    internal_invoice = self.portal.accounting_module.newContent(
+        portal_type='Internal Invoice Transaction',
+        title='test invoice',
+        source_section_value=self.section,
+        destination_section_value=self.main_section,
+        start_date=DateTime(2015, 1, 1),
+    )
+    line_1, line_2 = internal_invoice.getMovementList()
+    line_1.edit(
+        source_value=self.portal.account_module.receivable,
+        source_debit=100)
+    line_2.edit(
+        source_value=self.portal.account_module.goods_sales,
+        source_credit=100)
+    self.commit()
+
+    self.portal.portal_workflow.doActionFor(
+        internal_invoice, 'start_action')
+    self.assertEqual('started', internal_invoice.getSimulationState())
+
+    payment_node = self.section.newContent(portal_type='Bank Account')
+
+    payment = internal_invoice.Invoice_createRelatedPaymentTransaction(
+        node=self.account_module.bank.getRelativeUrl(),
+        payment=payment_node.getRelativeUrl(),
+        payment_mode='check',
+        batch_mode=True)
+    # on internal invoice transaction, we create a payment transaction
+    self.assertEqual(
+        'Internal Invoice Transaction',
+        payment.getPortalType())
+    self.assertEqual(internal_invoice, payment.getCausalityValue())
+    self.assertItemsEqual(
+        [ (self.portal.account_module.bank, 100, 0),
+          (self.portal.account_module.receivable, 0, 100), ],
+        [ (line.getSourceValue(), line.getSourceDebit(), line.getSourceCredit())
+          for line in payment.getMovementList(
+              portal_type='Internal Invoice Transaction Line')])
+
 
 class TestAccountingCodingStyle(CodingStyleTestCase, AccountingTestCase):
   """Runs CodingStyleTestCase checks on erp5_accounting
