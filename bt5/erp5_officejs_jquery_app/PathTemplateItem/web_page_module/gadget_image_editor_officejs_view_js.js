@@ -50,7 +50,7 @@
             });
         })
         .push(function () {
-          return gadget.notifySubmitted('Data Updated');
+          return gadget.notifySubmitted({message: 'Data Updated', status: "success"});
         });
     })
 
