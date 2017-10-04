@@ -95,8 +95,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     for portal_type in portal_type_list:
       for brain in portal_catalog(portal_type = portal_type):
         obj = brain.getObject()
-        userdb_path, user_id = obj.getOwnerTuple()
-        obj.assignRoleToSecurityGroup(user_name = user_id)
+        obj.updateLocalRolesOnSecurityGroups()
 
   def assignPASRolesToUser(self, user_name, role_list):
     """
