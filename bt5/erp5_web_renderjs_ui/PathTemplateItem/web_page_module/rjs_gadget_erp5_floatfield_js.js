@@ -19,9 +19,8 @@
           value: window.parseFloat(field_json.default),
           text_content: '',
           // `step` is used for browser-level validation thus a mandatory value
-          // HTML5 default is 1.0 which is not feasible most of the time thus we
-          // default to over-sufficiently small value
-          step: 0.00000001,
+          // if unspecified we can use "any" value
+          step: "any",
           // `append` is a string to display next to the field ("%", "EUR"...)
           append: ''
         };
