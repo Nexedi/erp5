@@ -50,4 +50,7 @@ else:
 
   response.setHeader('Content-Type', web_page.getContentType('text/html'))
 
+  # The vanilla HTML is wanted
+  response.setBase(None)
+
 return web_content
