@@ -102,6 +102,7 @@
                     <value>
                       <list>
                         <string>my_destination_section</string>
+                        <string>my_destination_payment</string>
                         <string>my_destination_reference</string>
                         <string>my_title</string>
                         <string>my_source_section</string>

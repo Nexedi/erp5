@@ -11,7 +11,12 @@ if date is None:
   date = DateTime()
 portal = context.getPortalObject()
 is_source = context.AccountingTransaction_isSourceView()
+
+transaction_portal_type = 'Payment Transaction'
 line_portal_type = 'Accounting Transaction Line'
+if context.getPortalType() == 'Internal Invoice Transaction':
+  transaction_portal_type = 'Internal Invoice Transaction'
+  line_portal_type = 'Internal Invoice Transaction Line'
 
 # update selection params, because it'll be used in the selection dialog.
 portal.portal_selections.setSelectionParamsFor(
@@ -30,13 +35,13 @@ total_payable_price_details = \
 # if there's nothing more to pay, don't create an empty transaction
 if sum(total_payable_price_details.values()) == 0:
   if not batch_mode:
-    return context.REQUEST.RESPONSE.redirect(
-      "%s/view?portal_status_message=%s" % (
-      context.absolute_url(), Base_translateString('Nothing more to pay.')))
+    return context.Base_redirect(
+      form_id,
+      keep_items={'portal_status_message': Base_translateString('Nothing more to pay.')})
   return None
 
 related_payment = portal.accounting_module.newContent(
-  portal_type="Payment Transaction",
+  portal_type=transaction_portal_type,
   title=str(Base_translateString("Payment of ${invoice_title}",
           mapping=dict(invoice_title=unicode((context.getReference() or
                                               context.getTitle() or ''),
@@ -55,12 +60,12 @@ related_payment = portal.accounting_module.newContent(
   payment_mode=payment_mode,
 )
 if is_source:
-  related_payment.edit(destination_payment=context.getDestinationPayment(),
-                       source_payment=payment)
+  related_payment.setDestinationPayment(context.getDestinationPayment())
+  related_payment.setSourcePayment(payment)
   mirror_section = context.getDestinationSection()
 else:
-  related_payment.edit(destination_payment=payment,
-              source_payment=context.getSourcePayment())
+  related_payment.setDestinationPayment(payment)
+  related_payment.setSourcePayment(context.getSourcePayment())
   mirror_section = context.getSourceSection()
 
 bank = related_payment.newContent(

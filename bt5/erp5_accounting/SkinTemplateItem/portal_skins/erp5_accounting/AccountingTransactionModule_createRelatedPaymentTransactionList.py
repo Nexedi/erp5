@@ -1,5 +1,4 @@
 from Products.ERP5Type.Message import translateString
-from zExceptions import Redirect
 
 portal = context.getPortalObject()
 countMessage = portal.portal_activities.countMessage
@@ -21,10 +20,10 @@ portal.portal_selections.setSelectionParamsFor('accounting_create_related_paymen
 
 # XXX prevent to call this on the whole module:
 if len(object_list) >= 1000:
-  return context.REQUEST.RESPONSE.redirect(
-    "%s/view?portal_status_message=%s" % (
-        context.absolute_url(), translateString(
-         'Refusing to process more than 1000 objects, check your selection.')))
+  return context.Base_redirect(
+      form_id,
+      keep_items={'portal_status_message': translateString(
+          'Refusing to process more than 1000 objects, check your selection.')})
 
 tag = 'payment_creation_%s' % random.randint(0, 1000)
 activated = 0
@@ -33,9 +32,11 @@ for obj in object_list:
     obj = obj.getObject()
     if countMessage(path=obj.getPath(),
                     method_id='Invoice_createRelatedPaymentTransaction'):
-      raise Redirect, "%s/view?portal_status_message=%s" % (
-                context.absolute_url(), translateString(
-        'Payment creation already in progress, abandon.'))
+      return context.Base_redirect(
+          form_id,
+          abort_transaction=True,
+          keep_items={'portal_status_message': translateString(
+              'Payment creation already in progress, abandon.')})
     obj.activate(tag=tag).Invoice_createRelatedPaymentTransaction(
                                                   node=node,
                                                   payment_mode=payment_mode,
@@ -44,17 +45,18 @@ for obj in object_list:
     activated += 1
 
 if not activated:
-  return context.REQUEST.RESPONSE.redirect(
-    "%s/view?portal_status_message=%s" % (
-        context.absolute_url(), translateString('No invoice in your selection.')))
+  return context.Base_redirect(
+      form_id,
+      keep_items={'portal_status_message': translateString(
+          'No invoice in your selection.')})
 
 # activate something on the folder
 context.activate(after_tag=tag).getTitle()
 
-return context.REQUEST.RESPONSE.redirect(
-    "%s/view?portal_status_message=%s" % (
-        context.absolute_url(), translateString(
-          'Payments creation for ${activated_invoice_count} on'
-          ' ${total_selection_count} invoices in progress.',
-          mapping=dict(activated_invoice_count=activated,
-                       total_selection_count=len(object_list)))))
+return context.Base_redirect(
+    form_id,
+    keep_items={'portal_status_message': translateString(
+        'Payments creation for ${activated_invoice_count} on'
+        ' ${total_selection_count} invoices in progress.',
+        mapping={'activated_invoice_count': activated,
+                 'total_selection_count': len(object_list)})})
