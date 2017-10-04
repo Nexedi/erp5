@@ -155,8 +155,12 @@ manage_addSQLCatalogForm = DTMLFile('dtml/addSQLCatalog',globals())
 #  global_uid_buffer_dict[catalog_path][thread_id] = UidBuffer
 global_uid_buffer_dict = {}
 
+# These are global variables on memory, so shared only by threads in the same Zope instance.
 # This is used for exclusive access to the list of reserved uids.
 global_reserved_uid_lock = allocate_lock()
+
+# This is set to the time when reserved uids are cleared in this Zope instance.
+global_clear_reserved_time = None
 
 def manage_addSQLCatalog(self, id, title,
              vocab_id='create_default_catalog_', # vocab_id is a strange name - not abbreviation
@@ -635,10 +639,6 @@ class Catalog(Folder,
   # This is to record the maximum value of uids. Because this uses the class Length
   # in BTrees.Length, this does not generate conflict errors.
   _max_uid = None
-
-  # These are class variable on memory, so shared only by threads in the same Zope instance.
-  # This is set to the time when reserved uids are cleared in this Zope instance.
-  _local_clear_reserved_time = None
 
   # This is an instance id which specifies who owns which reserved uids.
   _instance_id = getattr(getConfiguration(), 'instance_id', None)
@@ -1205,7 +1205,6 @@ class Catalog(Folder,
 
   security.declarePrivate('getUIDBuffer')
   def getUIDBuffer(self, force_new_buffer=False):
-    klass = self.__class__
     assert global_reserved_uid_lock.locked()
     assert getattr(self, 'aq_base', None) is not None
     instance_key = self.getPhysicalPath()
@@ -1226,13 +1225,13 @@ class Catalog(Folder,
     """
       Produces reserved uids in advance
     """
-    klass = self.__class__
+    global global_clear_reserved_time
     assert global_reserved_uid_lock.locked()
     # This checks if the list of local reserved uids was cleared after clearReserved
     # had been called.
-    force_new_buffer = (klass._local_clear_reserved_time != self._last_clear_reserved_time)
+    force_new_buffer = (global_clear_reserved_time != self._last_clear_reserved_time)
     uid_buffer = self.getUIDBuffer(force_new_buffer=force_new_buffer)
-    klass._local_clear_reserved_time = self._last_clear_reserved_time
+    global_clear_reserved_time = self._last_clear_reserved_time
     if len(uid_buffer) == 0:
       id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
       if id_tool is not None:
@@ -1318,7 +1317,6 @@ class Catalog(Folder,
     if not self.getPortalObject().isIndexable():
       return None
 
-    klass = self.__class__
     with global_reserved_uid_lock:
       self.produceUid()
       uid_buffer = self.getUIDBuffer()
