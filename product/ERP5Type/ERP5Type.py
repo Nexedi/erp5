@@ -58,24 +58,29 @@ class LocalRoleAssignorMixIn(object):
 
     security.declarePrivate('updateLocalRolesOnDocument')
     @UnrestrictedMethod
-    def updateLocalRolesOnDocument(self, ob, user_name=None, reindex=True, activate_kw=()):
+    def updateLocalRolesOnDocument(self, ob, reindex=True, activate_kw=()):
       """
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
       """
-      if user_name is None:
-        # First try to guess from the owner
-        owner = ob.getOwnerTuple()
-        if owner:
-          user_name = owner[1]
-        else:
-          for user_name, role_list in (ob.__ac_local_roles__ or {}).iteritems():
-            if 'Owner' in role_list:
-              break
-          else:
-            user_name = getSecurityManager().getUser().getId()
+      user_name = None
 
-      group_id_role_dict = {user_name: {'Owner'}}
+      # First try to guess from the owner
+      owner = ob.getOwnerTuple()
+      if owner:
+        # A user who is recorded as owner in Zope AccessControl's
+        # ownership is chosen.
+        user_name = owner[1]
+      else:
+        # Else one of the current users who have Owner local role is
+        # chosen.
+        for user_name, role_list in (ob.__ac_local_roles__ or {}).iteritems():
+          if 'Owner' in role_list:
+            break
+
+      group_id_role_dict = {}
+      if user_name is not None:
+        group_id_role_dict[user_name] = {'Owner'}
       local_roles_group_id_group_id = {}
       # Merge results from applicable roles
       for role_generator in self.getFilteredRoleListFor(ob):

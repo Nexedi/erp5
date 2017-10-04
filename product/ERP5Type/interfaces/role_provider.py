@@ -42,7 +42,7 @@ class ILocalRoleGenerator(Interface):
 class ILocalRoleAssignor(Interface):
   """
   """
-  def updateLocalRolesOnDocument(ob, user_name=None, reindex=True):
+  def updateLocalRolesOnDocument(ob, reindex=True):
     """Assign Local Roles to Groups on a document
     """
 
