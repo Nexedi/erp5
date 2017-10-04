@@ -74,8 +74,9 @@ class LocalRoleAssignorMixIn(object):
       else:
         # Else one of the current users who have Owner local role is
         # chosen.
-        for user_name, role_list in (ob.__ac_local_roles__ or {}).iteritems():
+        for id_, role_list in (ob.__ac_local_roles__ or {}).iteritems():
           if 'Owner' in role_list:
+            user_name = id_
             break
 
       group_id_role_dict = {}
