@@ -2,6 +2,7 @@ web_page_module/officejs_todomvc_*
 image_module/officejs_todomvc_*
 web_site_module/officejs_todomvc
 image_module/officejs_audioplayer_*
+image_module/wallsearch_icon_svg
 web_page_module/officejs_audioplayer_*
 web_page_module/gadget_field_*
 web_site_module/officejs_audioplayer
@@ -35,3 +36,8 @@ web_site_module/officejs_whiteboard
 web_site_module/officejs_export
 web_site_module/officejsoldv1
 web_site_module/officejsoldv1/**
+web_site_module/officejs_wallsearch
+web_site_module/officejs_wallsearch/**
+web_page_module/ojs_*
+web_page_module/fb_sdk_js
+web_page_module/wallsearch_privacy_policy_html
