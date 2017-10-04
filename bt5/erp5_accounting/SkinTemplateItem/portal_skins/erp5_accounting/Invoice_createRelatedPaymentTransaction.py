@@ -55,12 +55,12 @@ related_payment = portal.accounting_module.newContent(
   payment_mode=payment_mode,
 )
 if is_source:
-  related_payment.edit(destination_payment=context.getDestinationPayment(),
-                       source_payment=payment)
+  related_payment.setDestinationPayment(context.getDestinationPayment())
+  related_payment.setSourcePayment(payment)
   mirror_section = context.getDestinationSection()
 else:
-  related_payment.edit(destination_payment=payment,
-              source_payment=context.getSourcePayment())
+  related_payment.setDestinationPayment(payment)
+  related_payment.setSourcePayment(context.getSourcePayment())
   mirror_section = context.getSourceSection()
 
 bank = related_payment.newContent(
