@@ -113,16 +113,17 @@ class ERP5LoginUserManager(BasePlugin):
       return
     if user_value.getValidationState() == 'deleted':
       return
-    now = DateTime()
-    for assignment in user_value.contentValues(portal_type="Assignment"):
-      if assignment.getValidationState() == "open" and (
-        not assignment.hasStartDate() or assignment.getStartDate() <= now
-      ) and (
-        not assignment.hasStopDate() or assignment.getStopDate() >= now
-      ):
-        break
-    else:
-      return
+    if user_value.getPortalType() in ('Person', ):
+      now = DateTime()
+      for assignment in user_value.contentValues(portal_type="Assignment"):
+        if assignment.getValidationState() == "open" and (
+          not assignment.hasStartDate() or assignment.getStartDate() <= now
+        ) and (
+          not assignment.hasStopDate() or assignment.getStopDate() >= now
+        ):
+          break
+      else:
+        return
     is_authentication_policy_enabled = self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled()
     if check_password:
       password = credentials.get('password')
