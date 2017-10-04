@@ -103,13 +103,14 @@ class LocalRoleAssignorMixIn(object):
 
       if ac_local_roles != ob.__ac_local_roles__:
         ob.__ac_local_roles__ = ac_local_roles
-      if local_roles_group_id_group_id:
-        ob.__ac_local_roles_group_id_dict__ = local_roles_group_id_group_id
-      else:
-        try:
-          del ob.__ac_local_roles_group_id_dict__
-        except AttributeError:
-          pass
+      if local_roles_group_id_group_id != getattr(ob, '__ac_local_roles_group_id_dict__', {}):
+        if local_roles_group_id_group_id:
+          ob.__ac_local_roles_group_id_dict__ = local_roles_group_id_group_id
+        else:
+          try:
+            del ob.__ac_local_roles_group_id_dict__
+          except AttributeError:
+            pass
 
       ## Make sure that the object is reindexed if modified
       # XXX: Document modification detection assumes local roles are always

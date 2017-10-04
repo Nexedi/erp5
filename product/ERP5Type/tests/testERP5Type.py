@@ -3149,6 +3149,100 @@ return True''')
       self.assertEqual(script(1), 2)
       self.assertTrue(script.checkGuard())
 
+    def test_updateLocalRolesOnSecurityGroups(self):
+      # Boilerplate stuff...
+      category_script_id = 'ERP5Type_getSecurityCategoryFromContentRelatedList'
+      createZODBPythonScript(
+        self.getSkinsTool().custom,
+        category_script_id,
+        'base_category_list, user_name, document, portal_type',
+        '''\
+return [
+  {
+    base_category: [x.getRelativeUrl() for x in document.getRelatedValueList(base_category_list=base_category)]
+  }
+  for base_category in base_category_list
+]
+'''
+      )
+      role1 = 'Auditor'
+      role2 = 'Associate'
+      alternate = self.portal.portal_categories.local_role_group.newContent(
+        portal_type='Category',
+        reference='Alternate',
+        id='Alternate',
+      )
+      function = self.portal.portal_categories.function.newContent(
+        portal_type='Category',
+        id='some_function',
+        codification='SF1',
+      )
+      # End of boilerplate stuff
+
+      organisation = self.portal.organisation_module.newContent(
+        portal_type='Organisation',
+      )
+      person = self.portal.person_module.newContent(
+        portal_type='Person',
+        career_subordination_value=organisation,
+      )
+      person.newContent(
+        portal_type='Assignment',
+        function_value=function,
+      ).open()
+      self.tic()
+      user = self.portal.acl_users.getUserById(person.Person_getUserId())
+      hasRole = lambda role: user.has_role(role, organisation)
+      # No role given, so no role present
+      self.assertFalse(hasRole(role1))
+      self.assertFalse(hasRole(role2))
+      # Recomputing roles does not modify organisation
+      tid_before = organisation._p_serial
+      organisation.updateLocalRolesOnSecurityGroups()
+      self.tic()
+      self.assertEqual(tid_before, organisation._p_serial)
+      # Giving roles and recomputing makes these roles present
+      self.portal.portal_types.Organisation.newContent(
+        portal_type='Role Information',
+        role_name=role1,
+        role_base_category_list=['subordination'],
+        role_base_category_script_id=category_script_id,
+      )
+      self.portal.portal_types.Organisation.newContent(
+        portal_type='Role Information',
+        role_name=role2,
+        local_role_group_value=alternate,
+        role_category=function.getRelativeUrl(),
+      )
+      organisation.updateLocalRolesOnSecurityGroups()
+      self.tic()
+      self.assertTrue(hasRole(role1))
+      self.assertTrue(hasRole(role2))
+      # Test self-check: document modification detection actually works
+      self.assertNotEqual(tid_before, organisation._p_serial)
+      # Re-computing roles without role definition (nor category) change does
+      # not modify the document.
+      tid_before = organisation._p_serial
+      organisation.updateLocalRolesOnSecurityGroups()
+      self.tic()
+      self.assertEqual(tid_before, organisation._p_serial)
+      self.assertTrue(hasRole(role1))
+      self.assertTrue(hasRole(role2))
+      # Re-computing roles after relation change removes role
+      person.setCareerSubordinationValue(None)
+      # XXX: Person reindexation is needed as it acquires categories from
+      # Career subobject. This does not automatically happens, and should
+      # likely happen (by interaction workflow maybe ?).
+      person.recursiveReindexObject()
+      self.tic()
+      # Note: in a proper setup, updateLocalRolesOnSecurityGroups would
+      # automatically get called, likely by interaction workflow, whenever
+      # any role condition changes onrelated documents.
+      organisation.updateLocalRolesOnSecurityGroups()
+      self.tic()
+      self.assertFalse(hasRole(role1))
+      # but this did not affect the other role
+      self.assertTrue(hasRole(role2))
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
