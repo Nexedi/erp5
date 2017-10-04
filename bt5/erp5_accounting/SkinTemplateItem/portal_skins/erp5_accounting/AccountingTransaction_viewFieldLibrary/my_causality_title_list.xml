@@ -59,6 +59,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>allow_creation</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -67,7 +83,21 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>proxy_listbox_ids</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -139,28 +169,7 @@
                 <item>
                     <key> <string>portal_type</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Pay Sheet Transaction</string>
-                          <string>Pay Sheet Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Purchase Invoice Transaction</string>
-                          <string>Purchase Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Invoice Transaction</string>
-                          <string>Sale Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Accounting Transaction</string>
-                          <string>Accounting Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Payment Transaction</string>
-                          <string>Payment Transaction</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -184,6 +193,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: [(x,x) for x in context.getPortalAccountingTransactionTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
