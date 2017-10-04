@@ -69,7 +69,7 @@ def retryOnNetworkFailure(func):
 class SlapOSMasterCommunicator(object):
   latest_state = None
 
-  def __init__(self, slap, slap_supply, slap_order, url, logger ):
+  def __init__(self, slap, slap_supply, slap_order, url, logger):
 
     self._logger = logger
     self.slap = slap
@@ -251,6 +251,20 @@ class SlapOSMasterCommunicator(object):
     return SOFTWARE_STATE_UNKNOWN
 
   @retryOnNetworkFailure
+  def getRSSEntryFromMonitoring(self, base_url):
+    if base_url is None:
+      return {}
+
+    feed_url = base_url + '/monitor-public/rssfeed.html'
+    d = feedparser.parse(feed_url)
+
+    if len(d.entries) > 0:
+      return {"date": d.entries[0].published,
+              "message": d.entries[0].description,
+              "title" : d.entries[0].title}
+    return {}
+
+  @retryOnNetworkFailure
   def _getInstanceState(self):
     latest_state = self.latest_state
     self._logger('latest_state = %r', latest_state)
@@ -362,10 +376,7 @@ class SlapOSMasterCommunicator(object):
     self._logger("Instance correctly '%s' after %s seconds." %(state, str(time.time()-start_time)))
     return {'error_message' : None}
 
-
-class SoftwareReleaseTester(SlapOSMasterCommunicator):
-  deadline = None
-
+class SlapOSTester(SlapOSMasterCommunicator):
   def __init__(self,
               name,
               logger,
@@ -374,14 +385,11 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
               slap_supply,
               url, # software release url
               computer_guid=None, # computer for supply if desired
-              request_kw=None, # instance parameters, if instantiation
-                               # testing is desired
-              software_timeout=3600,
-              instance_timeout=3600,
+              request_kw=None
           ):
 
-    super(SoftwareReleaseTester, self).__init__( 
-      slap, slap_supply, slap_order, url, logger) 
+    super(SlapOSTester, self).__init__(
+      slap, slap_supply, slap_order, url, logger)
 
     self.name = name
     self.computer_guid = computer_guid
@@ -392,7 +400,74 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
     else:
       self.request_kw = request_kw
     self.message_history = []
- 
+
+  def getInfo(self):
+    info = ""
+    info += "Software Release URL: %s\n" % (self.url)
+    if self.computer_guid is not None:
+      info += "Supply requested on: %s\n" % (self.computer_guid)
+    info += "Instance Requested (Parameters): %s\n" % self.request_kw
+    return info
+
+  def supply(self, software_path=None, computer_guid=None):
+    if software_path is not None:
+      self.url = software_path
+    if computer_guid is not None:
+      self.computer_guid = computer_guid
+    self._supply()
+
+  def requestInstanceStart(self, instance_title=None, request_kw=None):
+    self._request(INSTANCE_STATE_STARTED, instance_title, request_kw)
+
+  def requestInstanceStop(self, instance_title=None, request_kw=None):
+    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw)
+
+  def requestInstanceDestroy(self, instance_title=None, request_kw=None):
+    self._request(INSTANCE_STATE_DESTROYED, instance_title, request_kw)
+
+  def waitInstanceStarted(self, instance_title):
+    error_message = self._waitInstance(instance_title, INSTANCE_STATE_STARTED)["error_message"]
+    if error_message is not None:
+      self._logger(error_message)
+      self._logger("Do you use instance state propagation in your project?")
+      self._logger("Instance '%s' will be stopped and test aborted." %instance_title)
+      self.requestInstanceStop()
+      time.sleep(60)
+      raise ValueError(error_message)
+
+  def waitInstanceStopped(self, instance_title):
+    error_message = self._waitInstance(instance_title, INSTANCE_STATE_STOPPED)["error_message"]
+    if error_message is not None:
+      self._logger(error_message)
+      self._logger("Do you use instance state propagation in your project?")
+      raise ValueError(error_message)
+
+  def waitInstanceDestroyed(self, instance_title):
+    error_message = self._waitInstance(instance_title, INSTANCE_STATE_DESTROYED)["error_message"]
+    if error_message is not None:
+      self._logger(error_message)
+      self._logger("Do you use instance state propagation in your project?")
+      raise ValueError(error_message)
+
+class SoftwareReleaseTester(SlapOSTester):
+  deadline = None
+
+  def __init__(self,
+              name,
+              logger,
+              slap,
+              slap_order,
+              slap_supply,
+              url, # software release url
+              computer_guid=None, # computer for supply if desired
+              request_kw=None,
+              software_timeout=3600,
+              instance_timeout=3600,
+          ):
+
+    super(SoftwareReleaseTester, self).__init__(
+      name, logger, slap, slap_order, slap_supply, url, computer_guid, request_kw)
+
     self.state = TESTER_STATE_INITIAL
     self.transition_dict = {
       # step function
@@ -438,46 +513,6 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
       ),
      }
 
-  def supply(self, software_path=None, computer_guid=None):
-    if software_path is not None:
-      self.url = software_path
-    if computer_guid is not None:
-      self.computer_guid = computer_guid
-    self._supply()
-
-  def requestStart(self, instance_title=None, request_kw=None):
-    self._request(INSTANCE_STATE_STARTED, instance_title, request_kw)
-
-  def requestStop(self, instance_title=None, request_kw=None):
-    self._request(INSTANCE_STATE_STOPPED, instance_title, request_kw)
-
-  def requestDestroy(self, instance_title=None, request_kw=None):
-    self._request(INSTANCE_STATE_DESTROYED, instance_title, request_kw)
-
-  def waitInstanceStarted(self, instance_title):
-    error_message = self._waitInstance(instance_title, INSTANCE_STATE_STARTED)["error_message"]
-    if error_message is not None:
-      self._logger(error_message)
-      self._logger("Do you use instance state propagation in your project?")
-      self._logger("Instance '%s' will be stopped and test aborted." %instance_title)
-      self.requestStop()
-      time.sleep(60)
-      raise ValueError(error_message)
-
-  def waitInstanceStopped(self, instance_title):
-    error_message = self._waitInstance(instance_title, INSTANCE_STATE_STOPPED)["error_message"]
-    if error_message is not None:
-      self._logger(error_message)
-      self._logger("Do you use instance state propagation in your project?")
-      raise ValueError(error_message)
-
-  def waitInstanceDestroyed(self, instance_title):
-    error_message = self._waitInstance(instance_title, INSTANCE_STATE_DESTROYED)["error_message"]
-    if error_message is not None:
-      self._logger(error_message)
-      self._logger("Do you use instance state propagation in your project?")
-      raise ValueError(error_message)
-
   def __repr__(self):
       deadline = self.deadline
       if deadline is not None:
@@ -485,14 +520,6 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
           deadline = '+%is' % (deadline, )
       return '<%s(state=%s, deadline=%s) at %x>' % (
           self.__class__.__name__, self.state, deadline, id(self))
-
-  def getInfo(self):
-    info = ""
-    info += "Software Release URL: %s\n" % (self.url)
-    if self.computer_guid is not None:
-      info += "Supply requested on: %s\n" % (self.computer_guid)
-    info += "Instance Requested (Parameters): %s\n" % self.request_kw
-    return info
 
   def getFormatedLastMessage(self):
     if len(self.message_history) == 0:
@@ -519,21 +546,6 @@ class SoftwareReleaseTester(SlapOSMasterCommunicator):
       message += "\n\n\n"
  
     return summary + message
-
-  @retryOnNetworkFailure
-  def getRSSEntryFromMonitoring(self, base_url):
-    if base_url is None:
-      return {}
-
-    feed_url = base_url + '/monitor-public/rssfeed.html'
-    d = feedparser.parse(feed_url) 
-    
-    if len(d.entries) > 0:
-      return {"date": d.entries[0].published, 
-              "message": d.entries[0].description, 
-              "title" : d.entries[0].title}
-        
-    return {}
 
   @retryOnNetworkFailure
   def teardown(self):
