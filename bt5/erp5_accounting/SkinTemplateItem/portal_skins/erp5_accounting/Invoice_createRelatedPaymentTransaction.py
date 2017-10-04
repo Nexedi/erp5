@@ -30,9 +30,9 @@ total_payable_price_details = \
 # if there's nothing more to pay, don't create an empty transaction
 if sum(total_payable_price_details.values()) == 0:
   if not batch_mode:
-    return context.REQUEST.RESPONSE.redirect(
-      "%s/view?portal_status_message=%s" % (
-      context.absolute_url(), Base_translateString('Nothing more to pay.')))
+    return context.Base_redirect(
+      form_id,
+      keep_items={'portal_status_message': Base_translateString('Nothing more to pay.')})
   return None
 
 related_payment = portal.accounting_module.newContent(
