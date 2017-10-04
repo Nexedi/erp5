@@ -57,7 +57,8 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_fast_input_jio</string>
+                <string>action_type/object_jio_fast_input</string>
+                <string>action_type/object_jio_fast_input</string>
               </tuple>
             </value>
         </item>
@@ -69,7 +70,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>object_fast_input_jio</string> </value>
+            <value> <string>object_jio_fast_input</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -77,7 +78,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>object_fast_input_jio</string> </value>
+            <value> <string>object_jio_fast_input</string> </value>
         </item>
       </dictionary>
     </pickle>

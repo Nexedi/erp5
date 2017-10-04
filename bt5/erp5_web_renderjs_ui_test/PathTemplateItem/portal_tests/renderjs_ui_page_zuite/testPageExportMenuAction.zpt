@@ -18,7 +18,7 @@
 </tr>
 
 <!-- Wait for gadget to be loaded
-     Here we assume portal_types/Foo has at least one object_report_jio -->
+     Here we assume portal_types/Foo has at least one Object JIO Report Action -->
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-url='${base_url}/web_site_module/renderjs_runner/gadget_erp5_page_export.html']</td>

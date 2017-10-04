@@ -63,7 +63,7 @@
 </tr>
 
 <!-- Header has a link to the export page
-     Here, we assume that portal_types/Bar has no object_report_jio -->
+     Here, we assume that portal_types/Bar has no Object JIO Report Action -->
 <tr>
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope='header']//a[text()='Export' and contains(@class, 'ui-disabled')]</td>

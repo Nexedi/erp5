@@ -80,7 +80,8 @@
       return gadget.jio_getAttachment(options.jio_key, "links")
         .push(function (result) {
           erp5_document = result;
-          report_list = asArray(erp5_document._links.action_object_report_jio);
+          report_list = asArray(erp5_document._links.action_object_report_jio)
+                        .concat(asArray(erp5_document._links.action_object_jio_report));
 
           return RSVP.all([
             renderLinkList(gadget, "Reports", "bar-chart-o", report_list, true)

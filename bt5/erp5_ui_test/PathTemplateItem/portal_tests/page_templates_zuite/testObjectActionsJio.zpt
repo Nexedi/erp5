@@ -12,7 +12,7 @@
 <tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" />
 <tr>
   <td>open</td>
-  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action_jio&name=Open Portal Jio&category=object_action_jio&action=string:%24{portal_url}/Foo_viewDoNothingActionDialog">Create a dummy action that redirects to the portal</td>
+  <td tal:content="string: ${here/portal_url}/portal_types/Foo/PortalType_addAction?id=test_action_jio&name=Open Portal Jio&category=object_jio_action&action=string:%24{portal_url}/Foo_viewDoNothingActionDialog">Create a dummy action that redirects to the portal</td>
   <td></td>
 </tr>
 <tr>
