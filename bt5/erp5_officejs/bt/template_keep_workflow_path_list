@@ -3,6 +3,7 @@ image_module/officejs_todomvc_*
 web_site_module/officejs_todomvc
 web_page_module/ckeditor_*
 image_module/ckeditor_*
+image_module/wallsearch_icon_*
 web_page_module/gadget_ckeditor_*
 web_page_module/gadget_officejs_*
 image_module/gadget_officejs_*
@@ -34,3 +35,8 @@ image_module/officejs_audioplayer_*
 web_page_module/officejs_audioplayer_*
 web_site_module/officejs_audioplayer
 web_site_module/officejs_audioplayer/**
+web_site_module/officejs_wallsearch
+web_site_module/officejs_wallsearch/**
+web_page_module/ojs_*
+web_page_module/wallsearch_privacy_policy_*
+web_page_module/fb_sdk_*
