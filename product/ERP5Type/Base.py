@@ -3221,29 +3221,15 @@ class Base( CopyContainer,
   security.declarePublic('isEditableMode')
   isEditableMode = isEditableWebMode # for backwards compatability
 
-  security.declarePublic('fixLocalRolesOnSecurityGroups')
-  def fixLocalRolesOnSecurityGroups(self, REQUEST=None):
-    """
-      Update local roles based on Portal Type Role Definitions and ERP5
-      Role Definition objects contained inside self. Since this method
-      only fixes local roles based on definitions, anyone should be
-      able to call it. This will reduce the utilisation of proxy role
-      of python script.
-    """
-    if REQUEST is not None:
-      # This method must not be called directly from the web.
-      # If this method is called directly from the web, then
-      # REQUEST parameter is automatically set by ZPublisher,
-      # thus REQUEST is not None.
-      return REQUEST.RESPONSE.forbiddenError()
-    else:
-      return self.updateLocalRolesOnSecurityGroups()
-
-  security.declareProtected(Permissions.ChangeLocalRoles,
-                            'updateLocalRolesOnSecurityGroups')
+  security.declarePublic('updateLocalRolesOnSecurityGroups')
   def updateLocalRolesOnSecurityGroups(self, **kw):
     """Assign Local Roles to Groups on self, based on Portal Type Role
     Definitions and "ERP5 Role Definition" objects contained inside self.
+
+    Since ERP5 Role system is declarative, this method only updates local
+    roles based on definitions. Anyone should be able to call it without
+    any permissions. If local roles are already updated, then nothing
+    changes.
     """
     self._getTypesTool().getTypeInfo(self) \
     .updateLocalRolesOnDocument(self, **kw)
