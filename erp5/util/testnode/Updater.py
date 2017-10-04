@@ -31,6 +31,7 @@ import shutil
 import subprocess
 import sys
 import threading
+import time
 
 from ProcessManager import SubprocessError
 
@@ -40,6 +41,7 @@ SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
 
 GIT_TYPE = 'git'
 SVN_TYPE = 'svn'
+PERIODIC_TYPE = 'periodic'
 
 class Updater(object):
 
@@ -74,6 +76,9 @@ class Updater(object):
       elif os.path.isdir(os.path.join(
                        self.getRepositoryPath(), '.svn')):
         repository_type = SVN_TYPE
+      elif os.path.isdir(os.path.join(
+                       self.getRepositoryPath(), '.periodic-prefix')):
+        repository_type = PERIODIC_TYPE
       else:
         raise NotImplementedError
       self.repository_type = repository_type
@@ -149,6 +154,9 @@ class Updater(object):
     elif self.getRepositoryType() == SVN_TYPE:
       stdout = self.spawn('svn', 'info', *path_list)['stdout']
       return str(max(map(int, SVN_CHANGED_REV.findall(stdout))))
+    elif self.getRepositoryType() == PERIODIC_TYPE:
+      path = self.getRepositoryPath()
+      return ('1', open(os.path.join(path, 'revision.txt')).read())
     raise NotImplementedError
 
   def deleteRepository(self):
@@ -156,13 +164,30 @@ class Updater(object):
              self.repository_path)
     shutil.rmtree(self.repository_path)
 
+  def _generatePeriodicRevision(self, url):
+    error = False
+    try:
+      _, pattern = self.url.split('//')
+    except ValueError:
+      error = True
+
+    if error or pattern == '':
+      self.log('Wrong periodic url %r' % (self.url,))
+      return 'WRONG_PERIODIC_URL-%r' % (self.url,)
+    else:
+      return time.strftime(pattern)
+
   def checkRepository(self):
     # make sure that the repository is like we expect
     if self.url:
       if os.path.exists(self.repository_path):
         correct_url = False
         try:
-          remote_url = self._git("config", "--get", "remote.origin.url")
+          if self.url.startswith('periodic-prefix://'):
+            remote_url = open(
+              os.path.join(self.repository_path, 'url.txt')).read()
+          else:
+            remote_url = self._git("config", "--get", "remote.origin.url")
           if remote_url == self.url:
             correct_url = True
         except (SubprocessError,) as e:
@@ -170,11 +195,20 @@ class Updater(object):
         if not(correct_url):
           self.deleteRepository()
       if not os.path.exists(self.repository_path):
-        parameter_list = ['clone', self.url]
-        if self.branch is not None:
-          parameter_list.extend(['-b', self.branch])
-        parameter_list.append(self.repository_path)
-        self._git(*parameter_list, cwd=self.working_directory)
+        if self.url.startswith('periodic-prefix'):
+          os.makedirs(self.repository_path)
+          open(
+            os.path.join(self.repository_path, 'url.txt'), 'w').write(self.url)
+          open(
+            os.path.join(self.repository_path, 'revision.txt'), 'w').write(
+              self._generatePeriodicRevision(self.url))
+          os.mkdir(os.path.join(self.repository_path, '.periodic-prefix'))
+        else:
+          parameter_list = ['clone', self.url]
+          if self.branch is not None:
+            parameter_list.extend(['-b', self.branch])
+          parameter_list.append(self.repository_path)
+          self._git(*parameter_list, cwd=self.working_directory)
 
   def checkout(self, *path_list):
     self.checkRepository()
@@ -232,7 +266,16 @@ class Updater(object):
         if not revision:
           self.revision = revision = SVN_UP_REV.findall(
             status_dict['stdout'].splitlines()[-1])[0]
+    elif self.getRepositoryType() == PERIODIC_TYPE:
+      if self.revision:
+        revision = self.revision
+      else:
+        revision = self._generatePeriodicRevision(self.url)
+      open(
+        os.path.join(self.repository_path, 'revision.txt'), 'w').write(
+          revision)
     else:
       raise NotImplementedError
     self._path_list += path_list
-    self.git_update_server_info()
+    if self.getRepositoryType() != PERIODIC_TYPE:
+      self.git_update_server_info()
