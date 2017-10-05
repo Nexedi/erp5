@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2017-10-02 23:10+UTC\n"
-"PO-Revision-Date: 2017-10-02 23:10+UTC\n"
+"POT-Creation-Date: 2017-10-05 19:10+UTC\n"
+"PO-Revision-Date: 2017-10-05 19:10+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fa <>\n"
 "MIME-Version: 1.0\n"
@@ -471,11 +471,20 @@ msgstr "عنوان معامله حسابداری"
 msgid "Accounting Transactions"
 msgstr "معامله حسابداری"
 
+msgid "Accounting Transactions to Close"
+msgstr "معامله حسابداری برای بستن"
+
 msgid "Accounting Transactions to Close (%(count)s)"
 msgstr "معامله حسابداری برای بستن (%(count)s)"
 
 msgid "Accounting Transactions to Close (%(count)s) [worklist in accounting_workflow]"
 msgstr "معامله حسابداری برای بستن (%(count)s)"
+
+msgid "Accounting Transactions to Close [worklist in accounting_workflow]"
+msgstr "معامله حسابداری برای بستن"
+
+msgid "Accounting Transactions to Start"
+msgstr "معامله حسابداری برای شروع"
 
 msgid "Accounting Transactions to Start (%(count)s)"
 msgstr "معامله حسابداری برای شروع (%(count)s)"
@@ -483,11 +492,20 @@ msgstr "معامله حسابداری برای شروع (%(count)s)"
 msgid "Accounting Transactions to Start (%(count)s) [worklist in accounting_workflow]"
 msgstr "معامله حسابداری برای شروع (%(count)s)"
 
+msgid "Accounting Transactions to Start [worklist in accounting_workflow]"
+msgstr "معامله حسابداری برای شروع"
+
+msgid "Accounting Transactions to Validate"
+msgstr "معامله حسابداری برای تأئید"
+
 msgid "Accounting Transactions to Validate (%(count)s)"
 msgstr "معامله حسابداری برای تأئید (%(count)s)"
 
 msgid "Accounting Transactions to Validate (%(count)s) [worklist in accounting_workflow]"
 msgstr "معامله حسابداری برای تأئید (%(count)s)"
+
+msgid "Accounting Transactions to Validate [worklist in accounting_workflow]"
+msgstr "معامله حسابداری برای تأئید"
 
 msgid "Accounting View"
 msgstr "دید حسابداری"
@@ -501,11 +519,17 @@ msgstr "اقلام (خطوط) معامله حساب داری یا از صورت�
 msgid "Accounts"
 msgstr "حساب ها"
 
+msgid "Accounts to Validate"
+msgstr "حساب ها برای تأئید"
+
 msgid "Accounts to Validate (%(count)s)"
 msgstr "حساب ها برای تأئید (%(count)s)"
 
 msgid "Accounts to Validate (%(count)s) [worklist in account_workflow]"
 msgstr "حساب ها برای تأئید (%(count)s)"
+
+msgid "Accounts to Validate [worklist in account_workflow]"
+msgstr "حساب ها برای تأئید"
 
 msgid "Acknowledge Event"
 msgstr "اتفاق تصدیق"
@@ -942,17 +966,29 @@ msgstr "تخصیص بلیط"
 msgid "Assigned"
 msgstr "تخصیص داده شده"
 
+msgid "Assigned Events"
+msgstr "اتفاق تخصیص داده شده"
+
 msgid "Assigned Events (%(count)s)"
 msgstr "(%(count)s) اتفاق تخصیص داده شده"
 
 msgid "Assigned Events (%(count)s) [worklist in event_workflow]"
 msgstr "(%(count)s)اتفاق تخصیص داده شده"
 
+msgid "Assigned Events [worklist in event_workflow]"
+msgstr "اتفاق تخصیص داده شده"
+
+msgid "Assigned Translations"
+msgstr "ترجمه تخصیص داده شده"
+
 msgid "Assigned Translations (%(count)s)"
 msgstr "(%(count)s) ترجمه تخصیص داده شده"
 
 msgid "Assigned Translations (%(count)s) [worklist in document_publication_workflow]"
 msgstr "(%(count)s)ترجمه تخصیص داده شده [worklist in document_publication_workflow]"
+
+msgid "Assigned Translations [worklist in document_publication_workflow]"
+msgstr "ترجمه تخصیص داده شده [worklist in document_publication_workflow]"
 
 msgid "Assigned [state in bug_workflow]"
 msgstr "تخصیص داده شده"
@@ -1221,11 +1257,17 @@ msgstr "گردش کار اتفاق خطا"
 msgid "Bug Line"
 msgstr "خط خطا"
 
+msgid "Bug Lines to Send"
+msgstr "خط خطا برای ارسال"
+
 msgid "Bug Lines to Send (%(count)s)"
 msgstr "خط خطا برای ارسال (%(count)s)"
 
 msgid "Bug Lines to Send (%(count)s) [worklist in bug_event_workflow]"
 msgstr "خط خطا برای ارسال (%(count)s)"
+
+msgid "Bug Lines to Send [worklist in bug_event_workflow]"
+msgstr "خط خطا برای ارسال"
 
 msgid "Bug Module"
 msgstr "ماژول خطا"
@@ -1236,11 +1278,20 @@ msgstr "گردش کار خطا"
 msgid "Bugs"
 msgstr "خطاها"
 
+msgid "Bugs Assigned to Follow"
+msgstr "خطاها برای ادامه واگذار شده"
+
 msgid "Bugs Assigned to Follow (%(count)s)"
 msgstr "خطاها برای ادامه واگذار شده (%(count)s)"
 
 msgid "Bugs Assigned to Follow (%(count)s) [worklist in bug_workflow]"
 msgstr "خطاها برای ادامه واگذار شده (%(count)s)"
+
+msgid "Bugs Assigned to Follow [worklist in bug_workflow]"
+msgstr "خطاها برای ادامه واگذار شده"
+
+msgid "Bugs to Follow"
+msgstr "خطاها برای ادامه"
 
 msgid "Bugs to Follow (%(count)s)"
 msgstr "خطاها برای ادامه (%(count)s)"
@@ -1248,17 +1299,32 @@ msgstr "خطاها برای ادامه (%(count)s)"
 msgid "Bugs to Follow (%(count)s) [worklist in bug_workflow]"
 msgstr "خطاها برای ادامه (%(count)s)"
 
+msgid "Bugs to Follow [worklist in bug_workflow]"
+msgstr "خطاها برای ادامه"
+
+msgid "Bugs to Resolve"
+msgstr "خطا برای رفع کردن"
+
 msgid "Bugs to Resolve (%(count)s)"
 msgstr "خطا برای رفع کردن (%(count)s)"
 
 msgid "Bugs to Resolve (%(count)s) [worklist in bug_workflow]"
 msgstr "خطا برای رفع کردن (%(count)s)"
 
+msgid "Bugs to Resolve [worklist in bug_workflow]"
+msgstr "خطا برای رفع کردن"
+
+msgid "Bugs to Validate"
+msgstr "خطا برای تأئید"
+
 msgid "Bugs to Validate (%(count)s)"
 msgstr "خطا برای تأئید (%(count)s)"
 
 msgid "Bugs to Validate (%(count)s) [worklist in bug_workflow]"
 msgstr "خطا برای تأئید (%(count)s)"
+
+msgid "Bugs to Validate [worklist in bug_workflow]"
+msgstr "خطا برای تأئید"
 
 msgid "Build Business Template"
 msgstr "ساخت الگوی تجاری"
@@ -3558,11 +3624,17 @@ msgstr ""
 msgid "Documents"
 msgstr "مدارک"
 
+msgid "Documents to Review"
+msgstr "مدارک برای بازبینی"
+
 msgid "Documents to Review (%(count)s)"
 msgstr "مدارک برای بازبینی (%(count)s)"
 
 msgid "Documents to Review (%(count)s) [worklist in document_publication_workflow]"
 msgstr "مدارک برای بازبینی (%(count)s)"
+
+msgid "Documents to Review [worklist in document_publication_workflow]"
+msgstr "مدارک برای بازبینی"
 
 msgid "Domain"
 msgstr "دامنه"
@@ -3621,11 +3693,20 @@ msgstr "دانلود پرونده هدف"
 msgid "Draft"
 msgstr "پیش نویس"
 
+msgid "Draft Campaigns"
+msgstr "کمپین پیش نویس"
+
 msgid "Draft Campaigns (%(count)s)"
 msgstr "(%(count)s) کمپین پیش نویس"
 
 msgid "Draft Campaigns (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) کمپین پیش نویس"
+
+msgid "Draft Campaigns [worklist in ticket_workflow]"
+msgstr "کمپین پیش نویس"
+
+msgid "Draft Events"
+msgstr "اتفاق پیش نویس"
 
 msgid "Draft Events (%(count)s)"
 msgstr "(%(count)s) اتفاق پیش نویس"
@@ -3633,8 +3714,14 @@ msgstr "(%(count)s) اتفاق پیش نویس"
 msgid "Draft Events (%(count)s) [worklist in event_workflow]"
 msgstr "(%(count)s) پیش نویس اتفاق"
 
+msgid "Draft Events [worklist in event_workflow]"
+msgstr "پیش نویس اتفاق"
+
 msgid "Draft Events to Process"
 msgstr "اتفاق پیش نویس برای پردازش"
+
+msgid "Draft Meetings"
+msgstr "پیش نویس جلسات"
 
 msgid "Draft Meetings (%(count)s)"
 msgstr "(%(count)s) پیش نویس جلسات"
@@ -3642,11 +3729,20 @@ msgstr "(%(count)s) پیش نویس جلسات"
 msgid "Draft Meetings (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) پیش نویس جلسات"
 
+msgid "Draft Meetings [worklist in ticket_workflow]"
+msgstr "پیش نویس جلسات"
+
+msgid "Draft Support Requests"
+msgstr "پیش نویس درخواست پشتیبانی"
+
 msgid "Draft Support Requests (%(count)s)"
 msgstr "(%(count)s) پیش نویس درخواست پشتیبانی"
 
 msgid "Draft Support Requests (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) پیش نویس درخواست پشتیبانی"
+
+msgid "Draft Support Requests [worklist in ticket_workflow]"
+msgstr "پیش نویس درخواست پشتیبانی"
 
 msgid "Draft [state in account_workflow]"
 msgstr "پیش نویس"
@@ -3762,11 +3858,17 @@ msgstr "پیش نویس"
 msgid "Draft [state in validation_workflow]"
 msgstr "پیش نویس"
 
+msgid "Drafts to Publish"
+msgstr "پیش نویس برای توزیع"
+
 msgid "Drafts to Publish (%(count)s)"
 msgstr "(%(count)s) پیش نویس برای توزیع"
 
 msgid "Drafts to Publish (%(count)s) [worklist in publication_workflow]"
 msgstr "(%(count)s) پیش نویس برای توزیع"
+
+msgid "Drafts to Publish [worklist in publication_workflow]"
+msgstr "پیش نویس برای توزیع"
 
 msgid "Dram"
 msgstr ""
@@ -4809,11 +4911,17 @@ msgstr ""
 msgid "Industrial Phase"
 msgstr "فاز صنعتی"
 
+msgid "Ingested Documents"
+msgstr "مدرک جذب شد"
+
 msgid "Ingested Documents (%(count)s)"
 msgstr "(%(count)s) مدرک جذب شد"
 
 msgid "Ingested Documents (%(count)s) [worklist in document_ingestion_workflow]"
 msgstr "(%(count)s) مدرک جذب شد"
+
+msgid "Ingested Documents [worklist in document_ingestion_workflow]"
+msgstr "مدرک جذب شد"
 
 msgid "Ingestion Interaction Workflow Definition"
 msgstr "تعریف گردش کار تعامل جذب"
@@ -5043,11 +5151,17 @@ msgstr "سلب اعتبار شده"
 msgid "Inventories"
 msgstr "موجودی انبارها"
 
+msgid "Inventories to validate"
+msgstr "موجودی انبارها برای تأئید کردن"
+
 msgid "Inventories to validate (%(count)s)"
 msgstr "موجودی انبارها برای تأئید کردن"
 
 msgid "Inventories to validate (%(count)s) [worklist in inventory_workflow]"
 msgstr "موجودی انبارها برای تأئید کردن (%(count)s)"
+
+msgid "Inventories to validate [worklist in inventory_workflow]"
+msgstr "موجودی انبارها برای تأئید کردن"
 
 msgid "Inventory"
 msgstr "موجودی انبار"
@@ -5739,11 +5853,17 @@ msgstr "لیست محتویات من"
 msgid "My Contributed Content"
 msgstr "محتویات اشتراک گذاشته شده من"
 
+msgid "My Drafts of Accounting Transactions"
+msgstr "تعداد پیش نویس های معاملات حسابداری من"
+
 msgid "My Drafts of Accounting Transactions (%(count)s)"
 msgstr "تعداد پیش نویس های معاملات حسابداری من (%(count)s)"
 
 msgid "My Drafts of Accounting Transactions (%(count)s) [worklist in accounting_workflow]"
 msgstr "تعداد پیش نویس های معاملات حسابداری من (%(count)s)"
+
+msgid "My Drafts of Accounting Transactions [worklist in accounting_workflow]"
+msgstr "تعداد پیش نویس های معاملات حسابداری من"
 
 msgid "My Favourites"
 msgstr "اقلام مورد علاقه من"
@@ -5826,11 +5946,17 @@ msgstr "اتفاق جدید"
 msgid "New File"
 msgstr "پرونده جدید"
 
+msgid "New Incoming Events"
+msgstr "اتفاق ورودی جدید"
+
 msgid "New Incoming Events (%(count)s)"
 msgstr "(%(count)s) اتفاق ورودی جدید"
 
 msgid "New Incoming Events (%(count)s) [worklist in event_workflow]"
 msgstr "(%(count)s) اتفاق ورودی جدید"
+
+msgid "New Incoming Events [worklist in event_workflow]"
+msgstr "اتفاق ورودی جدید"
 
 msgid "New Sol"
 msgstr ""
@@ -6033,11 +6159,17 @@ msgstr "Objects"
 msgid "Offered"
 msgstr "پیشنهاد شد"
 
+msgid "Offered Open Sale Orders to Follow"
+msgstr "پیشنهاد سفارش فروش باز برای پیگیری"
+
 msgid "Offered Open Sale Orders to Follow (%(count)s)"
 msgstr "(%(count)s) پیشنهاد سفارش فروش باز برای پیگیری"
 
 msgid "Offered Open Sale Orders to Follow (%(count)s) [worklist in open_order_workflow]"
 msgstr "(%(count)s) پیشنهاد سفارش فروش باز برای پیگیری"
+
+msgid "Offered Open Sale Orders to Follow [worklist in open_order_workflow]"
+msgstr "پیشنهاد سفارش فروش باز برای پیگیری"
 
 msgid "Offered Order"
 msgstr "سفارش پیشنهاد شده"
@@ -6045,11 +6177,20 @@ msgstr "سفارش پیشنهاد شده"
 msgid "Offered Order [state in open_order_workflow]"
 msgstr "سفارش پیشنهاد شده"
 
+msgid "Offered Purchase Orders to Follow"
+msgstr "پیشنهاد سفارش خرید برای پیگیری"
+
 msgid "Offered Purchase Orders to Follow (%(count)s)"
 msgstr "(%(count)s) پیشنهاد سفارش خرید برای پیگیری"
 
 msgid "Offered Purchase Orders to Follow (%(count)s) [worklist in order_workflow]"
 msgstr "(%(count)s) پیشنهاد سفارش خرید برای پیگیری"
+
+msgid "Offered Purchase Orders to Follow [worklist in order_workflow]"
+msgstr "پیشنهاد سفارش خرید برای پیگیری"
+
+msgid "Offered Sale Orders to Follow"
+msgstr "پیشنهاد سفارش فروش برای پیگیری"
 
 msgid "Offered Sale Orders to Follow (%(count)s)"
 msgstr "(%(count)s) پیشنهاد سفارش فروش برای پیگیری"
@@ -6057,17 +6198,26 @@ msgstr "(%(count)s) پیشنهاد سفارش فروش برای پیگیری"
 msgid "Offered Sale Orders to Follow (%(count)s) [worklist in order_workflow]"
 msgstr "(%(count)s) پیشنهاد سفارش فروش برای پیگیری"
 
+msgid "Offered Sale Orders to Follow [worklist in order_workflow]"
+msgstr "پیشنهاد سفارش فروش برای پیگیری"
+
 msgid "Offered [state in order_workflow]"
 msgstr "پیشنهاد شد"
 
 msgid "Offered [state in sale_opportunity_workflow]"
 msgstr "پیشنهاد شد"
 
+msgid "Offers to Send"
+msgstr "پیشنهاد برای ارسال"
+
 msgid "Offers to Send (%(count)s)"
 msgstr "(%(count)s) پیشنهاد برای ارسال"
 
 msgid "Offers to Send (%(count)s) [worklist in sale_opportunity_workflow]"
 msgstr "(%(count)s) پیشنهاد برای ارسال"
+
+msgid "Offers to Send [worklist in sale_opportunity_workflow]"
+msgstr "پیشنهاد برای ارسال"
 
 msgid "Office Document"
 msgstr "مدرک اداری"
@@ -6084,11 +6234,20 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
+msgid "Open Bugs"
+msgstr "خطای باز"
+
 msgid "Open Bugs (%(count)s)"
 msgstr "(%(count)s) خطای باز"
 
 msgid "Open Bugs (%(count)s) [worklist in bug_workflow]"
 msgstr "(%(count)s) خطای باز"
+
+msgid "Open Bugs [worklist in bug_workflow]"
+msgstr "خطای باز"
+
+msgid "Open Campaigns"
+msgstr "کمپین باز"
 
 msgid "Open Campaigns (%(count)s)"
 msgstr "(%(count)s) کمپین باز"
@@ -6096,11 +6255,20 @@ msgstr "(%(count)s) کمپین باز"
 msgid "Open Campaigns (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) کمپین های باز"
 
+msgid "Open Campaigns [worklist in ticket_workflow]"
+msgstr "کمپین های باز"
+
+msgid "Open Meetings"
+msgstr "جلسات باز"
+
 msgid "Open Meetings (%(count)s)"
 msgstr "(%(count)s) جلسات باز"
 
 msgid "Open Meetings (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) جلسه باز"
+
+msgid "Open Meetings [worklist in ticket_workflow]"
+msgstr "جلسه باز"
 
 msgid "Open Order Line"
 msgstr "خط سفارش باز"
@@ -6120,11 +6288,20 @@ msgstr " خط سفارش فروش باز"
 msgid "Open Sale Order Lines"
 msgstr "خطوط سفارش فروش باز"
 
+msgid "Open Sale Order Proposals to Approve "
+msgstr "پیشنهاد سفارش فروش باز برای تأئید"
+
 msgid "Open Sale Order Proposals to Approve  (%(count)s)"
 msgstr "(%(count)s) پیشنهاد سفارش فروش باز برای تأئید"
 
 msgid "Open Sale Order Proposals to Approve  (%(count)s) [worklist in open_order_workflow]"
 msgstr "(%(count)s) پیشنهاد سفارش فروش باز برای تأئید"
+
+msgid "Open Sale Order Proposals to Approve  [worklist in open_order_workflow]"
+msgstr "پیشنهاد سفارش فروش باز برای تأئید"
+
+msgid "Open Sale Orders to Order"
+msgstr "سفارش فروش باز برای سفارش"
 
 msgid "Open Sale Orders to Order (%(count)s)"
 msgstr "(%(count)s) سفارش فروش باز برای سفارش"
@@ -6132,11 +6309,23 @@ msgstr "(%(count)s) سفارش فروش باز برای سفارش"
 msgid "Open Sale Orders to Order (%(count)s) [worklist in open_order_workflow]"
 msgstr "(%(count)s) سفارش فروش باز برای سفارش"
 
+msgid "Open Sale Orders to Order [worklist in open_order_workflow]"
+msgstr "سفارش فروش باز برای سفارش"
+
+msgid "Open Sale Orders to Plan"
+msgstr "سفارش فروش باز برای برنامه ریزی"
+
 msgid "Open Sale Orders to Plan (%(count)s)"
 msgstr "(%(count)s) سفارش فروش باز برای برنامه ریزی"
 
 msgid "Open Sale Orders to Plan (%(count)s) [worklist in open_order_workflow]"
 msgstr "(%(count)s) سفارش فروش باز برای برنامه ریزی"
+
+msgid "Open Sale Orders to Plan [worklist in open_order_workflow]"
+msgstr "سفارش فروش باز برای برنامه ریزی"
+
+msgid "Open Sale Orders to Start"
+msgstr "سفارش فروش باز برای شروع"
 
 msgid "Open Sale Orders to Start (%(count)s)"
 msgstr "(%(count)s) سفارش فروش باز برای شروع"
@@ -6144,11 +6333,20 @@ msgstr "(%(count)s) سفارش فروش باز برای شروع"
 msgid "Open Sale Orders to Start (%(count)s) [worklist in open_order_workflow]"
 msgstr "(%(count)s) سفارش فروش باز برای شروع"
 
+msgid "Open Sale Orders to Start [worklist in open_order_workflow]"
+msgstr "سفارش فروش باز برای شروع"
+
+msgid "Open Support Requests"
+msgstr "پیش نویس درخواست پشتیبانی"
+
 msgid "Open Support Requests (%(count)s)"
 msgstr "(%(count)s) پیش نویس درخواست پشتیبانی"
 
 msgid "Open Support Requests (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) درخواست پشتیبانی باز"
+
+msgid "Open Support Requests [worklist in ticket_workflow]"
+msgstr "درخواست پشتیبانی باز"
 
 msgid "Open [state in bug_workflow]"
 msgstr ""
@@ -6273,11 +6471,17 @@ msgstr "سازمان ها"
 msgid "Organisations capture the contact information (ex. name, phone number) and their classification (ex. site, group, function etc.). Organisations are supported by a standard validation workflow."
 msgstr "سازمان، اطلاعات تماس (مانند اسم و شماره تلفن) و طبقه بندی آنها (مانند سایت، گروه، عملکرد و غیره) را ثبت می کند. سازمان ها توسط گردش کار تأئید استاندارد پشتیبانی شده است."
 
+msgid "Organisations to Validate"
+msgstr "سازمان برای تأئید کردن"
+
 msgid "Organisations to Validate (%(count)s)"
 msgstr "سازمان برای تأئید کردن (%(count)s)"
 
 msgid "Organisations to Validate (%(count)s) [worklist in validation_workflow]"
 msgstr "(%(count)s) شرایط معامله فروش برای تأئید"
+
+msgid "Organisations to Validate [worklist in validation_workflow]"
+msgstr "شرایط معامله فروش برای تأئید"
 
 msgid "Original English Term"
 msgstr "عبارت اصلی انگلیسی"
@@ -6312,11 +6516,17 @@ msgstr ""
 msgid "Outgoing"
 msgstr "خروجی"
 
+msgid "Outgoing Events"
+msgstr "اتفاقات خروجی"
+
 msgid "Outgoing Events (%(count)s)"
 msgstr "(%(count)s) اتفاقات خروجی"
 
 msgid "Outgoing Events (%(count)s) [worklist in event_workflow]"
 msgstr "(%(count)s)اتفاقات خروجی"
+
+msgid "Outgoing Events [worklist in event_workflow]"
+msgstr "اتفاقات خروجی"
 
 msgid "Outgoing [state in event_workflow]"
 msgstr "خروجی"
@@ -6528,17 +6738,29 @@ msgstr "گزارش مالیاتی حقوق"
 msgid "Pending"
 msgstr "معلق"
 
+msgid "Pending Events"
+msgstr "اتفاق معلق است"
+
 msgid "Pending Events (%(count)s)"
 msgstr "(%(count)s) اتفاق معلق است"
 
 msgid "Pending Events (%(count)s) [worklist in event_workflow]"
 msgstr "(%(count)s)اتفاق معلق است"
 
+msgid "Pending Events [worklist in event_workflow]"
+msgstr "اتفاق معلق است"
+
+msgid "Pending Offers"
+msgstr "پیشنهاد معلق است"
+
 msgid "Pending Offers (%(count)s)"
 msgstr "(%(count)s) پیشنهاد معلق است"
 
 msgid "Pending Offers (%(count)s) [worklist in sale_opportunity_workflow]"
 msgstr "(%(count)s) پیشنهاد معلق"
+
+msgid "Pending Offers [worklist in sale_opportunity_workflow]"
+msgstr "پیشنهاد معلق"
 
 msgid "Pending [state in document_staging_workflow]"
 msgstr "معلق"
@@ -6588,11 +6810,17 @@ msgstr "ماژول شخصی"
 msgid "Persons"
 msgstr "اشخاص"
 
+msgid "Persons to Validate"
+msgstr "شخص برای تأئید"
+
 msgid "Persons to Validate (%(count)s)"
 msgstr "شخص برای تأئید (%(count)s)"
 
 msgid "Persons to Validate (%(count)s) [worklist in validation_workflow]"
 msgstr "(%(count)s) شخص برای تأئید"
+
+msgid "Persons to Validate [worklist in validation_workflow]"
+msgstr "شخص برای تأئید"
 
 msgid "Philippine Peso"
 msgstr ""
@@ -6858,11 +7086,17 @@ msgstr ""
 msgid "Posted"
 msgstr "اعلام شد"
 
+msgid "Posted Events"
+msgstr "اتفاقات اعلام شد"
+
 msgid "Posted Events (%(count)s)"
 msgstr "(%(count)s) اتفاقات اعلام شد"
 
 msgid "Posted Events (%(count)s) [worklist in event_workflow]"
 msgstr "(%(count)s)اتفاق اعلام شد"
+
+msgid "Posted Events [worklist in event_workflow]"
+msgstr "اتفاق اعلام شد"
 
 msgid "Posted [state in event_workflow]"
 msgstr " اعلام شد"
@@ -7068,11 +7302,17 @@ msgstr "محصول یا خدمت"
 msgid "Products"
 msgstr "محصولات"
 
+msgid "Products to Validate"
+msgstr "محصول برای تأئید"
+
 msgid "Products to Validate (%(count)s)"
 msgstr "محصول برای تأئید (%(count)s)"
 
 msgid "Products to Validate (%(count)s) [worklist in validation_workflow]"
 msgstr "(%(count)s) محصول برای تأئید"
+
+msgid "Products to Validate [worklist in validation_workflow]"
+msgstr "محصول برای تأئید"
 
 msgid "Profile"
 msgstr "شرح حال"
@@ -7140,17 +7380,29 @@ msgstr "عنوان پروژه"
 msgid "Project Workflow"
 msgstr "گردش کار پروژه"
 
+msgid "Project to Open"
+msgstr "پروژه برای باز کردن"
+
 msgid "Project to Open (%(count)s)"
 msgstr "(%(count)s) پروژه برای باز کردن"
 
 msgid "Project to Open (%(count)s) [worklist in project_workflow]"
 msgstr "(%(count)s) پروژه برای باز کردن"
 
+msgid "Project to Open [worklist in project_workflow]"
+msgstr "پروژه برای باز کردن"
+
+msgid "Project to Resume"
+msgstr "پروژه برای شروع مجدد"
+
 msgid "Project to Resume (%(count)s)"
 msgstr "(%(count)s) پروژه برای شروع مجدد"
 
 msgid "Project to Resume (%(count)s) [worklist in project_workflow]"
 msgstr "(%(count)s) پروژه به رزومه"
+
+msgid "Project to Resume [worklist in project_workflow]"
+msgstr "پروژه به رزومه"
 
 msgid "Project:"
 msgstr "پروژه :"
@@ -7359,11 +7611,17 @@ msgstr "معامله صورتحساب خرید"
 msgid "Purchase Invoice Transaction Line"
 msgstr "خط معامله صورتحساب خرید"
 
+msgid "Purchase Invoices to Solve"
+msgstr "عدد صورتحساب خرید برای حل کردن"
+
 msgid "Purchase Invoices to Solve (%(count)s)"
 msgstr "(%(count)s) عدد صورتحساب خرید برای حل کردن"
 
 msgid "Purchase Invoices to Solve (%(count)s) [worklist in accounting_workflow]"
 msgstr "(%(count)s) عدد صورتحساب خرید برای حل کردن"
+
+msgid "Purchase Invoices to Solve [worklist in accounting_workflow]"
+msgstr "عدد صورتحساب خرید برای حل کردن"
 
 msgid "Purchase Order"
 msgstr "سفارش خرید"
@@ -7383,11 +7641,20 @@ msgstr "ماژول سفارش خرید"
 msgid "Purchase Orders"
 msgstr "سفارشات خرید"
 
+msgid "Purchase Orders to Confirm"
+msgstr "سفارش خرید برای تأئید"
+
 msgid "Purchase Orders to Confirm (%(count)s)"
 msgstr "(%(count)s) سفارش خرید برای تأئید"
 
 msgid "Purchase Orders to Confirm (%(count)s) [worklist in order_workflow]"
 msgstr "(%(count)s) پیشنهاد سفارش خرید برای تأئید"
+
+msgid "Purchase Orders to Confirm [worklist in order_workflow]"
+msgstr "پیشنهاد سفارش خرید برای تأئید"
+
+msgid "Purchase Orders to Order"
+msgstr "سفارش خرید برای سفارش دادن"
 
 msgid "Purchase Orders to Order (%(count)s)"
 msgstr "(%(count)s) سفارش خرید برای سفارش دادن"
@@ -7395,11 +7662,20 @@ msgstr "(%(count)s) سفارش خرید برای سفارش دادن"
 msgid "Purchase Orders to Order (%(count)s) [worklist in order_workflow]"
 msgstr "(%(count)s) سفارش خرید برای سفارش دادن"
 
+msgid "Purchase Orders to Order [worklist in order_workflow]"
+msgstr "سفارش خرید برای سفارش دادن"
+
+msgid "Purchase Orders to Plan"
+msgstr "سفارش خرید برای برنامه ریزی"
+
 msgid "Purchase Orders to Plan (%(count)s)"
 msgstr "(%(count)s) سفارش خرید برای برنامه ریزی"
 
 msgid "Purchase Orders to Plan (%(count)s) [worklist in order_workflow]"
 msgstr "(%(count)s) سفارش خرید برای برنامه ریزی"
+
+msgid "Purchase Orders to Plan [worklist in order_workflow]"
+msgstr "سفارش خرید برای برنامه ریزی"
 
 msgid "Purchase Packing List"
 msgstr "لیست بسته بندی خرید"
@@ -7422,11 +7698,20 @@ msgstr "ماژول لیست بسته بندی خرید"
 msgid "Purchase Packing List Movements"
 msgstr "تحرکات لیست بسته بندی خرید"
 
+msgid "Purchase Packing List to Confirm"
+msgstr "لیست بسته بندی خرید برای تأئید"
+
 msgid "Purchase Packing List to Confirm (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی خرید برای تأئید"
 
 msgid "Purchase Packing List to Confirm (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی خرید برای تأئید"
+
+msgid "Purchase Packing List to Confirm [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی خرید برای تأئید"
+
+msgid "Purchase Packing List to Receive"
+msgstr "لیست بسته بندی خرید برای دریافت"
 
 msgid "Purchase Packing List to Receive (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی خرید برای دریافت"
@@ -7434,11 +7719,23 @@ msgstr "(%(count)s) لیست بسته بندی خرید برای دریافت"
 msgid "Purchase Packing List to Receive (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی خرید برای دریافت"
 
+msgid "Purchase Packing List to Receive [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی خرید برای دریافت"
+
+msgid "Purchase Packing List to Solve"
+msgstr "لیست بسته بندی خرید برای حل کردن"
+
 msgid "Purchase Packing List to Solve (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی خرید برای حل کردن"
 
 msgid "Purchase Packing List to Solve (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی خرید برای حل کردن"
+
+msgid "Purchase Packing List to Solve [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی خرید برای حل کردن"
+
+msgid "Purchase Packing List to Validate"
+msgstr "لیست بسته بندی خرید برای معتبر کردن"
 
 msgid "Purchase Packing List to Validate (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی خرید برای معتبر کردن"
@@ -7446,14 +7743,23 @@ msgstr "(%(count)s) لیست بسته بندی خرید برای معتبر کر
 msgid "Purchase Packing List to Validate (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی خرید برای معتبر کردن"
 
+msgid "Purchase Packing List to Validate [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی خرید برای معتبر کردن"
+
 msgid "Purchase Packing Lists"
 msgstr "لیست های بسته بندی خرید"
+
+msgid "Purchase Proposals to Approve"
+msgstr "پیشنهاد سفارش خرید برای تأئید"
 
 msgid "Purchase Proposals to Approve (%(count)s)"
 msgstr "(%(count)s) پیشنهاد سفارش خرید برای تأئید"
 
 msgid "Purchase Proposals to Approve (%(count)s) [worklist in order_workflow]"
 msgstr "(%(count)s) پیشنهاد سفارش خرید برای تأئید"
+
+msgid "Purchase Proposals to Approve [worklist in order_workflow]"
+msgstr "پیشنهاد سفارش خرید برای تأئید"
 
 msgid "Purchase Supplies"
 msgstr "خرید تدارکات"
@@ -7485,11 +7791,17 @@ msgstr "ماژول شرط خرید تجاری"
 msgid "Purchase Trade Conditions"
 msgstr "شرایط خرید تجاری"
 
+msgid "Purchase Trade Conditions to Validate"
+msgstr "شرایط معامله خرید برای تأئید"
+
 msgid "Purchase Trade Conditions to Validate (%(count)s)"
 msgstr "(%(count)s) شرایط معامله خرید برای تأئید"
 
 msgid "Purchase Trade Conditions to Validate (%(count)s) [worklist in validation_workflow]"
 msgstr "(%(count)s) شرایط معامله خرید برای تأئید"
+
+msgid "Purchase Trade Conditions to Validate [worklist in validation_workflow]"
+msgstr "شرایط معامله خرید برای تأئید"
 
 msgid "Push Local Commits"
 msgstr ""
@@ -7545,11 +7857,17 @@ msgstr ""
 msgid "Queries"
 msgstr "پرسش ها"
 
+msgid "Queries to Answer"
+msgstr "پرسش برای پاسخ"
+
 msgid "Queries to Answer (%(count)s)"
 msgstr "(%(count)s) پرسش برای پاسخ"
 
 msgid "Queries to Answer (%(count)s) [worklist in query_workflow]"
 msgstr "(%(count)s) پرسش برای پاسخ"
+
+msgid "Queries to Answer [worklist in query_workflow]"
+msgstr "پرسش برای پاسخ"
 
 msgid "Query"
 msgstr "پرسش"
@@ -8460,14 +8778,23 @@ msgstr "معامله صورتحساب فروش"
 msgid "Sale Invoice Transaction Line"
 msgstr "خط صورتحساب فروش"
 
+msgid "Sale Invoices to Solve"
+msgstr "صورتحساب فروش برای حل کردن"
+
 msgid "Sale Invoices to Solve (%(count)s)"
 msgstr "(%(count)s) صورتحساب فروش برای حل کردن"
 
 msgid "Sale Invoices to Solve (%(count)s) [worklist in accounting_workflow]"
 msgstr "(%(count)s) صورتحساب فروش برای حل کردن"
 
+msgid "Sale Invoices to Solve [worklist in accounting_workflow]"
+msgstr "صورتحساب فروش برای حل کردن"
+
 msgid "Sale Opportunities"
 msgstr "شانس فروش"
+
+msgid "Sale Opportunities to Qualify"
+msgstr "تعداد شانس فروش برای تعیین صلاحیت"
 
 msgid "Sale Opportunities to Qualify (%(count)s)"
 msgstr "تعداد (%(count)s) شانس فروش برای تعیین صلاحیت"
@@ -8475,11 +8802,20 @@ msgstr "تعداد (%(count)s) شانس فروش برای تعیین صلاحی�
 msgid "Sale Opportunities to Qualify (%(count)s) [worklist in sale_opportunity_workflow]"
 msgstr "تعداد (%(count)s) شانس فروش برای تعیین صلاحیت"
 
+msgid "Sale Opportunities to Qualify [worklist in sale_opportunity_workflow]"
+msgstr "تعداد شانس فروش برای تعیین صلاحیت"
+
+msgid "Sale Opportunities to Validate"
+msgstr "شانس فروش برای تأئید"
+
 msgid "Sale Opportunities to Validate (%(count)s)"
 msgstr "شانس فروش برای تأئید (%(count)s)"
 
 msgid "Sale Opportunities to Validate (%(count)s) [worklist in sale_opportunity_workflow]"
 msgstr "شانس فروش برای تأئید (%(count)s)"
+
+msgid "Sale Opportunities to Validate [worklist in sale_opportunity_workflow]"
+msgstr "شانس فروش برای تأئید"
 
 msgid "Sale Opportunity"
 msgstr "شانس فروش"
@@ -8523,11 +8859,20 @@ msgstr "جعبه برنامه ریزی سفارش فروش"
 msgid "Sale Orders"
 msgstr "سفارش فروش"
 
+msgid "Sale Orders to Confirm"
+msgstr "سفارش فروش برای تأئید"
+
 msgid "Sale Orders to Confirm (%(count)s)"
 msgstr "(%(count)s) سفارش فروش برای تأئید"
 
 msgid "Sale Orders to Confirm (%(count)s) [worklist in order_workflow]"
 msgstr "سفارش فروش برای تأئید (%(count)s)"
+
+msgid "Sale Orders to Confirm [worklist in order_workflow]"
+msgstr "سفارش فروش برای تأئید"
+
+msgid "Sale Orders to Order"
+msgstr "سفارش فروش برای سفارش"
 
 msgid "Sale Orders to Order (%(count)s)"
 msgstr "(%(count)s) سفارش فروش برای سفارش"
@@ -8535,11 +8880,20 @@ msgstr "(%(count)s) سفارش فروش برای سفارش"
 msgid "Sale Orders to Order (%(count)s) [worklist in order_workflow]"
 msgstr "سفارش فروش برای سفارش (%(count)s)"
 
+msgid "Sale Orders to Order [worklist in order_workflow]"
+msgstr "سفارش فروش برای سفارش"
+
+msgid "Sale Orders to Plan"
+msgstr "سفارش فروش برای برنامه ریزی"
+
 msgid "Sale Orders to Plan (%(count)s)"
 msgstr "(%(count)s) سفارش فروش برای برنامه ریزی"
 
 msgid "Sale Orders to Plan (%(count)s) [worklist in order_workflow]"
 msgstr "سفارش فروش برای برنامه ریزی (%(count)s)"
+
+msgid "Sale Orders to Plan [worklist in order_workflow]"
+msgstr "سفارش فروش برای برنامه ریزی"
 
 msgid "Sale Packing List"
 msgstr "لیست بسته بندی فروش"
@@ -8559,11 +8913,20 @@ msgstr "خطوط لیست بسته بندی فروش"
 msgid "Sale Packing List Module"
 msgstr "ماژول لیست بسته بندی فروش"
 
+msgid "Sale Packing List to Prepare"
+msgstr "لیست بسته بندی فروش برای آماده کردن"
+
 msgid "Sale Packing List to Prepare (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی فروش برای آماده کردن"
 
 msgid "Sale Packing List to Prepare (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی فروش برای آماده کردن"
+
+msgid "Sale Packing List to Prepare [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی فروش برای آماده کردن"
+
+msgid "Sale Packing List to Process"
+msgstr "لیست بسته بندی فروش برای پردازش"
 
 msgid "Sale Packing List to Process (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی فروش برای پردازش"
@@ -8571,11 +8934,23 @@ msgstr "(%(count)s) لیست بسته بندی فروش برای پردازش"
 msgid "Sale Packing List to Process (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی فروش برای پردازش"
 
+msgid "Sale Packing List to Process [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی فروش برای پردازش"
+
+msgid "Sale Packing List to Ship"
+msgstr "لیست بسته بندی فروش برای حمل"
+
 msgid "Sale Packing List to Ship (%(count)s)"
 msgstr "لیست بسته بندی فروش برای حمل (%(count)s)"
 
 msgid "Sale Packing List to Ship (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی فروش برای حمل"
+
+msgid "Sale Packing List to Ship [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی فروش برای حمل"
+
+msgid "Sale Packing List to Solve"
+msgstr "لیست بسته بندی فروش برای حل کردن"
 
 msgid "Sale Packing List to Solve (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی فروش برای حل کردن"
@@ -8583,20 +8958,35 @@ msgstr "(%(count)s) لیست بسته بندی فروش برای حل کردن"
 msgid "Sale Packing List to Solve (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی فروش برای حل کردن"
 
+msgid "Sale Packing List to Solve [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی فروش برای حل کردن"
+
+msgid "Sale Packing List to Validate"
+msgstr "لیست بسته بندی فروش برای تأئید"
+
 msgid "Sale Packing List to Validate (%(count)s)"
 msgstr "(%(count)s) لیست بسته بندی فروش برای تأئید"
 
 msgid "Sale Packing List to Validate (%(count)s) [worklist in packing_list_workflow]"
 msgstr "(%(count)s) لیست بسته بندی فروش برای تأئید"
 
+msgid "Sale Packing List to Validate [worklist in packing_list_workflow]"
+msgstr "لیست بسته بندی فروش برای تأئید"
+
 msgid "Sale Packing Lists"
 msgstr "لیست های بسته بندی فروش"
+
+msgid "Sale Proposals to Approve "
+msgstr "پیشنهاد فروش برای تأئید"
 
 msgid "Sale Proposals to Approve  (%(count)s)"
 msgstr "(%(count)s) پیشنهاد فروش برای تأئید"
 
 msgid "Sale Proposals to Approve  (%(count)s) [worklist in order_workflow]"
 msgstr "پیشنهاد فروش برای تأئید (%(count)s)"
+
+msgid "Sale Proposals to Approve  [worklist in order_workflow]"
+msgstr "پیشنهاد فروش برای تأئید"
 
 msgid "Sale Supplies"
 msgstr "تدارکات فروش"
@@ -8628,11 +9018,17 @@ msgstr "ماژول شرط فروش تجاری"
 msgid "Sale Trade Conditions"
 msgstr "شرایط فروش تجاری"
 
+msgid "Sale Trade Conditions to Validate"
+msgstr "شرایط معامله فروش برای تأئید"
+
 msgid "Sale Trade Conditions to Validate (%(count)s)"
 msgstr "(%(count)s) شرایط معامله فروش برای تأئید"
 
 msgid "Sale Trade Conditions to Validate (%(count)s) [worklist in validation_workflow]"
 msgstr "(%(count)s) شرایط معامله فروش برای تأئید"
+
+msgid "Sale Trade Conditions to Validate [worklist in validation_workflow]"
+msgstr "شرایط معامله فروش برای تأئید"
 
 msgid "Salvadorian Colon"
 msgstr ""
@@ -8817,11 +9213,17 @@ msgstr "ماژول خدمات"
 msgid "Services"
 msgstr "خدمات"
 
+msgid "Services to Validate"
+msgstr "خدمت برای تأئید"
+
 msgid "Services to Validate (%(count)s)"
 msgstr "خدمت برای تأئید (%(count)s)"
 
 msgid "Services to Validate (%(count)s) [worklist in validation_workflow]"
 msgstr "خدمت برای تأئید (%(count)s)"
+
+msgid "Services to Validate [worklist in validation_workflow]"
+msgstr "خدمت برای تأئید"
 
 msgid "Session Tool"
 msgstr "ابزار جلسه"
@@ -9663,11 +10065,20 @@ msgstr "تسلیم پیام"
 msgid "Submitted"
 msgstr "تسلیم شد"
 
+msgid "Submitted Campaigns"
+msgstr "کمپین تسلیم شد"
+
 msgid "Submitted Campaigns (%(count)s)"
 msgstr "(%(count)s) کمپین تسلیم شد"
 
 msgid "Submitted Campaigns (%(count)s) [worklist in ticket_workflow]"
 msgstr "کمپین تسلیم شد (%(count)s)"
+
+msgid "Submitted Campaigns [worklist in ticket_workflow]"
+msgstr "کمپین تسلیم شد"
+
+msgid "Submitted Meetings"
+msgstr "جلسه تسلیم شد"
 
 msgid "Submitted Meetings (%(count)s)"
 msgstr "(%(count)s) جلسه تسلیم شد"
@@ -9675,17 +10086,32 @@ msgstr "(%(count)s) جلسه تسلیم شد"
 msgid "Submitted Meetings (%(count)s) [worklist in ticket_workflow]"
 msgstr "جلسه تسلیم شد (%(count)s)"
 
+msgid "Submitted Meetings [worklist in ticket_workflow]"
+msgstr "جلسه تسلیم شد"
+
+msgid "Submitted Sale Opportunities to Validate"
+msgstr "تعداد شانس فروش برای تأئید تسلیم شد."
+
 msgid "Submitted Sale Opportunities to Validate (%(count)s)"
 msgstr "تعداد (%(count)s) شانس فروش برای تأئید تسلیم شد."
 
 msgid "Submitted Sale Opportunities to Validate (%(count)s) [worklist in sale_opportunity_workflow]"
 msgstr "تعداد (%(count)s) شانس فروش برای تأئید تسلیم شد"
 
+msgid "Submitted Sale Opportunities to Validate [worklist in sale_opportunity_workflow]"
+msgstr "تعداد شانس فروش برای تأئید تسلیم شد"
+
+msgid "Submitted Support Requests"
+msgstr "درخواست پشتیبانی تسلیم شد"
+
 msgid "Submitted Support Requests (%(count)s)"
 msgstr "(%(count)s) درخواست پشتیبانی تسلیم شد"
 
 msgid "Submitted Support Requests (%(count)s) [worklist in ticket_workflow]"
 msgstr "(%(count)s) درخواست پشتیبانی تسلیم شد"
+
+msgid "Submitted Support Requests [worklist in ticket_workflow]"
+msgstr "درخواست پشتیبانی تسلیم شد"
 
 msgid "Submitted [state in document_publication_workflow]"
 msgstr "تسلیم شد"
@@ -9894,11 +10320,20 @@ msgstr "گردش کار گزارش وظیفه"
 msgid "Task Reports"
 msgstr "گزارش های وظیفه"
 
+msgid "Task Reports to Close"
+msgstr "گزارش وظیفه برای بستن"
+
 msgid "Task Reports to Close (%(count)s)"
 msgstr "گزارش وظیفه برای بستن (%(count)s)"
 
 msgid "Task Reports to Close (%(count)s) [worklist in task_report_workflow]"
 msgstr "تعداد (%(count)s) گزارش وظیفه برای بستن"
+
+msgid "Task Reports to Close [worklist in task_report_workflow]"
+msgstr "تعداد گزارش وظیفه برای بستن"
+
+msgid "Task Reports to Finish"
+msgstr "تعداد گزارش وظیفه برای اتمام"
 
 msgid "Task Reports to Finish (%(count)s)"
 msgstr "تعداد (%(count)s) گزارش وظیفه برای اتمام"
@@ -9906,11 +10341,23 @@ msgstr "تعداد (%(count)s) گزارش وظیفه برای اتمام"
 msgid "Task Reports to Finish (%(count)s) [worklist in task_report_workflow]"
 msgstr "تعداد (%(count)s) گزارش وظیفه برای اتمام"
 
+msgid "Task Reports to Finish [worklist in task_report_workflow]"
+msgstr "تعداد گزارش وظیفه برای اتمام"
+
+msgid "Task Reports to Follow"
+msgstr "گزارش وظیفه برای پیگیری"
+
 msgid "Task Reports to Follow (%(count)s)"
 msgstr "گزارش وظیفه برای پیگیری (%(count)s)"
 
 msgid "Task Reports to Follow (%(count)s) [worklist in task_report_workflow]"
 msgstr "تعداد (%(count)s) گزارش وظیفه برای پیگیری"
+
+msgid "Task Reports to Follow [worklist in task_report_workflow]"
+msgstr "تعداد گزارش وظیفه برای پیگیری"
+
+msgid "Task Reports to Start"
+msgstr "گزارش برای شروع"
 
 msgid "Task Reports to Start (%(count)s)"
 msgstr "گزارش برای شروع (%(count)s)"
@@ -9918,11 +10365,20 @@ msgstr "گزارش برای شروع (%(count)s)"
 msgid "Task Reports to Start (%(count)s) [worklist in task_report_workflow]"
 msgstr "تعداد (%(count)s) گزارش برای شروع"
 
+msgid "Task Reports to Start [worklist in task_report_workflow]"
+msgstr "تعداد گزارش برای شروع"
+
+msgid "Task Reports to Validate"
+msgstr "گزارش برای معتبر کردن"
+
 msgid "Task Reports to Validate (%(count)s)"
 msgstr "گزارش برای معتبر کردن (%(count)s)"
 
 msgid "Task Reports to Validate (%(count)s) [worklist in task_report_workflow]"
 msgstr "تعداد (%(count)s) گزارش برای معتبر کردن"
+
+msgid "Task Reports to Validate [worklist in task_report_workflow]"
+msgstr "تعداد گزارش برای معتبر کردن"
 
 msgid "Task Title"
 msgstr "عنوان وظیفه"
@@ -9942,11 +10398,20 @@ msgstr "خلاصه وظیفه"
 msgid "Tasks can not be created, start date is empty."
 msgstr "وظیفه قابل ایجاد نیست، تاریخ شروع خالی است."
 
+msgid "Tasks to Confirm"
+msgstr "وظیفه برای تأئید"
+
 msgid "Tasks to Confirm (%(count)s)"
 msgstr "وظیفه برای تأئید (%(count)s)"
 
 msgid "Tasks to Confirm (%(count)s) [worklist in task_workflow]"
 msgstr "تعداد (%(count)s) وظیفه برای تأئید"
+
+msgid "Tasks to Confirm [worklist in task_workflow]"
+msgstr "تعداد وظیفه برای تأئید"
+
+msgid "Tasks to Order"
+msgstr "وظیفه برای سفارش"
 
 msgid "Tasks to Order (%(count)s)"
 msgstr "وظیفه برای سفارش (%(count)s)"
@@ -9954,11 +10419,20 @@ msgstr "وظیفه برای سفارش (%(count)s)"
 msgid "Tasks to Order (%(count)s) [worklist in task_workflow]"
 msgstr "وظیفه برای سفارش (%(count)s)"
 
+msgid "Tasks to Order [worklist in task_workflow]"
+msgstr "وظیفه برای سفارش"
+
+msgid "Tasks to Validate"
+msgstr "وظیفه برای تأئید"
+
 msgid "Tasks to Validate (%(count)s)"
 msgstr "وظیفه برای تأئید (%(count)s)"
 
 msgid "Tasks to Validate (%(count)s) [worklist in task_workflow]"
 msgstr "وظیفه برای تأئید (%(count)s)"
+
+msgid "Tasks to Validate [worklist in task_workflow]"
+msgstr "وظیفه برای تأئید"
 
 msgid "Tax"
 msgstr "مالیات"
@@ -10491,11 +10965,20 @@ msgstr "ترجمه درخواست شد"
 msgid "Translations"
 msgstr ""
 
+msgid "Translations to Assign"
+msgstr "ترجمه برای تخصیص"
+
 msgid "Translations to Assign (%(count)s)"
 msgstr "(%(count)s) ترجمه برای تخصیص"
 
 msgid "Translations to Assign (%(count)s) [worklist in document_publication_workflow]"
 msgstr "(%(count)s)ترجمه برای تخصیص"
+
+msgid "Translations to Assign [worklist in document_publication_workflow]"
+msgstr "ترجمه برای تخصیص"
+
+msgid "Translations to Collate"
+msgstr "ترجمه برای تلفیق"
 
 msgid "Translations to Collate (%(count)s)"
 msgstr "(%(count)s) ترجمه برای تلفیق"
@@ -10503,11 +10986,20 @@ msgstr "(%(count)s) ترجمه برای تلفیق"
 msgid "Translations to Collate (%(count)s) [worklist in document_publication_workflow]"
 msgstr "(%(count)s)ترجمه برای تلفیق"
 
+msgid "Translations to Collate [worklist in document_publication_workflow]"
+msgstr "ترجمه برای تلفیق"
+
+msgid "Translations to Revise"
+msgstr "ترجمه برای تجدید نظر"
+
 msgid "Translations to Revise (%(count)s)"
 msgstr "(%(count)s) ترجمه برای تجدید نظر"
 
 msgid "Translations to Revise (%(count)s) [worklist in document_publication_workflow]"
 msgstr "(%(count)s)ترجمه برای تجدید نظر"
+
+msgid "Translations to Revise [worklist in document_publication_workflow]"
+msgstr "ترجمه برای تجدید نظر"
 
 msgid "Translator Mode"
 msgstr ""
