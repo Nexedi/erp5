@@ -40,7 +40,7 @@
         })
         .push(function (content) {
           if (!gadget.state.editable) {
-            gadget.updateDocument(content);
+            return gadget.updateDocument(content);
           }
           return gadget.jio_putAttachment(
             gadget.state.jio_key,
