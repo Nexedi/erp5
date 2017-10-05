@@ -10,20 +10,18 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
-                <string>default</string>
-                <string>width</string>
-                <string>height</string>
-                <string>enabled</string>
-                <string>editable</string>
-                <string>whitespace_preserve</string>
+                <string>gadget_url</string>
+                <string>renderjs_extra</string>
+                <string>title</string>
+                <string>validator_field_id</string>
+                <string>validator_form_id</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>iframe_content</string> </value>
+            <value> <string>my_view_mode_text_content</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -48,10 +46,6 @@
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -60,16 +54,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -80,7 +66,27 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
+                    <key> <string>gadget_url</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>validator_form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -91,48 +97,38 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
                     <value> <string>The content of the document considered as a text string</string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_editor_field</string> </value>
+                    <value> <string>my_gadget_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>18</int> </value>
+                    <key> <string>gadget_url</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>target</string> </key>
-                    <value> <string>Click to edit the target</string> </value>
+                    <key> <string>renderjs_extra</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Page Content</string> </value>
+                    <value> <string>Text</string> </value>
                 </item>
                 <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <key> <string>validator_field_id</string> </key>
+                    <value> <string>text_content_validator</string> </value>
                 </item>
                 <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>80</int> </value>
+                    <key> <string>validator_form_id</string> </key>
+                    <value> <string>erp5_core/Base_viewFieldLibrary</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -142,36 +138,26 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python:\'<iframe width="100%%" height="600" src="%s/asEntireHTML"></iframe>\' % here.absolute_url()
-
-]]></string> </value>
+            <value> <string>python: field.restrictedTraverse(\'gadget_editor.html\').absolute_url()</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/isExternalDocument</string> </value>
+            <value> <string>python: [(\'editor\', context.Base_getEditorFieldPreferredTextEditor()), (\'portal_type\', context.getPortalType()), ]</string> </value>
         </item>
       </dictionary>
     </pickle>

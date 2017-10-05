@@ -11,8 +11,6 @@
             <value>
               <list>
                 <string>description</string>
-                <string>editable</string>
-                <string>height</string>
                 <string>title</string>
               </list>
             </value>
@@ -60,10 +58,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -91,16 +85,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>description</string> </key>
                     <value> <string>Content of the web page</string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

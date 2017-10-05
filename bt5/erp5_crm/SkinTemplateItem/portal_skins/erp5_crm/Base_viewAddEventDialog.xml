@@ -74,7 +74,9 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -82,7 +84,6 @@
                     <value>
                       <list>
                         <string>your_notification_message</string>
-                        <string>your_text_content</string>
                         <string>your_keep_draft</string>
                       </list>
                     </value>

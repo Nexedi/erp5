@@ -75,6 +75,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>your_text_content</string>
                         <string>your_workflow_action</string>
                       </list>
                     </value>
@@ -85,7 +86,6 @@
                       <list>
                         <string>your_notification_message</string>
                         <string>your_content_type</string>
-                        <string>your_text_content</string>
                         <string>your_event_workflow_action</string>
                       </list>
                     </value>

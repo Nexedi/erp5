@@ -10,10 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
                 <string>default</string>
                 <string>editable</string>
-                <string>text_editor</string>
               </list>
             </value>
         </item>
@@ -56,10 +54,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -92,10 +86,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>page</string> </value>
-                </item>
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>

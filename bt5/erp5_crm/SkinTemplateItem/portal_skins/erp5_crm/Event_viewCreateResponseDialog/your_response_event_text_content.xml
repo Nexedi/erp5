@@ -10,10 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
                 <string>default</string>
                 <string>editable</string>
-                <string>text_editor</string>
                 <string>title</string>
               </list>
             </value>
@@ -57,10 +55,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -83,12 +77,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -99,10 +87,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>page</string> </value>
-                </item>
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
@@ -124,10 +108,6 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Message</string> </value>
                 </item>
@@ -146,19 +126,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: context.getReplyBody(content_type=context.Event_getPreferredResponseEventContentType())</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.Base_getEditorFieldPreferredTextEditor(content_type=context.Event_getPreferredResponseEventContentType())</string> </value>
         </item>
       </dictionary>
     </pickle>

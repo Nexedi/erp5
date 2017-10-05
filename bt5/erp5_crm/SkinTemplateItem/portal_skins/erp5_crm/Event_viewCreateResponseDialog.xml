@@ -62,6 +62,7 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -70,11 +71,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>your_response_event_text_content</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>center</string> </key>
                     <value>
                       <list>
                         <string>your_response_event_notification_message</string>
-                        <string>your_response_event_text_content</string>
                         <string>your_response_workflow_action</string>
                       </list>
                     </value>

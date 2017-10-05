@@ -53,6 +53,7 @@
                 <string>right (Publication)</string>
                 <string>center</string>
                 <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -70,6 +71,12 @@
                 </item>
                 <item>
                     <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list/>
                     </value>

@@ -151,7 +151,6 @@
                         <string>my_captcha</string>
                         <string>my_dialog_mode_description</string>
                         <string>my_dialog_mode_title</string>
-                        <string>my_dialog_mode_text_content</string>
                         <string>my_view_mode_listbox_category</string>
                         <string>my_view_mode_listbox_description</string>
                         <string>my_view_mode_read_only_id</string>
@@ -159,6 +158,9 @@
                         <string>my_gadget_field</string>
                         <string>my_iframe_gadget_field</string>
                         <string>my_view_mode_raw_text_content</string>
+                        <string>my_view_mode_text_content</string>
+                        <string>text_content_validator</string>
+                        <string>my_dialog_mode_text_content</string>
                       </list>
                     </value>
                 </item>

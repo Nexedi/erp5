@@ -10,12 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
                 <string>default</string>
                 <string>editable</string>
-                <string>height</string>
                 <string>title</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -58,10 +55,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -93,10 +86,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>page</string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -113,20 +102,12 @@
                     <value> <string>Base_viewCRMFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Message Content</string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>

@@ -77,8 +77,7 @@
                     <key> <string>bottom (Preview)</string> </key>
                     <value>
                       <list>
-                        <string>iframe_content</string>
-                        <string>text_content</string>
+                        <string>my_text_content</string>
                       </list>
                     </value>
                 </item>

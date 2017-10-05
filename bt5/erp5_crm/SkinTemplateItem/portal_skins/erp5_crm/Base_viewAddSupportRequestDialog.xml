@@ -62,6 +62,7 @@
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
               </list>
             </value>
         </item>
@@ -70,10 +71,17 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
                         <string>your_text_content</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list>
                         <string>your_support_request_state</string>
                       </list>
                     </value>
