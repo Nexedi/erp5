@@ -22,6 +22,10 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
+    .allowPublicAcquisition('notifySubmit', function () {
+      return this.triggerSubmit();
+    })
+
     .onEvent('submit', function () {
       var gadget = this;
       return gadget.getDeclaredGadget('form_view')
