@@ -617,3 +617,179 @@
   jIO.addStorage('mapping', MappingStorage);
 }(jIO, RSVP, UriTemplate, SimpleQuery, ComplexQuery, QueryFactory, Query,
   FormData));
+/*jslint nomen: true*/
+(function (jIO) {
+  "use strict";
+
+  /**
+   * The jIO DateUpdaterStorage extension
+   *
+   * @class DateUpdaterStorage
+   * @constructor
+   */
+
+  function updateDocument(doc, property_list) {
+    var i, len = property_list.length;
+    for (i = 0; i < len; i += 1) {
+      doc[property_list[i]] = new Date().toUTCString().replace('GMT', '+0000');
+    }
+    return doc;
+  }
+
+  function DateUpdaterStorage(spec) {
+    this._sub_storage = jIO.createJIO(spec.sub_storage);
+    this._property_list = spec.property_list || [];
+  }
+
+  DateUpdaterStorage.prototype.get = function () {
+    return this._sub_storage.get.apply(this._sub_storage, arguments);
+  };
+  DateUpdaterStorage.prototype.allAttachments = function () {
+    return this._sub_storage.allAttachments.apply(this._sub_storage, arguments);
+  };
+  DateUpdaterStorage.prototype.post = function (doc) {
+    doc = updateDocument(doc, this._property_list);
+    return this._sub_storage.post(doc);
+  };
+  DateUpdaterStorage.prototype.put = function (id, doc) {
+    doc = updateDocument(doc, this._property_list);
+    return this._sub_storage.put(id, doc);
+  };
+  DateUpdaterStorage.prototype.remove = function () {
+    return this._sub_storage.remove.apply(this._sub_storage, arguments);
+  };
+  DateUpdaterStorage.prototype.getAttachment = function () {
+    return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);
+  };
+  DateUpdaterStorage.prototype.putAttachment = function (id) {
+    var storage = this, argument_list = arguments;
+    return storage.get(id)
+      .push(function (doc) {
+        return storage.put(id, doc);
+      })
+      .push(function () {
+        return storage._sub_storage.putAttachment.apply(
+          storage._sub_storage,
+          argument_list
+        );
+      });
+  };
+  DateUpdaterStorage.prototype.removeAttachment = function (id) {
+    var storage = this, argument_list = arguments;
+    return storage.get(id)
+      .push(function (doc) {
+        return storage.put(id, doc);
+      })
+      .push(function () {
+        return storage._sub_storage.removeAttachment.apply(
+          storage._sub_storage,
+          argument_list
+        );
+      });
+  };
+  DateUpdaterStorage.prototype.repair = function () {
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);
+  };
+  DateUpdaterStorage.prototype.hasCapacity = function (name) {
+    return this._sub_storage.hasCapacity(name);
+  };
+  DateUpdaterStorage.prototype.buildQuery = function () {
+    return this._sub_storage.buildQuery.apply(this._sub_storage,
+                                              arguments);
+  };
+
+  jIO.addStorage('dateupdater', DateUpdaterStorage);
+
+}(jIO));
+
+/*jslint nomen: true*/
+(function (jIO) {
+  "use strict";
+
+  /**
+   * The jIO SafeRepairStorage extension
+   *
+   * @class SafeRepairStorage
+   * @constructor
+   */
+
+
+  function SafeRepairStorage(spec) {
+    this._sub_storage = jIO.createJIO(spec.sub_storage);
+    this._id_dict = {};
+  }
+
+  SafeRepairStorage.prototype.get = function () {
+    return this._sub_storage.get.apply(this._sub_storage, arguments);
+  };
+  SafeRepairStorage.prototype.allAttachments = function () {
+    return this._sub_storage.allAttachments.apply(this._sub_storage, arguments);
+  };
+  SafeRepairStorage.prototype.post = function () {
+    return this._sub_storage.post.apply(this._sub_storage, arguments);
+  };
+  SafeRepairStorage.prototype.put = function (id, doc) {
+    var storage = this;
+    return this._sub_storage.put.apply(this._sub_storage, arguments)
+      .push(undefined, function (error) {
+        if (error instanceof jIO.util.jIOError &&
+            error.status_code === 403) {
+          if (storage._id_dict[id]) {
+            return storage._sub_storage.put(storage._id_dict[id], doc);
+          }
+          return storage._sub_storage.post(doc)
+            .push(function (sub_id) {
+              storage._id_dict[id] = sub_id;
+              return sub_id;
+            });
+        }
+      });
+  };
+  SafeRepairStorage.prototype.remove = function () {
+    return;
+  };
+  SafeRepairStorage.prototype.getAttachment = function () {
+    return this._sub_storage.getAttachment.apply(this._sub_storage, arguments);
+  };
+  SafeRepairStorage.prototype.putAttachment = function (id, attachment_id,
+      attachment) {
+    var storage = this;
+    return this._sub_storage.putAttachment.apply(this._sub_storage, arguments)
+      .push(undefined, function (error) {
+        if (error instanceof jIO.util.jIOError &&
+            error.status_code === 403) {
+          return new RSVP.Queue()
+            .push(function () {
+              if (storage._id_dict[id]) {
+                return storage._id_dict[id];
+              }
+              return storage._sub_storage.get(id)
+                .push(function (doc) {
+                  return storage._sub_storage.post(doc);
+                });
+            })
+            .push(function (sub_id) {
+              storage._id_dict[id] = sub_id;
+              return storage._sub_storage.putAttachment(sub_id, attachment_id,
+                  attachment);
+            });
+        }
+      });
+  };
+  SafeRepairStorage.prototype.removeAttachment = function () {
+    return;
+  };
+  SafeRepairStorage.prototype.repair = function () {
+    return this._sub_storage.repair.apply(this._sub_storage, arguments);
+  };
+  SafeRepairStorage.prototype.hasCapacity = function (name) {
+    return this._sub_storage.hasCapacity(name);
+  };
+  SafeRepairStorage.prototype.buildQuery = function () {
+    return this._sub_storage.buildQuery.apply(this._sub_storage,
+                                              arguments);
+  };
+
+  jIO.addStorage('saferepair', SafeRepairStorage);
+
+}(jIO));
