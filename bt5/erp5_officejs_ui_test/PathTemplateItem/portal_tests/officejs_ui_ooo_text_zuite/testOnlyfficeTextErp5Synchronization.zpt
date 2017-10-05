@@ -144,6 +144,11 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//div[@class='asc-loadmask-title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>//canvas[@id='id_target_cursor']</td>
   <td></td>
 </tr>

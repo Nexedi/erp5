@@ -258,6 +258,11 @@
 <!-- Stop Generic -->
 <tr>
   <td>waitForElementPresent</td>
+  <td>//div[@class='asc-loadmask-title']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>identifier=ws-canvas</td>
   <td></td>
 </tr>
