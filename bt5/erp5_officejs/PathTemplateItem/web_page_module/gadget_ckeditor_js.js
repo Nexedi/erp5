@@ -10,9 +10,50 @@
       gadget.state.ckeditor = CKEDITOR.replace(
         textarea,
         {
-          removeButtons: 'NewPage,Preview,Cut,Paste,Copy,PasteText,' +
-            'PasteFromWord,Flash,Iframe,Form,Checkbox,Radio,TextField,' +
-            'Textarea,Select,Button,ImageButton,HiddenField,Maximize',
+          toolbar: [
+            {
+              name: 'clipboard',
+              groups: [ 'clipboard', 'undo' ],
+              items: [
+                'PasteText', 'Undo', 'Redo'
+              ]
+            },
+            {
+              name: 'basicstyles',
+              groups: [ 'basicstyles', 'cleanup' ],
+              items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript',
+                'Superscript', '-', 'RemoveFormat' ]
+            },
+            {
+              name: 'paragraph',
+              groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ],
+              items: [
+                'NumberedList', 'BulletedList',
+              ]
+            },
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+            {
+              name: 'insert',
+              items: [
+                'Image',
+                'Table',
+                'HorizontalRule',
+                'SpecialChar', 'PageBreak'
+              ]
+            },
+            {
+              name: 'styles',
+              items: ['Styles', 'Format', 'Font', 'FontSize' ]
+            },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+            {
+              name: 'tools',
+              items: [
+                'Maximize',
+              ]
+            },
+            { name: 'about', items: [ 'About' ] }
+          ],
           removePlugins: '',
           disableNativeSpellChecker: false,
           extraAllowedContent: "details section article"
