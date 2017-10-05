@@ -150,7 +150,7 @@
         })
         .push(function (result_list) {
           var s = '', i, comments = gadget.element.querySelector("#post_list"),
-            plain_content, post_list = result_list.pop();
+            post_list = result_list.pop();
           if (post_list.length) {
             for (i = 0; i < post_list.length; i += 1) {
               s += '<li>' +
@@ -160,14 +160,13 @@
                 post_list[i][3] = result_list[i];
               }
               if (post_list[i][2]) {
-                plain_content = "<p>" + post_list[i][2].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>") + "</p>";
                 if (post_list[i][3]) {
-                  s += plain_content + '<strong>Attachment: </strong>' +
+                  s += post_list[i][2] + '<strong>Attachment: </strong>' +
                     '<a href=\"' +
                     post_list[i][3] + '\">' + post_list[i][4] +
                     '</a>';
                 } else {
-                  s += plain_content;
+                  s += post_list[i][2];
                 }
               } else {
                 if (post_list[i][3]) {
@@ -184,40 +183,69 @@
           }
         });
     })
-    .onEvent('submit', function () {
-      var gadget = this,
-        editor = gadget.element.querySelector('#comment');
-
-      if (editor.value === '') {
-        return gadget.notifySubmitted("Post content can not be empty!");
-      }
-
-      return gadget.notifySubmitted("Comment added")
-        .push(function () {
-          var choose_file_html_element = gadget.element.querySelector('#attachment'),
-            file_blob = choose_file_html_element.files[0],
-            url = gadget.hateoas_url + "post_module/PostModule_createHTMLPost",
-            data = new FormData();
-          data.append("follow_up", gadget.options.jio_key);
-          data.append("predecessor", '');
-          data.append("data", editor.value);
-          data.append("file", file_blob);
-          // XXX: Hack, call jIO.util.ajax directly to pass the file blob
-          // Because the jio_putAttachment will call readBlobAsText, which
-          // will broke the binary file. Call the jIO.util.ajax directly
-          // will not touch the blob
-          return jIO.util.ajax({
-            "type": "POST",
-            "url": url,
-            "data": data,
-            "xhrFields": {
-              withCredentials: true
-            }
-          });
+    .declareService(function () {
+      var gadget = this;
+      return gadget.declareGadget("officejs_ckeditor_gadget/basic/",
+        {
+          element: gadget.element.querySelector('.editor'),
+          sandbox: 'iframe',
+          scope: 'editor'
         })
         .push(function () {
-          editor.value = '';
-          return gadget.redirect({command: 'reload'});
+          return gadget.getDeclaredGadget('editor');
+        })
+        .push(function (editor) {
+          return editor.render({});
+        });
+    })
+    .onEvent('submit', function () {
+      var gadget = this,
+        editor_gadget;
+
+      return gadget.getDeclaredGadget('editor')
+        .push(function (text_content_gadget) {
+          editor_gadget = text_content_gadget;
+          return text_content_gadget.getContent();
+        })
+        .push(function (comment_content) {
+          if (comment_content.undefined === '') {
+            return gadget.notifySubmitted("Post content can not be empty!");
+          }
+          return gadget.notifySubmitted("Comment added")
+            .push(function () {
+              var post_content = Object.values(comment_content)[0],
+                choose_file_html_element = gadget.element.querySelector('#attachment'),
+                file_blob = choose_file_html_element.files[0],
+                file_upload_div = gadget.element.querySelector('#file_upload_div');
+              file_upload_div.innerHTML = file_upload_div.innerHTML;
+              return [post_content, file_blob];
+            })
+            .push(function (result) {
+              // XXX: Hack, call jIO.util.ajax directly to pass the file blob
+              // Because the jio_putAttachment will call readBlobAsText, which
+              // will broke the binary file. Call the jIO.util.ajax directly
+              // will not touch the blob
+              var url = gadget.hateoas_url + "post_module/PostModule_createHTMLPost",
+                data = new FormData();
+              data.append("follow_up", gadget.options.jio_key);
+              data.append("predecessor", '');
+              data.append("data", result[0]);
+              data.append("file", result[1]);
+              return jIO.util.ajax({
+                "type": "POST",
+                "url": url,
+                "data": data,
+                "xhrFields": {
+                  withCredentials: true
+                }
+              });
+            })
+            .push(function () {
+              return RSVP.all([
+                editor_gadget.render({}),
+                gadget.redirect({command: 'reload'})
+              ]);
+            });
         });
     });
 }(window, rJS, RSVP, calculatePageTitle));
