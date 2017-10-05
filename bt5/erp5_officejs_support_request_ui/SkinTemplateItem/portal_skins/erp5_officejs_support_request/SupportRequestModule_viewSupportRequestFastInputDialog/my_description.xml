@@ -175,7 +175,9 @@
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>extra</string> </key>
@@ -212,6 +214,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: field.restrictedTraverse("officejs_ckeditor_gadget/app").absolute_url() + "/"</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>checkEditorContent</string> </value>
         </item>
       </dictionary>
     </pickle>
