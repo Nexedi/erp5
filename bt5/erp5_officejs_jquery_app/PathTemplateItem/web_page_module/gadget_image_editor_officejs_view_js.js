@@ -58,7 +58,7 @@
           return gadget.jio_put(gadget.state.jio_key, doc);
         })
         .push(function () {
-          return gadget.notifySubmitted('Data Updated');
+          return gadget.notifySubmitted({message: 'Data Updated', status: 'success'});
         });
     })
 
