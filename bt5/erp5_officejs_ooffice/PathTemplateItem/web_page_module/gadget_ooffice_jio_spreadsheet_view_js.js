@@ -52,7 +52,6 @@
               jIO.util.dataURItoBlob(content.text_content)
             );
           }
-          doc.modification_date = (new Date()).toISOString();
         })
         .push(function () {
           return gadget.jio_put(gadget.state.jio_key, doc);
