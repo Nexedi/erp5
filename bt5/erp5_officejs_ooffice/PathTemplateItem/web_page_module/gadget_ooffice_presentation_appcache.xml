@@ -116,8 +116,7 @@ font-awesome/font-awesome-webfont.woff2\n
 font-awesome/font-awesome-webfont.ttf\n
 font-awesome/font-awesome-webfont.svg\n
 gadget_erp5_nojqm.css\n
-jio_mappingstorage.js\n
-jio_fixstorage.js\n
+jio_ojs_storage.js\n
 gadget_erp5_global.js\n
 URI.js\n
 dygraph.js\n
@@ -336,7 +335,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -350,7 +349,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.62559.15643.59750</string> </value>
+                <value> <string>962.42958.18622.47018</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -368,7 +367,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1504882731.36</float>
+                        <float>1507552671.36</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

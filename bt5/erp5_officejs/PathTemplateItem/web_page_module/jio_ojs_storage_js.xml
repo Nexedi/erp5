@@ -24,6 +24,7 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -42,6 +43,8 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -61,18 +64,20 @@
             </value>
         </item>
         <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>content_md5</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>jio_fixstorage.js</string> </value>
+            <value> <string>jio_ojs_storage.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -82,13 +87,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jio_fixstorage_js</string> </value>
+            <value> <string>jio_ojs_storage_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>en</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -96,6 +99,16 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>jio_ojs_storage.js</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
             <value>
               <none/>
             </value>
@@ -158,11 +171,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish</string> </value>
+                <value> <string>publish_alive</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -184,7 +197,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498817425.15</float>
+                        <float>1507730066.16</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -193,7 +206,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published</string> </value>
+                <value> <string>published_alive</string> </value>
             </item>
           </dictionary>
         </list>
@@ -215,7 +228,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -229,7 +242,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.33037.19706.64802</string> </value>
+                <value> <string>962.45923.44376.29252</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -247,7 +260,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1499179222.51</float>
+                        <float>1507730215.96</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -270,13 +283,11 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value>
-                  <none/>
-                </value>
+                <value> <string>detect_converted_file</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -288,7 +299,7 @@
             </item>
             <item>
                 <key> <string>external_processing_state</string> </key>
-                <value> <string>empty</string> </value>
+                <value> <string>converted</string> </value>
             </item>
             <item>
                 <key> <string>serial</string> </key>
@@ -306,7 +317,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1498814308.48</float>
+                        <float>1507197694.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
