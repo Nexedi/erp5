@@ -64,7 +64,7 @@
     />
     <tal:block
       tal:condition="python: form is not None"
-      tal:repeat="field python: [field for group in form.get_groups(include_empty=0) if group != 'hidden' for field in form.get_fields_in_group(group)]"
+      tal:repeat="field python: [field for group in form.get_groups(include_empty=0) for field in form.get_fields_in_group(group)]"
     >
       <style
         tal:define="css python: field.render_css(REQUEST=request)"
