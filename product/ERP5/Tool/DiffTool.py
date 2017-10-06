@@ -109,8 +109,16 @@ class PortalPatch:
     """
     Returns a Json patch with deep diff extensions
     """
-    src = self.old_value._asDict()
-    dst = self.new_value._asDict()
+    #It's easier to ask forgiveness than permission
+    try:
+      src = self.old_value._asDict()
+    except AttributeError:
+      src = self.old_value
+    try:
+      dst = self.new_value._asDict()
+    except AttributeError:
+      dst = self.new_value
+
     ddiff = DeepDiff(src, dst, ignore_order=True, verbose_level=0)
     return ddiff
 
