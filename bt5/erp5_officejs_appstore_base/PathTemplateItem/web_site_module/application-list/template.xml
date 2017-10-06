@@ -170,7 +170,7 @@
             <value>
               <tuple>
                 <string>aggregate/web_page_module/gadget_ojs_appstore_redirect_page_html</string>
-                <string>caching_policy/must-revalidate</string>
+                <string>caching_policy/error-cache</string>
               </tuple>
             </value>
         </item>
@@ -405,7 +405,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>vincent</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -419,7 +419,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>959.46472.13801.63641</string> </value>
+                <value> <string>962.27144.34845.17305</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -437,7 +437,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1496149454.25</float>
+                        <float>1507281244.95</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
