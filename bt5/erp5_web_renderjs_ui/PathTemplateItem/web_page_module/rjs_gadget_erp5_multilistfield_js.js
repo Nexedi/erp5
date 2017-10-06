@@ -3,6 +3,13 @@
 (function (window, rJS, document, RSVP) {
   'use strict';
 
+  /* Make sure that returned object is an Array instance. */
+  function ensureArray(obj) {
+    if (!obj) {return []; }
+    if (Array.isArray(obj)) {return obj; }
+    return [obj];
+  }
+
   function appendListField(gadget, value, item_list) {
     var div = document.createElement('div');
     gadget.element.appendChild(div);
@@ -32,8 +39,9 @@
       var field_json = options.field_json || {},
         item_list = field_json.items,
         state_dict = {
-          value_list: JSON.stringify(field_json.value ||
-                                     field_json.default || []),
+          value_list: JSON.stringify(
+            ensureArray(field_json.value || field_json.default)
+          ),
           editable: field_json.editable,
           required: field_json.required,
           name: field_json.key,
