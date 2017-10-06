@@ -1195,12 +1195,12 @@ class BusinessPatchItem(XMLObject):
     # Business Property Item for storing old and new values
     if '#' in item_path:
       # Create new_prop_item and build it from ZODB
-      new_prop_item = self.newContent(portal_type='Business Property Item',
+      new_item = self.newContent(portal_type='Business Property Item',
                                       item_path=item_path,
                                       item_layer=item_layer,
                                       item_sign=item_sign,
                                       id='new_item')
-      new_prop_item.build(self)
+      new_item.build(self)
 
     else:
       # Create new_item and build it from ZODB
@@ -1214,6 +1214,15 @@ class BusinessPatchItem(XMLObject):
     updated_id = 'old_item'
     # Copy old item/property item from the item at similar path in dependency_bm
     dependency_item = dependency_bm.getBusinessItemByPath(item_path)
+
+    # Raise if there is no item exisiting in dependency Business Manager
+    if not dependency_item:
+      import pdb; pdb.set_trace()
+      raise ValueError('No %s exist at path %s in installed version of %s'
+                          % ( new_item.getPortalType(),
+                              item_path,
+                              dependency_title,))
+
     cp_data = dependency_bm.manage_copyObjects([dependency_item.getId()])
     new_id = self.manage_pasteObjects(cp_data)[0]['new_id']
     self.manage_renameObject(id=new_id, new_id=updated_id)
@@ -1246,24 +1255,37 @@ class BusinessPatchItem(XMLObject):
     else:
       return old_item.getProperty('item_property_value')
 
-  def getDiff(self):
+  def getDiff(self, patch_format='deepdiff'):
     """
     Use diff tool to find the diff between two values
 
     XXX: For now we display the json format of the patched diff
     """
-    portal = self.getPortalObject()
-    diff_tool = portal.portal_diff
-    patch_format = 'deepdiff'
-    patch = diff_tool.diffPortalObject(old=self._getOb('old_item'),
-                                       new=self._getOb('new_item'),
-                                       patch_format=patch_format
-                                       )
+    patch = self.getPatchObject(patch_format)
     if patch_format == 'deepdiff':
       return patch.asDeepDiffPatch().json
     else:
       # For json-patch object
       return patch.asJSONPatch().to_string()
+
+  def getPatchObject(self, patch_format='deepdiff'):
+    portal = self.getPortalObject()
+    diff_tool = portal.portal_diff
+
+    old_item = self._getOb('old_item')
+    new_item = self._getOb('new_item')
+
+    if (old_item.getPortalType() == new_item.getPortalType() == 'Business Item'):
+      old = old_item.objectValues()[0]
+      new = new_item.objectValues()[0]
+    else:
+      old = old_item.getProperty('item_property_value')
+      new = new_item.getProperty('item_property_value')
+    patch = diff_tool.diffPortalObject(old=old,
+                                       new=new,
+                                       patch_format=patch_format
+                                       )
+    return patch
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
