@@ -1,7 +1,7 @@
 msgid ""
 msgstr "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2017-10-05 19:10+UTC\n"
-"PO-Revision-Date: 2017-10-05 19:10+UTC\n"
+"POT-Creation-Date: 2017-10-06 03:10+UTC\n"
+"PO-Revision-Date: 2017-10-06 03:10+UTC\n"
 "Last-Translator:  <>\n"
 "Language-Team: fa <>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgid "${count} tasks created."
 msgstr "${count} وظیفه ایجاد شد."
 
 msgid "${date} at ${hour_minute_text}"
-msgstr "${hours_minute_text} در ${date}"
+msgstr "${hour_minute_text} در ${date}"
 
 msgid "${date} is already in an open accounting period."
 msgstr "${date} در دوره باز حسابداری موجود است."
@@ -25,10 +25,10 @@ msgid "${day_name} ${date}"
 msgstr "${day_name} ${date}"
 
 msgid "${delivery_portal_type} ${delivery_title}"
-msgstr "${delivery title} ${delivery_portal_type}"
+msgstr "${delivery_title} ${delivery_portal_type}"
 
 msgid "${delivery_portal_type} ${delivery_title} (${causality_portal_type} ${causality_title})"
-msgstr "sgid \"${delivery_portal_type} ${delivery_title} (${causality_portal_type} ${causality_"
+msgstr "${delivery_portal_type} ${delivery_title} (${causality_portal_type} ${causality_title})"
 
 msgid "${grouped_line_count} lines grouped."
 msgstr "${grouped_line_count} خط گروه بندی شد."
@@ -52,7 +52,7 @@ msgid "${number} records"
 msgstr " ${number} مدرک"
 
 msgid "${page} of ${total_pages}"
-msgstr "صفحه ${page} از ${total pages}"
+msgstr "صفحه ${page} از ${total_pages}"
 
 msgid "${portal_type} created successfully."
 msgstr "${portal_type} با موفقیت ایجاد شد."
@@ -64,7 +64,7 @@ msgid "${template_title} (Template)"
 msgstr "الگوی ${template_title}"
 
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
-msgstr "${that title} : ${this_portal_type} به ${that_portal_type} مربوط است."
+msgstr "${that_title} : ${this_portal_type} به ${that_portal_type} مربوط است."
 
 msgid "${timedif} days ago"
 msgstr "${timedif} روز قبل"
@@ -79,7 +79,7 @@ msgid "${transaction_title} (Transaction Reference = ${transaction_reference}, C
 msgstr "${transaction_title} مرجع معامله = ${transaction_reference},تاریخ ایجاد = ${creation_date}واحد پولی= ${currency_title}"
 
 msgid "${ungrouped_line_count} lines ungrouped."
-msgstr "${ungrouped_line_line} خط مجزا گردیدند."
+msgstr "${ungrouped_line_count} خط مجزا گردیدند."
 
 msgid "${year} years old"
 msgstr "${year} سال"
@@ -6583,7 +6583,7 @@ msgid "Pad Group is used to specify defaut pads"
 msgstr ""
 
 msgid "Page ${page} of ${total_pages}"
-msgstr "صفحه ${page} از ${total pages}"
+msgstr "صفحه ${page} از ${total_pages}"
 
 msgid "Pakistani Rupee"
 msgstr ""
