@@ -273,7 +273,7 @@
         </item>
         <item>
             <key> <string>configuration_content_security_policy</string> </key>
-            <value> <string>default-src \'self\'; img-src \'self\' data:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\'; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
+            <value> <string>default-src \'self\'; img-src \'self\' data: blob:; media-src \'self\' blob:; connect-src \'self\' https://content.dropboxapi.com https://api.dropboxapi.com mail.tiolive.com data: *.host.vifib.net *.node.vifib.com *.erp5.net https://netdna.bootstrapcdn.com; script-src \'self\' \'unsafe-eval\' \'unsafe-inline\' blob:; font-src \'self\' netdna.bootstrapcdn.com; style-src \'self\' netdna.bootstrapcdn.com \'unsafe-inline\' data:; frame-src \'self\' data:</string> </value>
         </item>
         <item>
             <key> <string>configuration_latest_document_version</string> </key>
@@ -528,7 +528,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.11900.14144.52992</string> </value>
+                <value> <string>962.39106.12698.39936</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -546,7 +546,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1505946859.11</float>
+                        <float>1507376684.75</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
