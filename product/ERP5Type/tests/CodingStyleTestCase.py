@@ -91,10 +91,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
           search_sub=True):
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
           message_list.extend(document.checkConsistency())
-
-    # Return results
-    if len(message_list):
-      raise self.failureException('\n'.join(map(lambda x: repr(x), message_list)))
+    self.assertEqual([], message_list)
 
   def test_PythonSourceCode(self):
     """test python script from the tested business templates.
@@ -108,4 +105,3 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     for business_template in self.portal.portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():
         self.assertEqual([], business_template.BusinessTemplate_getPythonSourceCodeMessageList())
-
