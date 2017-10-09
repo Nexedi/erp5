@@ -1217,7 +1217,7 @@ class BusinessPatchItem(XMLObject):
 
     # Raise if there is no item exisiting in dependency Business Manager
     if not dependency_item:
-      import pdb; pdb.set_trace()
+
       raise ValueError('No %s exist at path %s in installed version of %s'
                           % ( new_item.getPortalType(),
                               item_path,
