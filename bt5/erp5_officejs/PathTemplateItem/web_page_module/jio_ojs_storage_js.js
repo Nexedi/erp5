@@ -391,13 +391,25 @@
         && mapping_dict[attachment_id] !== undefined
         && mapping_dict[attachment_id].put !== undefined
         && mapping_dict[attachment_id].put.erp5_put_template !== undefined) {
-      return getSubStorageId(storage, id)
-        .push(function (sub_id) {
-          var url = UriTemplate.parse(
-            mapping_dict[attachment_id].put.erp5_put_template
-          ).expand({id: sub_id}),
+      return new RSVP.Queue()
+        .push(function () {
+          return RSVP.all([
+            getSubStorageId(storage, id),
+            storage.get(id)
+          ]);
+        })
+        .push(function (result) {
+          var sub_id = result[0],
+            doc = result[1],
+            url = UriTemplate.parse(
+              mapping_dict[attachment_id].put.erp5_put_template
+            ).expand({id: sub_id}),
             data = new FormData();
-          data.append("field_my_file", blob);
+          if (doc.filename) {
+            data.append("field_my_file", blob, doc.filename);
+          } else {
+            data.append("field_my_file", blob);
+          }
           data.append("form_id", "File_view");
           return jIO.util.ajax({
             "type": "POST",
