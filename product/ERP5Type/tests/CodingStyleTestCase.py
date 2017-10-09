@@ -87,9 +87,13 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     portal_skins = self.portal.portal_skins
     for skin_id in skin_id_set:
       skin = portal_skins[skin_id]
-      for document in skin.objectValues():
+      for _, document in skin.ZopeFind(
+          skin,
+          obj_metatypes=(),
+          search_sub=True):
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
-           message_list.extend(document.checkConsistency())
+          message_list.extend(document.checkConsistency())
+
 
     # Return results
     if len(message_list):
