@@ -9,6 +9,12 @@
     Text: 'application/x-asc-text'
   };
 
+  var file_ext = {
+    Spreadsheet: 'xlsy',
+    Presentation: 'ppty',
+    Text: 'docy'
+  };
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -36,7 +42,9 @@
             title: "Untitled Document",
             portal_type: result[0],
             parent_relative_url: result[1],
-            content_type: content_type[result[0]] || undefined
+            content_type: content_type[result[0]] || undefined,
+            filename: file_ext[result[0]] ? ((doc.reference || doc.title || "default") +
+              "." + file_ext[doc.portal_type]) : undefined
           });
         })
         .push(function (id) {
