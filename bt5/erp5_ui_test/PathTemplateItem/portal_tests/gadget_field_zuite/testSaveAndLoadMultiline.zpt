@@ -65,8 +65,7 @@
 <tr>
   <td>type</td>
   <td>//textarea[@title='field_my_description']</td>
-  <td>123
-456</td>
+  <td>123<br>456</td>
 </tr>
 
 
@@ -93,8 +92,7 @@
 <tr>
   <td>verifyValue</td>
   <td>//textarea[@title='field_my_description']</td>
-  <td>123
-456</td>
+  <td>123<br>456</td>
 </tr>
 
  <tr>
