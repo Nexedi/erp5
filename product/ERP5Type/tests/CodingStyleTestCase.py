@@ -75,17 +75,17 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     """
     # Find the list if skins to test - we only test the last business template
     portal_templates = self.portal.portal_templates
-    skin_id_list = []
+    skin_id_set = set()
     for business_template in portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():
-        skin_id_list.extend(business_template.getTemplateSkinIdList())
+        skin_id_set.update(business_template.getTemplateSkinIdList())
 
     # Init message list
     message_list = []
 
     # Test skins
     portal_skins = self.portal.portal_skins
-    for skin_id in skin_id_list:
+    for skin_id in skin_id_set:
       skin = portal_skins[skin_id]
       for document in skin.objectValues():
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
