@@ -65,6 +65,7 @@
                     <value>
                       <list>
                         <string>business_patch_item_view_diff_gadget</string>
+                        <string>my_object_link</string>
                       </list>
                     </value>
                 </item>

@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Workflow_statusModify</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -75,7 +75,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>business_manager_select_action_gadget</string>
+                        <string>your_business_manager_select_action_gadget</string>
                         <string>my_workflow_action</string>
                       </list>
                     </value>
@@ -89,13 +89,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_choice</string>
-                        <string>listbox_object_state</string>
-                        <string>listbox</string>
-                        <string>your_update_catalog</string>
-                        <string>your_update_translation</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

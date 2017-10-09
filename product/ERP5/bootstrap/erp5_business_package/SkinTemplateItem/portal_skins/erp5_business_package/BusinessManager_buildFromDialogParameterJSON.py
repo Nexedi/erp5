@@ -1,6 +1,6 @@
 kwargs = {
   'checkNeeded': check_needed,
-  'item_path_list': 'item_path_list'}
+  'item_path_list': item_path_list}
 
 context.build(**kwargs)
 

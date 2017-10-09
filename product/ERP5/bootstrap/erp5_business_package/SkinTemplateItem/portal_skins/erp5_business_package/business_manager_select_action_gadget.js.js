@@ -83,40 +83,32 @@
       var parameter_dict = JSON.parse(options.value),
         item_path_list = parameter_dict.item_path_list;
       console.log(item_path_list);
+      this.action_url = parameter_dict.action_url;
+      var node_list = buildTreeHTML('tree', convertPathListToTree(item_path_list));
       this.element.innerHTML = buildTreeHTML('tree', convertPathListToTree(item_path_list));
+      console.log(node_list);
     })
 
     .onEvent('change', function (evt) {
       if ((evt.target.type === 'checkbox') && (!evt.target.id)) {
         // XXX Update the checkbox state of children (and parents too)
         // querySelectorAll and parent ancestors
+        var val = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
+        console.log(val);
         console.log('Update the checkbox state of children (and parents too)');
-        return this.getContent();
       }
     }, false, false)
 
-    .declareMethod('getContent', function () {
+    .declareMethod('getContent', function (options) {
+      console.log('ayush');
       var input_list = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
       console.log(input_list);
-    });
-
-/*
-    .declareMethod('render2', function () {
-      var parameter_dict = JSON.parse(options.value),
-        item_path_list = parameter_dict.item_path_list,
-        form_data = new FormData(),
-        i;
-
-      for (i = 0; i < item_path_list.length; i += 1) {
-        form_data.append('item_path_list:list', item_path_list[i][0]);
-      }
-
       return jIO.util.ajax({
         type: 'POST',
-        url: parameter_dict.action_url,
-        data: form_data
+        url: this.action_url,
+        data: {'checkNeeded': 'True',
+              'item_path_list': input_list}
       });
-    });
-*/
+    })
 
 }(rJS, jIO, Handlebars, RSVP, window));
