@@ -9,6 +9,12 @@
     Text: 'application/x-asc-text'
   };
 
+  var file_ext = {
+    Spreadsheet: 'xlsy',
+    Presentation: 'ppty',
+    Text: 'docy'
+  };
+
   rJS(window)
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -32,12 +38,17 @@
           ]);
         })
         .push(function (result) {
-          return gadget.jio_post({
+          var ext = file_ext[result[0]],
+            ret = {
             title: "Untitled Document",
             portal_type: result[0],
             parent_relative_url: result[1],
             content_type: content_type[result[0]] || undefined
-          });
+          };
+          if (ext) {
+            ret.filename = "default." + ext;
+          }
+          return gadget.jio_post(ret);
         })
         .push(function (id) {
           return gadget.redirect({
