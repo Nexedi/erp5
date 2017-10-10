@@ -160,7 +160,7 @@
                 post_list[i][3] = result_list[i];
               }
               if (post_list[i][2]) {
-                plain_content = "<p>" + post_list[i][2].replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>") + "</p>";
+                plain_content = post_list[i][2];
                 if (post_list[i][3]) {
                   s += plain_content + '<strong>Attachment: </strong>' +
                     '<a href=\"' +
@@ -196,7 +196,7 @@
         .push(function () {
           var choose_file_html_element = gadget.element.querySelector('#attachment'),
             file_blob = choose_file_html_element.files[0],
-            url = gadget.hateoas_url + "post_module/PostModule_createHTMLPost",
+            url = gadget.hateoas_url + "post_module/PostModule_createHTMLPostFromText",
             data = new FormData();
           data.append("follow_up", gadget.options.jio_key);
           data.append("predecessor", '');

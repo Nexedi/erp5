@@ -44,7 +44,7 @@ if description or file is not None:
   post.edit(
     start_date=now,
     follow_up_value=support_request,
-    text_content=description,
+    text_content="<p>" + description.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("  ", " &nbsp;").replace("\n", "<br/>") + "</p>",
   )
 
   # handle attachments
