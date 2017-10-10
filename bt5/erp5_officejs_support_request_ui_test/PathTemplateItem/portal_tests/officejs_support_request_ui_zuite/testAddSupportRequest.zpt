@@ -51,13 +51,23 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//textarea[@id='field_my_description']</td>
+  <td>//body[@class='cke_editable cke_editable_themed cke_contents_ltr cke_show_borders']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectFrame</td>
+  <td>class=cke_wysiwyg_frame cke_reset</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>//textarea[@id='field_my_description']</td>
+  <td>//body[@contenteditable="true"]/p</td>
   <td>Post test</td>
+</tr>
+<tr>
+  <td>selectWindow</td>
+  <td></td>
+  <td></td>
 </tr>
 <tr>
   <td>click</td>
