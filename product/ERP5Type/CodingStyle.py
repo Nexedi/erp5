@@ -79,6 +79,7 @@ def getSkinPrefixList(self):
     'NotificationTool',
     'ERP5Site',
     'ERP5Type',
+    'Zuite',
     'Form', # Acceptable for ERP5 Forms which will soon become portal types too
   ))
 

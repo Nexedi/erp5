@@ -32,18 +32,12 @@ from Testing import ZopeTestCase
 from Acquisition import aq_base
 
 class CodingStyleTestCase(ERP5TypeTestCase):
-  """XXX
+  """Test case to test coding style in business templates.
+
+  Subclasses must override:
+    * getBusinessTemplateList to list business template to install.
+    * getTestedBusinessTemplateList to list business templates to test.
   """
-  manager_username = 'zope'
-  manager_password = 'zope'
-  website_id = 'test'
-
-  def getTitle(self):
-    """
-    Override this method in implementation class.
-    """
-    raise NotImplementedError
-
   def getBusinessTemplateList(self):
     """
     Return the list of required business templates.
@@ -61,12 +55,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     return self.getBusinessTemplateList()[-1:]
 
   def afterSetUp(self):
-    portal = self.portal
-
-    uf = portal.acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    self.loginByUserName(self.manager_username)
-
+    self.login()
 
   def test_SkinCodingStyle(self):
     """
@@ -75,22 +64,36 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     """
     # Find the list if skins to test - we only test the last business template
     portal_templates = self.portal.portal_templates
-    skin_id_list = []
+    skin_id_set = set()
     for business_template in portal_templates.contentValues():
       if business_template.getTitle() in self.getTestedBusinessTemplateList():
-        skin_id_list.extend(business_template.getTemplateSkinIdList())
+        skin_id_set.update(business_template.getTemplateSkinIdList())
 
     # Init message list
     message_list = []
 
     # Test skins
     portal_skins = self.portal.portal_skins
-    for skin_id in skin_id_list:
+    for skin_id in skin_id_set:
       skin = portal_skins[skin_id]
-      for document in skin.objectValues():
+      for _, document in skin.ZopeFind(
+          skin,
+          obj_metatypes=(),
+          search_sub=True):
         if getattr(aq_base(document), 'checkConsistency', None) is not None:
-           message_list.extend(document.checkConsistency())
+          message_list.extend(document.checkConsistency())
 
-    # Return results
-    if len(message_list):
-      raise self.failureException('\n'.join(map(lambda x: repr(x), message_list)))
+    self.assertEqual([], message_list)
+
+  def test_PythonSourceCode(self):
+    """test python script from the tested business templates.
+
+    reuses BusinessTemplate_getPythonSourceCodeMessageList from erp5_administration
+    """
+    if 'erp5_administration' not in self.getBusinessTemplateList():
+      self.skipTest('erp5_administration needs be installed to check python source code')
+
+    self.maxDiff = None
+    for business_template in self.portal.portal_templates.contentValues():
+      if business_template.getTitle() in self.getTestedBusinessTemplateList():
+        self.assertEqual([], business_template.BusinessTemplate_getPythonSourceCodeMessageList())
