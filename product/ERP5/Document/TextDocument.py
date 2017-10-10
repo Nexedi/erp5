@@ -42,6 +42,7 @@ from string import Template
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
+from Products.ERP5Type.mixin.text_content_history import TextContentHistoryMixin
 from Products.ERP5Type.Utils import guessEncodingFromText
 
 from lxml import html as etree_html
@@ -49,7 +50,7 @@ from lxml import etree
 
 from Products.ERP5Type.ImageUtil import transformUrlToDataURI
 
-class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
+class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin, TextContentHistoryMixin,
                                                             TextContent, File):
     """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
     and ITextConvertable
