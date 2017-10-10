@@ -1,3 +1,6 @@
+2017-10-10 roque.porchetto
+* Refactoring in scalability distributor: all scalability utils are now directly in the distributor.
+
 2013-09-08 arnaud.fontaine
 * ZODB Components: Revert 'Allow to execute runUnitTest for bt5 Test Components' to fix tests bootstrap.
 
