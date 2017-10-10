@@ -3,8 +3,9 @@ from DateTime import DateTime
 from zLOG import LOG,INFO,ERROR
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
-class TestSuite(XMLObject):
+class TestSuite(XMLObject, PeriodicityMixin):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

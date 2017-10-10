@@ -1066,3 +1066,72 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def test_19_testMultiDistributor(self):
     pass
 
+  def test_20_TestSuite_Periodicity(self):
+    revision = 'a=a,b=b,c=c'
+    self.addCleanup(self.unpinDateTime)
+    test_suite = self.test_suite_module.newContent(
+      portal_type='Test Suite',
+      title='Periodicity Enabled Test Suite',
+      int_index=1,
+      # periodicity enabled
+      enabled=True,
+      # periodicity configuration
+      periodicity_day_frequency=1,
+      periodicity_hour=(13,),
+      periodicity_minute=(0,),
+    )
+    test_suite.validate()
+    self.tic()
+
+    self.pinDateTime(DateTime('2017/05/01 00:00:00 UTC'))
+    self.assertEqual(None, test_suite.getAlarmDate())
+    first_test_result, got_revision = self._createTestResult(revision=revision, test_title='Periodicity Enabled Test Suite')
+    self.assertTrue(first_test_result.startswith('test_result_module/'))
+    self.assertEqual(revision, got_revision)
+    self.assertEqual(DateTime('2017/05/01 13:00:00 UTC'), test_suite.getAlarmDate())
+    # Finish the current test run
+    self.portal.restrictedTraverse(first_test_result).stop()
+    self.tic()
+
+    self.pinDateTime(DateTime('2017/05/01 14:00:00 UTC'))
+    second_test_result, got_revision = self._createTestResult(revision=revision, test_title='Periodicity Enabled Test Suite')
+    self.assertTrue(second_test_result.startswith('test_result_module/'))
+    self.assertNotEqual(first_test_result, second_test_result)
+    self.assertEqual(revision, got_revision)
+    self.assertEqual(DateTime('2017/05/02 13:00:00 UTC'), test_suite.getAlarmDate())
+    # Finish the current test run
+    self.portal.restrictedTraverse(second_test_result).stop()
+    self.tic()
+
+    self.pinDateTime(DateTime('2017/05/02 14:00:00 UTC'))
+    third_test_result, got_revision = self._createTestResult(revision=revision, test_title='Periodicity Enabled Test Suite')
+    self.assertTrue(third_test_result.startswith('test_result_module/'))
+    self.assertNotEqual(third_test_result, second_test_result)
+    self.assertEqual(DateTime('2017/05/03 13:00:00 UTC'), test_suite.getAlarmDate())
+    self.tic()
+
+  def test_21_TestSuite_Periodicity_disabled(self):
+    self.addCleanup(self.unpinDateTime)
+    test_suite = self.test_suite_module.newContent(
+      portal_type='Test Suite',
+      title='Periodicity Disabled Test Suite',
+      int_index=1,
+      # periodicity disabled
+      enabled=False,
+      # periodicity configuration
+      periodicity_day_frequency=1,
+      periodicity_hour=(13,),
+      periodicity_minute=(0,),
+    )
+    test_suite.validate()
+    today = DateTime('2017/05/01')
+    self.tic()
+
+    self.pinDateTime(today)
+    self.assertEqual(None, test_suite.getAlarmDate())
+    self._createTestResult(test_title='Periodicity Disabled Test Suite')
+    self.assertEqual(None, test_suite.getAlarmDate())
+    self.tic()
+
+    self._createTestResult(test_title='Periodicity Disabled Test Suite')
+    self.assertEqual(None, test_suite.getAlarmDate())

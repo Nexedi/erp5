@@ -397,6 +397,16 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       test_node.setPingDate()
     test_suite = self._getTestSuiteFromTitle(test_title)
     if test_suite is not None:
+      if not allow_restart and test_suite.isEnabled():
+        # in case if allow_restart is not enforced by client and test_node
+        # periodicity is enabled control the restartability based on test_suite
+        # periodicity
+        current_date = DateTime()
+        alarm_date = test_suite.getAlarmDate()
+        if alarm_date is None or alarm_date <= current_date:
+          allow_restart = True
+          test_suite.setAlarmDate(
+            test_suite.getNextPeriodicalDate(current_date, alarm_date))
       test_suite.setPingDate()
       return portal.portal_task_distribution.createTestResult(name,
            revision, test_name_list, allow_restart,
