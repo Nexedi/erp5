@@ -50,6 +50,7 @@
  </portal_type>
  <portal_type id="Test Suite">
   <item>Arrow</item>
+  <item>Periodicity</item>
   <item>Reference</item>
   <item>ScalabilityTestSuite</item>
   <item>SortIndex</item>

@@ -26,6 +26,7 @@ Test Result | Task
 Test Suite Repository | TestSuiteRepository
 Test Suite Repository | TestSuiteRepositoryConstraint
 Test Suite | Arrow
+Test Suite | Periodicity
 Test Suite | Reference
 Test Suite | ScalabilityTestSuite
 Test Suite | SortIndex

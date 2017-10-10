@@ -60,11 +60,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.test_node_module.newContent(
       portal_type='Test Node', title='Node0',
       test_suite_max=4).getTitle()
-    default_test_suite = self.test_suite_module.newContent(
+    self.default_test_suite = self.test_suite_module.newContent(
         portal_type='Test Suite', title='Default Test Suite',
         test_suite_title='Default Test Suite', int_index=1)
-    default_test_suite.validate()
-    self.default_test_title = default_test_suite.getTitle()
+    self.default_test_suite.validate()
+    self.default_test_title = self.default_test_suite.getTitle()
     self.tic()
 
   def beforeTearDown(self):
@@ -1066,3 +1066,90 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def test_19_testMultiDistributor(self):
     pass
 
+  def test_20_Periodicity(self):
+    # by default Test Suite periodiciy is disabled and alarm is not set
+    self.assertIsNone(self.default_test_suite.isEnabled())
+    self.assertIsNone(self.default_test_suite.getAlarmDate())
+
+    # "setup" periodicity by patching isRestartAllowed
+    original_class = self.default_test_suite.__class__
+    self._original_isRestartAllowed = original_class.isRestartAllowed
+    def isRestartAllowed(self):
+      return True
+    original_class.isRestartAllowed = isRestartAllowed
+    def restore_isRestartAllowed(self):
+      original_class = self.default_test_suite.__class__
+      original_class.isRestartAllowed = self._original_isRestartAllowed
+    self.addCleanup(restore_isRestartAllowed, self)
+    self.default_test_suite.edit(
+      enabled=True,
+    )
+    self.tic()
+
+    # create test result for given revision
+    revision = 'a=a,b=b,c=c'
+    base_test_result, got_revision = self._createTestResult(revision=revision)
+    self.assertTrue(base_test_result.startswith('test_result_module/'))
+    self.assertEqual(revision, got_revision)
+    # now alarm date is filled as expected
+    #self.assertEqual('', self.default_test_suite.getAlarmDate())
+    # finish test result on this run
+    test_result = self.portal.restrictedTraverse(base_test_result)
+    test_result.stop()
+    self.tic()
+    # do the exact same test, and as periodicity kicks in, the new test result
+    # is ready to be filled in for the exact same revision
+    periodic_test_result, got_revision = self._createTestResult(revision=revision)
+    self.assertEqual(revision, got_revision)
+    self.assertTrue(periodic_test_result.startswith('test_result_module/'))
+    self.assertNotEqual(base_test_result, periodic_test_result)
+
+  def test_21_TestSuite_isRestartAllowed(self):
+    test_suite = self.test_suite_module.newContent(
+      portal_type='Test Suite', title='Default Test Suite',
+      test_suite_title='Periodicity Enabled Test Suite',
+      int_index=1,
+      # periodicity enabled
+      enabled=True,
+      # periodicity configuration
+      periodicity_day_frequency=1,
+      periodicity_hour=(13,),
+      periodicity_minute=(0,),
+    )
+    today = DateTime('2017/05/01')
+    tomorrow = DateTime('2017/05/02')
+
+    self.assertEqual(None, test_suite.getAlarmDate())
+    self.assertEqual(True, test_suite.isRestartAllowed(current_date=today))
+    self.assertEqual(DateTime('2017/05/01 13:00:00 UTC'), test_suite.getAlarmDate())
+    self.tic()
+
+    self.assertEqual(False, test_suite.isRestartAllowed(current_date=today))
+    self.assertEqual(DateTime('2017/05/01 13:00:00 UTC'), test_suite.getAlarmDate())
+    self.tic()
+
+    self.assertEqual(True, test_suite.isRestartAllowed(current_date=tomorrow))
+    self.assertEqual(DateTime('2017/05/02 13:00:00 UTC'), test_suite.getAlarmDate())
+    self.tic()
+
+  def test_22_TestSuite_isRestartAllowed_disabled(self):
+    test_suite = self.test_suite_module.newContent(
+      portal_type='Test Suite', title='Default Test Suite',
+      test_suite_title='Periodicity Disabled Test Suite',
+      int_index=1,
+      # periodicity disabled
+      enabled=False,
+      # periodicity configuration
+      periodicity_day_frequency=1,
+      periodicity_hour=(13,),
+      periodicity_minute=(0,),
+    )
+    today = DateTime('2017/05/01')
+
+    self.assertEqual(None, test_suite.getAlarmDate())
+    self.assertEqual(False, test_suite.isRestartAllowed(current_date=today))
+    self.assertEqual(None, test_suite.getAlarmDate())
+    self.tic()
+
+    self.assertEqual(False, test_suite.isRestartAllowed(current_date=today))
+    self.assertEqual(None, test_suite.getAlarmDate())

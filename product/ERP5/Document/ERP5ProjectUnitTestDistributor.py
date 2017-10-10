@@ -397,6 +397,10 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       test_node.setPingDate()
     test_suite = self._getTestSuiteFromTitle(test_title)
     if test_suite is not None:
+      if not allow_restart:
+        # in case if allow_restart is not enforced by client control the
+        # restartability based on test_suite periodicity
+        allow_restart = test_suite.isRestartAllowed()
       test_suite.setPingDate()
       return portal.portal_task_distribution.createTestResult(name,
            revision, test_name_list, allow_restart,
