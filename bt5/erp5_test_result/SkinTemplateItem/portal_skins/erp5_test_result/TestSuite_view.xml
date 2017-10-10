@@ -84,6 +84,8 @@
                     <value>
                       <list>
                         <string>my_cluster_configuration</string>
+                        <string>my_enabled</string>
+                        <string>my_alarm_date</string>
                       </list>
                     </value>
                 </item>
