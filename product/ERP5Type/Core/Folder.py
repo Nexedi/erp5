@@ -74,7 +74,6 @@ import os
 from zLOG import LOG, WARNING
 import warnings
 from urlparse import urlparse
-REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
 from Products.ERP5Type.Message import translateString
 
 # Dummy Functions for update / upgrade
@@ -1231,49 +1230,26 @@ class Folder(CopyContainer, OFSFolder2, CMFBTreeFolder, CMFHBTreeFolder, Base, F
   security.declarePublic('recursiveReindexObject')
   def recursiveReindexObject(self, activate_kw=None, **kw):
     if self.isIndexable:
-      if not activate_kw and self.objectCount() > REINDEX_SPLIT_COUNT:
-        # If the number of objects to reindex is too high
-        # we should try to split reindexing in order to be more efficient
-        # NOTE: this heuristic will fail for example with orders which
-        # contain > REINDEX_SPLIT_COUNT order lines.
-        # It will be less efficient in this case. We also do not
-        # use this heuristic whenever activate_kw is defined
-        self._reindexObject(**kw)
-        # XXX-JPS: Here, we could invoke Folder_reindexAll instead, like this:
-        #   self.Folder_reindexAll()
-        #   return
-        # this shows that both methods should be merged.
-        for c in self.objectValues():
-          if getattr(aq_base(c),
-                    'recursiveReindexObject', None) is not None:
-            c.recursiveReindexObject(**kw)
-        return
+      kw, activate_kw = self._getReindexAndActivateParameterDict(
+        kw,
+        activate_kw,
+      )
+      activate_kw['group_method_cost'] = 0.01
+      self._recurseCallMethod(
+        'immediateReindexObject',
+        method_kw=kw,
+        activate_kw=activate_kw,
+        get_activate_kw_method_id='_updateActivateKwWithSerialisationTag',
+        max_depth=None,
+        skip_method_id='_isDocumentNonIndexable',
+      )
 
-      if activate_kw is None:
-        activate_kw = {}
+  def _isDocumentNonIndexable(self, document):
+    return not document.isIndexable
 
-      reindex_kw = self.getDefaultReindexParameterDict()
-      if reindex_kw is not None:
-        reindex_kw = reindex_kw.copy()
-        reindex_activate_kw = reindex_kw.pop('activate_kw', None) or {}
-        reindex_activate_kw.update(activate_kw)
-        reindex_kw.update(kw)
-        kw = reindex_kw
-        activate_kw = reindex_activate_kw
-
-      group_id_list  = []
-      if kw.get("group_id") not in ('', None):
-        group_id_list.append(kw["group_id"])
-      if kw.get("sql_catalog_id") not in ('', None):
-        group_id_list.append(kw["sql_catalog_id"])
-      group_id = ' '.join(group_id_list)
-
-      self.activate(group_method_id='portal_catalog/catalogObjectList',
-                    expand_method_id='getIndexableChildValueList',
-                    alternate_method_id='alternateReindexObject',
-                    group_id=group_id,
-                    serialization_tag=self.getRootDocumentPath(),
-                    **activate_kw).recursiveImmediateReindexObject(**kw)
+  def _updateActivateKwWithSerialisationTag(self, document, activate_kw):
+    activate_kw['serialization_tag'] = document.getRootDocumentPath()
+    return activate_kw
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getIndexableChildValueList' )
