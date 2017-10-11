@@ -110,21 +110,8 @@ class TestGoogleLogin(ERP5TypeTestCase):
     GoogleLoginUtility.getAccessTokenFromCode = getAccessTokenFromCode
     GoogleLoginUtility.getUserEntry = getUserEntry
 
-    self.dummy_user_id = "dummy"
     self.dummy_connector_id = "test_google_connector"
     person_module = self.portal.person_module
-    if getattr(person_module, self.dummy_user_id, None) is None:
-      person = person_module.newContent(first_name="Dummy",
-                                        id=self.dummy_user_id,
-                                        reference=self.dummy_user_id,
-                                        user_id=self.dummy_user_id
-                                       )
-      assignment = person.newContent(portal_type="Assignment")
-      assignment.open()
-      login = person.newContent(portal_type="ERP5 Login", reference=self.dummy_user_id)
-      login.validate()
-      person.validate()
-      self.tic()
     portal_catalog = self.portal.portal_catalog
     for obj in portal_catalog(portal_type=["Google Login", "Person"],
                               reference=getUserId(None),
