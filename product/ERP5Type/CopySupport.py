@@ -422,15 +422,16 @@ class CopyContainer:
                                          path_item_list=previous_path,
                                          new_id=self.id)
 
-  def _duplicate(self, cp):
+  def _duplicate(self, cp, reindex_kw=None):
     _, result = self.__duplicate(
       cp,
       duplicate=True,
       is_indexable=None,
+      reindex_kw=reindex_kw,
     )
     return result
 
-  def __duplicate(self, cp, duplicate, is_indexable):
+  def __duplicate(self, cp, duplicate, is_indexable, reindex_kw):
     try:
       cp = _cb_decode(cp)
     except:
@@ -490,6 +491,8 @@ class CopyContainer:
       new_id = self._get_id(orig_id)
       result.append({'id': orig_id, 'new_id': new_id})
       new_ob._setId(new_id)
+      if reindex_kw is not None:
+        new_ob.setDefaultReindexParameterDict(reindex_kw)
       if is_indexable is not None and not is_indexable:
         new_ob._setNonIndexable()
       self._setObject(new_id, new_ob, set_owner=set_owner)
@@ -531,7 +534,7 @@ class CopyContainer:
     self.isIndexable = ConstantGetter('isIndexable', value=False)
     self.__recurse('_setNonIndexable')
 
-  def manage_pasteObjects(self, cb_copy_data=None, is_indexable=None, REQUEST=None):
+  def manage_pasteObjects(self, cb_copy_data=None, is_indexable=None, reindex_kw=None, REQUEST=None):
     """Paste previously copied objects into the current object.
 
     If calling manage_pasteObjects from python code, pass the result of a
@@ -552,6 +555,7 @@ class CopyContainer:
       cp,
       duplicate=False,
       is_indexable=is_indexable,
+      reindex_kw=reindex_kw,
     )
     if REQUEST is None:
       return result
