@@ -101,10 +101,15 @@ class FolderMixIn(ExtensionClass.Base):
 
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
-          default=None, method=None, container=None, temp_object=0, **kw):
+          default=None, method=None, container=None, temp_object=0,
+          immediate_reindex=False, **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
+
+    immediate_reindex (bool)
+      Immediately reindex created document, so it is immediately possible to
+      find it in catalog once fully created.
     """
     pt = self._getTypesTool()
     if container is None:
@@ -154,7 +159,11 @@ class FolderMixIn(ExtensionClass.Base):
       # make sure another zope hasn't started to migrate to HBTree
       connection = self._p_jar
       connection is None or connection.readCurrent(self)
-
+    if immediate_reindex:
+      # Immediately reindexing document that we just created is safe, as no
+      # other transaction can by definition see it, so there cannot be a race
+      # condition leading to stale catalog content.
+      new_instance.immediateReindexObject()
     return new_instance
 
   security.declareProtected(
