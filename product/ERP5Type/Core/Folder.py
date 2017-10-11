@@ -1336,7 +1336,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
           value_list.extend(c.getIndexableChildValueList())
     return value_list
 
-  security.declarePublic( 'recursiveImmediateReindexObject' )
+  security.declarePrivate('recursiveImmediateReindexObject')
   def recursiveImmediateReindexObject(self, **kw):
     if self.isIndexable and int(getattr(self.getPortalObject(), 'isIndexable', 1)):
       self.immediateReindexObject(**kw)

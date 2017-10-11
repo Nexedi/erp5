@@ -2788,13 +2788,13 @@ class Base( CopyContainer,
 #   def contentIds(self, *args, **kw):
 #     return []
 
-  security.declarePublic('immediateReindexObject')
+  security.declarePrivate('immediateReindexObject')
   def immediateReindexObject(self, *args, **kw):
     if self.isIndexable and int(getattr(self.getPortalObject(), 'isIndexable', 1)):
       with super_user():
         PortalContent.reindexObject(self, *args, **kw)
 
-  security.declarePublic('recursiveImmediateReindexObject')
+  security.declarePrivate('recursiveImmediateReindexObject')
   recursiveImmediateReindexObject = immediateReindexObject
 
   security.declarePublic('reindexObject')
