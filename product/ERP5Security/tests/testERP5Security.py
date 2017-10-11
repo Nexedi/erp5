@@ -1270,7 +1270,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertTrue(len(person.objectIds()))
     person.reindexObjectSecurity()
     self.commit()
-    check(['recursiveImmediateReindexObject'])
+    # One reindexation activity per subobject, and one on the person itself.
+    check(['immediateReindexObject'] * (len(person) + 1))
     self.tic()
 
 def test_suite():

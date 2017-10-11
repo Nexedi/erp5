@@ -451,7 +451,7 @@ class TestXMLMatrix(ERP5TypeTestCase, LogInterceptor):
 
     cell_range = [['2', ], ['b',]]
     matrix.setCellRange(*cell_range, **kwd)
-    self.commit()
+    self.tic()
     self.assertEquals(set(["quantity_1_1"]), set([
       x.getId() for x in matrix.objectValues()]))
 
