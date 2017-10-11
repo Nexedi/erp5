@@ -2811,30 +2811,38 @@ class Base( CopyContainer,
     # Do not check if root is indexable, it is done into catalogObjectList,
     # so we will save time
     if self.isIndexable:
-      if activate_kw is None:
-        activate_kw = {}
+      kw, activate_kw = self._getReindexAndActivateParameterDict(
+        kw,
+        activate_kw,
+      )
+      activate_kw['serialization_tag'] = self.getRootDocumentPath()
+      self.activate(**activate_kw).immediateReindexObject(**kw)
 
-      reindex_kw = self.getDefaultReindexParameterDict()
-      if reindex_kw is not None:
-        reindex_kw = reindex_kw.copy()
-        reindex_activate_kw = reindex_kw.pop('activate_kw', None) or {}
-        reindex_activate_kw.update(activate_kw)
-        reindex_kw.update(kw)
-        kw = reindex_kw
-        activate_kw = reindex_activate_kw
-
-      group_id_list  = []
-      if kw.get("group_id") not in ('', None):
-        group_id_list.append(kw["group_id"])
-      if kw.get("sql_catalog_id") not in ('', None):
-        group_id_list.append(kw["sql_catalog_id"])
-      group_id = ' '.join(group_id_list)
-
-      self.activate(group_method_id='portal_catalog/catalogObjectList',
-                    alternate_method_id='alternateReindexObject',
-                    group_id=group_id,
-                    serialization_tag=self.getRootDocumentPath(),
-                    **activate_kw).immediateReindexObject(**kw)
+  def _getReindexAndActivateParameterDict(self, kw, activate_kw):
+    if activate_kw is None:
+      activate_kw = ()
+    reindex_kw = self.getDefaultReindexParameterDict()
+    if reindex_kw is not None:
+      reindex_kw = reindex_kw.copy()
+      reindex_activate_kw = reindex_kw.pop('activate_kw', None) or {}
+      reindex_activate_kw.update(activate_kw)
+      reindex_kw.update(kw)
+      kw = reindex_kw
+      activate_kw = reindex_activate_kw
+    else:
+      activate_kw = dict(activate_kw)
+    group_id_list  = []
+    if kw.get("group_id") not in ('', None):
+      group_id_list.append(kw["group_id"])
+    if kw.get("sql_catalog_id") not in ('', None):
+      group_id_list.append(kw["sql_catalog_id"])
+    if activate_kw.get('group_id') not in ('', None):
+      group_id_list.append(activate_kw['group_id'])
+    activate_kw['group_id'] = ' '.join(group_id_list)
+    activate_kw['group_method_id'] = 'portal_catalog/catalogObjectList'
+    activate_kw['alternate_method_id'] = 'alternateReindexObject'
+    activate_kw['activity'] = 'SQLDict'
+    return kw, activate_kw
 
   security.declarePublic('recursiveReindexObject')
   recursiveReindexObject = reindexObject
