@@ -2790,18 +2790,9 @@ class Base( CopyContainer,
 
   security.declarePublic('immediateReindexObject')
   def immediateReindexObject(self, *args, **kw):
-    """
-      Reindexes an object - also useful for testing
-    """
-    root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-    if self.isIndexable and root_indexable:
-      #LOG("immediateReindexObject",0,self.getRelativeUrl())
-      # Reindex result should not depend on the user
+    if self.isIndexable and int(getattr(self.getPortalObject(), 'isIndexable', 1)):
       with super_user():
         PortalContent.reindexObject(self, *args, **kw)
-    else:
-      pass
-      #LOG("No reindex now",0,self.getRelativeUrl())
 
   security.declarePublic('recursiveImmediateReindexObject')
   recursiveImmediateReindexObject = immediateReindexObject
@@ -2833,10 +2824,10 @@ class Base( CopyContainer,
         activate_kw = reindex_activate_kw
 
       group_id_list  = []
-      if kw.get("group_id", "") not in ('', None):
-        group_id_list.append(kw.get("group_id", ""))
-      if kw.get("sql_catalog_id", "") not in ('', None):
-        group_id_list.append(kw.get("sql_catalog_id", ""))
+      if kw.get("group_id") not in ('', None):
+        group_id_list.append(kw["group_id"])
+      if kw.get("sql_catalog_id") not in ('', None):
+        group_id_list.append(kw["sql_catalog_id"])
       group_id = ' '.join(group_id_list)
 
       self.activate(group_method_id='portal_catalog/catalogObjectList',
