@@ -1290,11 +1290,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
 
   # Catalog related
-  security.declarePublic( 'reindexObject' )
-  def reindexObject(self, *args, **kw):
-    """Fixes the hierarchy structure (use of Base class)
-    """
-    return Base.reindexObject(self, *args, **kw)
+  security.declarePublic('reindexObject')
+  reindexObject = Base.reindexObject
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'reindexObjectSecurity')
@@ -1303,14 +1300,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         Reindex security-related indexes on the object
     """
     # In ERP5, simply reindex all objects, recursively by default.
-    reindex = self._getTypeBasedMethod('reindexObjectSecurity',
-                                       'recursiveReindexObject')
-    reindex(*args, **kw)
+    self._getTypeBasedMethod(
+      'reindexObjectSecurity',
+      'recursiveReindexObject',
+    )(*args, **kw)
 
-  security.declarePublic( 'recursiveReindexObject' )
+  security.declarePublic('recursiveReindexObject')
   def recursiveReindexObject(self, activate_kw=None, **kw):
-    """Recursively indexes the content of self.
-    """
     if self.isIndexable:
       if not activate_kw and self.objectCount() > REINDEX_SPLIT_COUNT:
         # If the number of objects to reindex is too high
@@ -1343,10 +1339,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         activate_kw = reindex_activate_kw
 
       group_id_list  = []
-      if kw.get("group_id", "") not in ('', None):
-        group_id_list.append(kw.get("group_id", ""))
-      if kw.get("sql_catalog_id", "") not in ('', None):
-        group_id_list.append(kw.get("sql_catalog_id", ""))
+      if kw.get("group_id") not in ('', None):
+        group_id_list.append(kw["group_id"])
+      if kw.get("sql_catalog_id") not in ('', None):
+        group_id_list.append(kw["sql_catalog_id"])
       group_id = ' '.join(group_id_list)
 
       self.activate(group_method_id='portal_catalog/catalogObjectList',
@@ -1372,18 +1368,12 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   security.declarePublic( 'recursiveImmediateReindexObject' )
   def recursiveImmediateReindexObject(self, **kw):
-      """
-        Applies immediateReindexObject recursively
-      """
-      # Reindex self
-      root_indexable = int(getattr(self.getPortalObject(),'isIndexable',1))
-      if self.isIndexable and root_indexable:
-        self.immediateReindexObject(**kw)
-      # Reindex contents
-      for c in self.objectValues():
-        if getattr(aq_base(c),
-                   'recursiveImmediateReindexObject', None) is not None:
-          c.recursiveImmediateReindexObject(**kw)
+    if self.isIndexable and int(getattr(self.getPortalObject(), 'isIndexable', 1)):
+      self.immediateReindexObject(**kw)
+    for c in self.objectValues():
+      if getattr(aq_base(c),
+                 'recursiveImmediateReindexObject', None) is not None:
+        c.recursiveImmediateReindexObject(**kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
   def moveObject(self, idxs=None):
