@@ -86,7 +86,22 @@ class PortalPatch:
     """
     List all PortalPatchOperation instances in the PortalPatch
     """
-    pass
+    patch = self.asDeepDiffPatch()
+    # In general, we are using `tree` view, so basically for us all operations
+    # currently are `values_changed` from old to new value or to none
+    change_list = patch.values()
+    # Here we can have the change_list as nested list also, for example:
+    #
+    #  change_list =
+    #   {
+    #   'iterable_item_removed': set([<root[2] t1:'c', t2:Not Present>]),
+    #   'values_changed': set([<root[1] t1:'b', t2:'e'>, <root[0] t1:'a', t2:'d'>])
+    #   }
+    # We can see here that the values are basically change from one value to
+    # another, so to get the list of operation(s), we have to flatten all the
+    # values in one list
+    flatten_change_list = [item for sublist in change_list for item in sublist]
+    return flatten_change_list
 
   def patchPortalObject(self, object):
     """
@@ -95,31 +110,28 @@ class PortalPatch:
     """
     pass
 
-  def asJSONPatch(self):
-    """
-    Returns a Json patch in line with rfc6902
-    """
-    # Get the dict version of the old and new values
-    src = self.old_value._asDict()
-    dst = self.new_value._asDict()
-    patch = jsonpatch.make_patch(src, dst)
-    return patch
-
   def asDeepDiffPatch(self):
     """
     Returns a Json patch with deep diff extensions
     """
-    #It's easier to ask forgiveness than permission
+    # Use try-except as it's easier to ask forgiveness than permission
+
+    # `_asDict` is available only for objects, so in that case, we convert the
+    # ERP5-fied objects into dict and then work on them.
+    # In all other cases, we let `deepdiff` do its work on checking the type
     try:
       src = self.old_value._asDict()
     except AttributeError:
       src = self.old_value
+
     try:
       dst = self.new_value._asDict()
     except AttributeError:
       dst = self.new_value
 
-    ddiff = DeepDiff(src, dst, ignore_order=True, verbose_level=0)
+    # For now, we prefer having 'tree' view as it provides us with node level
+    # where on each node we have value changed(atleast for list and dictionary)
+    ddiff = DeepDiff(src, dst, view='tree')
     return ddiff
 
   def asStrippedHTML(self):
