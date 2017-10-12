@@ -449,6 +449,7 @@ class FolderMixIn(ExtensionClass.Base):
     activate_kw = self.getDefaultActivateParameterDict.im_func(None)
     activate_kw.update(kw.get('activate_kw', ()))
     activate_kw.setdefault('active_process', None)
+    activate_kw.setdefault('activity', 'SQLQueue')
     activate = self.getPortalObject().portal_activities.activateObject
     validate = restricted and getSecurityManager().validate
     cost = activate_kw.setdefault('group_method_cost', .034) # 30 objects
@@ -508,7 +509,7 @@ class FolderMixIn(ExtensionClass.Base):
           del next_id[0]
       if min_depth <= depth:
         check_limit()
-        getattr(activate(container, 'SQLQueue', **getActivateKw(container, recurse_activate_kw)),
+        getattr(activate(container, **getActivateKw(container, recurse_activate_kw)),
                 method_id)(*method_args, **method_kw)
       del recurse_stack[depth:]
     try:
@@ -517,7 +518,8 @@ class FolderMixIn(ExtensionClass.Base):
       if hook_raised:
         raise
       activate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
-      activate(self, 'SQLQueue', **activate_kw)._recurseCallMethod(
+      activate_kw['activity'] = 'SQLQueue'
+      activate(self, **activate_kw)._recurseCallMethod(
         method_id, method_args, method_kw, restricted=restricted, **kw)
 
   security.declarePublic('recurseCallMethod')
