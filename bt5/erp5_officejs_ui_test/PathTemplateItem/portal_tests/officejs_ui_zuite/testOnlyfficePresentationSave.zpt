@@ -28,18 +28,23 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>name=Base_createCloneDocument:method</td>
+  <td></td>field_my_id
+</tr>
+<tr>
   <td>runScript</td>
   <td>
-    window.indexedDB.deleteDatabase('jio:officejs_code_source');
+    window.indexedDB.deleteDatabase('jio:ojs_source_code');
     window.indexedDB.deleteDatabase('jio:officejs-hash');
     window.indexedDB.deleteDatabase('jio:setting')
   </td>
   <td></td>
 </tr>
 <tr>
-  <td>waitForElementPresent</td>
-  <td>name=Base_createCloneDocument:method</td>
-  <td></td>field_my_id
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
 </tr>
 <tr>
   <td>clickAndWait</td>
@@ -64,8 +69,18 @@
   <td></td>
 </tr>
 <tr>
+  <td>setTimeout</td>
+  <td>270000</td>
+  <td></td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
   <td>link=Local is Enough</td>
+  <td></td>
+</tr>
+<tr>
+  <td>setTimeout</td>
+  <td>90000</td>
   <td></td>
 </tr>
 <tr>

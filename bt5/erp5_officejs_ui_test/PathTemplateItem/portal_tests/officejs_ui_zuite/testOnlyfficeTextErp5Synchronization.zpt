@@ -24,23 +24,44 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/ooffice_text/</td>
+  <td>${base_url}/web_site_module/ooffice_text?ignore_layout:int=1</td>
   <td></td>
 </tr>
 <tr>
   <td>runScript</td>
-  <td>window.indexedDB.deleteDatabase('jio:setting')</td>
+  <td>
+    window.indexedDB.deleteDatabase('jio:ojs_source_code');
+    window.indexedDB.deleteDatabase('jio:officejs-erp5');
+    window.indexedDB.deleteDatabase('jio:officejs-erp5-hash');
+    window.indexedDB.deleteDatabase('jio:officejs-hash');
+    window.indexedDB.deleteDatabase('jio:setting')
+  </td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>open</td>
+  <td>${base_url}/web_site_module/ooffice_text/</td>
   <td></td>
 </tr>
 <!-- sometimes it take a bit more than 90s for install -->
 <tr>
-  <td>pause</td>
-  <td>10000</td>
+  <td>setTimeout</td>
+  <td>270000</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>link=Erp5</td>
+  <td></td>
+</tr>
+<tr>
+  <td>setTimeout</td>
+  <td>90000</td>
   <td></td>
 </tr>
 <tr>
@@ -156,6 +177,11 @@
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
   <td></td>
 </tr>
 <tr>
