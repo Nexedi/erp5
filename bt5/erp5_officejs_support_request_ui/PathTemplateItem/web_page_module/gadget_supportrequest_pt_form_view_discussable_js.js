@@ -189,10 +189,10 @@
         editor = gadget.element.querySelector('#comment');
 
       if (editor.value === '') {
-        return gadget.notifySubmitted("Post content can not be empty!");
+        return gadget.notifySubmitted({message: "Post content can not be empty!"});
       }
 
-      return gadget.notifySubmitted("Comment added")
+      return gadget.notifySubmitted({message: "Comment added"})
         .push(function () {
           var choose_file_html_element = gadget.element.querySelector('#attachment'),
             file_blob = choose_file_html_element.files[0],
