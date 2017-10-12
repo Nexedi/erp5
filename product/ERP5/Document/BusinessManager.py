@@ -552,7 +552,8 @@ class BusinessManager(Folder):
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
-    path_list = self.getPathList()
+    #XXX: We currently do not reduce Business Patch Item objects
+    path_list = [l for l in self.getPathList() if l.getPortalType() =! 'Business Patch Item']
 
     reduced_path_item_list = []
 
@@ -665,6 +666,23 @@ class BusinessManager(Folder):
     subtracted_value = [x for x in subtracted_value if x not in added_value]
 
     return added_value, subtracted_value
+
+  def mergeBusinessPatchItem(self, item1, item2):
+    """
+    Merge two BusinessPatchItem at same layer and same sign.
+
+    XXX: This function shouldn't be used at reduction, rather than during
+    updating the installation_state, because we need to know all the states to
+    be able to find out which patch needs to be used.
+
+    Cases:
+    1. Shouldn't matter if both have same new_value as we give preference to
+    the final result and try to remove conflict as much as possible.
+    2. If both have different old_value and different new_value, merge should
+    return both of them and let the updateInstallationState process decide
+    which one to apply and if needed, raise a conflict
+    """
+    pass
 
 class BusinessItem(XMLObject):
 
@@ -1286,6 +1304,21 @@ class BusinessPatchItem(XMLObject):
                                        patch_format=patch_format
                                        )
     return patch
+
+  def install(self, context, *args):
+    """
+    Install will call the apply function which puts the new value at the
+    path mentioned while checking if the old value exists.
+    """
+    # Installation is basically running installation on the new_value
+    self.new_value.install(context)
+
+  def applyPatch(self):
+    """
+    Apply the new value by removing the old value. Also, show conflict in case
+    the value at old_installation_state is not same as the old value.
+    """
+    pass
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
