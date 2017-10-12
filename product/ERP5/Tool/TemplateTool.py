@@ -2079,6 +2079,26 @@ class TemplateTool (BaseTool):
 
       bm.setStatus('installed')
 
+    def updateHash(self, item):
+      """
+      Function to update hash of Business Item or Business Property Item
+      """
+      # Check for isProperty attribute
+      if item.isProperty:
+        value = item.getProperty('item_property_value')
+      else:
+        value_list = item.objectValues()
+        if value_list:
+          value = value_list[0]
+        else:
+          value = ''
+
+      if value:
+        item.setProperty('item_sha', self.calculateComparableHash(
+                                                              value,
+                                                              item.isProperty,
+                                                              ))
+
     def rebuildBusinessManager(self, bm):
       """
       Compare the sub-objects in the Business Manager to the previous built
@@ -2251,44 +2271,47 @@ class TemplateTool (BaseTool):
       # thus all the BusinessItem sub-objects should have single value
       # Update hashes of item in old state before installation
       for item in old_installation_state.objectValues():
-        if item.isProperty:
-          value = item.getProperty('item_property_value')
+
+        # In case of Business Patch Item we need to update hash of both new and
+        # old value
+        if item.getPortalType() == 'Business Patch Item':
+          new_val = item._getOb('new_item')
+          old_val = item._getOb('old_item')
+          self.updateHash(new_val)
+          slef.updateHash(old_val)
         else:
-          value_list = item.objectValues()
-          if value_list:
-            value = value_list[0]
-          else:
-            value = ''
-        if value:
-          item.setProperty('item_sha', self.calculateComparableHash(
-                                                              value,
-                                                              item.isProperty,
-                                                              ))
+          self.updateHash(item)
 
       # Path Item List for installation_process should be the difference between
       # old and new installation state
       for item in new_installation_state.objectValues():
+
         # If the path has been removed, then add it with sign = -1
         old_item = old_installation_state.getBusinessItemByPath(item.getProperty('item_path'))
-        # Calculate sha for the items in new_insatallation_state
-        if item.isProperty:
-          value = item.getProperty('item_property_value')
+
+        # In case of Business Patch Item we need to update hash of both new and
+        # old value
+        if item.getPortalType() == 'Business Patch Item':
+          new_val = item._getOb('new_item')
+          old_val = item._getOb('old_item')
+          self.updateHash(new_val)
+          slef.updateHash(old_val)
         else:
-          value_list = item.objectValues()
-          if value_list:
-            value = value_list[0]
-          else:
-            value = ''
-        if value:
-          item.setProperty('item_sha', self.calculateComparableHash(
-                                                                value,
-                                                                item.isProperty,
-                                                                ))
+          self.updateHash(item)
+
         if old_item:
+          to_be_installed_item = item
+          if old_item.getPortalType() == 'Business Patch Item':
+            # In case of Business Patch Item, we just need to compare the hash
+            # of old_item
+            old_item = old_item._getOb('old_item')
+            item = item._getOb('old_item')
+
           # If the old_item exists, we match the hashes and if it differs, then
           # add the new item
           if old_item.getProperty('item_sha') != item.getProperty('item_sha'):
-            to_install_path_item_list.append(item)
+            to_install_path_item_list.append(to_be_installed_item)
+
         else:
           to_install_path_item_list.append(item)
 
