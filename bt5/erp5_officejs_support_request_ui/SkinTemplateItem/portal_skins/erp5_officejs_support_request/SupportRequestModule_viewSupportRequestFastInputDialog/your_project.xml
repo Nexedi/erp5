@@ -145,7 +145,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(o.getTitle(), o.getId()) for o in context.getPortalObject().portal_catalog(portal_type="Project", validation_state="validated")]</string> </value>
+            <value> <string>python:[(o.getProperty("title"), o.getProperty("id")) for o in context.getPortalObject().portal_catalog(portal_type="Project", validation_state="validated", select_list=("id", "title"))]</string> </value>
         </item>
       </dictionary>
     </pickle>
