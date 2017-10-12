@@ -767,6 +767,10 @@ class TestInvoiceMixin(TestPackingListMixin):
     packing_list = sequence.get('packing_list')
     packing_list.edit(description='This packing list was edited!')
 
+  def stepAcceptDecisionDescriptionPackingList(self,sequence=None, sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    self._solveDivergence(packing_list, 'description', 'Accept Solver')
+
   def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
                     sequence=None, sequence_list=None, **kw):
     """If we call edit on the packing list, delivery rule should not be
@@ -2741,6 +2745,10 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         base_sequence +
     """
       stepEditPackingListLine
+      stepTic
+      stepCheckPackingListIsDiverged
+      stepAcceptDecisionDescriptionPackingList
+      stepTic
       stepSetReadyPackingList
       stepTic
       stepStartPackingList
