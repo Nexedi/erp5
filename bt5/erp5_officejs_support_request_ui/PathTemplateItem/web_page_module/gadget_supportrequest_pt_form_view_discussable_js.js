@@ -223,6 +223,9 @@
           });
         })
         .push(function () {
+          return gadget.notifySubmitted({message: "Comment added", status: "success"});
+        })
+        .push(function () {
           editor.value = '';
           return gadget.redirect({command: 'reload'});
         });
