@@ -32,6 +32,7 @@
           conflict_handling: 1,
           parallel_operation_attachment_amount: 10,
           parallel_operation_amount: 10,
+          signature_hash_key: "modification_date",
           check_local_attachment_modification: attachment_synchro,
           check_local_attachment_creation: attachment_synchro,
           check_remote_attachment_modification: attachment_synchro,
@@ -45,6 +46,7 @@
           check_remote_deletion: true,
           signature_sub_storage: {
             type: "query",
+            schema: {"modification_date": {type: "string", format: "date-time"}},
             sub_storage: {
               type: "uuid",
               sub_storage: {
