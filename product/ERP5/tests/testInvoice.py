@@ -33,6 +33,7 @@
 import xml.dom.minidom
 import zipfile
 
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -766,6 +767,26 @@ class TestInvoiceMixin(TestPackingListMixin):
     """Edit the current packing list, to trigger updateSimulation."""
     packing_list = sequence.get('packing_list')
     packing_list.edit(description='This packing list was edited!')
+
+  def stepAcceptDecisionDescriptionPackingList(self,sequence=None, sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    self._solveDivergence(packing_list, 'description', 'Accept Solver')
+
+  def stepAssertCausalityStateIsNotSolvedInConsistencyMessage(self,
+                    sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    self.assertEqual(
+      ['Causality State is not "Solved". Please wait or take action'
+        + ' for causality state to reach "Solved".'],
+      [str(message.message) for message in packing_list.checkConsistency()])
+
+  def stepSetReadyWorkflowTransitionIsBlockByConsistency(self,
+                    sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('packing_list')
+    with self.assertRaisesRegexp(ValidationFailed,
+        '.*Causality State is not "Solved"*'):
+      self.getPortal().portal_workflow.doActionFor(
+        packing_list, 'set_ready_action')
 
   def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
                     sequence=None, sequence_list=None, **kw):
@@ -2741,6 +2762,12 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         base_sequence +
     """
       stepEditPackingListLine
+      stepTic
+      stepCheckPackingListIsDiverged
+      stepAssertCausalityStateIsNotSolvedInConsistencyMessage
+      stepSetReadyWorkflowTransitionIsBlockByConsistency
+      stepAcceptDecisionDescriptionPackingList
+      stepTic
       stepSetReadyPackingList
       stepTic
       stepStartPackingList
