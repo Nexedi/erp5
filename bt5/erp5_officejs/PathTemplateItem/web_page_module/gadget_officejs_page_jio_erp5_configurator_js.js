@@ -66,27 +66,30 @@
             }
           },
           remote_sub_storage: {
-            type: "mapping",
-            attachment_list: ["data"],
-            attachment: {
-              "data": {
-                "get": {
-                  "uri_template": (new URI("hateoas"))
-                                 .absoluteTo(erp5_url)
-                                 .toString() + extended_attachment_url
-                },
-                "put": {
-                  "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
-                    .toString() + "/{+id}/Base_edit"
-                }
-              }
-            },
+            type: "saferepair",
             sub_storage: {
-              type: "erp5",
-              url: (new URI("hateoas"))
-                  .absoluteTo(erp5_url)
-                  .toString(),
-              default_view_reference: result[2]
+              type: "mapping",
+              attachment_list: ["data"],
+              attachment: {
+                "data": {
+                  "get": {
+                    "uri_template": (new URI("hateoas"))
+                                   .absoluteTo(erp5_url)
+                                   .toString() + extended_attachment_url
+                  },
+                  "put": {
+                    "erp5_put_template": (new URI("hateoas")).absoluteTo(erp5_url)
+                      .toString() + "/{+id}/Base_edit"
+                  }
+                }
+              },
+              sub_storage: {
+                type: "erp5",
+                url: (new URI("hateoas"))
+                    .absoluteTo(erp5_url)
+                    .toString(),
+                default_view_reference: result[2]
+              }
             }
           }
         };
