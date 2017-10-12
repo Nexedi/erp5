@@ -29,8 +29,9 @@
 
 import transaction
 from collections import deque
+from functools import wraps
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from AccessControl.ZopeGuards import NullIter
+from AccessControl.ZopeGuards import NullIter, guarded_getattr
 from Acquisition import aq_base, aq_parent, aq_inner
 from OFS.ObjectManager import ObjectManager, checkValidId
 from zExceptions import BadRequest
@@ -81,6 +82,21 @@ def dummyFilter(object,REQUEST=None):
 
 def dummyTestAfter(object,REQUEST=None):
   return []
+
+class ExceptionRaised(object):
+  raised = False
+
+  def __nonzero__(self):
+    return self.raised
+
+  def __call__(self, func):
+    def wrapper(*args, **kw):
+      try:
+        return func(*args, **kw)
+      except:
+        self.raised = True
+        raise
+    return wraps(func)(wrapper)
 
 class FolderMixIn(ExtensionClass.Base):
   """A mixin class for folder operations, add content, delete content etc.
@@ -428,6 +444,8 @@ class FolderMixIn(ExtensionClass.Base):
     In order to activate objects that don't inherit ActiveObject,
     only placeless default activate parameters are taken into account.
     """
+    hook_raised = ExceptionRaised()
+    my_getattr = guarded_getattr if restricted else getattr
     activate_kw = self.getDefaultActivateParameterDict.im_func(None)
     activate_kw.update(kw.get('activate_kw', ()))
     activate_kw.setdefault('active_process', None)
@@ -448,6 +466,18 @@ class FolderMixIn(ExtensionClass.Base):
       kw['_recurse_stack'] = recurse_stack
     min_depth = kw.get('min_depth', 0)
     max_depth = kw.get('max_depth', 0)
+    get_activate_kw_method_id = kw.get('get_activate_kw_method_id')
+    if get_activate_kw_method_id is None:
+      getActivateKw = lambda document, activate_kw: activate_kw
+      recurse_activate_kw = activate_kw
+    else:
+      getActivateKw = hook_raised(my_getattr(self, get_activate_kw_method_id))
+      # Isolate caller-accessible mutable activate_kw from the on we need to
+      # re-invoke ourselves. Doing it once only should be sufficient (and saves a
+      # dict copy on each iteration) as all the values we care about (set above
+      # in this script) are immutable. Anything else is already under the control
+      # of caller, either via arguments or via default activate parameter dict.
+      recurse_activate_kw = activate_kw.copy()
     def recurse(container, depth):
       if getattr(aq_base(container), 'getPhysicalPath', None) is None:
         return
@@ -478,12 +508,14 @@ class FolderMixIn(ExtensionClass.Base):
           del next_id[0]
       if min_depth <= depth:
         check_limit()
-        getattr(activate(container, 'SQLQueue', **activate_kw),
+        getattr(activate(container, 'SQLQueue', **getActivateKw(container, recurse_activate_kw)),
                 method_id)(*method_args, **method_kw)
       del recurse_stack[depth:]
     try:
       recurse(self, 0)
     except StopIteration:
+      if hook_raised:
+        raise
       activate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
       activate(self, 'SQLQueue', **activate_kw)._recurseCallMethod(
         method_id, method_args, method_kw, restricted=restricted, **kw)
