@@ -89,6 +89,7 @@
                     <value>
                       <list>
                         <string>my_requirement_title_list</string>
+                        <string>my_successor_title</string>
                       </list>
                     </value>
                 </item>
