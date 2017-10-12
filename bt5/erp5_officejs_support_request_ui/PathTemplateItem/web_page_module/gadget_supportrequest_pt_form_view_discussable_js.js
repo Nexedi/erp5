@@ -184,15 +184,22 @@
           }
         });
     })
-    .onEvent('submit', function () {
+    .declareJob('submitPostComment', function () {
       var gadget = this,
+        submitButton = null,
+        queue = null,
         editor = gadget.element.querySelector('#comment');
 
       if (editor.value === '') {
         return gadget.notifySubmitted({message: "Post content can not be empty!"});
       }
 
-      return gadget.notifySubmitted({message: "Comment added"})
+      submitButton = gadget.element.querySelector("input[type=submit]");
+      submitButton.disabled = true;
+      function enableSubmitButton() {
+        submitButton.disabled = false;
+      }
+      queue = gadget.notifySubmitted({message: "Posting comment"})
         .push(function () {
           var choose_file_html_element = gadget.element.querySelector('#attachment'),
             file_blob = choose_file_html_element.files[0],
@@ -219,5 +226,10 @@
           editor.value = '';
           return gadget.redirect({command: 'reload'});
         });
+      queue.then(enableSubmitButton, enableSubmitButton);
+      return queue;
+    })
+    .onEvent('submit', function () {
+      this.submitPostComment();
     });
 }(window, rJS, RSVP, calculatePageTitle));
