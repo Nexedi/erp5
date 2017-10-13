@@ -115,8 +115,10 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     #
     # 1. All calculations are done relative to the same time
     # 2. We don't get random failures when tests run close to midnight
+    self.datetime = DateTime() - 2
     self.pinDateTime(self.datetime)
     self.loginByUserName('test_user')
+    self.begin = self.datetime
 
   def beforeTearDown(self):
     self.unpinDateTime()

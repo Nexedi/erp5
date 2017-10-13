@@ -322,18 +322,7 @@ class TestPackingListMixin(TestOrderMixin):
     quantity_solver_decision.updateConfiguration(**kw)
     solver_process.buildTargetSolverList()
     solver_process.solve()
-    # build split deliveries manually. XXX ad-hoc
-    previous_tag = None
-    for delivery_builder in packing_list.getBuilderList():
-      after_tag = []
-      if previous_tag:
-        after_tag.append(previous_tag)
-      delivery_builder.activate(
-        after_method_id=('solve',
-                         'immediateReindexObject',
-                         'recursiveImmediateReindexObject',), # XXX too brutal.
-        after_tag=after_tag,
-        ).build(explanation_uid=packing_list.getCausalityValue().getUid())
+    self.callPackingListBuilderList(packing_list)
 
   def stepSplitAndDeferDoNothingPackingList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -389,12 +378,10 @@ class TestPackingListMixin(TestOrderMixin):
         packing_list1 = packing_list
       else:
         packing_list2 = packing_list
-    for line in packing_list1.objectValues(
-          portal_type= self.packing_list_line_portal_type):
-      self.assertEqual(self.default_quantity-2,line.getQuantity())
-    for line in packing_list2.objectValues(
-          portal_type= self.packing_list_line_portal_type):
-      self.assertEqual(2,line.getQuantity())
+    line1, =  packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(self.default_quantity-2,line1.getQuantity())
+    line2, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(2,line2.getQuantity())
 
   def stepCheckPackingListNotSplitted(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1013,6 +1000,20 @@ class TestPackingListMixin(TestOrderMixin):
       portal_type=self.packing_list_line_portal_type)
     self._checkRecordedProperty(movement_list, 'resource', False)
 
+  def callPackingListBuilderList(self, packing_list):
+    # build split deliveries manually. XXX ad-hoc
+    previous_tag = None
+    for delivery_builder in packing_list.getBuilderList():
+      after_tag = []
+      if previous_tag:
+        after_tag.append(previous_tag)
+      delivery_builder.activate(
+        after_method_id=('solve',
+                         'immediateReindexObject',
+                         'recursiveImmediateReindexObject',), # XXX too brutal.
+        after_tag=after_tag,
+        ).build(explanation_uid=packing_list.getCausalityValue().getUid())
+
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
   run_all_test = 1
@@ -1479,6 +1480,122 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         CheckPackingListIsSolved
         CheckNewPackingListIsSolved
         CheckPackingListSplittedTwoTimes
+        """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+
+  def stepSplitAndMovePackingList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Do the split and move to another delivery action
+    """
+    packing_list = sequence.get('packing_list')
+    new_packing_list = sequence.get('new_packing_list')
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
+    quantity_solver_decision, = [x for x in solver_process.contentValues()
+      if 'quantity' in x.getCausalityValue().getTestedPropertyList()]
+    # use Quantity Split Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Move Solver'])
+    # configure for Quantity Split Solver.
+    kw = {'delivery_solver':'FIFO Delivery Solver',
+          'delivery_url': new_packing_list.getRelativeUrl()}
+    quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+
+  def stepCheckSeveralDivergenceAction(self, sequence=None, sequence_list=None, **kw):
+    """
+      Do the split and move to another delivery action
+    """
+    packing_list1 = sequence.get('packing_list')
+    line1, = packing_list1.objectValues(portal_type=self.packing_list_line_portal_type)
+    packing_list2 = sequence.get('new_packing_list')
+    # Make sure we can split and defer the new packing list, this would make
+    # use of FIFO delivery solver in the case we have several lines
+    line2, = packing_list2.objectValues(portal_type=self.packing_list_line_portal_type)
+    line2.setQuantity(1.5)
+    self.tic()
+    self.assertEqual('diverged', packing_list2.getCausalityState())
+    solver_process, = [x for x in packing_list2.getSolverValueList() if \
+                       x.getValidationState() == "draft"]
+    quantity_solver_decision, = [x for x in solver_process.contentValues()
+      if 'quantity' in x.getCausalityValue().getTestedPropertyList()]
+    # use Quantity Split Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
+    # configure for Quantity Split Solver.
+    kw = {'delivery_solver':'FIFO Delivery Solver',
+          'start_date':self.datetime + 35,
+          'stop_date':self.datetime + 45}
+    quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+    self.callPackingListBuilderList(packing_list2)
+    self.tic()
+    packing_list1, packing_list2, packing_list3 = self.getCreatedTypeList(
+      self.packing_list_portal_type)
+    line3, = packing_list3.objectValues(portal_type=self.packing_list_line_portal_type)
+    self.assertEqual(0.5, line3.getQuantity())
+    self.assertEqual('solved', packing_list1.getCausalityState())
+    self.assertEqual('solved', packing_list2.getCausalityState())
+    self.assertEqual('solved', packing_list3.getCausalityState())
+    # And now make sure we could accept a new quantity in case we have several
+    # simulation movements
+    line2.setQuantity(1.2)
+    self.tic()
+    self.assertEqual('diverged', packing_list2.getCausalityState())
+    solver_process, = [x for x in packing_list2.getSolverValueList() if \
+                       x.getValidationState() == "draft"]
+    quantity_solver_decision, = [x for x in solver_process.contentValues()
+      if 'quantity' in x.getCausalityValue().getTestedPropertyList()]
+    # use Quantity Split Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Accept Solver'])
+    kw = {'tested_property_list':['quantity']}
+    quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+    self.callPackingListBuilderList(packing_list2)
+    self.tic()
+    packing_list1, packing_list2, packing_list3 = self.getCreatedTypeList(
+      self.packing_list_portal_type)
+    self.assertEqual('solved', packing_list1.getCausalityState())
+    self.assertEqual('solved', packing_list2.getCausalityState())
+    self.assertEqual('solved', packing_list3.getCausalityState())
+    self.assertEqual(self.default_quantity-2, line1.getQuantity())
+    self.assertEqual(1.2, line2.getQuantity())
+    self.assertEqual(0.5, line3.getQuantity())
+
+  def test_11b_PackingListDecreaseTwoTimesQuantityAndMoveToDelivery(self,
+                                               quiet=quiet, run=run_all_test):
+    """
+      Change the quantity on an delivery line, then
+      split and defer the packing list. Then decrease again the quantity,
+      and use solver "split and move" to move the quantity to the second packing
+      list. The second packing list would be solved by the "split and move"
+      solver
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = self.default_sequence + """
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        Tic
+        CheckPackingListIsDiverged
+        SplitAndDeferPackingList
+        Tic
+        CheckPackingListIsSolved
+        CheckPackingListSplitted
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        Tic
+        CheckPackingListIsDiverged
+        SplitAndMovePackingList
+        Tic
+        CheckNewPackingListIsSolved
+        CheckPackingListSplittedTwoTimes
+        CheckSeveralDivergenceAction
         """
     sequence_list.addSequenceString(sequence_string)
 

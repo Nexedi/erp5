@@ -96,6 +96,7 @@ from Products.ERP5Type.tests.ProcessingNodeTestCase import \
 onsetup(patchActivityTool)()
 
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from Products.ZSQLCatalog.SQLCatalog import Query
 
 from Acquisition import aq_base
 
@@ -411,6 +412,21 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     def getCurrencyModule(self):
       return getattr(self.portal, 'currency_module',
           getattr(self.portal, 'currency', None))
+
+    def getCreatedTypeList(self, portal_type, from_date=None):
+      """
+      Convenient method to retrieve new documents created in the testn in
+      particular documents that are created indirectly, like trough activities.
+      "begin" attribute of test class instance could be initialized in an
+      afterSetup.
+      """
+      if from_date is None:
+        from_date = getattr(self, 'begin')
+      type_list = [x.getObject() for x in self.portal.portal_catalog(
+                  portal_type=portal_type,
+                  query=Query(creation_date=from_date, range="min"))]
+      type_list.sort(key=lambda x: x.getCreationDate())
+      return type_list
 
     def _addPropertySheet(self, portal_type_name,
                           property_sheet_name='TestPropertySheet',

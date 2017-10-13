@@ -71,17 +71,23 @@ class QuantitySplitMoveSolver(QuantitySplitSolver):
     delivery = diverged_simulation_movement.getDeliveryValue().getParentValue()
     assert delivery.isDelivery()
     trade_phase = self.getDeliveryValue().getTradePhase()
-    assert trade_phase is not None, "Unable to solve, no trade phase is defined for %s" % diverged_simulation_movement.getRelativeUrl()
-    business_link_list = diverged_simulation_movement.asComposedDocument().getBusinessLinkValueList(trade_phase=trade_phase)
-    assert len(business_link_list) == 1, "Expected to find only one business link for trade_phase %s, but found %r" % (trade_phase,
+    assert trade_phase is not None, "Unable to solve, no trade phase is defined for %s" % \
+      diverged_simulation_movement.getRelativeUrl()
+    business_link_list = diverged_simulation_movement.asComposedDocument(
+      ).getBusinessLinkValueList(trade_phase=trade_phase)
+    assert len(business_link_list) == 1, \
+      "Expected to find only one business link for trade_phase %s, but found %r" % (trade_phase,
       [x.getRelativeUrl() for x in business_link_list])
     business_link, = business_link_list
-    delivery_builder_list = business_link.getDeliveryBuilderValueList()
-    assert len(delivery_builder_list) == 1, "Expected to find only one builder on business link, but found %r" % (
+    delivery_builder_list = [x for x in business_link.getDeliveryBuilderValueList() \
+                             if x.getDeliveryPortalType() == delivery.getPortalType()]
+    assert len(delivery_builder_list) == 1, \
+      "Expected to find only one builder on business link, but found %r" % (
       business_link.getRelativeUrl(), [x.getRelativeUrl() for x in delivery_builder_list])
     delivery_builder, = delivery_builder_list
     # Update simulation movements to make sure they match the new delivery
-    delivery_level_movement_group = [x for x in delivery_builder.objectValues() if x.getCollectOrderGroup() == "delivery"]
+    delivery_level_movement_group = [x for x in delivery_builder.objectValues() \
+                      if x.getCollectOrderGroup() == "delivery"]
     delivery_to_move = portal.unrestrictedTraverse(configuration_dict['delivery_url'])
     assert delivery_to_move.getDivergenceList() == []
     for movement_group in delivery_level_movement_group:
