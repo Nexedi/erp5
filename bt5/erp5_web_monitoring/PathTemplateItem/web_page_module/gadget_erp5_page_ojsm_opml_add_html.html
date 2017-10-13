@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>OfficeJS Monitor Add OPML</title>
+    <link href="gadget_officejs_monitoring_custom.css" rel="stylesheet" type="text/css"/>
+
+    <script src="rsvp.js"></script>
+    <script src="renderjs.js"></script>
+    <script src="handlebars.js"></script>
+    <script src="gadget_officejs_monitoring_global.js"></script>
+    <script src="gadget_erp5_page_ojsm_opml_add.js"></script>
+    <script id="template-message-error" type="text/x-handlebars-template">
+      <p><span class='ui-text-{{status}}'>{{message}}</span></p>
+    </script>
+  </head>
+
+  <body>
+    <div data-gadget-url="gadget_officejs_monitoring_jio.html" data-gadget-scope="jio_gadget" data-gadget-sandbox="public"></div>
+    <form class="save_form ui-body-c" novalidate>
+      <button type="submit" class="ui-btn ui-btn-b ui-btn-inline
+        ui-icon-edit ui-btn-icon-right ui-screen-hidden"></button>
+      <div class="ui-message-alert"></div>
+      <div data-gadget-url="gadget_erp5_form.html"
+              data-gadget-scope="form_view"
+              data-gadget-sandbox="public">
+      </div>
+    </form>
+  </body>
+</html>

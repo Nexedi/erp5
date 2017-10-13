@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Page" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -67,7 +64,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/public</string>
+                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -79,21 +76,19 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
+            <value> <string>text/html</string> </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>notify.min.js</string> </value>
+            <value> <string>gadget_officejs_monitoring_jio.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Jio access</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Notify_min_js</string> </value>
+            <value> <string>gadget_officejs_monitoring_jio_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -101,7 +96,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Page</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -111,7 +106,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Notify.js</string> </value>
+            <value> <string>Officejs Monitoring Jio Gadget</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -171,7 +166,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -197,7 +192,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464108139.95</float>
+                        <float>1452875306.6</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -206,7 +201,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -242,7 +237,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.21937.16299.41642</string> </value>
+                <value> <string>962.48734.17927.8823</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +255,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507899148.22</float>
+                        <float>1507898792.09</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -317,7 +312,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464102882.33</float>
+                        <float>1452874965.12</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

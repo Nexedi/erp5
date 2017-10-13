@@ -24,7 +24,6 @@
             <key> <string>_Add_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
@@ -43,8 +42,6 @@
             <key> <string>_Modify_portal_content_Permission</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
             </value>
@@ -83,7 +80,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>notify.min.js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_hosting_subscription_list.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +90,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Notify_min_js</string> </value>
+            <value> <string>gadget_erp5_page_ojsm_hosting_subscription_list_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,7 +108,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Notify.js</string> </value>
+            <value> <string>Monitoring Hosting Subscription list JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -171,7 +168,7 @@
           <dictionary>
             <item>
                 <key> <string>action</string> </key>
-                <value> <string>publish_alive</string> </value>
+                <value> <string>publish</string> </value>
             </item>
             <item>
                 <key> <string>actor</string> </key>
@@ -197,7 +194,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464108139.95</float>
+                        <float>1457347208.26</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -206,7 +203,7 @@
             </item>
             <item>
                 <key> <string>validation_state</string> </key>
-                <value> <string>published_alive</string> </value>
+                <value> <string>published</string> </value>
             </item>
           </dictionary>
         </list>
@@ -242,7 +239,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.21937.16299.41642</string> </value>
+                <value> <string>963.19077.52757.17169</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +257,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507899148.22</float>
+                        <float>1510052055.87</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -317,7 +314,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464102882.33</float>
+                        <float>1457347073.74</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

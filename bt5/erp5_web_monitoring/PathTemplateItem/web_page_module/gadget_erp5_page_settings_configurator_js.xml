@@ -67,7 +67,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>classification/collaborative/public</string>
+                <string>classification/collaborative/team</string>
               </tuple>
             </value>
         </item>
@@ -78,12 +78,8 @@
             </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/javascript</string> </value>
-        </item>
-        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>notify.min.js</string> </value>
+            <value> <string>gadget_erp5_page_settings_configurator.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -93,7 +89,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Notify_min_js</string> </value>
+            <value> <string>gadget_erp5_page_settings_configurator_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -111,7 +107,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Notify.js</string> </value>
+            <value> <string>Gadget Officejs Monitoring Settings Configurator JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -197,7 +193,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464108139.95</float>
+                        <float>1509441101.54</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -242,7 +238,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>961.21937.16299.41642</string> </value>
+                <value> <string>963.8902.10923.27409</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -260,7 +256,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507899148.22</float>
+                        <float>1509441073.68</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -317,7 +313,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1464102882.33</float>
+                        <float>1509440963.17</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
