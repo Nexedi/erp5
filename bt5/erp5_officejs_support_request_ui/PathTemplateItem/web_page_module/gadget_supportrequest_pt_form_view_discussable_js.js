@@ -203,7 +203,7 @@
         .push(function () {
           var choose_file_html_element = gadget.element.querySelector('#attachment'),
             file_blob = choose_file_html_element.files[0],
-            url = gadget.hateoas_url + "post_module/PostModule_createHTMLPostFromText",
+            url = gadget.hateoas_url + "post_module/PostModule_createHTMLPostForSupportRequest",
             data = new FormData();
           data.append("follow_up", gadget.options.jio_key);
           data.append("predecessor", '');

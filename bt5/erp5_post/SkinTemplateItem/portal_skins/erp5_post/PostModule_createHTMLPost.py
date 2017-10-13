@@ -14,10 +14,6 @@ if object_list:
 else:
   raise LookupError("Target follow up object not found")
 
-follow_up_object.edit(
-  modification_date = now
-)
-
 post.edit(
   start_date=now,
   follow_up_value=follow_up_object,
