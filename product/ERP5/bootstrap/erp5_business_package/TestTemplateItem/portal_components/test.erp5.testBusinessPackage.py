@@ -1334,8 +1334,6 @@ class TestBusinessPackage(ERP5TypeTestCase):
 
     transaction.commit()
 
-    import pdb; pdb.set_trace()
-
     # Import the Business Manager
     imported_manager = portal_templates._importObjectFromFile('/srv/slapgrid/slappart16/srv/runner/instance/slappart6/tmp/%s.zexp' % manager.id)
 

@@ -82,7 +82,6 @@
     .declareMethod('render', function (options) {
       var parameter_dict = JSON.parse(options.value),
         item_path_list = parameter_dict.item_path_list;
-      console.log(item_path_list);
       this.action_url = parameter_dict.action_url;
       var node_list = buildTreeHTML('tree', convertPathListToTree(item_path_list));
       this.element.innerHTML = buildTreeHTML('tree', convertPathListToTree(item_path_list));
@@ -93,14 +92,18 @@
       if ((evt.target.type === 'checkbox') && (!evt.target.id)) {
         // XXX Update the checkbox state of children (and parents too)
         // querySelectorAll and parent ancestors
+        // var parentSelected = this.element.querySelectorAll('input[type=checkbox][name=""]:checked')
         var val = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
-        console.log(val);
+        // Spread the result value so that we can use map on it
+        var labelValues = [...val].map(function(x){
+          return x.nextSibling.data;
+        });
         console.log('Update the checkbox state of children (and parents too)');
+        console.log(labelValues);
       }
     }, false, false)
 
     .declareMethod('getContent', function (options) {
-      console.log('ayush');
       var input_list = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
       console.log(input_list);
       return jIO.util.ajax({
