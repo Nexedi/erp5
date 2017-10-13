@@ -17,3 +17,8 @@ if file != "undefined":  # XXX "undefined" ? should also be fixed in javascript 
   post.setSuccessorValueList([document])
   # XXX depending on security model this should be changed accordingly
   document.publish()
+
+post.publish()
+# XXX in support request web app interface, discussable page reloads right after
+#     adding a post, searching for new post hoping it is already indexed.
+post.immediateReindexObject()

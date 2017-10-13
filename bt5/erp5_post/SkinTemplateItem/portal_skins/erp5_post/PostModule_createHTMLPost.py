@@ -21,9 +21,4 @@ post = post_module.newContent(
   **post_edit_kw
 )
 
-post.publish()
-# We need to reindex the object on server. So the page will get the post which
-# just submmitted.
-post.immediateReindexObject()
-
 return post
