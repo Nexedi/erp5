@@ -1,6 +1,4 @@
 portal = context.getPortalObject()
-now = DateTime()
-
 
 # create an HTML Post
 post_module = portal.post_module
@@ -14,27 +12,20 @@ if object_list:
 else:
   raise LookupError("Target follow up object not found")
 
-post.edit(
-  start_date=now,
-  follow_up_value=follow_up_object,
-  predecessor_value = predecessor if predecessor else None,
-  text_content=data,
-)
-
-# handle attachments
-if file != "undefined":
-  document_kw = {'batch_mode': True,
-                  'redirect_to_document': False,
-                  'file': file}
-  document = context.Base_contribute(**document_kw)
-  # set relation between post and document
-  post.setSuccessorValueList([document])
-  # depending on security model this should be changed accordingly
-  document.publish()
+now = DateTime()
+post_edit_kw = {
+  "start_date": now,
+  "follow_up_value": follow_up_object,
+  "text_content": data,
+}
+if predecessor is not None:
+  predecessor_value, = portal.portal_catalog(relative_url=predecessor)
+  post_edit_kw["predecessor_value"] = predecessor_value.getObject()
+post.edit(**post_edit_kw)
 
 post.publish()
 # We need to reindex the object on server. So the page will get the post which
 # just submmitted.
 post.immediateReindexObject()
 
-return
+return post
