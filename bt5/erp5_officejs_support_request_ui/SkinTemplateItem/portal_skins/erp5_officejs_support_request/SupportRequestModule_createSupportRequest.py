@@ -36,31 +36,13 @@ support_request.edit(
 support_request.submit()
 support_request.immediateReindexObject()
 
-# create an HTML Post
-if description or file is not None:
-  post_module = portal.post_module
-  post = post_module.newContent(portal_type='HTML Post')
-  
-  post.edit(
-    start_date=now,
-    follow_up_value=support_request,
-    text_content="<p>" + description.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("  ", " &nbsp;").replace("\n", "<br/>") + "</p>",
+if description is not None or file is not None:
+  portal.post_module.PostModule_createHTMLPostForSupportRequest(
+    follow_up=support_request.getRelativeUrl(),  # XXX give support_request as follow_up_value
+    predecessor=None,
+    data="" if description is None else description,
+    file=file,
   )
-
-  # handle attachments
-  if getattr(file, 'filename', '') != '':
-    document_kw = {'batch_mode': True,
-                   'redirect_to_document': False,
-                   'file': file}
-    document = context.Base_contribute(**document_kw)
-
-    # set relation between post and document
-    post.setSuccessorValueList([document])
-  
-    # depending on security model this should be changed accordingly
-    document.publish()
-  post.publish()
-  post.immediateReindexObject()
 
 return support_request.Base_redirect('officejs_support_request_view',
   keep_items={

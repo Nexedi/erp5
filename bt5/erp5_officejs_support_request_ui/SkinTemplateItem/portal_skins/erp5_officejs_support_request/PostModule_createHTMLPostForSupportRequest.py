@@ -5,7 +5,7 @@ post = context.PostModule_createHTMLPostFromText(
   data=data,
 )
 
-if file != "undefined":  # XXX "undefined" ? should also be fixed in javascript side
+if file not in ("undefined", None):  # XXX "undefined" ? should also be fixed in javascript side
   document_kw = {'batch_mode': True,
                  'redirect_to_document': False,
                  'file': file}
