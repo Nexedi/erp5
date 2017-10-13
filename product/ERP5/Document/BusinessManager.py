@@ -553,7 +553,7 @@ class BusinessManager(Folder):
     reduce(BT) = BT
     """
     #XXX: We currently do not reduce Business Patch Item objects
-    path_list = [l for l in self.getPathList() if l.getPortalType() =! 'Business Patch Item']
+    path_list = [l for l in self.getPathList() if l.getPortalType() != 'Business Patch Item']
 
     reduced_path_item_list = []
 
