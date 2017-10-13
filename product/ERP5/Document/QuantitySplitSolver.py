@@ -69,6 +69,15 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   def _solve(self, activate_kw=None):
     """
     """
+    self._solveBySplitting(activate_kw=activate_kw)
+
+  def _solveBySplitting(self, activate_kw=None):
+    """
+    contains all the logic to split. This method is convenient in case
+    another solver needs it.
+    """
+    solver_dict = {}
+    new_movement_list = []
     configuration_dict = self.getConfigurationPropertyDict()
     delivery_dict = {}
     for simulation_movement in self.getDeliveryValueList():
@@ -98,6 +107,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         new_movement = applied_rule.newContent(
           new_id, simulation_movement.getPortalType(),
           activate_kw=activate_kw, **kw)
+        new_movement_list.append(new_movement)
         # Dirty code until IPropertyRecordable is revised.
         # Merge original simulation movement recorded property to new one.
         recorded_property_dict = simulation_movement._getRecordedPropertyDict(None)
@@ -129,3 +139,5 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
     if self.getPortalObject().portal_workflow.isTransitionPossible(
       self, 'succeed'):
       self.succeed()
+    solver_dict["new_movement_list"] = new_movement_list
+    return solver_dict

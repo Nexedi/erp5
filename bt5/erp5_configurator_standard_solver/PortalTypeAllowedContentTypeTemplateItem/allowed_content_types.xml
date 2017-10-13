@@ -6,6 +6,7 @@
   <item>LIFO Delivery Solver</item>
   <item>Minimise Price Delivery Solver</item>
   <item>Production Reduction Solver</item>
+  <item>Quantity Split Move Solver</item>
   <item>Quantity Split Solver</item>
   <item>Trade Model Solver</item>
   <item>Unify Solver</item>
