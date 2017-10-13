@@ -552,8 +552,7 @@ class BusinessManager(Folder):
     A Business Manager BT is said to be reduced if and only if:
     reduce(BT) = BT
     """
-    #XXX: We currently do not reduce Business Patch Item objects
-    path_list = [l for l in self.getPathList() if l.getPortalType() != 'Business Patch Item']
+    path_list = self.getPathList()
 
     reduced_path_item_list = []
 
