@@ -306,7 +306,7 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_page_module/Zuite_waitForActivities</td>
+  <td>${base_url}/document_module/Zuite_waitForActivities</td>
   <td></td>
 </tr>
 <tr>
