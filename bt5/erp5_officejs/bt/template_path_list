@@ -25,6 +25,8 @@ web_site_module/officejs_codemirror
 web_site_module/officejs_codemirror/**
 web_site_module/officejs_cribjs
 web_site_module/officejs_cribjs/**
+web_site_module/officejs_drive_app
+web_site_module/officejs_drive_app/**
 web_site_module/officejs_export
 web_site_module/officejs_pdf_viewer
 web_site_module/officejs_pdf_viewer/**
