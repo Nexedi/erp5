@@ -100,7 +100,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Thu, 12 Oct 2017 10:00:00 +0000\n
+# generated on Mon, 16 Oct 2017 10:00:00 +0000\n
 CACHE:\n
 renderjs.js\n
 rsvp.js\n
@@ -585,7 +585,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.24071.53498.34082</string> </value>
+                <value> <string>962.52799.37506.35106</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -603,7 +603,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507813195.9</float>
+                        <float>1508144447.58</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
