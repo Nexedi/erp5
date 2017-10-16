@@ -128,6 +128,7 @@
     })
 
     .declareMethod('render', function (options) {
+      this.listenToResize();
       return this.changeState({
         key: options.key,
         value: options.value || "",
@@ -136,7 +137,8 @@
         configuration_mobile: options.configuration_mobile ||
                               MOBILE_CONFIGURATION,
         is_responsive: (options.configuration_mobile !== undefined) ||
-                       (options.configuration === undefined)
+                       (options.configuration === undefined),
+        is_mobile: MATCH_MEDIA.matches
       });
     })
 
@@ -190,7 +192,7 @@
       }
     })
 
-    .declareService(function () {
+    .declareJob('listenToResize', function () {
       var result,
         event,
         context = this;
@@ -204,12 +206,8 @@
           is_mobile: false
         });
       }
-      result = loopEventListener(window, 'resize', false,
-                                 extractSizeAndDispatch);
-      event = document.createEvent("Event");
-      event.initEvent('resize', true, true);
-      window.dispatchEvent(event);
-      return result;
+      return loopEventListener(window, 'resize', false,
+                               extractSizeAndDispatch);
     });
 
 
