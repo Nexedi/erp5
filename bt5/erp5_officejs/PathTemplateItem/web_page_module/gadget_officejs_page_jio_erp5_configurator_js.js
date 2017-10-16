@@ -46,7 +46,6 @@
           check_remote_deletion: true,
           signature_sub_storage: {
             type: "query",
-            schema: {"modification_date": {type: "string", format: "date-time"}},
             sub_storage: {
               type: "uuid",
               sub_storage: {
@@ -57,6 +56,7 @@
           },
           local_sub_storage: {
             type: "query",
+            schema: {"modification_date": {type: "string", format: "date-time"}},
             sub_storage: {
               type: "uuid",
               sub_storage: {
