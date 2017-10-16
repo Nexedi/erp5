@@ -30,10 +30,13 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
 from DateTime import DateTime
 from zExceptions import NotFound
+from cStringIO import StringIO
+import httplib
 import msgpack
 import numpy as np
 import string
 import random
+import urllib
 
 def getRandomString():
   return 'test_%s' %''.join([random.choice(string.ascii_letters + string.digits) \
@@ -84,7 +87,7 @@ class Test(ERP5TypeTestCase):
     import pandas as _
     import matplotlib as _
 
-  def test_01_IngestionFromFluentd(self):
+  def test_01_IngestionFromFluentd(self, old_fluentd=False):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
     simulating input from fluentd.
@@ -103,12 +106,17 @@ class Test(ERP5TypeTestCase):
     ingestion_policy, _, data_stream, data_array = \
       self.stepSetupIngestion(reference)
 
-    # simulate fluentd by setting proper values in REQUEST
-    request.method = 'POST'
-    data_chunk = msgpack.packb([0, real_data], use_bin_type=True)
-    request.set('reference', reference)
-    request.set('data_chunk', data_chunk)
-    ingestion_policy.ingest()
+    # simulate fluentd
+    body = msgpack.packb([0, real_data], use_bin_type=True)
+    if old_fluentd:
+      env = {'CONTENT_TYPE': 'application/x-www-form-urlencoded'}
+      body = urllib.urlencode({'data_chunk': body})
+    else:
+      env = {'CONTENT_TYPE': 'application/octet-stream'}
+    response = self.publish(
+      ingestion_policy.getPath() + '/ingest?reference=' + reference,
+      env=env, request_method='POST', stdin=StringIO(body))
+    self.assertEqual(httplib.NO_CONTENT, response.getStatus())
 
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
@@ -129,9 +137,11 @@ class Test(ERP5TypeTestCase):
     # test ingesting with bad reference and raise of NotFound
     request.set('reference', reference + 'not_existing')
     self.assertRaises(NotFound, ingestion_policy.ingest)
+
+  def test_01_1_IngestionFromOldFluentd(self):
+    self.test_01_IngestionFromFluentd(True)
     
-    
-  def test_01_1_IngestionTail(self):
+  def test_01_2_IngestionTail(self):
     """
     Test real time convertion to a numpy array by appending data to a data stream.
     """
