@@ -109,6 +109,11 @@
       "cache": "gadget_erp5_page_ojs_wallsearch.appcache",
       "sub_gadget": []
     },
+    "Drive App": {
+      "url": "officejs_drive_app/",
+      "cache": "gadget_officejs_drive_app.appcache",
+      "sub_gadget": []
+    },
     "connection": {
       "cache": "gadget_jabberconnection.appcache",
       "no_installer": true
