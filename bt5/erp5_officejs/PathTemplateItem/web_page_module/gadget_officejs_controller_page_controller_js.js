@@ -18,8 +18,8 @@
     .allowPublicAcquisition('notifySubmit', function () {
       return this.triggerSubmit();
     })
-    .allowPublicAcquisition('updateDocument', function (content) {
-      var gadget = this;
+    .allowPublicAcquisition('updateDocument', function (param_list) {
+      var gadget = this, content = param_list[0];
       return gadget.jio_get(gadget.state.jio_key)
         .push(function (doc) {
           var property;

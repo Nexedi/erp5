@@ -117,13 +117,33 @@
   <td>title</td>
 </tr>
 <tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Reference %s' % DateTime()">Reference</td>
+  <td>reference</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Language %s' % DateTime()">Language</td>
+  <td>language</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Version %s' % DateTime()">Version</td>
+  <td>version</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td tal:content="python: 'Test Description %s' % DateTime()">Description</td>
+  <td>description</td>
+</tr>
+<tr>
   <td>waitForElementPresent</td>
-  <td>identifier=title</td>
+  <td>//input[@title='Title']</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>name=title</td>
+  <td>//input[@title='Title']</td>
   <td>${title}</td>
 </tr>
 <tr>
@@ -143,13 +163,28 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>identifier=reference</td>
+  <td>//input[@title='Reference']</td>
   <td></td>
 </tr>
 <tr>
   <td>type</td>
-  <td>name=reference</td>
-  <td>reference</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>click</td>
@@ -160,6 +195,56 @@
   <td>waitForElementPresent</td>
   <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
   <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=Add</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>link=${title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//textarea[@title='Description']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Title']</td>
+  <td>${title}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Reference']</td>
+  <td>${reference}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Version']</td>
+  <td>${version}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//input[@title='Language']</td>
+  <td>${language}</td>
+</tr>
+<tr>
+  <td>verifyValue</td>
+  <td>//textarea[@title='Description']</td>
+  <td>${description}</td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
