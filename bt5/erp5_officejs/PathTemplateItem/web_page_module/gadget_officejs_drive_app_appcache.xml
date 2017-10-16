@@ -123,8 +123,7 @@ font-awesome/font-awesome-webfont.woff2\n
 font-awesome/font-awesome-webfont.ttf\n
 font-awesome/font-awesome-webfont.svg\n
 gadget_erp5_nojqm.css\n
-jio_mappingstorage.js\n
-jio_fixstorage.js\n
+jio_ojs_storage.js\n
 gadget_erp5_global.js\n
 URI.js\n
 dygraph.js\n
@@ -198,7 +197,23 @@ gadget_erp5_sort_editor.html\n
 gadget_erp5_sort_editor.js\n
 gadget_erp5_field_password.html\n
 gadget_erp5_field_password.js\n
-\n
+gadget_erp5_page_ojs_configurator.html\n
+gadget_erp5_page_ojs_configurator.js\n
+gadget_ojs_configurator_access.html\n
+gadget_ojs_configurator_access.js\n
+gadget_erp5_field_list.html\n
+gadget_erp5_field_list.js\n
+gadget_html5_select.html\n
+gadget_html5_select.js\n
+gadget_html5_textarea.html\n
+gadget_html5_textarea.js\n
+gadget_erp5_field_integer.html\n
+gadget_erp5_field_integer.js\n
+gadget_erp5_field_textarea.html\n
+gadget_erp5_field_textarea.js\n
+gadget_erp5_field_radio.html\n
+gadget_erp5_field_radio.js\n
+gadget_officejs_bootloader_serviceworker.js\n
 gadget_erp5_page_drive_app_car.html\n
 gadget_erp5_page_drive_app_car.js\n
 drive_app_landing_page.html\n
@@ -349,7 +364,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.48398.15828.27938</string> </value>
+                <value> <string>962.52711.11260.52684</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -367,7 +382,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507881153.74</float>
+                        <float>1508137848.27</float>
                         <string>GMT+9</string>
                       </tuple>
                     </state>
