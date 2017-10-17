@@ -49,22 +49,37 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
-  JSL_IGNORE_FILE_LIST = ('require.js','require.min.js','wz_dragdrop.js',
-                          'renderjs.js','jio.js','rsvp.js','handlebars.js', 
-                          'pdf_js/build/pdf.js', 'pdf_js/build/pdf.worker.js',
-                          'pdf_js/compatibility.js', 'pdf_js/debugger.js',
-                          'pdf_js/viewer.js', 'pdf_js/l10n.js',
-                          'dream_graph_editor/lib/handlebars.min.js',
-                          'dream_graph_editor/lib/jquery-ui.js',
-                          'dream_graph_editor/lib/jquery.js',
-                          'dream_graph_editor/lib/jquery.jsplumb.js',
-                          'dream_graph_editor/lib/jquery.simulate.js',
-                          'dream_graph_editor/lib/qunit.js',
-                          'dream_graph_editor/lib/springy.js',
-                          )
-  JSL_IGNORE_SKIN_LIST = ('erp5_ace_editor', 'erp5_code_mirror',
-                          'erp5_fckeditor', 'erp5_jquery', 'erp5_jquery_ui',
-                          'erp5_svg_editor', 'erp5_xinha_editor')
+  JSL_IGNORE_FILE_LIST = (
+        'dream_graph_editor/lib/handlebars.min.js',
+        'dream_graph_editor/lib/jquery-ui.js',
+        'dream_graph_editor/lib/jquery.js',
+        'dream_graph_editor/lib/jquery.jsplumb.js',
+        'dream_graph_editor/lib/jquery.simulate.js',
+        'dream_graph_editor/lib/qunit.js',
+        'dream_graph_editor/lib/springy.js',
+        'handlebars.js',
+        'jio.js',
+        'pdf_js/build/pdf.js',
+        'pdf_js/build/pdf.worker.js',
+        'pdf_js/compatibility.js',
+        'pdf_js/debugger.js',
+        'pdf_js/l10n.js',
+        'pdf_js/viewer.js',
+        'renderjs.js',
+        'require.js',
+        'require.min.js',
+        'rsvp.js',
+        'wz_dragdrop.js',
+        )
+  JSL_IGNORE_SKIN_LIST = (
+        'erp5_ace_editor',
+        'erp5_code_mirror',
+        'erp5_fckeditor',
+        'erp5_jquery',
+        'erp5_jquery_ui',
+        'erp5_svg_editor',
+        'erp5_xinha_editor',
+        )
 
   def changeSkin(self, skin_name):
     """
