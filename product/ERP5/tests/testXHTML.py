@@ -59,6 +59,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'dream_graph_editor/lib/springy.js',
         'handlebars.js',
         'jio.js',
+        'jslint.js',
         'pdf_js/build/pdf.js',
         'pdf_js/build/pdf.worker.js',
         'pdf_js/compatibility.js',
@@ -77,6 +78,9 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'erp5_fckeditor',
         'erp5_jquery',
         'erp5_jquery_ui',
+        'erp5_pivot_table',
+        'erp5_sql_browser',
+        'erp5_dhtmlx_scheduler',
         'erp5_svg_editor',
         'erp5_xinha_editor',
         )
