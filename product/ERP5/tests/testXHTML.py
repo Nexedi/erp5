@@ -189,6 +189,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
     portal_skins_path = self.portal.getId() + '/portal_skins/'
     args = ('jsl', '-stdin', '-nologo', '-nosummary', '-conf',
             os.path.join(os.path.dirname(__file__), 'jsl.conf'))
+    error_list = []
     for path in path_list:
       check_path = portal_skins_path + path
       body = self.publish(check_path).getBody()
@@ -197,7 +198,11 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                                close_fds=True).communicate(body)
       except OSError, e:
         raise OSError, '%r\n%r' % (os.environ, e)
-      self.assertEqual(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
+      if stdout:
+        error_list.append((check_path, stdout))
+    if error_list:
+      message = '\n'.join(["%s\n%s\n" % error for error in error_list])
+      self.fail(message)
 
   def test_html_file(self):
     path_list = os.environ.get('CGI_PATH',
