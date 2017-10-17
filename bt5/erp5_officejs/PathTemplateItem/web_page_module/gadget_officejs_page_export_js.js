@@ -112,7 +112,7 @@
     "Drive App": {
       "url": "officejs_drive_app/",
       "cache": "gadget_officejs_drive_app.appcache",
-      "sub_gadget": []
+      "sub_gadget": ["officejs_setting_gadget"]
     },
     "connection": {
       "cache": "gadget_jabberconnection.appcache",
