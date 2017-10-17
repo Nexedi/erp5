@@ -49,22 +49,41 @@ class TestXHTMLMixin(ERP5TypeTestCase):
 
   # some forms have intentionally empty listbox selections like RSS generators
   FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
-  JSL_IGNORE_FILE_LIST = ('require.js','require.min.js','wz_dragdrop.js',
-                          'renderjs.js','jio.js','rsvp.js','handlebars.js', 
-                          'pdf_js/build/pdf.js', 'pdf_js/build/pdf.worker.js',
-                          'pdf_js/compatibility.js', 'pdf_js/debugger.js',
-                          'pdf_js/viewer.js', 'pdf_js/l10n.js',
-                          'dream_graph_editor/lib/handlebars.min.js',
-                          'dream_graph_editor/lib/jquery-ui.js',
-                          'dream_graph_editor/lib/jquery.js',
-                          'dream_graph_editor/lib/jquery.jsplumb.js',
-                          'dream_graph_editor/lib/jquery.simulate.js',
-                          'dream_graph_editor/lib/qunit.js',
-                          'dream_graph_editor/lib/springy.js',
-                          )
-  JSL_IGNORE_SKIN_LIST = ('erp5_ace_editor', 'erp5_code_mirror',
-                          'erp5_fckeditor', 'erp5_jquery', 'erp5_jquery_ui',
-                          'erp5_svg_editor', 'erp5_xinha_editor')
+  JSL_IGNORE_FILE_LIST = (
+        'dream_graph_editor/lib/handlebars.min.js',
+        'dream_graph_editor/lib/jquery-ui.js',
+        'dream_graph_editor/lib/jquery.js',
+        'dream_graph_editor/lib/jquery.jsplumb.js',
+        'dream_graph_editor/lib/jquery.simulate.js',
+        'dream_graph_editor/lib/qunit.js',
+        'dream_graph_editor/lib/springy.js',
+        'handlebars.js',
+        'jio.js',
+        'jslint.js',
+        'pdf_js/build/pdf.js',
+        'pdf_js/build/pdf.worker.js',
+        'pdf_js/compatibility.js',
+        'pdf_js/debugger.js',
+        'pdf_js/l10n.js',
+        'pdf_js/viewer.js',
+        'renderjs.js',
+        'require.js',
+        'require.min.js',
+        'rsvp.js',
+        'wz_dragdrop.js',
+        )
+  JSL_IGNORE_SKIN_LIST = (
+        'erp5_ace_editor',
+        'erp5_code_mirror',
+        'erp5_fckeditor',
+        'erp5_jquery',
+        'erp5_jquery_ui',
+        'erp5_pivot_table',
+        'erp5_sql_browser',
+        'erp5_dhtmlx_scheduler',
+        'erp5_svg_editor',
+        'erp5_xinha_editor',
+        )
 
   def changeSkin(self, skin_name):
     """
@@ -189,6 +208,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
     portal_skins_path = self.portal.getId() + '/portal_skins/'
     args = ('jsl', '-stdin', '-nologo', '-nosummary', '-conf',
             os.path.join(os.path.dirname(__file__), 'jsl.conf'))
+    error_list = []
     for path in path_list:
       check_path = portal_skins_path + path
       body = self.publish(check_path).getBody()
@@ -197,7 +217,11 @@ class TestXHTMLMixin(ERP5TypeTestCase):
                                close_fds=True).communicate(body)
       except OSError, e:
         raise OSError, '%r\n%r' % (os.environ, e)
-      self.assertEqual(stdout, '', 'jsl result of %s : %s' % (check_path, stdout))
+      if stdout:
+        error_list.append((check_path, stdout))
+    if error_list:
+      message = '\n'.join(["%s\n%s\n" % error for error in error_list])
+      self.fail(message)
 
   def test_html_file(self):
     path_list = os.environ.get('CGI_PATH',
