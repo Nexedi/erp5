@@ -15,7 +15,11 @@ password_key = request.get('field_your_password_key',
                            request.get('your_password_key'))
 assert password_key
 
-validation_message_list = context.analyzePassword(editor, password_key)
+# Explicitely get Password Tool, as we cannot be sure that the context
+# is 100% of the time Password Tool (developers may want to include the
+# PasswordTool_viewResetPassword form in their own website to not
+# duplicate code).
+validation_message_list = context.getPortalObject().portal_password.analyzePassword(editor, password_key)
 if validation_message_list:
   message = u' '.join([str(x) for x in validation_message_list])
   raise ValidationError('external_validator_failed', context, error_text=message)
