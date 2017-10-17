@@ -38,10 +38,6 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     * getBusinessTemplateList to list business template to install.
     * getTestedBusinessTemplateList to list business templates to test.
   """
-  manager_username = 'zope'
-  manager_password = 'zope'
-  website_id = 'test'
-
   def getBusinessTemplateList(self):
     """
     Return the list of required business templates.
@@ -59,12 +55,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     return self.getBusinessTemplateList()[-1:]
 
   def afterSetUp(self):
-    portal = self.portal
-
-    uf = portal.acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
-    self.loginByUserName(self.manager_username)
-
+    self.login()
 
   def test_SkinCodingStyle(self):
     """
