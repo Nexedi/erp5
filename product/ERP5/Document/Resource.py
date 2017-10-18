@@ -289,7 +289,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       if context is None:
         transformation_list = self.portal_catalog(
-            portal_type="Transformation",
+            portal_type=self.getPortalObject().getPortalTransformationTypeList(),
             default_resource_uid=self.getUid(),
             sort_on=[('version', 'descending')],
             limit=1
@@ -303,7 +303,7 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
         return method(context)
 
       transformation_list = self.portal_domains.searchPredicateList(context,
-                                portal_type="Transformation",
+                                portal_type=self.getPortalObject().getPortalTransformationTypeList(),
                                 limit=1)
 
       if len(transformation_list) > 0:
