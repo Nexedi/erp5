@@ -29,9 +29,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
 from DateTime import DateTime
-from zExceptions import NotFound
 from cStringIO import StringIO
-import httplib
 import msgpack
 import numpy as np
 import string
@@ -113,10 +111,15 @@ class Test(ERP5TypeTestCase):
       body = urllib.urlencode({'data_chunk': body})
     else:
       env = {'CONTENT_TYPE': 'application/octet-stream'}
-    response = self.publish(
-      ingestion_policy.getPath() + '/ingest?reference=' + reference,
-      'ERP5TypeTestCase:', env, request_method='POST', stdin=StringIO(body))
-    self.assertEqual(httplib.NO_CONTENT, response.getStatus())
+    path = ingestion_policy.getPath() + '/ingest?reference=' + reference
+    publish_kw = dict(basic='ERP5TypeTestCase:', env=env,
+      request_method='POST', stdin=StringIO(body))
+    response = self.publish(path, **publish_kw)
+    # Due to inconsistencies in the Zope framework,
+    # a normal instance returns 204. As explained at
+    # http://blog.ploeh.dk/2013/04/30/rest-lesson-learned-avoid-204-responses/
+    # turning 200 into 204 automatically when the body is empty is questionable.
+    self.assertEqual(200, response.getStatus())
 
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
@@ -135,8 +138,8 @@ class Test(ERP5TypeTestCase):
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
     
     # test ingesting with bad reference and raise of NotFound
-    request.set('reference', reference + 'not_existing')
-    self.assertRaises(NotFound, ingestion_policy.ingest)
+    response = self.publish(path + '_not_existing', **publish_kw)
+    self.assertEqual(404, response.getStatus())
 
   def test_01_1_IngestionFromOldFluentd(self):
     self.test_01_IngestionFromFluentd(True)
