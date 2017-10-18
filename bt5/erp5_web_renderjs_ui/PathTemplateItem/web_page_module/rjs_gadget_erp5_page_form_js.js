@@ -195,9 +195,18 @@
         });
     })
     .allowPublicAcquisition("displayFormulatorValidationError", function (param_list) {
+      var erp5_document = JSON.parse(this.state.erp5_document);
+      erp5_document._embedded._view = param_list[0];
+      // Force refresh
+      erp5_document._now = Date.now();
+
+      return this.changeState({erp5_document: JSON.stringify(erp5_document)});
+    })
+    /** Re-render whole form page with completely new form. */
+    .allowPublicAcquisition("updateForm", function (args, subgadget_id) {
       var erp5_document = JSON.parse(this.state.erp5_document),
         options = this.state.options;
-      erp5_document._embedded._view = param_list[0];
+      erp5_document._embedded._view = args[0];
       erp5_document._now = Date.now();  // force refresh
       // We choose render instead of changeState because the new form can use
       // different page_template (reports are setup in form_dialog but rendered
@@ -205,10 +214,10 @@
       // Validation provides document updated for error texts but uses the same
       // form thus the same view thus the same url - no DOM modifications
       //
-      // We modify inplace state.options because in render we remove this
-      // exceeding document.
+      // We modify inplace state.options because render method uses and removes
+      // erp5_document hidden in its options.
       options.erp5_document = erp5_document;
       return this.render(options);
-    })
+    });
 
 }(window, rJS, URI, RSVP));
