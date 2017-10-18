@@ -164,6 +164,15 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
       '''
       pass
 
+    def publish(self, *args, **kw):
+      from zope.security.management import thread_local
+      interaction = thread_local.interaction
+      try:
+        del thread_local.interaction
+        return super(ERP5TypeLiveTestCase, self).publish(*args, **kw)
+      finally:
+        thread_local.interaction = interaction
+
 from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
