@@ -718,7 +718,15 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
             raise TypeError, ''
 
         if basic:
-            env['HTTP_AUTHORIZATION'] = "Basic %s" % base64.encodestring(basic).replace('\012', '')
+          env['HTTP_AUTHORIZATION'] = "Basic %s" % \
+            base64.encodestring(basic).replace('\n', '')
+          from AccessControl import AuthEncoding
+          from thread import get_ident
+          me = get_ident()
+          orig_pw_validate = AuthEncoding.pw_validate
+          def pw_validate(reference, password):
+            return (me == get_ident() and not password
+                    or pw_validate(reference, password))
 
         if stdin is None:
             stdin = StringIO()
@@ -726,16 +734,21 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         outstream = StringIO()
         response = Response(stdout=outstream, stderr=sys.stderr)
 
-        publish_module('Zope2',
-                       response=response,
-                       stdin=stdin,
-                       environ=env,
-                       extra=extra,
-                       debug=not handle_errors,
-                      )
-
-        # Restore security manager
-        setSecurityManager(sm)
+        try:
+          if basic:
+            AuthEncoding.pw_validate = pw_validate
+          publish_module('Zope2',
+                         response=response,
+                         stdin=stdin,
+                         environ=env,
+                         extra=extra,
+                         debug=not handle_errors,
+                        )
+        finally:
+          if basic:
+            AuthEncoding.pw_validate = orig_pw_validate
+          # Restore security manager
+          setSecurityManager(sm)
 
         # Make sure that the skin cache does not have objects that were
         # loaded with the connection used by the requested url.
