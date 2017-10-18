@@ -79,6 +79,7 @@ class PackingList(Delivery):
                       , PropertySheet.Movement
                       , PropertySheet.TradeCondition
                       , PropertySheet.Order
+                      , PropertySheet.CausalityConstraint
                       )
 
     #######################################################
