@@ -115,7 +115,7 @@ class Test(ERP5TypeTestCase):
       env = {'CONTENT_TYPE': 'application/octet-stream'}
     response = self.publish(
       ingestion_policy.getPath() + '/ingest?reference=' + reference,
-      env=env, request_method='POST', stdin=StringIO(body))
+      'ERP5TypeTestCase:', env, request_method='POST', stdin=StringIO(body))
     self.assertEqual(httplib.NO_CONTENT, response.getStatus())
 
     data_stream_data = data_stream.getData()
