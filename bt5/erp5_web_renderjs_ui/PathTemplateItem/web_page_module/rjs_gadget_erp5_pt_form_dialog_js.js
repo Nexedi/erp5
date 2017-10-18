@@ -23,6 +23,7 @@
     .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("translate", "translate")
     .declareAcquiredMethod("notifyChange", "notifyChange")
+    .declareAcquiredMethod("updateForm", "updateForm")
     .declareAcquiredMethod("displayFormulatorValidationError", "displayFormulatorValidationError")
 
     /////////////////////////////////////////////////////////////////
@@ -271,7 +272,7 @@
                 return jIO.util.readBlobAsText(attachment.target.response);
               })
               .push(function (response_text) {
-                return form_gadget.displayFormulatorValidationError(JSON.parse(response_text.target.result));
+                return form_gadget.updateForm(JSON.parse(response_text.target.result));
               });
           }
           // response status > 200 (e.g. 202 "Accepted" or 204 "No Content")
