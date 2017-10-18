@@ -50,6 +50,7 @@ CategoryExistenceConstraint
 CategoryMembershipArityConstraint
 CategoryMembershipStateConstraint
 CategoryRelatedMembershipArityConstraint
+CausalityConstraint
 Chain
 Codification
 Comment
