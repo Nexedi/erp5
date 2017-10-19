@@ -42,6 +42,27 @@ from Products.PythonScripts.standard import url_quote_plus
 from Products.Formulator.Errors import FormValidationError, ValidationError
 
 import string
+from contextlib import contextmanager
+
+@contextmanager
+def getFormBoxContext(field, REQUEST):
+  other = REQUEST.other
+  has_here = 'here' in other
+  # XXX hardcoded acquisition
+  here = other['here'] if has_here else field.aq_parent.aq_parent
+  context_method_id = field.get_value('context_method_id')
+  try:
+    cell = other.pop('cell', None)
+    context = cell or here
+    if context_method_id:
+      context = getattr(context, context_method_id)(
+        field=field, REQUEST=REQUEST)
+    yield context
+  finally:
+    if has_here:
+      other['here'] = here
+    if cell:
+      other['cell'] = cell
 
 class FormBoxWidget(Widget.Widget):
   """
@@ -103,20 +124,8 @@ class FormBoxWidget(Widget.Widget):
     """
     target_id = field.get_value('formbox_target_id')
     if target_id:
-      other = REQUEST.other
-      here = other['here']
-      context_method_id = field.get_value('context_method_id')
-      try:
-        cell = other.pop('cell', None)
-        context = cell or here
-        if context_method_id:
-          context = getattr(context, context_method_id)(
-            field=field, REQUEST=REQUEST)
+      with getFormBoxContext(field, REQUEST) as context:
         return getattr(context, target_id)(REQUEST=REQUEST, key_prefix=key)
-      finally:
-        other['here'] = here
-        if cell:
-          other['cell'] = cell
     return ''
 
 class FormBoxEditor:
@@ -175,29 +184,26 @@ class FormBoxValidator(Validator.Validator):
   required_not_found = 'Input is required but no input given.'
 
   def validate(self, field, key, REQUEST):
-    # XXX hardcoded acquisition
     # TODO: Handle 'cell' for validation inside listboxes,
     #       like it is done for rendering.
-    here = field.aq_parent.aq_parent
     context_method_id = field.get_value('context_method_id')
-    if context_method_id:
-      here = getattr(here, context_method_id)(field=field, REQUEST=REQUEST)
     formbox_target_id = field.get_value('formbox_target_id')
 
     # Get current error fields
     current_field_errors = REQUEST.get('field_errors', [])
 
-    # XXX Hardcode script name
-    result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
-    if result_type == 'edit':
-      return FormBoxEditor(result, context_method_id)
-    elif result_type == 'form':
-      formbox_field_errors = REQUEST.get('field_errors', [])
-      current_field_errors.extend(formbox_field_errors)
-      REQUEST.set('field_errors', current_field_errors)
-      getattr(here, formbox_target_id).validate_all_to_request(REQUEST, key_prefix=key)
-    else:
-      raise NotImplementedError, result_type
+    with getFormBoxContext(field, REQUEST) as here:
+      # XXX Hardcode script name
+      result, result_type = here.Base_edit(formbox_target_id, silent_mode=1, key_prefix=key)
+      if result_type == 'edit':
+        return FormBoxEditor(result, context_method_id)
+      elif result_type == 'form':
+        formbox_field_errors = REQUEST.get('field_errors', [])
+        current_field_errors.extend(formbox_field_errors)
+        REQUEST.set('field_errors', current_field_errors)
+        getattr(here, formbox_target_id).validate_all_to_request(REQUEST, key_prefix=key)
+      else:
+        raise NotImplementedError, result_type
 
 FormBoxWidgetInstance = FormBoxWidget()
 FormBoxValidatorInstance = FormBoxValidator()
