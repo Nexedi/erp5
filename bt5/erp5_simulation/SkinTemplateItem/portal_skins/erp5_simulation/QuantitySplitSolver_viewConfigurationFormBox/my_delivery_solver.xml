@@ -144,7 +144,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getConfigurationPropertyDict().get(\'delivery_solver\', None)</string> </value>
+            <value> <string>python:here.getConfigurationPropertyDict().get(\'delivery_solver\', None)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -157,7 +157,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(here.Base_translateString(x.getSolverActionTitle() or \'\'), x.getId()) for x in cell.searchDeliverySolverList()]</string> </value>
+            <value> <string>python:[(here.Base_translateString(x.getSolverActionTitle() or \'\'), x.getId()) for x in here.searchDeliverySolverList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

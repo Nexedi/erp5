@@ -129,7 +129,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getConfigurationPropertyDict().get(\'stop_date\', here.getStopDate())</string> </value>
+            <value> <string>python:here.getConfigurationPropertyDict().get(\'stop_date\', here.getDeliveryValue().getDeliveryValue().getStopDate())</string> </value>
         </item>
       </dictionary>
     </pickle>
