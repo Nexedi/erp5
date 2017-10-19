@@ -13,7 +13,6 @@ from erp5.util.testnode.ScalabilityTestRunner import ScalabilityTestRunner
 from erp5.util.testnode.SlapOSControler import createFolder
 
 from erp5.util.taskdistribution import TaskDistributor
-from erp5.util.taskdistribution import TaskDistributionTool
 from erp5.util.taskdistribution import TestResultProxy
 import os
 import shutil
@@ -690,11 +689,11 @@ develop = false
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
-    original_createTestResult = TaskDistributionTool.createTestResult
+    original_createTestResult = TaskDistributor.createTestResult
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
     TaskDistributor.getTestType = patch_getTestType
-    TaskDistributionTool.createTestResult = patch_createTestResult
+    TaskDistributor.createTestResult = patch_createTestResult
 
     # TestNode
     test_node = self.getTestNode()
@@ -719,9 +718,9 @@ develop = false
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
-    TaskDistributionTool.createTestResult = original_createTestResult
-    TaskDistributionTool.subscribeNode = original_subscribeNode
-    TaskDistributionTool.getTestType = original_getTestType
+    TaskDistributor.createTestResult = original_createTestResult
+    TaskDistributor.subscribeNode = original_subscribeNode
+    TaskDistributor.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
@@ -857,8 +856,8 @@ develop = false
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
     TaskDistributor.getTestType = patch_getTestType
-    original_createTestResult = TaskDistributionTool.createTestResult
-    TaskDistributionTool.createTestResult = patch_createTestResult
+    original_createTestResult = TaskDistributor.createTestResult
+    TaskDistributor.createTestResult = patch_createTestResult
     test_node = self.getTestNode()
     # Change UnitTestRunner class methods
     original_prepareSlapOS = RunnerClass._prepareSlapOS
@@ -889,9 +888,9 @@ develop = false
       SlapOSMasterCommunicator.__init__ = original_SlapOSMasterCommunicator__init__
     TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.startTestSuite = original_startTestSuite
-    TaskDistributionTool.createTestResult = original_createTestResult
-    TaskDistributionTool.subscribeNode = original_subscribeNode
-    TaskDistributionTool.getTestType = original_getTestType
+    TaskDistributor.createTestResult = original_createTestResult
+    TaskDistributor.subscribeNode = original_subscribeNode
+    TaskDistributor.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
 
@@ -1065,7 +1064,7 @@ develop = false
     original_startTestSuite = TaskDistributor.startTestSuite
     original_subscribeNode = TaskDistributor.subscribeNode
     original_getTestType = TaskDistributor.getTestType
-    original_createTestResult = TaskDistributionTool.createTestResult
+    original_createTestResult = TaskDistributor.createTestResult
     original_prepareSlapOS = RunnerClass._prepareSlapOS
     original_runTestSuite = RunnerClass.runTestSuite
     original_supply = SlapOSControler.supply
@@ -1083,7 +1082,7 @@ develop = false
     TaskDistributor.startTestSuite = patch_startTestSuite
     TaskDistributor.subscribeNode = doNothing
     TaskDistributor.getTestType = patch_getTestType
-    TaskDistributionTool.createTestResult = patch_createTestResult
+    TaskDistributor.createTestResult = patch_createTestResult
     RunnerClass._prepareSlapOS = doNothing
     RunnerClass.runTestSuite = patch_runTestSuite
     SlapOSControler.supply = doNothing
@@ -1101,9 +1100,9 @@ develop = false
     TaskDistributor.generateConfiguration = original_generateConfiguration
     TaskDistributor.isMasterTestnode = original_isMasterTestnode
     TaskDistributor.startTestSuite = original_startTestSuite
-    TaskDistributionTool.createTestResult = original_createTestResult
-    TaskDistributionTool.subscribeNode = original_subscribeNode
-    TaskDistributionTool.getTestType = original_getTestType
+    TaskDistributor.createTestResult = original_createTestResult
+    TaskDistributor.subscribeNode = original_subscribeNode
+    TaskDistributor.getTestType = original_getTestType
     RunnerClass._prepareSlapOS = original_prepareSlapOS
     RunnerClass.runTestSuite = original_runTestSuite
     SlapOSControler.supply = original_supply
