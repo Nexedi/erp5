@@ -29,7 +29,7 @@ Client implementation for portal_task_distribution.
 
 Example use:
   import erp5.util.taskdistribution
-  tool = erp5.util.taskdistribution.TaskDistributionTool(...)
+  distributor = erp5.util.taskdistribution.TaskDistributor(...)
   test_result = tool.createTestResult(...)
   test_result.addWatch('foo', open('foo'))
   while True:
@@ -138,7 +138,7 @@ class TestResultLineProxy(RPCRetry):
 
     Properties:
     name (str) (ro)
-      Test name, as provided to TaskDistributionTool.createTestResult .
+      Test name, as provided to TaskDistributor.createTestResult .
     """
     def __init__(self, proxy, retry_time, logger, test_result_line_path,
             test_name):
@@ -468,9 +468,13 @@ class TaskDistributor(RPCRetry):
         if logger is None:
            logger = null_logger
         if portal_url is None:
-            proxy = DummyTaskDistributionTool()
+            proxy = DummyTaskDistributor()
         else:
             proxy = ServerProxy(portal_url, allow_none=True)
+            # create internal proxy to the tool in order to fall-back in case
+            # of old server
+            self._tool_proxy = ServerProxy(portal_url, allow_none=True
+                ).portal_task_distribution
         super(TaskDistributor, self).__init__(proxy, retry_time,logger)
         protocol_revision = self._retryRPC('getProtocolRevision')
         if protocol_revision != 1:
@@ -538,8 +542,40 @@ class TaskDistributor(RPCRetry):
       """
       return self._retryRPC('getSlaposHateoasUrl')
 
+    def createTestResult(self, revision, test_name_list, node_title,
+            allow_restart=False, test_title=None, project_title=None):
+        """
+        (maybe) create a new test run.
+        revision (str)
+          An opaque string describing code being tested.
+        test_name_list (list of str)
+          List of tests being part of this test run. May be empty.
+        node_title (str)
+          Human-readable test node identifier, so an adnmin can know which
+          node does what.
+        allow_restart (bool)
+          When true, a tet result is always created, even if a former finished
+          one is found for same name and revision pair.
+        test_title (str)
+          Human-readable title for test. Must be identical for successive runs.
+          Allows browsing its result history.
+        project_title (str)
+          Existing project title, so test result gets associated to it.
 
-class DummyTaskDistributionTool(object):
+        Returns None if no test run is needed (a test run for given name and
+        revision has already been completed).
+        Otherwise, returns a TestResultProxy instance.
+        """
+        result = self._retryRPC('createTestResult', ('', revision,
+            test_name_list, allow_restart, test_title, node_title,
+            project_title))
+        if result:
+            test_result_path, revision = result
+            result = TestResultProxy(self._proxy, self._retry_time,
+                self._logger, test_result_path, node_title, revision)
+        return result
+
+class DummyTaskDistributor(object):
     """
     Fake remote server.
 
