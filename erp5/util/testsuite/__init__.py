@@ -294,7 +294,7 @@ def runTestSuite():
                       default='.')
 
   args = parser.parse_args()
-  master = taskdistribution.TaskDistributionTool(args.master_url)
+  master = taskdistribution.TaskDistributor(args.master_url)
   os.environ.setdefault("SOURCE_CODE_TO_TEST", args.source_code_path_list)
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
