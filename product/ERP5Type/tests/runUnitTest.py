@@ -292,6 +292,9 @@ class ERP5TypeTestLoader(unittest.TestLoader):
           super(ComponentTestCase, self).setUp()
           self._callSetUpOnce()
 
+        ERP5TypeLiveTestCase.publish
+        publish = ERP5TypeTestCase.publish
+
       # Bootstrap has been done in loadTestsFromNames, so the test can now
       # be loaded like any Live Test on a real instance
       if ComponentTestCase not in ERP5TypeTestCase.__bases__:
