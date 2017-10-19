@@ -77,22 +77,25 @@ class FIFODeliverySolver(XMLObject):
       return result
     simulation_movement_list = self._getSimulationMovementList()
     for movement in simulation_movement_list:
-      if remaining_quantity:
-        quantity = movement.getQuantity()
-        if quantity < remaining_quantity:
-          result.append((movement, quantity))
-          remaining_quantity -= quantity
-          movement.edit(quantity=0, delivery_ratio=0, activate_kw=activate_kw)
-        else:
+      quantity = movement.getQuantity()
+      if quantity < remaining_quantity:
+        result.append((movement, quantity))
+        remaining_quantity -= quantity
+        movement.edit(quantity=0, delivery_ratio=0, activate_kw=activate_kw)
+      else:
+        # only append movement if we decrease the quantity, which means we
+        # would surely split it. If remaining quantity is 0, the code is
+        # just used to update delivery ratio
+        if remaining_quantity:
           result.append((movement, remaining_quantity))
-          movement_quantity = quantity - remaining_quantity
-          delivery_ratio = 1.
-          if new_quantity:
-            delivery_ratio = movement_quantity / new_quantity
-          movement.edit(quantity=movement_quantity,
-                        delivery_ratio=delivery_ratio,
-                        activate_kw=activate_kw)
-          remaining_quantity = 0
+        movement_quantity = quantity - remaining_quantity
+        delivery_ratio = 1.
+        if new_quantity:
+          delivery_ratio = movement_quantity / new_quantity
+        movement.edit(quantity=movement_quantity,
+                      delivery_ratio=delivery_ratio,
+                      activate_kw=activate_kw)
+        remaining_quantity = 0
     # Return movement, split_quantity tuples
     return result
 
@@ -103,6 +106,6 @@ class FIFODeliverySolver(XMLObject):
     simulation_movement_list = self.getDeliveryValueList()
     if len(simulation_movement_list) > 1:
       return sorted(simulation_movement_list,
-        key=lambda x:x.getExplainationValue().getStartDate(), reverse=True)
+        key=lambda x:x.getExplanationValue().getStartDate(), reverse=True)
     else:
       return simulation_movement_list

@@ -160,7 +160,7 @@
         </item>
         <item>
             <key> <string>line_groupable</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

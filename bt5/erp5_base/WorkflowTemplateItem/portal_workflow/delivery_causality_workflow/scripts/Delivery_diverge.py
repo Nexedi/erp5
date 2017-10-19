@@ -9,6 +9,9 @@ for solver_process in delivery.getSolverValueList():
     draft_solver_process = solver_process
 
 if draft_solver_process is not None:
+  # Fully clean it to avoid having some solver decisions in double
+  id_list = [x for x in draft_solver_process.objectIds()]
+  draft_solver_process.manage_delObjects(ids=id_list)
   draft_solver_process.buildSolverDecisionList(delivery)
 else:
   delivery.getPortalObject().portal_solver_processes.newSolverProcess(delivery)

@@ -63,6 +63,6 @@ class LIFODeliverySolver(FIFODeliverySolver):
     simulation_movement_list = self.getDeliveryValueList()
     if len(simulation_movement_list) > 1:
       return sorted(simulation_movement_list,
-        key=lambda x:x.getExplainationValue().getStartDate())
+        key=lambda x:x.getExplanationValue().getStartDate())
     else:
       return simulation_movement_list
