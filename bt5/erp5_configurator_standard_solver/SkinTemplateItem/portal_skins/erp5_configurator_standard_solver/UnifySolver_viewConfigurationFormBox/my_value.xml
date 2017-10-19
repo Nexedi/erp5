@@ -144,7 +144,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getConfigurationPropertyDict().get(\'value\', None)</string> </value>
+            <value> <string>python:here.getConfigurationPropertyDict().get(\'value\', None)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -157,7 +157,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getConfigurationPropertyListDict().values()[0]</string> </value>
+            <value> <string>python:here.getConfigurationPropertyListDict().values()[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
