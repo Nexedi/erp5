@@ -316,13 +316,10 @@ shared = true
           remote_test_result_needs_cleanup = False
           begin = time.time()
           portal_url = config['test_suite_master_url']
-          portal = taskdistribution.TaskDistributionTool(portal_url,
-                                                         logger=DummyLogger(log))
-          self.portal = portal
-          self.test_suite_portal = taskdistribution.TaskDistributor(
+          self.taskdistribution = taskdistribution.TaskDistributor(
                                                         portal_url,
                                                         logger=DummyLogger(log))
-          node_configuration = self.test_suite_portal.subscribeNode(node_title=config['test_node_title'],
+          node_configuration = self.taskdistribution.subscribeNode(node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
           if type(node_configuration) == str:
             # Backward compatiblity
@@ -334,7 +331,7 @@ shared = true
             log('Received and using process timeout from master: %i' % (
               process_timeout))
             self.process_manager.max_timeout = process_timeout
-          test_suite_data = self.test_suite_portal.startTestSuite(
+          test_suite_data = self.taskdistribution.startTestSuite(
                                                node_title=config['test_node_title'],
                                                computer_guid=config['computer_id'])
           if type(test_suite_data) == str:
@@ -344,7 +341,7 @@ shared = true
           log("Got following test suite data from master : %r",
               test_suite_data)
           try:
-            my_test_type = self.test_suite_portal.getTestType()
+            my_test_type = self.taskdistribution.getTestType()
           except Exception:
             log("testnode, error during requesting getTestType() method"
                 " from the distributor.")
@@ -392,7 +389,8 @@ shared = true
             self.constructProfile(node_test_suite, my_test_type, 
                                   runner.getRelativePathUsage())
             # Make sure we have local repository
-            test_result = portal.createTestResult(node_test_suite.revision, [],
+            test_result = self.taskdistribution.createTestResult(
+                     node_test_suite.revision, [],
                      config['test_node_title'], False,
                      node_test_suite.test_suite_title,
                      node_test_suite.project_title)
@@ -405,7 +403,7 @@ shared = true
               # get cluster configuration for this test suite, this is needed to
               # know slapos parameters to user for creating instances
 	      log("Getting configuration from test suite " + str(node_test_suite.test_suite_title))        
-              generated_config = self.test_suite_portal.generateConfiguration(node_test_suite.test_suite_title)
+              generated_config = self.taskdistribution.generateConfiguration(node_test_suite.test_suite_title)
               json_data = json.loads(generated_config)
               cluster_configuration = Utils.deunicodeData(json_data['configuration_list'][0])
               node_test_suite.edit(cluster_configuration=cluster_configuration)
