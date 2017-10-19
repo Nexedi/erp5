@@ -47,7 +47,7 @@ import threading
 import time
 import xmlrpclib
 
-__all__ = ['TaskDistributionTool', 'TestResultProxy', 'TestResultLineProxy', 'patchRPCParser']
+__all__ = ['TaskDistributor', 'TestResultProxy', 'TestResultLineProxy', 'patchRPCParser']
 
 # Depending on used xmlrpc backend, different exceptions can be thrown.
 SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError,
@@ -406,61 +406,6 @@ class ServerProxy(xmlrpclib.ServerProxy):
     def __request(self, *args, **kw):
         with self.__rpc_lock:
             return xmlrpclib.ServerProxy.__request(self, *args, **kw)
-
-class TaskDistributionTool(RPCRetry):
-    def __init__(self, portal_url, retry_time=64, logger=None):
-        """
-        portal_url (str, None)
-          Portal URL of ERP5 site to use as a task distributor.
-          If None, single node setup is assumed.
-        """
-        if logger is None:
-            logger = null_logger
-        if portal_url is None:
-            proxy = DummyTaskDistributionTool()
-        else:
-            proxy = ServerProxy(
-                portal_url,
-                allow_none=True,
-            ).portal_task_distribution
-        super(TaskDistributionTool, self).__init__(proxy, retry_time, logger)
-        protocol_revision = self._retryRPC('getProtocolRevision')
-        if protocol_revision != 1:
-            raise ValueError('Unsupported protocol revision: %r',
-                protocol_revision)
-
-    def createTestResult(self, revision, test_name_list, node_title,
-            allow_restart=False, test_title=None, project_title=None):
-        """
-        (maybe) create a new test run.
-        revision (str)
-          An opaque string describing code being tested.
-        test_name_list (list of str)
-          List of tests being part of this test run. May be empty.
-        node_title (str)
-          Human-readable test node identifier, so an adnmin can know which
-          node does what.
-        allow_restart (bool)
-          When true, a tet result is always created, even if a former finished
-          one is found for same name and revision pair.
-        test_title (str)
-          Human-readable title for test. Must be identical for successive runs.
-          Allows browsing its result history.
-        project_title (str)
-          Existing project title, so test result gets associated to it.
-
-        Returns None if no test run is needed (a test run for given name and
-        revision has already been completed).
-        Otherwise, returns a TestResultProxy instance.
-        """
-        result = self._retryRPC('createTestResult', ('', revision,
-            test_name_list, allow_restart, test_title, node_title,
-            project_title))
-        if result:
-            test_result_path, revision = result
-            result = TestResultProxy(self._proxy, self._retry_time,
-                self._logger, test_result_path, node_title, revision)
-        return result
 
 class TaskDistributor(RPCRetry):
 
