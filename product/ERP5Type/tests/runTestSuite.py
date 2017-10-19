@@ -67,7 +67,7 @@ def main():
   args = parser.parse_args()
   if args.bt5_path is not None:
     sys.path[0:0] = args.bt5_path.split(",")
-  master = taskdistribution.TaskDistributionTool(args.master_url)
+  master = taskdistribution.TaskDistributor(args.master_url)
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
   suite = makeSuite(test_suite=args.test_suite,
