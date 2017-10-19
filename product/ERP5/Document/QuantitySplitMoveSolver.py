@@ -96,8 +96,6 @@ class QuantitySplitMoveSolver(QuantitySplitSolver):
     # from simulation
     divergence_list = delivery_to_move.getDivergenceList()
     if divergence_list:
-      """def _solveDivergence(self, document, property, solver, **kw):"""
-      """Solve divergence by using solver tool"""
       solver_process_tool = portal.portal_solver_processes
       solver_process = solver_process_tool.newSolverProcess(delivery_to_move)
       solver_decision, = [x for x in solver_process.contentValues()
@@ -108,3 +106,10 @@ class QuantitySplitMoveSolver(QuantitySplitSolver):
       solver_decision.updateConfiguration(tested_property_list=['quantity'])
       solver_process.buildTargetSolverList()
       solver_process.solve()
+
+    # Finish solving
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      self, 'succeed'):
+      self.succeed()
+    solver_dict["new_movement_list"] = new_movement_list
+    return solver_dict
