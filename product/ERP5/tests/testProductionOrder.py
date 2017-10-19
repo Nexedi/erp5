@@ -1514,7 +1514,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       CheckOrderLineTransformationIsSet \
                       RemoveResourceFromOrderLine \
                       Tic \
-                      CheckOrderLineTransformationIsSet \
+                      CheckOrderLineTransformationIsNotSet \
                       '
     sequence_list.addSequenceString(sequence_string)
 

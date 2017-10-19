@@ -1150,7 +1150,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
                       CheckOrderLineTransformationIsSet \
                       RemoveResourceFromOrderLine \
                       Tic \
-                      CheckOrderLineTransformationIsSet \
+                      CheckOrderLineTransformationIsNotSet \
                       '
     sequence_list.addSequenceString(sequence_string)
 
