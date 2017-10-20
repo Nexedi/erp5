@@ -630,7 +630,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
 
     # Test some range of conflict error occurences.
-    organisation_module.recursiveReindexObject()
+    organisation_module.reindexObject()
     self.commit()
     self.assertTrue(len(activity_tool.getMessageList()), 1)
     try:
