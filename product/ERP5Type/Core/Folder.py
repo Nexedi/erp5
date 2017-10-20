@@ -36,11 +36,9 @@ from OFS.ObjectManager import ObjectManager, checkValidId
 from zExceptions import BadRequest
 from OFS.History import Historical
 import ExtensionClass
-
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Products.CMFCore.PortalFolder import ContentFilter
-
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.CopySupport import CopyContainer
@@ -50,20 +48,16 @@ from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Accessor import Base as BaseAccessor
-
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
-
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2Base, BTreeFolder2
-
 try:
   from Products.HBTreeFolder2.CMFHBTreeFolder import CMFHBTreeFolder
   from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base
   from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2
 except ImportError:
-
   class CMFHBTreeFolder:
     pass
 
@@ -72,23 +66,14 @@ except ImportError:
 
   class HBTreeFolder2:
     pass
-
-
 from DateTime import DateTime
 from random import randint
-
-
 import os
-
 from zLOG import LOG, WARNING
 import warnings
 from urlparse import urlparse
-
 REINDEX_SPLIT_COUNT = 100 # if folder containes more than this, reindexing should be splitted.
 from Products.ERP5Type.Message import translateString
-
-# from Products.BTreeFolder2.BTreeFolder2 import _marker as BTreeMarker
-# from Products.HBTreeFolder2.HBTreeFolder2 import _marker as HBTreeMarker
 
 # Dummy Functions for update / upgrade
 def dummyFilter(object,REQUEST=None):
