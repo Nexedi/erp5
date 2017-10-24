@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="Implicit Item Movement Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Item Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Service Report Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

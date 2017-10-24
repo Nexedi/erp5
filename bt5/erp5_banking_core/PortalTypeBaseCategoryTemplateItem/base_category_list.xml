@@ -2,8 +2,14 @@
  <portal_type id="Accounting Cancellation">
   <item>site</item>
  </portal_type>
+ <portal_type id="Accounting Cancellation Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Accounting Date">
   <item>site</item>
+ </portal_type>
+ <portal_type id="Accounting Date Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Bank Account">
   <item>site</item>
@@ -21,6 +27,9 @@
  <portal_type id="Check Model Type Variation">
   <item>check_type</item>
  </portal_type>
+ <portal_type id="Check Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Check Operation Line">
   <item>aggregate_resource</item>
  </portal_type>
@@ -32,8 +41,23 @@
  <portal_type id="Checkbook Model">
   <item>composition</item>
  </portal_type>
+ <portal_type id="Checkbook Model Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Checkbook Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Counter Date">
   <item>site</item>
+ </portal_type>
+ <portal_type id="Counter Date Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Counter Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Currency Cash Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Currency Exchange Cell">
   <item>currency_exchange_type</item>

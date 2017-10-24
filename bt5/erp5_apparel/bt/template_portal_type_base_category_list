@@ -1,10 +1,22 @@
+Apparel Assortment Module | business_application
+Apparel Bath Module | business_application
+Apparel Cloth Module | business_application
 Apparel Cloth | measure
+Apparel Colour Range Module | business_application
 Apparel Colour Range Variation Line | specialise
 Apparel Colour Range | fabric_brand
+Apparel Component Module | business_application
 Apparel Component Variation | collection
+Apparel Consumption Module | business_application
 Apparel Fabric Colour Variation | collection
 Apparel Fabric Colour Variation | colour
+Apparel Fabric Item Module | business_application
+Apparel Fabric Module | business_application
 Apparel Fabric | cleaning_code
 Apparel Fabric | fabric_brand
+Apparel Measurement Module | business_application
 Apparel Measurement | measure
+Apparel Model Module | business_application
+Apparel Shape Module | business_application
+Apparel Size Module | business_application
 Apparel Technical Drawing | image

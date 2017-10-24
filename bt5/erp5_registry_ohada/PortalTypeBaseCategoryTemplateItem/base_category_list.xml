@@ -9,13 +9,22 @@
   <item>destination_form</item>
   <item>follow_up</item>
  </portal_type>
+ <portal_type id="M0 Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="M2">
   <item>destination_form</item>
   <item>follow_up</item>
  </portal_type>
+ <portal_type id="M2 Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="M4">
   <item>destination_form</item>
   <item>follow_up</item>
+ </portal_type>
+ <portal_type id="M4 Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Mail Message">
   <item>follow_up</item>
@@ -30,13 +39,22 @@
   <item>destination_form</item>
   <item>follow_up</item>
  </portal_type>
+ <portal_type id="P0 Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="P2">
   <item>destination_form</item>
   <item>follow_up</item>
  </portal_type>
+ <portal_type id="P2 Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="P4">
   <item>destination_form</item>
   <item>follow_up</item>
+ </portal_type>
+ <portal_type id="P4 Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="PDF">
   <item>aggregate</item>
@@ -51,8 +69,14 @@
   <item>destination_form</item>
   <item>follow_up</item>
  </portal_type>
+ <portal_type id="S1 Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="S5">
   <item>destination_form</item>
   <item>follow_up</item>
+ </portal_type>
+ <portal_type id="S5 Module">
+  <item>business_application</item>
  </portal_type>
 </base_category_list>

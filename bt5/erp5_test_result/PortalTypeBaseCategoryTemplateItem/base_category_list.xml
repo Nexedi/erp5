@@ -15,6 +15,9 @@
   <item>aggregate</item>
   <item>specialise</item>
  </portal_type>
+ <portal_type id="Test Node Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Test Result">
   <item>source_project</item>
  </portal_type>
@@ -26,6 +29,9 @@
  </portal_type>
  <portal_type id="Test Suite">
   <item>specialise</item>
+ </portal_type>
+ <portal_type id="Test Suite Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Test Suite Repository">
   <item>aggregate</item>
