@@ -26,7 +26,6 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 from wendelin.bigarray.array_zodb import ZBigArray
 from DateTime import DateTime
 from cStringIO import StringIO
@@ -53,38 +52,6 @@ class Test(ERP5TypeTestCase):
   def getTitle(self):
     return "Wendelin Test"
 
-  def afterSetUp(self):
-    """
-    This is ran before anything, used to set the environment
-    """
-    # here, you can create the categories and objects your test will depend on
-    pass
-  
-  def stepSetupIngestion(self, reference):
-    """
-      Generic step.
-    """
-    ingestion_policy, data_supply, data_stream, data_array = \
-      self.portal.portal_ingestion_policies.IngestionPolicyTool_addIngestionPolicy( \
-        reference  = reference, \
-        batch_mode = 1)
-    # to avoid random test failures due to test execution we make start date one day before
-    data_supply.setStartDate(DateTime() - 1)
-    self.tic()
-    
-    return ingestion_policy, data_supply, data_stream, data_array
-    
-   
-  def test_0_import(self): 		 
-    """ 		 
-    Test we can import certain libraries but still failure to do so should be a  		 
-    a test step failure rather than global test failure. 		 
-    """ 		 
-    import scipy as _	 
-    import sklearn as _
-    import pandas as _
-    import matplotlib as _
-
   def test_01_IngestionFromFluentd(self, old_fluentd=False):
     """
     Test ingestion using a POST Request containing a msgpack encoded message
@@ -92,17 +59,16 @@ class Test(ERP5TypeTestCase):
     """
     portal = self.portal
     request = portal.REQUEST
-    
-    reference = getRandomString()
+
+    ingestion_policy = portal.restrictedTraverse("portal_ingestion_policies/wendelin_1")
+    data_supply = portal.restrictedTraverse("data_supply_module/wendelin_1")
+    reference = 'wendelin-default-ingestion'
     number_string_list = []
     for my_list in list(chunks(range(0, 100001), 10)):
       number_string_list.append(','.join([str(x) for x in my_list]))
     real_data = '\n'.join(number_string_list)
     # make sure real_data tail is also a full line
     real_data += '\n'
-
-    ingestion_policy, _, data_stream, data_array = \
-      self.stepSetupIngestion(reference)
 
     # simulate fluentd
     body = msgpack.packb([0, real_data], use_bin_type=True)
@@ -121,112 +87,47 @@ class Test(ERP5TypeTestCase):
     # turning 200 into 204 automatically when the body is empty is questionable.
     self.assertEqual(200, response.getStatus())
 
+    # at every ingestion if no specialised Data Ingestion exists it is created
+    # thus it is needed to wait for server side activities to be processed
+    self.tic()
+
+    # get related Data ingestion
+    data_ingestion = data_supply.Base_getRelatedObjectList(portal_type='Data Ingestion')[0]
+    self.assertNotEqual(None, data_ingestion)
+    data_ingestion_line = [x for x in data_ingestion.objectValues() if x.getReference() == 'out_data_stream'][0]
+
+    data_stream = data_ingestion_line.getAggregateValue()
+    self.assertEqual('Data Stream', data_stream.getPortalType())
+
     data_stream_data = data_stream.getData()
     self.assertEqual(real_data, data_stream_data)
-    
+
     # try sample transformation
+    data_array = portal.data_array_module.newContent(
+                          portal_type = 'Data Array', 
+                          reference = reference)
+    data_array.validate()
+    self.tic()
+
     data_stream.DataStream_transform(\
         chunk_length = 10450, \
         transform_script_id = 'DataStream_copyCSVToDataArray',
         data_array_reference = reference)
-
     self.tic()
-    
+
     # test that extracted array contains same values as input CSV
     zarray = data_array.getArray()
     self.assertEqual(np.average(zarray), np.average(np.arange(100001)))
     self.assertTrue(np.array_equal(zarray, np.arange(100001)))
-    
-    # test ingesting with bad reference and raise of NotFound
-    response = self.publish(path + '_not_existing', **publish_kw)
-    self.assertEqual(404, response.getStatus())
+
+    # clean up
+    data_array.invalidate()
+    data_stream.setData('')
+    self.tic()
+
 
   def test_01_1_IngestionFromOldFluentd(self):
     self.test_01_IngestionFromFluentd(True)
-    
-  def test_01_2_IngestionTail(self):
-    """
-    Test real time convertion to a numpy array by appending data to a data stream.
-    """
-    portal = self.portal
-
-    reference = getRandomString()
-    number_string_list = []
-    for my_list in list(chunks(range(0, 10001), 10)):
-      number_string_list.append(','.join([str(x) for x in my_list]))
-    real_data = '\n'.join(number_string_list)
-    # make sure real_data tail is also a full line
-    real_data += '\n'
-
-    _, _, data_stream, data_array = self.stepSetupIngestion(reference)
-    data_stream.appendData(real_data)
-    self.tic()
-    
-    self.assertEqual(None, data_array.getArray())
-
-    # override DataStream_transformTail to actually do transformation on appenData
-    start = data_stream.getSize()
-    script_id = 'DataStream_transformTail'
-    script_content_list = ["start_offset, end_offset", """
-# created by testWendelin.test_01_1_IngestionTail
-start = %s
-end  = %s
-context.activate().DataStream_readChunkListAndTransform( \
-  start, \
-  end, \
-  %s, \
-  transform_script_id = 'DataStream_copyCSVToDataArray', \
-  data_array_reference=context.getReference())""" %(start, start + 10450, 10450)]
-    createZODBPythonScript(
-      portal.portal_skins.custom, 
-      script_id, 
-      *script_content_list)
-    
-    number_string_list = []
-    for my_list in list(chunks(range(10001, 200001), 10)):
-      number_string_list.append(','.join([str(x) for x in my_list]))
-    real_data = '\n'.join(number_string_list)
-    # make sure real_data tail is also a full line
-    real_data += '\n'
-      
-    # append data to Data Stream and check array which should be feed now.
-    data_stream.appendData(real_data)
-    self.tic()
-    
-    # test that extracted array contains same values as input CSV
-    zarray = data_array.getArray()
-    expected_numpy_array = np.arange(10001, 200001)
-    self.assertEqual(np.average(zarray), np.average(expected_numpy_array))
-    self.assertTrue(np.array_equal(zarray, expected_numpy_array))
-    
-    # clean up script
-    portal.portal_skins.custom.manage_delObjects([script_id,])
-    self.tic()
-    
-    # analyze numpy array using activities.
-    active_process = portal.portal_activities.newActiveProcess()
-    zarray = data_array.getArray()
-    max_elements = zarray.shape[0]
-    expected_result_list = []
-    jobs = 15
-    offset = max_elements / jobs
-    start = 0
-    end = start + offset
-    for _ in range(jobs):
-      # calculate directly expectations
-      expected_result_list.append(np.average(expected_numpy_array[start:end]))
-      data_array.activate(
-                   active_process = active_process.getPath(),  \
-                   activity='SQLQueue').DataArray_calculateArraySliceAverageAndStore(start, end)
-      data_array.log('%s %s' %(start, end))
-      start += offset
-      end += offset
-    self.tic()
-    
-    result_list = [x.getResult() for x in active_process.getResultList()]
-    self.assertSameSet(result_list, expected_result_list)
-    # final reduce job to a number
-    sum(result_list)
 
   def test_01_02_ParallelTransformation(self):
     """
@@ -240,10 +141,15 @@ context.activate().DataStream_readChunkListAndTransform( \
     number_string_list = [row]*20
     real_data = '\n'.join(number_string_list)
 
-    portal.log( real_data)
-    
-    _, _, data_stream, _ = self.stepSetupIngestion(reference)
+    data_stream = portal.data_stream_module.newContent(
+                    portal_type = 'Data Stream',
+                    reference = reference)
     data_stream.appendData(real_data)
+    data_stream.validate()
+    data_array = portal.data_array_module.newContent(
+                          portal_type = 'Data Array', 
+                          reference = reference)
+    data_array.validate()
     self.tic()
     
     data_stream.DataStream_transform(\

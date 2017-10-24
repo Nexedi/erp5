@@ -4,19 +4,32 @@ Data Analysis Module | Data Analysis
 Data Analysis | Data Analysis Line
 Data Array Module | Data Array
 Data Array | Data Array Line
+Data Descriptor Type | Action Information
+Data Descriptor Type | Role Information
 Data Event Module | Data Event
+Data Ingestion Batch Module | Data Ingestion Batch
 Data Ingestion Module | Data Ingestion
 Data Ingestion | Data Ingestion Line
 Data License Module | Data License
 Data Operation Module | Data Operation
 Data Product Module | Data Product
 Data Product | Embedded File
+Data Product | Measure
+Data Product | Product Individual Variation
 Data Release Module | Data Release
 Data Set Module | Data Set
 Data Stream Module | Data Bucket Stream
 Data Stream Module | Data Stream
 Data Supply Module | Data Supply
 Data Supply | Data Supply Line
+Data Transformation Module | Data Transformation
+Data Transformation | Data Transformation Operation Line
+Data Transformation | Data Transformation Resource Line
+Device Configuration Type | Action Information
+Device Configuration Type | Role Information
 Ingestion Policy Tool | Ingestion Policy
+Progress Indicator Module | Progress Indicator
 Property Sheet | Data Array Line Existence Constraint
 Sensor Module | Sensor
+Types Tool | Data Descriptor Type
+Types Tool | Device Configuration Type

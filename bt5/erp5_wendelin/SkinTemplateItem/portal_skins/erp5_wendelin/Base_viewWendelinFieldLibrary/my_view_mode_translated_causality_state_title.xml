@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list>
+                <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>my_view_mode_translated_causality_state_title</string> </value>
+        </item>
+        <item>
+            <key> <string>message_values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>external_validator_failed</string> </key>
+                    <value> <string>The input failed the external validator.</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>overrides</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>tales</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>values</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>field_id</string> </key>
+                    <value> <string>my_view_mode_translated_workflow_state_title</string> </value>
+                </item>
+                <item>
+                    <key> <string>form_id</string> </key>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Causality State</string> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

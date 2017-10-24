@@ -7,13 +7,25 @@ Data Analysis Module | view
 Data Analysis | view
 Data Array Line Existence Constraint | predicate
 Data Array Line Existence Constraint | view
+Data Array Line | preview
 Data Array Line | view
 Data Array Module | view
 Data Array | preview
 Data Array | view
 Data Bucket Stream | view
+Data Configuration Module | view
+Data Descriptor Module | view
+Data Descriptor Type | action_view
+Data Descriptor Type | json
+Data Descriptor Type | jump_property_sheets
+Data Descriptor Type | role_view
+Data Descriptor Type | translation_view
+Data Descriptor Type | update_local_roles
+Data Descriptor Type | view
 Data Event Module | view
 Data Event | view
+Data Ingestion Batch Module | view
+Data Ingestion Batch | view
 Data Ingestion Line | view
 Data Ingestion Module | view
 Data Ingestion | view
@@ -30,14 +42,32 @@ Data Set Module | view
 Data Set | predicate
 Data Set | view
 Data Stream Module | view
+Data Stream | append_file
 Data Stream | preview
 Data Stream | view
+Data Supply Line | profile_view
 Data Supply Line | view
 Data Supply Module | view
+Data Supply | profile_view
 Data Supply | view
+Data Transformation Module | view
+Data Transformation Operation Line | view
+Data Transformation Resource Line | view
+Data Transformation | view
+Device Configuration Module | view
+Device Configuration Type | action_view
+Device Configuration Type | json
+Device Configuration Type | jump_property_sheets
+Device Configuration Type | role_view
+Device Configuration Type | translation_view
+Device Configuration Type | update_local_roles
+Device Configuration Type | view
 Ingestion Policy Tool | add_ingestion_policy
 Ingestion Policy Tool | view
 Ingestion Policy | view
+Progress Indicator Module | view
+Progress Indicator | view
 Sensor Module | view
 Sensor | view
+System Preference | wendelin_preference
 portal_actions | ingestion_policies

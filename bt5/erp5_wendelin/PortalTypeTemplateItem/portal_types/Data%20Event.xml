@@ -44,7 +44,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>XMLObject</string> </value>
+            <value> <string>Event</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

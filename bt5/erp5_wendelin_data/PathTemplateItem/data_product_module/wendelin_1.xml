@@ -14,9 +14,7 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -27,9 +25,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -40,9 +36,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Associate</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -54,9 +48,15 @@
                 <string>Assignor</string>
                 <string>Associate</string>
                 <string>Auditor</string>
-                <string>Author</string>
                 <string>Manager</string>
-                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>aggregated_portal_type</string> </key>
+            <value>
+              <tuple>
+                <string>Data Stream</string>
               </tuple>
             </value>
         </item>
@@ -64,14 +64,14 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>quantity_unit/information/byte</string>
-                <string>use/big_data/analysis</string>
+                <string>use/big_data/ingestion</string>
+                <string>quantity_unit/unit/piece</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>CAR-LOG-ANALYSIS</string> </value>
+            <value> <string>wendelin-default-ingestion</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Car Log Analysis</string> </value>
+            <value> <string>Append to Data Stream</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -173,7 +173,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432718139.78</float>
+                        <float>1430377410.81</float>
                         <string>GMT+3</string>
                       </tuple>
                     </state>
@@ -188,12 +188,12 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>fluentd</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
                 <value>
-                  <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                  <none/>
                 </value>
             </item>
             <item>
@@ -202,7 +202,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>0.0.0.0</string> </value>
+                <value> <string>942.44494.44857.54545</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -218,7 +218,52 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432718139.78</float>
+                        <float>1430383613.96</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>fluentd</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>942.44494.58949.15428</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1430383643.46</float>
                         <string>GMT+3</string>
                       </tuple>
                     </state>
@@ -247,7 +292,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.19307.43670.36642</string> </value>
+                <value> <string>942.44495.25627.22886</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -263,7 +308,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432718158.83</float>
+                        <float>1430391567.1</float>
                         <string>GMT+3</string>
                       </tuple>
                     </state>
@@ -292,7 +337,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>943.19307.64480.35788</string> </value>
+                <value> <string>942.44627.29609.19746</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -308,8 +353,233 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432718170.92</float>
+                        <float>1430391633.8</float>
                         <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>961.62101.54716.51746</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1504855120.34</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>961.62102.44117.34304</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1504855143.36</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>961.62103.3939.28194</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1504855152.77</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>961.62103.14019.1723</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1504857472.37</float>
+                        <string>UTC</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>961.62141.57268.28996</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1504860276.36</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -352,14 +622,14 @@
                 <value>
                   <object>
                     <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
+                      <global id="4.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1432718139.78</float>
+                        <float>1430377410.8</float>
                         <string>GMT+3</string>
                       </tuple>
                     </state>
@@ -371,40 +641,86 @@
                 <value> <string>draft</string> </value>
             </item>
           </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>validate_action</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>fluentd</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1430383601.04</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>draft</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>validate</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>fluentd</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="4.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1430383601.05</float>
+                        <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>validated</string> </value>
+            </item>
+          </dictionary>
         </list>
       </tuple>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="Message" module="Products.ERP5Type.Message"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>default</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-        <item>
-            <key> <string>domain</string> </key>
-            <value> <string>erp5_ui</string> </value>
-        </item>
-        <item>
-            <key> <string>mapping</string> </key>
-            <value>
-              <dictionary>
-                <item>
-                    <key> <string>source_item</string> </key>
-                    <value> <string>/erp5/data_product_module/wendelin_4</string> </value>
-                </item>
-              </dictionary>
-            </value>
-        </item>
-        <item>
-            <key> <string>message</string> </key>
-            <value> <string>Object copied from ${source_item}</string> </value>
-        </item>
-      </dictionary>
     </pickle>
   </record>
 </ZopeData>
