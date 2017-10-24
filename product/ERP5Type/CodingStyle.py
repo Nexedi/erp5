@@ -79,6 +79,7 @@ def getSkinPrefixList(self):
     'ERP5Type',
 
     'Entity', # A base class for Person / Organisation
+    'Zuite', # Products.Zelenium test suites
     'Form', # Acceptable for ERP5 Forms which will soon become portal types too
     'Brain', # Catalog brains
   ))
