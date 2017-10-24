@@ -87,6 +87,10 @@ class Test(ERP5TypeTestCase):
     # turning 200 into 204 automatically when the body is empty is questionable.
     self.assertEqual(200, response.getStatus())
 
+    # at every ingestion if no specialised Data Ingestion exists it is created
+    # thus it is needed to wait for server side activities to be processed
+    self.tic()
+
     # get related Data ingestion
     data_ingestion = data_supply.Base_getRelatedObjectList(portal_type='Data Ingestion')[0]
     self.assertNotEqual(None, data_ingestion)
