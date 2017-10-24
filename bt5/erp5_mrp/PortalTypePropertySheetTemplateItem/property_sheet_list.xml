@@ -2,4 +2,7 @@
  <portal_type id="Production Order Line">
   <item>ProductionOrderLine</item>
  </portal_type>
+ <portal_type id="Production Packing List">
+  <item>DeliveryCausalityStateConstraint</item>
+ </portal_type>
 </property_sheet_list>
