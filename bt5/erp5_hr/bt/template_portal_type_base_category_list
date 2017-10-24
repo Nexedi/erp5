@@ -1,5 +1,6 @@
 Assignment | agent
 Career | agent
+Position Announcement Module | business_application
 Position Announcement | aggregate
 Position Announcement | classification
 Position Announcement | destination
@@ -12,5 +13,7 @@ Position Announcement | site
 Position Announcement | source
 Position Announcement | source_project
 Position Announcement | successor
+Position Module | business_application
+Position Opportunity Module | business_application
 Position Opportunity | referral
 Position | agent

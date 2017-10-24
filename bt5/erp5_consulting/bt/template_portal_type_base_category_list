@@ -2,9 +2,11 @@ Document Analysis Document | document_analysis_document_type
 Document Analysis Lexicon Item | lexicon_item_type
 Document Analysis Lexicon Item | lexicon_item_ubm
 Document Analysis Lexicon | lexicon_source_type
+Document Analysis Module | business_application
 Test Case Actor | group
 Test Case Actor | site
 Test Case Actor | use_case_actor_role
+Test Case Module | business_application
 Test Case Step | requirement
 Test Case Step | source_section
 Test Case | requirement
@@ -14,6 +16,7 @@ Test Report Actor | group
 Test Report Actor | site
 Test Report Actor | source
 Test Report Actor | use_case_actor_role
+Test Report Module | business_application
 Test Report Step | requirement
 Test Report Step | source_section
 Test Report | requirement
@@ -22,6 +25,7 @@ Test Report | specialise
 Use Case Actor | group
 Use Case Actor | site
 Use Case Actor | use_case_actor_role
+Use Case Module | business_application
 Use Case Scenario Step | requirement
 Use Case Scenario Step | source_section
 Use Case Scenario | requirement

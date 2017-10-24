@@ -9,4 +9,7 @@
   <item>group</item>
   <item>publication_section</item>
  </portal_type>
+ <portal_type id="Knowledge Pad Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>
