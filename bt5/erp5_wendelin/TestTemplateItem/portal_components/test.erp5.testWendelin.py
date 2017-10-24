@@ -123,6 +123,7 @@ class Test(ERP5TypeTestCase):
     # clean up
     data_array.invalidate()
     data_stream.setData('')
+    self.tic()
 
 
   def test_01_1_IngestionFromOldFluentd(self):
