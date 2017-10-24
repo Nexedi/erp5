@@ -1,0 +1,202 @@
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Split and Differ Divergence Solver Scenario</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Split and differ divergence solver scenario</td></tr>
+</thead><tbody>
+<tr><td>setTimeout</td><td>90000</td><td></td></tr>
+<tr><td>store</td><td tal:content="python: here.getPortalObject().absolute_url()"></td><td>base_url</td></tr>
+<!-- tal:block metal:use-macro="here/PTZuite_CommonTemplate/macros/init" -->
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_favorite</td>
+  <td>Configure your Site</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>//button[@name="field_your_business_configuration" and @value="business_configuration_module/erp5_simulation_test_default_standard_configuration"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>10000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>setTimeout</td>
+  <td>3600000</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+<tr>
+  <td>setTimeout</td>
+  <td>90000</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/login_form</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>__ac_name</td>
+  <td>erp5_simulation_test_login_001</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>__ac_password</td>
+  <td>erp5_simulation_test_login_001</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>logged_in:method</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_prepareConfiguredErp5SimulationTest</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Prepared successfully</td>
+  <td></td>
+</tr>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_createSaleOrderForSimulationZuite</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Created successfully</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/portal_alarms/packing_list_builder_alarm/Zuite_callPackingListBuilderAlarmActiveSense</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>active sense called</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_searchRedirect?portal_type=Sale Packing List Line&amp;sort_on=creation_date:descending</td>
+  <td></td>
+</tr>
+
+<tr>
+  <td>type</td>
+  <td>field_my_quantity</td>
+  <td>77.0</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>Base_edit:method</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_searchRedirect?portal_type=Sale Packing List&amp;sort_on=creation_date:descending</td>
+  <td></td>
+</tr>
+<tr>
+  <td>selectAndWait</td>
+  <td>select_action</td>
+  <td>Solve Divergences</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@type="radio" and @value="portal_solvers/Quantity Split Solver"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_update_button</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="date_field" and contains(@name, "my_start_date_year")]</td>
+  <td tal:content="python: DateTime().year() + 1"></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="date_field" and contains(@name, "my_start_date_month")]</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="date_field" and contains(@name, "my_start_date_day")]</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="date_field" and contains(@name, "my_stop_date_year")]</td>
+  <td tal:content="python: DateTime().year() + 1"></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="date_field" and contains(@name, "my_stop_date_month")]</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>//input[@class="date_field" and contains(@name, "my_stop_date_day")]</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@value="FIFO Delivery Solver"]</td>
+  <td>12</td>
+</tr>
+<tr>
+  <td>clickAndWait</td>
+  <td>dialog_submit_button</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+<tr>
+  <td>open</td>
+  <td>${base_url}/portal_alarms/packing_list_builder_alarm/Zuite_callPackingListBuilderAlarmActiveSense</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>active sense called</td>
+  <td></td>
+</tr>
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>
+<tr>
+  <td>openAndWait</td>
+  <td>${base_url}/Zuite_searchRedirect?portal_type=Sale Packing List&amp;sort_on=creation_date:descending</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>Solved</td>
+  <td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

@@ -1,8 +1,4 @@
 business_configuration_module/erp5_simulation_test_default_standard_configuration
 business_configuration_module/erp5_simulation_test_default_standard_configuration/**
-portal_alarms/invoice_builder_alarm
-portal_alarms/packing_list_builder_alarm
-portal_categories/trade_phase/default
-portal_categories/trade_phase/default/**
 portal_tests/simulation_zuite
 portal_tests/simulation_zuite/**
