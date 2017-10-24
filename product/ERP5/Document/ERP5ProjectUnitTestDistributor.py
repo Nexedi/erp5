@@ -394,7 +394,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     portal = self.getPortalObject()
     test_node = self._getTestNodeFromTitle(node_title)
     test_node.setPingDate()
-    test_suite = self._getTestSuiteFromTitle(name)
+    test_suite = self._getTestSuiteFromTitle(test_title)
     if test_suite is not None:
       test_suite.setPingDate()
       return portal.portal_task_distribution_tool.createTestResult(name,
