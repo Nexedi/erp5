@@ -22,7 +22,16 @@
   <item>source_project</item>
   <item>successor</item>
  </portal_type>
+ <portal_type id="Position Announcement Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Position Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Position Opportunity">
   <item>referral</item>
+ </portal_type>
+ <portal_type id="Position Opportunity Module">
+  <item>business_application</item>
  </portal_type>
 </base_category_list>

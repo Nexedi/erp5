@@ -1,5 +1,11 @@
 <base_category_list>
+ <portal_type id="Document Ingestion Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Document Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="External Source Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Image Module">

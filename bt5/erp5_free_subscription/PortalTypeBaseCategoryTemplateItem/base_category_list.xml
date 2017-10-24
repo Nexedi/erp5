@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Free Subscription Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Free Subscription Request">
   <item>causality</item>
   <item>follow_up</item>

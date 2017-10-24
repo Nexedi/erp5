@@ -1,0 +1,11 @@
+<base_category_list>
+ <portal_type id="Open Internal Order Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Open Purchase Order Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Open Sale Order Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

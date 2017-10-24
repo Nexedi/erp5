@@ -1,15 +1,33 @@
 <base_category_list>
+ <portal_type id="Apparel Assortment Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Apparel Bath Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Apparel Cloth">
   <item>measure</item>
+ </portal_type>
+ <portal_type id="Apparel Cloth Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Apparel Colour Range">
   <item>fabric_brand</item>
  </portal_type>
+ <portal_type id="Apparel Colour Range Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Apparel Colour Range Variation Line">
   <item>specialise</item>
  </portal_type>
+ <portal_type id="Apparel Component Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Apparel Component Variation">
   <item>collection</item>
+ </portal_type>
+ <portal_type id="Apparel Consumption Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Apparel Fabric">
   <item>cleaning_code</item>
@@ -19,8 +37,26 @@
   <item>collection</item>
   <item>colour</item>
  </portal_type>
+ <portal_type id="Apparel Fabric Item Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Apparel Fabric Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Apparel Measurement">
   <item>measure</item>
+ </portal_type>
+ <portal_type id="Apparel Measurement Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Apparel Model Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Apparel Shape Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Apparel Size Module">
+  <item>business_application</item>
  </portal_type>
  <portal_type id="Apparel Technical Drawing">
   <item>image</item>

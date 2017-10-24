@@ -7,4 +7,7 @@
   <item>destination</item>
   <item>source</item>
  </portal_type>
+ <portal_type id="System Event Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>

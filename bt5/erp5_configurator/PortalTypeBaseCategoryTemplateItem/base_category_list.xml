@@ -1,4 +1,7 @@
 <base_category_list>
+ <portal_type id="Business Configuration Module">
+  <item>business_application</item>
+ </portal_type>
  <portal_type id="Configuration Save">
   <item>causality</item>
   <item>current_state</item>

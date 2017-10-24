@@ -9,4 +9,7 @@
   <item>social_contract_type</item>
   <item>source</item>
  </portal_type>
+ <portal_type id="Social Contract Module">
+  <item>business_application</item>
+ </portal_type>
 </base_category_list>
