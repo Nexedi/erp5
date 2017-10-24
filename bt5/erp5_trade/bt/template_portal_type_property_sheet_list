@@ -1,6 +1,11 @@
 Business Process | Reference
 Business Process | Version
 Delivery Node | DeliveryNode
+Internal Packing List | DeliveryCausalityStateConstraint
+Purchase Packing List | DeliveryCausalityStateConstraint
+Returned Purchase Packing List | DeliveryCausalityStateConstraint
+Returned Sale Packing List | DeliveryCausalityStateConstraint
 Sale Order | PaymentCondition
+Sale Packing List | DeliveryCausalityStateConstraint
 Sale Trade Condition | PaymentCondition
 Trade Model Path | PaymentCondition

@@ -6,8 +6,23 @@
  <portal_type id="Delivery Node">
   <item>DeliveryNode</item>
  </portal_type>
+ <portal_type id="Internal Packing List">
+  <item>DeliveryCausalityStateConstraint</item>
+ </portal_type>
+ <portal_type id="Purchase Packing List">
+  <item>DeliveryCausalityStateConstraint</item>
+ </portal_type>
+ <portal_type id="Returned Purchase Packing List">
+  <item>DeliveryCausalityStateConstraint</item>
+ </portal_type>
+ <portal_type id="Returned Sale Packing List">
+  <item>DeliveryCausalityStateConstraint</item>
+ </portal_type>
  <portal_type id="Sale Order">
   <item>PaymentCondition</item>
+ </portal_type>
+ <portal_type id="Sale Packing List">
+  <item>DeliveryCausalityStateConstraint</item>
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>PaymentCondition</item>
