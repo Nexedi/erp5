@@ -17,11 +17,18 @@
  <portal_type id="Data Array Module">
   <item>Data Array</item>
  </portal_type>
+ <portal_type id="Data Descriptor Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Data Event Module">
   <item>Data Event</item>
  </portal_type>
  <portal_type id="Data Ingestion">
   <item>Data Ingestion Line</item>
+ </portal_type>
+ <portal_type id="Data Ingestion Batch Module">
+  <item>Data Ingestion Batch</item>
  </portal_type>
  <portal_type id="Data Ingestion Module">
   <item>Data Ingestion</item>
@@ -34,6 +41,8 @@
  </portal_type>
  <portal_type id="Data Product">
   <item>Embedded File</item>
+  <item>Measure</item>
+  <item>Product Individual Variation</item>
  </portal_type>
  <portal_type id="Data Product Module">
   <item>Data Product</item>
@@ -54,13 +63,31 @@
  <portal_type id="Data Supply Module">
   <item>Data Supply</item>
  </portal_type>
+ <portal_type id="Data Transformation">
+  <item>Data Transformation Operation Line</item>
+  <item>Data Transformation Resource Line</item>
+ </portal_type>
+ <portal_type id="Data Transformation Module">
+  <item>Data Transformation</item>
+ </portal_type>
+ <portal_type id="Device Configuration Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Ingestion Policy Tool">
   <item>Ingestion Policy</item>
+ </portal_type>
+ <portal_type id="Progress Indicator Module">
+  <item>Progress Indicator</item>
  </portal_type>
  <portal_type id="Property Sheet">
   <item>Data Array Line Existence Constraint</item>
  </portal_type>
  <portal_type id="Sensor Module">
   <item>Sensor</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>Data Descriptor Type</item>
+  <item>Device Configuration Type</item>
  </portal_type>
 </allowed_content_type_list>

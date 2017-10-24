@@ -62,6 +62,7 @@ class DataArray(BigFile):
     """
     array = ZBigArray(shape, dtype)
     self._setArray(array)
+    return array
 
   def getArray(self, default=None):
     """
@@ -124,6 +125,15 @@ class DataArray(BigFile):
     zarray = self.getArray()
     if zarray is not None:
       return zarray.dtype
+    
+  security.declareProtected(Permissions.AccessContentsInformation, 'getArrayDtypeNames')
+  def getArrayDtypeNames(self):
+    """
+    Get numpy array dtype names
+    """
+    zarray = self.getArray()
+    if zarray is not None:
+      return zarray.dtype.names
 
   security.declareProtected(Permissions.View, 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, inline=_MARKER, **kw):
@@ -143,6 +153,21 @@ class DataArray(BigFile):
     RESPONSE.setHeader("Content-Type", "application/octet-stream")
     # HTTP Range header handling: return True if we've served a range
     # chunk out of our data.
+    # convert ranges from bytes to array indices
+    slice_index = REQUEST.get('slice_index', None)
+    if slice_index is not None:
+      slice_index_list = []
+      for index in slice_index:
+        slice_index_list.append(slice(index.get('start'),
+                                      index.get('stop'),
+                                      index.get('step')))
+      list_index = REQUEST.get('list_index', None)
+      if list_index is not None:
+        RESPONSE.write(self.getArray()[tuple(slice_index_list)][list_index].tobytes())
+      else:
+        RESPONSE.write(self.getArray()[tuple(slice_index_list)].tobytes())
+      return True
+
     range = REQUEST.get_header('Range', None)
     request_range = REQUEST.get_header('Request-Range', None)
     if request_range is not None:

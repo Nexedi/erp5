@@ -1,6 +1,9 @@
+Data Configuration Module | business_application
+Data Descriptor Module | business_application
 Data Event | aggregate
 Data Event | destination
 Data Event | resource
 Data Event | source
-Sensor | destination
-Sensor | source
+Data Transformation Module | business_application
+Device Configuration Module | business_application
+Progress Indicator Module | business_application

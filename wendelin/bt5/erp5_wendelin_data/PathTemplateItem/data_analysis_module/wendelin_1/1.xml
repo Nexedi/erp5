@@ -29,7 +29,7 @@
               <tuple>
                 <string>use/big_data/analysis</string>
                 <string>aggregate/data_stream_module/4</string>
-                <string>resource/data_product_module/wendelin_4</string>
+                <string>resource/data_product_module/wendelin_1</string>
               </tuple>
             </value>
         </item>
@@ -727,6 +727,51 @@
                       <tuple>
                         <float>1432716993.66</float>
                         <string>GMT+3</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>zope</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>961.47875.10486.14984</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="3.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1504855079.65</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

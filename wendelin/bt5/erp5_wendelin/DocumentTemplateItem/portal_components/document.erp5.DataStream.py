@@ -55,6 +55,7 @@ class DataStream(BigFile):
     """
     chunk_list = []
     data = self._baseGetData()
+
     for chunk in data.iterate(start_offset, end_offset - start_offset):
       chunk_list.append(chunk)
 

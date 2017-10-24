@@ -5,6 +5,7 @@
   append data there. We save raw JSON dictionary as string.
   Ingestion Policy -> Data Supply -> Data Supply Line -> Sensor
                                                       -> Data Stream
+  Since new Wendelin model (2017) this script is considered obsolete.
 """
 from DateTime import DateTime
 from zExceptions import NotFound
