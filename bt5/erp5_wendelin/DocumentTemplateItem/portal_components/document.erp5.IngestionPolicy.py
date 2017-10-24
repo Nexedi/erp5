@@ -53,7 +53,7 @@ class IngestionPolicy(Folder):
     return self.portal_ingestion_policies.unpack(data)
   
   security.declarePublic('ingest')
-  def ingest(self, REQUEST, **kw):
+  def ingest(self, REQUEST):
     """
     Ingest chunk of raw data either from a Sensor or any of DAUs.
     """
@@ -83,7 +83,7 @@ class IngestionPolicy(Folder):
     # XXX Compatibility with old ingestion. Must be dropped before merging
     # with wendelin master
     if tag_parsing_script_id == "ERP5Site_handleDefaultFluentdIngestion":
-      return tag_parsing_script(**kw)
+      return tag_parsing_script()
     
     reference = self.REQUEST.get('reference')
     data_chunk = self.REQUEST.get('data_chunk')  
