@@ -1,4 +1,4 @@
-# Script that creates "user_number" user for scalabiility tests:
+# Script that creates "user_quantity" user for scalabiility tests:
 # creates and validates persons
 # adds assignment and starts it
 # creates user (login credentials)
@@ -26,8 +26,8 @@ if configurator == None or not configurator.contentValues(portal_type='Configura
   error_message = "Could not find the scalability business configuration object. Standard configuration not installed?"
   return {'status_code' : 1, 'error_message': error_message, 'password' : None }
 
-user_number = request.get('user_number')
-if user_number is None: return {'status_code' : 1, 'error_message': "Parameter 'user_number' is required.", 'password' : None }
+user_quantity = request.get('user_quantity')
+if user_quantity is None: return {'status_code' : 1, 'error_message': "Parameter 'user_quantity' is required.", 'password' : None }
 password = ''.join(random.choice(string.digits + string.letters) for i in xrange(10))
 
 try:
@@ -39,7 +39,7 @@ try:
     return {'status_code' : 1, 'error_message': error_message, 'password' : None }
   organisation = organisation.getObject().getRelativeUrl()
 
-  for i in xrange(0, int(user_number)):
+  for i in xrange(0, int(user_quantity)):
     user_id = "scalability_user_%i" % i
     person = portal_catalog.getResultValue(
                     portal_type="Person",
@@ -53,10 +53,9 @@ try:
                       function_list = ["company/manager"],
       )
       person.validate()
-    assignements = person.objectValues(portal_type = 'Assignment')
-    for assignement in assignements:
-      if assignement.getId() == "assignment_%s" % user_id:
-        person.deleteContent(id = "assignment_%s" % user_id)
+
+    assignment_id_list = [x.getId() for x in person.objectValues(portal_type="Assignment")]
+    if assignment_id_list: person.manage_delObjects(ids=assignment_id_list)
     assignment = person.newContent(
                     portal_type = "Assignment",
                     id = "assignment_%s" % user_id,
@@ -69,10 +68,9 @@ try:
                     stop_date = DateTime(3000, 1, 1)
     )
     assignment.open()
-    users = person.objectValues(portal_type = 'ERP5 Login')
-    for user in users:
-      if user.getId() == "login_%s" % user_id:
-        person.deleteContent(id = "login_%s" % user_id)
+
+    user_id_list = [x.getId() for x in person.objectValues(portal_type="ERP5 Login")]
+    if user_id_list: person.manage_delObjects(ids=user_id_list)
     user = person.newContent(
                     portal_type = "ERP5 Login",
                     id = "login_%s" % user_id,
