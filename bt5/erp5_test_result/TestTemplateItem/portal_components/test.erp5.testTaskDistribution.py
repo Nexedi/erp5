@@ -57,6 +57,16 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
     self._cleanupTestResult()
 
+    self.test_node_module.newContent(
+      portal_type='Test Node', title='Node0',
+      test_suite_max=4).getTitle()
+    default_test_suite = self.test_suite_module.newContent(
+        portal_type='Test Suite', title='Default Test Suite',
+        test_suite_title='Default Test Suite', int_index=1)
+    default_test_suite.validate()
+    self.default_test_title = default_test_suite.getTitle()
+    self.tic()
+
   def beforeTearDown(self):
     original_class = self.distributor.__class__
     original_scalability_class = self.scalability_distributor.__class__
@@ -296,16 +306,18 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def _cleanupTestResult(self):
     self.tic()
     cleanup_state_list = ['started', 'stopped']
-    test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %"',
+    test_list =  self.test_result_module.searchFolder(title='"TEST FOO" OR "test suite %" OR "Default Test Suite"',
                simulation_state=cleanup_state_list)
     for test_result in test_list:
       if test_result.getSimulationState() in cleanup_state_list:
         test_result.cancel()
     self.tic()
 
-  def _createTestResult(self, revision="r0=a,r1=a", node_title="Node0",
+  def _createTestResult(self, revision="r0=a,r1=a", node_title='Node0',
                               test_list=None, tic=1, allow_restart=False,
-                              test_title="TEST FOO"):
+                              test_title=None):
+    if test_title is None:
+      test_title = self.default_test_title
     result =  self.distributor.createTestResult(
                                "", revision, test_list or [], allow_restart,
                                test_title=test_title, node_title=node_title)
@@ -315,15 +327,17 @@ class TestTaskDistribution(ERP5TypeTestCase):
     
   def test_05_createTestResult(self):
     """
-    We will check the method createTestResult of task distribution tool
+    We will check the method createTestResult of distributor
     """
+    self._createTestNode()
+    self.tic()
     test_result_path, revision = self._createTestResult()
     self.assertEqual("r0=a,r1=a", revision)
     self.assertTrue(test_result_path.startswith("test_result_module/"))
     # If we ask again with another revision, we should get with previous
     # revision
     next_test_result_path, next_revision = self._createTestResult(
-      revision="r0=a,r1=b", node_title="Node1")
+      revision="r0=a,r1=b", node_title="UnitTestNode 1")
     self.assertEqual(revision, next_revision)
     self.assertEqual(next_test_result_path, test_result_path)
     # Check if test result object is well created
@@ -389,17 +403,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual("stopped", test_result.getSimulationState())
 
   def test_05c_createTestResult_with_registered_test_node(self):
-    node_title = 'Node0OinkUink' + DateTime().strftime('%Y%m%d%H%M%S')
-    # "register" Test Node
-    test_node = self.portal.test_node_module.newContent(
-        portal_type='Test Node', title=node_title)
-    self.tic()
-    test_result_path, revision = self._createTestResult(node_title=node_title)
+    test_result_path, revision = self._createTestResult()
     # check that Test Node Result used in Test Result is specialised
     # into registered Test Node
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     test_result_node = test_result.contentValues(portal_type='Test Result Node')[0]
-    self.assertEqual(test_result_node.getSpecialise(), test_node.getRelativeUrl())
+    self.assertEqual(test_result_node.getSpecialiseTitle(), 'Node0')
 
   def test_06_startStopUnitTest(self):
     """
@@ -481,21 +490,22 @@ class TestTaskDistribution(ERP5TypeTestCase):
     revision and might fail with same failure forever (for example, a slapos
     build issue).
     """
-    test_result_path, revision = self._createTestResult(node_title="Node0")
-    next_test_result_path, revision = self._createTestResult(node_title="Node1")
+    self._createTestNode()
+    test_result_path, _ = self._createTestResult()
+    next_test_result_path, _ = self._createTestResult(node_title="UnitTestNode 1")
     self.assertEqual(test_result_path, next_test_result_path)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.assertEqual("started", test_result.getSimulationState())
     node_list = test_result.objectValues(portal_type="Test Result Node",
                                          sort_on=[("title", "ascending")])
     def checkNodeState(first_state, second_state):
-      self.assertEqual([("Node0", first_state), ("Node1", second_state)],
+      self.assertEqual([("Node0", first_state), ("UnitTestNode 1", second_state)],
               [(x.getTitle(), x.getSimulationState()) for x in node_list])
     checkNodeState("started", "started")
     self.tool.reportTaskFailure(test_result_path, {}, "Node0")
     self.assertEqual("started", test_result.getSimulationState())
     checkNodeState("failed", "started")
-    self.tool.reportTaskFailure(test_result_path, {}, "Node1")
+    self.tool.reportTaskFailure(test_result_path, {}, "UnitTestNode 1")
     self.assertEqual("failed", test_result.getSimulationState())
     checkNodeState("failed", "failed")
 
@@ -520,7 +530,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     now = DateTime()
     try:
       self.pinDateTime(now - 1.0/24*2)
-      test_result_path, revision = self._createTestResult(node_title="Node0",
+      test_result_path, revision = self._createTestResult(
                                                test_list=['testFoo', 'testBar'])
       test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
       self.assertEqual("started", test_result.getSimulationState())
@@ -547,10 +557,11 @@ class TestTaskDistribution(ERP5TypeTestCase):
     same suite, we create test and we immediately reindex it. So we must
     be able to find new test immediately after.
     """
-    test_result_path, revision = self._createTestResult(
-                                      node_title="Node0", tic=0)
-    next_test_result_path, revision = self._createTestResult(
-                                      node_title="Node1", tic=0)
+    self._createTestNode()
+    self.tic()
+    test_result_path, _ = self._createTestResult(tic=0)
+    next_test_result_path, _ = self._createTestResult(
+                                      node_title="UnitTestNode 1", tic=0)
     self.assertEqual(test_result_path, next_test_result_path)
 
   def _checkCreateTestResultAndAllowRestart(self, tic=False):
