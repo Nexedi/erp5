@@ -13,5 +13,7 @@ portal_alarms/packing_list_builder_alarm
 portal_categories/trade_phase/default
 portal_categories/trade_phase/default/**
 portal_categories/trade_state/**
+portal_tests/simulation_zuite
+portal_tests/simulation_zuite/**
 sale_trade_condition_module/erp5_simulation_test_sale_trade_condition_001
 sale_trade_condition_module/erp5_simulation_test_sale_trade_condition_001/**
