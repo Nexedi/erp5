@@ -3,13 +3,14 @@
 (function (window, document, rJS, RSVP, Handlebars, loopEventListener) {
   "use strict";
 
-  function scroll() {
+  function scroll(g) {
+    var gadget = g;
     RSVP.Queue()
       .push(function () {
         return RSVP.delay(0);
       })
       .push(function () {
-        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+        window.scrollTo(0, gadget.props.element.scrollHeight || document.body.scrollHeight || document.documentElement.scrollHeight);
       });
   }
 
@@ -176,7 +177,7 @@
 
           gadget.props.element.querySelector(".discussion-content").innerHTML = "";
           gadget.props.element.querySelector(".discussion-content").appendChild(ul);
-          scroll();
+          return scroll(gadget);
         });
     })
 
@@ -259,7 +260,7 @@
     })
 
     .declareService(function () {
-      scroll();
+      return scroll(this);
     });
 
 }(window, document, rJS, RSVP, Handlebars, loopEventListener));
