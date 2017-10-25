@@ -306,7 +306,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
   def _createTestResult(self, revision="r0=a,r1=a", node_title="Node0",
                               test_list=None, tic=1, allow_restart=False,
                               test_title="TEST FOO"):
-    result =  self.tool.createTestResult(
+    result =  self.distributor.createTestResult(
                                "", revision, test_list or [], allow_restart,
                                test_title=test_title, node_title=node_title)
     # we commit, since usually we have a remote call only doing this
