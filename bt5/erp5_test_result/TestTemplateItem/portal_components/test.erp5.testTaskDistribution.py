@@ -138,14 +138,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
 
   def test_02_createTestSuite(self):
     # Test Test Suite
-    test_suite,  = self._createTestSuite()
+    test_suite = self._createTestSuite()[0]
     self.assertEquals(test_suite.getPortalType(), "Test Suite")
     self.assertEquals(test_suite.getSpecialise(), self.distributor.getRelativeUrl())
     # Test Scalability Test Suite
-    scalability_test_suite,  = self._createTestSuite(
+    scalability_test_suite  = self._createTestSuite(
                                  portal_type="Scalability Test Suite",
                                  specialise_value = self.scalability_distributor
-                               )
+                               )[0]
     self.assertEquals(scalability_test_suite.getPortalType(),
                        "Scalability Test Suite")
     self.assertEquals(scalability_test_suite.getSpecialise(),
@@ -353,10 +353,10 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(2, len(line_list))
     self.assertEqual(set(['testFoo', 'testBar']), set([x.getTitle() for x
                       in line_list]))
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     result = self._createTestResult(test_list=['testFoo', 'testBar'])
     self.assertEqual((test_result_path, revision), result)
-    next_line_url, next_test = self.tool.startUnitTest(test_result_path)
+    self.tool.startUnitTest(test_result_path)
     # all tests of this test suite are now started, stop affecting test node to it
     result = self._createTestResult(test_list=['testFoo', 'testBar'])
     self.assertEqual(None, result)
@@ -365,7 +365,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.commit()
     result = self._createTestResult(test_list=['testFoo', 'testBar'])
     self.assertEqual((test_result_path, revision), result)
-    next_line_url, next_test = self.tool.startUnitTest(test_result_path)
+    self.tool.startUnitTest(test_result_path)
 
   def test_05b_createTestResultDoesNotReexecuteRevision(self):
     """
@@ -377,16 +377,16 @@ class TestTaskDistribution(ERP5TypeTestCase):
     - if testnode ask for r0=c, then usual test is created/executed
     """
     # launch test r0=b
-    test_result_path, revision = self._createTestResult(revision="r0=b", test_list=["testFoo"])
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    test_result_path, _ = self._createTestResult(revision="r0=b", test_list=["testFoo"])
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     status_dict = {}
     self.tool.stopUnitTest(line_url, status_dict)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
     # launch test r0=a
-    test_result_path, revision = self._createTestResult(revision="r0=a", test_list=["testFoo"])
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    test_result_path, _ = self._createTestResult(revision="r0=a", test_list=["testFoo"])
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     self.tool.stopUnitTest(line_url, status_dict)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.tic()
@@ -395,15 +395,15 @@ class TestTaskDistribution(ERP5TypeTestCase):
     result = self._createTestResult(revision="r0=b", test_list=["testFoo"])
     self.assertEqual(None, result)
     # launch test r0=c
-    test_result_path, revision = self._createTestResult(revision="r0=c", test_list=["testFoo"])
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    test_result_path, _ = self._createTestResult(revision="r0=c", test_list=["testFoo"])
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     self.tool.stopUnitTest(line_url, status_dict)
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
 
   def test_05c_createTestResult_with_registered_test_node(self):
-    test_result_path, revision = self._createTestResult()
+    test_result_path, _ = self._createTestResult()
     # check that Test Node Result used in Test Result is specialised
     # into registered Test Node
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
@@ -414,7 +414,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     """
     We will check methods startUnitTest/stopUnitTest of task distribution tool
     """
-    test_result_path, revision = self._createTestResult(
+    test_result_path, _ = self._createTestResult(
       test_list=['testFoo', 'testBar'])
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     line_url, test = self.tool.startUnitTest(test_result_path)
@@ -443,7 +443,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.tic()
     self.assertEqual("stopped", test_result.getSimulationState())
     self.tic()
-    next_test_result_path, revision = self._createTestResult(
+    next_test_result_path, _ = self._createTestResult(
       test_list=['testFoo', 'testBar'], revision="r0=a,r1=b")
     self.assertNotEquals(next_test_result_path, test_result_path)
     line_url, test = self.tool.startUnitTest(next_test_result_path)
@@ -455,10 +455,10 @@ class TestTaskDistribution(ERP5TypeTestCase):
     Check if a test result line is not stuck in 'started', if so, redraft
     if with alarm to let opportunity of another test node to work on it
     """
-    test_result_path, revision = self._createTestResult(
+    test_result_path, _ = self._createTestResult(
       test_list=['testFoo', 'testBar'])
     test_result = self.portal.unrestrictedTraverse(test_result_path)
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     now = DateTime()
     def checkTestResultLine(expected):
       line_list = test_result.objectValues(portal_type="Test Result Line")
@@ -468,7 +468,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
     self._callRestartStuckTestResultAlarm()
     checkTestResultLine([('testBar', 'started'), ('testFoo', 'draft')])
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     checkTestResultLine([('testBar', 'started'), ('testFoo', 'started')])
     self._callRestartStuckTestResultAlarm()
     checkTestResultLine([('testBar', 'started'), ('testFoo', 'started')])
@@ -530,14 +530,14 @@ class TestTaskDistribution(ERP5TypeTestCase):
     now = DateTime()
     try:
       self.pinDateTime(now - 1.0/24*2)
-      test_result_path, revision = self._createTestResult(
+      test_result_path, _ = self._createTestResult(
                                                test_list=['testFoo', 'testBar'])
       test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
       self.assertEqual("started", test_result.getSimulationState())
       node, = test_result.objectValues(portal_type="Test Result Node",
                                            sort_on=[("title", "ascending")])
       self.assertEqual("started", node.getSimulationState())
-      line_url, test = self.tool.startUnitTest(test_result_path)
+      self.tool.startUnitTest(test_result_path)
       # We have a failure but with recent activities on tests
       self.pinDateTime(now - 1.0/24*1.5)
       self.tool.reportTaskFailure(test_result_path, {}, "Node0")
@@ -565,15 +565,15 @@ class TestTaskDistribution(ERP5TypeTestCase):
     self.assertEqual(test_result_path, next_test_result_path)
 
   def _checkCreateTestResultAndAllowRestart(self, tic=False):
-    test_result_path, revision = self._createTestResult(test_list=["testFoo"])
-    line_url, test = self.tool.startUnitTest(test_result_path)
+    test_result_path, _ = self._createTestResult(test_list=["testFoo"])
+    line_url, _ = self.tool.startUnitTest(test_result_path)
     status_dict = {}
     self.tool.stopUnitTest(line_url, status_dict)
     if tic:
       self.tic()
     test_result = self.getPortalObject().unrestrictedTraverse(test_result_path)
     self.assertEqual(None, self._createTestResult(test_list=["testFoo"]))
-    next_test_result_path, next_revision = self._createTestResult(
+    next_test_result_path, _ = self._createTestResult(
       test_list=["testFoo"], allow_restart=True)
     self.assertTrue(next_test_result_path != test_result_path)
     self.tic()
@@ -777,8 +777,8 @@ class TestTaskDistribution(ERP5TypeTestCase):
     """
     test_node_one, test_node_two = self._createTestNode(quantity=2,
                                specialise_value=self.performance_distributor)
-    test_suite_one, = self._createTestSuite(
-                          title='one', specialise_value=self.performance_distributor)
+    test_suite_one = self._createTestSuite(
+                          title='one', specialise_value=self.performance_distributor)[0]
     self._createTestSuite(title='two', reference_correction=+1,
                           specialise_value=self.performance_distributor)
     self.tic()
@@ -939,12 +939,12 @@ class TestTaskDistribution(ERP5TypeTestCase):
     test_node_module = self.test_node_module
 
     # Subscribe nodes
-    nodes = [self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1"),
-             self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2"),
-             self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3"),
-             self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")]
-     # Create test suite
-    test_suite = self._createTestSuite(quantity=1,priority=1, reference_correction=0,
+    self.scalability_distributor.subscribeNode("COMP1-Scalability-Node1", computer_guid="COMP-1")
+    self.scalability_distributor.subscribeNode("COMP2-Scalability-Node2", computer_guid="COMP-2")
+    self.scalability_distributor.subscribeNode("COMP3-Scalability-Node3", computer_guid="COMP-3")
+    self.scalability_distributor.subscribeNode("COMP4-Scalability-Node4", computer_guid="COMP-4")
+    # Create test suite
+    self._createTestSuite(quantity=1,priority=1, reference_correction=0,
                        specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite")  
     self.tic()
     self._callOptimizeAlarm()
@@ -1007,8 +1007,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
     """
     Check configuration generation
     """
-    test_node_module = self.test_node_module
-
     # Subscribe nodes
     node_list = [
       ('NODE-%s' % (i,), self.scalability_distributor.subscribeNode("COMP%s-Scalability-Node%s" % (i, i), computer_guid="COMP-%s" % (i,))) for i in range(1,5)
@@ -1048,7 +1046,7 @@ class TestTaskDistribution(ERP5TypeTestCase):
     # -Generate graph coordinate
     graph_coordinate = range(1, len(node_list)+1)
     # -Create the test suite
-    test_suite = self._createTestSuite(quantity=1,priority=1, reference_correction=0,
+    self._createTestSuite(quantity=1,priority=1, reference_correction=0,
                        specialise_value=self.scalability_distributor, portal_type="Scalability Test Suite",
                        graph_coordinate=graph_coordinate, cluster_configuration=cluster_configuration)
     self.tic()
@@ -1065,6 +1063,6 @@ class TestTaskDistribution(ERP5TypeTestCase):
 #    # logs
 ##    log(configuration_list)    
 
-    def test_19_testMultiDistributor(self):
-      pass
+  def test_19_testMultiDistributor(self):
+    pass
 
