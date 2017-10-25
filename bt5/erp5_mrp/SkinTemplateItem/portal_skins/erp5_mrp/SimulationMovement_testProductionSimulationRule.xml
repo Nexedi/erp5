@@ -54,7 +54,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SimulationMovement_testProductionManufacturingSimulationRule</string> </value>
+            <value> <string>SimulationMovement_testProductionSimulationRule</string> </value>
         </item>
       </dictionary>
     </pickle>
