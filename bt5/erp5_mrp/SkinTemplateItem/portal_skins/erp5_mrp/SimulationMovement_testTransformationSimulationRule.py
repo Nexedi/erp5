@@ -6,4 +6,5 @@ if  (len(specialise_list) == 1 and
     movement = context.getParentValue().getDeliveryValue()
 
     return movement is not None and movement.getPortalType() in (
-      "Production Order Line", "Production Order Cell")
+      "Production Order Line", "Production Order Cell",
+      "Manufacturing Order Line", "Manufacturing Order Cell")
