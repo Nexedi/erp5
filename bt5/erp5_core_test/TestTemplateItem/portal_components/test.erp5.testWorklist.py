@@ -86,7 +86,8 @@ class TestWorklist(ERP5TypeTestCase):
     Create a simple user in user_folder with manager rights.
     This user will be used to initialize data in the method afterSetup
     """
-    self.getUserFolder()._doAddUser('manager', '', ['Manager'], [])
+    self.getUserFolder()._doAddUser('manager', self.newPassword(),
+                                    ['Manager'], [])
     self.loginByUserName('manager')
 
   def createERP5Users(self, user_dict):
@@ -215,7 +216,8 @@ class TestWorklist(ERP5TypeTestCase):
       self.assertTrue(url, 'Can not check url parameters without url')
       url = '%s%s' % (self.portal.getId(), url[len(self.portal.absolute_url()):])
       # Touch URL to save worklist parameters in listbox selection
-      self.publish(url, 'manager:') # XXX which user ?
+      # XXX which user ?
+      self.assertEqual(200, self.publish(url, user='manager').getStatus())
       selection_parameter_dict = self.portal.portal_selections.getSelectionParamsFor(
                                                     self.module_selection_name)
       for parameter, value in url_parameter_dict.iteritems():

@@ -681,7 +681,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing ... ', DEBUG, message)
 
-    def publish(self, path, basic=None, env=None, extra=None,
+    def publish(self, path, basic=None, env=None, extra=None, user=None,
                 request_method='GET', stdin=None, handle_errors=True):
         '''Publishes the object at 'path' returning a response object.'''
 
@@ -718,15 +718,19 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
             raise TypeError, ''
 
         if basic:
+          assert not user, (basic, user)
           env['HTTP_AUTHORIZATION'] = "Basic %s" % \
             base64.encodestring(basic).replace('\n', '')
-          from AccessControl import AuthEncoding
+        elif user:
+          PAS = self.portal.acl_users.__class__
+          orig_extractUserIds = PAS._extractUserIds
           from thread import get_ident
           me = get_ident()
-          orig_pw_validate = AuthEncoding.pw_validate
-          def pw_validate(reference, password):
-            return (me == get_ident() and not password
-                    or pw_validate(reference, password))
+          def _extractUserIds(pas, request, plugins):
+            if me == get_ident():
+              info = pas._verifyUser(plugins, user)
+              return [(info['id'], info['login'])] if info else ()
+            return orig_extractUserIds(pas, request, plugins)
 
         if stdin is None:
             stdin = StringIO()
@@ -735,8 +739,8 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         response = Response(stdout=outstream, stderr=sys.stderr)
 
         try:
-          if basic:
-            AuthEncoding.pw_validate = pw_validate
+          if user:
+            PAS._extractUserIds = _extractUserIds
           publish_module('Zope2',
                          response=response,
                          stdin=stdin,
@@ -745,8 +749,8 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                          debug=not handle_errors,
                         )
         finally:
-          if basic:
-            AuthEncoding.pw_validate = orig_pw_validate
+          if user:
+            PAS._extractUserIds = orig_extractUserIds
           # Restore security manager
           setSecurityManager(sm)
 
