@@ -1907,6 +1907,38 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def stepAssertCausalityStateIsNotSolvedInConsistencyMessage(self,
+                    sequence=None, sequence_list=None, **kw):
+    """
+      Test that Causality State not solved appears in check consistency
+    """
+    packing_list = sequence.get('packing_list')
+    self.assertEqual(
+      ['Causality State is not "Solved". Please wait or take action'
+        + ' for causality state to reach "Solved".'],
+      [str(message.message) for message in packing_list.checkConsistency()])
+
+  def test_20_PackingListCausalityStateConstraint(self,
+      quiet=quiet, run=run_all_test):
+    """
+      Check that consistency takes into account the Causality State
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = self.default_sequence + """
+        DecreasePackingListLineQuantity
+        CheckPackingListIsCalculating
+        AssertCausalityStateIsNotSolvedInConsistencyMessage
+        Tic
+        CheckPackingListIsDiverged
+        AssertCausalityStateIsNotSolvedInConsistencyMessage
+        """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+
 class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
 
