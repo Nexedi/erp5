@@ -47,6 +47,7 @@ Production Packing List Module | view
 Production Packing List | packing_list_print
 Production Packing List | view
 Production Packing List | view_stock
+Production Simulation Rule | view
 System Preference | mrp_preference
 Transformation Simulation Rule | view
 Transformation Sourcing Simulation Rule | view
