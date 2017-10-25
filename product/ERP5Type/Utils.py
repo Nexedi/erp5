@@ -473,9 +473,9 @@ def checkPythonSourceCode(source_code_str):
 
     with tempfile.NamedTemporaryFile(suffix='.py') as input_file:
       input_file.write(source_code_str)
-      input_file.seek(0)
+      input_file.flush()
 
-      Run([input_file.name, '--reports=n', '--indent-string="  "', '--zope=y',
+      args = [input_file.name, '--reports=n', '--indent-string="  "',
            # Disable Refactoring and Convention messages which are too verbose
            # TODO-arnau: Should perphaps check ERP5 Naming Conventions?
            '--disable=R,C',
@@ -510,8 +510,13 @@ def checkPythonSourceCode(source_code_str):
            # 'Access to a protected member %s of a client class'
            '--disable=W0212',
            # string module does not only contain deprecated functions...
-           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec'],
-          reporter=TextReporter(output_file), exit=False)
+           '--deprecated-modules=regsub,TERMIOS,Bastion,rexec']
+      try:
+        from pylint.extensions.bad_builtin import __name__ as ext
+        args.append('--load-plugins=' + ext)
+      except ImportError:
+        pass
+      Run(args, reporter=TextReporter(output_file), exit=False)
 
     output_file.reset()
     for line in output_file:
