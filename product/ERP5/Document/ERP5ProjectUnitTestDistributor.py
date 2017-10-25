@@ -399,7 +399,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
       test_suite.setPingDate()
       return portal.portal_task_distribution.createTestResult(name,
            revision, test_name_list, allow_restart,
-           test_title=title_title, node_title=node_title,
+           test_title=test_title, node_title=node_title,
            project_title=project_title)
 
   def _getTestNodeFromTitle(self, node_title):
