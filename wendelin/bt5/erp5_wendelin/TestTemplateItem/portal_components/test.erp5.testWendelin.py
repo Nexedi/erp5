@@ -78,7 +78,7 @@ class Test(ERP5TypeTestCase):
     else:
       env = {'CONTENT_TYPE': 'application/octet-stream'}
     path = ingestion_policy.getPath() + '/ingest?reference=' + reference
-    publish_kw = dict(basic='ERP5TypeTestCase:', env=env,
+    publish_kw = dict(user='ERP5TypeTestCase', env=env,
       request_method='POST', stdin=StringIO(body))
     response = self.publish(path, **publish_kw)
     # Due to inconsistencies in the Zope framework,
