@@ -1033,7 +1033,9 @@ class TestItemScripts(ERP5TypeTestCase):
     self.tic()
 
   @reindex
-  def _makeSalePackingListLine(self):
+  def _makeSalePackingListLine(self, start_date=None):
+    if start_date is None:
+      start_date = DateTime() - 1
     packing_list = self.portal.sale_packing_list_module.newContent(
                   portal_type='Sale Packing List',
                   source_value=self.mirror_node,
@@ -1041,7 +1043,7 @@ class TestItemScripts(ERP5TypeTestCase):
                   destination_value=self.node,
                   destination_section_value=self.section,
                   specialise_value=self.portal.business_process_module.erp5_default_business_process,
-                  start_date=DateTime() - 1,)
+                  start_date=start_date,)
     line = packing_list.newContent(
                   portal_type='Sale Packing List Line',
                   quantity=1,
@@ -1094,6 +1096,27 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual('Node', self.item.Item_getCurrentSiteTitle())
     self.assertEqual(None,
           self.item.Item_getCurrentSiteTitle(at_date=DateTime() - 2))
+
+  def test_Item_getTrackingList_empty(self):
+    self.assertEqual([], self.item.Item_getTrackingList())
+
+  def test_Item_getTrackingList_explanation_brain_attribute(self):
+    line = self._makeSalePackingListLine(start_date=DateTime(2001, 2, 3))
+    line.setTitle('explanation title')
+    self.tic()
+
+    history_item, = self.item.Item_getTrackingList()
+    self.assertEqual(DateTime(2001, 2, 3), history_item.date)
+    self.assertEqual('Node', history_item.node_title)
+    self.assertEqual('Mirror Node', history_item.source_title)
+    self.assertEqual('Section', history_item.section_title)
+    self.assertEqual('Product', history_item.resource_title)
+    self.assertEqual('explanation title', history_item.explanation)
+    self.assertEqual('Sale Packing List Line', history_item.translated_portal_type)
+    self.assertEqual(1, history_item.quantity)
+    self.assertEqual(line.absolute_url(), history_item.url)
+    self.assertEqual((), history_item.variation_category_item_list)
+    self.assertEqual('Delivered', history_item.simulation_state)
 
   def test_item_current_location_and_transit_movement(self):
     # a started packing list is still in transit, so we do not know its
