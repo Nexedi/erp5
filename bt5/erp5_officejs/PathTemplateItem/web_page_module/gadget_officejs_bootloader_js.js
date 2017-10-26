@@ -37,8 +37,8 @@ var repair = false;
       },
       remote_sub_storage: {
         type: "appcache",
-        manifest: gadget.state.cache_file,
-        version: gadget.state.version_url,
+        manifest: gadget.props.cache_file,
+        version: gadget.props.version_url,
         take_installer: true
       }
     });
@@ -48,28 +48,28 @@ var repair = false;
     .setState({error_amount: 0})
     .ready(function (gadget) {
       var i,
-        state = {},
         element_list =
           gadget.element.querySelectorAll('[data-install-configuration]');
+      gadget.props = {};
       if (window.Bootloader === undefined) {
         window.Bootloader = gadget;
       }
 
       for (i = 0; i < element_list.length; i += 1) {
-        state[element_list[i].getAttribute('data-install-configuration')] =
-          element_list[i].textContent;
+        gadget.props[
+          element_list[i].getAttribute('data-install-configuration')
+        ] = element_list[i].textContent;
       }
-      state.redirect_url = new URL(window.location);
-      state.redirect_url.pathname += state.version_url;
+      gadget.props.redirect_url = new URL(window.location);
+      gadget.props.redirect_url.pathname += gadget.props.version_url;
       // This is a bad hack to support dropbox.
-      if (state.redirect_url.hash &&
-          state.redirect_url.hash.startsWith('#access_token')) {
-        state.redirect_url.hash = state.redirect_url.hash.replace(
+      if (gadget.props.redirect_url.hash &&
+          gadget.props.redirect_url.hash.startsWith('#access_token')) {
+        gadget.props.redirect_url.hash = gadget.props.redirect_url.hash.replace(
           '#access_token',
           '#/?page=ojs_dropbox_configurator&access_token'
         );
       }
-      return gadget.changeState(state);
     })
 
     .allowPublicAcquisition('isChildren', function () {
@@ -93,7 +93,7 @@ var repair = false;
                 }),
               gadget.install()
                 .push(function () {
-                  window.location = gadget.state.redirect_url;
+                  window.location = gadget.props.redirect_url;
                 })
             ]);
           }
@@ -125,7 +125,7 @@ var repair = false;
         )
           .push(function (view_gadget) {
             return view_gadget.render({
-              app_name: gadget.state.app_name,
+              app_name: gadget.props.app_name,
               redirect_url: gadget.state.redirect_url
             });
           });
