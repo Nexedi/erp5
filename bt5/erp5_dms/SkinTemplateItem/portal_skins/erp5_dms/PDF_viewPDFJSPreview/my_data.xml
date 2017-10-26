@@ -51,6 +51,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>data_url</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -111,7 +115,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getData().encode("base64")</string> </value>
+            <value> <string>python: context.absolute_url()+\'/getData\'</string> </value>
         </item>
       </dictionary>
     </pickle>
