@@ -10,7 +10,7 @@
     this._gadget = spec.gadget;
     this._take_installer = spec.take_installer || false;
     this._origin_url = spec.origin_url !== undefined ?
-        spec.origin_url : new URL(window.location);
+        spec.origin_url : window.location.href;
     this._version = spec.version || "";
     this._gadget_list = [];
     this._prefix = spec.prefix || "";
@@ -72,15 +72,18 @@
       });
   };
 
-  AppCacheStorage.prototype.allAttachments = function () {
-    var result = {}, i, len = this._relative_url_list.length;
-    for (i = 0; i < len; i += 1) {
-      result[this._relative_url_list[i]] = {};
+  AppCacheStorage.prototype.allAttachments = function (id) {
+    if (id === this._origin_url) {
+      var result = {}, i, len = this._relative_url_list.length;
+      for (i = 0; i < len; i += 1) {
+        result[this._relative_url_list[i]] = {};
+      }
+      for (i = 0; i < this._gadget_list.length; i += 1) {
+        result[this._gadget_list[i]] = {};
+      }
+      return result;
     }
-    for (i = 0; i < this._gadget_list.length; i += 1) {
-      result[this._gadget_list[i]] = {};
-    }
-    return result;
+    return [];
   };
 
   AppCacheStorage.prototype.buildQuery = function () {
