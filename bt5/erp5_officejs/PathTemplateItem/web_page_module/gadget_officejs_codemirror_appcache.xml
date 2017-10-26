@@ -140,6 +140,7 @@ codemirror/addon/lint/javascript-lint.js\n
 csslint.js\n
 codemirror/addon/lint/css-lint.js\n
 codemirror/mode/xml/xml.js\n
+codemirror/mode/python/python.js\n
 codemirror/mode/javascript/javascript.js\n
 codemirror/mode/css/css.js\n
 codemirror/mode/htmlmixed/htmlmixed.js\n
@@ -272,7 +273,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>zope</string> </value>
+                <value> <string>superseb</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -286,7 +287,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>962.48895.14326.63948</string> </value>
+                <value> <string>963.2052.23883.60586</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -304,8 +305,8 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1507908439.82</float>
-                        <string>UTC</string>
+                        <float>1509031162.48</float>
+                        <string>GMT+2</string>
                       </tuple>
                     </state>
                   </object>
