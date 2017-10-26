@@ -76,6 +76,7 @@ class TestXHTMLMixin(ERP5TypeTestCase):
         'erp5_ace_editor',
         'erp5_code_mirror',
         'erp5_fckeditor',
+        'erp5_ckeditor',
         'erp5_jquery',
         'erp5_jquery_ui',
         'erp5_pivot_table',
