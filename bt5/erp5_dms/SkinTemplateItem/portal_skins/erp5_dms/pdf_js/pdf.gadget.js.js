@@ -21,15 +21,7 @@
         window.document.head.removeChild(el);
       });
       this.props.key = options.key;
-      var raw = window.atob(options.value);
-      var rawLength = raw.length;
-      var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-      for (var i = 0; i < rawLength; i++) {
-        array[i] = raw.charCodeAt(i);
-      }
-
-      webViewerLoad(array);
+      webViewerLoad(options.value);
 
       // hide few buttons for now
       this.props.element.querySelector('#viewBookmark').hidden = true;
