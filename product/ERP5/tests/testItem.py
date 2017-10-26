@@ -1118,6 +1118,25 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual((), history_item.variation_category_item_list)
     self.assertEqual('Delivered', history_item.simulation_state)
 
+  def test_Item_getTrackingList_default_sort(self):
+    # Item_getTrackingList returns lines sorted in chronological order
+    implicit_movement = self.portal.implicit_item_movement_module.newContent(
+      portal_type='Implicit Item Movement',
+      destination_value=self.mirror_node,
+      destination_section_value=self.mirror_section,
+      stop_date=DateTime(2016, 1, 1),
+      aggregate_value=self.item,
+    )
+    implicit_movement.deliver()
+    self._makeSalePackingListLine(start_date=DateTime(2017, 1, 1))
+
+    self.assertEqual(
+        [DateTime(2016, 1, 1), DateTime(2017, 1, 1)],
+        [brain.date for brain in self.item.Item_getTrackingList()])
+    self.assertEqual(
+        ['Mirror Node', 'Node'],
+        [brain.node_title for brain in self.item.Item_getTrackingList()])
+
   def test_item_current_location_and_transit_movement(self):
     # a started packing list is still in transit, so we do not know its
     # current location until it is delivered.
