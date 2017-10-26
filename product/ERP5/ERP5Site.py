@@ -236,6 +236,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   icon = 'portal.gif'
   # Default value, prevents error during upgrade
   isIndexable = ConstantGetter('isIndexable', value=True)
+  # There can remain a lot a activities to be processed once all BT5 are
+  # installed, and scalability tests want a reliable way to know when the site
+  # is ready to be tortured.
+  isPortalBeingCreated = ConstantGetter('isPortalBeingCreated', value=False)
 
   _properties = (
       { 'id':'title',
@@ -1905,7 +1909,7 @@ class ERP5Generator(PortalGenerator):
 
     p._v_bootstrapping = False
 
-    # XXX: Is it useful to wait for indexing ?
+    # XXX: Is it useful to wait for indexing before using upgradeSite ?
     after_method_id = 'immediateReindexObject'
     if bt5_repository_url:
       p.portal_templates.repository_dict = dict.fromkeys(
@@ -1916,8 +1920,21 @@ class ERP5Generator(PortalGenerator):
                 method_id)(bt5.split(), update_catalog=True)
         after_method_id = method_id
     if cloudooo_url:
-      p.portal_activities.activateObject(p, after_method_id=after_method_id,
-        )._initSystemPreference(cloudooo_url=cloudooo_url)
+      method_id = '_initSystemPreference'
+      getattr(p.portal_activities.activateObject(p,
+        after_method_id=after_method_id), method_id)(cloudooo_url=cloudooo_url)
+      after_method_id = method_id
+    id_ = 'isPortalBeingCreated'
+    setattr(p, id_, ConstantGetter(id_, value=True))
+    # XXX: ERP5Site_reindexAll should be reviewed so that one can depend on a
+    #      final tag. A more general approach is to have an activity dependency
+    #      to anything, so that _delPropValue is called as soon as activity
+    #      nodes have nothing else to do.
+    after_method_id = tuple({after_method_id}.union(('Folder_reindexAll',
+      'Folder_reindexObjectList', 'InventoryModule_reindexMovementList',
+      'immediateReindexObject', 'recursiveImmediateReindexObject', 'SQLCatalog_deferFullTextIndexActivity')))
+    p.portal_activities.activateObject(p, after_method_id=after_method_id,
+      )._delPropValue(id_)
 
     return p
 
