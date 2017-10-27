@@ -88,13 +88,21 @@ var repair = false;
       }
       state.redirect_url = new URL(window.location);
       state.redirect_url.pathname += state.version_url;
-      // This is a bad hack to support dropbox.
-      if (state.redirect_url.hash &&
-          state.redirect_url.hash.startsWith('#access_token')) {
-        state.redirect_url.hash = state.redirect_url.hash.replace(
-          '#access_token',
-          '#/?page=ojs_dropbox_configurator&access_token'
-        );
+      if (state.redirect_url.hash) {
+        if (state.redirect_url.hash.startsWith('#access_token')) {
+          // This is a bad hack to support dropbox.
+          state.redirect_url.hash = state.redirect_url.hash.replace(
+            '#access_token',
+            '#/?page=ojs_dropbox_configurator&access_token'
+          );
+        } else if (state.redirect_url.hash
+            .startsWith('#page=settings_configurator')) {
+          // Make monitoring app still compatible with old instances setup URLs
+          state.redirect_url.hash = state.redirect_url.hash.replace(
+            '#page=settings_configurator',
+            '#/?page=settings_configurator'
+          );
+        }
       }
       return gadget.changeState(state);
     })
