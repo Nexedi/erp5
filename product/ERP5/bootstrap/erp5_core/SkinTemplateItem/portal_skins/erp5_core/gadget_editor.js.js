@@ -76,6 +76,9 @@
                 }
               );
             });
+        } else if (gadget.state.editable &&
+            (gadget.state.editor === 'text_area')) {
+          element.appendChild(document.createElement('textarea'));
         } else {
           element.appendChild(document.createElement('pre'));
         }
@@ -90,6 +93,9 @@
           .push(function (editor_gadget) {
             return editor_gadget.render(gadget.state);
           });
+      } else if (gadget.state.editable &&
+          (gadget.state.editor === 'text_area')) {
+        element.querySelector('textarea').value = gadget.state.value;
       } else if (!gadget.state.editable &&
           (gadget.state.editor === 'fck_editor')) {
         element.innerHTML = gadget.state.value;
@@ -101,7 +107,7 @@
 
     .declareMethod('getContent', function () {
       var argument_list = arguments,
-        context = this;
+        result;
       if (this.state.editable &&
           ((this.state.editor === 'codemirror') || (this.state.editor === 'fck_editor'))) {
         return this.getDeclaredGadget('editor')
@@ -119,6 +125,11 @@
             return result;
           });
           */
+      } else if (this.state.editable &&
+          (this.state.editor === 'text_area')) {
+        result = {};
+        result[this.state.key] = this.element.querySelector('textarea').value;
+        return result;
       }
       return {};
     });
