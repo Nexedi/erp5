@@ -35,6 +35,8 @@ class TestMRPMixin(TestBPMMixin):
   def afterSetUp(self):
     super(TestMRPMixin, self).afterSetUp()
     self._createRule("Transformation Simulation Rule")
+    production_simulation_rule = self._createRule("Production Simulation Rule")
+    production_simulation_rule.setTradePhase("manufacturing/order")
     rule = self._createRule("Transformation Sourcing Simulation Rule")
     rule._setSameTotalQuantity(False)
 
@@ -116,7 +118,7 @@ class TestMRPMixin(TestBPMMixin):
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
         ('s' + str(i) for i in xrange(1)))
     self.createCategoriesInCategory(category_tool.trade_state,
-        ('s' + str(i) for i in xrange(5)))
+        ('s' + str(i) for i in xrange(6)))
 
   def createDefaultOrder(self, business_process, transformation=None):
     if transformation is None:
@@ -161,7 +163,7 @@ class TestMRPMixin(TestBPMMixin):
                                    trade_phase='mrp/p1')
     return transformation
 
-  def createBusinessProcess1(self, node_p0=None):
+  def createBusinessProcess1(self, node_p0):
     """
     Terms
     =====
@@ -179,6 +181,7 @@ class TestMRPMixin(TestBPMMixin):
     ================
     The Business process will proceed this way:
     1/ Generate Production Order and confirm it
+    2/ Generate Manufacturing Order and confirm it
     2/ Generate Manufacturing Execution p0 which generate a
       the product with a variation to indicate it is a partial product.
       The variation is trade_phase/mrp/p0. It takes place in workshop2
@@ -193,9 +196,9 @@ class TestMRPMixin(TestBPMMixin):
 
     Business Process Schema
     =======================
-        order      p0      s0      p1     deliver
-       ------- S0 ---- S1 ---- S2 ---- S3 ------- S4
-         PO        ME1    PPL1    ME2       PPL2
+        order     order     p0      s0      p1     deliver
+       ------- S0 ----- S1 ---- S2 ---- S3 ---- S4 -------- S5
+         PO         MO      ME1    PPL1     ME2       PPL2
 
     Simulation Tree
     ===============
@@ -203,30 +206,34 @@ class TestMRPMixin(TestBPMMixin):
       * Production Order Line
         * default_delivering_rule
           * PPL2
-            * default_transformation_rule
-              * input ME1
-              * input ME1
-              * output ME1 - partial product
-              * input ME2 - partial product
-                * default_transformation_source_rule
-                  * PPL1
-              * input ME2
-                * default_transformation_source_rule
-              * input ME2
-                * default_transformation_source_rule
-              * output ME2
+            * default_production_rule
+              * MO
+                * default_transformation_rule
+                  * input ME1
+                  * input ME1
+                  * output ME1 - partial product
+                  * input ME2 - partial product
+                    * default_transformation_source_rule
+                      * PPL1
+                  * input ME2
+                    * default_transformation_source_rule
+                  * input ME2
+                    * default_transformation_source_rule
+                  * output ME2
     """
     business_process = self._createDocument("Business Process")
-    builder = 'portal_deliveries/production_packing_list_builder'
+    production_packing_list_builder = 'portal_deliveries/production_packing_list_builder'
+    manufacturing_execution_builder = 'portal_deliveries/manufacturing_execution_builder'
+    manufacturing_order_builder = 'portal_deliveries/manufacturing_order_builder'
     completed = 'delivered', 'started', 'stopped'
-    phase_list = [('default/order', None, ('confirmed',)),
-                  ('default/delivery', builder, completed)]
-    phase_list[1:1] = [('mrp/p' + str(i),
-                        'portal_deliveries/manufacturing_execution_builder',
-                        completed)
-                       for i in xrange(2)]
-    if node_p0 is not None:
-      phase_list.insert(2, ('mrp/s0', builder, completed))
+    phase_list = [
+      ('default/order', None, ('confirmed',)),
+      ('manufacturing/order', manufacturing_order_builder, ('confirmed',)),
+      ('mrp/p0', manufacturing_execution_builder, completed),
+      ('mrp/s0', production_packing_list_builder, completed),
+      ('mrp/p1', manufacturing_execution_builder, completed),
+      ('default/delivery', production_packing_list_builder, completed)
+    ]
     predecessor = None
     for i, (phase, builder, completed) in enumerate(phase_list):
       successor = 'trade_state/s' + str(i)
@@ -238,13 +245,12 @@ class TestMRPMixin(TestBPMMixin):
                               delivery_builder=builder)
       predecessor = successor
     phase_list = [x[0] for x in phase_list]
-    if node_p0 is not None:
-      self.createTradeModelPath(business_process,
-                                destination_value=node_p0,
-                                trade_phase=phase_list.pop(1))
-      self.createTradeModelPath(business_process,
-                                test_tales_expression="here/getSource",
-                                trade_phase=phase_list.pop(1))
+    self.createTradeModelPath(business_process,
+                              destination_value=node_p0,
+                              trade_phase=phase_list.pop(2))
+    self.createTradeModelPath(business_process,
+                              test_tales_expression="here/getSource",
+                              trade_phase=phase_list.pop(2))
     self.createTradeModelPath(business_process, trade_phase_list=phase_list)
     return business_process
 
@@ -288,6 +294,10 @@ class TestMRPImplementation(TestMRPMixin):
     ar, = sm.objectValues()
     # The final PPL
     sm, = ar.objectValues() # deliver
+    # default_production_rule
+    ar, = sm.objectValues()
+    # Manufacturing Order Movements
+    sm, = ar.objectValues() # Order
     # default_transformation_rule
     ar, = sm.objectValues()
 
@@ -322,16 +332,22 @@ class TestMRPImplementation(TestMRPMixin):
       )))
 
     order.confirm()
+    # Build Manufacturing Order
     order.localBuild()
     self.tic()
-    self.checkStock(resource)
 
     def getRelatedDeliveryList(portal_type):
       return order.getCausalityRelatedValueList(portal_type=portal_type)
 
-    pr1, = getRelatedDeliveryList("Manufacturing Execution")
-    pr1.start()
-    pr1.deliver()
+    mo, = getRelatedDeliveryList("Manufacturing Order Line")
+    # Build First Manufacturing Execution
+    order.localBuild()
+    self.tic()
+    self.checkStock(resource)
+
+    me1, = getRelatedDeliveryList("Manufacturing Execution")
+    me1.start()
+    me1.deliver()
     order.localBuild()
     self.tic()
     variation = 'industrial_phase/trade_phase/mrp/p0'
@@ -344,10 +360,10 @@ class TestMRPImplementation(TestMRPMixin):
     self.tic()
     self.checkStock(resource, (self.workshop, variation, 10))
 
-    pr2, = (x for x in getRelatedDeliveryList("Manufacturing Execution")
-              if x.aq_base is not pr1.aq_base)
-    pr2.start()
-    pr2.deliver()
+    me2, = (x for x in getRelatedDeliveryList("Manufacturing Execution")
+              if x.aq_base is not me1.aq_base)
+    me2.start()
+    me2.deliver()
     order.localBuild()
     self.tic()
     self.checkStock(resource, (self.workshop, '', 10))
