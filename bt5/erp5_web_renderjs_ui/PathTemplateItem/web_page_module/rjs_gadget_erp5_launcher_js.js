@@ -179,7 +179,10 @@
         setting;
       this.props = {
         loading_counter: 0,
-        content_element: this.element.querySelector('.gadget-content')
+        content_element: this.element.querySelector('.gadget-content'),
+        setting_id: "setting/" + document.head.querySelector(
+          'script[data-renderjs-configuration="application_title"]'
+        ).textContent
       };
 
       // Configure setting storage
@@ -193,7 +196,7 @@
         })
         .push(function () {
 
-          return setting_gadget.get("setting")
+          return setting_gadget.get(gadget.props.setting_id)
             .push(undefined, function (error) {
               if (error.status_code === 404) {
                 return {};
@@ -236,7 +239,7 @@
             }
           }
 
-          return setting_gadget.put("setting", setting);
+          return setting_gadget.put(gadget.props.setting_id, setting);
         })
         .push(function () {
           // Configure jIO storage
@@ -269,7 +272,7 @@
         default_value = argument_list[1];
       return gadget.getDeclaredGadget("setting_gadget")
         .push(function (jio_gadget) {
-          return jio_gadget.get("setting");
+          return jio_gadget.get(gadget.props.setting_id);
         })
         .push(function (doc) {
           return doc[key] || default_value;
@@ -288,7 +291,7 @@
       return gadget.getDeclaredGadget("setting_gadget")
         .push(function (result) {
           jio_gadget = result;
-          return jio_gadget.get("setting");
+          return jio_gadget.get(gadget.props.setting_id);
         })
         .push(undefined, function (error) {
           if (error.status_code === 404) {
@@ -298,7 +301,7 @@
         })
         .push(function (doc) {
           doc[key] = value;
-          return jio_gadget.put('setting', doc);
+          return jio_gadget.put(gadget.props.setting_id, doc);
         });
     })
     .allowPublicAcquisition("translateHtml", function (argument_list) {
