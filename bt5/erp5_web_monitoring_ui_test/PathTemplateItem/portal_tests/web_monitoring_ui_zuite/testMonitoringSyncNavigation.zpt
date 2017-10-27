@@ -24,27 +24,47 @@
 <!-- Initialize -->
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/monitoring_render_js/</td>
+  <td>${base_url}/web_site_module/officejs_monitoring/</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//a[@data-i18n='Monitoring Configurations']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@href='#page=settings_configurator']</td>
+  <td>//a[@data-i18n='Synchronize']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Synchronizing Data...</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForTextPresent</td>
+  <td>Synchronisation finished</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Monitoring Configurations']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//span[@data-i18n="Configure monitoring OPML"]</td>
+  <td>//button[@id="destroyOPML"]</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@href='#config-add']</td>
+  <td>//input[@name='check_online_access']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
 <tr>
@@ -53,8 +73,18 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//button[@data-i18n='Add OPML']</td>
+  <td>click</td>
+  <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n="Save"]</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Change Password']</td>
   <td></td>
 </tr>
 <tr>
@@ -64,12 +94,22 @@
 </tr>
 <tr>
   <td>store</td>
+  <td>rootInstance</td>
+  <td>instance_root</td>
+</tr>
+<tr>
+  <td>store</td>
+  <td>subInstance-1</td>
+  <td>instance_1</td>
+</tr>
+<tr>
+  <td>store</td>
   <td>admin</td>
   <td>username</td>
 </tr>
 <tr>
   <td>store</td>
-  <td>zwkuyjdl</td>
+  <td>ntpvmhkg</td>
   <td>password</td>
 </tr>
 <tr>
@@ -89,7 +129,7 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[@data-i18n='Add OPML']</td>
+  <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
 <tr>
@@ -98,8 +138,8 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertTextNotPresent</td>
-  <td>Failed to access OPML URL</td>
+  <td>assertElementNotPresent</td>
+  <td>//span[contains(@class, 'ui-text-error')]</td>
   <td></td>
 </tr>
 <tr>
@@ -108,28 +148,28 @@
   <td></td>
 </tr>
 <tr>
-  <td>waitForTextPresent</td>
-  <td>Monitoring Promises Status</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//button[contains(@class, 'sync-all')]</td>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n='OPML Documents']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//a[@href='#page=settings_configurator']</td>
+  <td>//a[@data-i18n='Monitoring Configurations']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@id="destroyOPML"]</td>
   <td></td>
 </tr>
 <tr>
   <td>pause</td>
-  <td>2000</td>
+  <td>3000</td>
   <td></td>
 </tr>
 <tr>
   <td>assertElementPresent</td>
-  <td>//table[contains(@class, 'opml-tablelinks')]</td>
+  <td>//table[contains(@class, 'ui-table-inset')]</td>
   <td></td>
 </tr>
 <tr>
@@ -139,17 +179,17 @@
 </tr>
 <tr>
   <td>storeElementPresent</td>
-  <td>//table[contains(@class, 'opml-tablelinks')]/tbody/tr[1]/td[3]/a</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
   <td>has_hosting</td>
 </tr>
 <tr>
   <td>storeText</td>
-  <td>//table[contains(@class, 'opml-tablelinks')]/tbody/tr[1]/td[3]/a</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
   <td>hosting_title</td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[contains(@class, 'sync-all')]</td>
+  <td>//a[@data-i18n='Synchronize']</td>
   <td></td>
 </tr>
 <tr>
@@ -163,8 +203,13 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n='Monitoring Promises']</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
-  <td>//a[@href='#page=hosting_subscription_list']</td>
+  <td>//a[@data-i18n='Hosting Subscriptions']</td>
   <td></td>
 </tr>
 <tr>
@@ -179,32 +224,69 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//table[contains(@class, 'instance-overview')]/tbody/tr[1]/td[1]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>2000</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertTextPresent</td>
-  <td>${hosting_title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>open</td>
-  <td>${base_url}/web_site_module/monitoring_render_js/app/</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//h1[@data-i18n='Software Instances']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${instance_root}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${instance_1}</td>
+  <td></td>
+</tr>
+<tr>
+  <!-- Navigate to the first instance -->
+  <td>click</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='Instance: ${instance_root}']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//h1[@data-i18n='Instance Promises Status']</td>
+  <td></td>
+</tr>
+<!-- Display list of promises -->
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Promises']</td>
   <td></td>
 </tr>
 <tr>
   <td>pause</td>
   <td>500</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n='Monitoring Promises']</td>
   <td></td>
 </tr>
 <tr>
@@ -218,18 +300,44 @@
   <td></td>
 </tr>
 <tr>
+  <td>assertTextPresent</td>
+  <td>${instance_root}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertTextPresent</td>
+  <td>${instance_1}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>storeText</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>promise_title</td>
+</tr>
+<tr>
+  <!-- Open the first promise -->
   <td>click</td>
-  <td>//table[contains(@class, 'ui-responsive')]/tbody/tr[1]/td[1]/a</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//a[@data-i18n='Promise: ${promise_title}']</td>
   <td></td>
 </tr>
 <tr>
-  <td>pause</td>
-  <td>2000</td>
+  <td>assertTextPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//h1[@data-i18n='Promise Status History']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>assertElementPresent</td>
+  <td>//span[contains(@class, 'label')]</td>
   <td></td>
 </tr>
 <tr>
@@ -244,62 +352,12 @@
 </tr>
 <tr>
   <td>open</td>
-  <td>${base_url}/web_site_module/monitoring_render_js/app/#page=settings_configurator</td>
+  <td>${base_url}/web_site_module/officejs_monitoring/app/#!display?n.page=settings_configurator</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//table[contains(@class, 'opml-tablelinks')]/tbody/tr[1]/td[3]/a</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Add OPML']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//label[contains(@class, 'configure-auth')]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>pause</td>
-  <td>500</td>
-  <td></td>
-</tr>
-<tr>
-  <td>assertElementPresent</td>
-  <td>//label[@data-i18n="Confirm New Password:"]</td>
-  <td></td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=new_password_confirm</td>
-  <td>${password}</td>
-</tr>
-<tr>
-  <td>type</td>
-  <td>name=new_password</td>
-  <td>${password}</td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>//button[@data-i18n='Add OPML']</td>
+  <td>//a[@data-i18n='Monitoring Configurations']</td>
   <td></td>
 </tr>
 <tr>
@@ -308,13 +366,63 @@
   <td></td>
 </tr>
 <tr>
-  <td>assertElementPresent</td>
-  <td>//button[contains(@class, 'sync-all')]</td>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n='OPML Documents']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>2000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>${hosting_title}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='${hosting_title}']</td>
   <td></td>
 </tr>
 <tr>
   <td>click</td>
-  <td>//button[contains(@class, 'sync-all')]</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>type</td>
+  <td>name=password</td>
+  <td>${password}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//input[@name='verify_password']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Synchronize']</td>
   <td></td>
 </tr>
 <tr>
@@ -329,17 +437,27 @@
 </tr>
 <tr>
   <td>click</td>
-  <td>//input[@name='opml-all']</td>
-  <td></td>
-</tr>
-<tr>
-  <td>clickAndWait</td>
-  <td>//a[contains(@class, 'opml-delete')]</td>
+  <td>//a[@data-i18n='Monitoring Configurations']</td>
   <td></td>
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>//button[@data-i18n='Menu']</td>
+  <td>//h1[@data-i18n='OPML Documents']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
+  <td>verifyText</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
+  <td>${hosting_title}</td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//table[contains(@class, 'ui-table-inset')]/tbody/tr[1]/td[1]/a</td>
   <td></td>
 </tr>
 <tr>
@@ -348,13 +466,38 @@
   <td></td>
 </tr>
 <tr>
+  <td>waitForElementPresent</td>
+  <td>//a[@data-i18n='${hosting_title}']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Delete']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//h1[@data-i18n='OPML Documents']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>pause</td>
+  <td>1000</td>
+  <td></td>
+</tr>
+<tr>
   <td>assertTextNotPresent</td>
   <td>${opml_url}</td>
   <td></td>
 </tr>
 <tr>
+  <td>assertTextNotPresent</td>
+  <td>${hosting_title}</td>
+  <td></td>
+</tr>
+<tr>
   <td>click</td>
-  <td>//a[@href='#page=hosting_subscription_list']</td>
+  <td>//a[@data-i18n='Hosting Subscriptions']</td>
   <td></td>
 </tr>
 <tr>
