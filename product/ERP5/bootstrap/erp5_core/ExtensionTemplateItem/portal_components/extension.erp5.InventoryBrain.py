@@ -296,8 +296,7 @@ class TrackingListBrain(InventoryListBrain):
     # the brain is accessed from the Shared.DC.ZRDB.Results.Results instance
     obj = self.getObject()
     if obj is not None:
-      portal = obj.getPortalObject()
-      movement = portal.portal_catalog.getObject(self.delivery_uid)
+      movement = self._getObjectByUid(self.delivery_uid)
       date = movement.getStartDate() or movement.getStopDate()
       if date is not None:
         timezone = date.timezone()
