@@ -159,7 +159,7 @@
                         <string>my_iframe_gadget_field</string>
                         <string>my_view_mode_raw_text_content</string>
                         <string>my_view_mode_text_content</string>
-                        <string>text_content_validator</string>
+                        <string>my_core_mode_text_content_validator</string>
                         <string>my_dialog_mode_text_content</string>
                       </list>
                     </value>

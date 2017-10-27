@@ -124,7 +124,7 @@
                 </item>
                 <item>
                     <key> <string>validator_field_id</string> </key>
-                    <value> <string>text_content_validator</string> </value>
+                    <value> <string>my_core_mode_text_content_validator</string> </value>
                 </item>
                 <item>
                     <key> <string>validator_form_id</string> </key>
