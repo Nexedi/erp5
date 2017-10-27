@@ -310,3 +310,27 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Folder._generateRandomId() will be called and it returns 'str' not
     # 'int' id.
     return ActiveProcess._generateRandomId(self)
+
+  security.declareProtected(Permissions.ChangeLocalRoles,
+                            'updateLocalRolesOnSecurityGroups')
+  def updateLocalRolesOnSecurityGroups(self, **kw):
+    """Update roles and add groups defined on related delivery
+    """
+    super(SolverProcess, self).updateLocalRolesOnSecurityGroups(**kw)
+    delivery_value = self.objectValues()[0]  # Solver Decision XXX dirty
+    if delivery_value is not None:
+      delivery_value = delivery_value.getDeliveryValue()  # Simulation
+    if delivery_value is not None:
+      delivery_value = delivery_value.getDeliveryValue()  # Sale Packing List Line
+    if delivery_value is not None:
+      delivery_value = delivery_value.getParentValue()  # Sale Packing List
+    if delivery_value is not None:
+      changed = False
+      for group, local_role_list in delivery_value.__ac_local_roles__.items():
+        for role in ("Assignee", "Assignor", "Associate"):
+          if role in local_role_list:
+            self.__ac_local_roles__.setdefault(group, ["Assignor"])
+            changed = True
+            break
+      if changed:
+        self._p_changed = 1
