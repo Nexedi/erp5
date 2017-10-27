@@ -55,11 +55,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>runScript</td>
-  <td>window.indexedDB.deleteDatabase('jio:setting')</td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
   <td>link=Local is Enough</td>
   <td></td>

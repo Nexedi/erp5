@@ -28,15 +28,6 @@
   <td></td>
 </tr>
 <tr>
-  <td>runScript</td>
-  <td>
-    window.indexedDB.deleteDatabase('jio:officejs_code_source');
-    window.indexedDB.deleteDatabase('jio:officejs-hash');
-    window.indexedDB.deleteDatabase('jio:setting')
-  </td>
-  <td></td>
-</tr>
-<tr>
   <td>waitForElementPresent</td>
   <td>name=Base_createCloneDocument:method</td>
   <td></td>field_my_id
