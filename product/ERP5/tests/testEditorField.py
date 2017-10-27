@@ -34,6 +34,7 @@ import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from DocumentTemplate.DT_Util import html_quote
 
 class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
   """
@@ -113,7 +114,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Make sure editor field preference is also set
     form = getattr(event, form_id)
     field = getattr(form, field_id)
-    self.assertEqual(field.get_value('text_editor'), editor)
+    self.assertEqual(dict(field.get_value('renderjs_extra'))['editor'], editor)
 
   def _isFCKEditor(self, html_text, field_id, text_content):
     """
@@ -128,8 +129,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       text_content -- the embedded text content
     """
     html_text = html_text.encode('utf-8')
-    match_string1 = "var oFCKeditor      = new FCKeditor('field_%s');" % field_id
-    match_string2 = "oFCKeditor.Value    = '%s';" % ('\\n'.join(text_content.splitlines()))
+    match_string1 = 'data-gadget-editable="field_%s"' % field_id
+    match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
     if html_text.find(match_string1) == -1:
       print html_text
       print match_string1
@@ -153,14 +154,21 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       text_content -- the embedded text content
     """
     html_text = html_text.encode('utf-8')
-    match_string = """name="field_%s" >\n%s</textarea>""" % (field_id, text_content)
-    if html_text.find(match_string) == -1:
+    match_string1 = 'data-gadget-editable="field_%s"' % field_id
+    match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
+    if html_text.find(match_string1) == -1:
       print html_text
-      print match_string
+      print match_string1
+      import pdb; pdb.set_trace()
+      return False
+    if html_text.find(match_string2) == -1:
+      print html_text
+      print match_string2
+      import pdb; pdb.set_trace()
       return False
     return True
 
-  def _isReadOnlyEditor(self, html_text, document):
+  def _isReadOnlyEditor(self, html_text, document, text_content):
     """
       Tries to find in the HTML page string portions
       which show that text content is displayed in read
@@ -172,10 +180,9 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
                   read only mode
     """
     html_text = html_text.encode('utf-8')
-    text_content = document.asStrippedHTML()
-    match_string1 = """<div class="input"><div class="page" >\n%s</div></div>""" % text_content
-    match_string2 = """<div class="field page"""
-    if html_text.find(match_string1) == -1:
+    match_string1 = "data-gadget-editable="
+    match_string2 = 'data-gadget-value="%s"' % html_quote(text_content)
+    if html_text.find(match_string1) != -1:
       print html_text
       print match_string1
       return False
@@ -203,8 +210,6 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._testPreferredDocumentEditor(event, 'fck_editor', 'fck_editor', 'Event_view', 'my_text_content')
 
     # Make sure generated HTML is based on FCKEditor
-    request=self.app.REQUEST
-    request.set('URLPATH2', '/arbitrary/path') # A hack to make sure FCKEditor page template renders
     html_text = event.view()
     self.assertTrue(self._isFCKEditor(html_text, 'my_text_content', text_content))
 
@@ -213,7 +218,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     event.setData('fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
-    self.assertTrue(self._isReadOnlyEditor(html_text, event))
+    self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
 
   def test_EditSimpleEmailEventFCKEditorText(self):
     """
@@ -234,8 +239,6 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     self._testPreferredDocumentEditor(event, 'fck_editor', 'text_area', 'Event_view', 'my_text_content')
 
     # Make sure generated HTML is based on TextArea since this is not HTML
-    request=self.app.REQUEST
-    request.set('URLPATH2', '/arbitrary/path') # A hack to make sure FCKEditor page template renders
     html_text = event.view()
     self.assertTrue(self._isTextAreaEditor(html_text, 'my_text_content', text_content))
 
@@ -244,7 +247,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     event.setData('fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
-    self.assertTrue(self._isReadOnlyEditor(html_text, event))
+    self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
 
   def test_EditSimpleEmailEventTextAreaHTML(self):
     """
@@ -265,9 +268,6 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Make sure generated HTML is based on TextArea
     html_text = event.view()
-    # text_content is processed to simulate the way TextArea does
-    text_content = text_content.replace('<', '&lt;')
-    text_content = text_content.replace('>', '&gt;')
     self.assertTrue(self._isTextAreaEditor(html_text, 'my_text_content', text_content))
 
     # Set a fake file on Event and make sure no more editor is displayed
@@ -275,7 +275,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     event.setData('fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
-    self.assertTrue(self._isReadOnlyEditor(html_text, event))
+    self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
 
   def test_EditSimpleEmailEventTextAreaText(self):
     """
@@ -303,7 +303,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     event.setData('fake')
     self.assertFalse(event.Event_view.my_text_content.get_value('editable'))
     html_text = event.view()
-    self.assertTrue(self._isReadOnlyEditor(html_text, event))
+    self.assertTrue(self._isReadOnlyEditor(html_text, event, 'fake'))
 
   def test_EditWebPageFCKEditorHTML(self):
     """
@@ -324,8 +324,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Make sure default view is read only
     html_text = page.WebPage_view()
-    self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page))
+    self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
 
   def test_EditWebPageFCKEditorText(self):
     """
@@ -346,8 +346,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Make sure default view is read only
     html_text = page.WebPage_view()
-    self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page))
+    self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
 
   def test_EditWebPageTextAreaHTML(self):
     """
@@ -368,8 +368,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Make sure default view is read only
     html_text = page.WebPage_view()
-    self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page))
+    self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
 
   def test_EditWebPageTextAreaText(self):
     """
@@ -390,8 +390,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # Make sure default view is read only
     html_text = page.WebPage_view()
-    self.assertFalse(page.WebPage_view.text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page))
+    self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
 
 def test_suite():
   suite = unittest.TestSuite()
