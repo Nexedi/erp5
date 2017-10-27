@@ -85,6 +85,12 @@
                       </tuple>
                     </value>
                 </item>
+                <item>
+                    <key> <string>View</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
