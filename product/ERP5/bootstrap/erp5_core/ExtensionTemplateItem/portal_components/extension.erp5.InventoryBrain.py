@@ -288,6 +288,9 @@ class TrackingListBrain(InventoryListBrain):
   """
   List of aggregated movements
   """
+  def getExplanationValue(self):
+    return self._getObjectByUid(self.delivery_uid)
+
   def getDate(self):
     if not self.date:
       return
