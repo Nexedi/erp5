@@ -1333,7 +1333,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         # Return the search dialog
         return getattr(o, dialog_id)(REQUEST=REQUEST)
 
-    security.declarePublic('asDomainSelection')
+    security.declarePublic('asDomainQuery')
     def asDomainQuery(self, domain, strict_membership=False):
       if isinstance(domain, DomainSelection):
         warnings.warn("To pass a DomainSelection instance is deprecated.\n"
