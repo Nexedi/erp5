@@ -188,7 +188,7 @@
           setting_gadget = result;
           return setting_gadget.createJio({
             type: "indexeddb",
-            database: "setting"
+            database: window.location.pathname + "setting"
           });
         })
         .push(function () {
