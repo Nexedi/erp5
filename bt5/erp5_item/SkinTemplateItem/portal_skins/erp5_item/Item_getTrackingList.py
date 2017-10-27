@@ -22,7 +22,7 @@ for brain in method(aggregate_uid=context.getUid(), **kw):
       translated_portal_type=explanation.getTranslatedPortalType(),
       quantity=explanation.getQuantity(),
       url=explanation.absolute_url(),
-      item_quantity=context.getQuantity(at_date=date),
+      # item_quantity=context.getQuantity(at_date=date),
       variation_category_item_list=[x[0] for x in explanation.getVariationCategoryItemList()],
       simulation_state=explanation.getTranslatedSimulationStateTitle(),
   )
