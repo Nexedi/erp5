@@ -12,7 +12,7 @@
               <list>
                 <string>columns</string>
                 <string>list_method</string>
-                <string>sort</string>
+                <string>sort_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
               </list>
@@ -137,12 +137,20 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>sort</string> </key>
+                    <key> <string>sort_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
                           <string>date</string>
-                          <string>ascending</string>
+                          <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>simulation_state</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
