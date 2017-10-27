@@ -310,3 +310,41 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Folder._generateRandomId() will be called and it returns 'str' not
     # 'int' id.
     return ActiveProcess._generateRandomId(self)
+
+  security.declareProtected(Permissions.ChangeLocalRoles,
+                            'updateLocalRolesOnSecurityGroups')
+  def updateLocalRolesOnSecurityGroups(self, **kw):
+    """Update roles and add groups defined on related delivery
+    """
+    super(SolverProcess, self).updateLocalRolesOnSecurityGroups(**kw)
+    delivery_value = self["1"]  # XXX big hardcode !
+    if delivery_value is not None:
+      delivery_value = delivery_value.getDeliveryValue()  # Simulation
+    if delivery_value is not None:
+      delivery_value = delivery_value.getDeliveryValue()  # Sale Packing List Line
+    if delivery_value is not None:
+      delivery_value = delivery_value.getParentValue()  # Sale Packing List
+    if delivery_value is not None:
+      # __ac_local_roles__ changes
+      # Delivery
+      # 'NEX-DEV' : ['Assignee', 'Auditor']
+      # 'NEX-LEAD' : ['Assognor']
+      # 'WOEL-DEV' : ['Reviewer']
+
+      # Solver
+      # 'NEX-DEV' : ['Assignor']
+      # 'NEX-LEAD': ['Assignor']
+      # 'WOEL-DEV': ['Assignor']
+
+      self.log("TRISTAN delivery_value %r" % (delivery_value,))
+      for group, local_role_list in delivery_value.__ac_local_roles__.items():
+        self.log("TRISTAN group, local_role_list %r" % ((group, local_role_list),))
+        for role in ("Assignee", "Assignor", "Associate"):
+          if role in local_role_list:
+            self.log("TRISTAN role in local_role_list %r" % (role,))
+            self.__ac_local_roles__.setdefault(group, ["Assignor"])
+            break
+    #.updateLocalRolesOnDocument(self, **kw)
+
+    # may be need to have an interaction when _setDelivery* is called on solver process
+    # in order to update local roles
