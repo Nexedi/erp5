@@ -79,14 +79,17 @@
       } else if (options.portal_type === 'Web Style') {
         mode = 'css';
       } else if (options.portal_type === 'Python Script') {
-        console.log("switch to mode python");
         mode = 'python';
       }
       state_dict.mode = mode;
-      state_dict.value = options.value || "";
-      /* if (!this.editor.hasFocus()) {
+      //The if below is not good, we should look for a general improvements
+      //to make sure all fields do not loose focus. But it is unsure now if
+      //this change could be applied globally (like we might have cases where
+      //the backend slightly change data).
+      //state_dict.value = options.value || "";
+      if (!this.editor.hasFocus()) {
         state_dict.value = options.value || "";
-      } */
+      }
       return this.changeState(state_dict);
     })
 
