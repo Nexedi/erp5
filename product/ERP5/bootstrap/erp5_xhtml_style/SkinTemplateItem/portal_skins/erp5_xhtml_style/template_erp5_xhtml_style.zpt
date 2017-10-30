@@ -18,7 +18,7 @@ DEPRECATION:
       ">
       <tal:block metal:use-macro="global_definitions_macros/header_definitions" />
       <!DOCTYPE html>
-      <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+      <html xml:lang="en" lang="en">
         <head>
           <tal:block metal:use-macro="global_definitions_macros/header_boilerplate" />
           <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2015. All rights reserved." />
