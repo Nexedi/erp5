@@ -70,7 +70,7 @@
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-/*
+
     .declareMethod('notifyError', function () {
       this.stats.loaded = true;
       this.stats.submitted = true;
@@ -84,7 +84,7 @@
     .declareMethod('notifyUpdate', function () {
       return this.render(this.stats.options);
     })
-*/
+
     .declareMethod('notifyLoading', function () {
       if (this.stats.loaded) {
         this.stats.loaded = false;
@@ -97,7 +97,7 @@
         return this.render(this.stats.options);
       }
     })
-/*
+
     .declareMethod('notifyChange', function () {
       if (!this.stats.modified) {
         this.stats.modified = true;
@@ -118,7 +118,7 @@
         return this.render(this.stats.options);
       }
     })
-*/
+
     .declareMethod('render', function (options) {
       var gadget = this,
         possible_left_link_list = [
