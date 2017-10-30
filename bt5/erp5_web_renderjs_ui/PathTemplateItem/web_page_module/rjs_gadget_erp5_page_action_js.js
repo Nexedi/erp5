@@ -18,7 +18,7 @@
    * @param {string} icon - alias used in font-awesome iconset
    * @param {Array} command_list - array of links obtained from ERP5 HATEOAS
    */
-  function renderLinkList(gadget, title, icon, erp5_link_list, editable) {
+  function renderLinkList(gadget, title, icon, erp5_link_list) {
     return new RSVP.Queue()
       .push(function () {
         // obtain RJS links from ERP5 links
@@ -28,8 +28,7 @@
               "command": 'change',
               "options": {
                 "view": erp5_link.href,
-                "page": undefined,
-                "editable": editable
+                "page": undefined
               }
             });
           })
@@ -86,8 +85,8 @@
                         .concat(asArray(erp5_document._links.action_object_clone_action));
 
           return RSVP.all([
-            renderLinkList(gadget, "Actions", "gear", action_list, options.editable),
-            renderLinkList(gadget, "Workflow-Transitions", "random", transition_list, true)
+            renderLinkList(gadget, "Actions", "gear", action_list),
+            renderLinkList(gadget, "Workflow-Transitions", "random", transition_list)
           ]);
         })
         .push(function (translated_html_link_list) {
