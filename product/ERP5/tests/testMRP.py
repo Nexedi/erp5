@@ -404,6 +404,9 @@ class TestMRPImplementation(TestMRPMixin):
     order_line = self.order_line
     resource = order_line.getResourceValue()
     self.tic()
+    manufacturing_order_line, = order.getCausalityRelatedValueList(
+                            portal_type="Manufacturing Order Line")
+    self.assertEquals(self.item, manufacturing_order_line.getAggregateValue())
     order.localBuild()
     self.tic()
 
