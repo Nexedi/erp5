@@ -214,6 +214,19 @@
           <table style="display: none;" class="test">
             <tbody>
               <tr>
+                <td>storeAttribute</td>
+                <td>//div[@id="breadcrumb"]/a[3]@href</td>
+                <td>wait</td>
+              </tr>
+              <tr style="opacity: 1; z-index: 0;" class="">
+                <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities  &lt;/span&gt;</td>
+              </tr>
+              <tr>
+                <td>open</td>
+                <td>${wait}</td>
+                <td></td>
+              </tr>
+              <tr>
                 <td>selectAndWait</td>
                 <td>//select[@name="select_action"]</td>
                 <td>Ship Packing List</td>
@@ -227,11 +240,6 @@
                 <td>verifyText</td>
                 <td>//label[normalize-space(text())='State']/../div</td>
                 <td>Shipped</td>
-              </tr>
-              <tr>
-                <td>storeAttribute</td>
-                <td>//div[@id="breadcrumb"]/a[3]@href</td>
-                <td>wait</td>
               </tr>
               <tr class="" style="opacity: 1;">
                 <td colspan="3">&lt;span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"&gt; Wait for activities &lt;/span&gt;</td>
