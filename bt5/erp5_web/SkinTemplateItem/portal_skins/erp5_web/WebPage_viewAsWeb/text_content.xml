@@ -15,8 +15,6 @@
                 <string>description</string>
                 <string>enabled</string>
                 <string>title</string>
-                <string>whitespace_preserve</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -94,14 +92,6 @@
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -127,7 +117,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -140,14 +130,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Page Content</string> </value>
-                </item>
-                <item>
-                    <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>80</int> </value>
                 </item>
               </dictionary>
             </value>
