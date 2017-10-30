@@ -168,8 +168,10 @@ class TestMRPMixin(TestBPMMixin):
     Terms
     =====
     PPL : Production Packing List
-    PR  : Manufacturing Execution
+    ME  : Manufacturing Execution
     PO  : Production Order
+    MO  : Manufacturing Order
+    IPL : Internal Packing List
 
     Context
     =======
@@ -198,14 +200,14 @@ class TestMRPMixin(TestBPMMixin):
     =======================
         order     order     p0      s0      p1     deliver
        ------- S0 ----- S1 ---- S2 ---- S3 ---- S4 -------- S5
-         PO         MO      ME1    PPL1     ME2       PPL2
+         PO         MO      ME1     IPL     ME2       PPL
 
     Simulation Tree
     ===============
     * PO / new_order_root_simulation_rule
       * Production Order Line
         * default_delivering_rule
-          * PPL2
+          * PPL
             * default_production_rule
               * MO
                 * default_transformation_rule
@@ -214,7 +216,7 @@ class TestMRPMixin(TestBPMMixin):
                   * output ME1 - partial product
                   * input ME2 - partial product
                     * default_transformation_source_rule
-                      * PPL1
+                      * IPL
                   * input ME2
                     * default_transformation_source_rule
                   * input ME2
@@ -225,12 +227,13 @@ class TestMRPMixin(TestBPMMixin):
     production_packing_list_builder = 'portal_deliveries/production_packing_list_builder'
     manufacturing_execution_builder = 'portal_deliveries/manufacturing_execution_builder'
     manufacturing_order_builder = 'portal_deliveries/manufacturing_order_builder'
+    sourcing_builder = 'portal_deliveries/transformation_sourcing_internal_packing_list_builder'
     completed = 'delivered', 'started', 'stopped'
     phase_list = [
       ('default/order', None, ('confirmed',)),
       ('manufacturing/order', manufacturing_order_builder, ('confirmed',)),
       ('mrp/p0', manufacturing_execution_builder, completed),
-      ('mrp/s0', production_packing_list_builder, completed),
+      ('mrp/s0', sourcing_builder, completed),
       ('mrp/p1', manufacturing_execution_builder, completed),
       ('default/delivery', production_packing_list_builder, completed)
     ]
@@ -283,6 +286,10 @@ class TestMRPImplementation(TestMRPMixin):
     self.tic()
 
   def testSimpleOrder(self):
+    """
+    We test the process implemented in 'createBusinessProcess1' is
+    correctly followed
+    """
     self.createMRPOrder()
     order = self.order
 
@@ -353,9 +360,9 @@ class TestMRPImplementation(TestMRPMixin):
     variation = 'industrial_phase/trade_phase/mrp/p0'
     self.checkStock(resource, (self.workshop2, variation, 10))
 
-    ppl1, = getRelatedDeliveryList("Production Packing List")
-    ppl1.start()
-    ppl1.deliver()
+    ipl, = getRelatedDeliveryList("Internal Packing List")
+    ipl.start()
+    ipl.deliver()
     order.localBuild()
     self.tic()
     self.checkStock(resource, (self.workshop, variation, 10))
@@ -368,10 +375,10 @@ class TestMRPImplementation(TestMRPMixin):
     self.tic()
     self.checkStock(resource, (self.workshop, '', 10))
 
-    ppl2, = (x for x in getRelatedDeliveryList("Production Packing List")
-               if x.aq_base is not ppl1.aq_base)
-    ppl2.start()
-    ppl2.deliver()
+    ppl, = (x for x in getRelatedDeliveryList("Production Packing List")
+               if x.aq_base is not ipl.aq_base)
+    ppl.start()
+    ppl.deliver()
     self.tic()
     self.checkStock(resource, (self.destination, '', 10))
 
