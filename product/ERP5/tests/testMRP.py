@@ -397,6 +397,8 @@ class TestMRPImplementation(TestMRPMixin):
     order_line = self.order_line
     resource = order_line.getResourceValue()
     self.tic()
+    order.localBuild()
+    self.tic()
 
     manufacturing_execution, = order.getCausalityRelatedValueList(
                                 portal_type="Manufacturing Execution")
