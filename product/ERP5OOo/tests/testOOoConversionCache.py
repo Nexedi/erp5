@@ -308,6 +308,12 @@ class TestDocumentConversionCache(TestDocumentMixin):
     if 'File' in portal_type_list:
       #File conversion is not implemented
       portal_type_list.remove('File')
+    if 'Web Illustration' in portal_type_list:
+      #Web Illustration conversion is not implemented
+      portal_type_list.remove('Web Illustration')
+    if 'Web Table' in portal_type_list:
+      #Web Table conversion is not implemented
+      portal_type_list.remove('Web Table')
     data_mapping = {'Drawing': 'TEST-en-002.sxd',
                     'Text': 'TEST-en-002.doc',
                     'Spreadsheet': 'TEST-en-002.sxc',
