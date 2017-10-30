@@ -325,7 +325,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Make sure default view is read only
     html_text = page.WebPage_view()
     self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.getTextContent()))
 
   def test_EditWebPageFCKEditorText(self):
     """
@@ -347,7 +347,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Make sure default view is read only
     html_text = page.WebPage_view()
     self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.getTextContent()))
 
   def test_EditWebPageTextAreaHTML(self):
     """
@@ -369,7 +369,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Make sure default view is read only
     html_text = page.WebPage_view()
     self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.getTextContent()))
 
   def test_EditWebPageTextAreaText(self):
     """
@@ -391,7 +391,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Make sure default view is read only
     html_text = page.WebPage_view()
     self.assertFalse(page.WebPage_view.my_text_content.get_value('editable'))
-    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.asStrippedHTML()))
+    self.assertTrue(self._isReadOnlyEditor(html_text, page, page.getTextContent()))
 
 def test_suite():
   suite = unittest.TestSuite()
