@@ -57,13 +57,14 @@
           return new Blob([]);
         });
     }
+    if (relative_url === '/') {
+      relative_url = '';
+    }
     return new RSVP.Queue()
       .push(function () {
         return jIO.util.ajax({
           type: "GET",
-          url: (relative_url.startsWith("http") ||
-                relative_url.startsWith("//")) ?
-                relative_url : origin_url + relative_url,
+          url: new URL(relative_url, origin_url),
           dataType: "blob"
         });
       })
@@ -106,7 +107,8 @@
       .push(function () {
         return jIO.util.ajax({
           type: "GET",
-          url: storage._origin_url + storage._version + storage._manifest
+          url: new URL(storage._manifest, new URL(storage._version,
+                       storage._origin_url))
         });
       })
       .push(function (response) {
