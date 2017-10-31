@@ -13,12 +13,12 @@
         spec.origin_url : window.location.href;
     this._version = spec.version || "";
     this._gadget_list = [];
-    this._prefix = spec.prefix || "";
+    this._prefix = spec.prefix || "./";
     this._documents = {};
     // Harcoded here, find a better way.
     if (this._take_installer) {
       this._relative_url_list = [
-        this._prefix + "/",
+        this._prefix,
         this._prefix + "gadget_officejs_bootloader.js",
         this._prefix + "gadget_officejs_bootloader_presentation.html",
         this._prefix + "gadget_officejs_bootloader_presentation.js",
@@ -56,9 +56,6 @@
         .push(function () {
           return new Blob([]);
         });
-    }
-    if (relative_url === '/') {
-      relative_url = '';
     }
     return new RSVP.Queue()
       .push(function () {

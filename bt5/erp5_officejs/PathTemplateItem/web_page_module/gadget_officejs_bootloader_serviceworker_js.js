@@ -47,13 +47,10 @@ var global = self, window = self;
   });
 
   self.addEventListener("fetch", function (event) {
-    var relative_url = event.request.url.split("#")[0]
+    var relative_url = './' + event.request.url.split("#")[0]
       .replace(self.registration.scope, "")
       .replace(self.version_url, "");
-    if (relative_url === "") {
-      relative_url = "/";
-    }
-    if (relative_url === 'no-cache') {
+    if (relative_url === './no-cache') {
       event.respondWith(new Response(self.cache_list));
       return;
     }
