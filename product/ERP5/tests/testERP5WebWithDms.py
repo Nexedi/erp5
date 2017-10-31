@@ -1617,6 +1617,7 @@ return True
       img.publish()
       img_list.append(img)
     page = web_page_module.newContent(
+      portal_type="Web Page",
       reference="P-WP-implicit.successor.value.list.test",
       version="001",
       language="en",
