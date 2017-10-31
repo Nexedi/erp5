@@ -12,10 +12,7 @@
               <list>
                 <string>css_class</string>
                 <string>default</string>
-                <string>text_editor</string>
                 <string>title</string>
-                <string>whitespace_preserve</string>
-                <string>width</string>
               </list>
             </value>
         </item>
@@ -112,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_content</string> </value>
+                    <value> <string>text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
