@@ -1095,6 +1095,46 @@ class TestItemScripts(ERP5TypeTestCase):
     self.assertEqual(None,
           self.item.Item_getCurrentSiteTitle(at_date=DateTime() - 2))
 
+  def test_Item_getTrackingList_empty(self):
+    self.assertEqual([], self.item.Item_getTrackingList())
+
+  def test_Item_getTrackingList_explanation_brain_attribute(self):
+    line = self._makeSalePackingListLine(start_date=DateTime(2001, 2, 3))
+    line.setTitle('explanation title')
+    self.tic()
+
+    history_item, = self.item.Item_getTrackingList()
+    self.assertEqual(DateTime(2001, 2, 3), history_item.date)
+    self.assertEqual('Node', history_item.node_title)
+    self.assertEqual('Mirror Node', history_item.source_title)
+    self.assertEqual('Section', history_item.section_title)
+    self.assertEqual('Product', history_item.resource_title)
+    self.assertEqual('explanation title', history_item.explanation)
+    self.assertEqual('Sale Packing List Line', history_item.translated_portal_type)
+    self.assertEqual(1, history_item.quantity)
+    self.assertEqual(line.absolute_url(), history_item.url)
+    self.assertEqual((), history_item.variation_category_item_list)
+    self.assertEqual('Delivered', history_item.simulation_state)
+
+  def test_Item_getTrackingList_default_sort(self):
+    # Item_getTrackingList returns lines sorted in chronological order
+    implicit_movement = self.portal.implicit_item_movement_module.newContent(
+      portal_type='Implicit Item Movement',
+      destination_value=self.mirror_node,
+      destination_section_value=self.mirror_section,
+      stop_date=DateTime(2016, 1, 1),
+      aggregate_value=self.item,
+    )
+    implicit_movement.deliver()
+    self._makeSalePackingListLine(start_date=DateTime(2017, 1, 1))
+
+    self.assertEqual(
+        [DateTime(2016, 1, 1), DateTime(2017, 1, 1)],
+        [brain.date for brain in self.item.Item_getTrackingList()])
+    self.assertEqual(
+        ['Mirror Node', 'Node'],
+        [brain.node_title for brain in self.item.Item_getTrackingList()])
+
   def test_item_current_location_and_transit_movement(self):
     # a started packing list is still in transit, so we do not know its
     # current location until it is delivered.
