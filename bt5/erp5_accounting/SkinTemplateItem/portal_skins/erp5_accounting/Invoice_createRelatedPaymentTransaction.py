@@ -37,10 +37,9 @@ if sum(total_payable_price_details.values()) == 0:
 
 related_payment = portal.accounting_module.newContent(
   portal_type="Payment Transaction",
-  title=str(Base_translateString("Payment of ${invoice_title}",
-          mapping=dict(invoice_title=unicode((context.getReference() or
-                                              context.getTitle() or ''),
-                                              'utf8', 'repr')))),
+  title=Base_translateString("Payment of ${invoice_title}",
+          mapping=dict(invoice_title=(context.getReference() or
+                                      context.getTitle() or ''))),
   source_section=context.getSourceSection(),
   destination_section=context.getDestinationSection(),
   source_project=context.getSourceProject(),
