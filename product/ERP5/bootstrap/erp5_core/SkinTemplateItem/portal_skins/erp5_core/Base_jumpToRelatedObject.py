@@ -42,8 +42,8 @@ if len(related_list) == 0:
   url = context.absolute_url()
   message = Base_translateString(
     'No %s Related' % portal_type[0],
-    default = unicode(Base_translateString('No ${portal_type} related.',
-                                           mapping = { 'portal_type': Base_translateString(portal_type[0])}), 'utf8'))
+    default=Base_translateString('No ${portal_type} related.',
+                                 mapping={'portal_type': Base_translateString(portal_type[0])}))
 
 elif len(related_list) == 1:
   relation_found = 1
@@ -63,10 +63,10 @@ elif len(related_list) == 1:
       # first, try to get a full translated message with portal types
       "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),
        # if not found, fallback to generic translation
-      default = unicode(Base_translateString('${this_portal_type} related to ${that_portal_type} : ${that_title}.',
-        mapping={"this_portal_type" : related_object.getTranslatedPortalType(),
-                 "that_portal_type" : context.getTranslatedPortalType(),
-                 "that_title" : context.getTitleOrId() }), 'utf8'))
+      default=Base_translateString('${this_portal_type} related to ${that_portal_type} : ${that_title}.',
+        mapping={"this_portal_type": related_object.getTranslatedPortalType(),
+                 "that_portal_type": context.getTranslatedPortalType(),
+                 "that_title": context.getTitleOrId() }),)
   else :
     url = context.absolute_url()
     message = Base_translateString("You are not authorised to view the related document.")
