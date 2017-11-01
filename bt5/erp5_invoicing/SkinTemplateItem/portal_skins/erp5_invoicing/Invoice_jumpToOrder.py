@@ -17,10 +17,10 @@ if packing_list_list:
       # first, try to get a full translated message with portal types
       "%s related to %s." % (related_object.getPortalType(), context.getPortalType()),
        # if not found, fallback to generic translation
-      default = unicode(translateString('${this_portal_type} related to ${that_portal_type} : ${that_title}.',
-        mapping={"this_portal_type" : related_object.getTranslatedPortalType(),
-                 "that_portal_type" : context.getTranslatedPortalType(),
-                 "that_title" : context.getTitleOrId() }), 'utf8'))
+      default=translateString('${this_portal_type} related to ${that_portal_type} : ${that_title}.',
+        mapping={"this_portal_type": related_object.getTranslatedPortalType(),
+                 "that_portal_type": context.getTranslatedPortalType(),
+                 "that_title": context.getTitleOrId() }))
       return related_order_list[0].Base_redirect('view',
                               keep_items=dict(portal_status_message=message))
   else:

@@ -28,11 +28,11 @@ reversal = accounting_module.newContent (
     destination_payment_request=context.getProperty('destination_payment_request'),
     source_administration=context.getSourceAdministration(),
     destination_administration=context.getDestinationAdministration(),
-    title = Base_translateString("Reversal Transaction for ${title}",
-                                 mapping={'title':unicode(context.getTitleOrId(), 'utf8')}),
-    description = Base_translateString(
+    title=Base_translateString("Reversal Transaction for ${title}",
+                               mapping={'title': context.getTitleOrId()}),
+    description=Base_translateString(
   "Reversal Transaction for ${title} (${specific_reference})",
-  mapping={'title': unicode(context.getTitleOrId(), 'utf8'),
+  mapping={'title': context.getTitleOrId(),
            'specific_reference': specific_reference}),
     resource=context.getResource(),
     specialise_list=context.getSpecialiseList(),
