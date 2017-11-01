@@ -337,13 +337,17 @@ class SolverProcess(XMLObject, ActiveProcess):
       # 'WOEL-DEV': ['Assignor']
 
       self.log("TRISTAN delivery_value %r" % (delivery_value,))
+      changed = False
       for group, local_role_list in delivery_value.__ac_local_roles__.items():
         self.log("TRISTAN group, local_role_list %r" % ((group, local_role_list),))
         for role in ("Assignee", "Assignor", "Associate"):
           if role in local_role_list:
             self.log("TRISTAN role in local_role_list %r" % (role,))
             self.__ac_local_roles__.setdefault(group, ["Assignor"])
+            changed = True
             break
+      if changed:
+        self._p_changed = 1
     #.updateLocalRolesOnDocument(self, **kw)
 
     # may be need to have an interaction when _setDelivery* is called on solver process
