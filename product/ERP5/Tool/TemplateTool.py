@@ -2278,7 +2278,7 @@ class TemplateTool (BaseTool):
           new_val = item._getOb('new_item')
           old_val = item._getOb('old_item')
           self.updateHash(new_val)
-          slef.updateHash(old_val)
+          self.updateHash(old_val)
         else:
           self.updateHash(item)
 
@@ -2295,7 +2295,7 @@ class TemplateTool (BaseTool):
           new_val = item._getOb('new_item')
           old_val = item._getOb('old_item')
           self.updateHash(new_val)
-          slef.updateHash(old_val)
+          self.updateHash(old_val)
         else:
           self.updateHash(item)
 
@@ -2392,6 +2392,10 @@ class TemplateTool (BaseTool):
       Use shallow copy of the dict of the object at ZODB after removing
       attributes which changes at small updation, like workflow_history,
       uid, volatile attributes(which starts with _v)
+
+      # XXX: Comparable hash shouldn't be used for BusinessPatchItem as whole.
+      We can compare the old_value and new_value, but there shouldn't be hash
+      for the Patch Item.
       """
       if isProperty:
         obj_dict = object
@@ -2493,6 +2497,41 @@ class TemplateTool (BaseTool):
 
       for path in to_update_path_list:
         try:
+          # Better to check for status of BusinessPatchItem separately as it
+          # can contain both BusinessItem as well as BusinessPropertyItem
+          new_item = installation_process.getBusinessItemByPath(path)
+          if new_item.getPortalType() == 'Business Patch Item':
+            patch_item = new_item
+            # If the value is in ZODB, then compare it to the old_value
+            if '#' in str(path):
+              isProperty = True
+              relative_url, property_id = path.split('#')
+              obj = portal.restrictedTraverse(relative_url)
+              property_value = obj.getProperty(property_id)
+              if not property_value:
+                raise KeyError
+              property_type = obj.getPropertyType(property_id)
+              obj = property_value
+            else:
+              # If the path is path on an object and not of a property
+              isProperty = False
+              obj = portal.restictedTraverse(path)
+
+            obj_sha = self.calculateComparableHash(obj, isProperty)
+
+            # Get the sha of new_item from the BusinessPatchItem object
+            new_item_sha = patch_item._getOb('new_item').getProperty('item_sha')
+            old_item_sha = patch_item._getOb('old_item').getProperty('item_sha')
+
+            if new_item_sha == obj_sha:
+              # If the new_item in the patch is same as the one at ZODB, do
+              # nothing
+              continue
+            elif old_item_sha == obj_sha:
+              change_list.append((patch_item._getOb('new_item'), 'Adding'))
+            else:
+              change_list.append((patch_item._getOb('new_item'), 'Removing'))
+
           if '#' in str(path):
             isProperty = True
             relative_url, property_id = path.split('#')
