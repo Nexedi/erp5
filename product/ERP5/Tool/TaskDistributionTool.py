@@ -294,7 +294,7 @@ class TaskDistributionTool(BaseTool):
     test_result = portal.restrictedTraverse(test_result_path)
     node = self._getTestResultNode(test_result, node_title)
     assert node is not None
-    node.edit(cmdline=status_dict['command'],
+    node._edit(cmdline=status_dict['command'],
               stdout=status_dict['stdout'], stderr=status_dict['stderr'])
 
   security.declarePublic('isTaskAlive')
