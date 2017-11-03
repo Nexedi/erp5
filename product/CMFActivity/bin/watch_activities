@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 # Small watching script based on Sébastien idea.
 
 # ideas:
@@ -7,10 +8,10 @@
 #    - somehow done, use shell variable text_group
 #  - use python with curses to have runtime control
 
-function show_help ( )
+show_help()
 {
-  script_name=`basename $0`
-  echo """
+  script_name=`basename "$0"`
+  echo "
   Usage:
     $script_name <mysql_opt> [interval seconds]
   Interval is default 5.
@@ -20,20 +21,16 @@ function show_help ( )
   Typical usage:
     $script_name erp5
     $script_name \"-h remotehost -u user erp5remote\" 3
-  """
+"
 }
 
 MYSQL_OPT=$1
 INTERVAL=$2
 
-if [ "$MYSQL_OPT" == "" ] ; then
+[ "$MYSQL_OPT" ] || {
   show_help
   exit 1
-fi
-
-if [ "$INTERVAL" == "" ] ; then
-  INTERVAL=5
-fi
+}
 
 SELECT=""
 for t in message message_queue ; do
@@ -44,4 +41,4 @@ for t in message message_queue ; do
   SELECT count(*) AS ${t}_count FROM $t;
   """
 done
-watch -n $INTERVAL "mysql $MYSQL_OPT --disable-pager -t -e '$SELECT' "
+exec watch -n ${INTERVAL:-5} "${MYSQL:-mysql} $MYSQL_OPT --disable-pager -t -e '$SELECT' "

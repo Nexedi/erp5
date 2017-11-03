@@ -1,13 +1,13 @@
 #!/bin/sh
+set -e
 # Small wait script based on watch_activities scripts.
 
 # The goal is keep running until the activities.
 
-
-function show_help ( )
+show_help()
 {
-  script_name=`basename $0`
-  echo """
+  script_name=`basename "$0"`
+  echo "
   Usage:
     $script_name <mysql_opt> [interval seconds] [timeout in seconds]
   Interval is default 5.
@@ -18,47 +18,38 @@ function show_help ( )
   Typical usage:
     $script_name erp5
     $script_name \"-h remotehost -u user erp5remote\" 3
-  """
+"
 }
 
 MYSQL_OPT=$1
 INTERVAL=$2
 TIMEOUT=$3
-MYSQL_BIN=$MYSQL
 
-if [ "$MYSQL_BIN" == "" ] ; then
-  MYSQL_BIN='mysql'
-fi
+[ "$MYSQL" ] || MYSQL=mysql
 
-if [ "$MYSQL_OPT" == "" ] ; then
+[ "$MYSQL_OPT" ] || {
   show_help
   exit 1
-fi
+}
 
-if [ "$INTERVAL" == "" ] ; then
-  INTERVAL=5
-fi
-if [ "$TIMEOUT" == "" ] ; then
-  TIMEOUT=600
-fi
+[ "$INTERVAL" ] || INTERVAL=5
+[ "$TIMEOUT"  ] || TIMEOUT=600
 
 TIME=0
 
 while true
 do
-    MESSAGE_VALUE=`echo "SELECT count(*) AS message_count FROM message;" | $MYSQL_BIN $MYSQL_OPT | grep -v message`
-    MESSAGE_QUEUE_VALUE=`echo "SELECT count(*) AS message_count FROM message_queue;" | $MYSQL_BIN $MYSQL_OPT | grep -v message`
-    if [ "$MESSAGE_VALUE" == "0" -a "$MESSAGE_QUEUE_VALUE" == 0 ] ; then
-      exit 0
-    fi
+    MESSAGE_VALUE=`echo "SELECT count(*) AS message_count FROM message;" | $MYSQL $MYSQL_OPT | grep -v message`
+    MESSAGE_QUEUE_VALUE=`echo "SELECT count(*) AS message_count FROM message_queue;" | $MYSQL $MYSQL_OPT | grep -v message`
+    [ "$MESSAGE_VALUE" = 0 ] && [ "$MESSAGE_QUEUE_VALUE" = 0 ] && break
     sleep $INTERVAL;
-    TIME="`expr $TIME + $INTERVAL`"
+    TIME=`expr $TIME + $INTERVAL`
     if [ $TIME -gt $TIMEOUT ]
     then
         echo "Messages"
-        echo "SELECT path, processing_node, method_id AS message_count FROM message;" | $MYSQL_BIN $MYSQL_OPT
+        echo "SELECT path, processing_node, method_id AS message_count FROM message;" | $MYSQL $MYSQL_OPT
         echo "Messages Queue"
-        echo "SELECT path, processing_node, method_id AS message_count FROM message_queue;" | $MYSQL_BIN $MYSQL_OPT
+        echo "SELECT path, processing_node, method_id AS message_count FROM message_queue;" | $MYSQL $MYSQL_OPT
         echo "Timeout"
         exit 1
     fi
