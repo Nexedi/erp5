@@ -3,7 +3,6 @@ import hmac
 if REQUEST is not None:
   raise Unauthorized
 
-result = None
 access_token_document = context
 request = context.REQUEST
 
@@ -18,10 +17,13 @@ if access_token_document.getValidationState() == 'validated':
 
     # use hmac.compare_digest and not string comparison to avoid timing attacks
     if not hmac.compare_digest(access_token_document.getReference(), reference):
-      return None
-    
+      return None, None
+
     agent_document = access_token_document.getAgentValue()
     if agent_document is not None:
-      result = agent_document.Person_getUserId()
+      portal = agent_document.getPortalObject()
+      for erp5_login in agent_document.objectValues(portal.getPortalLoginTypeList()):
+        if erp5_login.getValidationState() == "validated":
+          return erp5_login.getReference(), erp5_login.getPortalType()
 
-return result
+return None, None
