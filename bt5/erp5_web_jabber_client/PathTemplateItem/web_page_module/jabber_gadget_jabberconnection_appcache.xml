@@ -100,7 +100,7 @@
         <item>
             <key> <string>text_content</string> </key>
             <value> <string>CACHE MANIFEST\n
-# generated on Mon, 1 Mar 2016 16:00:00 +0000\n
+# generated on Mon, 8 Jun 2018 00:00:00 +0000\n
 \n
 CACHE:\n
 gadget_global.js\n
@@ -244,7 +244,7 @@ NETWORK:\n
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>960.4006.61190.60910</string> </value>
+                <value> <string>963.11851.42215.35874</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -262,7 +262,7 @@ NETWORK:\n
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1497524164.53</float>
+                        <float>1528450792.31</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

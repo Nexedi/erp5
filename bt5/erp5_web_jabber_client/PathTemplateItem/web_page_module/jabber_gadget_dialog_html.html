@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>JabberClient Gadget Dialog</title>
+
+    <!-- renderjs -->
+    <script src="rsvp.js" type="text/javascript"></script>
+    <script src="renderjs.js" type="text/javascript"></script>
+
+    <!-- custom script -->
+    <script src="gadget_jabberclient_dialog.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+    <form class="dialog_form">
+      <div data-gadget-url="gadget_erp5_form.html"
+              data-gadget-scope="form"
+              data-gadget-sandbox="public">
+      </div>
+      <input disabled name="action_confirm" type="submit"
+             data-i18n="[value]Proceed" value="Proceed" />
+    </form>
+  </body>
+</html>

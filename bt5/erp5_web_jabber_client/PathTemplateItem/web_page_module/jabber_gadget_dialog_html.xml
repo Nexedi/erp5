@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,14 +58,7 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
             </value>
         </item>
         <item>
@@ -81,7 +73,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jabberclient_router.html</string> </value>
+            <value> <string>gadget_jabberclient_dialog.html</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -91,7 +83,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jabber_gadget_router_html</string> </value>
+            <value> <string>jabber_gadget_dialog_html</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -109,7 +101,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>JabberClient Gadget  Router</string> </value>
+            <value> <string>JabberClient Gadget Dialog</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -195,7 +187,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456334074.25</float>
+                        <float>1527841931.78</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -240,7 +232,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.24010.37433.15462</string> </value>
+                <value> <string>967.60678.30724.15172</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -258,7 +250,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456843272.44</float>
+                        <float>1527844242.22</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -315,7 +307,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456333611.93</float>
+                        <float>1527841832.01</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

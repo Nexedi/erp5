@@ -1,0 +1,4 @@
+<tal tal:omit-tag="" tal:content="structure python: here.portal_skins.erp5_web_renderjs_ui['erp5css.less']"></tal>
+
+@colorheaderbackground: #FF8552;
+@colorsubheaderbackground: #E9D758;

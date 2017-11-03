@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Web Script" module="erp5.portal_type"/>
+      <global name="Web Style" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -76,8 +74,14 @@
             </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jabberclient_router.js</string> </value>
+            <value> <string>gadget_jabberclient.css</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -87,7 +91,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jabber_gadget_router_js</string> </value>
+            <value> <string>jabber_gadget_jabberclient_css</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -95,7 +99,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Script</string> </value>
+            <value> <string>Web Style</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -105,7 +109,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>JabberClient Gadget  Router JS</string> </value>
+            <value> <string>RenderJS Gadget Jabber Client CSS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -191,7 +195,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456334186.39</float>
+                        <float>1527842368.9</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -236,7 +240,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.35416.23201.12748</string> </value>
+                <value> <string>968.5279.51717.38963</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -254,7 +258,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456845631.45</float>
+                        <float>1528452643.41</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -311,7 +315,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456333611.91</float>
+                        <float>1527842362.94</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

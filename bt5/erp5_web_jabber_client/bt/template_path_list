@@ -1,3 +1,4 @@
+image_module/jabber_*
 web_page_module/jabber_*
 web_site_module/jabber_client
 web_site_module/jabber_client/**

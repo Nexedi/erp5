@@ -1,6 +1,6 @@
-/*global window, rJS, RSVP, loopEventListener*/
+/*global window, rJS*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, loopEventListener) {
+(function (window, rJS) {
   "use strict";
 
   function validatePassword(password1, password2) {
@@ -8,50 +8,40 @@
   }
 
   rJS(window)
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
 
     /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
-    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
     .declareAcquiredMethod("jio_put", "jio_put")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("redirect", "redirect")
+    .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod('triggerSubmit', function () {
-      this.props.element.querySelector('button').click();
+    .declareMethod('render', function () {
+      return this.changeState({
+        first_render: true
+      });
     })
-    .declareMethod("render", function () {
-      var page_gadget = this;
-      return page_gadget.updateHeader({
-        page_title: 'Reset Password',
-        submit_action: true
+
+    .onStateChange(function () {
+      var gadget = this;
+      return gadget.getUrlFor({
+        command: 'display_stored_state',
+        options: {page: 'jabberclient_contact'}
       })
-        .push(function () {
-          // Ensure user is connected...
-          return page_gadget.jio_allDocs();
+        .push(function (url) {
+          return gadget.updateHeader({
+            page_title: 'Reset Password',
+            page_icon: 'power-off',
+            cancel_url: url
+          });
         })
         .push(function () {
-          return page_gadget.getDeclaredGadget("erp5_form");
+          return gadget.getDeclaredGadget("form_dialog");
         })
         .push(function (form_gadget) {
           return form_gadget.render({
@@ -92,7 +82,7 @@
             }}},
             form_definition: {
               group_list: [[
-                "center",
+                "left",
                 [["server"], ["new_passwd"], ["repeat_passwd"]]
               ]]
             }
@@ -100,48 +90,25 @@
         });
     })
 
-    .declareService(function () {
-      var form_gadget = this;
-
-      function formSubmit() {
-        return form_gadget.notifySubmitting()
+    .allowPublicAcquisition("submitContent", function submitContent(param_list) {
+      var gadget = this,
+        content_dict = param_list[0];
+      if (validatePassword(content_dict.new_passwd, content_dict.repeat_passwd)) {
+        return gadget.jio_put(
+          'PASSWORD',
+          content_dict
+        )
           .push(function () {
-            return form_gadget.getDeclaredGadget("erp5_form");
-          })
-          .push(function (erp5_form) {
-            return erp5_form.getContent();
-          })
-          .push(function (content_dict) {
-            if (validatePassword(content_dict.new_passwd, content_dict.repeat_passwd)) {
-              return form_gadget.jio_put(
-                'PASSWORD',
-                content_dict
-              );
-            }
-            // XXX Uses field validation instead...
-            throw new Error('Password does not match.');
-          })
-          .push(function () {
-            return RSVP.all([
-              form_gadget.notifySubmitted(),
-              form_gadget.redirect({command: 'display', options: {page: 'contact'}})
-            ]);
-          })
-          .push(undefined, function (error) {
-            return form_gadget.notifySubmitted()
-              .push(function () {
-                throw error;
-              });
+            return gadget.redirect({
+              command: 'display_stored_state',
+              options: {page: 'jabberclient_contact'}
+            });
           });
       }
-
-      // Listen to form submit
-      return loopEventListener(
-        form_gadget.props.element.querySelector('form'),
-        'submit',
-        false,
-        formSubmit
-      );
+      return gadget.notifySubmitted({
+        'message': "Passwords do not match.",
+        'status': 'error'
+      });
     });
 
-}(window, rJS, RSVP, loopEventListener));
+}(window, rJS));

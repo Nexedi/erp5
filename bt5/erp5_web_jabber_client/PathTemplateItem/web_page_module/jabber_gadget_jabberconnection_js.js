@@ -52,7 +52,7 @@
   }
 
   function disconnectOnbeforeunload(connection) {
-    return function (event) {
+    return function () {
       /* XXX it can be interfere with changed warning
       if (changed && $('button.save')) {
         return unsaved_warn_message;

@@ -8,7 +8,7 @@
     JIO_GADGET_URL = "gadget_jio.html";
 
   function dropNotification() {
-    document.querySelector("link[rel='shortcut icon']").setAttribute("href", "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAERAAAAAAAAEQEAAAAAAAEQARAAAAAAARAAEQAAAAARAAARAAAAABAAAAEQAAAAAAAAABEAAAAAAAAAEQAAAAAAAAABEAAAAAAAAAARAAAAAAAAABEAAAAAAAAAAQAAAAAAAAAAD//wAA//8AAP7/AAD8fwAA+X8AAPM/AADznwAA558AAO/PAAD/5wAA/+cAAP/zAAD/+QAA//kAAP/9AAD//wAA");
+    document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_ok.ico");
   }
 
   function wrapJioCall(gadget, method_name, argument_list) {
@@ -140,7 +140,7 @@
         function markOffline(key) {
           return gadget.state_parameter_dict.volatile_jio.get(key)
             .push(function (doc) {
-              doc.offline = true;
+              doc.connected = false;
               return gadget.state_parameter_dict.volatile_jio.put(key, doc);
             });
         }
@@ -178,8 +178,8 @@
             (error.status_code === 404)) {
           return {
             jid: jid,
-            offline: true,
-            read: true
+            connected: false,
+            notification: false
           };
         }
         throw error;
@@ -252,9 +252,9 @@
         .push(function (doc) {
           if ((type === "unavailable") || (type === "unsubscribed")) {
             // Bye dear contact
-            doc.offline = true;
+            doc.connected = false;
           } else {
-            doc.offline = false;
+            doc.connected = true;
           }
           return gadget.state_parameter_dict.volatile_jio.put(from, doc);
         })
@@ -269,7 +269,7 @@
         if (!document.hasFocus()) {
           // Only notify when page has no focused.
           // It simplifies a lot notification status
-          document.querySelector("link[rel='shortcut icon']").setAttribute("href", "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAD8PwAA/D8AAPw/AAD8PwAA//8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA");
+          document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
         }
 
         var gadget = this;
@@ -278,7 +278,7 @@
             return initializeContact(gadget, argument_list[0]);
           })
           .push(function (doc) {
-            doc.read = false;
+            doc.notification = true;
             return gadget.state_parameter_dict.volatile_jio.put(argument_list[0], doc);
           })
           .push(function () {
@@ -327,7 +327,7 @@
     .allowPublicAcquisition("notifyXMPPDisconnected", function () {
       var gadget = this;
       // Notify about disconnection
-      document.querySelector("link[rel='shortcut icon']").setAttribute("href", "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAD8PwAA/D8AAPw/AAD8PwAA//8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA");
+      document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
       return dropConnectionGadget(gadget)
         .push(function () {
           return this.redirect({command: 'display', options: {page: 'connect'}});
@@ -337,7 +337,7 @@
     .allowPublicAcquisition("notifyXMPPConnectionError", function () {
       var gadget = this;
       // Notify about disconnection
-      document.querySelector("link[rel='shortcut icon']").setAttribute("href", "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAD8PwAA/D8AAPw/AAD8PwAA//8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA");
+      document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
 
       return dropConnectionGadget(gadget)
         .push(function () {
@@ -348,7 +348,7 @@
     .allowPublicAcquisition("notifyXMPPError", function () {
       var gadget = this;
       // Notify about disconnection
-      document.querySelector("link[rel='shortcut icon']").setAttribute("href", "data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAAAAAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAAAAAAREQAAAAAAABERAAAAAAAAEREAAAD8PwAA/D8AAPw/AAD8PwAA//8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA");
+      document.querySelector("link[rel='shortcut icon']").setAttribute("href", "gadget_jabberclient_notification_warning.ico");
 
       return dropConnectionGadget(gadget)
         .push(function () {
@@ -423,7 +423,7 @@
 
     .declareMethod('allDocs', function (options) {
       if (!this.state_parameter_dict.connected) {
-        return this.redirect({command: 'display', options: {page: 'connect'}});
+        return this.redirect({command: 'display', options: {page: 'jabberclient_connect'}});
       }
       return this.state_parameter_dict.volatile_jio.allDocs(options);
     })
@@ -432,7 +432,7 @@
       var gadget = this,
         result;
       if (!this.state_parameter_dict.connected) {
-        return this.redirect({command: 'display', options: {page: 'connect'}});
+        return this.redirect({command: 'display', options: {page: 'jabberclient_connect'}});
       }
       if (name === 'enclosure') {
         return getLog(this, id, options)
@@ -441,7 +441,7 @@
             return initializeContact(gadget, id);
           })
           .push(function (doc) {
-            doc.read = true;
+            doc.notification = false;
             return gadget.state_parameter_dict.volatile_jio.put(id, doc);
           })
           .push(function () {
@@ -454,7 +454,7 @@
     .declareMethod('putAttachment', function (id, name, blob) {
       var gadget = this;
       if (!this.state_parameter_dict.connected) {
-        return this.redirect({command: 'display', options: {page: 'connect'}});
+        return this.redirect({command: 'display', options: {page: 'jabberclient_connect'}});
       }
       if (name === 'MESSAGE') {
         return this.getDeclaredGadget(CONNECTION_GADGET_SCOPE)

@@ -5,45 +5,17 @@
     <meta name="viewport" content="width=device-width, user-scalable=no" />
     <title>JabberClient Gadget Page Contact</title>
 
-    <script id="contact-list-template" type="text/x-handlebars-template">
-          <ul data-role="listview" data-inset="true">
-            {{#each contact}}
-              <li>
-              {{#if status}}
-                {{#if url}}
-                  <a href="{{url}}" class="ui-btn ui-btn-icon-left ui-icon-check">
-                  {{#if new_message}}
-                    <span class="ui-li-count">!</span>
-                  {{/if}}
-                  {{jid}}</a>
-                {{else}}
-                  {{jid}}
-                {{/if}}
-              {{else}}
-                {{#if url}}
-                  <a href="{{url}}" class="ui-btn ui-btn-icon-left ui-icon-forbidden">
-                  {{#if new_message}}
-                    <span class="ui-li-count">!</span>
-                  {{/if}}
-                  {{jid}}</a>
-                {{else}}
-                  {{jid}}
-                {{/if}}
-              {{/if}}
-              </li>
-            {{/each}}
-          </ul>
-    </script>
-
-
     <!-- renderjs -->
     <script src="rsvp.js" type="text/javascript"></script>
     <script src="renderjs.js" type="text/javascript"></script>
 
     <!-- custom script -->
-    <script src="gadget_global.js" type="text/javascript"></script>
-    <script src="gadget_jabberclient_page_contact.js" type="text/javascript"></script>
+    <script src="gadget_erp5_page_jabberclient_contact.js" type="text/javascript"></script>
   </head>
   <body>
+    <div data-gadget-url="gadget_erp5_pt_form_list.html"
+            data-gadget-scope="form_list"
+            data-gadget-sandbox="public">
+    </div>
   </body>
 </html>

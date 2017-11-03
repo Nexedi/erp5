@@ -71,7 +71,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jabberclient_page_connect.js</string> </value>
+            <value> <string>gadget_erp5_page_jabberclient_connect.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -230,7 +230,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>949.35328.64444.1843</string> </value>
+                <value> <string>968.5178.51949.22050</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +248,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1456843227.61</float>
+                        <float>1528447738.91</float>
                         <string>UTC</string>
                       </tuple>
                     </state>

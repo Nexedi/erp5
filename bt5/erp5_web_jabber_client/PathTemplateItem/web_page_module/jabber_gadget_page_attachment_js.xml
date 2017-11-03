@@ -16,7 +16,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -59,7 +58,6 @@
                 <string>Associate</string>
                 <string>Auditor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -71,7 +69,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gadget_jabberconnection.js</string> </value>
+            <value> <string>gadget_erp5_page_jabberclient_attachment.js</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -81,7 +79,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jabber_gadget_jabberconnection_js</string> </value>
+            <value> <string>jabber_gadget_page_attachment_js</string> </value>
         </item>
         <item>
             <key> <string>language</string> </key>
@@ -99,7 +97,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>RenderJS Gadget JabberConnection JS</string> </value>
+            <value> <string>JabberClient Gadget Page Attachment JS</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -163,7 +161,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -185,8 +183,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418209617.05</float>
-                        <string>GMT</string>
+                        <float>1527840465.54</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>
@@ -230,7 +228,7 @@
             </item>
             <item>
                 <key> <string>serial</string> </key>
-                <value> <string>963.11851.42215.35874</string> </value>
+                <value> <string>967.60728.63160.9523</string> </value>
             </item>
             <item>
                 <key> <string>state</string> </key>
@@ -248,7 +246,7 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1509724529.27</float>
+                        <float>1528384889.29</float>
                         <string>UTC</string>
                       </tuple>
                     </state>
@@ -275,7 +273,7 @@
             </item>
             <item>
                 <key> <string>actor</string> </key>
-                <value> <string>romain</string> </value>
+                <value> <string>zope</string> </value>
             </item>
             <item>
                 <key> <string>comment</string> </key>
@@ -305,8 +303,8 @@
                     </tuple>
                     <state>
                       <tuple>
-                        <float>1418209490.05</float>
-                        <string>GMT</string>
+                        <float>1527840330.79</float>
+                        <string>UTC</string>
                       </tuple>
                     </state>
                   </object>

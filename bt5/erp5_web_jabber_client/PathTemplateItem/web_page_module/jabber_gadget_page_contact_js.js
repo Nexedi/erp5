@@ -1,102 +1,108 @@
-/*global window, rJS, RSVP, Handlebars*/
+/*global window, rJS*/
 /*jslint nomen: true, indent: 2, maxerr: 3 */
-(function (window, rJS, RSVP, Handlebars) {
+(function (window, rJS) {
   "use strict";
 
-  function compareContact(a, b) {
-    var result;
-    if (a.new_message && (!b.new_message)) {
-      result = -1;
-    } else if (b.new_message && (!a.new_message)) {
-      result = 1;
-    } else if (a.status && (!b.status)) {
-      result = -1;
-    } else if (b.status && (!a.status)) {
-      result = 1;
-    } else if (b.jid < a.jid) {
-      result = 1;
-    } else if (a.jid < b.jid) {
-      result = -1;
-    } else {
-      result = 0;
-    }
-    return result;
-  }
-
-  /////////////////////////////////////////////////////////////////
-  // Handlebars
-  /////////////////////////////////////////////////////////////////
-  // Precompile the templates while loading the first gadget instance
-  var gadget_klass = rJS(window),
-    source = gadget_klass.__template_element
-                         .getElementById("contact-list-template")
-                         .innerHTML,
-    table_template = Handlebars.compile(source);
-
-  gadget_klass
-    /////////////////////////////////////////////////////////////////
-    // ready
-    /////////////////////////////////////////////////////////////////
-    // Init local properties
-    .ready(function (g) {
-      g.props = {};
-    })
-
-    // Assign the element to a variable
-    .ready(function (g) {
-      return g.getElement()
-        .push(function (element) {
-          g.props.element = element;
-        });
-    })
-
-    /////////////////////////////////////////////////////////////////
+  rJS(window)
+   /////////////////////////////////////////////////////////////////
     // Acquired methods
     /////////////////////////////////////////////////////////////////
     .declareAcquiredMethod("updateHeader", "updateHeader")
-    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
+    .declareAcquiredMethod("getUrlParameter", "getUrlParameter")
+    .declareAcquiredMethod("getUrlForList", "getUrlForList")
     .declareAcquiredMethod("getUrlFor", "getUrlFor")
+    .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
     /////////////////////////////////////////////////////////////////
-    .declareMethod("render", function () {
-      var page_gadget = this,
-        contact_list = [],
-        gadget = this;
+    .allowPublicAcquisition('updateHeader', function () {
+      return;
+    })
 
-      return page_gadget.updateHeader({
-        page_title: 'Contact'
-      })
-        .push(function () {
-          return page_gadget.jio_allDocs({select_list: ['jid', 'read', 'offline']});
-        })
+    .allowPublicAcquisition("jio_allDocs", function (param_list) {
+      var gadget = this;
+      return gadget.jio_allDocs(param_list[0])
         .push(function (result) {
           var i,
-            contact,
-            promise_list = [];
-          for (i = 0; i < result.data.total_rows; i += 1) {
-            contact = result.data.rows[i].value;
-            contact_list.push({
-              jid: contact.jid,
-              new_message: !contact.read,
-              status: !contact.offline
-            });
-            promise_list.push(gadget.getUrlFor({command: 'display', options: {page: 'dialog', jid: contact.jid}}));
+            len = result.data.total_rows;
+          for (i = 0; i < len; i += 1) {
+            result.data.rows[i].value.connected =
+              result.data.rows[i].value.connected ? '✓' : '';
+            result.data.rows[i].value.notification =
+              result.data.rows[i].value.notification ? '✓' : '';
           }
-          return RSVP.all(promise_list);
+          return result;
+        });
+    })
+
+    .declareMethod("triggerSubmit", function () {
+      var argument_list = arguments;
+      return this.getDeclaredGadget('form_list')
+        .push(function (gadget) {
+          return gadget.triggerSubmit.apply(gadget, argument_list);
+        });
+    })
+
+    .declareMethod("render", function () {
+      var gadget = this;
+
+      return gadget.getUrlFor({
+        command: 'change',
+        options: {page: "jabberclient_new_contact"}
+      })
+        .push(function (url) {
+          return gadget.updateHeader({
+            page_title: 'Contacts',
+            page_icon: 'puzzle-piece',
+            filter_action: true,
+            add_url: url
+          });
         })
-        .push(function (url_list) {
-          var i;
-          for (i = 0; i < url_list.length; i += 1) {
-            contact_list[i].url = url_list[i];
-          }
-          contact_list.sort(compareContact);
-          gadget.props.element.innerHTML =
-            table_template({
-              contact: contact_list
-            });
+        .push(function () {
+          return gadget.getDeclaredGadget('form_list');
+        })
+        .push(function (form_gadget) {
+          var column_list = [
+            ['jid', 'Name'],
+            ['notification', 'Notification'],
+            ['connected', 'Connected']
+          ];
+          return form_gadget.render({
+            erp5_document: {"_embedded": {"_view": {
+              "listbox": {
+                "column_list": column_list,
+                "show_anchor": 0,
+                "default_params": {},
+                "editable": 0,
+                "editable_column_list": [],
+                "key": "field_listbox",
+                "lines": 20,
+                "list_method": "portal_catalog",
+                "query": "urn:jio:allDocs",
+                "portal_type": [],
+                "search_column_list": column_list,
+                "sort_column_list": column_list,
+                "sort": [['notification', 'descending'], ['connected', 'descending'], ['jid', 'ascending']],
+                "title": "Contacts",
+                "type": "ListBox"
+              }
+            }},
+              "_links": {
+                "type": {
+                  // form_list display portal_type in header
+                  name: ""
+                }
+              }
+              },
+            form_definition: {
+              group_list: [[
+                "bottom",
+                [["listbox"]]
+              ]]
+            }
+          });
         });
     });
 
-}(window, rJS, RSVP, Handlebars));
+}(window, rJS));
