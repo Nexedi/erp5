@@ -73,6 +73,7 @@ def manage_addERP5Site(self,
                        cmf_activity_sql_connection_string='test test',
                        bt5_repository_url='',
                        bt5='',
+                       id_store_interval='',
                        cloudooo_url='',
                        light_install=0,
                        reindex=1,
@@ -91,6 +92,7 @@ def manage_addERP5Site(self,
                  cmf_activity_sql_connection_string,
                  bt5_repository_url,
                  bt5,
+                 id_store_interval,
                  cloudooo_url,
                  create_activities=create_activities,
                  light_install=light_install,
@@ -1874,6 +1876,7 @@ class ERP5Generator(PortalGenerator):
              cmf_activity_sql_connection_string,
              bt5_repository_url,
              bt5,
+             id_store_interval,
              cloudooo_url,
              create_activities=True,
              reindex=1,
@@ -1919,6 +1922,16 @@ class ERP5Generator(PortalGenerator):
         getattr(p.portal_templates.activate(after_method_id=after_method_id),
                 method_id)(bt5.split(), update_catalog=True)
         after_method_id = method_id
+    if id_store_interval != '':
+      id_store_interval = int(id_store_interval)
+      if id_store_interval < 0:
+        raise TypeError('id_store_interval must be a positive integer')
+      ob = p.portal_ids._getLatestGeneratorValue(
+          'mysql_non_continuous_increasing')
+      if id_store_interval:
+        ob._setStoreInterval(id_store_interval)
+      else:
+        ob._setStoredInZodb(0)
     if cloudooo_url:
       method_id = '_initSystemPreference'
       getattr(p.portal_activities.activateObject(p,
