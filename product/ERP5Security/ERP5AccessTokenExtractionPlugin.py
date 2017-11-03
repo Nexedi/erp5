@@ -78,15 +78,17 @@ class ERP5AccessTokenExtractionPlugin(BasePlugin):
         external_login = None
         method = token_document._getTypeBasedMethod('getExternalLogin')
         if method is not None:
-          external_login = method()
+          external_login, login_portal_type = method()
 
         if external_login is not None:
           creds['external_login'] = external_login
+          creds['login_portal_type'] = login_portal_type
           creds['remote_host'] = request.get('REMOTE_HOST', '')
           try:
             creds['remote_address'] = request.getClientAddr()
           except AttributeError:
             creds['remote_address'] = request.get('REMOTE_ADDR', '')
+
     return creds
 
 #Form for new plugin in ZMI
