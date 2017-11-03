@@ -432,7 +432,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     """
     LOG('ERP5ProjectUnitTestDistributor.startUnitTest', 0, test_result_path)
     portal = self.getPortalObject()
-    return portal.portal_task_distribution_tool.startUnitTest(test_result_path,exclude_list)
+    return portal.portal_task_distribution.startUnitTest(test_result_path,exclude_list)
 
   security.declarePublic("stopUnitTest")
   def stopUnitTest(self,test_path,status_dict):
@@ -443,7 +443,7 @@ class ERP5ProjectUnitTestDistributor(XMLObject):
     portal = self.getPortalObject()
     test_result = portal.unrestrictedTraverse(test_path)
     test_suite_title = test_result.getTitle()
-    return portal.portal_task_distribution_tool.stopUnitTest(self,test_path,status_dict)
+    return portal.portal_task_distribution.stopUnitTest(self,test_path,status_dict)
 
   security.declarePublic("generateConfiguration")
   def generateConfiguration(self, test_suite_title, batch_mode=0):
