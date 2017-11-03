@@ -4,7 +4,11 @@ cache_key = context.getId() + '_' + script.id
 try:
   return cache[cache_key]
 except KeyError:
-  params = {'selection_domain': context.portal_selections.getSelectionDomainDictFor(selection_name)} if selection_name else {}
+  params = {}
+  if selection_name:
+    selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)
+    if selection_domain:
+      params['selection_domain'] = selection_domain
   row, = portal.portal_simulation.getInventoryList(
     select_dict={'count': 'COUNT(*)'},
     ignore_group_by=1,
