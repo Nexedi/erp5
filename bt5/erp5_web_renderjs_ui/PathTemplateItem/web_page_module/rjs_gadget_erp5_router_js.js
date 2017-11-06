@@ -509,6 +509,14 @@
           copyStickyParameterDict(previous_options, options);
           return addNavigationHistoryAndDisplay(gadget, uri.segment(2), options);
         }
+      }, function (error) {
+        if ((error instanceof jIO.util.jIOError) &&
+            (error.status_code === 404)) {
+          var options = {};
+          copyStickyParameterDict(previous_options, options);
+          return gadget.redirect({command: 'display', options: options});
+        }
+        throw error;
       });
   }
 
