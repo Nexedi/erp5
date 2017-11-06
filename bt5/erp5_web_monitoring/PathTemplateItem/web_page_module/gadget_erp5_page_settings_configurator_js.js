@@ -141,6 +141,10 @@
                                    parseInt(doc.listbox_lines_limit, 10));
         })
         .push(function () {
+          return gadget.setSetting('opml_import_limit',
+                                   parseInt(doc.opml_import_limit, 10));
+        })
+        .push(function () {
           return RSVP.all([
             gadget.notifySubmitted('Parameters Updated')
           ]);
@@ -155,7 +159,8 @@
         last_sync_time,
         sync_data_interval,
         check_online_access,
-        listbox_lines_limit;
+        listbox_lines_limit,
+        opml_import_limit;
 
       if (options.url) {
         // backward compatibility redirect to add opml
@@ -165,6 +170,10 @@
 
       return new RSVP.Queue()
         .push(function () {
+          return gadget.getSetting('opml_import_limit', 100);
+        })
+        .push(function (import_limit) {
+          opml_import_limit = import_limit;
           return gadget.getSetting('listbox_lines_limit', 20);
         })
         .push(function (lines_limit) {
@@ -248,6 +257,16 @@
                   "hidden": 0,
                   "type": "CheckBoxField"
                 },
+                "my_opml_import_limit": {
+                  "description": "Maximum number of OPML to import",
+                  "title": "OPML Import Limit",
+                  "default": opml_import_limit,
+                  "css_class": "",
+                  "editable": 1,
+                  "key": "opml_import_limit",
+                  "hidden": 0,
+                  "type": "IntegerField"
+                },
                 "listbox": {
                   "column_list": column_list,
                   "show_anchor": 0,
@@ -278,7 +297,8 @@
               group_list: [[
                 "left",
                 [["your_last_sync_date"], ["my_auto_sync_interval"],
-                 ["my_listbox_lines_limit"], ["my_check_online_access"]]
+                 ["my_listbox_lines_limit"], ["my_opml_import_limit"],
+                 ["my_check_online_access"]]
               ],
               [
                 "right",

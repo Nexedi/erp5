@@ -1,6 +1,8 @@
-/*global window, rJS, RSVP, jsen, Rusha, Handlebars, atob */
+/*global window, rJS, RSVP, jsen, Rusha, Handlebars, atob, btoa, DOMParser,
+  URLSearchParams */
 /*jslint nomen: true, indent: 2, maxerr: 3*/
-(function (window, rJS, RSVP, jsen, Rusha, Handlebars, atob) {
+(function (window, rJS, RSVP, jsen, Rusha, Handlebars, atob, btoa, DOMParser,
+           URLSearchParams) {
   "use strict";
 
   var gadget_klass = rJS(window),
@@ -13,7 +15,7 @@
     ),
     header_title = Handlebars.compile(
       templater.getElementById("template-section-title").innerHTML
-    ); 
+    );
 
   function getMonitorSetting(gadget) {
     return gadget.jio_allDocs({
@@ -23,7 +25,7 @@
     .push(function (opml_result) {
       var i,
         opml_dict = {opml_description_list: []};
-      for (i = 0; i < opml_result.data.total_rows; i+= 1) {
+      for (i = 0; i < opml_result.data.total_rows; i += 1) {
         opml_dict.opml_description_list.push(opml_result.data.rows[i].value);
       }
       return opml_dict;
@@ -118,7 +120,7 @@
             }
           }
         },
-  
+
         "additionalProperties": false
       };
 
@@ -249,6 +251,109 @@
       });
   }
 
+  function readMonitoringParameter(parmeter_xml) {
+    var parser = new DOMParser(),
+      xmlDoc = parser.parseFromString(parmeter_xml, "text/xml"),
+      parameter,
+      uri_param,
+      monitor_dict = {};
+
+    parameter = xmlDoc.getElementById("monitor-setup-url");
+    if (parameter !== undefined && parameter !== null) {
+      // monitor-setup-url exists
+      uri_param = new URLSearchParams(parameter.textContent);
+      if (uri_param.has('url') && uri_param.has('password') &&
+          uri_param.has('username') && uri_param.get('url').startsWith('http')) {
+        return {
+          opml_url: uri_param.get('url'),
+          username: uri_param.get('username'),
+          password: uri_param.get('password')
+        };
+      }
+    } else {
+      parameter = xmlDoc.getElementById("monitor-url");
+      if (parameter !== undefined && parameter !== null) {
+        monitor_dict.url = parameter.textContent.trim();
+        parameter = xmlDoc.getElementById("monitor-user");
+        if (parameter === undefined && parameter !== null) {
+          return;
+        }
+        monitor_dict.username = parameter.textContent.trim();
+        parameter = xmlDoc.getElementById("monitor-password");
+        if (parameter === undefined && parameter !== null) {
+          return;
+        }
+        monitor_dict.password = parameter.textContent.trim();
+        return monitor_dict;
+      }
+    }
+  }
+
+  function getInstanceOPMLListFromMaster(gadget, limit) {
+    var hosting_subscription_list = [],
+      opml_list = [],
+      uid_dict = {};
+    if (limit === undefined) {
+      limit = 100;
+    }
+    return gadget.state.erp5_gadget.allDocs({
+        query: '(portal_type:"Hosting Subscription") AND (validation_state:"validated")',
+        select_list: ['title', 'default_predecessor_uid', 'uid'],
+        limit: [0, limit],
+        sort_on: [
+          ["creation_date", "descending"]
+        ]
+      })
+      .push(function (result) {
+        var i,
+          uid_search_list = [];
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          hosting_subscription_list.push({
+            title: result.data.rows[i].value.title,
+            relative_url: result.data.rows[i].id
+          });
+          uid_search_list.push(result.data.rows[i].value.uid);
+          if (result.data.rows[i].value.default_predecessor_uid) {
+            uid_dict[result.data.rows[i].value.default_predecessor_uid] = i;
+          }
+        }
+        return gadget.state.erp5_gadget.allDocs({
+          query: '(portal_type:"Software Instance") AND ' +
+            '(predecessor_related_uid:("' + uid_search_list.join('","') + '"))',
+          select_list: ['uid', 'predecessor_related_uid', 'connection_xml'],
+          limit: [0, limit]
+        });
+      })
+      .push(function (result) {
+        var i,
+          tmp_parameter,
+          tmp_uid;
+
+        for (i = 0; i < result.data.total_rows; i += 1) {
+          tmp_uid = result.data.rows[i].value.uid;
+          if (uid_dict.hasOwnProperty(tmp_uid)) {
+            tmp_parameter = readMonitoringParameter(result.data.rows[i].value.connection_xml);
+            if (tmp_parameter !== undefined) {
+              opml_list.push({
+                portal_type: "opml",
+                title: hosting_subscription_list[uid_dict[tmp_uid]]
+                  .title,
+                relative_url: hosting_subscription_list[uid_dict[tmp_uid]]
+                  .relative_url,
+                url: tmp_parameter.opml_url,
+                username: tmp_parameter.username,
+                password: tmp_parameter.password,
+                basic_login: btoa(tmp_parameter.username + ':' +
+                                  tmp_parameter.password),
+                active: true
+              });
+            }
+          }
+        }
+        return opml_list;
+      });
+  }
+
   gadget_klass
     /////////////////////////////
     // state
@@ -276,6 +381,8 @@
     .declareAcquiredMethod("redirect", "redirect")
     .declareAcquiredMethod("jio_allDocs", "jio_allDocs")
     .declareAcquiredMethod("jio_put", "jio_put")
+    .declareAcquiredMethod("notifySubmitting", "notifySubmitting")
+    .declareAcquiredMethod("notifySubmitted", "notifySubmitted")
 
     /////////////////////////////////////////////////////////////////
     // declared methods
@@ -339,12 +446,12 @@
 
           if (gadget.state.is_exporter) {
             title_content = header_title({
-              title: "Export Monitor Configurations",
+              title: "Export OPML Configurations",
               icon: "download"
             });
           } else {
             title_content = header_title({
-              title: "Import Monitor Configurations",
+              title: "Import OPML Configurations",
               icon: "upload"
             });
           }
@@ -423,26 +530,23 @@
             });
         })
         .push(function () {
+          var hosting_subscription_list = [],
+            has_failed = false,
+            uid_dict = {};
           if (gadget.state.sync === "erp5" && gadget.state.storage_url) {
             // start import from erp5 now
-            return gadget.setSetting("hateoas_url", gadget.state.storage_url)
+            return gadget.notifySubmitting()
+              .push(function () {
+                return gadget.setSetting("hateoas_url", gadget.state.storage_url);
+              })
               .push(function () {
                 return gadget.state.erp5_gadget.createJio();
               })
               .push(function () {
-                // force login if not logged yet
-                return gadget.state.erp5_gadget.get("document2");
+                return gadget.getSetting('opml_import_limit', 100);
               })
-              .push(undefined, function () {
-                return false;
-              })
-              .push(function () {
-                // load monitoring information.
-                return gadget.state.erp5_gadget.getAttachment(
-                  'hosting_subscription_module',
-                  gadget.state.storage_url + 'hosting_subscription_module'
-                    + "/Base_getMonitoringInstanceParameterDictAsJson"
-                );
+              .push(function (select_limit) {
+                return getInstanceOPMLListFromMaster(gadget, select_limit);
               })
               .push(undefined, function () {
                 gadget.state.message
@@ -451,14 +555,54 @@
                     message: 'Error: Failed to get Monitor Configuration from URL: ' +
                       gadget.state.storage_url
                   });
-                return undefined;
+                has_failed = true;
+                return [];
               })
-              .push(function (result) {
-                if (result !== undefined) {
-                  return importMonitorConfiguration(gadget, result);
+              .push(function (opml_list) {
+                var i,
+                  push_queue = new RSVP.Queue();
+
+                function pushOPML(opml_dict) {
+                  push_queue
+                    .push(function () {
+                      return gadget.jio_put(opml_dict.url, opml_dict);
+                    })
+                    .push(undefined, function (error) {
+                      throw error;
+                    });
+                }
+
+                for (i = 0; i < opml_list.length; i += 1) {
+                  pushOPML(opml_list[i]);
+                }
+                return push_queue;
+              })
+              .push(undefined, function () {
+                gadget.state.message
+                  .innerHTML = notify_msg_template({
+                    status: 'error',
+                    message: 'An error occurred while saving Configuration from URL: ' +
+                      gadget.state.storage_url
+                  });
+                has_failed = true;
+              })
+              .push(function () {
+                if (!has_failed) {
+                  return gadget.notifySubmitted("Failed to import Configurations");
+                } else {
+                  return gadget.notifySubmitted("Configuration Saved!");
+                }
+              })
+              .push(function () {
+                if (!has_failed) {
+                  return gadget.redirect({
+                    "command": "display",
+                    "options": {"page": "settings_configurator"}
+                  });
                 }
               });
           }
         });
     });
-}(window, rJS, RSVP, jsen, Rusha, Handlebars, atob));
+}(window, rJS, RSVP, jsen, Rusha, Handlebars, atob, btoa, DOMParser,
+  URLSearchParams));

@@ -5,7 +5,7 @@
 
   rJS(window)
     .setState({
-      erp5_url: "https://vifib.erp5.net/web_site_module/renderjs_runner"
+      erp5_url: "https://vifib.erp5.net/web_site_module/renderjs_runner/hateoas/"
     })
     /////////////////////////////////////////////////////////////////
     // Acquired methods
@@ -26,7 +26,7 @@
           return form_gadget.getContent();
         })
         .push(function (content) {
-          master_url = content.erp5_url + "/hateoas/";
+          master_url = content.erp5_url;
           return gadget.setSetting("hateoas_url", master_url);
         })
         .push(function () {
@@ -34,7 +34,7 @@
             page: "ojsm_import_export",
             auto_sync: "erp5",
             url: master_url
-            }});
+          }});
         });
     })
 
