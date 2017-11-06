@@ -74,6 +74,21 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>name=editable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>identifier=title</td>
   <td></td>
 </tr>
@@ -112,6 +127,16 @@
   <td>//button[@data-i18n='Save']</td>
   <td></td>
 </tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
+  <td></td>
+</tr>
 <!-- Verify Search, add another document -->
 <tr>
   <td>waitForElementPresent</td>
@@ -121,6 +146,21 @@
 <tr>
   <td>click</td>
   <td>//a[@data-i18n='Add']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>name=editable</td>
   <td></td>
 </tr>
 <tr>
@@ -146,6 +186,11 @@
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//a[@data-i18n='Document']</td>
   <td></td>
 </tr>
 <tr>
@@ -233,7 +278,6 @@
   <td>//a[@data-i18n='Synchronize']</td>
   <td></td>
 </tr>
-<!-- Wait for search fixed
 <tr>
   <td>waitForElementPresent</td>
   <td>name=search</td>
@@ -253,7 +297,7 @@
   <td>click</td>
   <td>//button[@data-i18n='Filter']</td>
   <td></td>
-</tr> -->
+</tr>
 <tr>
   <td>waitForElementPresent</td>
   <td>//button[@data-i18n='Filter']</td>
