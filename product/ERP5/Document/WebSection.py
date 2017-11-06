@@ -246,8 +246,9 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         self.REQUEST[self.web_section_key] = self.getPhysicalPath()
       self.REQUEST.set('current_web_section', self)
 
+      # The URL to access the section should have the trailing slash.
       actual_url = self.REQUEST.get("ACTUAL_URL", "").strip()
-      if actual_url and self.REQUEST.get("method") == "GET" and not actual_url.endswith("/"):
+      if actual_url and self.REQUEST.get("method") == "GET" and not actual_url.endswith("/") and self.REQUEST.get('PUBLISHED') == self:
         query_string = self.REQUEST.get("QUERY_STRING", "")
         query_str = "?%s" % query_string if query_string else query_string
         return self.REQUEST.RESPONSE.redirect(
