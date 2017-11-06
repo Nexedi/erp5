@@ -74,6 +74,21 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
+  <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>//button[@data-i18n='Menu']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>click</td>
+  <td>name=editable</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
   <td>identifier=title</td>
   <td></td>
 </tr>
@@ -114,12 +129,7 @@
 </tr>
 <tr>
   <td>waitForElementPresent</td>
-  <td>link=${title}</td>
-  <td></td>
-</tr>
-<tr>
-  <td>click</td>
-  <td>link=${title}</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
   <td></td>
 </tr>
 <tr>
@@ -155,6 +165,11 @@
 <tr>
   <td>click</td>
   <td>//button[@data-i18n='Save']</td>
+  <td></td>
+</tr>
+<tr>
+  <td>waitForElementPresent</td>
+  <td>//div[@data-gadget-scope="notification"]//button[text()='Data Updated']</td>
   <td></td>
 </tr>
 <tr>
