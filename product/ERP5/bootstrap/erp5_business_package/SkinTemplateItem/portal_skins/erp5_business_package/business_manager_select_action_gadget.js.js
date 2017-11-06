@@ -66,7 +66,7 @@
           state = tree.sub[key].value;
           node = {id: subid, title: key};
           if (tree.sub[key].hasOwnProperty('value')) {
-            node.state = tree.sub[key].value ;
+            node.state = tree.sub[key].value;
           }
           if (tree.sub[key].hasOwnProperty('sub')) {
             node.tree_html = buildTreeHTML(subid, tree.sub[key]);
@@ -79,18 +79,14 @@
     return html;
   }
 
-  function getParentNode(data, childName) {
-    // Get the tree created from `item_path_list` and use it to find out parent
-  }
-
   rJS(window)
 
     .declareMethod('render', function (options) {
       var parameter_dict = JSON.parse(options.value),
-        item_path_list = parameter_dict.item_path_list;
+        item_path_list = parameter_dict.item_path_list,
+        html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list));
       this.action_url = parameter_dict.action_url;
-      var html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list));
-      this.element.innerHTML = html_tree
+      this.element.innerHTML = html_tree;
       console.log(html_tree);
     })
 
@@ -104,22 +100,49 @@
         // 2 . If parent has no value:
         //      - All children checked -> Parent checked
         //      - Parent checked -> All children checked
-        var childrenSelected = this.element.querySelectorAll('input[type=checkbox][id="item_path_list:list"][name="child_path"]:checked');
-        var parentSelected = this.element.querySelectorAll('input[type=checkbox][id^="tree"][name="parent_path"]:checked');
-        // Spread the result value so that we can use map on it
-        var parentValues = [...parentSelected].map(function(x){
-          return x.nextSibling.textContent;
-        });
-        var childrenValues = [...childrenSelected].map(function(x){
-          return x.nextSibling.textContent;
-        })
+        if (evt.target.getAttribute('name') === 'child_path') {
+          // Get the parent element with with path
+          var parent = evt.target.parentElement.parentElement.parentElement,
+            state = parent.querySelector('input[type=checkbox][name$="_path"]').nextElementSibling.getAttribute('state');
+
+          // Only update the children and parents together if parent element
+          // has no state value
+          if (!state) {
+            var childrenChecked = parent.querySelectorAll('input[type=checkbox][name="child_path"]:checked'),
+              children = parent.querySelectorAll('input[type=checkbox][name="child_path"]'),
+              parentCheckBox = parent.querySelector('input[type=checkbox][name$="parent_path"]');
+            if (children.length === childrenChecked.length) {
+              parentCheckBox.checked = evt.target.checked;
+            }
+          }
+
+        }
+        if (evt.target.getAttribute('name') === 'parent_path') {
+          // Check for the state of the target
+          // If there is no state, then check if all the children are flattened
+          // or not. If there is another tree in the child nodes, do nothing.
+          // Else update the checked status of all the child nodes similar to
+          // that of the parent
+          if (!evt.target.nextSibling.getAttribute('state')) {
+            var nodeChildPath = evt.target.nextElementSibling.nextElementSibling.querySelectorAll('input[type=checkbox][name="child_path"]'),
+              nodeParentPath = evt.target.nextElementSibling.nextElementSibling.querySelectorAll('input[type=checkbox][name="parent_path"]'),
+              i,
+              element;
+            // If there is no nodeParentPath and some childParentPath, update
+            // the checked status of the childParentPath
+            if ((!nodeParentPath.length) && (nodeChildPath.length)) {
+              for (i = 0; element = nodeChildPath[i]; i++) {
+                element.checked = evt.target.checked;
+              }
+            }
+          }
+        }
         console.log('Update the checkbox state of children (and parents too)');
       }
     }, false, false)
 
     .declareMethod('getContent', function (options) {
-      var val = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
-      var val_tree = this.element.querySelectorAll('input[type=checkbox][name^="tree"]:checked');
+      var input_list = options.input_list;
       console.log(input_list);
       return jIO.util.ajax({
         type: 'POST',
@@ -127,6 +150,6 @@
         data: {'checkNeeded': 'True',
               'item_path_list': input_list}
       });
-    })
+    });
 
 }(rJS, jIO, Handlebars, RSVP, window));
