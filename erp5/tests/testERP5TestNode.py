@@ -341,6 +341,15 @@ shared = true
     rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
     output = call("git branch".split()).strip()
     self.assertTrue("* bar" in output.split('\n'))
+    # Add a fourth branch on remote, make sure we could switch to it
+    # this time the branch name is a substring of previous one (we had
+    # failure is such case at some point)
+    remote_call = self.getCaller(cwd=self.remote_repository2)
+    output = remote_call('git checkout master -b ba'.split())
+    vcs_repository_info['branch'] = 'ba'
+    rev_list = self.getAndUpdateFullRevisionList(test_node, node_test_suite)
+    output = call("git branch".split()).strip()
+    self.assertTrue("* ba" in output.split('\n'))
 
   def test_05c_changeRepositoryUrl(self):
     """

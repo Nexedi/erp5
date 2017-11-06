@@ -202,7 +202,7 @@ class Updater(object):
           if self.branch and \
             not ("* %s" % self.branch in self._git('branch').split("\n")):
               # Delete branch if already exists
-              if self.branch in self._git('branch'):
+              if self.branch in [x.strip() for x in self._git('branch').split("\n")]:
                 self._git('branch', '-D', self.branch)
               self._git('checkout',  'origin/%s' % self.branch, '-b',
                         self.branch)
