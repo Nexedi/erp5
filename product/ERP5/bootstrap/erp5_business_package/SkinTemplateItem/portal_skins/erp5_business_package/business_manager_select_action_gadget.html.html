@@ -13,10 +13,10 @@
     {{#if tree_html}}
       <input type="checkbox" id="{{id}}" />
       <label for="{{id}}"></label>
-      <label><input type="checkbox"/>{{title}}</label>
+      <input type="checkbox" id="{{id}}" name='parent_path'/><label state="{{state}}">{{title}}</label>
     {{else}}
       <label></label>
-      <label><input type="checkbox" name="item_path_list:list"/>{{title}}</label>
+      <input type="checkbox" id="item_path_list:list" name='child_path' /><label state="{{state}}">{{title}}</label>
     {{/if}}
 
     {{#if tree_html}}

@@ -41,7 +41,7 @@ li > label:first-child:before {
 }
 
 /* by default, do not display the subtree */
-li > input:first-child ~ ul {
+li > input:first-child  ~ ul {
   display: none;
 }
 li > input:first-child + label:before {
@@ -54,4 +54,19 @@ li > input:first-child:checked ~ ul {
 }
 li > input:first-child:checked + label:before {
   content: '-';
+}
+
+/* Default color should be green for no state change */
+li > input[name$="path"] + label {
+  color: green;
+}
+
+/* if state is Changed, turn the color orange of child and parent path */
+li > input[name$="path"] + label[state='Changed'] {
+  color: orange;
+}
+
+/* if state is Deleted, turn the color red of child and parent path */
+li > input[name$="path"] + label[state='Deleted'] {
+  color: red;
 }

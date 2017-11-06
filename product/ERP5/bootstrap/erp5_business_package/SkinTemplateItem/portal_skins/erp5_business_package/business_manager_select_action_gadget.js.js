@@ -56,15 +56,17 @@
       key,
       node_list = [],
       subid,
+      state,
       node;
 
     if (tree.hasOwnProperty('sub')) {
       for (key in tree.sub) {
         if (tree.sub.hasOwnProperty(key)) {
           subid = id + key;
+          state = tree.sub[key].value;
           node = {id: subid, title: key};
           if (tree.sub[key].hasOwnProperty('value')) {
-            node.title += ' (' + tree.sub[key].value + ')'
+            node.state = tree.sub[key].value ;
           }
           if (tree.sub[key].hasOwnProperty('sub')) {
             node.tree_html = buildTreeHTML(subid, tree.sub[key]);
@@ -77,34 +79,47 @@
     return html;
   }
 
+  function getParentNode(data, childName) {
+    // Get the tree created from `item_path_list` and use it to find out parent
+  }
+
   rJS(window)
 
     .declareMethod('render', function (options) {
       var parameter_dict = JSON.parse(options.value),
         item_path_list = parameter_dict.item_path_list;
       this.action_url = parameter_dict.action_url;
-      var node_list = buildTreeHTML('tree', convertPathListToTree(item_path_list));
-      this.element.innerHTML = buildTreeHTML('tree', convertPathListToTree(item_path_list));
-      console.log(node_list);
+      var html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list));
+      this.element.innerHTML = html_tree
+      console.log(html_tree);
     })
 
     .onEvent('change', function (evt) {
-      if ((evt.target.type === 'checkbox') && (!evt.target.id)) {
+      if ((evt.target.type === 'checkbox') && (evt.target.name) && (evt.target.id)) {
         // XXX Update the checkbox state of children (and parents too)
-        // querySelectorAll and parent ancestors
-        // var parentSelected = this.element.querySelectorAll('input[type=checkbox][name=""]:checked')
-        var val = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
+        // Rules:
+        // 1 . State of parent shouldn't be dependent on the state of children
+        //     and vice-versa if both of them some value(i.e, if there has been
+        //     any change in the path).
+        // 2 . If parent has no value:
+        //      - All children checked -> Parent checked
+        //      - Parent checked -> All children checked
+        var childrenSelected = this.element.querySelectorAll('input[type=checkbox][id="item_path_list:list"][name="child_path"]:checked');
+        var parentSelected = this.element.querySelectorAll('input[type=checkbox][id^="tree"][name="parent_path"]:checked');
         // Spread the result value so that we can use map on it
-        var labelValues = [...val].map(function(x){
-          return x.nextSibling.data;
+        var parentValues = [...parentSelected].map(function(x){
+          return x.nextSibling.textContent;
         });
+        var childrenValues = [...childrenSelected].map(function(x){
+          return x.nextSibling.textContent;
+        })
         console.log('Update the checkbox state of children (and parents too)');
-        console.log(labelValues);
       }
     }, false, false)
 
     .declareMethod('getContent', function (options) {
-      var input_list = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
+      var val = this.element.querySelectorAll('input[type=checkbox][name="item_path_list:list"]:checked');
+      var val_tree = this.element.querySelectorAll('input[type=checkbox][name^="tree"]:checked');
       console.log(input_list);
       return jIO.util.ajax({
         type: 'POST',
