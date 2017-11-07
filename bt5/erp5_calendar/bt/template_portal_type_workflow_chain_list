@@ -6,7 +6,9 @@ Group Calendar | group_calendar_workflow
 Group Presence Period | edit_workflow
 Group Presence Period | group_calendar_interaction_workflow
 Leave Request Period | edit_workflow
+Leave Request Period | leave_request_interaction_workflow
 Leave Request | edit_workflow
+Leave Request | leave_request_interaction_workflow
 Leave Request | leave_request_workflow
 Presence Request Period | edit_workflow
 Presence Request | edit_workflow

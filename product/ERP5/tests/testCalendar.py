@@ -1623,6 +1623,99 @@ class TestCalendar(ERP5ReportTestCase):
                              **{'calendar_period_type/type2': 2.0,
                                 'calendar_period_type/type3': 1.5,})
 
+  def test_LeaveRequest_defaultLeaveRequestPeriod(self):
+    '''
+      Check check how default_leave_request_period is created and when
+      fields of LeaveRequest_view are visible or not
+    '''
+    default_start_date = DateTime('2018/01/01')
+    default_stop_date = DateTime('2018/01/03')
+    extra_start_date = DateTime('2018/01/05')
+    extra_stop_date = DateTime('2018/01/08')
+    default_quantity = 2.0
+
+    def checkDisplayedAsSimple():
+      self.assertEqual(
+        my_default_leave_request_period_start_date.get_value("enabled"),
+        True,
+      )
+      self.assertEqual(
+        my_default_leave_request_period_stop_date.get_value("enabled"),
+        True,
+      )
+      self.assertEqual(my_start_date.get_value("enabled"), False)
+      self.assertEqual(my_start_date.get_value("enabled"), False)
+      self.assertEqual(listbox.get_value("enabled"), False)
+
+    # Add a Leave Request, we should have no sub-objects and it should be
+    # displayed as simple (no listbox and fields to be edited on Delivery)
+    leave_request = self.portal.leave_request_module.newContent()
+    LeaveRequest_view = leave_request.LeaveRequest_view
+    my_default_leave_request_period_start_date = LeaveRequest_view.\
+      my_default_leave_request_period_start_date
+    my_default_leave_request_period_stop_date = LeaveRequest_view.\
+      my_default_leave_request_period_stop_date
+    my_start_date = LeaveRequest_view.my_start_date
+    my_stop_date = LeaveRequest_view.my_stop_date
+    listbox = LeaveRequest_view.listbox
+    checkDisplayedAsSimple()
+    self.assertEqual(
+      len(leave_request.objectValues(portal_type='Leave Request Period')), 0
+    )
+
+    # Edit properties, default_leave_request_period should be created, yet
+    # Leave Request is still displayed as simple
+    leave_request.edit(
+      default_leave_request_period_start_date=default_start_date,
+      default_leave_request_period_stop_date=default_stop_date,
+      default_leave_request_period_quantity=default_quantity,
+    )
+    checkDisplayedAsSimple()
+    leave_request_period_list = leave_request.objectValues(
+      portal_type='Leave Request Period'
+    )
+    self.assertEqual(len(leave_request_period_list), 1)
+    default_leave_request_period = leave_request_period_list[0]
+    self.assertEqual(
+      default_leave_request_period.getId(), 'default_leave_request_period'
+    )
+    self.assertEqual(default_leave_request_period.getStartDate(), default_start_date)
+    self.assertEqual(default_leave_request_period.getStopDate(), default_stop_date)
+    self.assertEqual(default_leave_request_period.getQuantity(), default_quantity)
+    self.assertEqual(leave_request.getStartDate(), default_start_date)
+    self.assertEqual(leave_request.getStopDate(), default_stop_date)
+
+    extra_leave_request_period = leave_request.newContent(
+      portal_type = 'Leave Request Period',
+    )
+    extra_leave_request_period.edit(
+      start_date=extra_start_date,
+      stop_date=extra_stop_date,
+      quantity=1.0,
+    )
+    self.assertEqual(
+      len(leave_request.objectValues(portal_type='Leave Request Period')), 2
+    )
+    # Since we have more than 1 Leave Request Periods, now we get the non-simple
+    # display (with listbox and not fields to be edited on Delivery)
+    self.assertEqual(
+      my_default_leave_request_period_start_date.get_value("enabled"),
+      False,
+    )
+    self.assertEqual(
+      my_default_leave_request_period_stop_date.get_value("enabled"),
+      False,
+    )
+    self.assertEqual(my_start_date.get_value("enabled"), True)
+    self.assertEqual(my_start_date.get_value("enabled"), True)
+    self.assertEqual(listbox.get_value("enabled"), True)
+
+    # yet, start and stop dates are not editable in Delivery level
+    # and they are defined by the movement values
+    self.assertEqual(my_start_date.get_value("editable"), 0)
+    self.assertEqual(my_start_date.get_value("editable"), 0)
+    self.assertEqual(leave_request.getStartDate(), default_start_date)
+    self.assertEqual(leave_request.getStopDate(), extra_stop_date)
 
 def test_suite():
   suite = unittest.TestSuite()
