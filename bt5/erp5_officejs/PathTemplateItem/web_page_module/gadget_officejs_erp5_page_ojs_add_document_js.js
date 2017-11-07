@@ -35,7 +35,8 @@
           return gadget.jio_post({
             title: "Untitled Document",
             portal_type: result[0],
-            parent_relative_url: result[1]
+            parent_relative_url: result[1],
+            content_type: content_type[result[0]] || undefined
           });
         })
         .push(function (id) {
