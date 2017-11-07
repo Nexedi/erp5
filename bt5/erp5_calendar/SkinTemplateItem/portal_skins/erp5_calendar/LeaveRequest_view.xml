@@ -83,6 +83,7 @@
                       <list>
                         <string>listbox_start_date</string>
                         <string>listbox_stop_date</string>
+                        <string>listbox_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -91,6 +92,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_default_leave_request_period_quantity</string>
+                        <string>my_default_leave_request_period_resource</string>
                       </list>
                     </value>
                 </item>
@@ -98,7 +102,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_destination_title</string>
+                        <string>my_start_date</string>
+                        <string>my_stop_date</string>
+                        <string>my_default_leave_request_period_start_date</string>
+                        <string>my_default_leave_request_period_stop_date</string>
                         <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
