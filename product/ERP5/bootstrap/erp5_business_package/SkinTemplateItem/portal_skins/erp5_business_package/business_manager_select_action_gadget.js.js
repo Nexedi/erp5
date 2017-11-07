@@ -17,8 +17,8 @@
          sub: {
            portal_ids: {
              sub: {
-               1: {value: 'Bar'},
-               6: {value: 'Foo'}
+               1: {value: 'Bar', path: 'portal_ids/1},
+               6: {value: 'Foo', path: 'portal_ids/6}
              }
            }
          }
@@ -46,6 +46,7 @@
       }
       if (splitted_key_list.length) {
         subtree.value = item_path_list[i][1];
+        subtree.path = item_path_list[i][0];
       }
     }
     return tree;
@@ -56,17 +57,20 @@
       key,
       node_list = [],
       subid,
-      state,
       node;
 
     if (tree.hasOwnProperty('sub')) {
       for (key in tree.sub) {
         if (tree.sub.hasOwnProperty(key)) {
           subid = id + key;
-          state = tree.sub[key].value;
           node = {id: subid, title: key};
           if (tree.sub[key].hasOwnProperty('value')) {
-            node.state = tree.sub[key].value;
+            // class is a reserved keyword
+            node['class'] = tree.sub[key].value;
+            node['data-path'] = tree.sub[key].path;
+          }
+          else {
+            node['class'] = 'Unchanged';
           }
           if (tree.sub[key].hasOwnProperty('sub')) {
             node.tree_html = buildTreeHTML(subid, tree.sub[key]);
@@ -84,7 +88,8 @@
     .declareMethod('render', function (options) {
       var parameter_dict = JSON.parse(options.value),
         item_path_list = parameter_dict.item_path_list,
-        html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list));
+        node_tree = convertPathListToTree(item_path_list),
+        html_tree = buildTreeHTML('tree', node_tree);
       this.action_url = parameter_dict.action_url;
       this.element.innerHTML = html_tree;
       console.log(html_tree);
@@ -100,30 +105,34 @@
         // 2 . If parent has no value:
         //      - All children checked -> Parent checked
         //      - Parent checked -> All children checked
-        if (evt.target.getAttribute('name') === 'child_path') {
+        if (evt.target.name === 'child_path') {
           // Get the parent element with with path
           var parent = evt.target.parentElement.parentElement.parentElement,
-            state = parent.querySelector('input[type=checkbox][name$="_path"]').nextElementSibling.getAttribute('state');
+            state = parent.querySelector(
+              'input[type=checkbox][name$="_path"]').nextElementSibling.className;
 
           // Only update the children and parents together if parent element
           // has no state value
-          if (!state) {
-            var childrenChecked = parent.querySelectorAll('input[type=checkbox][name="child_path"]:checked'),
-              children = parent.querySelectorAll('input[type=checkbox][name="child_path"]'),
-              parentCheckBox = parent.querySelector('input[type=checkbox][name$="parent_path"]');
+          if (state === 'Unchanged') {
+            var childrenChecked = parent.querySelectorAll(
+              'input[type=checkbox][name="child_path"]:checked'),
+              children = parent.querySelectorAll(
+                'input[type=checkbox][name="child_path"]'),
+              parentCheckBox = parent.querySelector(
+                'input[type=checkbox][name$="parent_path"]');
             if (children.length === childrenChecked.length) {
               parentCheckBox.checked = evt.target.checked;
             }
           }
-
         }
-        if (evt.target.getAttribute('name') === 'parent_path') {
+
+        if (evt.target.name === 'parent_path') {
           // Check for the state of the target
           // If there is no state, then check if all the children are flattened
           // or not. If there is another tree in the child nodes, do nothing.
           // Else update the checked status of all the child nodes similar to
           // that of the parent
-          if (!evt.target.nextSibling.getAttribute('state')) {
+          if (evt.target.nextSibling.className === 'Unchanged') {
             var nodeChildPath = evt.target.nextElementSibling.nextElementSibling.querySelectorAll('input[type=checkbox][name="child_path"]'),
               nodeParentPath = evt.target.nextElementSibling.nextElementSibling.querySelectorAll('input[type=checkbox][name="parent_path"]'),
               i,
@@ -131,8 +140,8 @@
             // If there is no nodeParentPath and some childParentPath, update
             // the checked status of the childParentPath
             if ((!nodeParentPath.length) && (nodeChildPath.length)) {
-              for (i = 0; element = nodeChildPath[i]; i++) {
-                element.checked = evt.target.checked;
+              for (i = 0; i < nodeChildPath.length; i++) {
+                nodeChildPath[i].checked = evt.target.checked;
               }
             }
           }
@@ -142,13 +151,26 @@
     }, false, false)
 
     .declareMethod('getContent', function (options) {
-      var input_list = options.input_list;
-      console.log(input_list);
-      return jIO.util.ajax({
+      var i,
+        path_list = [];
+
+      // Get all the checked checkbox from both child_path and parent_path
+      var checkedInputList = this.element.querySelectorAll(
+        'input[type=checkbox][name$="_path"]:checked');
+
+      // Filter all paths except for those 'Unchanged'
+      for (i = 0; i < checkedInputList.length; ++i) {
+        var nextLabelElement = checkedInputList[i].nextElementSibling;
+        if (nextLabelElement.className !== "Unchanged") {
+          path_list.push(nextLabelElement.dataset.path)
+        }
+      }
+
+      jIO.util.ajax({
         type: 'POST',
         url: this.action_url,
         data: {'checkNeeded': 'True',
-              'item_path_list': input_list}
+              'item_path_list': path_list}
       });
     });
 
