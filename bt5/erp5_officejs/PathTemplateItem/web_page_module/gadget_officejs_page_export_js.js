@@ -231,7 +231,7 @@
             take_installer: no_installer === undefined,
             manifest: cache_file,
             origin_url: site_url,
-            prefix: prefix || ""
+            prefix: './' + (prefix || "")
           }
         },
         signature_sub_storage: {
