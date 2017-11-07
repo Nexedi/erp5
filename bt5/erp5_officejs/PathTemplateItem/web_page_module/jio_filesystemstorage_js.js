@@ -20,7 +20,7 @@
   FileSystemStorage.prototype.getAttachment = function (doc_id, attachment_id) {
     return this._sub_storage.getAttachment(
       this._document,
-      doc_id + ((attachment_id === "index.html") ?
+      '.' + doc_id + ((attachment_id === "index.html") ?
         (doc_id.endsWith("imagelib/") ? "index.html" : "") : attachment_id)
     );
   };
@@ -52,10 +52,13 @@
           if (result.hasOwnProperty(id)) {
             last_index = id.lastIndexOf("/") + 1;
             if (last_index === id.length) {
+              if (id.startsWith('.')) {
+                id = id.substring(1);
+              }
               path = id || "/";
               filename = "index.html";
             } else {
-              path = id.substring(0, last_index);
+              path = id.substring(1, last_index);
               filename = id.substring(last_index);
             }
           }
