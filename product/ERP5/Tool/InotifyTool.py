@@ -37,7 +37,7 @@ from AccessControl.SecurityManagement import newSecurityManager, \
   getSecurityManager, setSecurityManager
 
 # TODO: Current API was designed to avoid compability issues in case it is
-#       reimplemented using http://pypi.python.org/pypi/inotifyx
+#       reimplemented using https://pypi.python.org/pypi/pyinotify
 
 IN_CREATE = 1
 IN_MODIFY = 2
