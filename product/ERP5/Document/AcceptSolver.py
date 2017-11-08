@@ -49,6 +49,7 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
     portal = self.getPortalObject()
     solved_property_list = self.getConfigurationPropertyDict() \
                                .get('tested_property_list')
+    solver_portal_type_relative_url = self.getPortalTypeValue().getRelativeUrl()
     if solved_property_list is None:
       solved_property_list = \
         portal.portal_types.getTypeInfo(self).getTestedPropertyList()
@@ -59,7 +60,11 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
         divergence_list = movement.getDivergenceList()
         for divergence in divergence_list:
           solved_property = divergence.getProperty('tested_property')
-          if solved_property not in solved_property_list:
+          # Only apply solver if it has been defined on the Tester
+          if (solved_property not in solved_property_list) or\
+              (not solver_portal_type_relative_url\
+              in portal.restrictedTraverse(
+                divergence.getProperty('tester_relative_url')).getSolverList()):
             continue
           new_value = divergence.getProperty('decision_value')
           # XXX hard coded
