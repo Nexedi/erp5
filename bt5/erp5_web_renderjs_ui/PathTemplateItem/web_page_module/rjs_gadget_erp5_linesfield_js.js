@@ -3,14 +3,14 @@
 (function (window, rJS) {
   "use strict";
 
-  function listToNewlines(list) {
-    if (list.constructor === Array) {return list.join("\n"); }
-    return list;
+  function listToNewlines(lines) {
+    if (Array.isArray(lines)) {return lines.join("\n"); }
+    return lines;
   }
 
-  function listToBR(list) {
-    if (list.constructor === Array) {return list.join("<br/>\n"); }
-    return list;
+  function listToBR(lines) {
+    if (Array.isArray(lines)) {return lines.join("<br/>\n"); }
+    return lines;
   }
 
   rJS(window)
@@ -50,7 +50,7 @@
             });
           });
       }
-      
+
       return gadget.getDeclaredGadget('sub')
         .push(function (input) {
           if (modification_dict.hasOwnProperty("value")) {
@@ -61,7 +61,7 @@
             }
           }
           // when we only receive changes we can simply pass (minimaly modified) modification dictionary
-          input.render(modification_dict); 
+          return input.render(modification_dict);
         });
     })
 

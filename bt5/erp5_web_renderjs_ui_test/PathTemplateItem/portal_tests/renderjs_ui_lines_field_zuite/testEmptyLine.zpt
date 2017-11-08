@@ -22,7 +22,9 @@
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
 <tr><td>type</td>
     <td>field_my_lines_list</td>
-    <td>javascript{"\na\nb\n"}</td></tr>
+    <td>a
+b
+</td></tr>
 <tr><td>waitForElementPresent</td>
     <td>//button[@data-i18n='Save']</td><td></td></tr>
 <tr><td>click</td>
@@ -39,8 +41,10 @@
     <td>//div[@data-gadget-url='${renderjs_url}/gadget_erp5_field_listbox.html']//table/tbody/tr[1]//a</td><td></td></tr>
 <tr><td>waitForElementPresent</td>
     <td>//div[@data-gadget-url="${renderjs_url}/gadget_erp5_field_lines.html"]//textarea</td><td></td></tr>
-<tr><td>assertEval</td>
-    <td>this.browserbot.findElement('field_my_lines_list').value</td>
-    <td>javascript{"\na\nb\n"}</td></tr>
+<tr><td>assertValue</td>
+    <td>//textarea[@name='field_my_lines_list']</td>
+    <td>a
+b
+</td></tr>
 </body>
 </html>
