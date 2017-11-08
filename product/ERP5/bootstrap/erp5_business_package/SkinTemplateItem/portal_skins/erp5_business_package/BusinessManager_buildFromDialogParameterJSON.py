@@ -1,3 +1,7 @@
+# Convert the item_path_list from str to list type
+if isinstance(item_path_list, str):
+  item_path_list = item_path_list.split(',')
+
 kwargs = {
   'checkNeeded': check_needed,
   'item_path_list': item_path_list}
