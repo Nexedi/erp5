@@ -166,6 +166,11 @@ var repair = false;
         storage = createStorage(gadget);
       if (navigator.serviceWorker !== undefined) {
         return storage.repair()
+          .push(function () {
+            return navigator.serviceWorker.register(
+              "gadget_officejs_bootloader_serviceworker.js"
+            );
+          })
           .push(undefined, function (error) {
             return gadget.changeState({
               error_amount: gadget.state.error_amount + 1,
@@ -177,11 +182,6 @@ var repair = false;
               .push(function () {
                 return gadget.install();
               });
-          })
-          .push(function () {
-            return navigator.serviceWorker.register(
-              "gadget_officejs_bootloader_serviceworker.js"
-            );
           });
       }
       return;
