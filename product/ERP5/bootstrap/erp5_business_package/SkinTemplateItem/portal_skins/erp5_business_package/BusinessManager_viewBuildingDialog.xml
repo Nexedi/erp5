@@ -75,7 +75,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_business_manager_select_action_gadget</string>
+                        <string>your_item_path_list</string>
                         <string>my_workflow_action</string>
                       </list>
                     </value>
