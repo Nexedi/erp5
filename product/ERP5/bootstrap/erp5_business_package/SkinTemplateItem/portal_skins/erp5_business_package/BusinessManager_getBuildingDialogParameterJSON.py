@@ -1,9 +1,8 @@
 import json
 
-checkNeeded, changed_path_list = context.getParentValue().rebuildBusinessManager(context)
+# Get the path list which has been changed/modified in Business Manager
+changed_path_list = context.getParentValue().rebuildBusinessManager(context)[1]
 
 return json.dumps({
-  'check_needed': checkNeeded,
   'item_path_list': changed_path_list,
-  'action_url': context.absolute_url() + '/BusinessManager_buildFromDialogParameterJSON',
 })
