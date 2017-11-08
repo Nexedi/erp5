@@ -379,6 +379,9 @@ class Image(TextConvertableMixin, File, OFSImage):
         # XXX: The only portable way is to pass what stdin.write can accept,
         #      which is a string for PIPE.
         image, err = process.communicate(data)
+        # XXX Hack to remove some warnings from imagemagick stdout !
+        #     https://codeyarns.com/2014/03/10/free-entry-warning-with-ghostscript-and-imagemagick/
+        image = re.sub(r"^(   \*\*\*\* Warning: considering '0000000000 XXXXX n' as a free entry.\n)+", "", image)
     finally:
         del process
     if image:
