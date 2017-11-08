@@ -60,6 +60,13 @@ var global = self, window = self;
           .push(function () {
             return fetch(event.request);
           })
+          .push(undefined, function (error) {
+            if (error.name === 'TypeError' &&
+                error.message === 'Failed to fetch') {
+              return {};
+            }
+            throw error;
+          })
           .push(function (response) {
             if (response.status === 200) {
               return response;
