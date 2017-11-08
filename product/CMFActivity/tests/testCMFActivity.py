@@ -47,6 +47,7 @@ from DateTime import DateTime
 from Products.CMFActivity.ActivityTool import Message
 from _mysql_exceptions import OperationalError
 from Products.ZMySQLDA.db import DB
+from sklearn.externals.joblib.hashing import hash as joblib_hash
 import gc
 import random
 import threading
@@ -83,7 +84,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
       Return the list of business templates.
     """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_joblib')
 
   def getCategoriesTool(self):
     return getattr(self.getPortal(), 'portal_categories', None)
@@ -403,6 +404,38 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = portal.portal_activities.getMessageList()
     self.assertEqual(len(message_list),0)
 
+  def TryActiveProcessWithResultDict(self, activity):
+    """
+    Try to store the result inside an active process using result list
+    """
+    portal = self.getPortal()
+    organisation =  portal.organisation._getOb(self.company_id)
+    organisation._setTitle(self.title1)
+    active_process = portal.portal_activities.newActiveProcess()
+    self.assertEqual(self.title1,organisation.getTitle())
+
+    # Post SQLjoblib tasks with explicit signature 
+    organisation.activate(activity=activity,active_process=active_process, signature=1).getTitle()
+    organisation.activate(activity=activity,active_process=active_process, signature=2).getTitle()
+    organisation.activate(activity=activity,active_process=active_process, signature=3).getTitle()
+    
+    self.commit()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
+    result_dict = active_process.getResultDict()
+    result = result_dict[1]
+    self.assertEqual(result_dict[1].method_id, 'getTitle')
+    self.assertEqual(result.result , self.title1)
+    result = result_dict[2]
+    self.assertEqual(result_dict[2].method_id, 'getTitle')
+    self.assertEqual(result.result , self.title1)
+    result = result_dict[3]
+    self.assertEqual(result_dict[3].method_id, 'getTitle')
+    self.assertEqual(result.result , self.title1)
+    message_list = portal.portal_activities.getMessageList()
+    self.assertEqual(len(message_list),0)
+
+
   def TryMethodAfterMethod(self, activity):
     """
       Ensure the order of an execution by a method id
@@ -703,6 +736,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if we can add a complete sales order
     self.DeferredSetTitleActivity('SQLQueue')
 
+  def test_03_DeferredSetTitleSQLJoblib(self):
+    # Test if we can add a complete sales order
+    self.DeferredSetTitleActivity('SQLJoblib')
+
   def test_05_InvokeAndCancelSQLDict(self):
     # Test if we can add a complete sales order
     self.InvokeAndCancelActivity('SQLDict')
@@ -710,6 +747,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_06_InvokeAndCancelSQLQueue(self):
     # Test if we can add a complete sales order
     self.InvokeAndCancelActivity('SQLQueue')
+
+  def test_07_InvokeAndCancelSQLJoblib(self):
+    self.InvokeAndCancelActivity('SQLJoblib')
 
   def test_09_CallOnceWithSQLDict(self):
     # Test if we call methods only once
@@ -719,6 +759,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if we call methods only once
     self.CallOnceWithActivity('SQLQueue')
 
+  def test_11_CallOnceWithSQLJoblib(self):
+    self.CallOnceWithActivity('SQLJoblib')
+
   def test_13_TryMessageWithErrorOnSQLDict(self):
     # Test if we call methods only once
     self.TryMessageWithErrorOnActivity('SQLDict')
@@ -726,6 +769,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_14_TryMessageWithErrorOnSQLQueue(self):
     # Test if we call methods only once
     self.TryMessageWithErrorOnActivity('SQLQueue')
+  
+  def test_15_TryMessageWithErrorOnSQLJoblib(self):
+    self.TryMessageWithErrorOnActivity('SQLJoblib')
 
   def test_17_TryFlushActivityWithSQLDict(self):
     # Test if we call methods only once
@@ -735,6 +781,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if we call methods only once
     self.TryFlushActivity('SQLQueue')
 
+  def test_19_TryFlushActivityWithSQLJoblib(self):
+    # Test if we call methods only once
+    self.TryFlushActivity('SQLJoblib')
+
   def test_21_TryActivateInsideFlushWithSQLDict(self):
     # Test if we call methods only once
     self.TryActivateInsideFlush('SQLDict')
@@ -742,6 +792,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_22_TryActivateInsideFlushWithSQLQueue(self):
     # Test if we call methods only once
     self.TryActivateInsideFlush('SQLQueue')
+
+  def test_23_TryActivateInsideFlushWithSQLQueue(self):
+    # Test if we call methods only once
+    self.TryActivateInsideFlush('SQLJoblib')
 
   def test_25_TryTwoMethodsWithSQLDict(self):
     # Test if we call methods only once
@@ -751,6 +805,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if we call methods only once
     self.TryTwoMethods('SQLQueue')
 
+  def test_27_TryTwoMethodsWithSQLJoblib(self):
+    # Test if we call methods only once
+    self.TryTwoMethods('SQLJoblib')
+
   def test_29_TryTwoMethodsAndFlushThemWithSQLDict(self):
     # Test if we call methods only once
     self.TryTwoMethodsAndFlushThem('SQLDict')
@@ -758,6 +816,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_30_TryTwoMethodsAndFlushThemWithSQLQueue(self):
     # Test if we call methods only once
     self.TryTwoMethodsAndFlushThem('SQLQueue')
+
+  def test_31_TryTwoMethodsAndFlushThemWithSQLJoblib(self):
+    # Test if we call methods only once
+    self.TryTwoMethodsAndFlushThem('SQLJoblib')
 
   def test_33_TryActivateFlushActivateTicWithSQLDict(self):
     # Test if we call methods only once
@@ -788,6 +850,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if we call methods only once
     self.DeferredSetTitleWithRenamedObject('SQLQueue')
 
+  def test_44_TryRenameObjectWithSQLJoblib(self):
+    # Test if we call methods only once
+    self.DeferredSetTitleWithRenamedObject('SQLJoblib')
+
   def test_46_TryActiveProcessWithSQLDict(self):
     # Test if we call methods only once
     self.TryActiveProcess('SQLDict')
@@ -795,6 +861,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_47_TryActiveProcessWithSQLQueue(self):
     # Test if we call methods only once
     self.TryActiveProcess('SQLQueue')
+
+  def test_48_TryActiveProcessWithSQLJoblib(self):
+    # Test if we call methods only once
+    self.TryActiveProcessWithResultDict('SQLJoblib')
 
   def test_54_TryAfterMethodIdWithSQLDict(self):
     # Test if after_method_id can be used
@@ -804,7 +874,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if after_method_id can be used
     self.TryMethodAfterMethod('SQLQueue')
 
-  def test_56_TryCallActivityWithRightUser(self):
+  def test_56_TryAfterMethodIdWithSQLJoblib(self):
+    # Test if after_method_id can be used
+    self.TryMethodAfterMethod('SQLJoblib')
+
+  def test_57_TryCallActivityWithRightUser(self):
     # Test if me execute methods with the right user
     # This should be independant of the activity used
     # We are first logged as seb
@@ -835,21 +909,33 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Test if after_tag can be used
     self.TryAfterTag('SQLQueue')
 
-  def test_61_CheckSchedulingWithSQLDict(self):
+  def test_61_TryAfterTagWithSQLJoblib(self):
+    # Test if after_tag can be used
+    self.TryAfterTag('SQLJoblib')
+
+  def test_62_CheckSchedulingWithSQLDict(self):
     # Test if scheduling is correct with SQLDict
     self.CheckScheduling('SQLDict')
 
-  def test_62_CheckSchedulingWithSQLQueue(self):
+  def test_63_CheckSchedulingWithSQLQueue(self):
     # Test if scheduling is correct with SQLQueue
     self.CheckScheduling('SQLQueue')
 
-  def test_61_CheckSchedulingAfterTagListWithSQLDict(self):
+  def test_64_CheckSchedulingWithSQLJoblib(self):
+    # Test if scheduling is correct with SQLQueue
+    self.CheckScheduling('SQLJoblib')
+
+  def test_65_CheckSchedulingAfterTagListWithSQLDict(self):
     # Test if scheduling is correct with SQLDict
     self.CheckSchedulingAfterTagList('SQLDict')
 
-  def test_62_CheckSchedulingWithAfterTagListSQLQueue(self):
+  def test_66_CheckSchedulingWithAfterTagListSQLQueue(self):
     # Test if scheduling is correct with SQLQueue
     self.CheckSchedulingAfterTagList('SQLQueue')
+
+  def test_67_CheckSchedulingWithAfterTagListSQLJoblib(self):
+    # Test if scheduling is correct with SQLQueue
+    self.CheckSchedulingAfterTagList('SQLJoblib')
 
   def flushAllActivities(self, silent=0, loop_size=1000):
     """Executes all messages until the queue only contains failed
@@ -872,7 +958,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     if not silent:
       self.fail('flushAllActivities maximum loop count reached')
 
-  def test_65_TestMessageValidationAndFailedActivities(self):
+  def test_68_TestMessageValidationAndFailedActivities(self):
     """after_method_id and failed activities.
 
     Tests that if we have an active method scheduled by
@@ -888,13 +974,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     obj = self.getPortal().organisation_module.newContent(
                     portal_type='Organisation',
                     title=original_title)
-
     # Monkey patch Organisation to add a failing method
     def failingMethod(self):
       raise ValueError, 'This method always fail'
     Organisation.failingMethod = failingMethod
 
-    activity_list = ['SQLQueue', 'SQLDict', ]
+    activity_list = ['SQLQueue', 'SQLDict', 'SQLJoblib']
     for activity in activity_list:
       # reset
       activity_tool.manageClearActivities()
@@ -909,7 +994,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       full_message_list = activity_tool.getMessageList()
       remaining_messages = [a for a in full_message_list if a.method_id !=
           'failingMethod']
-      if len(full_message_list) != 2:
+      if len(full_message_list) != 3:
         self.fail('failingMethod should not have been flushed')
       if len(remaining_messages) != 0:
         self.fail('Activity tool should have no other remaining messages')
@@ -923,7 +1008,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       full_message_list = activity_tool.getMessageList()
       remaining_messages = [a for a in full_message_list if a.method_id !=
           'failingMethod']
-      if len(full_message_list) != 3:
+      if len(full_message_list) != 4:
         self.fail('failingMethod should not have been flushed')
       if len(remaining_messages) != 1:
         self.fail('Activity tool should have one blocked setTitle activity')
@@ -931,13 +1016,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           ['failingMethod'])
       self.assertEqual(obj.getTitle(), original_title)
 
-  def test_66_TestCountMessageWithTagWithSQLDict(self):
+  def test_69_TestCountMessageWithTagWithSQLDict(self):
     """
       Test new countMessageWithTag function with SQLDict.
     """
     self.CheckCountMessageWithTag('SQLDict')
 
-  def test_67_TestCancelFailedActiveObject(self):
+  def test_70_TestCancelFailedActiveObject(self):
     """Cancel an active object to make sure that it does not refer to
     a persistent object.
 
@@ -983,7 +1068,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 0)
 
-  def test_68_RetryMessageExecution(self):
+  def test_71_RetryMessageExecution(self):
     activity_tool = self.portal.portal_activities
     self.assertFalse(activity_tool.getMessageList())
     exec_count = [0]
@@ -999,7 +1084,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         raise ConflictError if conflict else Exception
     def check(retry_list, **activate_kw):
       fail = retry_list[-1][0] is not None and 1 or 0
-      for activity in 'SQLDict', 'SQLQueue':
+      for activity in 'SQLDict', 'SQLQueue', 'SQLJoblib':
         exec_count[0] = 0
         activity_tool.activate(activity=activity, priority=priority(1,6),
                                **activate_kw).doSomething(retry_list)
@@ -1040,37 +1125,43 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       del activity_tool.__class__.doSomething
     self.assertFalse(activity_tool.getMessageList())
 
-  def test_70_TestConflictErrorsWhileValidatingWithSQLDict(self):
+  def test_72_TestConflictErrorsWhileValidatingWithSQLDict(self):
     """
       Test if conflict errors spoil out active objects with SQLDict.
     """
     self.TryConflictErrorsWhileValidating('SQLDict')
 
-  def test_71_TestConflictErrorsWhileValidatingWithSQLQueue(self):
+  def test_73_TestConflictErrorsWhileValidatingWithSQLQueue(self):
     """
       Test if conflict errors spoil out active objects with SQLQueue.
     """
     self.TryConflictErrorsWhileValidating('SQLQueue')
 
-  def test_72_TestErrorsWhileFinishingCommitDBWithSQLDict(self):
+  def test_74_TestConflictErrorsWhileValidatingWithSQLJoblib(self):
+    """
+      Test if conflict errors spoil out active objects with SQLJoblib.
+    """
+    self.TryConflictErrorsWhileValidating('SQLJoblib')
+
+  def test_75_TestErrorsWhileFinishingCommitDBWithSQLDict(self):
     """
     """
     self.TryErrorsWhileFinishingCommitDB('SQLDict')
 
-  def test_73_TestErrorsWhileFinishingCommitDBWithSQLQueue(self):
+  def test_76_TestErrorsWhileFinishingCommitDBWithSQLQueue(self):
     """
     """
     self.TryErrorsWhileFinishingCommitDB('SQLQueue')
 
-  def test_74_TryFlushActivityWithAfterTagSQLDict(self):
+  def test_77_TryFlushActivityWithAfterTagSQLDict(self):
     # Test if after_tag can be used
     self.TryFlushActivityWithAfterTag('SQLDict')
 
-  def test_75_TryFlushActivityWithAfterTagWithSQLQueue(self):
+  def test_78_TryFlushActivityWithAfterTagWithSQLQueue(self):
     # Test if after_tag can be used
     self.TryFlushActivityWithAfterTag('SQLQueue')
 
-  def test_76_ActivateKwForNewContent(self):
+  def test_79_ActivateKwForNewContent(self):
     o1 = self.getOrganisationModule().newContent(
                                   activate_kw=dict(tag='The Tag'))
     self.commit()
@@ -1081,7 +1172,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(m.activity_kw.get('tag'), 'The Tag')
 
 
-  def test_77_FlushAfterMultipleActivate(self):
+  def test_80_FlushAfterMultipleActivate(self):
     orga_module = self.getOrganisationModule()
     p = orga_module.newContent(portal_type='Organisation')
     self.tic()
@@ -1113,13 +1204,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEqual(len(activity_tool.getMessageList()), 0)
 
-  def test_78_IsMessageRegisteredSQLDict(self):
+  def test_81_IsMessageRegisteredSQLDict(self):
     """
       This test tests behaviour of IsMessageRegistered method.
     """
     self.checkIsMessageRegisteredMethod('SQLDict')
 
-  def test_79_AbortTransactionSynchronously(self):
+  def test_82_AbortTransactionSynchronously(self):
     """
       This test checks if transaction.abort() synchronizes connections. It
       didn't do so back in Zope 2.7
@@ -1186,7 +1277,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = portal.portal_activities.getMessageList()
     self.assertEqual(len(message_list),5)
     portal.portal_activities.tic()
-    expected = dict(SQLDict=1, SQLQueue=5)[activity]
+    expected = dict(SQLDict=1, SQLQueue=5, SQLJoblib=1)[activity]
     self.assertEqual(expected, organisation.getFoobar())
 
 
@@ -1217,26 +1308,32 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = portal.portal_activities.getMessageList()
     self.assertEqual(len(message_list),20)
     portal.portal_activities.tic()
-    self.assertEqual(dict(SQLDict=11, SQLQueue=60)[activity],
+    self.assertEqual(dict(SQLDict=11, SQLQueue=60, SQLJoblib=11)[activity],
                       organisation.getFoobar())
-    self.assertEqual(dict(SQLDict=[1, 1, 1], SQLQueue=[5, 5, 10])[activity],
+    self.assertEqual(dict(SQLDict=[1, 1, 1], SQLQueue=[5, 5, 10], SQLJoblib=[1,1,1])[activity],
                       sorted(foobar_list))
     message_list = portal.portal_activities.getMessageList()
     self.assertEqual(len(message_list), 0)
 
-  def test_80a_CallWithGroupIdParamaterSQLDict(self):
+  def test_83a_CallWithGroupIdParamaterSQLDict(self):
     """
     Test that group_id parameter is used to separate execution of the same method
     """
     self.callWithGroupIdParamater('SQLDict')
 
-  def test_80b_CallWithGroupIdParamaterSQLQueue(self):
+  def test_83b_CallWithGroupIdParamaterSQLQueue(self):
     """
     Test that group_id parameter is used to separate execution of the same method
     """
     self.callWithGroupIdParamater('SQLQueue')
 
-  def test_81_ActivateKwForWorkflowTransition(self):
+  def test_83c_CallWithGroupIdParamaterSQLJoblib(self):
+    """
+    Test that group_id parameter is used to separate execution of the same method
+    """
+    self.callWithGroupIdParamater('SQLJoblib')
+
+  def test_84_ActivateKwForWorkflowTransition(self):
     """
     Test call of a workflow transition with activate_kw parameter propagate them
     """
@@ -1250,7 +1347,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     for m in messages_for_o1:
       self.assertEqual(m.activity_kw.get('tag'), 'The Tag')
 
-  def test_82_LossOfVolatileAttribute(self):
+  def test_85_LossOfVolatileAttribute(self):
     """
     Test that the loss of volatile attribute doesn't loose activities
     """
@@ -1373,7 +1470,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     self.TryUserNotificationOnActivityFailure('SQLDict')
 
-  def test_91_userNotificationOnActivityFailureWithSQLQueue(self):
+  def test_91_userNotificationOnActivityFailureWithSQLJoblib(self):
+    """
+      Check user notification sent on activity final error
+    """
+    self.TryUserNotificationOnActivityFailure('SQLJoblib')
+
+  def test_92_userNotificationOnActivityFailureWithSQLQueue(self):
     """
       Check that a user notification method is called on message when activity
       fails and will not be tried again.
@@ -1401,17 +1504,23 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       Message.notifyUser = original_notifyUser
       delattr(Organisation, 'failingMethod')
 
-  def test_92_userNotificationRaiseWithSQLDict(self):
+  def test_93_userNotificationRaiseWithSQLDict(self):
     """
       Check that activities are not left with processing=1 when notifyUser raises.
     """
     self.TryUserNotificationRaise('SQLDict')
 
-  def test_93_userNotificationRaiseWithSQLQueue(self):
+  def test_94_userNotificationRaiseWithSQLQueue(self):
     """
       Check that activities are not left with processing=1 when notifyUser raises.
     """
     self.TryUserNotificationRaise('SQLQueue')
+
+  def test_95_userNotificationRaiseWithSQLJoblib(self):
+    """
+      Check that activities are not left with processing=1 when notifyUser raises.
+    """
+    self.TryUserNotificationRaise('SQLJoblib')
 
   def TryActivityRaiseInCommitDoesNotStallActivityConection(self, activity):
     """
@@ -1493,7 +1602,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_101_TryChangeSkinInActivitySQLQueue(self):
     self.TryChangeSkinInActivity('SQLQueue')
 
-  def test_102_1_CheckSQLDictDoesNotDeleteSimilaritiesBeforeExecution(self):
+  def test_102_TryChangeSkinInActivitySQLJoblib(self):
+    self.TryChangeSkinInActivity('SQLJoblib')
+
+  def test_103_1_CheckSQLDictDoesNotDeleteSimilaritiesBeforeExecution(self):
     """
       Test that SQLDict does not delete similar messages which have the same
       method_id and path but a different tag before execution.
@@ -1520,7 +1632,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del activity_tool.__class__.doSomething
 
-  def test_102_2_CheckSQLDictDeleteDuplicatesBeforeExecution(self):
+  def test_103_2_CheckSQLDictDeleteDuplicatesBeforeExecution(self):
     """
       Test that SQLDict delete the same messages before execution if messages
       has the same method_id and path and tag.
@@ -1550,7 +1662,37 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del activity_tool.__class__.doSomething
 
-  def test_102_3_CheckSQLDictDistributeWithSerializationTagAndGroupMethodId(
+  def test_103_3_CheckSQLJoblibDeleteDuplicatesBeforeExecution(self):
+    """
+      Test that SQLJoblib delete the same messages before execution if messages
+      has the same method_id and path and tag and signature.
+    """
+    activity_tool = self.getActivityTool()
+    marker = []
+    def doSomething(self, other_tag):
+      marker.append(self.countMessage(tag=other_tag))
+    activity_tool.__class__.doSomething = doSomething
+    try:
+      # Adds two same activities.
+      activity_tool.activate(activity='SQLJoblib', after_tag='foo', priority=2,
+        tag='a').doSomething(other_tag='a')
+      self.commit()
+      uid1, = [x.uid for x in activity_tool.getMessageList()]
+      activity_tool.activate(activity='SQLJoblib', after_tag='bar', priority=1,
+        tag='a').doSomething(other_tag='a')
+      self.commit()
+      self.assertEqual(len(activity_tool.getMessageList()), 2)
+      activity_tool.distribute()
+      # After distribute, duplicate is deleted.
+      uid2, = [x.uid for x in activity_tool.getMessageList()]
+      self.assertNotEqual(uid1, uid2)
+      activity_tool.tic()
+      self.assertEqual(len(activity_tool.getMessageList()), 0)
+      self.assertEqual(marker, [1])
+    finally:
+      del activity_tool.__class__.doSomething
+
+  def test_103_4_CheckSQLDictDistributeWithSerializationTagAndGroupMethodId(
       self):
     """
       Distribuation was at some point buggy with this scenario when there was
@@ -1574,7 +1716,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEqual(len(activity_tool.getMessageList()), 0)
 
-  def test_103_interQueuePriorities(self):
+  def test_104_interQueuePriorities(self):
     """
       Important note: there is no way to really reliably check that this
       feature is correctly implemented, as activity execution order is
@@ -1649,11 +1791,14 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del document.__class__.doSomething
 
-  def test_104_activityRuntimeEnvironmentSQLDict(self):
+  def test_105_activityRuntimeEnvironmentSQLDict(self):
     self.CheckActivityRuntimeEnvironment('SQLDict')
 
-  def test_105_activityRuntimeEnvironmentSQLQueue(self):
+  def test_106_activityRuntimeEnvironmentSQLQueue(self):
     self.CheckActivityRuntimeEnvironment('SQLQueue')
+
+  def test_107_activityRuntimeEnvironmentSQLJoblib(self):
+    self.CheckActivityRuntimeEnvironment('SQLJoblib')
 
   def CheckSerializationTag(self, activity):
     organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
@@ -1706,13 +1851,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEqual(len(activity_tool.getMessageList()), 0)
 
-  def test_106_checkSerializationTagSQLDict(self):
+  def test_108_checkSerializationTagSQLDict(self):
     self.CheckSerializationTag('SQLDict')
 
-  def test_107_checkSerializationTagSQLQueue(self):
+  def test_109_checkSerializationTagSQLQueue(self):
     self.CheckSerializationTag('SQLQueue')
 
-  def test_108_testAbsoluteUrl(self):
+  def test_110_testAbsoluteUrl(self):
     # Tests that absolute_url works in activities. The URL generation is based
     # on REQUEST information when the method was activated.
     request = self.portal.REQUEST
@@ -1943,7 +2088,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(active_process.hasActivity())
 
     def test(obj, **kw):
-      for activity in ('SQLDict', 'SQLQueue'):
+      for activity in ('SQLDict', 'SQLQueue', 'SQLJoblib'):
         active_object.activate(activity=activity, **kw).getTitle()
         self.commit()
         self.assertTrue(obj.hasActivity(), activity)
@@ -1991,6 +2136,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def test_hasErrorActivity_error_SQLDict(self):
     self._test_hasErrorActivity_error('SQLDict')
 
+  def test_hasErrorActivity_error_SQLJoblib(self):
+    self._test_hasErrorActivity_error('SQLJoblib')
+
   def _test_hasErrorActivity(self, activity):
     active_object = self.portal.organisation_module.newContent(
                                             portal_type='Organisation')
@@ -2022,6 +2170,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def test_hasErrorActivity_SQLDict(self):
     self._test_hasErrorActivity('SQLDict')
+
+  def test_hasErrorActivity_SQLJoblib(self):
+    self._test_hasErrorActivity('SQLJoblib')
 
   def test_active_object_hasActivity_does_not_catch_exceptions(self):
     """
@@ -2062,7 +2213,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.__call_count += 1
       o = self.portal.organisation_module.newContent(portal_type='Organisation')
 
-      for activity in "SQLDict", "SQLQueue":
+      for activity in "SQLDict", "SQLQueue", "SQLJoblib":
         self.__call_count = 0
         try:
           for i in xrange(10):
@@ -2153,7 +2304,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     activity_tool = self.portal.portal_activities
     activity_tool.__class__.doSomething = processed.append
     try:
-      for activity in 'SQLDict', 'SQLQueue':
+      for activity in 'SQLDict', 'SQLQueue', 'SQLJoblib':
         activity_tool.activate(activity=activity).doSomething(activity)
         self.commit()
         # Make first commit in dequeueMessage raise
@@ -2249,6 +2400,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     self.TryNotificationSavedOnEventLogWhenNotifyUserRaises('SQLQueue')
 
+  def test_120_userNotificationSavedOnEventLogWhenNotifyUserRaisesWithSQLJoblib(self):
+    """
+      Check the error is saved on event log even if the mail notification is not sent.
+    """
+    self.TryNotificationSavedOnEventLogWhenNotifyUserRaises('SQLJoblib')
+
   def TryUserMessageContainingNoTracebackIsStillSent(self, activity):
     portal = self.getPortalObject()
     activity_tool = self.getActivityTool()
@@ -2281,11 +2438,17 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       Message.notifyUser = original_notifyUser
       delattr(Organisation, 'failingMethod')
 
-  def test_120_sendMessageWithNoTracebackWithSQLQueue(self):
+  def test_121_sendMessageWithNoTracebackWithSQLQueue(self):
     self.TryUserMessageContainingNoTracebackIsStillSent('SQLQueue')
 
-  def test_121_sendMessageWithNoTracebackWithSQLDict(self):
+  def test_122_sendMessageWithNoTracebackWithSQLDict(self):
     self.TryUserMessageContainingNoTracebackIsStillSent('SQLDict')
+
+  def test_123_sendMessageWithNoTracebackWithSQLJoblib(self):
+    """
+      Check that message with no traceback is still sen
+    """
+    self.TryUserMessageContainingNoTracebackIsStillSent('SQLJoblib')
 
   def TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises(self, activity):
     # Make sure that no active object is installed.
@@ -2330,13 +2493,28 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       del Organisation.failingMethod
       self._ignore_log_errors()
 
-  def test_122_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLDict(self):
+  def test_124_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLJoblib(self):
+    """
+      Check that message not saved in site error logger is not lost
+    """
+    self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLJoblib')
+
+  def test_125_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLDict(self):
+    """
+      Check that message not saved in site error logger is not lost'
+    """
     self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLDict')
 
-  def test_123_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLQueue(self):
+  def test_125_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLJoblib(self):
+    """
+      Check that message not saved in site error logger is not lost'
+    """
+    self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLJoblib')
+
+  def test_126_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLQueue(self):
     self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLQueue')
 
-  def test_124_checkConflictErrorAndNoRemainingActivities(self):
+  def test_127_checkConflictErrorAndNoRemainingActivities(self):
     """
     When an activity creates several activities, make sure that all newly
     created activities are not commited if there is ZODB Conflict error
@@ -2368,7 +2546,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       SQLBase.MAX_MESSAGE_LIST_SIZE = MAX_MESSAGE_LIST_SIZE
 
-  def test_125_CheckDistributeWithSerializationTagAndGroupMethodId(self):
+  def test_128_CheckDistributeWithSerializationTagAndGroupMethodId(self):
     activity_tool = self.portal.portal_activities
     obj1 = activity_tool.newActiveProcess()
     obj2 = activity_tool.newActiveProcess()
@@ -2382,7 +2560,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       group_method_call_list.append(r)
     activity_tool.__class__.doSomething = doSomething
     try:
-      for activity in 'SQLDict', 'SQLQueue':
+      for activity in 'SQLDict', 'SQLQueue', 'SQLJoblib':
         activity_kw = dict(activity=activity, serialization_tag=self.id(),
                            group_method_id='portal_activities/doSomething')
         obj1.activate(**activity_kw).dummy(1, x=None)
@@ -2405,13 +2583,14 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         activity_tool.tic()
         self.assertEqual(group_method_call_list.pop(),
                          dict(SQLDict=[message2],
-                              SQLQueue=[message1, message2])[activity])
+                              SQLQueue=[message1, message2],
+                              SQLJoblib=[message2])[activity])
         self.assertFalse(group_method_call_list)
         self.assertFalse(activity_tool.getMessageList())
     finally:
       del activity_tool.__class__.doSomething
 
-  def test_126_beforeCommitHook(self):
+  def test_129_beforeCommitHook(self):
     """
     Check it is possible to activate an object from a before commit hook
     """
@@ -2516,7 +2695,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         transaction.get().addBeforeCommitHook(_raise, (error,))
     obj.__class__.doSomething = doSomething
     try:
-      for activity in 'SQLDict', 'SQLQueue':
+      for activity in 'SQLDict', 'SQLQueue', 'SQLJoblib':
         for conflict_error in False, True:
           weakref_list = []
           obj.activity_count = obj.on_error_count = 0
@@ -2647,7 +2826,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     kw = {}
     self._catch_log_errors(subsystem='CMFActivity')
     try:
-      for kw['activity'] in 'SQLDict', 'SQLQueue':
+      for kw['activity'] in 'SQLDict', 'SQLQueue', 'SQLJoblib':
         for kw['group_method_id'] in '', None:
           obj = activity_tool.newActiveProcess()
           self.tic()
