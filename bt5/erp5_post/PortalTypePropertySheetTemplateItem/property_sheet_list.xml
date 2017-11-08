@@ -2,4 +2,7 @@
  <portal_type id="HTML Post">
   <item>Task</item>
  </portal_type>
+ <portal_type id="Text Post">
+  <item>Task</item>
+ </portal_type>
 </property_sheet_list>

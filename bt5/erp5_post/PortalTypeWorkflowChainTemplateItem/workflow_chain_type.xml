@@ -3,4 +3,8 @@
   <type>HTML Post</type>
   <workflow>edit_workflow, post_workflow</workflow>
  </chain>
+ <chain>
+  <type>Text Post</type>
+  <workflow>edit_workflow, post_workflow</workflow>
+ </chain>
 </workflow_chain>

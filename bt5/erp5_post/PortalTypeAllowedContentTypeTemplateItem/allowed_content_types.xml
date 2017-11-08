@@ -1,5 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Post Module">
   <item>HTML Post</item>
+  <item>Text Post</item>
  </portal_type>
 </allowed_content_type_list>
