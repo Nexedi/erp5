@@ -88,11 +88,13 @@
     .declareMethod('render', function (options) {
       var parameter_dict = JSON.parse(options.value),
         item_path_list = parameter_dict.item_path_list,
-        node_tree = convertPathListToTree(item_path_list),
-        html_tree = buildTreeHTML('tree', node_tree);
-      this.action_url = parameter_dict.action_url;
+        html_tree = buildTreeHTML('tree', convertPathListToTree(item_path_list)),
+        state_dict = {
+          key: options.key
+        };
+
       this.element.innerHTML = html_tree;
-      console.log(html_tree);
+      return this.changeState(state_dict);
     })
 
     .onEvent('change', function (evt) {
@@ -151,7 +153,8 @@
 
     .declareMethod('getContent', function () {
       var i,
-        path_list = [];
+        path_list = [],
+        result = {};
 
       // Get all the checked checkbox from both child_path and parent_path
       var checkedInputList = this.element.querySelectorAll(
@@ -166,10 +169,9 @@
           path_list.push(nextLabelElement.dataset.path);
         }
       }
-      var form_data = {'check_needed': 'True',
-                      'item_path_list': path_list} ;
 
-      return form_data
+      result[this.state.key] = path_list;
+      return result;
     });
 
 }(rJS, jIO, Handlebars, RSVP, window));
