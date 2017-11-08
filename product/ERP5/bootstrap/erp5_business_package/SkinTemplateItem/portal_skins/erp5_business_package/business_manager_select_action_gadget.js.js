@@ -135,8 +135,7 @@
           if (evt.target.nextSibling.className === 'Unchanged') {
             var nodeChildPath = evt.target.nextElementSibling.nextElementSibling.querySelectorAll('input[type=checkbox][name="child_path"]'),
               nodeParentPath = evt.target.nextElementSibling.nextElementSibling.querySelectorAll('input[type=checkbox][name="parent_path"]'),
-              i,
-              element;
+              i;
             // If there is no nodeParentPath and some childParentPath, update
             // the checked status of the childParentPath
             if ((!nodeParentPath.length) && (nodeChildPath.length)) {
@@ -150,28 +149,27 @@
       }
     }, false, false)
 
-    .declareMethod('getContent', function (options) {
+    .declareMethod('getContent', function () {
       var i,
         path_list = [];
 
       // Get all the checked checkbox from both child_path and parent_path
       var checkedInputList = this.element.querySelectorAll(
-        'input[type=checkbox][name$="_path"]:checked');
+        'input[type=checkbox][name$="_path"]:checked'
+        ),
+        nextLabelElement;
 
       // Filter all paths except for those 'Unchanged'
       for (i = 0; i < checkedInputList.length; ++i) {
-        var nextLabelElement = checkedInputList[i].nextElementSibling;
+        nextLabelElement = checkedInputList[i].nextElementSibling;
         if (nextLabelElement.className !== "Unchanged") {
-          path_list.push(nextLabelElement.dataset.path)
+          path_list.push(nextLabelElement.dataset.path);
         }
       }
+      var form_data = {'check_needed': 'True',
+                      'item_path_list': path_list} ;
 
-      jIO.util.ajax({
-        type: 'POST',
-        url: this.action_url,
-        data: {'checkNeeded': 'True',
-              'item_path_list': path_list}
-      });
+      return form_data
     });
 
 }(rJS, jIO, Handlebars, RSVP, window));
